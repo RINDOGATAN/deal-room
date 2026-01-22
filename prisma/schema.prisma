@@ -25,8 +25,9 @@ model User {
   updatedAt     DateTime  @updatedAt
 
   // Auth relations
-  accounts      Account[]
-  sessions      Session[]
+  accounts        Account[]
+  sessions        Session[]
+  twoFactorSecret TwoFactorSecret?
 
   // Deal Room relations
   dealRoomParties DealRoomParty[]
@@ -34,6 +35,18 @@ model User {
   auditLogs       AuditLog[]
 
   @@map("users")
+}
+
+model TwoFactorSecret {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  secret    String   // Encrypted TOTP secret
+  verified  Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("two_factor_secrets")
 }
 
 model Account {

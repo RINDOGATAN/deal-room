@@ -3,24 +3,30 @@ import { type CreateNextContextOptions } from "@trpc/server/adapters/next";
 import superjson from "superjson";
 import { ZodError } from "zod";
 import { getServerSession, type Session } from "next-auth";
+import { cookies } from "next/headers";
 import { authOptions } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 
 interface CreateContextOptions {
   session: Session | null;
+  getCookie: (name: string) => string | undefined;
 }
 
 export const createInnerTRPCContext = (opts: CreateContextOptions) => {
   return {
     session: opts.session,
     prisma,
+    getCookie: opts.getCookie,
   };
 };
 
 export const createTRPCContext = async (opts: { req: Request }) => {
   const session = await getServerSession(authOptions);
+  const cookieStore = await cookies();
+
   return createInnerTRPCContext({
     session,
+    getCookie: (name: string) => cookieStore.get(name)?.value,
   });
 };
 

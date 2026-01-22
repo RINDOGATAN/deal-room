@@ -1,26 +1,32 @@
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
+import { isAdminEmail } from "@/lib/totp";
 
-// For now, admin check is based on email domain
-// In production, this would use a proper role system
-const ADMIN_EMAILS = ["admin@lawfirm.com"];
+const requireAdmin = (
+  email: string | null | undefined,
+  getCookie: (name: string) => string | undefined
+) => {
+  if (!isAdminEmail(email)) {
+    throw new TRPCError({
+      code: "FORBIDDEN",
+      message: "Admin access required",
+    });
+  }
 
-const isAdmin = (email: string | null | undefined): boolean => {
-  return ADMIN_EMAILS.includes(email || "");
+  const twoFactorVerified = getCookie("admin_2fa_verified");
+  if (twoFactorVerified !== "true") {
+    throw new TRPCError({
+      code: "FORBIDDEN",
+      message: "2FA verification required",
+    });
+  }
 };
 
 export const adminRouter = createTRPCRouter({
   // Get all deals (admin only)
   getAllDeals: protectedProcedure.query(async ({ ctx }) => {
-    // For dev mode, allow any user to access admin
-    // In production, check admin role
-    // if (!isAdmin(ctx.session.user.email)) {
-    //   throw new TRPCError({
-    //     code: "FORBIDDEN",
-    //     message: "Admin access required",
-    //   });
-    // }
+    requireAdmin(ctx.session.user.email, ctx.getCookie);
 
     const deals = await ctx.prisma.dealRoom.findMany({
       include: {
@@ -75,6 +81,8 @@ export const adminRouter = createTRPCRouter({
   getDealDetails: protectedProcedure
     .input(z.object({ dealId: z.string() }))
     .query(async ({ ctx, input }) => {
+      requireAdmin(ctx.session.user.email, ctx.getCookie);
+
       const deal = await ctx.prisma.dealRoom.findUnique({
         where: { id: input.dealId },
         include: {
@@ -172,6 +180,8 @@ export const adminRouter = createTRPCRouter({
 
   // Get negotiation analytics
   getAnalytics: protectedProcedure.query(async ({ ctx }) => {
+    requireAdmin(ctx.session.user.email, ctx.getCookie);
+
     const [
       totalDeals,
       dealsByStatus,
