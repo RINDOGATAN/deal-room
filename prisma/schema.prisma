@@ -1,0 +1,427 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================================
+// AUTHENTICATION & USERS
+// ============================================================
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  image         String?
+  company       String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Auth relations
+  accounts      Account[]
+  sessions      Session[]
+
+  // Deal Room relations
+  dealRoomParties DealRoomParty[]
+  invitations     Invitation[]
+  auditLogs       AuditLog[]
+
+  @@map("users")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+// ============================================================
+// CONTRACT TEMPLATES (Loaded from Skills)
+// ============================================================
+
+model ContractTemplate {
+  id              String   @id @default(cuid())
+  contractType    String   @unique // e.g., "NDA", "DPA", "SAAS", "MSA"
+  displayName     String
+  description     String?
+  version         String   @default("1.0")
+  skillPath       String   // Path to skill folder
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  clauses   ClauseTemplate[]
+  dealRooms DealRoom[]
+
+  @@map("contract_templates")
+}
+
+model ClauseTemplate {
+  id               String   @id @default(cuid())
+  contractTemplateId String
+  clauseId         String   // e.g., "data-retention"
+  title            String
+  category         String   // e.g., "Privacy", "Liability", "Term"
+  order            Int
+  plainDescription String   @db.Text
+  legalContext     String?  @db.Text
+  isRequired       Boolean  @default(true)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  contractTemplate ContractTemplate @relation(fields: [contractTemplateId], references: [id], onDelete: Cascade)
+  options          ClauseOption[]
+  dealRoomClauses  DealRoomClause[]
+
+  @@unique([contractTemplateId, clauseId])
+  @@map("clause_templates")
+}
+
+model ClauseOption {
+  id               String   @id @default(cuid())
+  clauseTemplateId String
+  optionId         String   // e.g., "opt-30d"
+  code             String   // e.g., "30-days"
+  label            String   // e.g., "30 Days"
+  order            Int
+  plainDescription String   @db.Text
+  prosPartyA       String[] // Array of pros for Party A
+  consPartyA       String[] // Array of cons for Party A
+  prosPartyB       String[] // Array of pros for Party B
+  consPartyB       String[] // Array of cons for Party B
+  legalText        String   @db.Text
+  biasPartyA       Float    // -1 to 1, how much this option favors Party A
+  biasPartyB       Float    // -1 to 1, how much this option favors Party B
+  jurisdictionConfig Json?  // Jurisdiction-specific availability and warnings
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  clauseTemplate    ClauseTemplate    @relation(fields: [clauseTemplateId], references: [id], onDelete: Cascade)
+  partySelections   PartySelection[]
+  compromiseSuggestions CompromiseSuggestion[]
+  counterProposals  CounterProposal[]
+
+  @@unique([clauseTemplateId, optionId])
+  @@map("clause_options")
+}
+
+// ============================================================
+// DEAL ROOMS
+// ============================================================
+
+enum DealRoomStatus {
+  DRAFT              // Initiator still making selections
+  AWAITING_RESPONSE  // Invitation sent, waiting for respondent
+  NEGOTIATING        // Both parties have submitted, reviewing compromises
+  AGREED             // All clauses agreed upon
+  SIGNING            // Sent for e-signature
+  COMPLETED          // Fully signed
+  CANCELLED          // Deal cancelled
+}
+
+enum GoverningLaw {
+  CALIFORNIA      // California, USA
+  ENGLAND_WALES   // England & Wales, UK
+  SPAIN           // Spain, EU
+}
+
+enum PartyRole {
+  INITIATOR
+  RESPONDENT
+}
+
+enum PartyStatus {
+  PENDING     // Not yet submitted selections
+  SUBMITTED   // Selections submitted
+  REVIEWING   // Reviewing compromise suggestions
+  ACCEPTED    // Accepted all suggestions/counter-proposals
+}
+
+model DealRoom {
+  id                 String         @id @default(cuid())
+  name               String
+  contractTemplateId String
+  governingLaw       GoverningLaw   // Determines applicable law framework
+  status             DealRoomStatus @default(DRAFT)
+  currentRound       Int            @default(0)
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
+
+  contractTemplate ContractTemplate @relation(fields: [contractTemplateId], references: [id])
+  parties          DealRoomParty[]
+  clauses          DealRoomClause[]
+  invitations      Invitation[]
+  rounds           NegotiationRound[]
+  auditLogs        AuditLog[]
+  signingRequest   SigningRequest?
+
+  @@map("deal_rooms")
+}
+
+model DealRoomParty {
+  id          String      @id @default(cuid())
+  dealRoomId  String
+  userId      String?     // Null until user accepts invitation
+  role        PartyRole
+  status      PartyStatus @default(PENDING)
+  email       String      // Email used for invitation
+  name        String?     // Contact name
+  company     String?     // Company name
+  submittedAt DateTime?   // When selections were submitted
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  dealRoom   DealRoom         @relation(fields: [dealRoomId], references: [id], onDelete: Cascade)
+  user       User?            @relation(fields: [userId], references: [id])
+  selections PartySelection[]
+  counterProposals CounterProposal[]
+
+  @@unique([dealRoomId, role])
+  @@map("deal_room_parties")
+}
+
+// Clause instance for a specific deal room
+model DealRoomClause {
+  id               String   @id @default(cuid())
+  dealRoomId       String
+  clauseTemplateId String
+  status           ClauseStatus @default(PENDING)
+  agreedOptionId   String?  // Set when both parties agree
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  dealRoom       DealRoom       @relation(fields: [dealRoomId], references: [id], onDelete: Cascade)
+  clauseTemplate ClauseTemplate @relation(fields: [clauseTemplateId], references: [id])
+
+  selections              PartySelection[]
+  compromiseSuggestions   CompromiseSuggestion[]
+  counterProposals        CounterProposal[]
+
+  @@unique([dealRoomId, clauseTemplateId])
+  @@map("deal_room_clauses")
+}
+
+enum ClauseStatus {
+  PENDING     // Awaiting selections
+  DIVERGENT   // Parties selected different options
+  SUGGESTED   // Compromise suggested
+  AGREED      // Both parties accepted
+}
+
+// ============================================================
+// PARTY SELECTIONS
+// ============================================================
+
+model PartySelection {
+  id              String   @id @default(cuid())
+  dealRoomClauseId String
+  partyId         String
+  optionId        String
+  priority        Int      @default(3) // 1-5, how important this clause is
+  flexibility     Int      @default(3) // 1-5, how flexible party is on this clause
+  notes           String?  @db.Text    // Private notes (never shown to other party)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  dealRoomClause DealRoomClause @relation(fields: [dealRoomClauseId], references: [id], onDelete: Cascade)
+  party          DealRoomParty  @relation(fields: [partyId], references: [id], onDelete: Cascade)
+  option         ClauseOption   @relation(fields: [optionId], references: [id])
+
+  @@unique([dealRoomClauseId, partyId])
+  @@map("party_selections")
+}
+
+// ============================================================
+// COMPROMISE SUGGESTIONS & NEGOTIATION ROUNDS
+// ============================================================
+
+model CompromiseSuggestion {
+  id                    String   @id @default(cuid())
+  dealRoomClauseId      String
+  roundNumber           Int
+  suggestedOptionId     String
+  satisfactionPartyA    Float    // 0-100
+  satisfactionPartyB    Float    // 0-100
+  reasoning             String   @db.Text
+  partyAAccepted        Boolean?
+  partyBAccepted        Boolean?
+  createdAt             DateTime @default(now())
+
+  dealRoomClause  DealRoomClause   @relation(fields: [dealRoomClauseId], references: [id], onDelete: Cascade)
+  suggestedOption ClauseOption     @relation(fields: [suggestedOptionId], references: [id])
+
+  @@unique([dealRoomClauseId, roundNumber])
+  @@map("compromise_suggestions")
+}
+
+model NegotiationRound {
+  id          String      @id @default(cuid())
+  dealRoomId  String
+  roundNumber Int
+  initiatedBy PartyRole   // Who started this round
+  status      RoundStatus @default(PENDING_RESPONSE)
+  createdAt   DateTime    @default(now())
+
+  dealRoom         DealRoom          @relation(fields: [dealRoomId], references: [id], onDelete: Cascade)
+  counterProposals CounterProposal[]
+
+  @@unique([dealRoomId, roundNumber])
+  @@map("negotiation_rounds")
+}
+
+enum RoundStatus {
+  PENDING_RESPONSE  // Waiting for other party
+  BOTH_RESPONDED    // Both parties have responded
+  COMPLETED         // Round completed (all accepted or next round started)
+}
+
+model CounterProposal {
+  id              String         @id @default(cuid())
+  roundId         String
+  dealRoomClauseId String
+  partyId         String
+  proposedOptionId String
+  newPriority     Int?           // If party wants to update priority
+  rationale       String?        @db.Text
+  status          ProposalStatus @default(PENDING)
+  createdAt       DateTime       @default(now())
+
+  round           NegotiationRound @relation(fields: [roundId], references: [id], onDelete: Cascade)
+  dealRoomClause  DealRoomClause   @relation(fields: [dealRoomClauseId], references: [id], onDelete: Cascade)
+  party           DealRoomParty    @relation(fields: [partyId], references: [id], onDelete: Cascade)
+  proposedOption  ClauseOption     @relation(fields: [proposedOptionId], references: [id])
+
+  @@unique([roundId, dealRoomClauseId, partyId])
+  @@map("counter_proposals")
+}
+
+enum ProposalStatus {
+  PENDING     // Awaiting response
+  ACCEPTED    // Other party accepted
+  REJECTED    // Other party rejected
+  SUPERSEDED  // New round started
+}
+
+// ============================================================
+// INVITATIONS
+// ============================================================
+
+model Invitation {
+  id          String           @id @default(cuid())
+  dealRoomId  String
+  email       String
+  token       String           @unique @default(cuid())
+  status      InvitationStatus @default(PENDING)
+  sentAt      DateTime         @default(now())
+  expiresAt   DateTime
+  acceptedAt  DateTime?
+  sentById    String
+
+  dealRoom DealRoom @relation(fields: [dealRoomId], references: [id], onDelete: Cascade)
+  sentBy   User     @relation(fields: [sentById], references: [id])
+
+  @@map("invitations")
+}
+
+enum InvitationStatus {
+  PENDING
+  ACCEPTED
+  EXPIRED
+  CANCELLED
+}
+
+// ============================================================
+// E-SIGNATURE
+// ============================================================
+
+model SigningRequest {
+  id                  String        @id @default(cuid())
+  dealRoomId          String        @unique
+  provider            String        // "docusign" or "hellosign"
+  externalId          String?       // ID from e-signature provider
+  documentUrl         String?       // Generated document URL
+  status              SigningStatus @default(PENDING)
+  initiatorSignedAt   DateTime?
+  respondentSignedAt  DateTime?
+  completedAt         DateTime?
+  signedDocumentUrl   String?       // URL to signed document
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
+
+  dealRoom            DealRoom      @relation(fields: [dealRoomId], references: [id], onDelete: Cascade)
+
+  @@map("signing_requests")
+}
+
+enum SigningStatus {
+  PENDING           // Not yet sent
+  SENT              // Sent for signature
+  PARTIALLY_SIGNED  // One party signed
+  COMPLETED         // Both signed
+  DECLINED          // One party declined
+  EXPIRED           // Signature request expired
+}
+
+// ============================================================
+// AUDIT LOG
+// ============================================================
+
+model AuditLog {
+  id          String   @id @default(cuid())
+  dealRoomId  String?
+  userId      String?
+  action      String   // e.g., "SELECTION_SUBMITTED", "COMPROMISE_ACCEPTED"
+  details     Json?    // Additional data
+  ipAddress   String?
+  userAgent   String?
+  createdAt   DateTime @default(now())
+
+  dealRoom DealRoom? @relation(fields: [dealRoomId], references: [id], onDelete: SetNull)
+  user     User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([dealRoomId])
+  @@index([userId])
+  @@index([createdAt])
+  @@map("audit_logs")
+}
