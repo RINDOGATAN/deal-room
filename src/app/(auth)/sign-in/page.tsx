@@ -81,8 +81,7 @@ export default function SignInPage() {
     <div className="w-full max-w-md">
       <div className="card-brutal">
         <div className="text-center mb-8">
-          <img src="/logo.png" alt="Deal Room" className="h-10 mx-auto mb-6" />
-          <h1 className="text-2xl font-bold mb-2">Sign In</h1>
+          <h1 className="text-3xl font-bold mb-2 text-primary">Dealroom</h1>
           <p className="text-muted-foreground">
             Enter your email to receive a magic link
           </p>

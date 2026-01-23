@@ -23,8 +23,8 @@ export function verifyToken(secret: string, token: string): boolean {
     secret: OTPAuth.Secret.fromBase32(secret),
   });
 
-  // Allow 1 period window for clock drift
-  const delta = totp.validate({ token, window: 1 });
+  // Allow 2 period window for clock drift (60 seconds either direction)
+  const delta = totp.validate({ token, window: 2 });
   return delta !== null;
 }
 

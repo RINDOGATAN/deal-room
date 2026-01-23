@@ -42,7 +42,7 @@ export default function DashboardLayout({
       <header className="border-b border-border">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <Link href="/deals" className="flex items-center">
-            <img src="/logo.png" alt="Deal Room" className="h-8" />
+            <img src="/nel-logo.png" alt="North End Law" className="h-8" />
           </Link>
 
           <nav className="flex items-center gap-1">
