@@ -9,7 +9,6 @@ import {
   Plus,
   LogOut,
   User,
-  LayoutDashboard
 } from "lucide-react";
 
 export default function DashboardLayout({
@@ -42,11 +41,8 @@ export default function DashboardLayout({
       {/* Top Navigation */}
       <header className="border-b border-border">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-          <Link href="/deals" className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-primary flex items-center justify-center">
-              <LayoutDashboard className="w-5 h-5 text-primary-foreground" />
-            </div>
-            <span className="text-xl font-bold text-foreground">Deal Room</span>
+          <Link href="/deals" className="flex items-center">
+            <img src="/logo.png" alt="Deal Room" className="h-8" />
           </Link>
 
           <nav className="flex items-center gap-1">
