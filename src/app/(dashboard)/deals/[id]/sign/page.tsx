@@ -244,17 +244,26 @@ export default function SigningPage() {
               <p className="text-muted-foreground mb-6">
                 Both parties have signed. The contract is now legally binding.
               </p>
-              {signingRequest.documentUrl && (
+              <div className="flex items-center justify-center gap-3">
+                {signingRequest.documentUrl && (
+                  <a
+                    href={signingRequest.documentUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn-brutal inline-flex items-center gap-2"
+                  >
+                    <Download className="w-4 h-4" />
+                    Download Signed Contract
+                  </a>
+                )}
                 <a
-                  href={signingRequest.documentUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn-brutal inline-flex items-center gap-2"
+                  href={`/api/deals/${dealId}/document`}
+                  className="btn-brutal-outline inline-flex items-center gap-2"
                 >
                   <Download className="w-4 h-4" />
-                  Download Signed Contract
+                  Download Contract PDF
                 </a>
-              )}
+              </div>
             </div>
           ) : (
             <div className="text-center py-6 border-t border-border">
@@ -264,17 +273,26 @@ export default function SigningPage() {
                 Signing links have been sent to both parties via email.
                 Please check your inbox for the secure signing link.
               </p>
-              {signingRequest.documentUrl && (
+              <div className="flex items-center justify-center gap-3">
+                {signingRequest.documentUrl && (
+                  <a
+                    href={signingRequest.documentUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn-brutal inline-flex items-center gap-2"
+                  >
+                    <ExternalLink className="w-4 h-4" />
+                    View Document
+                  </a>
+                )}
                 <a
-                  href={signingRequest.documentUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn-brutal inline-flex items-center gap-2"
+                  href={`/api/deals/${dealId}/document`}
+                  className="btn-brutal-outline inline-flex items-center gap-2"
                 >
-                  <ExternalLink className="w-4 h-4" />
-                  View Document
+                  <Download className="w-4 h-4" />
+                  Download Contract PDF
                 </a>
-              )}
+              </div>
             </div>
           )}
         </div>
@@ -285,24 +303,33 @@ export default function SigningPage() {
           <p className="text-muted-foreground mb-6 max-w-md mx-auto">
             All terms have been agreed upon. Initiate the e-signature process to make this contract legally binding.
           </p>
-          <button
-            onClick={() => initiateSigning.mutate({ dealRoomId: dealId })}
-            disabled={initiateSigning.isPending}
-            className="btn-brutal flex items-center gap-2 mx-auto"
-          >
-            {initiateSigning.isPending ? (
-              <>
-                <Loader2 className="w-4 h-4 animate-spin" />
-                Initiating...
-              </>
-            ) : (
-              <>
-                <FileSignature className="w-4 h-4" />
-                Initiate E-Signature
-              </>
-            )}
-          </button>
-          <p className="text-xs text-muted-foreground mt-4">
+          <div className="flex items-center justify-center gap-3 mb-4">
+            <button
+              onClick={() => initiateSigning.mutate({ dealRoomId: dealId })}
+              disabled={initiateSigning.isPending}
+              className="btn-brutal flex items-center gap-2"
+            >
+              {initiateSigning.isPending ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  Initiating...
+                </>
+              ) : (
+                <>
+                  <FileSignature className="w-4 h-4" />
+                  Initiate E-Signature
+                </>
+              )}
+            </button>
+            <a
+              href={`/api/deals/${dealId}/document`}
+              className="btn-brutal-outline flex items-center gap-2"
+            >
+              <Download className="w-4 h-4" />
+              Download Contract PDF
+            </a>
+          </div>
+          <p className="text-xs text-muted-foreground">
             Both parties will receive an email with a secure signing link
           </p>
         </div>
