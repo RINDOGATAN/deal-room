@@ -1,0 +1,650 @@
+{
+  "contractType": "DPA",
+  "displayName": "Data Processing Agreement",
+  "description": "Controller-to-Processor agreements compliant with GDPR, UK GDPR, and CCPA/CPRA for handling personal data",
+  "version": "1.0",
+  "clauses": [
+    {
+      "id": "data-retention",
+      "title": "Data Retention Period",
+      "category": "Data Handling",
+      "order": 1,
+      "plainDescription": "How long can the processor retain personal data after the services end? When must data be deleted or returned?",
+      "legalContext": "GDPR requires data minimization - personal data should not be kept longer than necessary. However, legal retention requirements may necessitate longer periods. The balance is between the controller's data protection obligations and practical business needs.",
+      "isRequired": true,
+      "options": [
+        {
+          "id": "retention-30d",
+          "code": "30-days",
+          "label": "30 Days",
+          "order": 1,
+          "plainDescription": "Processor must delete or return all personal data within 30 days of service termination.",
+          "prosPartyA": ["Quick data cleanup", "Minimizes exposure window", "Strong data minimization"],
+          "consPartyA": ["Short window for data export", "May miss some data needs"],
+          "prosPartyB": ["Clear timeline", "Quick end to obligations"],
+          "consPartyB": ["Tight deadline for deletion", "May conflict with backups", "Limited time for compliance verification"],
+          "legalText": "Upon termination of the Principal Agreement, the Processor shall delete or return all Personal Data within thirty (30) days and certify such deletion in writing.",
+          "biasPartyA": 0.3,
+          "biasPartyB": -0.3
+        },
+        {
+          "id": "retention-60d",
+          "code": "60-days",
+          "label": "60 Days",
+          "order": 2,
+          "plainDescription": "Processor has 60 days to delete or return all personal data after services end.",
+          "prosPartyA": ["Reasonable timeline", "Allows for data export", "Industry standard"],
+          "consPartyA": ["Longer exposure window", "Data persists longer"],
+          "prosPartyB": ["Practical timeline", "Time for backup cleanup", "Reasonable compliance window"],
+          "consPartyB": ["Still need to track and execute", "Ongoing obligations during period"],
+          "legalText": "Upon termination of the Principal Agreement, the Processor shall delete or return all Personal Data within sixty (60) days and certify such deletion in writing.",
+          "biasPartyA": 0.0,
+          "biasPartyB": 0.0
+        },
+        {
+          "id": "retention-90d",
+          "code": "90-days",
+          "label": "90 Days",
+          "order": 3,
+          "plainDescription": "Processor has 90 days to delete or return all personal data, providing more time for complex data cleanup.",
+          "prosPartyA": ["Flexible timeline", "Accounts for complex systems"],
+          "consPartyA": ["Extended exposure", "Data retained longer than necessary"],
+          "prosPartyB": ["Comfortable timeline", "Handles complex infrastructure", "Time for proper verification"],
+          "consPartyB": ["Longer obligation period", "More tracking required"],
+          "legalText": "Upon termination of the Principal Agreement, the Processor shall delete or return all Personal Data within ninety (90) days and certify such deletion in writing.",
+          "biasPartyA": -0.3,
+          "biasPartyB": 0.3
+        }
+      ]
+    },
+    {
+      "id": "subprocessor-approval",
+      "title": "Sub-Processor Approval",
+      "category": "Sub-Processing",
+      "order": 2,
+      "plainDescription": "How must the processor obtain approval before engaging other companies (sub-processors) to help process personal data?",
+      "legalContext": "GDPR Article 28 requires processors to obtain controller authorization before engaging sub-processors. The question is whether this is a general authorization with objection rights, or specific per-sub-processor approval.",
+      "isRequired": true,
+      "options": [
+        {
+          "id": "subproc-specific",
+          "code": "specific-approval",
+          "label": "Specific Prior Approval",
+          "order": 1,
+          "plainDescription": "Processor must obtain explicit written approval before engaging any new sub-processor. No general authorization.",
+          "prosPartyA": ["Maximum control", "Approve each sub-processor", "Full visibility"],
+          "consPartyA": ["Administrative burden", "May slow processor operations", "Need to respond to requests"],
+          "prosPartyB": ["Clear approval process", "No ambiguity"],
+          "consPartyB": ["Must wait for approval", "Delays in adding vendors", "Operational inflexibility"],
+          "legalText": "The Processor shall not engage any Sub-processor without the Controller's prior specific written authorization. Any request to add a Sub-processor must be submitted in writing and approved by the Controller before engagement.",
+          "biasPartyA": 0.5,
+          "biasPartyB": -0.5
+        },
+        {
+          "id": "subproc-general-30d",
+          "code": "general-30day-notice",
+          "label": "General Authorization (30-Day Notice)",
+          "order": 2,
+          "plainDescription": "General authorization to use sub-processors, but processor must give 30 days notice of changes. Controller can object on data protection grounds.",
+          "prosPartyA": ["Balanced approach", "Right to object", "Reasonable notice period"],
+          "consPartyA": ["Less control than specific approval", "Must actively monitor notices"],
+          "prosPartyB": ["Operational flexibility", "Clear process", "Can add vendors with notice"],
+          "consPartyB": ["Controller may object", "Must maintain sub-processor list"],
+          "legalText": "The Controller provides general authorization for the Processor to engage Sub-processors. The Processor shall notify the Controller of any intended changes at least thirty (30) days before the change. If the Controller objects on reasonable data protection grounds, the parties shall discuss in good faith.",
+          "biasPartyA": 0.0,
+          "biasPartyB": 0.0
+        },
+        {
+          "id": "subproc-general-14d",
+          "code": "general-14day-notice",
+          "label": "General Authorization (14-Day Notice)",
+          "order": 3,
+          "plainDescription": "General authorization with only 14 days notice before adding new sub-processors. Controller can still object.",
+          "prosPartyA": ["Some notice provided", "Right to object retained"],
+          "consPartyA": ["Short notice period", "Less time to evaluate", "May miss objection window"],
+          "prosPartyB": ["Good operational flexibility", "Quick vendor additions", "Standard for cloud services"],
+          "consPartyB": ["Controller may object last minute", "Must still maintain lists"],
+          "legalText": "The Controller provides general authorization for the Processor to engage Sub-processors. The Processor shall notify the Controller of any intended changes at least fourteen (14) days before the change. The Controller may object on reasonable data protection grounds.",
+          "biasPartyA": -0.3,
+          "biasPartyB": 0.3
+        }
+      ]
+    },
+    {
+      "id": "breach-notification",
+      "title": "Data Breach Notification Timing",
+      "category": "Security",
+      "order": 3,
+      "plainDescription": "How quickly must the processor notify the controller of a personal data breach?",
+      "legalContext": "GDPR requires processors to notify controllers 'without undue delay' after becoming aware of a breach, with controllers having 72 hours to notify regulators. CCPA/CPRA requires notification 'in the most expedient time possible.'",
+      "isRequired": true,
+      "options": [
+        {
+          "id": "breach-24h",
+          "code": "24-hours",
+          "label": "24 Hours",
+          "order": 1,
+          "plainDescription": "Processor must notify controller within 24 hours of discovering a data breach.",
+          "prosPartyA": ["Maximum response time", "Early awareness", "More time to assess and notify regulators"],
+          "consPartyA": ["May receive incomplete information", "Frequent updates needed"],
+          "prosPartyB": ["Clear deadline", "Demonstrates commitment"],
+          "consPartyB": ["Very tight timeline", "May report before full assessment", "Resource intensive"],
+          "legalText": "In the event of a Personal Data Breach, the Processor shall notify the Controller without undue delay, and in any event within twenty-four (24) hours of becoming aware of the breach.",
+          "biasPartyA": 0.4,
+          "biasPartyB": -0.4,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true, "note": "Exceeds CCPA 'expedient time' requirement - strong protection" },
+            "ENGLAND_WALES": { "available": true, "note": "Provides buffer for 72-hour regulatory deadline" },
+            "SPAIN": { "available": true, "note": "Provides buffer for GDPR 72-hour regulatory deadline" }
+          }
+        },
+        {
+          "id": "breach-48h",
+          "code": "48-hours",
+          "label": "48 Hours",
+          "order": 2,
+          "plainDescription": "Processor must notify controller within 48 hours of discovering a data breach.",
+          "prosPartyA": ["Good response time", "Balanced approach", "Time for initial assessment"],
+          "consPartyA": ["Less time than 72-hour regulatory deadline"],
+          "prosPartyB": ["Reasonable timeline", "Time to gather basic facts", "Industry standard"],
+          "consPartyB": ["Must have incident response ready", "Still requires quick action"],
+          "legalText": "In the event of a Personal Data Breach, the Processor shall notify the Controller without undue delay, and in any event within forty-eight (48) hours of becoming aware of the breach.",
+          "biasPartyA": 0.1,
+          "biasPartyB": -0.1,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true, "note": "Meets CCPA 'expedient time' standard" },
+            "ENGLAND_WALES": { "available": true, "note": "Leaves 24-hour buffer for UK GDPR deadline" },
+            "SPAIN": { "available": true, "note": "Leaves 24-hour buffer for GDPR deadline" }
+          }
+        },
+        {
+          "id": "breach-72h",
+          "code": "72-hours",
+          "label": "72 Hours",
+          "order": 3,
+          "plainDescription": "Processor must notify controller within 72 hours of discovering a breach, aligned with GDPR regulatory timeline.",
+          "prosPartyA": ["Aligned with regulatory deadline", "Processor has time for initial investigation"],
+          "consPartyA": ["Controller has no buffer time", "Tight regulatory deadline"],
+          "prosPartyB": ["Maximum time for assessment", "Can provide more complete information", "Standard GDPR timeline"],
+          "consPartyB": ["Less impressive commitment", "Controller may want faster notice"],
+          "legalText": "In the event of a Personal Data Breach, the Processor shall notify the Controller without undue delay, and in any event within seventy-two (72) hours of becoming aware of the breach.",
+          "biasPartyA": -0.3,
+          "biasPartyB": 0.3,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true, "note": "Aligns with CCPA 'expedient' standard for most cases" },
+            "ENGLAND_WALES": { "available": true, "warning": "Leaves no buffer before UK GDPR 72-hour regulatory deadline - controller must act immediately" },
+            "SPAIN": { "available": true, "warning": "Leaves no buffer before GDPR 72-hour regulatory deadline - controller must act immediately" }
+          }
+        }
+      ]
+    },
+    {
+      "id": "audit-rights",
+      "title": "Audit Rights",
+      "category": "Compliance",
+      "order": 4,
+      "plainDescription": "What rights does the controller have to audit or inspect the processor's data protection practices?",
+      "legalContext": "GDPR Article 28 requires processors to allow and contribute to audits by the controller. The scope and frequency of audits, and who bears the cost, are negotiable points.",
+      "isRequired": true,
+      "options": [
+        {
+          "id": "audit-full",
+          "code": "full-audit-rights",
+          "label": "Full On-Site Audit Rights",
+          "order": 1,
+          "plainDescription": "Controller may conduct on-site audits with reasonable notice, including inspecting facilities, systems, and records.",
+          "prosPartyA": ["Maximum visibility", "Can verify compliance directly", "Strong oversight"],
+          "consPartyA": ["Resource intensive", "May need specialized auditors", "Costs for audit team"],
+          "prosPartyB": ["Demonstrates transparency", "Builds trust"],
+          "consPartyB": ["Disruption to operations", "Security concerns from visitors", "Resource burden for hosting audits"],
+          "legalText": "The Processor shall allow for and contribute to audits, including on-site inspections, conducted by the Controller or an auditor mandated by the Controller, subject to reasonable advance notice of at least thirty (30) days.",
+          "biasPartyA": 0.4,
+          "biasPartyB": -0.4
+        },
+        {
+          "id": "audit-third-party",
+          "code": "third-party-reports",
+          "label": "Third-Party Audit Reports",
+          "order": 2,
+          "plainDescription": "Processor provides SOC 2 or ISO 27001 audit reports. On-site audits only if reports are insufficient.",
+          "prosPartyA": ["Professional audit reports", "Less resource intensive", "Regular independent verification"],
+          "consPartyA": ["Less direct control", "Reports may not cover specific concerns"],
+          "prosPartyB": ["Efficient approach", "Leverages existing audits", "Reduces disruption"],
+          "consPartyB": ["Must maintain certifications", "Audit costs", "May still face on-site requests"],
+          "legalText": "The Processor shall make available SOC 2 Type II or ISO 27001 audit reports upon request. The Controller may conduct on-site audits only if third-party reports do not adequately address specific data protection concerns, with at least thirty (30) days' notice.",
+          "biasPartyA": 0.0,
+          "biasPartyB": 0.0
+        },
+        {
+          "id": "audit-reports-only",
+          "code": "reports-only",
+          "label": "Certification Reports Only",
+          "order": 3,
+          "plainDescription": "Processor provides third-party audit reports and certifications. No on-site audit rights.",
+          "prosPartyA": ["Access to professional audits", "Low resource requirement"],
+          "consPartyA": ["No direct verification", "Limited to standard audit scope", "Must trust third-party auditors"],
+          "prosPartyB": ["Minimal disruption", "Clear boundaries", "Leverages existing audits"],
+          "consPartyB": ["Must maintain certifications", "No flexibility for concerns"],
+          "legalText": "The Processor shall maintain SOC 2 Type II or equivalent certification and provide copies of audit reports to the Controller upon request. On-site audits are not permitted except as required by regulatory authorities.",
+          "biasPartyA": -0.4,
+          "biasPartyB": 0.4
+        }
+      ]
+    },
+    {
+      "id": "data-transfer",
+      "title": "International Data Transfers",
+      "category": "Data Transfers",
+      "order": 5,
+      "plainDescription": "How will personal data transfers outside the EEA/UK be handled and protected?",
+      "legalContext": "GDPR restricts transfers outside the EEA unless adequate safeguards exist. Standard Contractual Clauses (SCCs) are the most common mechanism. CCPA does not have equivalent transfer restrictions but requires reasonable security.",
+      "isRequired": true,
+      "options": [
+        {
+          "id": "transfer-eea-only",
+          "code": "eea-only",
+          "label": "EEA/UK Only (No Transfers)",
+          "order": 1,
+          "plainDescription": "Personal data will only be stored and processed within the EEA or UK. No international transfers permitted.",
+          "prosPartyA": ["Maximum data sovereignty", "No transfer risk", "Simplified compliance"],
+          "consPartyA": ["May limit processor options", "Could increase costs"],
+          "prosPartyB": ["Clear boundaries", "No transfer mechanism needed"],
+          "consPartyB": ["Limits infrastructure options", "May require regional deployment", "Higher infrastructure costs"],
+          "legalText": "The Processor shall not transfer Personal Data outside the European Economic Area or United Kingdom. All processing shall occur within the EEA or UK.",
+          "biasPartyA": 0.4,
+          "biasPartyB": -0.4,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": false, "warning": "This option is designed for EU/UK GDPR compliance. For California deals, select 'Flexible' or 'US Only' options which better align with CCPA requirements." },
+            "ENGLAND_WALES": { "available": true, "note": "Strictest data residency - may limit processor choices but eliminates transfer risk" },
+            "SPAIN": { "available": true, "note": "Strictest data residency - ensures full GDPR compliance with no transfer complexity" }
+          }
+        },
+        {
+          "id": "transfer-sccs",
+          "code": "sccs-required",
+          "label": "SCCs Required for Transfers",
+          "order": 2,
+          "plainDescription": "Transfers outside EEA/UK permitted only with Standard Contractual Clauses and supplementary measures where required.",
+          "prosPartyA": ["Flexibility with protection", "Legally compliant mechanism", "Standard approach"],
+          "consPartyA": ["Transfer risk exists", "Must monitor supplementary measures"],
+          "prosPartyB": ["Can use global infrastructure", "Clear legal framework", "Industry standard"],
+          "consPartyB": ["Must implement SCCs", "May need transfer impact assessments"],
+          "legalText": "Transfers outside the EEA or UK are permitted only where covered by Standard Contractual Clauses (EU Commission Decision 2021/914) and the UK International Data Transfer Addendum, with supplementary measures implemented where required.",
+          "biasPartyA": 0.0,
+          "biasPartyB": 0.0,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true, "note": "SCCs are not legally required under CCPA, but provide strong protection for international transfers" },
+            "ENGLAND_WALES": { "available": true, "note": "Industry standard for UK GDPR compliance with international processors" },
+            "SPAIN": { "available": true, "note": "Industry standard for GDPR compliance with international processors" }
+          }
+        },
+        {
+          "id": "transfer-flexible",
+          "code": "flexible-adequacy",
+          "label": "Flexible (Adequacy or SCCs)",
+          "order": 3,
+          "plainDescription": "Transfers permitted to countries with adequacy decisions or under SCCs, giving processor maximum flexibility.",
+          "prosPartyA": ["Recognizes adequacy decisions", "Practical approach"],
+          "consPartyA": ["Less restrictive", "Reliant on adequacy decisions continuing"],
+          "prosPartyB": ["Maximum flexibility", "Can use any adequate country", "Operational efficiency"],
+          "consPartyB": ["Must track adequacy decisions", "SCCs still needed for some transfers"],
+          "legalText": "Transfers outside the EEA or UK are permitted where: (a) the destination country has an adequacy decision; or (b) Standard Contractual Clauses are in place with supplementary measures where required.",
+          "biasPartyA": -0.2,
+          "biasPartyB": 0.2,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true, "note": "Recommended for California - provides reasonable safeguards without GDPR-specific mechanisms that may not be required" },
+            "ENGLAND_WALES": { "available": true, "note": "Balanced approach for UK GDPR compliance" },
+            "SPAIN": { "available": true, "note": "Balanced approach for GDPR compliance" }
+          }
+        }
+      ]
+    },
+    {
+      "id": "liability-cap",
+      "title": "Liability Cap for Data Breaches",
+      "category": "Liability",
+      "order": 6,
+      "plainDescription": "What is the maximum liability the processor faces for data protection breaches or violations?",
+      "legalContext": "Data protection violations can result in significant fines (up to 4% of global turnover under GDPR). The allocation of liability between controller and processor is a key commercial negotiation point.",
+      "isRequired": true,
+      "options": [
+        {
+          "id": "liability-unlimited",
+          "code": "unlimited",
+          "label": "Unlimited Liability",
+          "order": 1,
+          "plainDescription": "No cap on processor liability for data protection violations or breaches.",
+          "prosPartyA": ["Full protection", "Strong incentive for processor compliance", "Covers all potential damages"],
+          "consPartyA": ["Processor may refuse or charge more", "May be seen as unreasonable"],
+          "prosPartyB": ["Shows commitment to data protection"],
+          "consPartyB": ["Unlimited financial exposure", "Insurance may not cover", "Significant risk"],
+          "legalText": "The Processor's liability for breaches of this DPA or Data Protection Laws is not subject to any limitation or cap.",
+          "biasPartyA": 0.5,
+          "biasPartyB": -0.5
+        },
+        {
+          "id": "liability-2x-fees",
+          "code": "2x-annual-fees",
+          "label": "2x Annual Fees",
+          "order": 2,
+          "plainDescription": "Processor liability capped at twice the annual fees paid under the agreement.",
+          "prosPartyA": ["Meaningful cap", "Proportional to relationship size", "Reasonable protection"],
+          "consPartyA": ["May not cover major breach costs", "Limits recourse"],
+          "prosPartyB": ["Predictable exposure", "Proportional to revenue", "Industry acceptable"],
+          "consPartyB": ["Still significant liability", "Must track fee totals"],
+          "legalText": "The Processor's aggregate liability for breaches of this DPA shall not exceed two times (2x) the fees paid or payable by the Controller in the twelve (12) months preceding the claim.",
+          "biasPartyA": 0.1,
+          "biasPartyB": -0.1
+        },
+        {
+          "id": "liability-1x-fees",
+          "code": "1x-annual-fees",
+          "label": "1x Annual Fees",
+          "order": 3,
+          "plainDescription": "Processor liability capped at the annual fees paid under the agreement.",
+          "prosPartyA": ["Some protection", "Clear cap"],
+          "consPartyA": ["Low cap for serious breaches", "May not cover regulatory fines"],
+          "prosPartyB": ["Limited exposure", "Proportional to contract value", "Common in SaaS"],
+          "consPartyB": ["Controller may seek higher cap", "May seem inadequate"],
+          "legalText": "The Processor's aggregate liability for breaches of this DPA shall not exceed the fees paid or payable by the Controller in the twelve (12) months preceding the claim.",
+          "biasPartyA": -0.3,
+          "biasPartyB": 0.3
+        }
+      ]
+    },
+    {
+      "id": "data-subject-requests",
+      "title": "Data Subject Request Assistance",
+      "category": "Data Subject Rights",
+      "order": 7,
+      "plainDescription": "How will the processor help the controller respond to data subject requests (access, deletion, portability, etc.)?",
+      "legalContext": "GDPR gives individuals rights over their personal data. Controllers must respond to requests, and processors must assist. The level of assistance and any associated costs are negotiable.",
+      "isRequired": true,
+      "options": [
+        {
+          "id": "dsr-full-assist",
+          "code": "full-assistance",
+          "label": "Full Assistance (Included)",
+          "order": 1,
+          "plainDescription": "Processor provides full assistance with all data subject requests at no additional cost.",
+          "prosPartyA": ["Comprehensive support", "No surprise costs", "Quick response capability"],
+          "consPartyA": ["Processor may build cost into base price"],
+          "prosPartyB": ["Clear obligation", "No billing complexity"],
+          "consPartyB": ["Cost absorbed regardless of volume", "May be resource intensive"],
+          "legalText": "The Processor shall assist the Controller in responding to Data Subject requests at no additional cost, including providing relevant data and implementing technical measures to fulfill access, rectification, erasure, and portability requests.",
+          "biasPartyA": 0.3,
+          "biasPartyB": -0.3
+        },
+        {
+          "id": "dsr-standard",
+          "code": "standard-assistance",
+          "label": "Standard Assistance (Reasonable Efforts)",
+          "order": 2,
+          "plainDescription": "Processor provides reasonable assistance with data subject requests. High-volume or complex requests may incur fees.",
+          "prosPartyA": ["Balanced approach", "Support available", "Fees for excessive requests"],
+          "consPartyA": ["Potential additional costs", "'Reasonable' may vary"],
+          "prosPartyB": ["Fair allocation", "Can charge for extra work", "Sustainable model"],
+          "consPartyB": ["Must define 'reasonable'", "Potential disputes over fees"],
+          "legalText": "The Processor shall provide reasonable assistance to the Controller in responding to Data Subject requests. The Processor may charge reasonable fees for assistance beyond normal operational support, with prior notice to the Controller.",
+          "biasPartyA": 0.0,
+          "biasPartyB": 0.0
+        },
+        {
+          "id": "dsr-self-service",
+          "code": "self-service-tools",
+          "label": "Self-Service Tools Provided",
+          "order": 3,
+          "plainDescription": "Processor provides self-service tools for controller to handle data subject requests. Additional assistance available at extra cost.",
+          "prosPartyA": ["Tools available", "Can handle requests directly"],
+          "consPartyA": ["Limited hands-on support", "May need to do more work"],
+          "prosPartyB": ["Scalable approach", "Clear boundaries", "Additional revenue for support"],
+          "consPartyB": ["Must build and maintain tools", "Controller may expect more"],
+          "legalText": "The Processor shall provide self-service tools enabling the Controller to respond to Data Subject requests. Additional manual assistance is available at Processor's then-current professional services rates.",
+          "biasPartyA": -0.3,
+          "biasPartyB": 0.3
+        }
+      ]
+    },
+    {
+      "id": "security-measures",
+      "title": "Security Measures Standard",
+      "category": "Security",
+      "order": 8,
+      "plainDescription": "What security certifications or standards must the processor maintain?",
+      "legalContext": "GDPR requires 'appropriate technical and organizational measures.' Specific certifications like SOC 2 or ISO 27001 provide independent verification of security practices.",
+      "isRequired": true,
+      "options": [
+        {
+          "id": "security-iso27001",
+          "code": "iso-27001",
+          "label": "ISO 27001 Required",
+          "order": 1,
+          "plainDescription": "Processor must maintain ISO 27001 certification throughout the agreement term.",
+          "prosPartyA": ["Internationally recognized", "Comprehensive security framework", "Regular audits"],
+          "consPartyA": ["Limits processor options"],
+          "prosPartyB": ["Clear standard", "Well-understood requirements"],
+          "consPartyB": ["Certification costs", "Annual audits required", "Scope must cover services"],
+          "legalText": "The Processor shall maintain ISO 27001 certification covering the services provided under the Principal Agreement throughout the term of this DPA.",
+          "biasPartyA": 0.2,
+          "biasPartyB": -0.2
+        },
+        {
+          "id": "security-soc2",
+          "code": "soc-2-type-2",
+          "label": "SOC 2 Type II Required",
+          "order": 2,
+          "plainDescription": "Processor must maintain SOC 2 Type II attestation, demonstrating operational effectiveness over time.",
+          "prosPartyA": ["Operational effectiveness verified", "US standard widely accepted", "Covers key controls"],
+          "consPartyA": ["Less comprehensive than ISO 27001"],
+          "prosPartyB": ["Common US standard", "Clear scope", "Annual attestation"],
+          "consPartyB": ["Attestation costs", "Must maintain controls year-round"],
+          "legalText": "The Processor shall maintain SOC 2 Type II attestation covering Security, Availability, and Confidentiality trust service criteria throughout the term of this DPA.",
+          "biasPartyA": 0.1,
+          "biasPartyB": -0.1
+        },
+        {
+          "id": "security-appropriate",
+          "code": "appropriate-measures",
+          "label": "Appropriate Measures (No Specific Certification)",
+          "order": 3,
+          "plainDescription": "Processor must implement appropriate security measures but no specific certification is required.",
+          "prosPartyA": ["Flexibility for processor", "May reduce costs"],
+          "consPartyA": ["No independent verification", "Must assess security yourself", "More risk"],
+          "prosPartyB": ["Maximum flexibility", "Can use any security framework", "Lower certification costs"],
+          "consPartyB": ["May face more audit requests", "Must demonstrate adequacy"],
+          "legalText": "The Processor shall implement appropriate technical and organizational measures to protect Personal Data, taking into account the state of the art, costs, and nature of processing. Measures shall be documented in Annex 2.",
+          "biasPartyA": -0.3,
+          "biasPartyB": 0.3
+        }
+      ]
+    },
+    {
+      "id": "dpia-assistance",
+      "title": "DPIA Assistance",
+      "category": "Compliance",
+      "order": 9,
+      "plainDescription": "How will the processor assist with Data Protection Impact Assessments required by the controller?",
+      "legalContext": "GDPR requires DPIAs for high-risk processing. Processors must assist controllers with DPIAs, but the scope and cost of assistance is negotiable.",
+      "isRequired": true,
+      "options": [
+        {
+          "id": "dpia-full",
+          "code": "full-assistance",
+          "label": "Full DPIA Assistance (Included)",
+          "order": 1,
+          "plainDescription": "Processor provides comprehensive DPIA assistance including documentation and risk analysis at no additional cost.",
+          "prosPartyA": ["Complete support", "No additional costs", "Expert input available"],
+          "consPartyA": ["May be built into pricing"],
+          "prosPartyB": ["Clear obligation", "Builds relationship"],
+          "consPartyB": ["Resource commitment", "Must have DPIA expertise"],
+          "legalText": "The Processor shall provide comprehensive assistance with Data Protection Impact Assessments at no additional cost, including providing documentation on processing activities, security measures, and risk assessments.",
+          "biasPartyA": 0.3,
+          "biasPartyB": -0.3
+        },
+        {
+          "id": "dpia-standard",
+          "code": "standard-info",
+          "label": "Standard Information Provision",
+          "order": 2,
+          "plainDescription": "Processor provides necessary information for DPIAs. Extensive consultations may incur additional fees.",
+          "prosPartyA": ["Information available", "Reasonable approach"],
+          "consPartyA": ["May face fees for complex DPIAs"],
+          "prosPartyB": ["Balanced approach", "Can charge for extensive work"],
+          "consPartyB": ["Must provide basic information", "Need to track requests"],
+          "legalText": "The Processor shall provide information necessary for the Controller to conduct Data Protection Impact Assessments. Additional consulting support beyond standard documentation is available at Processor's professional services rates.",
+          "biasPartyA": 0.0,
+          "biasPartyB": 0.0
+        },
+        {
+          "id": "dpia-documentation",
+          "code": "documentation-only",
+          "label": "Documentation Only",
+          "order": 3,
+          "plainDescription": "Processor provides standard documentation. Controller responsible for conducting DPIA with this information.",
+          "prosPartyA": ["Basic information available"],
+          "consPartyA": ["Limited support", "More work for controller"],
+          "prosPartyB": ["Clear limited scope", "Minimal obligation"],
+          "consPartyB": ["Controller may want more help", "May impact relationship"],
+          "legalText": "The Processor shall make available documentation describing the processing activities, security measures, and Sub-processors to enable the Controller to conduct Data Protection Impact Assessments.",
+          "biasPartyA": -0.3,
+          "biasPartyB": 0.3
+        }
+      ]
+    },
+    {
+      "id": "instruction-compliance",
+      "title": "Processing Instructions",
+      "category": "Obligations",
+      "order": 10,
+      "plainDescription": "How strictly must the processor follow controller instructions, and what happens if instructions seem unlawful?",
+      "legalContext": "Processors must only process data on documented controller instructions. However, processors also have compliance obligations and should flag potentially unlawful instructions.",
+      "isRequired": true,
+      "options": [
+        {
+          "id": "instructions-strict",
+          "code": "strict-compliance",
+          "label": "Strict Compliance Required",
+          "order": 1,
+          "plainDescription": "Processor must strictly follow all documented controller instructions. Must inform controller immediately if any instruction appears unlawful.",
+          "prosPartyA": ["Maximum control", "Clear hierarchy", "Immediate notification of issues"],
+          "consPartyA": ["Less processor flexibility"],
+          "prosPartyB": ["Clear expectations", "Must flag issues promptly"],
+          "consPartyB": ["Limited ability to use judgment", "Must track all instructions"],
+          "legalText": "The Processor shall process Personal Data only on documented instructions from the Controller. The Processor shall immediately inform the Controller if any instruction, in the Processor's opinion, infringes Data Protection Laws.",
+          "biasPartyA": 0.2,
+          "biasPartyB": -0.2
+        },
+        {
+          "id": "instructions-standard",
+          "code": "standard-compliance",
+          "label": "Standard Compliance",
+          "order": 2,
+          "plainDescription": "Processor follows controller instructions and service agreement. Must promptly notify controller of any apparent legal issues.",
+          "prosPartyA": ["Good control", "Notification of issues", "Balanced approach"],
+          "consPartyA": ["Some processor discretion exists"],
+          "prosPartyB": ["Clear but practical", "Can use professional judgment", "Standard approach"],
+          "consPartyB": ["Must monitor instructions", "Notification obligations"],
+          "legalText": "The Processor shall process Personal Data in accordance with documented instructions from the Controller and the terms of the Principal Agreement. The Processor shall promptly inform the Controller if any instruction appears to infringe Data Protection Laws.",
+          "biasPartyA": 0.0,
+          "biasPartyB": 0.0
+        },
+        {
+          "id": "instructions-flexible",
+          "code": "flexible-compliance",
+          "label": "Flexible (Within Service Scope)",
+          "order": 3,
+          "plainDescription": "Processing governed primarily by service agreement terms. Controller can provide additional specific instructions as needed.",
+          "prosPartyA": ["Flexibility for processor to operate"],
+          "consPartyA": ["Less direct control", "More reliance on service terms"],
+          "prosPartyB": ["Operational flexibility", "Less instruction tracking", "Efficient operations"],
+          "consPartyB": ["Must ensure service terms are comprehensive", "Controller may want more control"],
+          "legalText": "The Processor shall process Personal Data in accordance with the Principal Agreement, which constitutes the Controller's documented instructions. The Controller may provide additional written instructions as necessary, which the Processor shall follow unless they appear to infringe Data Protection Laws.",
+          "biasPartyA": -0.2,
+          "biasPartyB": 0.2
+        }
+      ]
+    },
+    {
+      "id": "dispute-resolution",
+      "title": "Dispute Resolution",
+      "category": "Legal",
+      "order": 11,
+      "plainDescription": "How and where will disputes about this agreement be resolved? You can choose courts in the governing law jurisdiction, courts elsewhere, or private arbitration.",
+      "legalContext": "For DPA disputes, the choice of forum can impact how data protection issues are interpreted. Courts in GDPR jurisdictions may have more experience with data protection matters.",
+      "isRequired": true,
+      "options": [
+        {
+          "id": "dispute-courts-default",
+          "code": "courts-default",
+          "label": "Default Courts (Per Governing Law)",
+          "order": 1,
+          "jurisdictionDefault": true,
+          "plainDescription": "Disputes resolved in courts of the governing law jurisdiction: San Francisco (California), London (England & Wales), or Madrid (Spain).",
+          "prosPartyA": ["Consistent with governing law", "No jurisdictional complexity", "Established local precedent"],
+          "consPartyA": ["May be inconvenient for one party", "Public proceedings"],
+          "prosPartyB": ["Clear and predictable", "Same jurisdiction as governing law", "Established procedures"],
+          "consPartyB": ["Travel may be required", "Public record of disputes"],
+          "legalText": "Any dispute arising from this Agreement will be resolved exclusively in the state and federal courts located in the jurisdiction of the governing law. Each Party irrevocably submits to the exclusive jurisdiction of such courts.",
+          "biasPartyA": 0.0,
+          "biasPartyB": 0.0
+        },
+        {
+          "id": "dispute-courts-delaware",
+          "code": "courts-delaware",
+          "label": "Delaware Courts (Neutral - US)",
+          "order": 2,
+          "plainDescription": "Disputes resolved in Delaware courts, known for sophisticated commercial law and business-friendly judiciary.",
+          "prosPartyA": ["Highly developed commercial law", "Expert judges", "Predictable outcomes"],
+          "consPartyA": ["May require Delaware counsel", "Less GDPR experience"],
+          "prosPartyB": ["Neutral forum", "Quick resolution", "Well-established precedent"],
+          "consPartyB": ["Unfamiliar jurisdiction", "Additional legal costs"],
+          "legalText": "Any dispute arising from this Agreement will be resolved exclusively in the Court of Chancery of the State of Delaware (or, if such court lacks jurisdiction, the state and federal courts located in Delaware).",
+          "biasPartyA": 0.0,
+          "biasPartyB": 0.0
+        },
+        {
+          "id": "dispute-arbitration-jams",
+          "code": "arbitration-jams",
+          "label": "JAMS Arbitration",
+          "order": 3,
+          "plainDescription": "Private arbitration under JAMS rules - popular with technology companies handling data processing.",
+          "prosPartyA": ["Private and confidential", "Faster than courts", "Data privacy specialists available"],
+          "consPartyA": ["Arbitrator fees", "Limited discovery", "No jury trial"],
+          "prosPartyB": ["Confidential process", "Efficient resolution", "Flexible scheduling"],
+          "consPartyB": ["Decision is final", "Limited appeal rights", "Shared arbitration costs"],
+          "legalText": "Any dispute arising from this Agreement will be finally resolved by binding arbitration administered by JAMS under its Comprehensive Arbitration Rules. The arbitration will be conducted by one arbitrator in the seat of the governing law jurisdiction.",
+          "biasPartyA": 0.1,
+          "biasPartyB": -0.1
+        },
+        {
+          "id": "dispute-arbitration-icc",
+          "code": "arbitration-icc",
+          "label": "ICC Arbitration",
+          "order": 4,
+          "plainDescription": "International arbitration under ICC rules - ideal for cross-border data processing arrangements.",
+          "prosPartyA": ["Globally recognized", "Enforceable in 170+ countries", "Professional administration"],
+          "consPartyA": ["Higher fees", "More formal process"],
+          "prosPartyB": ["Neutral international forum", "Experienced arbitrators", "Clear procedures"],
+          "consPartyB": ["More expensive", "Longer process than domestic arbitration"],
+          "legalText": "Any dispute arising from this Agreement will be finally resolved by arbitration under the Rules of Arbitration of the International Chamber of Commerce. The arbitration will be conducted by one arbitrator, with the seat in the capital of the governing law jurisdiction.",
+          "biasPartyA": 0.0,
+          "biasPartyB": 0.0
+        },
+        {
+          "id": "dispute-arbitration-lcia",
+          "code": "arbitration-lcia",
+          "label": "LCIA Arbitration",
+          "order": 5,
+          "plainDescription": "Arbitration under LCIA rules - preferred for UK/EU data processing disputes.",
+          "prosPartyA": ["Strong international reputation", "GDPR-familiar arbitrators", "Reasonable costs"],
+          "consPartyA": ["London-centric", "English legal influence"],
+          "prosPartyB": ["Neutral and respected", "Quick appointment", "Clear timeline"],
+          "consPartyB": ["UK-focused administration", "Travel may be required"],
+          "legalText": "Any dispute arising from this Agreement will be finally resolved by arbitration under the LCIA Rules. The arbitration will be conducted by a sole arbitrator appointed by the LCIA Court. The seat of arbitration will be London, United Kingdom.",
+          "biasPartyA": 0.0,
+          "biasPartyB": 0.0
+        }
+      ]
+    }
+  ]
+}

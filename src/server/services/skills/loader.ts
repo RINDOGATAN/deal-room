@@ -4,7 +4,7 @@ import * as path from "path";
 import { z } from "zod";
 
 // Skills directory path - can be configured via env
-const SKILLS_DIR = process.env.SKILLS_DIR || "/Users/sme/NEL/skills";
+const SKILLS_DIR = process.env.SKILLS_DIR || path.join(process.cwd(), "data/skills");
 
 // Schema definitions for validation
 const ClauseOptionSchema = z.object({

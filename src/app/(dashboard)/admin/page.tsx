@@ -3,6 +3,7 @@
 import { trpc } from "@/lib/trpc";
 import { format } from "date-fns";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   FileText,
   Users,
@@ -17,7 +18,7 @@ import {
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const statusConfig = {
   DRAFT: { label: "Draft", color: "bg-muted text-muted-foreground", icon: FileText },
@@ -37,8 +38,15 @@ const partyStatusConfig = {
 };
 
 export default function AdminDashboard() {
+  const router = useRouter();
   const { data: deals, isLoading, error } = trpc.admin.getAllDeals.useQuery();
   const [expandedDeal, setExpandedDeal] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (error?.message?.includes("2FA verification required")) {
+      router.push("/admin-verify");
+    }
+  }, [error, router]);
 
   if (isLoading) {
     return (
@@ -56,6 +64,19 @@ export default function AdminDashboard() {
   }
 
   if (error) {
+    // Don't show error while redirecting to 2FA
+    if (error.message?.includes("2FA verification required")) {
+      return (
+        <div className="space-y-6">
+          <div className="flex items-center justify-between">
+            <h1 className="text-2xl font-bold">Admin Dashboard</h1>
+          </div>
+          <div className="card-brutal text-center py-12">
+            <p className="text-muted-foreground">Redirecting to verification...</p>
+          </div>
+        </div>
+      );
+    }
     return (
       <div className="card-brutal border-destructive">
         <div className="flex items-center gap-3 text-destructive">

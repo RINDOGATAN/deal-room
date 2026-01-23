@@ -1,0 +1,7 @@
+{
+  "contractType": "SAAS",
+  "displayName": "SaaS Subscription Agreement",
+  "description": "Software-as-a-Service subscription agreements covering access rights, usage terms, service levels, support, data rights, and commercial terms.",
+  "version": "1.0",
+  "clauseCount": 10
+}
