@@ -12,8 +12,8 @@ export default function AuthLayout({
       {/* Header */}
       <header className="border-b border-border">
         <div className="container mx-auto px-6 py-4">
-          <Link href="/" className="text-xl font-bold tracking-tight">
-            <span className="text-primary">DEAL</span>ROOM
+          <Link href="/">
+            <img src="/nel-logo.png" alt="North End Law" className="h-8" />
           </Link>
         </div>
       </header>
