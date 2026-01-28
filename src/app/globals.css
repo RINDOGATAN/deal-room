@@ -52,7 +52,7 @@
 :root {
   --radius: 0;
   /* Dark background */
-  --background: #0a0a0a;
+  --background: #1c1f37;
   --foreground: #e5e5e5;
   /* Cards slightly lighter */
   --card: #141414;
@@ -61,8 +61,8 @@
   --popover: #141414;
   --popover-foreground: #e5e5e5;
   /* Primary = Lime accent */
-  --primary: #c8ff00;
-  --primary-foreground: #0a0a0a;
+  --primary: #13e9d1;
+  --primary-foreground: #1c1f37;
   /* Secondary = Subtle dark */
   --secondary: #1f1f1f;
   --secondary-foreground: #a3a3a3;
@@ -70,19 +70,19 @@
   --muted: #1a1a1a;
   --muted-foreground: #737373;
   /* Accent = Lime */
-  --accent: #c8ff00;
-  --accent-foreground: #0a0a0a;
+  --accent: #13e9d1;
+  --accent-foreground: #1c1f37;
   /* Destructive */
   --destructive: #ef4444;
   /* Borders - visible but subtle */
   --border: #2a2a2a;
   --input: #1a1a1a;
-  --ring: #c8ff00;
+  --ring: #13e9d1;
   /* Lime color */
-  --lime: #c8ff00;
-  --lime-foreground: #0a0a0a;
+  --lime: #13e9d1;
+  --lime-foreground: #1c1f37;
   /* Charts */
-  --chart-1: #c8ff00;
+  --chart-1: #13e9d1;
   --chart-2: #a3e635;
   --chart-3: #84cc16;
   --chart-4: #65a30d;
@@ -90,12 +90,12 @@
   /* Sidebar */
   --sidebar: #0f0f0f;
   --sidebar-foreground: #e5e5e5;
-  --sidebar-primary: #c8ff00;
-  --sidebar-primary-foreground: #0a0a0a;
+  --sidebar-primary: #13e9d1;
+  --sidebar-primary-foreground: #1c1f37;
   --sidebar-accent: #1f1f1f;
   --sidebar-accent-foreground: #e5e5e5;
   --sidebar-border: #2a2a2a;
-  --sidebar-ring: #c8ff00;
+  --sidebar-ring: #13e9d1;
 }
 
 /* No separate dark mode - always dark */
@@ -113,19 +113,19 @@
   }
   /* Brutalist focus states */
   *:focus-visible {
-    @apply outline-2 outline-offset-2 outline-[#c8ff00];
+    @apply outline-2 outline-offset-2 outline-[#13e9d1];
   }
 }
 
 @layer components {
   /* Brutalist button variants */
   .btn-brutal {
-    @apply bg-[#c8ff00] text-[#0a0a0a] font-semibold px-6 py-3 border-2 border-[#c8ff00];
-    @apply hover:bg-transparent hover:text-[#c8ff00] transition-colors;
+    @apply bg-[#13e9d1] text-[#1c1f37] font-semibold px-6 py-3 border-2 border-[#13e9d1];
+    @apply hover:bg-transparent hover:text-[#13e9d1] transition-colors;
   }
   .btn-brutal-outline {
-    @apply bg-transparent text-[#c8ff00] font-semibold px-6 py-3 border-2 border-[#c8ff00];
-    @apply hover:bg-[#c8ff00] hover:text-[#0a0a0a] transition-colors;
+    @apply bg-transparent text-[#13e9d1] font-semibold px-6 py-3 border-2 border-[#13e9d1];
+    @apply hover:bg-[#13e9d1] hover:text-[#1c1f37] transition-colors;
   }
   /* Brutalist card */
   .card-brutal {
@@ -134,7 +134,7 @@
   /* Brutalist input */
   .input-brutal {
     @apply bg-[#1a1a1a] border border-[#2a2a2a] text-[#e5e5e5] px-4 py-3;
-    @apply focus:border-[#c8ff00] focus:outline-none;
+    @apply focus:border-[#13e9d1] focus:outline-none;
   }
   /* Brutalist tabs */
   .tab-brutal {
@@ -142,22 +142,22 @@
     @apply hover:text-[#e5e5e5];
   }
   .tab-brutal-active {
-    @apply text-[#c8ff00] border-[#c8ff00];
+    @apply text-[#13e9d1] border-[#13e9d1];
   }
   /* Selection highlight */
   ::selection {
-    @apply bg-[#c8ff00] text-[#0a0a0a];
+    @apply bg-[#13e9d1] text-[#1c1f37];
   }
 }
 
 @layer utilities {
   .text-lime {
-    color: #c8ff00;
+    color: #13e9d1;
   }
   .bg-lime {
-    background-color: #c8ff00;
+    background-color: #13e9d1;
   }
   .border-lime {
-    border-color: #c8ff00;
+    border-color: #13e9d1;
   }
 }

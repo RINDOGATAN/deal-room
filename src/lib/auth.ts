@@ -24,10 +24,10 @@ export const authOptions: NextAuthOptions = {
             subject: "Sign in to Deal Room",
             html: `
               <div style="font-family: sans-serif; max-width: 500px; margin: 0 auto;">
-                <h1 style="color: #c8ff00; background: #0a0a0a; padding: 20px; margin: 0;">Deal Room</h1>
+                <h1 style="color: #13e9d1; background: #1c1f37; padding: 20px; margin: 0;">Deal Room</h1>
                 <div style="padding: 20px; background: #f5f5f5;">
                   <p>Click the button below to sign in to Deal Room:</p>
-                  <a href="${url}" style="display: inline-block; background: #0a0a0a; color: #c8ff00; padding: 12px 24px; text-decoration: none; font-weight: bold; margin: 20px 0;">Sign In</a>
+                  <a href="${url}" style="display: inline-block; background: #1c1f37; color: #13e9d1; padding: 12px 24px; text-decoration: none; font-weight: bold; margin: 20px 0;">Sign In</a>
                   <p style="color: #666; font-size: 14px;">If you didn't request this email, you can safely ignore it.</p>
                   <p style="color: #666; font-size: 12px;">Or copy this link: ${url}</p>
                 </div>
