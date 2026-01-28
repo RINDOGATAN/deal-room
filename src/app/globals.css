@@ -65,10 +65,10 @@
   --primary-foreground: #1c1f37;
   /* Secondary = Subtle dark */
   --secondary: #232742;
-  --secondary-foreground: #a3a3a3;
+  --secondary-foreground: #e0e0e0;
   /* Muted */
   --muted: #232742;
-  --muted-foreground: #737373;
+  --muted-foreground: #d0d0d0;
   /* Accent = Lime */
   --accent: #13e9d1;
   --accent-foreground: #1c1f37;
@@ -138,7 +138,7 @@
   }
   /* Brutalist tabs */
   .tab-brutal {
-    @apply px-4 py-2 text-sm font-medium text-[#737373] border border-transparent;
+    @apply px-4 py-2 text-sm font-medium text-[#d0d0d0] border border-transparent;
     @apply hover:text-[#e5e5e5];
   }
   .tab-brutal-active {
