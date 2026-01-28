@@ -55,19 +55,19 @@
   --background: #1c1f37;
   --foreground: #e5e5e5;
   /* Cards slightly lighter */
-  --card: #141414;
+  --card: #232742;
   --card-foreground: #e5e5e5;
   /* Popovers */
-  --popover: #141414;
+  --popover: #232742;
   --popover-foreground: #e5e5e5;
   /* Primary = Lime accent */
   --primary: #13e9d1;
   --primary-foreground: #1c1f37;
   /* Secondary = Subtle dark */
-  --secondary: #1f1f1f;
+  --secondary: #232742;
   --secondary-foreground: #a3a3a3;
   /* Muted */
-  --muted: #1a1a1a;
+  --muted: #232742;
   --muted-foreground: #737373;
   /* Accent = Lime */
   --accent: #13e9d1;
@@ -75,8 +75,8 @@
   /* Destructive */
   --destructive: #ef4444;
   /* Borders - visible but subtle */
-  --border: #2a2a2a;
-  --input: #1a1a1a;
+  --border: #232742;
+  --input: #232742;
   --ring: #13e9d1;
   /* Lime color */
   --lime: #13e9d1;
@@ -88,13 +88,13 @@
   --chart-4: #65a30d;
   --chart-5: #4d7c0f;
   /* Sidebar */
-  --sidebar: #0f0f0f;
+  --sidebar: #232742;
   --sidebar-foreground: #e5e5e5;
   --sidebar-primary: #13e9d1;
   --sidebar-primary-foreground: #1c1f37;
-  --sidebar-accent: #1f1f1f;
+  --sidebar-accent: #232742;
   --sidebar-accent-foreground: #e5e5e5;
-  --sidebar-border: #2a2a2a;
+  --sidebar-border: #232742;
   --sidebar-ring: #13e9d1;
 }
 
@@ -129,11 +129,11 @@
   }
   /* Brutalist card */
   .card-brutal {
-    @apply bg-[#141414] border border-[#2a2a2a] p-6;
+    @apply bg-[#232742] border border-[#232742] p-6;
   }
   /* Brutalist input */
   .input-brutal {
-    @apply bg-[#1a1a1a] border border-[#2a2a2a] text-[#e5e5e5] px-4 py-3;
+    @apply bg-[#232742] border border-[#232742] text-[#e5e5e5] px-4 py-3;
     @apply focus:border-[#13e9d1] focus:outline-none;
   }
   /* Brutalist tabs */
