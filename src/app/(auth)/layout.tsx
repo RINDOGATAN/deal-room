@@ -13,7 +13,7 @@ export default function AuthLayout({
       <header className="border-b border-border">
         <div className="container mx-auto px-6 py-4">
           <Link href="/">
-            <img src="/nel-logo.png" alt="North End Law" className="h-8" />
+            <img src="/nel-icon.png" alt="NEL" className="h-8" />
           </Link>
         </div>
       </header>
