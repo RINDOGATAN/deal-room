@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import type { Adapter, AdapterUser } from "next-auth/adapters";
+import type { Adapter, AdapterUser, VerificationToken } from "next-auth/adapters";
 
 /**
  * Minimal adapter for Platform Admin authentication.
@@ -9,7 +9,7 @@ import type { Adapter, AdapterUser } from "next-auth/adapters";
 export function createAdminAdapter(prisma: PrismaClient): Adapter {
   return {
     // Create a virtual user for the admin - we don't actually use the User table
-    async createUser(user) {
+    async createUser(user: Omit<AdapterUser, "id">) {
       // Return a virtual user based on PlatformAdmin
       const admin = await prisma.platformAdmin.findUnique({
         where: { email: user.email!.toLowerCase() },
@@ -27,7 +27,7 @@ export function createAdminAdapter(prisma: PrismaClient): Adapter {
       } as AdapterUser;
     },
 
-    async getUser(id) {
+    async getUser(id: string) {
       const admin = await prisma.platformAdmin.findUnique({
         where: { id },
       });
@@ -42,7 +42,7 @@ export function createAdminAdapter(prisma: PrismaClient): Adapter {
       } as AdapterUser;
     },
 
-    async getUserByEmail(email) {
+    async getUserByEmail(email: string) {
       const admin = await prisma.platformAdmin.findUnique({
         where: { email: email.toLowerCase() },
       });
@@ -62,7 +62,7 @@ export function createAdminAdapter(prisma: PrismaClient): Adapter {
       return null;
     },
 
-    async updateUser(user) {
+    async updateUser(user: Partial<AdapterUser> & Pick<AdapterUser, "id">) {
       // We don't update admins through NextAuth
       return user as AdapterUser;
     },
@@ -100,7 +100,7 @@ export function createAdminAdapter(prisma: PrismaClient): Adapter {
     },
 
     // These are the critical methods for email provider
-    async createVerificationToken(data) {
+    async createVerificationToken(data: VerificationToken) {
       const token = await prisma.verificationToken.create({
         data: {
           identifier: data.identifier,
@@ -111,7 +111,7 @@ export function createAdminAdapter(prisma: PrismaClient): Adapter {
       return token;
     },
 
-    async useVerificationToken({ identifier, token }) {
+    async useVerificationToken({ identifier, token }: { identifier: string; token: string }) {
       try {
         const verificationToken = await prisma.verificationToken.delete({
           where: {
