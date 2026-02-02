@@ -12,7 +12,7 @@ export default function AdminVerifyPage() {
   const [code, setCode] = useState("");
   const [error, setError] = useState<string | null>(null);
 
-  const { data: twoFactorStatus, isLoading: statusLoading } =
+  const { data: twoFactorStatus, isLoading: statusLoading, error: statusError } =
     trpc.platformAdminTwoFactor.getStatus.useQuery();
 
   const setupMutation = trpc.platformAdminTwoFactor.setup.useMutation({
@@ -58,6 +58,29 @@ export default function AdminVerifyPage() {
         <div className="card-brutal text-center py-12">
           <Loader2 className="w-8 h-8 animate-spin mx-auto text-primary" />
           <p className="mt-4 text-muted-foreground">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error if status query failed
+  if (statusError) {
+    return (
+      <div className="w-full max-w-md">
+        <div className="card-brutal">
+          <div className="text-center mb-6">
+            <Shield className="w-12 h-12 text-destructive mx-auto mb-4" />
+            <h1 className="text-xl font-bold mb-2">Session Error</h1>
+            <p className="text-muted-foreground mb-4">
+              {statusError.message}
+            </p>
+            <a
+              href="/admin/sign-in"
+              className="btn-brutal inline-block"
+            >
+              Back to Sign In
+            </a>
+          </div>
         </div>
       </div>
     );
