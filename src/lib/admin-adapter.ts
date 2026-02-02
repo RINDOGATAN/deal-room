@@ -101,6 +101,11 @@ export function createAdminAdapter(prisma: PrismaClient): Adapter {
 
     // These are the critical methods for email provider
     async createVerificationToken(data: VerificationToken) {
+      console.log("[Admin Adapter] Creating verification token:", {
+        identifier: data.identifier,
+        tokenPrefix: data.token.substring(0, 10) + "...",
+        expires: data.expires,
+      });
       const token = await prisma.verificationToken.create({
         data: {
           identifier: data.identifier,
@@ -108,10 +113,15 @@ export function createAdminAdapter(prisma: PrismaClient): Adapter {
           expires: data.expires,
         },
       });
+      console.log("[Admin Adapter] Token created successfully");
       return token;
     },
 
     async useVerificationToken({ identifier, token }: { identifier: string; token: string }) {
+      console.log("[Admin Adapter] Looking up verification token:", {
+        identifier,
+        tokenPrefix: token.substring(0, 10) + "...",
+      });
       try {
         const verificationToken = await prisma.verificationToken.delete({
           where: {
@@ -121,8 +131,10 @@ export function createAdminAdapter(prisma: PrismaClient): Adapter {
             },
           },
         });
+        console.log("[Admin Adapter] Token found and deleted successfully");
         return verificationToken;
-      } catch {
+      } catch (error) {
+        console.error("[Admin Adapter] Token lookup failed:", error);
         // Token not found or already used
         return null;
       }
