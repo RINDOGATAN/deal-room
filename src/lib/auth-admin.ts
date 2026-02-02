@@ -84,48 +84,42 @@ export const adminAuthOptions: NextAuthOptions = {
       return session;
     },
     async jwt({ token, user }) {
-      console.log("[Admin Auth JWT] Called with:", {
-        hasUser: !!user,
-        userEmail: user?.email,
-        tokenEmail: token.email,
-        tokenAdminId: token.adminId,
-      });
-
       // On initial sign-in, user object is present
-      if (user?.email) {
-        const admin = await prisma.platformAdmin.findUnique({
-          where: { email: user.email.toLowerCase() },
-        });
-        console.log("[Admin Auth JWT] Looked up admin:", {
-          found: !!admin,
-          adminId: admin?.id,
-        });
+      if (user) {
+        // The user object from our adapter has the admin's id as user.id
+        // and should have email, but let's handle both cases
+        const admin = user.email
+          ? await prisma.platformAdmin.findUnique({
+              where: { email: user.email.toLowerCase() },
+            })
+          : await prisma.platformAdmin.findUnique({
+              where: { id: user.id },
+            });
+
         if (admin) {
           token.adminId = admin.id;
           token.email = admin.email;
           token.name = admin.name;
         }
       }
-      // On subsequent requests, ensure adminId is set if we have an email
-      else if (token.email && !token.adminId) {
-        const admin = await prisma.platformAdmin.findUnique({
-          where: { email: (token.email as string).toLowerCase() },
-        });
-        console.log("[Admin Auth JWT] Subsequent lookup:", {
-          found: !!admin,
-          adminId: admin?.id,
-        });
+      // On subsequent requests, ensure adminId is set
+      else if (token.sub && !token.adminId) {
+        // Try to look up by ID (token.sub) or email
+        const admin = token.email
+          ? await prisma.platformAdmin.findUnique({
+              where: { email: (token.email as string).toLowerCase() },
+            })
+          : await prisma.platformAdmin.findUnique({
+              where: { id: token.sub },
+            });
+
         if (admin) {
           token.adminId = admin.id;
+          token.email = admin.email;
           token.name = admin.name;
         }
       }
 
-      console.log("[Admin Auth JWT] Final token:", {
-        email: token.email,
-        adminId: token.adminId,
-        name: token.name,
-      });
       return token;
     },
   },

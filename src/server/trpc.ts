@@ -32,28 +32,34 @@ export const createTRPCContext = async (opts: { req: Request }) => {
   // Try to decode admin session from JWT
   let adminSession: { email: string; adminId: string } | null = null;
   const adminToken = cookieStore.get("admin_session")?.value;
-  console.log("[tRPC Context] admin_session cookie exists:", !!adminToken);
   if (adminToken) {
     try {
       const decoded = await decode({
         token: adminToken,
         secret: process.env.NEXTAUTH_SECRET!,
       });
-      console.log("[tRPC Context] Decoded admin JWT:", {
-        hasEmail: !!decoded?.email,
-        hasAdminId: !!decoded?.adminId,
-        email: decoded?.email,
-        adminId: decoded?.adminId,
-        allKeys: decoded ? Object.keys(decoded) : [],
-      });
+
+      // If we have adminId and email directly, use them
       if (decoded?.email && decoded?.adminId) {
         adminSession = {
           email: decoded.email as string,
           adminId: decoded.adminId as string,
         };
       }
-    } catch (error) {
-      console.error("[tRPC Context] Failed to decode admin JWT:", error);
+      // Fallback: if we only have sub (user ID), look up the admin
+      else if (decoded?.sub) {
+        const admin = await prisma.platformAdmin.findUnique({
+          where: { id: decoded.sub },
+        });
+        if (admin) {
+          adminSession = {
+            email: admin.email,
+            adminId: admin.id,
+          };
+        }
+      }
+    } catch {
+      // Invalid token, ignore
     }
   }
 
