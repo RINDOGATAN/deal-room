@@ -84,10 +84,21 @@ export const adminAuthOptions: NextAuthOptions = {
       return session;
     },
     async jwt({ token, user }) {
+      console.log("[Admin Auth JWT] Called with:", {
+        hasUser: !!user,
+        userEmail: user?.email,
+        tokenEmail: token.email,
+        tokenAdminId: token.adminId,
+      });
+
       // On initial sign-in, user object is present
       if (user?.email) {
         const admin = await prisma.platformAdmin.findUnique({
           where: { email: user.email.toLowerCase() },
+        });
+        console.log("[Admin Auth JWT] Looked up admin:", {
+          found: !!admin,
+          adminId: admin?.id,
         });
         if (admin) {
           token.adminId = admin.id;
@@ -100,11 +111,21 @@ export const adminAuthOptions: NextAuthOptions = {
         const admin = await prisma.platformAdmin.findUnique({
           where: { email: (token.email as string).toLowerCase() },
         });
+        console.log("[Admin Auth JWT] Subsequent lookup:", {
+          found: !!admin,
+          adminId: admin?.id,
+        });
         if (admin) {
           token.adminId = admin.id;
           token.name = admin.name;
         }
       }
+
+      console.log("[Admin Auth JWT] Final token:", {
+        email: token.email,
+        adminId: token.adminId,
+        name: token.name,
+      });
       return token;
     },
   },
