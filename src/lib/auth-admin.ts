@@ -81,6 +81,7 @@ export const adminAuthOptions: NextAuthOptions = {
       return session;
     },
     async jwt({ token, user }) {
+      // On initial sign-in, user object is present
       if (user?.email) {
         const admin = await prisma.platformAdmin.findUnique({
           where: { email: user.email.toLowerCase() },
@@ -88,6 +89,16 @@ export const adminAuthOptions: NextAuthOptions = {
         if (admin) {
           token.adminId = admin.id;
           token.email = admin.email;
+          token.name = admin.name;
+        }
+      }
+      // On subsequent requests, ensure adminId is set if we have an email
+      else if (token.email && !token.adminId) {
+        const admin = await prisma.platformAdmin.findUnique({
+          where: { email: (token.email as string).toLowerCase() },
+        });
+        if (admin) {
+          token.adminId = admin.id;
           token.name = admin.name;
         }
       }

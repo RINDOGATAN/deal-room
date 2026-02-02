@@ -81,6 +81,7 @@ export const supervisorAuthOptions: NextAuthOptions = {
       return session;
     },
     async jwt({ token, user }) {
+      // On initial sign-in, user object is present
       if (user?.email) {
         const supervisor = await prisma.supervisor.findUnique({
           where: { email: user.email.toLowerCase() },
@@ -88,6 +89,16 @@ export const supervisorAuthOptions: NextAuthOptions = {
         if (supervisor) {
           token.supervisorId = supervisor.id;
           token.email = supervisor.email;
+          token.name = supervisor.name;
+        }
+      }
+      // On subsequent requests, ensure supervisorId is set if we have an email
+      else if (token.email && !token.supervisorId) {
+        const supervisor = await prisma.supervisor.findUnique({
+          where: { email: (token.email as string).toLowerCase() },
+        });
+        if (supervisor) {
+          token.supervisorId = supervisor.id;
           token.name = supervisor.name;
         }
       }
