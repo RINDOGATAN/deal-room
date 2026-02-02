@@ -32,11 +32,19 @@ export const createTRPCContext = async (opts: { req: Request }) => {
   // Try to decode admin session from JWT
   let adminSession: { email: string; adminId: string } | null = null;
   const adminToken = cookieStore.get("admin_session")?.value;
+  console.log("[tRPC Context] admin_session cookie exists:", !!adminToken);
   if (adminToken) {
     try {
       const decoded = await decode({
         token: adminToken,
         secret: process.env.NEXTAUTH_SECRET!,
+      });
+      console.log("[tRPC Context] Decoded admin JWT:", {
+        hasEmail: !!decoded?.email,
+        hasAdminId: !!decoded?.adminId,
+        email: decoded?.email,
+        adminId: decoded?.adminId,
+        allKeys: decoded ? Object.keys(decoded) : [],
       });
       if (decoded?.email && decoded?.adminId) {
         adminSession = {
@@ -44,8 +52,8 @@ export const createTRPCContext = async (opts: { req: Request }) => {
           adminId: decoded.adminId as string,
         };
       }
-    } catch {
-      // Invalid token, ignore
+    } catch (error) {
+      console.error("[tRPC Context] Failed to decode admin JWT:", error);
     }
   }
 
