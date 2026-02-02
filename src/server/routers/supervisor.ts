@@ -1,17 +1,18 @@
 import { z } from "zod";
-import { createTRPCRouter, protectedProcedure } from "../trpc";
+import { createTRPCRouter, supervisorProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
 
-// Helper to require supervisor access
-const requireSupervisor = async (
-  email: string | null | undefined,
+// Helper to check 2FA and get supervisor record
+const requireVerified2FA = async (
+  email: string,
   getCookie: (name: string) => string | undefined,
   prisma: any
 ) => {
-  if (!email) {
+  const twoFactorVerified = getCookie("supervisor_2fa_verified");
+  if (twoFactorVerified !== "true") {
     throw new TRPCError({
-      code: "UNAUTHORIZED",
-      message: "Not authenticated",
+      code: "FORBIDDEN",
+      message: "2FA verification required",
     });
   }
 
@@ -26,22 +27,14 @@ const requireSupervisor = async (
     });
   }
 
-  const twoFactorVerified = getCookie("supervisor_2fa_verified");
-  if (twoFactorVerified !== "true") {
-    throw new TRPCError({
-      code: "FORBIDDEN",
-      message: "2FA verification required",
-    });
-  }
-
   return supervisor;
 };
 
 export const supervisorRouter = createTRPCRouter({
   // Get deals assigned to the current supervisor
-  getAssignedDeals: protectedProcedure.query(async ({ ctx }) => {
-    const supervisor = await requireSupervisor(
-      ctx.session.user.email,
+  getAssignedDeals: supervisorProcedure.query(async ({ ctx }) => {
+    const supervisor = await requireVerified2FA(
+      ctx.supervisorSession.email,
       ctx.getCookie,
       ctx.prisma
     );
@@ -103,11 +96,11 @@ export const supervisorRouter = createTRPCRouter({
   }),
 
   // Get detailed deal info (only if assigned to supervisor)
-  getDealDetails: protectedProcedure
+  getDealDetails: supervisorProcedure
     .input(z.object({ dealId: z.string() }))
     .query(async ({ ctx, input }) => {
-      const supervisor = await requireSupervisor(
-        ctx.session.user.email,
+      const supervisor = await requireVerified2FA(
+        ctx.supervisorSession.email,
         ctx.getCookie,
         ctx.prisma
       );
@@ -225,11 +218,11 @@ export const supervisorRouter = createTRPCRouter({
     }),
 
   // Get audit log for a deal (only if assigned)
-  getAuditLog: protectedProcedure
+  getAuditLog: supervisorProcedure
     .input(z.object({ dealId: z.string() }))
     .query(async ({ ctx, input }) => {
-      const supervisor = await requireSupervisor(
-        ctx.session.user.email,
+      const supervisor = await requireVerified2FA(
+        ctx.supervisorSession.email,
         ctx.getCookie,
         ctx.prisma
       );

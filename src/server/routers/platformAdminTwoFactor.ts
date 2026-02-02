@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { createTRPCRouter, protectedProcedure } from "../trpc";
+import { createTRPCRouter, adminProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
 import {
   generateAdminSecret,
@@ -9,11 +9,8 @@ import {
 
 export const platformAdminTwoFactorRouter = createTRPCRouter({
   // Get 2FA status for current platform admin
-  getStatus: protectedProcedure.query(async ({ ctx }) => {
-    const email = ctx.session.user.email;
-    if (!email) {
-      return { isAdmin: false, isSetup: false, isVerified: false };
-    }
+  getStatus: adminProcedure.query(async ({ ctx }) => {
+    const email = ctx.adminSession.email;
 
     const admin = await ctx.prisma.platformAdmin.findUnique({
       where: { email: email.toLowerCase() },
@@ -32,14 +29,8 @@ export const platformAdminTwoFactorRouter = createTRPCRouter({
   }),
 
   // Setup 2FA - generate new secret and QR code
-  setup: protectedProcedure.mutation(async ({ ctx }) => {
-    const email = ctx.session.user.email;
-    if (!email) {
-      throw new TRPCError({
-        code: "UNAUTHORIZED",
-        message: "Not authenticated",
-      });
-    }
+  setup: adminProcedure.mutation(async ({ ctx }) => {
+    const email = ctx.adminSession.email;
 
     const admin = await ctx.prisma.platformAdmin.findUnique({
       where: { email: email.toLowerCase() },
@@ -85,16 +76,10 @@ export const platformAdminTwoFactorRouter = createTRPCRouter({
   }),
 
   // Verify TOTP code (for initial setup or login)
-  verify: protectedProcedure
+  verify: adminProcedure
     .input(z.object({ code: z.string().length(6) }))
     .mutation(async ({ ctx, input }) => {
-      const email = ctx.session.user.email;
-      if (!email) {
-        throw new TRPCError({
-          code: "UNAUTHORIZED",
-          message: "Not authenticated",
-        });
-      }
+      const email = ctx.adminSession.email;
 
       const admin = await ctx.prisma.platformAdmin.findUnique({
         where: { email: email.toLowerCase() },

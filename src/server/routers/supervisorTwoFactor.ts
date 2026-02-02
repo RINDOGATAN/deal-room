@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { createTRPCRouter, protectedProcedure } from "../trpc";
+import { createTRPCRouter, supervisorProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
 import {
   generateSupervisorSecret,
@@ -9,11 +9,8 @@ import {
 
 export const supervisorTwoFactorRouter = createTRPCRouter({
   // Get 2FA status for current supervisor
-  getStatus: protectedProcedure.query(async ({ ctx }) => {
-    const email = ctx.session.user.email;
-    if (!email) {
-      return { isSupervisor: false, isSetup: false, isVerified: false };
-    }
+  getStatus: supervisorProcedure.query(async ({ ctx }) => {
+    const email = ctx.supervisorSession.email;
 
     const supervisor = await ctx.prisma.supervisor.findUnique({
       where: { email: email.toLowerCase() },
@@ -32,14 +29,8 @@ export const supervisorTwoFactorRouter = createTRPCRouter({
   }),
 
   // Setup 2FA - generate new secret and QR code
-  setup: protectedProcedure.mutation(async ({ ctx }) => {
-    const email = ctx.session.user.email;
-    if (!email) {
-      throw new TRPCError({
-        code: "UNAUTHORIZED",
-        message: "Not authenticated",
-      });
-    }
+  setup: supervisorProcedure.mutation(async ({ ctx }) => {
+    const email = ctx.supervisorSession.email;
 
     const supervisor = await ctx.prisma.supervisor.findUnique({
       where: { email: email.toLowerCase() },
@@ -85,16 +76,10 @@ export const supervisorTwoFactorRouter = createTRPCRouter({
   }),
 
   // Verify TOTP code (for initial setup or login)
-  verify: protectedProcedure
+  verify: supervisorProcedure
     .input(z.object({ code: z.string().length(6) }))
     .mutation(async ({ ctx, input }) => {
-      const email = ctx.session.user.email;
-      if (!email) {
-        throw new TRPCError({
-          code: "UNAUTHORIZED",
-          message: "Not authenticated",
-        });
-      }
+      const email = ctx.supervisorSession.email;
 
       const supervisor = await ctx.prisma.supervisor.findUnique({
         where: { email: email.toLowerCase() },

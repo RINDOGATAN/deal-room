@@ -1,17 +1,18 @@
 import { z } from "zod";
-import { createTRPCRouter, protectedProcedure } from "../trpc";
+import { createTRPCRouter, adminProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
 
-// Helper to require platform admin access
-const requirePlatformAdmin = async (
-  email: string | null | undefined,
+// Helper to check 2FA and get admin record
+const requireVerified2FA = async (
+  email: string,
   getCookie: (name: string) => string | undefined,
   prisma: any
 ) => {
-  if (!email) {
+  const twoFactorVerified = getCookie("platform_admin_2fa_verified");
+  if (twoFactorVerified !== "true") {
     throw new TRPCError({
-      code: "UNAUTHORIZED",
-      message: "Not authenticated",
+      code: "FORBIDDEN",
+      message: "2FA verification required",
     });
   }
 
@@ -26,21 +27,13 @@ const requirePlatformAdmin = async (
     });
   }
 
-  const twoFactorVerified = getCookie("platform_admin_2fa_verified");
-  if (twoFactorVerified !== "true") {
-    throw new TRPCError({
-      code: "FORBIDDEN",
-      message: "2FA verification required",
-    });
-  }
-
   return admin;
 };
 
 export const platformAdminRouter = createTRPCRouter({
   // Dashboard stats
-  getDashboardStats: protectedProcedure.query(async ({ ctx }) => {
-    await requirePlatformAdmin(ctx.session.user.email, ctx.getCookie, ctx.prisma);
+  getDashboardStats: adminProcedure.query(async ({ ctx }) => {
+    await requireVerified2FA(ctx.adminSession.email, ctx.getCookie, ctx.prisma);
 
     const [
       customerCount,
@@ -85,8 +78,8 @@ export const platformAdminRouter = createTRPCRouter({
   }),
 
   // Supervisor management
-  listSupervisors: protectedProcedure.query(async ({ ctx }) => {
-    await requirePlatformAdmin(ctx.session.user.email, ctx.getCookie, ctx.prisma);
+  listSupervisors: adminProcedure.query(async ({ ctx }) => {
+    await requireVerified2FA(ctx.adminSession.email, ctx.getCookie, ctx.prisma);
 
     return ctx.prisma.supervisor.findMany({
       orderBy: { createdAt: "desc" },
@@ -98,13 +91,13 @@ export const platformAdminRouter = createTRPCRouter({
     });
   }),
 
-  createSupervisor: protectedProcedure
+  createSupervisor: adminProcedure
     .input(z.object({
       email: z.string().email(),
       name: z.string().optional(),
     }))
     .mutation(async ({ ctx, input }) => {
-      await requirePlatformAdmin(ctx.session.user.email, ctx.getCookie, ctx.prisma);
+      await requireVerified2FA(ctx.adminSession.email, ctx.getCookie, ctx.prisma);
 
       // Check if supervisor already exists
       const existing = await ctx.prisma.supervisor.findUnique({
@@ -126,13 +119,13 @@ export const platformAdminRouter = createTRPCRouter({
       });
     }),
 
-  toggleSupervisorActive: protectedProcedure
+  toggleSupervisorActive: adminProcedure
     .input(z.object({
       supervisorId: z.string(),
       isActive: z.boolean(),
     }))
     .mutation(async ({ ctx, input }) => {
-      await requirePlatformAdmin(ctx.session.user.email, ctx.getCookie, ctx.prisma);
+      await requireVerified2FA(ctx.adminSession.email, ctx.getCookie, ctx.prisma);
 
       return ctx.prisma.supervisor.update({
         where: { id: input.supervisorId },
@@ -141,8 +134,8 @@ export const platformAdminRouter = createTRPCRouter({
     }),
 
   // Deal management (all deals)
-  listAllDeals: protectedProcedure.query(async ({ ctx }) => {
-    await requirePlatformAdmin(ctx.session.user.email, ctx.getCookie, ctx.prisma);
+  listAllDeals: adminProcedure.query(async ({ ctx }) => {
+    await requireVerified2FA(ctx.adminSession.email, ctx.getCookie, ctx.prisma);
 
     return ctx.prisma.dealRoom.findMany({
       orderBy: { updatedAt: "desc" },
@@ -166,13 +159,13 @@ export const platformAdminRouter = createTRPCRouter({
     });
   }),
 
-  assignSupervisor: protectedProcedure
+  assignSupervisor: adminProcedure
     .input(z.object({
       supervisorId: z.string(),
       dealRoomId: z.string(),
     }))
     .mutation(async ({ ctx, input }) => {
-      const admin = await requirePlatformAdmin(ctx.session.user.email, ctx.getCookie, ctx.prisma);
+      const admin = await requireVerified2FA(ctx.adminSession.email, ctx.getCookie, ctx.prisma);
 
       // Check if already assigned
       const existing = await ctx.prisma.supervisorAssignment.findUnique({
@@ -200,10 +193,10 @@ export const platformAdminRouter = createTRPCRouter({
       });
     }),
 
-  removeSupervisorAssignment: protectedProcedure
+  removeSupervisorAssignment: adminProcedure
     .input(z.object({ assignmentId: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      await requirePlatformAdmin(ctx.session.user.email, ctx.getCookie, ctx.prisma);
+      await requireVerified2FA(ctx.adminSession.email, ctx.getCookie, ctx.prisma);
 
       return ctx.prisma.supervisorAssignment.delete({
         where: { id: input.assignmentId },
@@ -211,12 +204,12 @@ export const platformAdminRouter = createTRPCRouter({
     }),
 
   // Customer management
-  listCustomers: protectedProcedure
+  listCustomers: adminProcedure
     .input(z.object({
       search: z.string().optional(),
     }))
     .query(async ({ ctx, input }) => {
-      await requirePlatformAdmin(ctx.session.user.email, ctx.getCookie, ctx.prisma);
+      await requireVerified2FA(ctx.adminSession.email, ctx.getCookie, ctx.prisma);
 
       const where = input.search
         ? {
@@ -239,8 +232,8 @@ export const platformAdminRouter = createTRPCRouter({
     }),
 
   // Skill management
-  listSkillPackages: protectedProcedure.query(async ({ ctx }) => {
-    await requirePlatformAdmin(ctx.session.user.email, ctx.getCookie, ctx.prisma);
+  listSkillPackages: adminProcedure.query(async ({ ctx }) => {
+    await requireVerified2FA(ctx.adminSession.email, ctx.getCookie, ctx.prisma);
 
     return ctx.prisma.skillPackage.findMany({
       orderBy: { installedAt: "desc" },
@@ -253,8 +246,8 @@ export const platformAdminRouter = createTRPCRouter({
   }),
 
   // Analytics
-  getAnalytics: protectedProcedure.query(async ({ ctx }) => {
-    await requirePlatformAdmin(ctx.session.user.email, ctx.getCookie, ctx.prisma);
+  getAnalytics: adminProcedure.query(async ({ ctx }) => {
+    await requireVerified2FA(ctx.adminSession.email, ctx.getCookie, ctx.prisma);
 
     const [
       totalDeals,
