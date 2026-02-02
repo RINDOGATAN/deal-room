@@ -30,7 +30,7 @@ export default function AdminSignInPage() {
         body: new URLSearchParams({
           csrfToken,
           email,
-          callbackUrl: "/admin",
+          callbackUrl: "/admin/verify",
         }),
       });
 
