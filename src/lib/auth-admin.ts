@@ -26,6 +26,10 @@ export const adminAuthOptions: NextAuthOptions = {
           throw new Error("Not authorized as a platform administrator");
         }
 
+        // Rewrite the callback URL to use the admin auth path
+        // NextAuth generates /api/auth/callback/email but we need /api/auth/admin/callback/email
+        const adminUrl = url.replace("/api/auth/callback/", "/api/auth/admin/callback/");
+
         try {
           await resend.emails.send({
             from: process.env.EMAIL_FROM || "onboarding@resend.dev",
@@ -36,9 +40,9 @@ export const adminAuthOptions: NextAuthOptions = {
                 <h1 style="color: #ffffff; background: #1c1f37; padding: 20px; margin: 0;">Deal Room - Platform Admin</h1>
                 <div style="padding: 20px; background: #f5f5f5;">
                   <p>Click the button below to sign in to the Platform Admin Portal:</p>
-                  <a href="${url}" style="display: inline-block; background: #1c1f37; color: white; padding: 12px 24px; text-decoration: none; font-weight: bold; margin: 20px 0; border: 2px solid #000;">Sign In as Admin</a>
+                  <a href="${adminUrl}" style="display: inline-block; background: #1c1f37; color: white; padding: 12px 24px; text-decoration: none; font-weight: bold; margin: 20px 0; border: 2px solid #000;">Sign In as Admin</a>
                   <p style="color: #666; font-size: 14px;">If you didn't request this email, you can safely ignore it.</p>
-                  <p style="color: #666; font-size: 12px;">Or copy this link: ${url}</p>
+                  <p style="color: #666; font-size: 12px;">Or copy this link: ${adminUrl}</p>
                 </div>
               </div>
             `,

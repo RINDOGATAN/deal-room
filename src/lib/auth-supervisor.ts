@@ -26,6 +26,10 @@ export const supervisorAuthOptions: NextAuthOptions = {
           throw new Error("Not authorized as a supervisor");
         }
 
+        // Rewrite the callback URL to use the supervisor auth path
+        // NextAuth generates /api/auth/callback/email but we need /api/auth/supervisor/callback/email
+        const supervisorUrl = url.replace("/api/auth/callback/", "/api/auth/supervisor/callback/");
+
         try {
           await resend.emails.send({
             from: process.env.EMAIL_FROM || "onboarding@resend.dev",
@@ -36,9 +40,9 @@ export const supervisorAuthOptions: NextAuthOptions = {
                 <h1 style="color: #9333ea; background: #1c1f37; padding: 20px; margin: 0;">Deal Room - Supervisor Portal</h1>
                 <div style="padding: 20px; background: #f5f5f5;">
                   <p>Click the button below to sign in to the Supervisor Portal:</p>
-                  <a href="${url}" style="display: inline-block; background: #9333ea; color: white; padding: 12px 24px; text-decoration: none; font-weight: bold; margin: 20px 0;">Sign In as Supervisor</a>
+                  <a href="${supervisorUrl}" style="display: inline-block; background: #9333ea; color: white; padding: 12px 24px; text-decoration: none; font-weight: bold; margin: 20px 0;">Sign In as Supervisor</a>
                   <p style="color: #666; font-size: 14px;">If you didn't request this email, you can safely ignore it.</p>
-                  <p style="color: #666; font-size: 12px;">Or copy this link: ${url}</p>
+                  <p style="color: #666; font-size: 12px;">Or copy this link: ${supervisorUrl}</p>
                 </div>
               </div>
             `,
