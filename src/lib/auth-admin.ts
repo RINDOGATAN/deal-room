@@ -30,8 +30,6 @@ export const adminAuthOptions: NextAuthOptions = {
         // NextAuth generates /api/auth/callback/email but we need /api/auth/admin/callback/email
         const adminUrl = url.replace("/api/auth/callback/", "/api/auth/admin/callback/");
 
-        console.log("[Admin Auth] Original URL:", url);
-        console.log("[Admin Auth] Rewritten URL:", adminUrl);
 
         try {
           await resend.emails.send({
