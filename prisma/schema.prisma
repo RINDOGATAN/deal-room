@@ -90,6 +90,97 @@ model VerificationToken {
 }
 
 // ============================================================
+// SKILL PACKAGES & LICENSING
+// ============================================================
+
+enum CustomerType {
+  SAAS
+  SELF_HOSTED
+}
+
+enum LicenseType {
+  TRIAL
+  SUBSCRIPTION
+  PERPETUAL
+}
+
+enum EntitlementStatus {
+  ACTIVE
+  EXPIRED
+  SUSPENDED
+}
+
+model SkillPackage {
+  id              String   @id @default(cuid())
+  skillId         String   @unique  // "com.nel.skills.nda"
+  name            String             // "NDA"
+  displayName     String             // "Non-Disclosure Agreement"
+  version         String             // "1.2.3"
+  packageHash     String             // SHA-256 of package contents
+  jurisdictions   String[]           // Available jurisdictions in this package
+  languages       String[]           // Available languages (e.g., ["en", "es"])
+  isActive        Boolean  @default(true)
+  installedAt     DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  contractTemplate ContractTemplate?
+  entitlements     SkillEntitlement[]
+
+  @@map("skill_packages")
+}
+
+model Customer {
+  id               String       @id @default(cuid())
+  name             String
+  email            String       @unique
+  type             CustomerType // SAAS | SELF_HOSTED
+  stripeCustomerId String?
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+
+  entitlements SkillEntitlement[]
+  activations  SkillActivation[]
+
+  @@map("customers")
+}
+
+model SkillEntitlement {
+  id              String            @id @default(cuid())
+  customerId      String
+  skillPackageId  String
+  licenseKey      String            @unique
+  licenseType     LicenseType       // TRIAL | SUBSCRIPTION | PERPETUAL
+  status          EntitlementStatus @default(ACTIVE)
+  maxActivations  Int               @default(1)
+  jurisdictions   String[]          // Subset of jurisdictions customer paid for
+  expiresAt       DateTime?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  customer     Customer       @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  skillPackage SkillPackage   @relation(fields: [skillPackageId], references: [id], onDelete: Cascade)
+  activations  SkillActivation[]
+
+  @@unique([customerId, skillPackageId])
+  @@map("skill_entitlements")
+}
+
+model SkillActivation {
+  id            String   @id @default(cuid())
+  entitlementId String
+  customerId    String
+  instanceId    String   @unique  // Unique installation identifier
+  machineHash   String            // SHA-256(hostname + MAC)
+  activatedAt   DateTime @default(now())
+  lastSeenAt    DateTime @default(now())
+
+  entitlement SkillEntitlement @relation(fields: [entitlementId], references: [id], onDelete: Cascade)
+  customer    Customer         @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
+  @@map("skill_activations")
+}
+
+// ============================================================
 // CONTRACT TEMPLATES (Loaded from Skills)
 // ============================================================
 
@@ -100,9 +191,14 @@ model ContractTemplate {
   description     String?
   version         String   @default("1.0")
   skillPath       String   // Path to skill folder
+  boilerplate     Json?    // Standard contract sections (preamble, definitions, etc.)
   isActive        Boolean  @default(true)
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
+
+  // Link to skill package (for licensed skills)
+  skillPackageId  String?  @unique
+  skillPackage    SkillPackage? @relation(fields: [skillPackageId], references: [id])
 
   clauses   ClauseTemplate[]
   dealRooms DealRoom[]

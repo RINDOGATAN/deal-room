@@ -2,6 +2,14 @@ import { z } from "zod";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
 import { DealRoomStatus, PartyRole, PartyStatus, ClauseStatus, InvitationStatus, GoverningLaw } from "@prisma/client";
+import { checkDealCreationEntitlement } from "../services/licensing/entitlement";
+
+// Map GoverningLaw enum to jurisdiction strings for entitlement checking
+const GOVERNING_LAW_TO_JURISDICTION: Record<string, string> = {
+  CALIFORNIA: "US-CA",
+  ENGLAND_WALES: "GB",
+  SPAIN: "ES",
+};
 
 export const dealRouter = createTRPCRouter({
   // List all deal rooms for the current user
@@ -202,6 +210,7 @@ export const dealRouter = createTRPCRouter({
           clauses: {
             orderBy: { order: "asc" },
           },
+          skillPackage: true,
         },
       });
 
@@ -210,6 +219,36 @@ export const dealRouter = createTRPCRouter({
           code: "NOT_FOUND",
           message: "Contract template not found",
         });
+      }
+
+      // Check entitlement if this is a licensed skill
+      if (template.skillPackageId) {
+        // Find customer by email
+        const customer = await ctx.prisma.customer.findFirst({
+          where: { email: userEmail },
+        });
+
+        if (!customer) {
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message: "A customer account is required to use this contract template. Please contact sales.",
+          });
+        }
+
+        // Check entitlement for skill and jurisdiction
+        const jurisdiction = GOVERNING_LAW_TO_JURISDICTION[input.governingLaw];
+        const entitlement = await checkDealCreationEntitlement(
+          customer.id,
+          input.contractType,
+          jurisdiction
+        );
+
+        if (!entitlement.entitled) {
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message: entitlement.reason || "You do not have a license for this contract template",
+          });
+        }
       }
 
       // Create the deal room with clauses

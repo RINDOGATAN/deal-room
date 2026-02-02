@@ -7,6 +7,7 @@ import { skillsRouter } from "./skills";
 import { signingRouter } from "./signing";
 import { adminRouter } from "./admin";
 import { twoFactorRouter } from "./twoFactor";
+import { skillManagerRouter } from "./skillManager";
 
 export const appRouter = createTRPCRouter({
   deal: dealRouter,
@@ -17,6 +18,7 @@ export const appRouter = createTRPCRouter({
   signing: signingRouter,
   admin: adminRouter,
   twoFactor: twoFactorRouter,
+  skillManager: skillManagerRouter,
 });
 
 export type AppRouter = typeof appRouter;
