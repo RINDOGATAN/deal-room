@@ -8,6 +8,10 @@ import { signingRouter } from "./signing";
 import { adminRouter } from "./admin";
 import { twoFactorRouter } from "./twoFactor";
 import { skillManagerRouter } from "./skillManager";
+import { supervisorRouter } from "./supervisor";
+import { supervisorTwoFactorRouter } from "./supervisorTwoFactor";
+import { platformAdminRouter } from "./platformAdmin";
+import { platformAdminTwoFactorRouter } from "./platformAdminTwoFactor";
 
 export const appRouter = createTRPCRouter({
   deal: dealRouter,
@@ -16,9 +20,14 @@ export const appRouter = createTRPCRouter({
   invitation: invitationRouter,
   skills: skillsRouter,
   signing: signingRouter,
-  admin: adminRouter,
+  admin: adminRouter, // Legacy admin router (for backward compatibility)
   twoFactor: twoFactorRouter,
   skillManager: skillManagerRouter,
+  // New two-level admin system
+  supervisor: supervisorRouter,
+  supervisorTwoFactor: supervisorTwoFactorRouter,
+  platformAdmin: platformAdminRouter,
+  platformAdminTwoFactor: platformAdminTwoFactorRouter,
 });
 
 export type AppRouter = typeof appRouter;

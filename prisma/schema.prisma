@@ -49,6 +49,77 @@ model TwoFactorSecret {
   @@map("two_factor_secrets")
 }
 
+// ============================================================
+// SUPERVISORS (Supervising Attorneys)
+// ============================================================
+
+model Supervisor {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  twoFactorSecret SupervisorTwoFactor?
+  assignments     SupervisorAssignment[]
+
+  @@map("supervisors")
+}
+
+model SupervisorTwoFactor {
+  id           String   @id @default(cuid())
+  supervisorId String   @unique
+  secret       String
+  verified     Boolean  @default(false)
+  createdAt    DateTime @default(now())
+
+  supervisor Supervisor @relation(fields: [supervisorId], references: [id], onDelete: Cascade)
+
+  @@map("supervisor_two_factor")
+}
+
+model SupervisorAssignment {
+  id           String   @id @default(cuid())
+  supervisorId String
+  dealRoomId   String
+  assignedAt   DateTime @default(now())
+  assignedBy   String?  // Platform admin who assigned
+
+  supervisor Supervisor @relation(fields: [supervisorId], references: [id], onDelete: Cascade)
+  dealRoom   DealRoom   @relation(fields: [dealRoomId], references: [id], onDelete: Cascade)
+
+  @@unique([supervisorId, dealRoomId])
+  @@map("supervisor_assignments")
+}
+
+// ============================================================
+// PLATFORM ADMINISTRATORS
+// ============================================================
+
+model PlatformAdmin {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  twoFactorSecret AdminTwoFactor?
+
+  @@map("platform_admins")
+}
+
+model AdminTwoFactor {
+  id        String   @id @default(cuid())
+  adminId   String   @unique
+  secret    String
+  verified  Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  admin PlatformAdmin @relation(fields: [adminId], references: [id], onDelete: Cascade)
+
+  @@map("admin_two_factor")
+}
+
 model Account {
   id                String  @id @default(cuid())
   userId            String
@@ -297,13 +368,14 @@ model DealRoom {
   createdAt          DateTime       @default(now())
   updatedAt          DateTime       @updatedAt
 
-  contractTemplate ContractTemplate @relation(fields: [contractTemplateId], references: [id])
-  parties          DealRoomParty[]
-  clauses          DealRoomClause[]
-  invitations      Invitation[]
-  rounds           NegotiationRound[]
-  auditLogs        AuditLog[]
-  signingRequest   SigningRequest?
+  contractTemplate        ContractTemplate       @relation(fields: [contractTemplateId], references: [id])
+  parties                 DealRoomParty[]
+  clauses                 DealRoomClause[]
+  invitations             Invitation[]
+  rounds                  NegotiationRound[]
+  auditLogs               AuditLog[]
+  signingRequest          SigningRequest?
+  supervisorAssignments   SupervisorAssignment[]
 
   @@map("deal_rooms")
 }

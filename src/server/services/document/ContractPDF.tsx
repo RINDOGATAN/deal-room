@@ -2,6 +2,7 @@
  * Contract PDF Template Component
  *
  * React-PDF component for generating professional legal documents.
+ * Renders complete contracts with boilerplate sections and negotiated terms.
  */
 
 import React from "react";
@@ -39,7 +40,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   title: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: "bold",
     marginBottom: 8,
     textTransform: "uppercase",
@@ -57,10 +58,10 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 10,
     textTransform: "uppercase",
-    borderBottomWidth: 1,
-    borderBottomColor: "#000",
-    borderBottomStyle: "solid",
-    paddingBottom: 4,
+  },
+  sectionNumber: {
+    fontSize: 12,
+    fontWeight: "bold",
   },
   partiesGrid: {
     flexDirection: "row",
@@ -95,6 +96,76 @@ const styles = StyleSheet.create({
     fontSize: 9,
     color: "#666",
   },
+  preambleText: {
+    fontSize: 11,
+    textAlign: "justify",
+    lineHeight: 1.6,
+    marginBottom: 15,
+    whiteSpace: "pre-wrap",
+  },
+  backgroundText: {
+    fontSize: 11,
+    textAlign: "justify",
+    lineHeight: 1.6,
+    marginBottom: 15,
+  },
+  definitionContainer: {
+    marginBottom: 10,
+    paddingLeft: 10,
+  },
+  definitionTerm: {
+    fontSize: 11,
+    fontWeight: "bold",
+  },
+  definitionText: {
+    fontSize: 10,
+    textAlign: "justify",
+    lineHeight: 1.5,
+  },
+  clauseContainer: {
+    marginBottom: 16,
+  },
+  clauseHeader: {
+    flexDirection: "row",
+    marginBottom: 6,
+  },
+  clauseNumber: {
+    fontSize: 11,
+    fontWeight: "bold",
+    marginRight: 8,
+  },
+  clauseTitle: {
+    fontSize: 11,
+    fontWeight: "bold",
+  },
+  clauseText: {
+    fontSize: 10,
+    textAlign: "justify",
+    lineHeight: 1.6,
+    paddingLeft: 20,
+    whiteSpace: "pre-wrap",
+  },
+  legalText: {
+    fontSize: 10,
+    textAlign: "justify",
+    lineHeight: 1.6,
+    paddingLeft: 20,
+    whiteSpace: "pre-wrap",
+  },
+  provisionContainer: {
+    marginBottom: 12,
+  },
+  provisionTitle: {
+    fontSize: 11,
+    fontWeight: "bold",
+    marginBottom: 4,
+  },
+  provisionText: {
+    fontSize: 10,
+    textAlign: "justify",
+    lineHeight: 1.6,
+    whiteSpace: "pre-wrap",
+  },
   governingLawBox: {
     backgroundColor: "#f5f5f5",
     padding: 12,
@@ -110,49 +181,13 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontWeight: "bold",
   },
-  clauseContainer: {
-    marginBottom: 16,
-    paddingBottom: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: "#eee",
-    borderBottomStyle: "solid",
-  },
-  clauseHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "flex-start",
-    marginBottom: 6,
-  },
-  clauseNumber: {
-    fontSize: 10,
-    fontWeight: "bold",
-    marginRight: 8,
-  },
-  clauseTitle: {
-    fontSize: 11,
-    fontWeight: "bold",
-    flex: 1,
-  },
-  clauseCategory: {
-    fontSize: 9,
-    color: "#666",
-    backgroundColor: "#f0f0f0",
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-  },
-  clauseOption: {
-    fontSize: 10,
-    color: "#444",
-    marginBottom: 6,
-    fontStyle: "italic",
-  },
-  legalText: {
-    fontSize: 10,
-    textAlign: "justify",
-    lineHeight: 1.6,
-  },
   signatureSection: {
     marginTop: 40,
+  },
+  signatureText: {
+    fontSize: 10,
+    marginBottom: 20,
+    whiteSpace: "pre-wrap",
   },
   signatureGrid: {
     flexDirection: "row",
@@ -204,6 +239,22 @@ const styles = StyleSheet.create({
     fontSize: 9,
     color: "#666",
   },
+  divider: {
+    borderBottomWidth: 1,
+    borderBottomColor: "#000",
+    borderBottomStyle: "solid",
+    marginVertical: 15,
+  },
+  negotiatedTermsHeader: {
+    fontSize: 12,
+    fontWeight: "bold",
+    marginBottom: 15,
+    textTransform: "uppercase",
+    borderBottomWidth: 2,
+    borderBottomColor: "#000",
+    borderBottomStyle: "solid",
+    paddingBottom: 5,
+  },
 });
 
 function formatDate(date: Date): string {
@@ -219,6 +270,9 @@ interface ContractPDFProps {
 }
 
 export function ContractPDF({ data }: ContractPDFProps) {
+  const hasBoilerplate = data.boilerplate !== null;
+  let sectionNumber = 1;
+
   return (
     <Document
       title={`${data.contractType} - ${data.dealName}`}
@@ -228,93 +282,283 @@ export function ContractPDF({ data }: ContractPDFProps) {
       <Page size="A4" style={styles.page}>
         {/* Header */}
         <View style={styles.header}>
-          <Text style={styles.title}>{data.contractType}</Text>
+          <Text style={styles.title}>
+            {hasBoilerplate
+              ? data.boilerplate!.contractTitle
+              : data.contractType}
+          </Text>
           <Text style={styles.subtitle}>
             Effective Date: {formatDate(data.createdAt)}
           </Text>
         </View>
 
-        {/* Parties */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Parties</Text>
-          <View style={styles.partiesGrid}>
-            <View style={styles.partyBox}>
-              <Text style={styles.partyLabel}>Party A (Disclosing Party)</Text>
-              <Text style={styles.partyName}>{data.partyA.name}</Text>
-              {data.partyA.company && (
-                <Text style={styles.partyCompany}>{data.partyA.company}</Text>
-              )}
-              <Text style={styles.partyEmail}>{data.partyA.email}</Text>
-            </View>
-            <View style={styles.partyBox}>
-              <Text style={styles.partyLabel}>Party B (Receiving Party)</Text>
-              <Text style={styles.partyName}>{data.partyB.name}</Text>
-              {data.partyB.company && (
-                <Text style={styles.partyCompany}>{data.partyB.company}</Text>
-              )}
-              <Text style={styles.partyEmail}>{data.partyB.email}</Text>
-            </View>
-          </View>
-        </View>
-
-        {/* Governing Law */}
-        <View style={styles.governingLawBox}>
-          <Text style={styles.governingLawLabel}>Governing Law</Text>
-          <Text style={styles.governingLawText}>{data.governingLaw}</Text>
-        </View>
-
-        {/* Terms and Conditions */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Terms and Conditions</Text>
-          {data.clauses.map((clause, index) => (
-            <View key={index} style={styles.clauseContainer} wrap={false}>
-              <View style={styles.clauseHeader}>
-                <Text style={styles.clauseNumber}>{index + 1}.</Text>
-                <Text style={styles.clauseTitle}>{clause.title}</Text>
-                <Text style={styles.clauseCategory}>{clause.category}</Text>
-              </View>
-              <Text style={styles.clauseOption}>
-                Selected Option: {clause.agreedOption}
+        {hasBoilerplate ? (
+          <>
+            {/* Preamble */}
+            <View style={styles.section}>
+              <Text style={styles.preambleText}>
+                {data.boilerplate!.preamble}
               </Text>
-              <Text style={styles.legalText}>{clause.legalText}</Text>
             </View>
-          ))}
-        </View>
 
-        {/* Signature Section */}
-        <View style={styles.signatureSection} wrap={false}>
-          <Text style={styles.sectionTitle}>Signatures</Text>
-          <Text style={{ fontSize: 10, marginBottom: 20 }}>
-            IN WITNESS WHEREOF, the parties have executed this Agreement as of
-            the date first written above.
-          </Text>
-          <View style={styles.signatureGrid}>
-            <View style={styles.signatureBox}>
-              <Text style={styles.signatureLabel}>Party A</Text>
-              <View style={styles.signatureLine} />
-              <Text style={styles.signaturePartyName}>{data.partyA.name}</Text>
-              {data.partyA.company && (
-                <Text style={{ fontSize: 9, color: "#666" }}>
-                  {data.partyA.company}
+            {/* Background (if present) */}
+            {data.boilerplate!.background && (
+              <View style={styles.section}>
+                <Text style={styles.sectionTitle}>Background</Text>
+                <Text style={styles.backgroundText}>
+                  {data.boilerplate!.background}
                 </Text>
-              )}
-              <Text style={styles.signatureDate}>Date:</Text>
-              <View style={styles.dateLine} />
-            </View>
-            <View style={styles.signatureBox}>
-              <Text style={styles.signatureLabel}>Party B</Text>
-              <View style={styles.signatureLine} />
-              <Text style={styles.signaturePartyName}>{data.partyB.name}</Text>
-              {data.partyB.company && (
-                <Text style={{ fontSize: 9, color: "#666" }}>
-                  {data.partyB.company}
+              </View>
+            )}
+
+            {/* Definitions */}
+            {data.boilerplate!.definitions.length > 0 && (
+              <View style={styles.section}>
+                <Text style={styles.sectionTitle}>
+                  {sectionNumber++}. Definitions
                 </Text>
-              )}
-              <Text style={styles.signatureDate}>Date:</Text>
-              <View style={styles.dateLine} />
+                <Text style={{ fontSize: 10, marginBottom: 10 }}>
+                  In this Agreement:
+                </Text>
+                {data.boilerplate!.definitions.map((def, index) => (
+                  <View key={index} style={styles.definitionContainer}>
+                    <Text style={styles.definitionText}>
+                      <Text style={styles.definitionTerm}>
+                        &quot;{def.term}&quot;
+                      </Text>{" "}
+                      {def.definition}
+                    </Text>
+                  </View>
+                ))}
+              </View>
+            )}
+
+            {/* Standard Clauses from Boilerplate */}
+            {data.boilerplate!.standardClauses.map((clause, index) => (
+              <View key={`std-${index}`} style={styles.section} wrap={false}>
+                <View style={styles.clauseHeader}>
+                  <Text style={styles.clauseNumber}>{sectionNumber++}.</Text>
+                  <Text style={styles.clauseTitle}>{clause.title}</Text>
+                </View>
+                <Text style={styles.clauseText}>{clause.text}</Text>
+              </View>
+            ))}
+
+            {/* Negotiated Terms */}
+            {data.clauses.length > 0 && (
+              <View style={styles.section}>
+                <Text style={styles.negotiatedTermsHeader}>
+                  {sectionNumber++}. Negotiated Terms
+                </Text>
+                {data.clauses.map((clause, index) => (
+                  <View
+                    key={`neg-${index}`}
+                    style={styles.clauseContainer}
+                    wrap={false}
+                  >
+                    <View style={styles.clauseHeader}>
+                      <Text style={styles.clauseNumber}>
+                        {sectionNumber - 1}.{index + 1}
+                      </Text>
+                      <Text style={styles.clauseTitle}>{clause.title}</Text>
+                    </View>
+                    <Text style={styles.legalText}>{clause.legalText}</Text>
+                  </View>
+                ))}
+              </View>
+            )}
+
+            {/* General Provisions */}
+            {data.boilerplate!.generalProvisions.length > 0 && (
+              <View style={styles.section}>
+                <Text style={styles.sectionTitle}>
+                  {sectionNumber++}. General Provisions
+                </Text>
+                {data.boilerplate!.generalProvisions.map((provision, index) => (
+                  <View
+                    key={`gen-${index}`}
+                    style={styles.provisionContainer}
+                    wrap={false}
+                  >
+                    <Text style={styles.provisionTitle}>
+                      {sectionNumber - 1}.{index + 1} {provision.title}
+                    </Text>
+                    <Text style={styles.provisionText}>{provision.text}</Text>
+                  </View>
+                ))}
+              </View>
+            )}
+
+            {/* Jurisdiction-Specific Provisions */}
+            {data.boilerplate!.jurisdictionProvision && (
+              <View style={styles.section} wrap={false}>
+                <Text style={styles.sectionTitle}>
+                  {sectionNumber++}.{" "}
+                  {data.boilerplate!.jurisdictionProvision.title}
+                </Text>
+                <Text style={styles.provisionText}>
+                  {data.boilerplate!.jurisdictionProvision.text}
+                </Text>
+              </View>
+            )}
+
+            {/* Governing Law Box */}
+            <View style={styles.governingLawBox}>
+              <Text style={styles.governingLawLabel}>Governing Law</Text>
+              <Text style={styles.governingLawText}>{data.governingLaw}</Text>
             </View>
-          </View>
-        </View>
+
+            {/* Signature Section */}
+            <View style={styles.signatureSection} wrap={false}>
+              <Text style={styles.sectionTitle}>{sectionNumber}. Signatures</Text>
+              <Text style={styles.signatureText}>
+                IN WITNESS WHEREOF, the parties have executed this Agreement as
+                of the Effective Date.
+              </Text>
+              <View style={styles.signatureGrid}>
+                <View style={styles.signatureBox}>
+                  <Text style={styles.signatureLabel}>
+                    {data.boilerplate!.contractTitle.includes("NDA")
+                      ? "Party A"
+                      : data.boilerplate!.contractTitle.includes("DPA")
+                        ? "Controller"
+                        : data.boilerplate!.contractTitle.includes("MSA") ||
+                            data.boilerplate!.contractTitle.includes("SaaS")
+                          ? "Provider"
+                          : "Party A"}
+                  </Text>
+                  <View style={styles.signatureLine} />
+                  <Text style={styles.signaturePartyName}>
+                    {data.partyA.company || data.partyA.name}
+                  </Text>
+                  {data.partyA.company && (
+                    <Text style={{ fontSize: 9, color: "#666" }}>
+                      {data.partyA.name}
+                    </Text>
+                  )}
+                  <Text style={styles.signatureDate}>Date:</Text>
+                  <View style={styles.dateLine} />
+                </View>
+                <View style={styles.signatureBox}>
+                  <Text style={styles.signatureLabel}>
+                    {data.boilerplate!.contractTitle.includes("NDA")
+                      ? "Party B"
+                      : data.boilerplate!.contractTitle.includes("DPA")
+                        ? "Processor"
+                        : data.boilerplate!.contractTitle.includes("MSA") ||
+                            data.boilerplate!.contractTitle.includes("SaaS")
+                          ? "Customer"
+                          : "Party B"}
+                  </Text>
+                  <View style={styles.signatureLine} />
+                  <Text style={styles.signaturePartyName}>
+                    {data.partyB.company || data.partyB.name}
+                  </Text>
+                  {data.partyB.company && (
+                    <Text style={{ fontSize: 9, color: "#666" }}>
+                      {data.partyB.name}
+                    </Text>
+                  )}
+                  <Text style={styles.signatureDate}>Date:</Text>
+                  <View style={styles.dateLine} />
+                </View>
+              </View>
+            </View>
+          </>
+        ) : (
+          <>
+            {/* Fallback: Simple format when no boilerplate */}
+            {/* Parties */}
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>Parties</Text>
+              <View style={styles.partiesGrid}>
+                <View style={styles.partyBox}>
+                  <Text style={styles.partyLabel}>Party A</Text>
+                  <Text style={styles.partyName}>{data.partyA.name}</Text>
+                  {data.partyA.company && (
+                    <Text style={styles.partyCompany}>
+                      {data.partyA.company}
+                    </Text>
+                  )}
+                  <Text style={styles.partyEmail}>{data.partyA.email}</Text>
+                </View>
+                <View style={styles.partyBox}>
+                  <Text style={styles.partyLabel}>Party B</Text>
+                  <Text style={styles.partyName}>{data.partyB.name}</Text>
+                  {data.partyB.company && (
+                    <Text style={styles.partyCompany}>
+                      {data.partyB.company}
+                    </Text>
+                  )}
+                  <Text style={styles.partyEmail}>{data.partyB.email}</Text>
+                </View>
+              </View>
+            </View>
+
+            {/* Governing Law */}
+            <View style={styles.governingLawBox}>
+              <Text style={styles.governingLawLabel}>Governing Law</Text>
+              <Text style={styles.governingLawText}>{data.governingLaw}</Text>
+            </View>
+
+            {/* Terms and Conditions */}
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>Terms and Conditions</Text>
+              {data.clauses.map((clause, index) => (
+                <View
+                  key={index}
+                  style={styles.clauseContainer}
+                  wrap={false}
+                >
+                  <View style={styles.clauseHeader}>
+                    <Text style={styles.clauseNumber}>{index + 1}.</Text>
+                    <Text style={styles.clauseTitle}>{clause.title}</Text>
+                  </View>
+                  <Text style={styles.legalText}>{clause.legalText}</Text>
+                </View>
+              ))}
+            </View>
+
+            {/* Signature Section */}
+            <View style={styles.signatureSection} wrap={false}>
+              <Text style={styles.sectionTitle}>Signatures</Text>
+              <Text style={{ fontSize: 10, marginBottom: 20 }}>
+                IN WITNESS WHEREOF, the parties have executed this Agreement as
+                of the date first written above.
+              </Text>
+              <View style={styles.signatureGrid}>
+                <View style={styles.signatureBox}>
+                  <Text style={styles.signatureLabel}>Party A</Text>
+                  <View style={styles.signatureLine} />
+                  <Text style={styles.signaturePartyName}>
+                    {data.partyA.name}
+                  </Text>
+                  {data.partyA.company && (
+                    <Text style={{ fontSize: 9, color: "#666" }}>
+                      {data.partyA.company}
+                    </Text>
+                  )}
+                  <Text style={styles.signatureDate}>Date:</Text>
+                  <View style={styles.dateLine} />
+                </View>
+                <View style={styles.signatureBox}>
+                  <Text style={styles.signatureLabel}>Party B</Text>
+                  <View style={styles.signatureLine} />
+                  <Text style={styles.signaturePartyName}>
+                    {data.partyB.name}
+                  </Text>
+                  {data.partyB.company && (
+                    <Text style={{ fontSize: 9, color: "#666" }}>
+                      {data.partyB.company}
+                    </Text>
+                  )}
+                  <Text style={styles.signatureDate}>Date:</Text>
+                  <View style={styles.dateLine} />
+                </View>
+              </View>
+            </View>
+          </>
+        )}
 
         {/* Footer with page number */}
         <Text

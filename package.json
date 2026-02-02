@@ -18,7 +18,9 @@
     "skill:verify": "tsx cli/commands/skill-verify.ts",
     "skill:activate": "tsx cli/commands/skill-activate.ts",
     "skill:deactivate": "tsx cli/commands/skill-deactivate.ts",
-    "license:fingerprint": "tsx cli/commands/license-fingerprint.ts"
+    "license:fingerprint": "tsx cli/commands/license-fingerprint.ts",
+    "admin:create": "tsx cli/commands/admin-create.ts",
+    "supervisor:create": "tsx cli/commands/supervisor-create.ts"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"

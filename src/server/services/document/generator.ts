@@ -19,14 +19,37 @@ export interface ClauseData {
   legalText: string;
 }
 
+export interface Definition {
+  term: string;
+  definition: string;
+}
+
+export interface StandardClause {
+  title: string;
+  text: string;
+}
+
+export interface BoilerplateData {
+  contractTitle: string;
+  preamble: string;
+  background?: string;
+  definitions: Definition[];
+  standardClauses: StandardClause[];
+  generalProvisions: StandardClause[];
+  jurisdictionProvision: StandardClause | null;
+  signatureBlock: string;
+}
+
 export interface ContractData {
   dealName: string;
   contractType: string;
   governingLaw: string;
+  governingLawKey: string;
   createdAt: Date;
   partyA: PartyData;
   partyB: PartyData;
   clauses: ClauseData[];
+  boilerplate: BoilerplateData | null;
 }
 
 const GOVERNING_LAW_DISPLAY: Record<string, string> = {
@@ -34,6 +57,75 @@ const GOVERNING_LAW_DISPLAY: Record<string, string> = {
   ENGLAND_WALES: "England and Wales, United Kingdom",
   SPAIN: "Kingdom of Spain",
 };
+
+/**
+ * Interpolate variables in boilerplate text
+ */
+function interpolateText(
+  text: string,
+  variables: Record<string, string>
+): string {
+  return text.replace(/\{(\w+)\}/g, (match, key) => {
+    return variables[key] || match;
+  });
+}
+
+/**
+ * Process boilerplate data with variable interpolation
+ */
+function processBoilerplate(
+  rawBoilerplate: Record<string, unknown> | null,
+  governingLawKey: string,
+  variables: Record<string, string>
+): BoilerplateData | null {
+  if (!rawBoilerplate) {
+    return null;
+  }
+
+  const bp = rawBoilerplate as {
+    contractTitle?: string;
+    preamble?: string;
+    background?: string;
+    definitions?: Array<{ term: string; definition: string }>;
+    standardClauses?: Array<{ title: string; text: string }>;
+    generalProvisions?: Array<{ title: string; text: string }>;
+    jurisdictionProvisions?: Record<string, { title: string; text: string }>;
+    signatureBlock?: string;
+  };
+
+  // Get jurisdiction-specific provision
+  const jurisdictionProvision = bp.jurisdictionProvisions?.[governingLawKey]
+    ? {
+        title: bp.jurisdictionProvisions[governingLawKey].title,
+        text: interpolateText(
+          bp.jurisdictionProvisions[governingLawKey].text,
+          variables
+        ),
+      }
+    : null;
+
+  return {
+    contractTitle: bp.contractTitle || "",
+    preamble: interpolateText(bp.preamble || "", variables),
+    background: bp.background
+      ? interpolateText(bp.background, variables)
+      : undefined,
+    definitions: (bp.definitions || []).map((d) => ({
+      term: d.term,
+      definition: interpolateText(d.definition, variables),
+    })),
+    standardClauses: (bp.standardClauses || []).map((c) => ({
+      title: c.title,
+      text: interpolateText(c.text, variables),
+    })),
+    generalProvisions: (bp.generalProvisions || []).map((p) => ({
+      title: p.title,
+      text: interpolateText(p.text, variables),
+    })),
+    jurisdictionProvision,
+    signatureBlock: interpolateText(bp.signatureBlock || "", variables),
+  };
+}
 
 /**
  * Fetches and compiles deal data into a structured contract format
@@ -114,11 +206,43 @@ export async function generateContractData(
     });
   }
 
+  // Format date for boilerplate
+  const effectiveDate = deal.createdAt.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+
+  // Build party names with company fallback
+  const partyAName = initiator.company || initiator.name || initiator.email;
+  const partyBName = respondent.company || respondent.name || respondent.email;
+
+  // Variables for boilerplate interpolation
+  const variables: Record<string, string> = {
+    effectiveDate,
+    partyAName,
+    partyBName,
+    partyAAddress: "[Address]",
+    partyBAddress: "[Address]",
+    partyAShortName: "Party A",
+    partyBShortName: "Party B",
+    partyASignatureBlock: `For and on behalf of ${partyAName}:\n\nSignature: _______________________________\n\nName: ${initiator.name || "[Name]"}\n\nTitle: [Title]\n\nDate: ___________________________________`,
+    partyBSignatureBlock: `For and on behalf of ${partyBName}:\n\nSignature: _______________________________\n\nName: ${respondent.name || "[Name]"}\n\nTitle: [Title]\n\nDate: ___________________________________`,
+  };
+
+  // Process boilerplate with variable interpolation
+  const boilerplate = processBoilerplate(
+    deal.contractTemplate.boilerplate as Record<string, unknown> | null,
+    deal.governingLaw,
+    variables
+  );
+
   return {
     dealName: deal.name,
     contractType: deal.contractTemplate.displayName,
     governingLaw:
       GOVERNING_LAW_DISPLAY[deal.governingLaw] || deal.governingLaw,
+    governingLawKey: deal.governingLaw,
     createdAt: deal.createdAt,
     partyA: {
       name: initiator.name || initiator.email,
@@ -131,6 +255,7 @@ export async function generateContractData(
       company: respondent.company || undefined,
     },
     clauses,
+    boilerplate,
   };
 }
 

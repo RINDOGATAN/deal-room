@@ -1,36 +1,138 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Deal Room
+
+Two-party async contract negotiation platform with weighted compromise algorithm.
+
+## Features
+
+- **Contract Negotiation** - Structured clause-by-clause negotiation workflow
+- **Weighted Compromise** - Algorithm suggests fair compromises based on party priorities
+- **Skills Marketplace** - Licensed contract templates (NDA, DPA, MSA, etc.)
+- **Multilingual Support** - Cross-language negotiation (Party A in English, Party B in Spanish)
+- **Two-Level Admin** - Platform admins manage marketplace; supervisors monitor deals
+
+## Tech Stack
+
+- **Framework:** Next.js 14 (App Router)
+- **Language:** TypeScript
+- **API:** tRPC
+- **Database:** PostgreSQL + Prisma
+- **Auth:** NextAuth (magic link + 2FA for admins)
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js 18+
+- PostgreSQL database
+- Resend account (for magic link emails)
+
+### Installation
 
 ```bash
+# Install dependencies
+npm install
+
+# Set up environment variables
+cp .env.example .env
+
+# Push database schema
+npx prisma generate && npx prisma db push
+
+# Seed initial data
+npx prisma db seed
+
+# Start development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to access the app.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Environment Variables
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+DATABASE_URL=postgresql://...
+NEXTAUTH_SECRET=...
+NEXTAUTH_URL=http://localhost:3000
+RESEND_API_KEY=...
+EMAIL_FROM=noreply@yourdomain.com
+SKILLS_DIR=/path/to/skills
+```
 
-## Learn More
+## Administration
 
-To learn more about Next.js, take a look at the following resources:
+### Create Platform Admin
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+npm run admin:create -- --email=admin@example.com --name="Admin Name"
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Access the platform admin portal at `/admin`.
 
-## Deploy on Vercel
+### Create Supervisor
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+npm run supervisor:create -- --email=supervisor@lawfirm.com --name="Jane Smith"
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Or create via the admin portal at `/admin/supervisors`.
+
+Supervisors access their portal at `/supervise` and can only view deals assigned to them.
+
+## Documentation
+
+- `CLAUDE.md` - Quick reference for development
+- `docs/skills-and-licensing.md` - Skill packages and licensing system
+- `docs/administration.md` - Admin and supervisor portal documentation
+
+## Project Structure
+
+```
+src/
+├── app/                    # Next.js App Router pages
+│   ├── (admin)/           # Platform admin portal
+│   ├── (supervisor)/      # Supervisor portal
+│   ├── (dashboard)/       # User dashboard
+│   └── api/               # API routes
+├── components/            # React components
+├── lib/                   # Shared utilities
+└── server/
+    ├── routers/           # tRPC routers
+    └── services/          # Business logic
+prisma/
+├── schema.prisma          # Database schema
+└── seed.ts               # Seed data
+cli/
+└── commands/             # CLI tools
+docs/                     # Documentation
+```
+
+## Key Concepts
+
+### Deal Flow
+
+1. **Create** - Initiator creates deal, selects skill and jurisdiction
+2. **Invite** - Respondent receives invitation link
+3. **Submit** - Both parties submit clause preferences
+4. **Negotiate** - Algorithm suggests compromises
+5. **Agree** - Parties accept final terms
+6. **Sign** - Contract generated for signing
+
+### Compromise Algorithm
+
+```
+stake = (priority/5 × 0.4) + ((5-flexibility)/5 × 0.3) + (|bias| × 0.3)
+```
+
+Party with higher stake wins the clause; equal stakes trigger compromise.
+
+### Administration Levels
+
+| Role | Portal | Access |
+|------|--------|--------|
+| Platform Admin | `/admin` | Manage marketplace, customers, supervisors |
+| Supervisor | `/supervise` | Monitor assigned deals only |
+| User | `/deals` | Own negotiations only |
+
+## License
+
+Proprietary - NEL Law

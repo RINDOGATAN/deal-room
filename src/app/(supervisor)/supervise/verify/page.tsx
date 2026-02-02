@@ -2,56 +2,46 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
-import { Loader2, Shield, Key } from "lucide-react";
+import { Loader2, Shield, Key, Scale } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { trpc } from "@/lib/trpc";
 
-export default function AdminVerifyPage() {
+export default function SupervisorVerifyPage() {
   const router = useRouter();
-  const { data: session, status } = useSession();
   const [code, setCode] = useState("");
   const [error, setError] = useState<string | null>(null);
 
   const { data: twoFactorStatus, isLoading: statusLoading } =
-    trpc.twoFactor.getStatus.useQuery(undefined, {
-      enabled: status === "authenticated",
-    });
+    trpc.supervisorTwoFactor.getStatus.useQuery();
 
-  const setupMutation = trpc.twoFactor.setup.useMutation({
+  const setupMutation = trpc.supervisorTwoFactor.setup.useMutation({
     onError: (err) => setError(err.message),
   });
 
-  const verifyMutation = trpc.twoFactor.verify.useMutation({
+  const verifyMutation = trpc.supervisorTwoFactor.verify.useMutation({
     onSuccess: () => {
       // Set httpOnly cookie via API route
-      fetch("/api/admin-2fa-verify", {
+      fetch("/api/supervisor-2fa-verify", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ verified: true }),
       }).then(() => {
-        router.push("/admin");
+        router.push("/supervise");
       });
     },
     onError: (err) => setError(err.message),
   });
 
   useEffect(() => {
-    if (status === "unauthenticated") {
-      router.push("/sign-in");
-    }
-  }, [status, router]);
-
-  useEffect(() => {
-    if (twoFactorStatus && !twoFactorStatus.isAdmin) {
-      router.push("/deals");
+    if (twoFactorStatus && !twoFactorStatus.isSupervisor) {
+      router.push("/supervise/sign-in");
     }
   }, [twoFactorStatus, router]);
 
-  // Start setup if admin hasn't set up 2FA yet
+  // Start setup if supervisor hasn't set up 2FA yet
   useEffect(() => {
-    if (twoFactorStatus?.isAdmin && !twoFactorStatus.isSetup && !setupMutation.data) {
+    if (twoFactorStatus?.isSupervisor && !twoFactorStatus.isSetup && !setupMutation.data) {
       setupMutation.mutate();
     }
   }, [twoFactorStatus, setupMutation]);
@@ -62,29 +52,29 @@ export default function AdminVerifyPage() {
     verifyMutation.mutate({ code });
   };
 
-  if (status === "loading" || statusLoading) {
+  if (statusLoading) {
     return (
       <div className="w-full max-w-md">
         <div className="card-brutal text-center py-12">
-          <Loader2 className="w-8 h-8 animate-spin mx-auto text-primary" />
+          <Loader2 className="w-8 h-8 animate-spin mx-auto text-purple-500" />
           <p className="mt-4 text-muted-foreground">Loading...</p>
         </div>
       </div>
     );
   }
 
-  if (!session) {
-    return null;
-  }
-
   // First-time setup: show QR code
-  if (twoFactorStatus?.isAdmin && !twoFactorStatus.isSetup) {
+  if (twoFactorStatus?.isSupervisor && !twoFactorStatus.isSetup) {
     return (
       <div className="w-full max-w-md">
         <div className="card-brutal">
           <div className="text-center mb-8">
-            <div className="w-16 h-16 bg-primary/20 flex items-center justify-center mx-auto mb-6">
-              <Shield className="w-8 h-8 text-primary" />
+            <div className="w-16 h-16 bg-purple-500/20 flex items-center justify-center mx-auto mb-6">
+              <Shield className="w-8 h-8 text-purple-500" />
+            </div>
+            <div className="flex items-center justify-center gap-2 mb-4">
+              <Scale className="w-4 h-4 text-purple-500" />
+              <span className="text-purple-500 text-sm font-medium">Supervisor Portal</span>
             </div>
             <h1 className="text-2xl font-bold mb-2">Setup Two-Factor Auth</h1>
             <p className="text-muted-foreground">
@@ -94,7 +84,7 @@ export default function AdminVerifyPage() {
 
           {setupMutation.isPending && (
             <div className="flex justify-center py-8">
-              <Loader2 className="w-8 h-8 animate-spin text-primary" />
+              <Loader2 className="w-8 h-8 animate-spin text-purple-500" />
             </div>
           )}
 
@@ -146,7 +136,7 @@ export default function AdminVerifyPage() {
                 <button
                   type="submit"
                   disabled={verifyMutation.isPending || code.length !== 6}
-                  className="btn-brutal w-full flex items-center justify-center gap-2 disabled:opacity-50"
+                  className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-purple-500 text-white font-semibold border-2 border-purple-600 shadow-[4px_4px_0px_0px_rgba(88,28,135,1)] hover:shadow-[2px_2px_0px_0px_rgba(88,28,135,1)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all disabled:opacity-50"
                 >
                   {verifyMutation.isPending ? (
                     <>
@@ -173,10 +163,14 @@ export default function AdminVerifyPage() {
     <div className="w-full max-w-md">
       <div className="card-brutal">
         <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-primary/20 flex items-center justify-center mx-auto mb-6">
-            <Shield className="w-8 h-8 text-primary" />
+          <div className="w-16 h-16 bg-purple-500/20 flex items-center justify-center mx-auto mb-6">
+            <Shield className="w-8 h-8 text-purple-500" />
           </div>
-          <h1 className="text-2xl font-bold mb-2">Admin Verification</h1>
+          <div className="flex items-center justify-center gap-2 mb-4">
+            <Scale className="w-4 h-4 text-purple-500" />
+            <span className="text-purple-500 text-sm font-medium">Supervisor Portal</span>
+          </div>
+          <h1 className="text-2xl font-bold mb-2">Supervisor Verification</h1>
           <p className="text-muted-foreground">
             Enter the 6-digit code from your authenticator app
           </p>
@@ -210,7 +204,7 @@ export default function AdminVerifyPage() {
           <button
             type="submit"
             disabled={verifyMutation.isPending || code.length !== 6}
-            className="btn-brutal w-full flex items-center justify-center gap-2 disabled:opacity-50"
+            className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-purple-500 text-white font-semibold border-2 border-purple-600 shadow-[4px_4px_0px_0px_rgba(88,28,135,1)] hover:shadow-[2px_2px_0px_0px_rgba(88,28,135,1)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all disabled:opacity-50"
           >
             {verifyMutation.isPending ? (
               <>

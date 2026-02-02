@@ -181,6 +181,29 @@ If a translation is missing:
 
 ---
 
+## Platform Administration
+
+Platform Admins manage skills and customer entitlements via the admin portal at `/admin`.
+
+### Admin Portal Features
+
+| Section | Purpose |
+|---------|---------|
+| `/admin/skills` | View installed skills, versions, jurisdictions |
+| `/admin/customers` | View customers and their entitlements |
+| `/admin/analytics` | Usage analytics by skill and jurisdiction |
+
+### Customer Entitlement Management
+
+Platform Admins can:
+- View which skills each customer has access to
+- See jurisdiction coverage per entitlement
+- Monitor license usage and activations
+
+See `docs/administration.md` for full admin portal documentation.
+
+---
+
 ## Installation & Management
 
 ### Installing a Skill Package
