@@ -4,7 +4,7 @@ import * as path from "path";
 
 const prisma = new PrismaClient();
 
-const SKILLS_DIR = process.env.SKILLS_DIR || "/Users/sme/NEL/skills";
+const SKILLS_DIR = process.env.SKILLS_DIR || "/Users/sme/NEL/legalskills";
 
 interface SkillMetadata {
   contractType: string;
