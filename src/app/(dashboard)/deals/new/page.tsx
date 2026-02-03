@@ -13,6 +13,8 @@ import {
   Check,
   Scale,
   Globe,
+  AlertCircle,
+  X,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -62,6 +64,7 @@ export default function NewDealPage() {
   const [selectedJurisdiction, setSelectedJurisdiction] = useState<GoverningLaw | null>(null);
   const [dealName, setDealName] = useState("");
   const [company, setCompany] = useState("");
+  const [entitlementError, setEntitlementError] = useState<string | null>(null);
 
   const { data: templates, isLoading } = trpc.skills.listTemplates.useQuery();
   const createDeal = trpc.deal.create.useMutation({
@@ -70,7 +73,12 @@ export default function NewDealPage() {
       router.push(`/deals/${deal.id}/negotiate`);
     },
     onError: (error) => {
-      toast.error(`Failed to create deal: ${error.message}`);
+      // Check if this is an entitlement/access error
+      if (error.data?.code === "FORBIDDEN") {
+        setEntitlementError(error.message);
+      } else {
+        toast.error(`Failed to create deal: ${error.message}`);
+      }
     },
   });
 
@@ -116,6 +124,36 @@ export default function NewDealPage() {
           Select a contract type and configure your deal room
         </p>
       </div>
+
+      {/* Entitlement Error Banner */}
+      {entitlementError && (
+        <div className="card-brutal border-destructive bg-destructive/5 relative">
+          <button
+            onClick={() => setEntitlementError(null)}
+            className="absolute top-4 right-4 text-muted-foreground hover:text-foreground"
+          >
+            <X className="w-4 h-4" />
+          </button>
+          <div className="flex items-start gap-4">
+            <div className="w-10 h-10 bg-destructive/20 flex items-center justify-center flex-shrink-0">
+              <AlertCircle className="w-5 h-5 text-destructive" />
+            </div>
+            <div>
+              <h3 className="font-semibold text-destructive">Access Required</h3>
+              <p className="text-sm text-muted-foreground mt-1">
+                {entitlementError}
+              </p>
+              <a
+                href="mailto:hello@northend.law?subject=Dealroom%20Access%20Request"
+                className="inline-flex items-center gap-2 mt-3 text-sm text-primary hover:underline"
+              >
+                Contact us to request access
+                <ArrowRight className="w-3 h-3" />
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Step 1: Contract Type Selection */}
       <div className="space-y-4">

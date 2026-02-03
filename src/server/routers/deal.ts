@@ -231,7 +231,7 @@ export const dealRouter = createTRPCRouter({
         if (!customer) {
           throw new TRPCError({
             code: "FORBIDDEN",
-            message: "A customer account is required to use this contract template. Please contact sales.",
+            message: "This contract skill has not been enabled on your account. Please contact us to get access.",
           });
         }
 
@@ -246,7 +246,7 @@ export const dealRouter = createTRPCRouter({
         if (!entitlement.entitled) {
           throw new TRPCError({
             code: "FORBIDDEN",
-            message: entitlement.reason || "You do not have a license for this contract template",
+            message: "This contract skill has not been enabled on your account. Please contact us to get access.",
           });
         }
       }
