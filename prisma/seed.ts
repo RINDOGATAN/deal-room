@@ -1,6 +1,7 @@
 import { Prisma, PrismaClient } from "@prisma/client";
 import * as fs from "fs";
 import * as path from "path";
+import * as crypto from "crypto";
 
 const prisma = new PrismaClient();
 
@@ -12,6 +13,17 @@ interface SkillMetadata {
   description?: string;
   version: string;
   clauseCount: number;
+}
+
+interface SkillManifest {
+  skillId: string;
+  name: string;
+  displayName: string;
+  version: string;
+  jurisdictions: string[];
+  languages: string[];
+  author?: string;
+  license?: string;
 }
 
 interface JurisdictionRule {
@@ -76,6 +88,7 @@ async function main() {
     const skillPath = path.join(SKILLS_DIR, skillDir);
     const clausesPath = path.join(skillPath, "clauses.json");
     const metadataPath = path.join(skillPath, "metadata.json");
+    const manifestPath = path.join(skillPath, "manifest.json");
 
     if (!fs.existsSync(clausesPath)) {
       console.log(`Skipping ${skillDir}: no clauses.json found`);
@@ -93,6 +106,42 @@ async function main() {
       metadata = JSON.parse(fs.readFileSync(metadataPath, "utf-8"));
     }
 
+    let manifest: SkillManifest | null = null;
+    if (fs.existsSync(manifestPath)) {
+      manifest = JSON.parse(fs.readFileSync(manifestPath, "utf-8"));
+    }
+
+    // Create or update SkillPackage if manifest exists (enables licensing)
+    let skillPackage = null;
+    if (manifest) {
+      // Generate package hash from clauses content
+      const clausesContent = fs.readFileSync(clausesPath, "utf-8");
+      const packageHash = crypto.createHash("sha256").update(clausesContent).digest("hex");
+
+      skillPackage = await prisma.skillPackage.upsert({
+        where: { skillId: manifest.skillId },
+        create: {
+          skillId: manifest.skillId,
+          name: manifest.name,
+          displayName: manifest.displayName,
+          version: manifest.version,
+          packageHash,
+          jurisdictions: manifest.jurisdictions,
+          languages: manifest.languages,
+          isActive: true,
+        },
+        update: {
+          name: manifest.name,
+          displayName: manifest.displayName,
+          version: manifest.version,
+          packageHash,
+          jurisdictions: manifest.jurisdictions,
+          languages: manifest.languages,
+        },
+      });
+      console.log(`  Created/updated SkillPackage: ${skillPackage.skillId} (licensing enabled)`);
+    }
+
     // Create or update contract template
     const template = await prisma.contractTemplate.upsert({
       where: { contractType: clausesData.contractType },
@@ -102,6 +151,7 @@ async function main() {
         description: metadata?.description,
         version: clausesData.version || metadata?.version || "1.0",
         skillPath: skillPath,
+        skillPackageId: skillPackage?.id,
         isActive: true,
       },
       update: {
@@ -109,10 +159,11 @@ async function main() {
         description: metadata?.description,
         version: clausesData.version || metadata?.version,
         skillPath: skillPath,
+        skillPackageId: skillPackage?.id,
       },
     });
 
-    console.log(`  Created/updated template: ${template.displayName}`);
+    console.log(`  Created/updated template: ${template.displayName}${skillPackage ? ' (licensed)' : ' (unlicensed)'}`);
 
     // Create or update clauses
     for (const clause of clausesData.clauses) {
