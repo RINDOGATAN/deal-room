@@ -393,13 +393,23 @@ npm run admin:create -- --email=your@email.com
 
 Contract skills are maintained in a separate private repository (`legalskills`) and automatically seeded to production via GitHub Actions.
 
+### Available Licensed Skills
+
+| Skill ID | Name | Clauses | Description |
+|----------|------|---------|-------------|
+| `com.nel.skills.founders` | Founders Agreement | 10 | Co-founder equity, vesting, roles, IP, departure terms |
+| `com.nel.skills.safe` | SAFE Agreement | 10 | Simple Agreement for Future Equity for startup fundraising |
+
+Licensed skills require Platform Admin to assign entitlements to customers before use.
+
 ### Repository Structure
 
 ```
 legalskills/
 ├── .github/workflows/seed.yml   # Auto-seed on push
 ├── _template/                   # Template for new skills
-├── founders-agreement/          # Example skill
+├── founders-agreement/          # Founders Agreement skill
+├── safe-agreement/              # SAFE Agreement skill
 │   ├── metadata.json
 │   ├── clauses.json
 │   ├── manifest.json
@@ -454,3 +464,32 @@ The `DEAL_ROOM_TOKEN` may expire. To refresh:
 1. Create a new PAT at https://github.com/settings/personal-access-tokens
 2. Grant `Contents: Read` access to `sergiomaldo/deal-room`
 3. Update the secret in legalskills repo settings
+
+### Licensing & Entitlements
+
+Skills with a `manifest.json` file are **licensed** and require entitlements. Skills without manifest are **unlicensed** (free for all users).
+
+**How licensing works:**
+
+1. Skill seeded with `manifest.json` → creates `SkillPackage` + links to `ContractTemplate`
+2. Platform Admin assigns entitlement to customer → creates `SkillEntitlement`
+3. Customer creates deal → system checks entitlement → access granted or denied
+
+**Assigning entitlements:**
+
+1. Go to `/admin/customers`
+2. Select or create customer
+3. Assign skill with jurisdictions and license type
+
+**License types:**
+- `TRIAL` - Time-limited evaluation
+- `SUBSCRIPTION` - Recurring access
+- `PERPETUAL` - Permanent access
+
+**Entitlement check response:**
+
+| Scenario | Result |
+|----------|--------|
+| Licensed skill, no entitlement | `entitled: false` - "No entitlement found" |
+| Licensed skill, with entitlement | `entitled: true` - license type returned |
+| Unlicensed skill | `entitled: true` - "Free template"
