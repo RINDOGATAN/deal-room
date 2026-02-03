@@ -13,11 +13,18 @@ import {
   Check,
   Scale,
   Globe,
-  AlertCircle,
-  X,
+  AlertTriangle,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
 
 const contractIcons = {
   NDA: Shield,
@@ -125,35 +132,45 @@ export default function NewDealPage() {
         </p>
       </div>
 
-      {/* Entitlement Error Banner */}
-      {entitlementError && (
-        <div className="card-brutal border-destructive bg-destructive/5 relative">
-          <button
-            onClick={() => setEntitlementError(null)}
-            className="absolute top-4 right-4 text-muted-foreground hover:text-foreground"
-          >
-            <X className="w-4 h-4" />
-          </button>
-          <div className="flex items-start gap-4">
-            <div className="w-10 h-10 bg-destructive/20 flex items-center justify-center flex-shrink-0">
-              <AlertCircle className="w-5 h-5 text-destructive" />
+      {/* Entitlement Error Modal */}
+      <Dialog open={!!entitlementError} onOpenChange={(open) => !open && setEntitlementError(null)}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 bg-yellow-500/20 flex items-center justify-center">
+                <AlertTriangle className="w-6 h-6 text-yellow-500" />
+              </div>
+              <div>
+                <DialogTitle>Access Required</DialogTitle>
+                <DialogDescription className="mt-1">
+                  {entitlementError}
+                </DialogDescription>
+              </div>
             </div>
-            <div>
-              <h3 className="font-semibold text-destructive">Access Required</h3>
-              <p className="text-sm text-muted-foreground mt-1">
-                {entitlementError}
-              </p>
-              <a
-                href="mailto:hello@northend.law?subject=Dealroom%20Access%20Request"
-                className="inline-flex items-center gap-2 mt-3 text-sm text-primary hover:underline"
-              >
-                Contact us to request access
-                <ArrowRight className="w-3 h-3" />
-              </a>
-            </div>
+          </DialogHeader>
+          <div className="py-4">
+            <p className="text-sm text-muted-foreground">
+              To use this contract type, you'll need to have it enabled on your account.
+              Get in touch with us and we'll help you get started.
+            </p>
           </div>
-        </div>
-      )}
+          <DialogFooter className="gap-2 sm:gap-0">
+            <button
+              onClick={() => setEntitlementError(null)}
+              className="px-4 py-2 border border-border text-sm hover:bg-muted/50"
+            >
+              Close
+            </button>
+            <a
+              href="mailto:hello@northend.law?subject=Dealroom%20Access%20Request"
+              className="btn-brutal inline-flex items-center gap-2 text-sm"
+            >
+              Contact Us
+              <ArrowRight className="w-4 h-4" />
+            </a>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {/* Step 1: Contract Type Selection */}
       <div className="space-y-4">

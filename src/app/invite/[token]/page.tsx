@@ -51,8 +51,8 @@ export default function InvitationPage() {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center p-6">
         <div className="card-brutal max-w-md w-full text-center">
-          <div className="w-16 h-16 bg-destructive/20 flex items-center justify-center mx-auto mb-6">
-            <AlertCircle className="w-8 h-8 text-destructive" />
+          <div className="w-16 h-16 bg-yellow-500/20 flex items-center justify-center mx-auto mb-6">
+            <AlertCircle className="w-8 h-8 text-yellow-600" />
           </div>
           <h1 className="text-2xl font-bold mb-2">Invalid Invitation</h1>
           <p className="text-muted-foreground mb-6">
@@ -111,8 +111,8 @@ export default function InvitationPage() {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center p-6">
         <div className="card-brutal max-w-md w-full text-center">
-          <div className="w-16 h-16 bg-destructive/20 flex items-center justify-center mx-auto mb-6">
-            <AlertCircle className="w-8 h-8 text-destructive" />
+          <div className="w-16 h-16 bg-yellow-500/20 flex items-center justify-center mx-auto mb-6">
+            <AlertCircle className="w-8 h-8 text-yellow-600" />
           </div>
           <h1 className="text-2xl font-bold mb-2">Invitation Cancelled</h1>
           <p className="text-muted-foreground mb-6">

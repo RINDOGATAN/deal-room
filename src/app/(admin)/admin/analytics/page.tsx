@@ -30,8 +30,8 @@ export default function AnalyticsPage() {
 
   if (error) {
     return (
-      <div className="card-brutal border-destructive">
-        <div className="flex items-center gap-3 text-destructive">
+      <div className="card-brutal border-yellow-500">
+        <div className="flex items-center gap-3 text-yellow-600">
           <AlertCircle className="w-5 h-5" />
           <span>Failed to load analytics: {error.message}</span>
         </div>

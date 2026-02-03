@@ -72,8 +72,8 @@
   /* Accent = Lime */
   --accent: #13e9d1;
   --accent-foreground: #1c1f37;
-  /* Destructive */
-  --destructive: #ef4444;
+  /* Warning/Destructive - Amber instead of Red */
+  --destructive: #f59e0b;
   /* Borders - visible but subtle */
   --border: #232742;
   --input: #232742;

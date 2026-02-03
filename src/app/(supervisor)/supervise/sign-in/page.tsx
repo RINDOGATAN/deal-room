@@ -107,7 +107,7 @@ export default function SupervisorSignInPage() {
           </div>
 
           {error && (
-            <div className="p-4 bg-destructive/10 border border-destructive text-destructive text-sm">
+            <div className="p-4 bg-yellow-500/10 border border-yellow-500 text-yellow-600 text-sm">
               {error}
             </div>
           )}

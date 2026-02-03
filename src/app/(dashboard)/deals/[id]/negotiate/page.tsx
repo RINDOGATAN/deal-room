@@ -103,8 +103,8 @@ export default function NegotiatePage() {
 
   if (error || !deal) {
     return (
-      <div className="card-brutal border-destructive">
-        <div className="flex items-center gap-3 text-destructive">
+      <div className="card-brutal border-yellow-500">
+        <div className="flex items-center gap-3 text-yellow-600">
           <AlertCircle className="w-5 h-5" />
           <span>Failed to load deal: {error?.message || "Not found"}</span>
         </div>
@@ -323,9 +323,9 @@ export default function NegotiatePage() {
 
             {/* Warning if current selection became unavailable */}
             {currentSelectionUnavailable && (
-              <div className="p-3 border border-destructive/50 bg-destructive/10 flex items-start gap-2">
-                <AlertTriangle className="w-4 h-4 text-destructive mt-0.5 flex-shrink-0" />
-                <p className="text-sm text-destructive">
+              <div className="p-3 border border-yellow-500/50 bg-yellow-500/10 flex items-start gap-2">
+                <AlertTriangle className="w-4 h-4 text-yellow-600 mt-0.5 flex-shrink-0" />
+                <p className="text-sm text-yellow-600">
                   Your previous selection is not available under {governingLawLabels[governingLaw]} law. Please select a different option.
                 </p>
               </div>
@@ -419,11 +419,11 @@ export default function NegotiatePage() {
                           </ul>
                         </div>
                         <div>
-                          <p className="text-xs font-medium text-destructive uppercase tracking-wider mb-2">Cons for You</p>
+                          <p className="text-xs font-medium text-yellow-600 uppercase tracking-wider mb-2">Cons for You</p>
                           <ul className="space-y-1">
                             {(deal.currentUserRole === "INITIATOR" ? option.consPartyA : option.consPartyB).map((con, i) => (
                               <li key={i} className="text-sm text-muted-foreground flex items-start gap-2">
-                                <span className="text-destructive">-</span>
+                                <span className="text-yellow-600">-</span>
                                 {con}
                               </li>
                             ))}

@@ -24,7 +24,7 @@ const statusConfig = {
   AGREED: { label: "Agreed", color: "bg-primary/20 text-primary", icon: CheckCircle },
   SIGNING: { label: "Signing", color: "bg-purple-500/20 text-purple-500", icon: FileText },
   COMPLETED: { label: "Completed", color: "bg-green-500/20 text-green-500", icon: CheckCircle },
-  CANCELLED: { label: "Cancelled", color: "bg-destructive/20 text-destructive", icon: AlertCircle },
+  CANCELLED: { label: "Cancelled", color: "bg-yellow-500/20 text-yellow-600", icon: AlertCircle },
 };
 
 const partyStatusConfig = {
@@ -67,8 +67,8 @@ export default function SupervisorDealDetailPage() {
           </Link>
           <h1 className="text-2xl font-bold">Error</h1>
         </div>
-        <div className="card-brutal border-destructive">
-          <div className="flex items-center gap-3 text-destructive">
+        <div className="card-brutal border-yellow-500">
+          <div className="flex items-center gap-3 text-yellow-600">
             <AlertCircle className="w-5 h-5" />
             <span>{error.message}</span>
           </div>

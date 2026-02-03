@@ -67,8 +67,8 @@ export default function CustomersPage() {
 
   if (error) {
     return (
-      <div className="card-brutal border-destructive">
-        <div className="flex items-center gap-3 text-destructive">
+      <div className="card-brutal border-yellow-500">
+        <div className="flex items-center gap-3 text-yellow-600">
           <AlertCircle className="w-5 h-5" />
           <span>Failed to load customers: {error.message}</span>
         </div>
@@ -160,7 +160,7 @@ export default function CustomersPage() {
               </button>
             </div>
             {createMutation.error && (
-              <div className="p-3 bg-destructive/10 border border-destructive text-destructive text-sm">
+              <div className="p-3 bg-yellow-500/10 border border-yellow-500 text-yellow-600 text-sm">
                 {createMutation.error.message}
               </div>
             )}

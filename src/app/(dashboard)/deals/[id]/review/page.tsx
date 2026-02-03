@@ -123,8 +123,8 @@ export default function ReviewPage() {
 
   if (!deal || !suggestions) {
     return (
-      <div className="card-brutal border-destructive">
-        <div className="flex items-center gap-3 text-destructive">
+      <div className="card-brutal border-yellow-500">
+        <div className="flex items-center gap-3 text-yellow-600">
           <AlertCircle className="w-5 h-5" />
           <span>Failed to load review data</span>
         </div>
@@ -450,7 +450,7 @@ export default function ReviewPage() {
                               accept: false,
                             })}
                             disabled={respondToCounterProposal.isPending}
-                            className="flex items-center gap-2 px-4 py-2 border border-destructive text-destructive hover:bg-destructive hover:text-white transition-colors"
+                            className="flex items-center gap-2 px-4 py-2 border border-yellow-500 text-yellow-600 hover:bg-yellow-500 hover:text-white transition-colors"
                           >
                             <ThumbsDown className="w-4 h-4" />
                             Reject
@@ -531,13 +531,13 @@ export default function ReviewPage() {
                       <div className="flex items-center gap-2">
                         <span className="text-muted-foreground">You:</span>
                         {myAccepted === true && <Badge className="bg-primary/20 text-primary">Accepted</Badge>}
-                        {myAccepted === false && <Badge className="bg-destructive/20 text-destructive">Rejected</Badge>}
+                        {myAccepted === false && <Badge className="bg-yellow-500/20 text-yellow-600">Rejected</Badge>}
                         {myAccepted === null && <Badge variant="outline">Pending</Badge>}
                       </div>
                       <div className="flex items-center gap-2">
                         <span className="text-muted-foreground">They:</span>
                         {otherAccepted === true && <Badge className="bg-primary/20 text-primary">Accepted</Badge>}
-                        {otherAccepted === false && <Badge className="bg-destructive/20 text-destructive">Rejected</Badge>}
+                        {otherAccepted === false && <Badge className="bg-yellow-500/20 text-yellow-600">Rejected</Badge>}
                         {otherAccepted === null && <Badge variant="outline">Pending</Badge>}
                       </div>
                     </div>
@@ -556,7 +556,7 @@ export default function ReviewPage() {
                             })),
                             suggestion.id
                           )}
-                          className="flex items-center gap-2 px-4 py-2 border border-muted-foreground text-muted-foreground hover:border-destructive hover:text-destructive transition-colors"
+                          className="flex items-center gap-2 px-4 py-2 border border-muted-foreground text-muted-foreground hover:border-yellow-500 hover:text-yellow-600 transition-colors"
                         >
                           <MessageSquare className="w-4 h-4" />
                           Counter-Propose
@@ -567,7 +567,7 @@ export default function ReviewPage() {
                             accept: false,
                           })}
                           disabled={respondToSuggestion.isPending}
-                          className="flex items-center gap-2 px-4 py-2 border border-destructive text-destructive hover:bg-destructive hover:text-white transition-colors"
+                          className="flex items-center gap-2 px-4 py-2 border border-yellow-500 text-yellow-600 hover:bg-yellow-500 hover:text-white transition-colors"
                         >
                           <ThumbsDown className="w-4 h-4" />
                           Reject
