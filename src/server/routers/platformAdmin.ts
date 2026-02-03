@@ -1,6 +1,13 @@
 import { z } from "zod";
 import { createTRPCRouter, adminProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
+import { generateLicenseKey } from "@/lib/crypto";
+import {
+  createEntitlement,
+  suspendEntitlement,
+  reactivateEntitlement,
+  updateEntitlementJurisdictions,
+} from "../services/licensing/entitlement";
 
 // Helper to check 2FA and get admin record
 const requireVerified2FA = async (
@@ -229,6 +236,201 @@ export const platformAdminRouter = createTRPCRouter({
           },
         },
       });
+    }),
+
+  // Create a new customer
+  createCustomer: adminProcedure
+    .input(z.object({
+      name: z.string().min(1, "Name is required"),
+      email: z.string().email("Valid email is required"),
+      type: z.enum(["SAAS", "SELF_HOSTED"]),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      await requireVerified2FA(ctx.adminSession.email, ctx.getCookie, ctx.prisma);
+
+      // Check if customer already exists
+      const existing = await ctx.prisma.customer.findUnique({
+        where: { email: input.email.toLowerCase() },
+      });
+
+      if (existing) {
+        throw new TRPCError({
+          code: "CONFLICT",
+          message: "A customer with this email already exists",
+        });
+      }
+
+      return ctx.prisma.customer.create({
+        data: {
+          name: input.name,
+          email: input.email.toLowerCase(),
+          type: input.type,
+        },
+      });
+    }),
+
+  // Get a single customer with all their entitlements
+  getCustomer: adminProcedure
+    .input(z.object({
+      customerId: z.string(),
+    }))
+    .query(async ({ ctx, input }) => {
+      await requireVerified2FA(ctx.adminSession.email, ctx.getCookie, ctx.prisma);
+
+      const customer = await ctx.prisma.customer.findUnique({
+        where: { id: input.customerId },
+        include: {
+          entitlements: {
+            include: {
+              skillPackage: true,
+              _count: { select: { activations: true } },
+            },
+            orderBy: { createdAt: "desc" },
+          },
+        },
+      });
+
+      if (!customer) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Customer not found",
+        });
+      }
+
+      return customer;
+    }),
+
+  // Create entitlement (assign skill to customer)
+  createEntitlement: adminProcedure
+    .input(z.object({
+      customerId: z.string(),
+      skillId: z.string(),
+      licenseType: z.enum(["TRIAL", "SUBSCRIPTION", "PERPETUAL"]),
+      jurisdictions: z.array(z.string()).min(1, "At least one jurisdiction is required"),
+      maxActivations: z.number().int().positive().default(1),
+      expiresAt: z.string().datetime().optional(),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      await requireVerified2FA(ctx.adminSession.email, ctx.getCookie, ctx.prisma);
+
+      // Check customer exists
+      const customer = await ctx.prisma.customer.findUnique({
+        where: { id: input.customerId },
+      });
+
+      if (!customer) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Customer not found",
+        });
+      }
+
+      // Check for existing entitlement
+      const skillPackage = await ctx.prisma.skillPackage.findUnique({
+        where: { skillId: input.skillId },
+      });
+
+      if (!skillPackage) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Skill package not found",
+        });
+      }
+
+      const existingEntitlement = await ctx.prisma.skillEntitlement.findUnique({
+        where: {
+          customerId_skillPackageId: {
+            customerId: input.customerId,
+            skillPackageId: skillPackage.id,
+          },
+        },
+      });
+
+      if (existingEntitlement) {
+        throw new TRPCError({
+          code: "CONFLICT",
+          message: "Customer already has an entitlement for this skill",
+        });
+      }
+
+      try {
+        return await createEntitlement({
+          customerId: input.customerId,
+          skillId: input.skillId,
+          licenseKey: generateLicenseKey(),
+          licenseType: input.licenseType,
+          maxActivations: input.maxActivations,
+          jurisdictions: input.jurisdictions,
+          expiresAt: input.expiresAt ? new Date(input.expiresAt) : undefined,
+        });
+      } catch (error) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: error instanceof Error ? error.message : "Failed to create entitlement",
+        });
+      }
+    }),
+
+  // Suspend an entitlement
+  suspendEntitlement: adminProcedure
+    .input(z.object({
+      entitlementId: z.string(),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      await requireVerified2FA(ctx.adminSession.email, ctx.getCookie, ctx.prisma);
+
+      const entitlement = await ctx.prisma.skillEntitlement.findUnique({
+        where: { id: input.entitlementId },
+      });
+
+      if (!entitlement) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Entitlement not found",
+        });
+      }
+
+      await suspendEntitlement(input.entitlementId);
+      return { success: true };
+    }),
+
+  // Reactivate a suspended entitlement
+  reactivateEntitlement: adminProcedure
+    .input(z.object({
+      entitlementId: z.string(),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      await requireVerified2FA(ctx.adminSession.email, ctx.getCookie, ctx.prisma);
+
+      try {
+        await reactivateEntitlement(input.entitlementId);
+        return { success: true };
+      } catch (error) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: error instanceof Error ? error.message : "Failed to reactivate entitlement",
+        });
+      }
+    }),
+
+  // Update entitlement jurisdictions
+  updateEntitlementJurisdictions: adminProcedure
+    .input(z.object({
+      entitlementId: z.string(),
+      jurisdictions: z.array(z.string()).min(1, "At least one jurisdiction is required"),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      await requireVerified2FA(ctx.adminSession.email, ctx.getCookie, ctx.prisma);
+
+      try {
+        await updateEntitlementJurisdictions(input.entitlementId, input.jurisdictions);
+        return { success: true };
+      } catch (error) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: error instanceof Error ? error.message : "Failed to update jurisdictions",
+        });
+      }
     }),
 
   // Skill management

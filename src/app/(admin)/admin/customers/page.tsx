@@ -11,16 +11,46 @@ import {
   Package,
   Building,
   Server,
+  Plus,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import Link from "next/link";
 
 export default function CustomersPage() {
   const [searchQuery, setSearchQuery] = useState("");
+  const [showCreateForm, setShowCreateForm] = useState(false);
+  const [newName, setNewName] = useState("");
+  const [newEmail, setNewEmail] = useState("");
+  const [newType, setNewType] = useState<"SAAS" | "SELF_HOSTED">("SAAS");
 
+  const utils = trpc.useUtils();
   const { data: customers, isLoading, error } = trpc.platformAdmin.listCustomers.useQuery({
     search: searchQuery,
   });
+
+  const createMutation = trpc.platformAdmin.createCustomer.useMutation({
+    onSuccess: () => {
+      utils.platformAdmin.listCustomers.invalidate();
+      setShowCreateForm(false);
+      setNewName("");
+      setNewEmail("");
+      setNewType("SAAS");
+    },
+  });
+
+  const handleCreate = (e: React.FormEvent) => {
+    e.preventDefault();
+    createMutation.mutate({ name: newName, email: newEmail, type: newType });
+  };
 
   if (isLoading) {
     return (
@@ -56,7 +86,87 @@ export default function CustomersPage() {
             Manage customers and their skill entitlements
           </p>
         </div>
+        <button
+          onClick={() => setShowCreateForm(true)}
+          className="btn-brutal flex items-center gap-2"
+        >
+          <Plus className="w-4 h-4" />
+          Add Customer
+        </button>
       </div>
+
+      {/* Create Form */}
+      {showCreateForm && (
+        <div className="card-brutal border-primary">
+          <h3 className="font-semibold mb-4">Create New Customer</h3>
+          <form onSubmit={handleCreate} className="space-y-4">
+            <div className="grid grid-cols-3 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="name">Name *</Label>
+                <Input
+                  id="name"
+                  type="text"
+                  value={newName}
+                  onChange={(e) => setNewName(e.target.value)}
+                  placeholder="Acme Corporation"
+                  className="input-brutal"
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="email">Email Address *</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  value={newEmail}
+                  onChange={(e) => setNewEmail(e.target.value)}
+                  placeholder="billing@acme.com"
+                  className="input-brutal"
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="type">Customer Type *</Label>
+                <Select value={newType} onValueChange={(v) => setNewType(v as "SAAS" | "SELF_HOSTED")}>
+                  <SelectTrigger className="input-brutal w-full">
+                    <SelectValue placeholder="Select type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="SAAS">SaaS (Cloud)</SelectItem>
+                    <SelectItem value="SELF_HOSTED">Self-Hosted</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <div className="flex justify-end gap-3">
+              <button
+                type="button"
+                onClick={() => setShowCreateForm(false)}
+                className="px-4 py-2 border border-border text-sm hover:bg-muted/50"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                disabled={createMutation.isPending || !newName || !newEmail}
+                className="btn-brutal flex items-center gap-2 text-sm disabled:opacity-50"
+              >
+                {createMutation.isPending ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <Plus className="w-4 h-4" />
+                )}
+                Create Customer
+              </button>
+            </div>
+            {createMutation.error && (
+              <div className="p-3 bg-destructive/10 border border-destructive text-destructive text-sm">
+                {createMutation.error.message}
+              </div>
+            )}
+          </form>
+        </div>
+      )}
 
       {/* Search */}
       <div className="relative">
@@ -121,9 +231,12 @@ export default function CustomersPage() {
                 {format(new Date(customer.createdAt), "MMM d, yyyy")}
               </div>
               <div>
-                <button className="px-3 py-1 text-xs border border-border hover:bg-muted/50">
+                <Link
+                  href={`/admin/customers/${customer.id}`}
+                  className="px-3 py-1 text-xs border border-border hover:bg-muted/50 inline-block"
+                >
                   View Details
-                </button>
+                </Link>
               </div>
             </div>
           ))}

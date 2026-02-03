@@ -12,12 +12,15 @@ import {
   Languages,
   Check,
   X,
+  UserPlus,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { AssignSkillModal } from "@/components/admin/AssignSkillModal";
 
 export default function SkillsPage() {
   const [searchQuery, setSearchQuery] = useState("");
+  const [assignSkillId, setAssignSkillId] = useState<string | null>(null);
 
   const { data: skills, isLoading, error } = trpc.platformAdmin.listSkillPackages.useQuery();
 
@@ -143,15 +146,32 @@ export default function SkillsPage() {
                   </div>
                 </div>
 
-                <div className="flex justify-between text-xs text-muted-foreground pt-2 border-t border-border">
+                <div className="flex justify-between items-center text-xs text-muted-foreground pt-2 border-t border-border">
                   <span>Installed {format(new Date(skill.installedAt), "MMM d, yyyy")}</span>
                   <span>{skill._count.entitlements} entitlements</span>
                 </div>
+
+                {/* Assign to Customer Button */}
+                <button
+                  onClick={() => setAssignSkillId(skill.skillId)}
+                  disabled={!skill.isActive}
+                  className="mt-3 w-full btn-brutal flex items-center justify-center gap-2 text-sm disabled:opacity-50"
+                >
+                  <UserPlus className="w-4 h-4" />
+                  Assign to Customer
+                </button>
               </div>
             </div>
           ))}
         </div>
       )}
+
+      {/* Assign Skill Modal */}
+      <AssignSkillModal
+        open={!!assignSkillId}
+        onOpenChange={(open) => !open && setAssignSkillId(null)}
+        preSelectedSkillId={assignSkillId || undefined}
+      />
     </div>
   );
 }
