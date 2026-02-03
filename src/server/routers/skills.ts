@@ -6,7 +6,13 @@ export const skillsRouter = createTRPCRouter({
   // List all available contract templates
   listTemplates: publicProcedure.query(async ({ ctx }) => {
     const templates = await ctx.prisma.contractTemplate.findMany({
-      where: { isActive: true },
+      where: {
+        isActive: true,
+        // Exclude internal template(s) not meant for users
+        NOT: {
+          contractType: "TEMPLATE",
+        },
+      },
       select: {
         id: true,
         contractType: true,
