@@ -16,25 +16,41 @@ import {
   FileText,
   Building,
   User,
+  PenTool,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
 import { format } from "date-fns";
 
 export default function SigningPage() {
   const params = useParams();
   const router = useRouter();
   const dealId = params.id as string;
+  const [typedSignature, setTypedSignature] = useState("");
+  const [confirmChecked, setConfirmChecked] = useState(false);
 
   const { data: deal, isLoading: dealLoading } = trpc.deal.getById.useQuery({ id: dealId });
   const { data: signingRequest, isLoading: signingLoading, refetch } = trpc.signing.getRequest.useQuery({ dealRoomId: dealId });
 
   const initiateSigning = trpc.signing.initiate.useMutation({
     onSuccess: () => {
-      toast.success("Signing initiated! Check your email for the signing link.");
+      toast.success("Signing process started. You can now sign below.");
       refetch();
     },
     onError: (error) => {
       toast.error(`Failed to initiate signing: ${error.message}`);
+    },
+  });
+
+  const recordSignature = trpc.signing.recordSignature.useMutation({
+    onSuccess: () => {
+      toast.success("Signature recorded successfully!");
+      setTypedSignature("");
+      setConfirmChecked(false);
+      refetch();
+    },
+    onError: (error) => {
+      toast.error(`Failed to record signature: ${error.message}`);
     },
   });
 
@@ -208,9 +224,17 @@ export default function SigningPage() {
                   </Badge>
                 )}
               </div>
+              {signingRequest.initiatorSignedAt && signingRequest.initiatorSignature && (
+                <p
+                  className="text-lg text-primary mt-2"
+                  style={{ fontFamily: "var(--font-signature), 'Brush Script MT', cursive" }}
+                >
+                  {signingRequest.initiatorSignature}
+                </p>
+              )}
               {signingRequest.initiatorSignedAt && (
-                <p className="text-xs text-muted-foreground">
-                  Signed on {format(new Date(signingRequest.initiatorSignedAt), "MMM d, yyyy 'at' h:mm a")}
+                <p className="text-xs text-muted-foreground mt-1">
+                  {format(new Date(signingRequest.initiatorSignedAt), "MMM d, yyyy 'at' h:mm a")}
                 </p>
               )}
             </div>
@@ -229,9 +253,17 @@ export default function SigningPage() {
                   </Badge>
                 )}
               </div>
+              {signingRequest.respondentSignedAt && signingRequest.respondentSignature && (
+                <p
+                  className="text-lg text-primary mt-2"
+                  style={{ fontFamily: "var(--font-signature), 'Brush Script MT', cursive" }}
+                >
+                  {signingRequest.respondentSignature}
+                </p>
+              )}
               {signingRequest.respondentSignedAt && (
-                <p className="text-xs text-muted-foreground">
-                  Signed on {format(new Date(signingRequest.respondentSignedAt), "MMM d, yyyy 'at' h:mm a")}
+                <p className="text-xs text-muted-foreground mt-1">
+                  {format(new Date(signingRequest.respondentSignedAt), "MMM d, yyyy 'at' h:mm a")}
                 </p>
               )}
             </div>
@@ -245,55 +277,169 @@ export default function SigningPage() {
                 Both parties have signed. The contract is now legally binding.
               </p>
               <div className="flex items-center justify-center gap-3">
-                {signingRequest.documentUrl && (
-                  <a
-                    href={signingRequest.documentUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="btn-brutal inline-flex items-center gap-2"
-                  >
-                    <Download className="w-4 h-4" />
-                    Download Signed Contract
-                  </a>
-                )}
                 <a
                   href={`/api/deals/${dealId}/document`}
-                  className="btn-brutal-outline inline-flex items-center gap-2"
+                  className="btn-brutal inline-flex items-center gap-2"
                 >
                   <Download className="w-4 h-4" />
-                  Download Contract PDF
+                  Download Signed Contract
                 </a>
               </div>
             </div>
           ) : (
-            <div className="text-center py-6 border-t border-border">
-              <Clock className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-              <h3 className="text-lg font-semibold mb-2">Awaiting Signatures</h3>
-              <p className="text-muted-foreground mb-6">
-                Signing links have been sent to both parties via email.
-                Please check your inbox for the secure signing link.
-              </p>
-              <div className="flex items-center justify-center gap-3">
-                {signingRequest.documentUrl && (
-                  <a
-                    href={signingRequest.documentUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="btn-brutal inline-flex items-center gap-2"
-                  >
-                    <ExternalLink className="w-4 h-4" />
-                    View Document
-                  </a>
-                )}
-                <a
-                  href={`/api/deals/${dealId}/document`}
-                  className="btn-brutal-outline inline-flex items-center gap-2"
-                >
-                  <Download className="w-4 h-4" />
-                  Download Contract PDF
-                </a>
-              </div>
-            </div>
+            <>
+              {/* Type-to-Sign Section */}
+              {(() => {
+                const currentPartyHasSigned = deal.currentUserRole === "INITIATOR"
+                  ? signingRequest.initiatorSignedAt
+                  : signingRequest.respondentSignedAt;
+                const currentPartySignature = deal.currentUserRole === "INITIATOR"
+                  ? signingRequest.initiatorSignature
+                  : signingRequest.respondentSignature;
+                const otherPartyHasSigned = deal.currentUserRole === "INITIATOR"
+                  ? signingRequest.respondentSignedAt
+                  : signingRequest.initiatorSignedAt;
+
+                if (currentPartyHasSigned) {
+                  return (
+                    <div className="py-6 border-t border-border">
+                      <div className="text-center mb-6">
+                        <Check className="w-12 h-12 text-primary mx-auto mb-4" />
+                        <h3 className="text-lg font-semibold mb-2">You Have Signed</h3>
+                        <p className="text-muted-foreground">
+                          {otherPartyHasSigned
+                            ? "Waiting for the document to be finalized..."
+                            : "Waiting for the other party to sign..."}
+                        </p>
+                      </div>
+                      {currentPartySignature && (
+                        <div className="max-w-md mx-auto">
+                          <p className="text-xs text-muted-foreground mb-2 text-center">Your signature:</p>
+                          <div className="p-4 border border-primary/30 bg-muted/20">
+                            <p
+                              className="text-2xl text-center text-primary"
+                              style={{ fontFamily: "var(--font-signature), 'Brush Script MT', cursive" }}
+                            >
+                              {currentPartySignature}
+                            </p>
+                          </div>
+                        </div>
+                      )}
+                      <div className="flex items-center justify-center gap-3 mt-6">
+                        <a
+                          href={`/api/deals/${dealId}/document`}
+                          className="btn-brutal-outline inline-flex items-center gap-2"
+                        >
+                          <Download className="w-4 h-4" />
+                          Download Contract PDF
+                        </a>
+                      </div>
+                    </div>
+                  );
+                }
+
+                return (
+                  <div className="py-6 border-t border-border">
+                    <div className="max-w-md mx-auto">
+                      <div className="text-center mb-6">
+                        <PenTool className="w-8 h-8 text-primary mx-auto mb-3" />
+                        <h3 className="text-lg font-semibold mb-2">Sign the Contract</h3>
+                        <p className="text-sm text-muted-foreground">
+                          Type your full legal name below to create your electronic signature
+                        </p>
+                      </div>
+
+                      {/* Signature Input */}
+                      <div className="space-y-4">
+                        <div>
+                          <label className="block text-sm font-medium mb-2">
+                            Type your full name
+                          </label>
+                          <Input
+                            type="text"
+                            value={typedSignature}
+                            onChange={(e) => setTypedSignature(e.target.value)}
+                            placeholder="e.g., John Smith"
+                            className="input-brutal text-lg"
+                          />
+                        </div>
+
+                        {/* Signature Preview */}
+                        {typedSignature && (
+                          <div>
+                            <label className="block text-xs text-muted-foreground mb-2">
+                              Signature Preview
+                            </label>
+                            <div className="p-6 border-2 border-dashed border-border bg-muted/20 text-center">
+                              <p
+                                className="text-3xl text-foreground"
+                                style={{ fontFamily: "var(--font-signature), 'Brush Script MT', cursive" }}
+                              >
+                                {typedSignature}
+                              </p>
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Confirmation Checkbox */}
+                        <label className="flex items-start gap-3 p-3 border border-border hover:bg-muted/20 cursor-pointer">
+                          <input
+                            type="checkbox"
+                            checked={confirmChecked}
+                            onChange={(e) => setConfirmChecked(e.target.checked)}
+                            className="mt-1 accent-primary"
+                          />
+                          <span className="text-sm text-muted-foreground">
+                            I confirm that I am authorized to sign this contract and that my typed name above
+                            constitutes my legal electronic signature with the same validity as a handwritten signature.
+                          </span>
+                        </label>
+
+                        {/* Sign Button */}
+                        <button
+                          onClick={() => {
+                            if (!signingRequest || !deal.currentUserRole) return;
+                            recordSignature.mutate({
+                              signingRequestId: signingRequest.id,
+                              partyRole: deal.currentUserRole,
+                              signature: typedSignature,
+                            });
+                          }}
+                          disabled={
+                            !typedSignature.trim() ||
+                            !confirmChecked ||
+                            recordSignature.isPending
+                          }
+                          className="w-full btn-brutal flex items-center justify-center gap-2 disabled:opacity-50"
+                        >
+                          {recordSignature.isPending ? (
+                            <>
+                              <Loader2 className="w-4 h-4 animate-spin" />
+                              Signing...
+                            </>
+                          ) : (
+                            <>
+                              <FileSignature className="w-4 h-4" />
+                              Sign Contract
+                            </>
+                          )}
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-center gap-3 mt-6">
+                      <a
+                        href={`/api/deals/${dealId}/document`}
+                        className="btn-brutal-outline inline-flex items-center gap-2"
+                      >
+                        <Download className="w-4 h-4" />
+                        Download Contract PDF
+                      </a>
+                    </div>
+                  </div>
+                );
+              })()}
+            </>
           )}
         </div>
       ) : (
@@ -301,7 +447,7 @@ export default function SigningPage() {
           <FileSignature className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
           <h2 className="text-lg font-semibold mb-2">Ready for Signatures</h2>
           <p className="text-muted-foreground mb-6 max-w-md mx-auto">
-            All terms have been agreed upon. Initiate the e-signature process to make this contract legally binding.
+            All terms have been agreed upon. Start the signing process and both parties can sign by typing their full legal name.
           </p>
           <div className="flex items-center justify-center gap-3 mb-4">
             <button
@@ -312,12 +458,12 @@ export default function SigningPage() {
               {initiateSigning.isPending ? (
                 <>
                   <Loader2 className="w-4 h-4 animate-spin" />
-                  Initiating...
+                  Starting...
                 </>
               ) : (
                 <>
-                  <FileSignature className="w-4 h-4" />
-                  Initiate E-Signature
+                  <PenTool className="w-4 h-4" />
+                  Start Signing Process
                 </>
               )}
             </button>
@@ -330,7 +476,7 @@ export default function SigningPage() {
             </a>
           </div>
           <p className="text-xs text-muted-foreground">
-            Both parties will receive an email with a secure signing link
+            You&apos;ll be able to sign immediately after starting the process
           </p>
         </div>
       )}

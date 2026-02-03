@@ -559,12 +559,14 @@ enum InvitationStatus {
 model SigningRequest {
   id                  String        @id @default(cuid())
   dealRoomId          String        @unique
-  provider            String        // "docusign" or "hellosign"
+  provider            String        // "docusign", "hellosign", or "type-to-sign"
   externalId          String?       // ID from e-signature provider
   documentUrl         String?       // Generated document URL
   status              SigningStatus @default(PENDING)
   initiatorSignedAt   DateTime?
   respondentSignedAt  DateTime?
+  initiatorSignature  String?       // Typed signature for initiator
+  respondentSignature String?       // Typed signature for respondent
   completedAt         DateTime?
   signedDocumentUrl   String?       // URL to signed document
   createdAt           DateTime      @default(now())

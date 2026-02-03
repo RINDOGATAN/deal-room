@@ -81,10 +81,9 @@ export const signingRouter = createTRPCRouter({
       const signingRequest = await ctx.prisma.signingRequest.create({
         data: {
           dealRoomId: input.dealRoomId,
-          provider: "docusign", // Placeholder - would be from config
+          provider: "type-to-sign",
           status: "PENDING",
-          externalId: `doc_${Date.now()}`, // Placeholder
-          // In production, these would be actual signing URLs from the e-sign provider
+          externalId: `sign_${Date.now()}`,
           documentUrl: null,
         },
       });
@@ -119,6 +118,7 @@ export const signingRouter = createTRPCRouter({
       z.object({
         signingRequestId: z.string(),
         partyRole: z.enum(["INITIATOR", "RESPONDENT"]),
+        signature: z.string().min(1, "Signature is required"),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -163,6 +163,7 @@ export const signingRouter = createTRPCRouter({
           });
         }
         updateData.initiatorSignedAt = now;
+        updateData.initiatorSignature = input.signature;
       } else {
         if (signingRequest.respondentSignedAt) {
           throw new TRPCError({
@@ -171,6 +172,7 @@ export const signingRouter = createTRPCRouter({
           });
         }
         updateData.respondentSignedAt = now;
+        updateData.respondentSignature = input.signature;
       }
 
       // Check if both parties have now signed
