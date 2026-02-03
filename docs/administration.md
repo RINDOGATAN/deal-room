@@ -386,3 +386,71 @@ npm run admin:create -- --email=your@email.com
 3. Email in spam folder
 
 **Solution:** Check email configuration and database records.
+
+---
+
+## Private Skills Library
+
+Contract skills are maintained in a separate private repository (`legalskills`) and automatically seeded to production via GitHub Actions.
+
+### Repository Structure
+
+```
+legalskills/
+├── .github/workflows/seed.yml   # Auto-seed on push
+├── _template/                   # Template for new skills
+├── founders-agreement/          # Example skill
+│   ├── metadata.json
+│   ├── clauses.json
+│   ├── manifest.json
+│   └── SKILL.md
+└── README.md
+```
+
+### Creating a New Skill
+
+1. Copy `_template/` to a new directory (e.g., `employment-agreement/`)
+2. Edit `metadata.json` with skill info
+3. Edit `clauses.json` with clauses and options
+4. Update `SKILL.md` with documentation
+5. Push to `main` branch
+
+### Automatic Deployment
+
+When you push changes to skill files (`*/clauses.json`, `*/metadata.json`, `*/manifest.json`), the GitHub Action:
+
+1. Checks out both `legalskills` and `deal-room` repos
+2. Runs `npx prisma db seed` against production database
+3. Skills are immediately available in the app
+
+### Manual Trigger
+
+```bash
+cd /path/to/legalskills
+gh workflow run seed.yml
+```
+
+### Local Development
+
+```bash
+# Set skills directory
+export SKILLS_DIR=/path/to/legalskills
+
+# Seed local database
+npx prisma db seed
+```
+
+### GitHub Secrets Required
+
+| Secret | Description |
+|--------|-------------|
+| `DATABASE_URL` | Production Postgres connection string |
+| `DEAL_ROOM_TOKEN` | GitHub PAT with repo access to deal-room |
+
+### Refreshing the Token
+
+The `DEAL_ROOM_TOKEN` may expire. To refresh:
+
+1. Create a new PAT at https://github.com/settings/personal-access-tokens
+2. Grant `Contents: Read` access to `sergiomaldo/deal-room`
+3. Update the secret in legalskills repo settings
