@@ -80,6 +80,10 @@ export const dealRouter = createTRPCRouter({
             userId,
           },
         },
+        // Hide cancelled deals from the list
+        status: {
+          not: DealRoomStatus.CANCELLED,
+        },
       },
       include: {
         contractTemplate: true,
