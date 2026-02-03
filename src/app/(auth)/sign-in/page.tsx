@@ -82,7 +82,18 @@ export default function SignInPage() {
       <div className="card-brutal">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold mb-2 text-white uppercase tracking-wide">Dealroom</h1>
-          <p className="text-muted-foreground">
+          <p className="text-muted-foreground mb-4">
+            A contract negotiation platform powered by{" "}
+            <a
+              href="https://northend.law"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary hover:underline"
+            >
+              North End Law
+            </a>
+          </p>
+          <p className="text-muted-foreground text-sm">
             Enter your email to receive a magic link
           </p>
         </div>
@@ -168,6 +179,29 @@ export default function SignInPage() {
               {isGoogleLoading ? "Signing in..." : "Continue with Google"}
             </span>
           </button>
+        </div>
+
+        <div className="mt-6 pt-6 border-t border-border text-center">
+          <p className="text-xs text-muted-foreground">
+            By signing in, you agree to our{" "}
+            <a
+              href="https://northend.law/terms-of-use"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary hover:underline"
+            >
+              Terms of Use
+            </a>{" "}
+            and{" "}
+            <a
+              href="https://northend.law/privacy-policy"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary hover:underline"
+            >
+              Privacy Policy
+            </a>
+          </p>
         </div>
       </div>
     </div>
