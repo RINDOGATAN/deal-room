@@ -1,9 +1,82 @@
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
-import { DealRoomStatus, PartyStatus } from "@prisma/client";
+import { DealRoomStatus, PartyRole, PartyStatus } from "@prisma/client";
 
 export const selectionsRouter = createTRPCRouter({
+  // Get counterparty's selections (option choices only, no priority/flexibility/notes)
+  // Only available to RESPONDENT after INITIATOR has submitted
+  getCounterpartySelections: protectedProcedure
+    .input(z.object({ dealRoomId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const userId = ctx.session.user.id;
+
+      // Get the deal room and parties
+      const dealRoom = await ctx.prisma.dealRoom.findUnique({
+        where: { id: input.dealRoomId },
+        include: {
+          parties: true,
+        },
+      });
+
+      if (!dealRoom) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Deal room not found",
+        });
+      }
+
+      // Find the current user's party
+      const currentParty = dealRoom.parties.find((p) => p.userId === userId);
+      if (!currentParty) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "You do not have access to this deal room",
+        });
+      }
+
+      // Only respondents can use this feature
+      if (currentParty.role !== PartyRole.RESPONDENT) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Only the respondent can pre-populate from counterparty selections",
+        });
+      }
+
+      // Find the initiator party
+      const initiatorParty = dealRoom.parties.find((p) => p.role === PartyRole.INITIATOR);
+      if (!initiatorParty) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Initiator party not found",
+        });
+      }
+
+      // Check if initiator has submitted
+      if (initiatorParty.status !== PartyStatus.SUBMITTED &&
+          initiatorParty.status !== PartyStatus.REVIEWING &&
+          initiatorParty.status !== PartyStatus.ACCEPTED) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "The other party has not yet submitted their selections",
+        });
+      }
+
+      // Get initiator's selections - only return dealRoomClauseId and optionId
+      // Privacy: Do NOT return priority, flexibility, or notes
+      const selections = await ctx.prisma.partySelection.findMany({
+        where: {
+          partyId: initiatorParty.id,
+        },
+        select: {
+          dealRoomClauseId: true,
+          optionId: true,
+        },
+      });
+
+      return selections;
+    }),
+
   // Get all selections for a deal room clause
   getByClause: protectedProcedure
     .input(

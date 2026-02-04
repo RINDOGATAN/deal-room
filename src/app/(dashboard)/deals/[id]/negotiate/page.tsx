@@ -14,6 +14,7 @@ import {
   ChevronUp,
   Star,
   Sliders,
+  Copy,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
@@ -60,6 +61,14 @@ export default function NegotiatePage() {
   const { data: deal, isLoading, error } = trpc.deal.getById.useQuery({ id: dealId });
   const { data: existingSelections } = trpc.selections.getMySelections.useQuery({ dealRoomId: dealId });
 
+  // Check if the user is a respondent and if counterparty selections are available
+  const isRespondent = deal?.currentUserRole === "RESPONDENT";
+  const initiatorParty = deal?.parties.find((p) => p.role === "INITIATOR");
+  const hasInitiatorSubmitted = initiatorParty?.status === "SUBMITTED" ||
+                                initiatorParty?.status === "REVIEWING" ||
+                                initiatorParty?.status === "ACCEPTED";
+  const canPrePopulate = isRespondent && hasInitiatorSubmitted;
+
   const saveSelections = trpc.selections.bulkSave.useMutation();
   const submitSelections = trpc.deal.submitSelections.useMutation({
     onSuccess: (result) => {
@@ -75,6 +84,33 @@ export default function NegotiatePage() {
       toast.error(`Failed to submit: ${error.message}`);
     },
   });
+
+  // Pre-populate from counterparty selections
+  const { refetch: fetchCounterpartySelections, isFetching: isPrePopulating } = trpc.selections.getCounterpartySelections.useQuery(
+    { dealRoomId: dealId },
+    { enabled: false } // Only fetch on demand
+  );
+
+  const handlePrePopulate = async () => {
+    try {
+      const result = await fetchCounterpartySelections();
+      if (result.data) {
+        const map = new Map<string, Selection>();
+        for (const sel of result.data) {
+          map.set(sel.dealRoomClauseId, {
+            dealRoomClauseId: sel.dealRoomClauseId,
+            optionId: sel.optionId,
+            priority: 3, // Default priority
+            flexibility: 3, // Default flexibility
+          });
+        }
+        setSelections(map);
+        toast.success("Selections pre-populated. Review and adjust as needed.");
+      }
+    } catch {
+      toast.error("Failed to load counterparty selections");
+    }
+  };
 
   // Load existing selections
   useEffect(() => {
@@ -233,6 +269,31 @@ export default function NegotiatePage() {
           <Progress value={progress} className="w-32 h-2" />
         </div>
       </div>
+
+      {/* Pre-populate checkbox - only visible for respondents when initiator has submitted */}
+      {canPrePopulate && selections.size === 0 && (
+        <div className="card-brutal mb-6 border-primary/30 bg-primary/5">
+          <label className="flex items-start gap-3 cursor-pointer">
+            <button
+              onClick={handlePrePopulate}
+              disabled={isPrePopulating}
+              className="flex items-center gap-3 w-full text-left"
+            >
+              <div className="w-5 h-5 border-2 border-primary flex items-center justify-center flex-shrink-0 mt-0.5">
+                <Copy className="w-3 h-3 text-primary" />
+              </div>
+              <div>
+                <p className="font-semibold">
+                  {isPrePopulating ? "Loading..." : "Pre-populate with my counterparty's selections"}
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  Save time by starting with the other party&apos;s choices. You can still adjust any selection before submitting.
+                </p>
+              </div>
+            </button>
+          </label>
+        </div>
+      )}
 
       <div className="grid grid-cols-4 gap-6">
         {/* Sidebar - Clause Navigation */}
