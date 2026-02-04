@@ -115,7 +115,7 @@ export default function DealsPage() {
                         {deal.contractTemplate.displayName}
                       </span>
                       <span>•</span>
-                      <span>{deal._count.clauses} clauses</span>
+                      <span><span className="metric text-foreground">{deal._count.clauses}</span> clauses</span>
                       <span>•</span>
                       <span>Updated {format(new Date(deal.updatedAt), "MMM d, yyyy")}</span>
                     </div>

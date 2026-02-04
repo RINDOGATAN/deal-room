@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Dancing_Script } from "next/font/google";
+import { Inter, Dancing_Script, Jost } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/components/providers";
 import { Toaster } from "@/components/ui/sonner";
@@ -15,6 +15,12 @@ const dancingScript = Dancing_Script({
   weight: ["400", "700"],
 });
 
+const jost = Jost({
+  subsets: ["latin"],
+  variable: "--font-display",
+  weight: ["400", "500", "600", "700"],
+});
+
 export const metadata: Metadata = {
   title: "Deal Room - Contract Negotiation Platform",
   description: "Two-party asynchronous contract negotiation platform with intelligent compromise suggestions",
@@ -27,7 +33,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} ${dancingScript.variable} font-sans antialiased min-h-screen flex flex-col`}>
+      <body className={`${inter.variable} ${dancingScript.variable} ${jost.variable} font-sans antialiased min-h-screen flex flex-col`}>
         <Providers>
           <div className="flex-1">
             {children}

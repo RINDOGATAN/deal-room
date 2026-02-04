@@ -257,16 +257,16 @@ export default function NegotiatePage() {
           <div>
             <h1 className="text-xl font-bold">{deal.name}</h1>
             <p className="text-sm text-muted-foreground">
-              {deal.contractTemplate.displayName} • Clause {currentClauseIndex + 1} of {clauses.length}
+              {deal.contractTemplate.displayName} • Clause <span className="metric text-foreground">{currentClauseIndex + 1}</span> of <span className="metric">{clauses.length}</span>
             </p>
           </div>
         </div>
         <div className="flex items-center gap-4">
           <div className="text-right">
             <p className="text-sm text-muted-foreground">Progress</p>
-            <p className="font-semibold">{selections.size}/{clauses.length} clauses</p>
+            <p className="metric"><span className="text-primary">{selections.size}</span><span className="text-muted-foreground">/{clauses.length}</span></p>
           </div>
-          <Progress value={progress} className="w-32 h-2" />
+          <Progress value={progress} className="w-32 h-1.5" />
         </div>
       </div>
 

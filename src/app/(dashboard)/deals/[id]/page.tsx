@@ -147,30 +147,30 @@ export default function DealDetailPage() {
 
       {/* Progress */}
       {progress && (
-        <div className="card-brutal">
-          <h2 className="font-semibold mb-4">Progress</h2>
-          <div className="grid grid-cols-3 gap-6">
-            <div className="space-y-2">
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-muted-foreground">Your Selections</span>
-                <span className="font-medium">{progress.initiatorProgress.completed}/{progress.totalClauses}</span>
-              </div>
-              <Progress value={progress.initiatorProgress.percentage} className="h-2" />
+        <div className="grid grid-cols-3 gap-4">
+          <div className="stat-card-neutral">
+            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-3">Your Selections</p>
+            <div className="flex items-baseline gap-2 mb-3">
+              <span className="metric-lg text-foreground">{progress.initiatorProgress.completed}</span>
+              <span className="text-muted-foreground font-display">/ {progress.totalClauses}</span>
             </div>
-            <div className="space-y-2">
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-muted-foreground">Counterparty</span>
-                <span className="font-medium">{progress.respondentProgress.completed}/{progress.totalClauses}</span>
-              </div>
-              <Progress value={progress.respondentProgress.percentage} className="h-2" />
+            <Progress value={progress.initiatorProgress.percentage} className="h-1.5" />
+          </div>
+          <div className="stat-card-neutral">
+            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-3">Counterparty</p>
+            <div className="flex items-baseline gap-2 mb-3">
+              <span className="metric-lg text-foreground">{progress.respondentProgress.completed}</span>
+              <span className="text-muted-foreground font-display">/ {progress.totalClauses}</span>
             </div>
-            <div className="space-y-2">
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-muted-foreground">Agreed Clauses</span>
-                <span className="font-medium text-primary">{progress.agreedClauses.completed}/{progress.totalClauses}</span>
-              </div>
-              <Progress value={progress.agreedClauses.percentage} className="h-2 [&>div]:bg-primary" />
+            <Progress value={progress.respondentProgress.percentage} className="h-1.5" />
+          </div>
+          <div className="stat-card">
+            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-3">Agreed Clauses</p>
+            <div className="flex items-baseline gap-2 mb-3">
+              <span className="metric-lg text-primary">{progress.agreedClauses.completed}</span>
+              <span className="text-muted-foreground font-display">/ {progress.totalClauses}</span>
             </div>
+            <Progress value={progress.agreedClauses.percentage} className="h-1.5 [&>div]:bg-primary" />
           </div>
         </div>
       )}
@@ -255,9 +255,12 @@ export default function DealDetailPage() {
 
       {/* Clauses Summary */}
       <div className="card-brutal">
-        <h2 className="font-semibold mb-4">Clauses ({deal.clauses.length})</h2>
-        <div className="space-y-2">
-          {deal.clauses.map((clause) => {
+        <div className="flex items-baseline gap-3 mb-4">
+          <h2 className="font-semibold">Clauses</h2>
+          <span className="metric text-primary">{deal.clauses.length}</span>
+        </div>
+        <div className="-mx-6">
+          {deal.clauses.map((clause, index) => {
             const clauseStatus = clause.status;
             const mySelection = clause.selections.find(
               (s) => s.partyId === deal.currentPartyId
@@ -266,14 +269,15 @@ export default function DealDetailPage() {
             return (
               <div
                 key={clause.id}
-                className="flex items-center justify-between py-3 border-b border-border last:border-0"
+                className="stat-row px-6"
               >
-                <div className="flex items-center gap-3">
-                  <div className={`w-2 h-2 rounded-full ${
+                <div className="flex items-center gap-4">
+                  <span className="metric text-muted-foreground w-6 text-right">{index + 1}</span>
+                  <div className={`w-2 h-2 ${
                     clauseStatus === "AGREED" ? "bg-primary" :
                     clauseStatus === "SUGGESTED" ? "bg-blue-500" :
                     clauseStatus === "DIVERGENT" ? "bg-yellow-500" :
-                    "bg-muted"
+                    "bg-muted-foreground/30"
                   }`} />
                   <div>
                     <p className="font-medium">{clause.clauseTemplate.title}</p>
@@ -283,10 +287,10 @@ export default function DealDetailPage() {
                 <div className="text-right">
                   {mySelection ? (
                     <p className="text-sm text-muted-foreground">
-                      Selected: <span className="text-foreground">{mySelection.option.label}</span>
+                      <span className="text-foreground">{mySelection.option.label}</span>
                     </p>
                   ) : (
-                    <p className="text-sm text-muted-foreground">Not selected</p>
+                    <p className="text-sm text-muted-foreground/50">—</p>
                   )}
                 </div>
               </div>
