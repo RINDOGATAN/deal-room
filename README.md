@@ -1,5 +1,7 @@
 # Deal Room
 
+[![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
+
 Two-party async contract negotiation platform with weighted compromise algorithm.
 
 ## Features
@@ -135,4 +137,4 @@ Party with higher stake wins the clause; equal stakes trigger compromise.
 
 ## License
 
-Proprietary - NEL Law
+This project is licensed under the [GNU Affero General Public License v3.0](LICENSE).
