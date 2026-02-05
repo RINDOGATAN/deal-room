@@ -5,6 +5,7 @@ import Link from "next/link";
 import { trpc } from "@/lib/trpc";
 import { format } from "date-fns";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 import {
   FileText,
   Clock,
@@ -32,20 +33,33 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 
-const statusConfig = {
-  DRAFT: { label: "Draft", color: "bg-muted text-muted-foreground", icon: FileText },
-  AWAITING_RESPONSE: { label: "Awaiting Response", color: "bg-yellow-500/20 text-yellow-500", icon: Clock },
-  NEGOTIATING: { label: "Negotiating", color: "bg-blue-500/20 text-blue-500", icon: Users },
-  AGREED: { label: "Agreed", color: "bg-primary/20 text-primary", icon: CheckCircle },
-  SIGNING: { label: "Signing", color: "bg-purple-500/20 text-purple-500", icon: FileText },
-  COMPLETED: { label: "Completed", color: "bg-green-500/20 text-green-500", icon: CheckCircle },
-  CANCELLED: { label: "Cancelled", color: "bg-orange-500/20 text-orange-500", icon: AlertCircle },
+const statusIcons = {
+  DRAFT: FileText,
+  AWAITING_RESPONSE: Clock,
+  NEGOTIATING: Users,
+  AGREED: CheckCircle,
+  SIGNING: FileText,
+  COMPLETED: CheckCircle,
+  CANCELLED: AlertCircle,
+};
+
+const statusColors = {
+  DRAFT: "bg-muted text-muted-foreground",
+  AWAITING_RESPONSE: "bg-yellow-500/20 text-yellow-500",
+  NEGOTIATING: "bg-blue-500/20 text-blue-500",
+  AGREED: "bg-primary/20 text-primary",
+  SIGNING: "bg-purple-500/20 text-purple-500",
+  COMPLETED: "bg-green-500/20 text-green-500",
+  CANCELLED: "bg-orange-500/20 text-orange-500",
 };
 
 export default function DealDetailPage() {
   const params = useParams();
   const router = useRouter();
   const dealId = params.id as string;
+  const t = useTranslations("dealDetail");
+  const tDeals = useTranslations("deals");
+  const tCommon = useTranslations("common");
 
   const [inviteOpen, setInviteOpen] = useState(false);
   const [inviteEmail, setInviteEmail] = useState("");
@@ -55,20 +69,31 @@ export default function DealDetailPage() {
   const { data: deal, isLoading, error, refetch } = trpc.deal.getById.useQuery({ id: dealId });
   const { data: progress } = trpc.deal.getProgress.useQuery({ id: dealId });
 
+  // Map status keys to translation keys
+  const statusLabels: Record<string, string> = {
+    DRAFT: tDeals("status.draft"),
+    AWAITING_RESPONSE: tDeals("status.awaitingResponse"),
+    NEGOTIATING: tDeals("status.negotiating"),
+    AGREED: tDeals("status.agreed"),
+    SIGNING: tDeals("status.signing"),
+    COMPLETED: tDeals("status.completed"),
+    CANCELLED: tDeals("status.cancelled"),
+  };
+
   const sendInvite = trpc.invitation.send.useMutation({
     onSuccess: () => {
-      toast.success("Invitation sent successfully");
+      toast.success(t("toastMessages.invitationSent"));
       setInviteOpen(false);
       refetch();
     },
     onError: (error) => {
-      toast.error(`Failed to send invitation: ${error.message}`);
+      toast.error(t("toastMessages.invitationFailed", { error: error.message }));
     },
   });
 
   const cancelDeal = trpc.deal.cancel.useMutation({
     onSuccess: () => {
-      toast.success("Deal cancelled");
+      toast.success(t("toastMessages.dealCancelled"));
       router.push("/deals");
     },
   });
@@ -87,14 +112,15 @@ export default function DealDetailPage() {
       <div className="card-brutal border-yellow-500">
         <div className="flex items-center gap-3 text-yellow-600">
           <AlertCircle className="w-5 h-5" />
-          <span>Failed to load deal: {error?.message || "Not found"}</span>
+          <span>{tDeals("failedToLoad", { error: error?.message || "Not found" })}</span>
         </div>
       </div>
     );
   }
 
-  const status = statusConfig[deal.status];
-  const StatusIcon = status.icon;
+  const StatusIcon = statusIcons[deal.status];
+  const statusColor = statusColors[deal.status];
+  const statusLabel = statusLabels[deal.status];
   const initiator = deal.parties.find((p) => p.role === "INITIATOR");
   const respondent = deal.parties.find((p) => p.role === "RESPONDENT");
   const isInitiator = deal.currentUserRole === "INITIATOR";
@@ -108,9 +134,9 @@ export default function DealDetailPage() {
         <div className="space-y-2">
           <div className="flex items-center gap-3">
             <h1 className="text-2xl font-bold">{deal.name}</h1>
-            <Badge className={status.color}>
+            <Badge className={statusColor}>
               <StatusIcon className="w-3 h-3 mr-1" />
-              {status.label}
+              {statusLabel}
             </Badge>
           </div>
           <div className="flex items-center gap-4 text-sm text-muted-foreground">
@@ -130,7 +156,7 @@ export default function DealDetailPage() {
               className="btn-brutal flex items-center gap-2"
             >
               <Edit className="w-4 h-4" />
-              {isInitiator && initiator?.status === "PENDING" ? "Make Selections" : "Continue Negotiation"}
+              {isInitiator && initiator?.status === "PENDING" ? t("makeSelections") : t("continueNegotiation")}
             </Link>
           )}
           {deal.status === "NEGOTIATING" && (
@@ -138,7 +164,7 @@ export default function DealDetailPage() {
               href={`/deals/${deal.id}/review`}
               className="btn-brutal-outline flex items-center gap-2"
             >
-              Review Compromises
+              {t("reviewCompromises")}
               <ArrowRight className="w-4 h-4" />
             </Link>
           )}
@@ -149,7 +175,7 @@ export default function DealDetailPage() {
       {progress && (
         <div className="grid grid-cols-3 gap-4">
           <div className="stat-card-neutral">
-            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-3">Your Selections</p>
+            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-3">{t("yourSelections")}</p>
             <div className="flex items-baseline gap-2 mb-3">
               <span className="metric-lg text-foreground">{progress.initiatorProgress.completed}</span>
               <span className="text-muted-foreground font-display">/ {progress.totalClauses}</span>
@@ -157,7 +183,7 @@ export default function DealDetailPage() {
             <Progress value={progress.initiatorProgress.percentage} className="h-1.5" />
           </div>
           <div className="stat-card-neutral">
-            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-3">Counterparty</p>
+            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-3">{t("counterparty")}</p>
             <div className="flex items-baseline gap-2 mb-3">
               <span className="metric-lg text-foreground">{progress.respondentProgress.completed}</span>
               <span className="text-muted-foreground font-display">/ {progress.totalClauses}</span>
@@ -165,7 +191,7 @@ export default function DealDetailPage() {
             <Progress value={progress.respondentProgress.percentage} className="h-1.5" />
           </div>
           <div className="stat-card">
-            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-3">Agreed Clauses</p>
+            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-3">{t("agreedClauses")}</p>
             <div className="flex items-baseline gap-2 mb-3">
               <span className="metric-lg text-primary">{progress.agreedClauses.completed}</span>
               <span className="text-muted-foreground font-display">/ {progress.totalClauses}</span>
@@ -180,8 +206,8 @@ export default function DealDetailPage() {
         {/* Initiator */}
         <div className="card-brutal">
           <div className="flex items-center gap-2 mb-4">
-            <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Initiator</span>
-            {isInitiator && <Badge variant="outline" className="text-xs">You</Badge>}
+            <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">{t("initiator")}</span>
+            {isInitiator && <Badge variant="outline" className="text-xs">{tCommon("you")}</Badge>}
           </div>
           <div className="space-y-3">
             <div className="flex items-center gap-3">
@@ -200,7 +226,7 @@ export default function DealDetailPage() {
               </div>
             )}
             <Badge variant="outline" className="text-xs">
-              {initiator?.status === "SUBMITTED" ? "Selections Submitted" : "Pending"}
+              {initiator?.status === "SUBMITTED" ? t("selectionsSubmitted") : tCommon("pending")}
             </Badge>
           </div>
         </div>
@@ -208,8 +234,8 @@ export default function DealDetailPage() {
         {/* Respondent */}
         <div className="card-brutal">
           <div className="flex items-center gap-2 mb-4">
-            <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Counterparty</span>
-            {!isInitiator && deal.currentUserRole === "RESPONDENT" && <Badge variant="outline" className="text-xs">You</Badge>}
+            <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">{t("counterparty")}</span>
+            {!isInitiator && deal.currentUserRole === "RESPONDENT" && <Badge variant="outline" className="text-xs">{tCommon("you")}</Badge>}
           </div>
           {respondent ? (
             <div className="space-y-3">
@@ -229,25 +255,25 @@ export default function DealDetailPage() {
                 </div>
               )}
               <Badge variant="outline" className="text-xs">
-                {respondent.status === "SUBMITTED" ? "Selections Submitted" : respondent.userId ? "Accepted, Pending Selections" : "Invitation Pending"}
+                {respondent.status === "SUBMITTED" ? t("selectionsSubmitted") : respondent.userId ? t("acceptedPendingSelections") : t("invitationPending")}
               </Badge>
             </div>
           ) : canInvite ? (
             <div className="space-y-4">
               <p className="text-sm text-muted-foreground">
-                No counterparty invited yet. Send an invitation to begin negotiation.
+                {t("noCounterpartyInvited")}
               </p>
               <button
                 onClick={() => setInviteOpen(true)}
                 className="btn-brutal-outline flex items-center gap-2 w-full justify-center"
               >
                 <Mail className="w-4 h-4" />
-                Invite Counterparty
+                {t("inviteCounterparty")}
               </button>
             </div>
           ) : (
             <p className="text-sm text-muted-foreground">
-              Complete your selections before inviting the counterparty.
+              {t("completeSelectionsFirst")}
             </p>
           )}
         </div>
@@ -256,7 +282,7 @@ export default function DealDetailPage() {
       {/* Clauses Summary */}
       <div className="card-brutal">
         <div className="flex items-baseline gap-3 mb-4">
-          <h2 className="font-semibold">Clauses</h2>
+          <h2 className="font-semibold">{tDeals("clauses")}</h2>
           <span className="metric text-primary">{deal.clauses.length}</span>
         </div>
         <div className="-mx-6">
@@ -307,7 +333,7 @@ export default function DealDetailPage() {
             className="flex items-center gap-2 px-4 py-2 text-sm text-orange-500 hover:bg-orange-500/10 transition-colors"
           >
             <X className="w-4 h-4" />
-            Cancel Deal
+            {t("cancelDeal")}
           </button>
         </div>
       )}
@@ -316,40 +342,40 @@ export default function DealDetailPage() {
       <Dialog open={inviteOpen} onOpenChange={setInviteOpen}>
         <DialogContent className="bg-card border-border">
           <DialogHeader>
-            <DialogTitle>Invite Counterparty</DialogTitle>
+            <DialogTitle>{t("inviteDialog.title")}</DialogTitle>
             <DialogDescription>
-              Send an invitation to the other party to begin negotiation.
+              {t("inviteDialog.description")}
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div className="space-y-2">
-              <Label htmlFor="inviteEmail">Email Address *</Label>
+              <Label htmlFor="inviteEmail">{t("inviteDialog.emailAddress")} *</Label>
               <Input
                 id="inviteEmail"
                 type="email"
                 value={inviteEmail}
                 onChange={(e) => setInviteEmail(e.target.value)}
-                placeholder="counterparty@company.com"
+                placeholder={t("inviteDialog.emailPlaceholder")}
                 className="input-brutal"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="inviteName">Contact Name</Label>
+              <Label htmlFor="inviteName">{t("inviteDialog.contactName")}</Label>
               <Input
                 id="inviteName"
                 value={inviteName}
                 onChange={(e) => setInviteName(e.target.value)}
-                placeholder="John Smith"
+                placeholder={t("inviteDialog.contactNamePlaceholder")}
                 className="input-brutal"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="inviteCompany">Company</Label>
+              <Label htmlFor="inviteCompany">{t("inviteDialog.company")}</Label>
               <Input
                 id="inviteCompany"
                 value={inviteCompany}
                 onChange={(e) => setInviteCompany(e.target.value)}
-                placeholder="Acme Corp"
+                placeholder={t("inviteDialog.companyPlaceholder")}
                 className="input-brutal"
               />
             </div>
@@ -359,12 +385,12 @@ export default function DealDetailPage() {
               onClick={() => setInviteOpen(false)}
               className="px-4 py-2 text-sm text-muted-foreground hover:text-foreground"
             >
-              Cancel
+              {tCommon("cancel")}
             </button>
             <button
               onClick={() => {
                 if (!inviteEmail.trim()) {
-                  toast.error("Email is required");
+                  toast.error(t("inviteDialog.emailRequired"));
                   return;
                 }
                 sendInvite.mutate({
@@ -378,7 +404,7 @@ export default function DealDetailPage() {
               className="btn-brutal flex items-center gap-2"
             >
               <Send className="w-4 h-4" />
-              {sendInvite.isPending ? "Sending..." : "Send Invitation"}
+              {sendInvite.isPending ? t("inviteDialog.sending") : t("inviteDialog.sendInvitation")}
             </button>
           </div>
         </DialogContent>

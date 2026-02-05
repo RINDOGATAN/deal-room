@@ -4,6 +4,8 @@ import "./globals.css";
 import { Providers } from "@/components/providers";
 import { Toaster } from "@/components/ui/sonner";
 import { brand } from "@/config/brand";
+import { NextIntlClientProvider } from "next-intl";
+import { getLocale, getMessages } from "next-intl/server";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -27,15 +29,19 @@ export const metadata: Metadata = {
   description: brand.description,
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const locale = await getLocale();
+  const messages = await getMessages();
+
   return (
-    <html lang="en">
+    <html lang={locale}>
       <body className={`${inter.variable} ${dancingScript.variable} ${jost.variable} font-sans antialiased min-h-screen flex flex-col`}>
-        <Providers>
+        <NextIntlClientProvider messages={messages}>
+          <Providers>
           <div className="flex-1">
             {children}
           </div>
@@ -71,7 +77,8 @@ export default function RootLayout({
             </div>
           </footer>
           <Toaster />
-        </Providers>
+          </Providers>
+        </NextIntlClientProvider>
       </body>
     </html>
   );

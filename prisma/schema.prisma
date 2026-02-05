@@ -363,6 +363,7 @@ model DealRoom {
   name               String
   contractTemplateId String
   governingLaw       GoverningLaw   // Determines applicable law framework
+  contractLanguage   String         @default("en") // "en" or "es" for contract output language
   status             DealRoomStatus @default(DRAFT)
   currentRound       Int            @default(0)
   createdAt          DateTime       @default(now())

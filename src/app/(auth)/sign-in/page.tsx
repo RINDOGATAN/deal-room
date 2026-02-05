@@ -2,39 +2,27 @@
 
 import { useState } from "react";
 import { signIn } from "next-auth/react";
-import { Mail, ArrowRight, Loader2 } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { useTranslations } from "next-intl";
+import { Loader2, Play } from "lucide-react";
 import { brand } from "@/config/brand";
 
 export default function SignInPage() {
-  const [email, setEmail] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const t = useTranslations("auth");
+  const [isTrialLoading, setIsTrialLoading] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
-  const [isEmailSent, setIsEmailSent] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
+  const handleTrialAccess = async () => {
+    setIsTrialLoading(true);
     setError(null);
 
     try {
-      const result = await signIn("email", {
-        email,
-        redirect: false,
+      await signIn("trial", {
         callbackUrl: "/deals",
       });
-
-      if (result?.error) {
-        setError("Failed to send magic link. Please try again.");
-      } else {
-        setIsEmailSent(true);
-      }
     } catch (err) {
-      setError("An unexpected error occurred.");
-    } finally {
-      setIsLoading(false);
+      setError(t("unexpectedError"));
+      setIsTrialLoading(false);
     }
   };
 
@@ -47,36 +35,10 @@ export default function SignInPage() {
         callbackUrl: "/deals",
       });
     } catch (err) {
-      setError("Google sign-in failed.");
+      setError(t("googleSignInFailed"));
       setIsGoogleLoading(false);
     }
   };
-
-  if (isEmailSent) {
-    return (
-      <div className="w-full max-w-md">
-        <div className="card-brutal text-center">
-          <div className="w-16 h-16 bg-primary/20 flex items-center justify-center mx-auto mb-6">
-            <Mail className="w-8 h-8 text-primary" />
-          </div>
-          <h1 className="text-2xl font-bold mb-2">Check Your Email</h1>
-          <p className="text-muted-foreground mb-6">
-            We've sent a magic link to <span className="text-foreground font-medium">{email}</span>.
-            Click the link in the email to sign in.
-          </p>
-          <p className="text-sm text-muted-foreground">
-            Didn't receive it?{" "}
-            <button
-              onClick={() => setIsEmailSent(false)}
-              className="text-primary hover:underline"
-            >
-              Try again
-            </button>
-          </p>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="w-full max-w-md">
@@ -84,68 +46,57 @@ export default function SignInPage() {
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold mb-2 text-white uppercase tracking-wide">{brand.shortName}</h1>
           <p className="text-muted-foreground mb-4">
-            A contract negotiation platform powered by{" "}
-            <a
-              href={brand.links.website}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-primary hover:underline"
-            >
-              {brand.company}
-            </a>
-          </p>
-          <p className="text-muted-foreground text-sm">
-            Enter your email to receive a magic link
+            {t.rich("poweredBy", {
+              link: () => (
+                <a
+                  href={brand.links.website}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary hover:underline"
+                >
+                  {brand.company}
+                </a>
+              ),
+            })}
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="space-y-2">
-            <Label htmlFor="email">Email Address</Label>
-            <Input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="you@company.com"
-              className="input-brutal"
-              required
-              autoFocus
-            />
+        {error && (
+          <div className="mb-6 p-4 bg-yellow-500/10 border border-yellow-500 text-yellow-600 text-sm">
+            {error}
           </div>
+        )}
 
-          {error && (
-            <div className="p-4 bg-yellow-500/10 border border-yellow-500 text-yellow-600 text-sm">
-              {error}
-            </div>
-          )}
-
+        {/* Trial Access - Primary CTA */}
+        <div className="space-y-4">
           <button
-            type="submit"
-            disabled={isLoading || !email}
-            className="btn-brutal w-full flex items-center justify-center gap-2 disabled:opacity-50"
+            type="button"
+            onClick={handleTrialAccess}
+            disabled={isTrialLoading}
+            className="btn-brutal w-full flex items-center justify-center gap-3 py-4 text-lg disabled:opacity-50"
           >
-            {isLoading ? (
+            {isTrialLoading ? (
               <>
-                <Loader2 className="w-4 h-4 animate-spin" />
-                Sending...
+                <Loader2 className="w-5 h-5 animate-spin" />
+                {t("signingIn")}
               </>
             ) : (
               <>
-                Continue with Email
-                <ArrowRight className="w-4 h-4" />
+                <Play className="w-5 h-5" />
+                {t("tryDemo")}
               </>
             )}
           </button>
-        </form>
 
-        <p className="mt-6 text-center text-sm text-muted-foreground">
-          No password needed. We'll send you a secure link.
-        </p>
+          <p className="text-center text-sm text-muted-foreground">
+            {t("trialDescription")}
+          </p>
+        </div>
 
-        <div className="mt-6 pt-6 border-t border-border">
+        {/* Google Sign In */}
+        <div className="mt-8 pt-6 border-t border-border">
           <p className="text-xs text-muted-foreground text-center mb-4">
-            Or continue with
+            {t("orContinueWith")}
           </p>
 
           <button
@@ -177,31 +128,35 @@ export default function SignInPage() {
               </svg>
             )}
             <span className="font-medium">
-              {isGoogleLoading ? "Signing in..." : "Continue with Google"}
+              {isGoogleLoading ? t("signingIn") : t("continueWithGoogle")}
             </span>
           </button>
         </div>
 
         <div className="mt-6 pt-6 border-t border-border text-center">
           <p className="text-xs text-muted-foreground">
-            By signing in, you agree to our{" "}
-            <a
-              href={brand.links.terms}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-primary hover:underline"
-            >
-              Terms of Use
-            </a>{" "}
-            and{" "}
-            <a
-              href={brand.links.privacy}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-primary hover:underline"
-            >
-              Privacy Policy
-            </a>
+            {t.rich("bySigningIn", {
+              termsLink: () => (
+                <a
+                  href={brand.links.terms}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary hover:underline"
+                >
+                  {t("termsOfUse")}
+                </a>
+              ),
+              privacyLink: () => (
+                <a
+                  href={brand.links.privacy}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary hover:underline"
+                >
+                  {t("privacyPolicy")}
+                </a>
+              ),
+            })}
           </p>
         </div>
       </div>
