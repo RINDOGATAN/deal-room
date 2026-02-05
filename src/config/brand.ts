@@ -42,7 +42,7 @@ export const brand = {
 
   // Asset paths (relative to public directory)
   assets: {
-    logo: "/logo.png",
+    logo: "/DEALROOM_TodoLaw.png",
     favicon: "/favicon.ico",
   },
 
