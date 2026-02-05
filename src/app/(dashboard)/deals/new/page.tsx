@@ -16,6 +16,7 @@ import {
   Globe,
   AlertTriangle,
   Languages,
+  Lock,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -100,7 +101,7 @@ export default function NewDealPage() {
   const [company, setCompany] = useState("");
   const [entitlementError, setEntitlementError] = useState<string | null>(null);
 
-  const { data: templates, isLoading } = trpc.skills.listTemplates.useQuery();
+  const { data: templates, isLoading } = trpc.skills.listTemplatesWithAccess.useQuery();
   const createDeal = trpc.deal.create.useMutation({
     onSuccess: (deal) => {
       toast.success("Deal room created");
@@ -166,34 +167,28 @@ export default function NewDealPage() {
           <DialogHeader>
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 bg-yellow-500/20 flex items-center justify-center">
-                <AlertTriangle className="w-6 h-6 text-yellow-500" />
+                <Lock className="w-6 h-6 text-yellow-500" />
               </div>
               <div>
-                <DialogTitle>Access Required</DialogTitle>
+                <DialogTitle>{t("accessRequired")}</DialogTitle>
                 <DialogDescription className="mt-1">
                   {entitlementError}
                 </DialogDescription>
               </div>
             </div>
           </DialogHeader>
-          <div className="py-4">
-            <p className="text-sm text-muted-foreground">
-              To use this contract type, you'll need to have it enabled on your account.
-              Get in touch with us and we'll help you get started.
-            </p>
-          </div>
-          <DialogFooter className="gap-2 sm:gap-0">
+          <DialogFooter className="gap-2 sm:gap-0 mt-4">
             <button
               onClick={() => setEntitlementError(null)}
               className="px-4 py-2 border border-border text-sm hover:bg-muted/50"
             >
-              Close
+              {tCommon("close")}
             </button>
             <a
               href={getContactMailto("Dealroom Access Request")}
               className="btn-brutal inline-flex items-center gap-2 text-sm"
             >
-              Contact Us
+              {t("contactUs")}
               <ArrowRight className="w-4 h-4" />
             </a>
           </DialogFooter>
@@ -214,11 +209,17 @@ export default function NewDealPage() {
           {templates?.map((template) => {
             const Icon = contractIcons[template.contractType as keyof typeof contractIcons] || FileText;
             const isSelected = selectedType === template.contractType;
+            const isLocked = template.requiresLicense && !template.hasAccess;
 
             return (
               <button
                 key={template.id}
                 onClick={() => {
+                  if (isLocked) {
+                    // Show contact dialog for locked skills
+                    setEntitlementError(t("toUseContract"));
+                    return;
+                  }
                   setSelectedType(template.contractType);
                   // Reset jurisdiction when changing contract type
                   if (template.contractType !== selectedType) {
@@ -227,28 +228,43 @@ export default function NewDealPage() {
                 }}
                 className={`
                   card-brutal text-left relative transition-colors
-                  ${isSelected
+                  ${isLocked
+                    ? "opacity-60 border-dashed"
+                    : isSelected
                     ? "border-primary"
                     : "hover:border-muted-foreground"
                   }
                 `}
               >
-                {isSelected && (
+                {isSelected && !isLocked && (
                   <div className="absolute top-4 right-4 w-6 h-6 bg-primary flex items-center justify-center">
                     <Check className="w-4 h-4 text-primary-foreground" />
+                  </div>
+                )}
+                {isLocked && (
+                  <div className="absolute top-4 right-4 w-6 h-6 bg-muted flex items-center justify-center">
+                    <Lock className="w-4 h-4 text-muted-foreground" />
                   </div>
                 )}
                 <div className="flex items-start gap-4">
                   <div className={`
                     w-10 h-10 flex items-center justify-center
-                    ${isSelected ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}
+                    ${isLocked
+                      ? "bg-muted text-muted-foreground"
+                      : isSelected
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-muted text-muted-foreground"
+                    }
                   `}>
                     <Icon className="w-5 h-5" />
                   </div>
                   <div>
                     <h3 className="font-semibold">{template.displayName}</h3>
                     <p className="text-sm text-muted-foreground mt-1">
-                      {template.clauseCount} negotiable clauses
+                      {isLocked
+                        ? t("accessRequired")
+                        : t("negotiableClauses", { count: template.clauseCount })
+                      }
                     </p>
                   </div>
                 </div>
