@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 import {
   FileText,
   Shield,
@@ -14,6 +15,7 @@ import {
   Scale,
   Globe,
   AlertTriangle,
+  Languages,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -34,6 +36,27 @@ const contractIcons = {
 };
 
 type GoverningLaw = "CALIFORNIA" | "ENGLAND_WALES" | "SPAIN";
+type ContractLanguage = "en" | "es";
+
+const contractLanguageOptions: {
+  value: ContractLanguage;
+  label: string;
+  nativeLabel: string;
+  description: string;
+}[] = [
+  {
+    value: "en",
+    label: "English",
+    nativeLabel: "English",
+    description: "Contract text in English",
+  },
+  {
+    value: "es",
+    label: "Spanish",
+    nativeLabel: "Español",
+    description: "Texto del contrato en español",
+  },
+];
 
 const jurisdictionOptions: {
   value: GoverningLaw;
@@ -67,8 +90,11 @@ const jurisdictionOptions: {
 
 export default function NewDealPage() {
   const router = useRouter();
+  const t = useTranslations("newDeal");
+  const tCommon = useTranslations("common");
   const [selectedType, setSelectedType] = useState<string | null>(null);
   const [selectedJurisdiction, setSelectedJurisdiction] = useState<GoverningLaw | null>(null);
+  const [selectedLanguage, setSelectedLanguage] = useState<ContractLanguage>("en");
   const [dealName, setDealName] = useState("");
   const [company, setCompany] = useState("");
   const [entitlementError, setEntitlementError] = useState<string | null>(null);
@@ -99,6 +125,7 @@ export default function NewDealPage() {
       name: dealName.trim(),
       contractType: selectedType,
       governingLaw: selectedJurisdiction,
+      contractLanguage: selectedLanguage,
       initiatorCompany: company.trim() || undefined,
     });
   };
@@ -302,16 +329,71 @@ export default function NewDealPage() {
         </div>
       )}
 
-      {/* Step 3: Deal Details */}
+      {/* Step 3: Contract Language Selection */}
+      {selectedType && selectedJurisdiction && (
+        <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-300">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold">
+              3
+            </div>
+            <Label className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
+              {t("contractLanguage")}
+            </Label>
+          </div>
+
+          <div className="card-brutal border-blue-500/50 bg-blue-500/5">
+            <div className="flex items-start gap-3">
+              <Languages className="w-5 h-5 text-blue-500 mt-0.5" />
+              <div>
+                <p className="text-sm font-medium">{t("contractLanguageExplainer")}</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            {contractLanguageOptions.map((lang) => {
+              const isSelected = selectedLanguage === lang.value;
+
+              return (
+                <button
+                  key={lang.value}
+                  onClick={() => setSelectedLanguage(lang.value)}
+                  className={`
+                    card-brutal text-left relative transition-colors p-4
+                    ${isSelected
+                      ? "border-primary"
+                      : "hover:border-muted-foreground"
+                    }
+                  `}
+                >
+                  {isSelected && (
+                    <div className="absolute top-4 right-4 w-6 h-6 bg-primary flex items-center justify-center">
+                      <Check className="w-4 h-4 text-primary-foreground" />
+                    </div>
+                  )}
+                  <div>
+                    <h3 className="font-semibold">{lang.nativeLabel}</h3>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      {lang.description}
+                    </p>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* Step 4: Deal Details */}
       {selectedType && selectedJurisdiction && (
         <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-300">
           <div className="space-y-4">
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold">
-                3
+                4
               </div>
               <Label className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
-                Deal Details
+                {t("dealDetails")}
               </Label>
             </div>
 
@@ -319,15 +401,21 @@ export default function NewDealPage() {
               {/* Summary of selections */}
               <div className="p-3 bg-muted/30 border border-border text-sm">
                 <div className="flex items-center justify-between">
-                  <span className="text-muted-foreground">Contract:</span>
+                  <span className="text-muted-foreground">{t("contract")}</span>
                   <span className="font-medium">
-                    {templates?.find((t) => t.contractType === selectedType)?.displayName}
+                    {templates?.find((tmpl) => tmpl.contractType === selectedType)?.displayName}
                   </span>
                 </div>
                 <div className="flex items-center justify-between mt-2">
-                  <span className="text-muted-foreground">Governing Law:</span>
+                  <span className="text-muted-foreground">{t("governingLaw")}:</span>
                   <span className="font-medium">
                     {selectedJurisdictionInfo?.flag} {selectedJurisdictionInfo?.label}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between mt-2">
+                  <span className="text-muted-foreground">{t("contractLanguage")}:</span>
+                  <span className="font-medium">
+                    {contractLanguageOptions.find((l) => l.value === selectedLanguage)?.nativeLabel}
                   </span>
                 </div>
               </div>

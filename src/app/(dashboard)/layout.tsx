@@ -4,12 +4,14 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
 import { redirect } from "next/navigation";
+import { useTranslations } from "next-intl";
 import {
   FileText,
   Plus,
   LogOut,
   User,
 } from "lucide-react";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 
 export default function DashboardLayout({
   children,
@@ -18,11 +20,13 @@ export default function DashboardLayout({
 }) {
   const { data: session, status } = useSession();
   const pathname = usePathname();
+  const t = useTranslations("nav");
+  const tCommon = useTranslations("common");
 
   if (status === "loading") {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-muted-foreground">Loading...</div>
+        <div className="text-muted-foreground">{tCommon("loading")}</div>
       </div>
     );
   }
@@ -32,8 +36,8 @@ export default function DashboardLayout({
   }
 
   const navItems = [
-    { href: "/deals", label: "My Deals", icon: FileText },
-    { href: "/deals/new", label: "New Deal", icon: Plus },
+    { href: "/deals", label: t("myDeals"), icon: FileText },
+    { href: "/deals/new", label: t("newDeal"), icon: Plus },
   ];
 
   return (
@@ -72,6 +76,7 @@ export default function DashboardLayout({
           </nav>
 
           <div className="flex items-center gap-4">
+            <LanguageSwitcher />
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <User className="w-4 h-4" />
               <span>{session?.user?.email}</span>
@@ -81,7 +86,7 @@ export default function DashboardLayout({
               className="flex items-center gap-2 px-3 py-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
               <LogOut className="w-4 h-4" />
-              Sign Out
+              {t("signOut")}
             </button>
           </div>
         </div>

@@ -2,11 +2,13 @@
 
 import { useState } from "react";
 import { signIn } from "next-auth/react";
+import { useTranslations } from "next-intl";
 import { Mail, ArrowRight, Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 export default function SignInPage() {
+  const t = useTranslations("auth");
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
@@ -26,12 +28,12 @@ export default function SignInPage() {
       });
 
       if (result?.error) {
-        setError("Failed to send magic link. Please try again.");
+        setError(t("failedMagicLink"));
       } else {
         setIsEmailSent(true);
       }
     } catch (err) {
-      setError("An unexpected error occurred.");
+      setError(t("unexpectedError"));
     } finally {
       setIsLoading(false);
     }
@@ -46,7 +48,7 @@ export default function SignInPage() {
         callbackUrl: "/deals",
       });
     } catch (err) {
-      setError("Google sign-in failed.");
+      setError(t("googleSignInFailed"));
       setIsGoogleLoading(false);
     }
   };
@@ -58,18 +60,19 @@ export default function SignInPage() {
           <div className="w-16 h-16 bg-primary/20 flex items-center justify-center mx-auto mb-6">
             <Mail className="w-8 h-8 text-primary" />
           </div>
-          <h1 className="text-2xl font-bold mb-2">Check Your Email</h1>
+          <h1 className="text-2xl font-bold mb-2">{t("checkEmail")}</h1>
           <p className="text-muted-foreground mb-6">
-            We've sent a magic link to <span className="text-foreground font-medium">{email}</span>.
-            Click the link in the email to sign in.
+            {t.rich("magicLinkSent", {
+              email: () => <span className="text-foreground font-medium">{email}</span>
+            })}
           </p>
           <p className="text-sm text-muted-foreground">
-            Didn't receive it?{" "}
+            {t("didntReceive")}{" "}
             <button
               onClick={() => setIsEmailSent(false)}
               className="text-primary hover:underline"
             >
-              Try again
+              {t("tryAgain")}
             </button>
           </p>
         </div>
@@ -81,26 +84,29 @@ export default function SignInPage() {
     <div className="w-full max-w-md">
       <div className="card-brutal">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold mb-2 text-white uppercase tracking-wide">Dealroom</h1>
+          <h1 className="text-3xl font-bold mb-2 text-white uppercase tracking-wide">{t("dealroom")}</h1>
           <p className="text-muted-foreground mb-4">
-            A contract negotiation platform powered by{" "}
-            <a
-              href="https://northend.law"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-primary hover:underline"
-            >
-              North End Law
-            </a>
+            {t.rich("poweredBy", {
+              link: (chunks) => (
+                <a
+                  href="https://northend.law"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary hover:underline"
+                >
+                  North End Law
+                </a>
+              ),
+            })}
           </p>
           <p className="text-muted-foreground text-sm">
-            Enter your email to receive a magic link
+            {t("enterEmail")}
           </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-2">
-            <Label htmlFor="email">Email Address</Label>
+            <Label htmlFor="email">{t("emailAddress")}</Label>
             <Input
               id="email"
               type="email"
@@ -127,11 +133,11 @@ export default function SignInPage() {
             {isLoading ? (
               <>
                 <Loader2 className="w-4 h-4 animate-spin" />
-                Sending...
+                {t("sending")}
               </>
             ) : (
               <>
-                Continue with Email
+                {t("continueWithEmail")}
                 <ArrowRight className="w-4 h-4" />
               </>
             )}
@@ -139,12 +145,12 @@ export default function SignInPage() {
         </form>
 
         <p className="mt-6 text-center text-sm text-muted-foreground">
-          No password needed. We'll send you a secure link.
+          {t("noPasswordNeeded")}
         </p>
 
         <div className="mt-6 pt-6 border-t border-border">
           <p className="text-xs text-muted-foreground text-center mb-4">
-            Or continue with
+            {t("orContinueWith")}
           </p>
 
           <button
@@ -176,31 +182,35 @@ export default function SignInPage() {
               </svg>
             )}
             <span className="font-medium">
-              {isGoogleLoading ? "Signing in..." : "Continue with Google"}
+              {isGoogleLoading ? t("signingIn") : t("continueWithGoogle")}
             </span>
           </button>
         </div>
 
         <div className="mt-6 pt-6 border-t border-border text-center">
           <p className="text-xs text-muted-foreground">
-            By signing in, you agree to our{" "}
-            <a
-              href="https://northend.law/terms-of-use"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-primary hover:underline"
-            >
-              Terms of Use
-            </a>{" "}
-            and{" "}
-            <a
-              href="https://northend.law/privacy-policy"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-primary hover:underline"
-            >
-              Privacy Policy
-            </a>
+            {t.rich("bySigningIn", {
+              termsLink: (chunks) => (
+                <a
+                  href="https://northend.law/terms-of-use"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary hover:underline"
+                >
+                  {t("termsOfUse")}
+                </a>
+              ),
+              privacyLink: (chunks) => (
+                <a
+                  href="https://northend.law/privacy-policy"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary hover:underline"
+                >
+                  {t("privacyPolicy")}
+                </a>
+              ),
+            })}
           </p>
         </div>
       </div>
