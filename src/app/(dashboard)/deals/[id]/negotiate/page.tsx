@@ -4,6 +4,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 import {
   ArrowLeft,
   ArrowRight,
@@ -52,6 +53,8 @@ export default function NegotiatePage() {
   const params = useParams();
   const router = useRouter();
   const dealId = params.id as string;
+  const t = useTranslations("negotiate");
+  const tCommon = useTranslations("common");
 
   const [currentClauseIndex, setCurrentClauseIndex] = useState(0);
   const [selections, setSelections] = useState<Map<string, Selection>>(new Map());
@@ -73,15 +76,15 @@ export default function NegotiatePage() {
   const submitSelections = trpc.deal.submitSelections.useMutation({
     onSuccess: (result) => {
       if (result.bothSubmitted) {
-        toast.success("Both parties have submitted! Generating compromise suggestions...");
+        toast.success(t("toastMessages.bothPartiesSubmitted"));
         router.push(`/deals/${dealId}/review`);
       } else {
-        toast.success("Selections submitted successfully!");
+        toast.success(t("toastMessages.selectionsSubmitted"));
         router.push(`/deals/${dealId}`);
       }
     },
     onError: (error) => {
-      toast.error(`Failed to submit: ${error.message}`);
+      toast.error(t("toastMessages.submitFailed", { error: error.message }));
     },
   });
 
@@ -105,10 +108,10 @@ export default function NegotiatePage() {
           });
         }
         setSelections(map);
-        toast.success("Selections pre-populated. Review and adjust as needed.");
+        toast.success(t("toastMessages.prePopulated"));
       }
     } catch {
-      toast.error("Failed to load counterparty selections");
+      toast.error(t("toastMessages.prePopulateFailed"));
     }
   };
 
@@ -226,7 +229,7 @@ export default function NegotiatePage() {
 
   const handleSubmit = async () => {
     if (!isComplete) {
-      toast.error("Please make selections for all clauses");
+      toast.error(t("toastMessages.pleaseSelectAll"));
       return;
     }
 

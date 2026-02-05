@@ -199,6 +199,7 @@ export const dealRouter = createTRPCRouter({
         name: z.string().min(1).max(200),
         contractType: z.string(),
         governingLaw: z.enum(["CALIFORNIA", "ENGLAND_WALES", "SPAIN"]),
+        contractLanguage: z.enum(["en", "es"]).default("en"),
         initiatorCompany: z.string().optional(),
       })
     )
@@ -261,6 +262,7 @@ export const dealRouter = createTRPCRouter({
           name: input.name,
           contractTemplateId: template.id,
           governingLaw: input.governingLaw as GoverningLaw,
+          contractLanguage: input.contractLanguage,
           status: DealRoomStatus.DRAFT,
           parties: {
             create: {
@@ -295,6 +297,7 @@ export const dealRouter = createTRPCRouter({
             name: input.name,
             contractType: input.contractType,
             governingLaw: input.governingLaw,
+            contractLanguage: input.contractLanguage,
           },
         },
       });

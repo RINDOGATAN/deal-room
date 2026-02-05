@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { trpc } from "@/lib/trpc";
 import { format } from "date-fns";
+import { useTranslations } from "next-intl";
 import {
   FileText,
   Plus,
@@ -14,24 +15,47 @@ import {
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
-const statusConfig = {
-  DRAFT: { label: "Draft", color: "bg-muted text-muted-foreground", icon: FileText },
-  AWAITING_RESPONSE: { label: "Awaiting Response", color: "bg-yellow-500/20 text-yellow-500", icon: Clock },
-  NEGOTIATING: { label: "Negotiating", color: "bg-blue-500/20 text-blue-500", icon: Users },
-  AGREED: { label: "Agreed", color: "bg-primary/20 text-primary", icon: CheckCircle },
-  SIGNING: { label: "Signing", color: "bg-purple-500/20 text-purple-500", icon: FileText },
-  COMPLETED: { label: "Completed", color: "bg-green-500/20 text-green-500", icon: CheckCircle },
-  CANCELLED: { label: "Cancelled", color: "bg-orange-500/20 text-orange-500", icon: AlertCircle },
+const statusIcons = {
+  DRAFT: FileText,
+  AWAITING_RESPONSE: Clock,
+  NEGOTIATING: Users,
+  AGREED: CheckCircle,
+  SIGNING: FileText,
+  COMPLETED: CheckCircle,
+  CANCELLED: AlertCircle,
+};
+
+const statusColors = {
+  DRAFT: "bg-muted text-muted-foreground",
+  AWAITING_RESPONSE: "bg-yellow-500/20 text-yellow-500",
+  NEGOTIATING: "bg-blue-500/20 text-blue-500",
+  AGREED: "bg-primary/20 text-primary",
+  SIGNING: "bg-purple-500/20 text-purple-500",
+  COMPLETED: "bg-green-500/20 text-green-500",
+  CANCELLED: "bg-orange-500/20 text-orange-500",
 };
 
 export default function DealsPage() {
+  const t = useTranslations("deals");
+  const tCommon = useTranslations("common");
   const { data: deals, isLoading, error } = trpc.deal.list.useQuery();
+
+  // Map status keys to translation keys
+  const statusLabels: Record<string, string> = {
+    DRAFT: t("status.draft"),
+    AWAITING_RESPONSE: t("status.awaitingResponse"),
+    NEGOTIATING: t("status.negotiating"),
+    AGREED: t("status.agreed"),
+    SIGNING: t("status.signing"),
+    COMPLETED: t("status.completed"),
+    CANCELLED: t("status.cancelled"),
+  };
 
   if (isLoading) {
     return (
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold">My Deals</h1>
+          <h1 className="text-2xl font-bold">{t("myDeals")}</h1>
         </div>
         <div className="grid gap-4">
           {[1, 2, 3].map((i) => (
@@ -50,7 +74,7 @@ export default function DealsPage() {
       <div className="card-brutal border-yellow-500">
         <div className="flex items-center gap-3 text-yellow-600">
           <AlertCircle className="w-5 h-5" />
-          <span>Failed to load deals: {error.message}</span>
+          <span>{t("failedToLoad", { error: error.message })}</span>
         </div>
       </div>
     );
@@ -60,34 +84,35 @@ export default function DealsPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">My Deals</h1>
+          <h1 className="text-2xl font-bold">{t("myDeals")}</h1>
           <p className="text-muted-foreground mt-1">
-            Manage your contract negotiations
+            {t("manageNegotiations")}
           </p>
         </div>
         <Link href="/deals/new" className="btn-brutal flex items-center gap-2">
           <Plus className="w-4 h-4" />
-          New Deal
+          {t("newDeal")}
         </Link>
       </div>
 
       {deals?.length === 0 ? (
         <div className="card-brutal text-center py-12">
           <FileText className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-          <h2 className="text-lg font-semibold mb-2">No deals yet</h2>
+          <h2 className="text-lg font-semibold mb-2">{t("noDealsYet")}</h2>
           <p className="text-muted-foreground mb-6">
-            Create your first deal room to start negotiating contracts
+            {t("createFirstDeal")}
           </p>
           <Link href="/deals/new" className="btn-brutal inline-flex items-center gap-2">
             <Plus className="w-4 h-4" />
-            Create Deal Room
+            {t("createDealRoom")}
           </Link>
         </div>
       ) : (
         <div className="grid gap-4">
           {deals?.map((deal) => {
-            const status = statusConfig[deal.status];
-            const StatusIcon = status.icon;
+            const StatusIcon = statusIcons[deal.status];
+            const statusColor = statusColors[deal.status];
+            const statusLabel = statusLabels[deal.status];
             const initiator = deal.parties.find((p) => p.role === "INITIATOR");
             const respondent = deal.parties.find((p) => p.role === "RESPONDENT");
 
@@ -103,9 +128,9 @@ export default function DealsPage() {
                       <h2 className="text-lg font-semibold group-hover:text-primary transition-colors">
                         {deal.name}
                       </h2>
-                      <Badge className={status.color}>
+                      <Badge className={statusColor}>
                         <StatusIcon className="w-3 h-3 mr-1" />
-                        {status.label}
+                        {statusLabel}
                       </Badge>
                     </div>
 
@@ -115,9 +140,9 @@ export default function DealsPage() {
                         {deal.contractTemplate.displayName}
                       </span>
                       <span>•</span>
-                      <span><span className="metric text-foreground">{deal._count.clauses}</span> clauses</span>
+                      <span><span className="metric text-foreground">{deal._count.clauses}</span> {t("clauses")}</span>
                       <span>•</span>
-                      <span>Updated {format(new Date(deal.updatedAt), "MMM d, yyyy")}</span>
+                      <span>{t("updated", { date: format(new Date(deal.updatedAt), "MMM d, yyyy") })}</span>
                     </div>
 
                     <div className="flex items-center gap-4 text-sm">
