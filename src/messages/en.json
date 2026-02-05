@@ -38,6 +38,8 @@
     "orContinueWith": "Or continue with",
     "continueWithGoogle": "Continue with Google",
     "signingIn": "Signing in...",
+    "tryDemo": "Try Demo",
+    "trialDescription": "No sign-up required. Explore the platform instantly.",
     "bySigningIn": "By signing in, you agree to our {termsLink} and {privacyLink}",
     "termsOfUse": "Terms of Use",
     "privacyPolicy": "Privacy Policy",

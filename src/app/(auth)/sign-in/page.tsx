@@ -3,39 +3,25 @@
 import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useTranslations } from "next-intl";
-import { Mail, ArrowRight, Loader2 } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Loader2, Play, Sparkles } from "lucide-react";
 
 export default function SignInPage() {
   const t = useTranslations("auth");
-  const [email, setEmail] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [isTrialLoading, setIsTrialLoading] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
-  const [isEmailSent, setIsEmailSent] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
+  const handleTrialAccess = async () => {
+    setIsTrialLoading(true);
     setError(null);
 
     try {
-      const result = await signIn("email", {
-        email,
-        redirect: false,
+      await signIn("trial", {
         callbackUrl: "/deals",
       });
-
-      if (result?.error) {
-        setError(t("failedMagicLink"));
-      } else {
-        setIsEmailSent(true);
-      }
     } catch (err) {
       setError(t("unexpectedError"));
-    } finally {
-      setIsLoading(false);
+      setIsTrialLoading(false);
     }
   };
 
@@ -53,33 +39,6 @@ export default function SignInPage() {
     }
   };
 
-  if (isEmailSent) {
-    return (
-      <div className="w-full max-w-md">
-        <div className="card-brutal text-center">
-          <div className="w-16 h-16 bg-primary/20 flex items-center justify-center mx-auto mb-6">
-            <Mail className="w-8 h-8 text-primary" />
-          </div>
-          <h1 className="text-2xl font-bold mb-2">{t("checkEmail")}</h1>
-          <p className="text-muted-foreground mb-6">
-            {t.rich("magicLinkSent", {
-              email: () => <span className="text-foreground font-medium">{email}</span>
-            })}
-          </p>
-          <p className="text-sm text-muted-foreground">
-            {t("didntReceive")}{" "}
-            <button
-              onClick={() => setIsEmailSent(false)}
-              className="text-primary hover:underline"
-            >
-              {t("tryAgain")}
-            </button>
-          </p>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="w-full max-w-md">
       <div className="card-brutal">
@@ -87,7 +46,7 @@ export default function SignInPage() {
           <h1 className="text-3xl font-bold mb-2 text-white uppercase tracking-wide">{t("dealroom")}</h1>
           <p className="text-muted-foreground mb-4">
             {t.rich("poweredBy", {
-              link: (chunks) => (
+              link: () => (
                 <a
                   href="https://northend.law"
                   target="_blank"
@@ -99,56 +58,42 @@ export default function SignInPage() {
               ),
             })}
           </p>
-          <p className="text-muted-foreground text-sm">
-            {t("enterEmail")}
-          </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="space-y-2">
-            <Label htmlFor="email">{t("emailAddress")}</Label>
-            <Input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="you@company.com"
-              className="input-brutal"
-              required
-              autoFocus
-            />
+        {error && (
+          <div className="mb-6 p-4 bg-yellow-500/10 border border-yellow-500 text-yellow-600 text-sm">
+            {error}
           </div>
+        )}
 
-          {error && (
-            <div className="p-4 bg-yellow-500/10 border border-yellow-500 text-yellow-600 text-sm">
-              {error}
-            </div>
-          )}
-
+        {/* Trial Access - Primary CTA */}
+        <div className="space-y-4">
           <button
-            type="submit"
-            disabled={isLoading || !email}
-            className="btn-brutal w-full flex items-center justify-center gap-2 disabled:opacity-50"
+            type="button"
+            onClick={handleTrialAccess}
+            disabled={isTrialLoading}
+            className="btn-brutal w-full flex items-center justify-center gap-3 py-4 text-lg disabled:opacity-50"
           >
-            {isLoading ? (
+            {isTrialLoading ? (
               <>
-                <Loader2 className="w-4 h-4 animate-spin" />
-                {t("sending")}
+                <Loader2 className="w-5 h-5 animate-spin" />
+                {t("signingIn")}
               </>
             ) : (
               <>
-                {t("continueWithEmail")}
-                <ArrowRight className="w-4 h-4" />
+                <Play className="w-5 h-5" />
+                {t("tryDemo")}
               </>
             )}
           </button>
-        </form>
 
-        <p className="mt-6 text-center text-sm text-muted-foreground">
-          {t("noPasswordNeeded")}
-        </p>
+          <p className="text-center text-sm text-muted-foreground">
+            {t("trialDescription")}
+          </p>
+        </div>
 
-        <div className="mt-6 pt-6 border-t border-border">
+        {/* Google Sign In */}
+        <div className="mt-8 pt-6 border-t border-border">
           <p className="text-xs text-muted-foreground text-center mb-4">
             {t("orContinueWith")}
           </p>
@@ -190,7 +135,7 @@ export default function SignInPage() {
         <div className="mt-6 pt-6 border-t border-border text-center">
           <p className="text-xs text-muted-foreground">
             {t.rich("bySigningIn", {
-              termsLink: (chunks) => (
+              termsLink: () => (
                 <a
                   href="https://northend.law/terms-of-use"
                   target="_blank"
@@ -200,7 +145,7 @@ export default function SignInPage() {
                   {t("termsOfUse")}
                 </a>
               ),
-              privacyLink: (chunks) => (
+              privacyLink: () => (
                 <a
                   href="https://northend.law/privacy-policy"
                   target="_blank"
