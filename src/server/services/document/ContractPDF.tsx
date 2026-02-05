@@ -15,6 +15,7 @@ import {
   Font,
 } from "@react-pdf/renderer";
 import type { ContractData } from "./generator";
+import { brand } from "@/config/brand";
 
 // Register fonts (using built-in fonts for simplicity)
 Font.register({
@@ -276,7 +277,7 @@ export function ContractPDF({ data }: ContractPDFProps) {
   return (
     <Document
       title={`${data.contractType} - ${data.dealName}`}
-      author="Deal Room"
+      author={brand.name}
       subject={data.contractType}
     >
       <Page size="A4" style={styles.page}>

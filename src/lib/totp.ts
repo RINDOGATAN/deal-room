@@ -1,7 +1,8 @@
 import * as OTPAuth from "otpauth";
 import QRCode from "qrcode";
+import { totpIssuers } from "@/config/brand";
 
-const ISSUER = "Deal Room";
+const ISSUER = totpIssuers.user;
 
 export function generateSecret(email: string): string {
   const totp = new OTPAuth.TOTP({

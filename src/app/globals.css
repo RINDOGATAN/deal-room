@@ -54,50 +54,50 @@
 :root {
   --radius: 0;
   /* Dark background */
-  --background: #1c1f37;
-  --foreground: #e5e5e5;
+  --background: #1a1a1a;
+  --foreground: #fefeff;
   /* Cards slightly lighter */
-  --card: #232742;
-  --card-foreground: #e5e5e5;
+  --card: #242424;
+  --card-foreground: #fefeff;
   /* Popovers */
-  --popover: #232742;
-  --popover-foreground: #e5e5e5;
-  /* Primary = Lime accent */
-  --primary: #13e9d1;
-  --primary-foreground: #1c1f37;
+  --popover: #242424;
+  --popover-foreground: #fefeff;
+  /* Primary = Blue accent */
+  --primary: #53aecc;
+  --primary-foreground: #1a1a1a;
   /* Secondary = Subtle dark */
-  --secondary: #232742;
+  --secondary: #242424;
   --secondary-foreground: #e0e0e0;
   /* Muted */
-  --muted: #232742;
-  --muted-foreground: #d0d0d0;
-  /* Accent = Lime */
-  --accent: #13e9d1;
-  --accent-foreground: #1c1f37;
+  --muted: #242424;
+  --muted-foreground: #a0a0a0;
+  /* Accent = Blue */
+  --accent: #53aecc;
+  --accent-foreground: #1a1a1a;
   /* Warning/Destructive - Amber instead of Red */
   --destructive: #f59e0b;
   /* Borders - visible but subtle */
-  --border: #232742;
-  --input: #232742;
-  --ring: #13e9d1;
-  /* Lime color */
-  --lime: #13e9d1;
-  --lime-foreground: #1c1f37;
+  --border: #333333;
+  --input: #242424;
+  --ring: #53aecc;
+  /* Lime color (legacy, now blue accent) */
+  --lime: #53aecc;
+  --lime-foreground: #1a1a1a;
   /* Charts */
-  --chart-1: #13e9d1;
-  --chart-2: #a3e635;
-  --chart-3: #84cc16;
-  --chart-4: #65a30d;
-  --chart-5: #4d7c0f;
+  --chart-1: #53aecc;
+  --chart-2: #6bc5e3;
+  --chart-3: #83dcfa;
+  --chart-4: #3a97b5;
+  --chart-5: #21809e;
   /* Sidebar */
-  --sidebar: #232742;
-  --sidebar-foreground: #e5e5e5;
-  --sidebar-primary: #13e9d1;
-  --sidebar-primary-foreground: #1c1f37;
-  --sidebar-accent: #232742;
-  --sidebar-accent-foreground: #e5e5e5;
-  --sidebar-border: #232742;
-  --sidebar-ring: #13e9d1;
+  --sidebar: #242424;
+  --sidebar-foreground: #fefeff;
+  --sidebar-primary: #53aecc;
+  --sidebar-primary-foreground: #1a1a1a;
+  --sidebar-accent: #242424;
+  --sidebar-accent-foreground: #fefeff;
+  --sidebar-border: #333333;
+  --sidebar-ring: #53aecc;
 }
 
 /* No separate dark mode - always dark */
@@ -115,52 +115,52 @@
   }
   /* Brutalist focus states */
   *:focus-visible {
-    @apply outline-2 outline-offset-2 outline-[#13e9d1];
+    @apply outline-2 outline-offset-2 outline-[#53aecc];
   }
 }
 
 @layer components {
   /* Brutalist button variants */
   .btn-brutal {
-    @apply bg-[#13e9d1] text-[#1c1f37] font-semibold px-6 py-3 border-2 border-[#13e9d1];
-    @apply hover:bg-transparent hover:text-[#13e9d1] transition-colors;
+    @apply bg-[#53aecc] text-[#1a1a1a] font-semibold px-6 py-3 border-2 border-[#53aecc];
+    @apply hover:bg-transparent hover:text-[#53aecc] transition-colors;
   }
   .btn-brutal-outline {
-    @apply bg-transparent text-[#13e9d1] font-semibold px-6 py-3 border-2 border-[#13e9d1];
-    @apply hover:bg-[#13e9d1] hover:text-[#1c1f37] transition-colors;
+    @apply bg-transparent text-[#53aecc] font-semibold px-6 py-3 border-2 border-[#53aecc];
+    @apply hover:bg-[#53aecc] hover:text-[#1a1a1a] transition-colors;
   }
   /* Brutalist card */
   .card-brutal {
-    @apply bg-[#232742] border border-[#232742] p-6;
+    @apply bg-[#242424] border border-[#333333] p-6;
   }
   /* Brutalist input */
   .input-brutal {
-    @apply bg-[#232742] border border-[#232742] text-[#e5e5e5] px-4 py-3;
-    @apply focus:border-[#13e9d1] focus:outline-none;
+    @apply bg-[#242424] border border-[#333333] text-[#fefeff] px-4 py-3;
+    @apply focus:border-[#53aecc] focus:outline-none;
   }
   /* Brutalist tabs */
   .tab-brutal {
-    @apply px-4 py-2 text-sm font-medium text-[#d0d0d0] border border-transparent;
-    @apply hover:text-[#e5e5e5];
+    @apply px-4 py-2 text-sm font-medium text-[#a0a0a0] border border-transparent;
+    @apply hover:text-[#fefeff];
   }
   .tab-brutal-active {
-    @apply text-[#13e9d1] border-[#13e9d1];
+    @apply text-[#53aecc] border-[#53aecc];
   }
   /* Selection highlight */
   ::selection {
-    @apply bg-[#13e9d1] text-[#1c1f37];
+    @apply bg-[#53aecc] text-[#1a1a1a];
   }
 }
 
 @layer utilities {
   .text-lime {
-    color: #13e9d1;
+    color: #53aecc;
   }
   .bg-lime {
-    background-color: #13e9d1;
+    background-color: #53aecc;
   }
   .border-lime {
-    border-color: #13e9d1;
+    border-color: #53aecc;
   }
   /* Display font for metrics and numbers */
   .font-display {
@@ -193,19 +193,19 @@
 @layer components {
   /* Stat card with accent line */
   .stat-card {
-    @apply bg-[#232742] p-6 relative;
-    border-left: 3px solid #13e9d1;
+    @apply bg-[#242424] p-6 relative;
+    border-left: 3px solid #53aecc;
   }
   .stat-card-neutral {
-    @apply bg-[#232742] p-6 relative;
-    border-left: 3px solid #404663;
+    @apply bg-[#242424] p-6 relative;
+    border-left: 3px solid #404040;
   }
   /* Progress stat row */
   .stat-row {
-    @apply flex items-center justify-between py-4 border-b border-[#2a2f4a] last:border-0;
+    @apply flex items-center justify-between py-4 border-b border-[#333333] last:border-0;
   }
   .stat-row:hover {
-    @apply bg-[#2a2f4a]/50;
+    @apply bg-[#333333]/50;
     margin-left: -1rem;
     margin-right: -1rem;
     padding-left: 1rem;

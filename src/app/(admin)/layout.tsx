@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Shield, LogOut, Home, Users, FileText, Package, BarChart, UserCog } from "lucide-react";
+import { brand } from "@/config/brand";
 
 export default function AdminLayout({
   children,
@@ -22,7 +23,7 @@ export default function AdminLayout({
         <header className="border-b border-border">
           <div className="container mx-auto px-6 py-4 flex items-center gap-3">
             <Link href="/" className="flex items-center gap-3">
-              <img src="/nel-icon.png" alt="NEL" className="h-8" />
+              <img src={brand.assets.logo} alt={brand.companyShort} className="h-8" />
             </Link>
             <div className="h-6 w-px bg-border" />
             <span className="text-primary font-medium text-sm uppercase tracking-wide">Platform Admin</span>
@@ -37,7 +38,7 @@ export default function AdminLayout({
         {/* Footer */}
         <footer className="border-t border-border py-6">
           <div className="container mx-auto px-6 text-center text-sm text-muted-foreground">
-            <p>Platform Administration - Deal Room</p>
+            <p>Platform Administration - {brand.name}</p>
           </div>
         </footer>
       </div>
@@ -60,7 +61,7 @@ export default function AdminLayout({
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <Link href="/admin" className="flex items-center gap-3">
-              <img src="/nel-icon.png" alt="NEL" className="h-8" />
+              <img src={brand.assets.logo} alt={brand.companyShort} className="h-8" />
             </Link>
             <div className="h-6 w-px bg-border" />
             <div className="flex items-center gap-2">

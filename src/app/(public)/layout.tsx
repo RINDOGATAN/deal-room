@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { BookOpen } from "lucide-react";
+import { brand } from "@/config/brand";
 
 export default function PublicLayout({
   children,
@@ -12,7 +13,7 @@ export default function PublicLayout({
       <header className="border-b border-border">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <Link href="/" className="flex items-center">
-            <img src="/nel-icon.png" alt="NEL" className="h-8" />
+            <img src={brand.assets.logo} alt={brand.companyShort} className="h-8" />
           </Link>
 
           <nav className="flex items-center gap-4">
@@ -41,9 +42,9 @@ export default function PublicLayout({
         <div className="max-w-7xl mx-auto px-6 py-8">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <img src="/nel-icon.png" alt="NEL" className="h-6" />
+              <img src={brand.assets.logo} alt={brand.companyShort} className="h-6" />
               <span className="text-sm text-muted-foreground">
-                Dealroom by NEL
+                {brand.shortName} by {brand.companyShort}
               </span>
             </div>
             <div className="flex items-center gap-6 text-sm text-muted-foreground">

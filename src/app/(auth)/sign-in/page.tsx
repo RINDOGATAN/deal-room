@@ -5,6 +5,7 @@ import { signIn } from "next-auth/react";
 import { Mail, ArrowRight, Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { brand } from "@/config/brand";
 
 export default function SignInPage() {
   const [email, setEmail] = useState("");
@@ -81,16 +82,16 @@ export default function SignInPage() {
     <div className="w-full max-w-md">
       <div className="card-brutal">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold mb-2 text-white uppercase tracking-wide">Dealroom</h1>
+          <h1 className="text-3xl font-bold mb-2 text-white uppercase tracking-wide">{brand.shortName}</h1>
           <p className="text-muted-foreground mb-4">
             A contract negotiation platform powered by{" "}
             <a
-              href="https://northend.law"
+              href={brand.links.website}
               target="_blank"
               rel="noopener noreferrer"
               className="text-primary hover:underline"
             >
-              North End Law
+              {brand.company}
             </a>
           </p>
           <p className="text-muted-foreground text-sm">
@@ -185,7 +186,7 @@ export default function SignInPage() {
           <p className="text-xs text-muted-foreground">
             By signing in, you agree to our{" "}
             <a
-              href="https://northend.law/terms-of-use"
+              href={brand.links.terms}
               target="_blank"
               rel="noopener noreferrer"
               className="text-primary hover:underline"
@@ -194,7 +195,7 @@ export default function SignInPage() {
             </a>{" "}
             and{" "}
             <a
-              href="https://northend.law/privacy-policy"
+              href={brand.links.privacy}
               target="_blank"
               rel="noopener noreferrer"
               className="text-primary hover:underline"

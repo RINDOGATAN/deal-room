@@ -3,6 +3,7 @@ import EmailProvider from "next-auth/providers/email";
 import { Resend } from "resend";
 import { PrismaClient } from "@prisma/client";
 import { createSupervisorAdapter } from "./supervisor-adapter";
+import { brand, getEmailStyles } from "@/config/brand";
 
 // Create a dedicated prisma instance to avoid module resolution issues
 const prisma = new PrismaClient();
@@ -30,17 +31,18 @@ export const supervisorAuthOptions: NextAuthOptions = {
         // NextAuth generates /api/auth/callback/email but we need /api/auth/supervisor/callback/email
         const supervisorUrl = url.replace("/api/auth/callback/", "/api/auth/supervisor/callback/");
 
+        const emailStyles = getEmailStyles();
         try {
           await resend.emails.send({
             from: process.env.EMAIL_FROM || "onboarding@resend.dev",
             to: email,
-            subject: "Sign in to Deal Room - Supervisor Portal",
+            subject: `Sign in to ${brand.name} - Supervisor Portal`,
             html: `
               <div style="font-family: sans-serif; max-width: 500px; margin: 0 auto;">
-                <h1 style="color: #9333ea; background: #1c1f37; padding: 20px; margin: 0;">Deal Room - Supervisor Portal</h1>
+                <h1 style="color: ${emailStyles.supervisorHeader.color}; background: ${emailStyles.supervisorHeader.background}; padding: 20px; margin: 0;">${brand.name} - Supervisor Portal</h1>
                 <div style="padding: 20px; background: #f5f5f5;">
                   <p>Click the button below to sign in to the Supervisor Portal:</p>
-                  <a href="${supervisorUrl}" style="display: inline-block; background: #9333ea; color: white; padding: 12px 24px; text-decoration: none; font-weight: bold; margin: 20px 0;">Sign In as Supervisor</a>
+                  <a href="${supervisorUrl}" style="display: inline-block; background: ${emailStyles.supervisorButton.background}; color: ${emailStyles.supervisorButton.color}; padding: 12px 24px; text-decoration: none; font-weight: bold; margin: 20px 0;">Sign In as Supervisor</a>
                   <p style="color: #666; font-size: 14px;">If you didn't request this email, you can safely ignore it.</p>
                   <p style="color: #666; font-size: 12px;">Or copy this link: ${supervisorUrl}</p>
                 </div>

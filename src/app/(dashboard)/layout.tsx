@@ -10,6 +10,7 @@ import {
   LogOut,
   User,
 } from "lucide-react";
+import { brand } from "@/config/brand";
 
 export default function DashboardLayout({
   children,
@@ -42,7 +43,7 @@ export default function DashboardLayout({
       <header className="border-b border-border">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <Link href="/deals" className="flex items-center">
-            <img src="/nel-icon.png" alt="NEL" className="h-8" />
+            <img src={brand.assets.logo} alt={brand.companyShort} className="h-8" />
           </Link>
 
           <nav className="flex items-center gap-1">
