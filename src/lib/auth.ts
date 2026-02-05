@@ -21,26 +21,28 @@ export const authOptions: NextAuthOptions = {
       name: "Trial Access",
       credentials: {},
       async authorize() {
-        // Find or create the trial user
-        let user = await prisma.user.findUnique({
-          where: { email: TRIAL_EMAIL },
-        });
-
-        if (!user) {
-          user = await prisma.user.create({
-            data: {
+        try {
+          // Upsert the trial user (create if not exists, otherwise return existing)
+          const user = await prisma.user.upsert({
+            where: { email: TRIAL_EMAIL },
+            update: {}, // Don't update anything if exists
+            create: {
               email: TRIAL_EMAIL,
               name: "Demo User",
               company: "Trial Account",
             },
           });
-        }
 
-        return {
-          id: user.id,
-          email: user.email,
-          name: user.name,
-        };
+          // Return user object for JWT token
+          return {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+          };
+        } catch (error) {
+          console.error("Trial auth error:", error);
+          return null;
+        }
       },
     }),
     GoogleProvider({
