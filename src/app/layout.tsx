@@ -3,6 +3,7 @@ import { Inter, Dancing_Script, Jost } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/components/providers";
 import { Toaster } from "@/components/ui/sonner";
+import { brand } from "@/config/brand";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -22,8 +23,8 @@ const jost = Jost({
 });
 
 export const metadata: Metadata = {
-  title: "Deal Room - Contract Negotiation Platform",
-  description: "Two-party asynchronous contract negotiation platform with intelligent compromise suggestions",
+  title: `${brand.name} - ${brand.tagline}`,
+  description: brand.description,
 };
 
 export default function RootLayout({
@@ -40,18 +41,18 @@ export default function RootLayout({
           </div>
           <footer className="py-4 px-6 border-t border-border bg-background">
             <div className="max-w-7xl mx-auto text-center text-sm text-muted-foreground">
-              Dealroom is a{" "}
+              {brand.shortName} is a{" "}
               <a
-                href="https://northend.law"
+                href={brand.links.website}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-primary hover:underline"
               >
-                North End Law
+                {brand.company}
               </a>{" "}
               service.{" "}
               <a
-                href="https://northend.law/terms-of-use"
+                href={brand.links.terms}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-primary hover:underline"
@@ -60,7 +61,7 @@ export default function RootLayout({
               </a>{" "}
               ·{" "}
               <a
-                href="https://northend.law/privacy-policy"
+                href={brand.links.privacy}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-primary hover:underline"

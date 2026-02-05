@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Scale, LogOut, Home } from "lucide-react";
+import { brand } from "@/config/brand";
 
 export default function SupervisorLayout({
   children,
@@ -22,7 +23,7 @@ export default function SupervisorLayout({
         <header className="border-b border-border">
           <div className="container mx-auto px-6 py-4 flex items-center gap-3">
             <Link href="/" className="flex items-center gap-3">
-              <img src="/nel-icon.png" alt="NEL" className="h-8" />
+              <img src={brand.assets.logo} alt={brand.companyShort} className="h-8" />
             </Link>
             <div className="h-6 w-px bg-border" />
             <span className="text-purple-500 font-medium text-sm uppercase tracking-wide">Supervisor Portal</span>
@@ -37,7 +38,7 @@ export default function SupervisorLayout({
         {/* Footer */}
         <footer className="border-t border-border py-6">
           <div className="container mx-auto px-6 text-center text-sm text-muted-foreground">
-            <p>Supervising Attorney Portal - Deal Room</p>
+            <p>Supervising Attorney Portal - {brand.name}</p>
           </div>
         </footer>
       </div>
@@ -51,7 +52,7 @@ export default function SupervisorLayout({
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <Link href="/supervise" className="flex items-center gap-3">
-              <img src="/nel-icon.png" alt="NEL" className="h-8" />
+              <img src={brand.assets.logo} alt={brand.companyShort} className="h-8" />
             </Link>
             <div className="h-6 w-px bg-border" />
             <div className="flex items-center gap-2">

@@ -3,6 +3,7 @@ import EmailProvider from "next-auth/providers/email";
 import { Resend } from "resend";
 import { PrismaClient } from "@prisma/client";
 import { createAdminAdapter } from "./admin-adapter";
+import { brand, getEmailStyles } from "@/config/brand";
 
 // Create a dedicated prisma instance to avoid module resolution issues
 const prisma = new PrismaClient();
@@ -31,17 +32,18 @@ export const adminAuthOptions: NextAuthOptions = {
         const adminUrl = url.replace("/api/auth/callback/", "/api/auth/admin/callback/");
 
 
+        const emailStyles = getEmailStyles();
         try {
           await resend.emails.send({
             from: process.env.EMAIL_FROM || "onboarding@resend.dev",
             to: email,
-            subject: "Sign in to Deal Room - Platform Admin",
+            subject: `Sign in to ${brand.name} - Platform Admin`,
             html: `
               <div style="font-family: sans-serif; max-width: 500px; margin: 0 auto;">
-                <h1 style="color: #ffffff; background: #1c1f37; padding: 20px; margin: 0;">Deal Room - Platform Admin</h1>
+                <h1 style="color: ${emailStyles.adminHeader.color}; background: ${emailStyles.adminHeader.background}; padding: 20px; margin: 0;">${brand.name} - Platform Admin</h1>
                 <div style="padding: 20px; background: #f5f5f5;">
                   <p>Click the button below to sign in to the Platform Admin Portal:</p>
-                  <a href="${adminUrl}" style="display: inline-block; background: #1c1f37; color: white; padding: 12px 24px; text-decoration: none; font-weight: bold; margin: 20px 0; border: 2px solid #000;">Sign In as Admin</a>
+                  <a href="${adminUrl}" style="display: inline-block; background: ${emailStyles.adminButton.background}; color: ${emailStyles.adminButton.color}; padding: 12px 24px; text-decoration: none; font-weight: bold; margin: 20px 0; border: 2px solid #000;">Sign In as Admin</a>
                   <p style="color: #666; font-size: 14px;">If you didn't request this email, you can safely ignore it.</p>
                   <p style="color: #666; font-size: 12px;">Or copy this link: ${adminUrl}</p>
                 </div>

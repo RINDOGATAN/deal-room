@@ -1,7 +1,8 @@
 import * as OTPAuth from "otpauth";
 import QRCode from "qrcode";
+import { totpIssuers } from "@/config/brand";
 
-const ISSUER = "Deal Room - Supervisor";
+const ISSUER = totpIssuers.supervisor;
 
 export function generateSupervisorSecret(email: string): string {
   const totp = new OTPAuth.TOTP({

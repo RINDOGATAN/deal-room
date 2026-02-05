@@ -25,6 +25,7 @@ import {
   DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog";
+import { getContactMailto } from "@/config/brand";
 
 const contractIcons = {
   NDA: Shield,
@@ -162,7 +163,7 @@ export default function NewDealPage() {
               Close
             </button>
             <a
-              href="mailto:hello@northend.law?subject=Dealroom%20Access%20Request"
+              href={getContactMailto("Dealroom Access Request")}
               className="btn-brutal inline-flex items-center gap-2 text-sm"
             >
               Contact Us

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { brand } from "@/config/brand";
 
 export default function AuthLayout({
   children,
@@ -13,7 +14,7 @@ export default function AuthLayout({
       <header className="border-b border-border">
         <div className="container mx-auto px-6 py-4">
           <Link href="/">
-            <img src="/nel-icon.png" alt="NEL" className="h-8" />
+            <img src={brand.assets.logo} alt={brand.companyShort} className="h-8" />
           </Link>
         </div>
       </header>
