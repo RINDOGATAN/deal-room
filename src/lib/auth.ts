@@ -1,47 +1,15 @@
 import { type NextAuthOptions } from "next-auth";
 import EmailProvider from "next-auth/providers/email";
 import GoogleProvider from "next-auth/providers/google";
-import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { Resend } from "resend";
 import prisma from "@/lib/prisma";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-// Trial user email - creates a demo account for testing
-const TRIAL_EMAIL = "demo@trial.dealroom.app";
-
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma) as NextAuthOptions["adapter"],
   providers: [
-    // Trial/Demo access - no credentials needed
-    CredentialsProvider({
-      id: "trial",
-      name: "Trial Access",
-      credentials: {},
-      async authorize() {
-        // Find or create the trial user
-        let user = await prisma.user.findUnique({
-          where: { email: TRIAL_EMAIL },
-        });
-
-        if (!user) {
-          user = await prisma.user.create({
-            data: {
-              email: TRIAL_EMAIL,
-              name: "Demo User",
-              company: "Trial Account",
-            },
-          });
-        }
-
-        return {
-          id: user.id,
-          email: user.email,
-          name: user.name,
-        };
-      },
-    }),
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,

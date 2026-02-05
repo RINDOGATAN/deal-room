@@ -3,25 +3,41 @@
 import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useTranslations } from "next-intl";
-import { Loader2, Play, Sparkles } from "lucide-react";
+import { Loader2, Mail } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 export default function SignInPage() {
   const t = useTranslations("auth");
-  const [isTrialLoading, setIsTrialLoading] = useState(false);
+  const [email, setEmail] = useState("");
+  const [isEmailLoading, setIsEmailLoading] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+  const [emailSent, setEmailSent] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const handleTrialAccess = async () => {
-    setIsTrialLoading(true);
+  const handleEmailSignIn = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email.trim()) return;
+
+    setIsEmailLoading(true);
     setError(null);
 
     try {
-      await signIn("trial", {
+      const result = await signIn("email", {
+        email: email.trim(),
+        redirect: false,
         callbackUrl: "/deals",
       });
+
+      if (result?.error) {
+        setError(t("failedMagicLink"));
+        setIsEmailLoading(false);
+      } else {
+        setEmailSent(true);
+      }
     } catch (err) {
       setError(t("unexpectedError"));
-      setIsTrialLoading(false);
+      setIsEmailLoading(false);
     }
   };
 
@@ -38,6 +54,36 @@ export default function SignInPage() {
       setIsGoogleLoading(false);
     }
   };
+
+  // Show email sent confirmation
+  if (emailSent) {
+    return (
+      <div className="w-full max-w-md">
+        <div className="card-brutal">
+          <div className="text-center">
+            <div className="w-16 h-16 bg-primary/20 flex items-center justify-center mx-auto mb-6">
+              <Mail className="w-8 h-8 text-primary" />
+            </div>
+            <h1 className="text-2xl font-bold mb-2">{t("checkEmail")}</h1>
+            <p className="text-muted-foreground">
+              {t.rich("magicLinkSent", {
+                email: () => <strong className="text-foreground">{email}</strong>,
+              })}
+            </p>
+            <button
+              onClick={() => {
+                setEmailSent(false);
+                setIsEmailLoading(false);
+              }}
+              className="mt-6 text-sm text-primary hover:underline"
+            >
+              {t("didntReceive")} {t("tryAgain")}
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full max-w-md">
@@ -66,31 +112,43 @@ export default function SignInPage() {
           </div>
         )}
 
-        {/* Trial Access - Primary CTA */}
-        <div className="space-y-4">
+        {/* Magic Link Email Form */}
+        <form onSubmit={handleEmailSignIn} className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="email">{t("emailAddress")}</Label>
+            <Input
+              id="email"
+              type="email"
+              placeholder="you@company.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className="bg-background"
+            />
+          </div>
+
           <button
-            type="button"
-            onClick={handleTrialAccess}
-            disabled={isTrialLoading}
-            className="btn-brutal w-full flex items-center justify-center gap-3 py-4 text-lg disabled:opacity-50"
+            type="submit"
+            disabled={isEmailLoading || !email.trim()}
+            className="btn-brutal w-full flex items-center justify-center gap-3 py-3 disabled:opacity-50"
           >
-            {isTrialLoading ? (
+            {isEmailLoading ? (
               <>
                 <Loader2 className="w-5 h-5 animate-spin" />
-                {t("signingIn")}
+                {t("sending")}
               </>
             ) : (
               <>
-                <Play className="w-5 h-5" />
-                {t("tryDemo")}
+                <Mail className="w-5 h-5" />
+                {t("continueWithEmail")}
               </>
             )}
           </button>
 
-          <p className="text-center text-sm text-muted-foreground">
-            {t("trialDescription")}
+          <p className="text-center text-xs text-muted-foreground">
+            {t("noPasswordNeeded")}
           </p>
-        </div>
+        </form>
 
         {/* Google Sign In */}
         <div className="mt-8 pt-6 border-t border-border">
