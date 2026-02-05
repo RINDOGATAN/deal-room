@@ -137,4 +137,6 @@ Party with higher stake wins the clause; equal stakes trigger compromise.
 
 ## License
 
+Copyright (c) 2025-2026 Rindogatan LLC
+
 This project is licensed under the [GNU Affero General Public License v3.0](LICENSE).
