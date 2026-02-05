@@ -22,10 +22,10 @@ export const authOptions: NextAuthOptions = {
       credentials: {},
       async authorize() {
         try {
-          // Upsert the trial user (create if not exists, otherwise return existing)
+          // Try to find or create trial user in database
           const user = await prisma.user.upsert({
             where: { email: TRIAL_EMAIL },
-            update: {}, // Don't update anything if exists
+            update: {},
             create: {
               email: TRIAL_EMAIL,
               name: "Demo User",
@@ -33,15 +33,19 @@ export const authOptions: NextAuthOptions = {
             },
           });
 
-          // Return user object for JWT token
           return {
             id: user.id,
             email: user.email,
             name: user.name,
           };
         } catch (error) {
-          console.error("Trial auth error:", error);
-          return null;
+          console.error("Trial auth DB error, using fallback:", error);
+          // Fallback: return a static trial user (won't persist but allows UI exploration)
+          return {
+            id: "trial-demo-user",
+            email: TRIAL_EMAIL,
+            name: "Demo User",
+          };
         }
       },
     }),
