@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Dancing_Script, Jost } from "next/font/google";
+import { Inter, Dancing_Script, Jost, Archivo_Black } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/components/providers";
 import { Toaster } from "@/components/ui/sonner";
@@ -21,7 +21,14 @@ const dancingScript = Dancing_Script({
 const jost = Jost({
   subsets: ["latin"],
   variable: "--font-display",
-  weight: ["400", "500", "600", "700"],
+  weight: ["300", "400", "500", "600", "700"],
+  style: ["normal", "italic"],
+});
+
+const archivoBlack = Archivo_Black({
+  subsets: ["latin"],
+  variable: "--font-heading",
+  weight: "400",
 });
 
 export const metadata: Metadata = {
@@ -39,7 +46,7 @@ export default async function RootLayout({
 
   return (
     <html lang={locale}>
-      <body className={`${inter.variable} ${dancingScript.variable} ${jost.variable} font-sans antialiased min-h-screen flex flex-col`}>
+      <body className={`${inter.variable} ${dancingScript.variable} ${jost.variable} ${archivoBlack.variable} font-sans antialiased min-h-screen flex flex-col`}>
         <NextIntlClientProvider messages={messages}>
           <Providers>
           <div className="flex-1">

@@ -166,7 +166,7 @@ export default function NewDealPage() {
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-yellow-500/20 flex items-center justify-center">
+              <div className="w-12 h-12 bg-yellow-500/20 rounded-2xl flex items-center justify-center">
                 <Lock className="w-6 h-6 text-yellow-500" />
               </div>
               <div>
@@ -180,7 +180,7 @@ export default function NewDealPage() {
           <DialogFooter className="gap-2 sm:gap-0 mt-4">
             <button
               onClick={() => setEntitlementError(null)}
-              className="px-4 py-2 border border-border text-sm hover:bg-muted/50"
+              className="px-4 py-2 border border-border text-sm hover:bg-muted/50 rounded-full"
             >
               {tCommon("close")}
             </button>
@@ -198,7 +198,7 @@ export default function NewDealPage() {
       {/* Step 1: Contract Type Selection */}
       <div className="space-y-4">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold">
+          <div className="w-8 h-8 bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold rounded-full">
             1
           </div>
           <Label className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
@@ -237,18 +237,18 @@ export default function NewDealPage() {
                 `}
               >
                 {isSelected && !isLocked && (
-                  <div className="absolute top-4 right-4 w-6 h-6 bg-primary flex items-center justify-center">
+                  <div className="absolute top-4 right-4 w-6 h-6 bg-primary flex items-center justify-center rounded-full">
                     <Check className="w-4 h-4 text-primary-foreground" />
                   </div>
                 )}
                 {isLocked && (
-                  <div className="absolute top-4 right-4 w-6 h-6 bg-muted flex items-center justify-center">
+                  <div className="absolute top-4 right-4 w-6 h-6 bg-muted flex items-center justify-center rounded-full">
                     <Lock className="w-4 h-4 text-muted-foreground" />
                   </div>
                 )}
                 <div className="flex items-start gap-4">
                   <div className={`
-                    w-10 h-10 flex items-center justify-center
+                    w-10 h-10 flex items-center justify-center rounded-xl
                     ${isLocked
                       ? "bg-muted text-muted-foreground"
                       : isSelected
@@ -283,7 +283,7 @@ export default function NewDealPage() {
       {selectedType && (
         <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-300">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold">
+            <div className="w-8 h-8 bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold rounded-full">
               2
             </div>
             <Label className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
@@ -322,7 +322,7 @@ export default function NewDealPage() {
                   `}
                 >
                   {isSelected && (
-                    <div className="absolute top-4 right-4 w-6 h-6 bg-primary flex items-center justify-center">
+                    <div className="absolute top-4 right-4 w-6 h-6 bg-primary flex items-center justify-center rounded-full">
                       <Check className="w-4 h-4 text-primary-foreground" />
                     </div>
                   )}
@@ -350,7 +350,7 @@ export default function NewDealPage() {
       {selectedType && selectedJurisdiction && (
         <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-300">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold">
+            <div className="w-8 h-8 bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold rounded-full">
               3
             </div>
             <Label className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
@@ -384,7 +384,7 @@ export default function NewDealPage() {
                   `}
                 >
                   {isSelected && (
-                    <div className="absolute top-4 right-4 w-6 h-6 bg-primary flex items-center justify-center">
+                    <div className="absolute top-4 right-4 w-6 h-6 bg-primary flex items-center justify-center rounded-full">
                       <Check className="w-4 h-4 text-primary-foreground" />
                     </div>
                   )}
@@ -406,7 +406,7 @@ export default function NewDealPage() {
         <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-300">
           <div className="space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold">
+              <div className="w-8 h-8 bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold rounded-full">
                 4
               </div>
               <Label className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
@@ -416,7 +416,7 @@ export default function NewDealPage() {
 
             <div className="card-brutal space-y-6">
               {/* Summary of selections */}
-              <div className="p-3 bg-muted/30 border border-border text-sm">
+              <div className="p-3 bg-muted/30 border border-border text-sm rounded-xl">
                 <div className="flex items-center justify-between">
                   <span className="text-muted-foreground">{t("contract")}</span>
                   <span className="font-medium">
