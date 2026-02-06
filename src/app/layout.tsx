@@ -49,40 +49,7 @@ export default async function RootLayout({
       <body className={`${inter.variable} ${dancingScript.variable} ${jost.variable} ${archivoBlack.variable} font-sans antialiased min-h-screen flex flex-col`}>
         <NextIntlClientProvider messages={messages}>
           <Providers>
-          <div className="flex-1">
-            {children}
-          </div>
-          <footer className="py-4 px-6 border-t border-border bg-background">
-            <div className="max-w-7xl mx-auto text-center text-sm text-muted-foreground">
-              {brand.shortName} is a{" "}
-              <a
-                href={brand.links.website}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-primary hover:underline"
-              >
-                {brand.company}
-              </a>{" "}
-              service.{" "}
-              <a
-                href={brand.links.terms}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-primary hover:underline"
-              >
-                Terms of Use
-              </a>{" "}
-              ·{" "}
-              <a
-                href={brand.links.privacy}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-primary hover:underline"
-              >
-                Privacy Notice
-              </a>
-            </div>
-          </footer>
+          {children}
           <Toaster />
           </Providers>
         </NextIntlClientProvider>

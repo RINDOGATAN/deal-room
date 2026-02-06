@@ -170,9 +170,42 @@ export default function DashboardLayout({
       )}
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-6 py-8">
+      <main className="max-w-7xl mx-auto px-6 py-8 flex-1">
         {children}
       </main>
+
+      {/* Footer */}
+      <footer className="py-4 px-6 border-t border-border">
+        <div className="max-w-7xl mx-auto text-center text-sm text-muted-foreground">
+          {brand.shortName} is a{" "}
+          <a
+            href={brand.links.website}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-primary hover:underline"
+          >
+            {brand.company}
+          </a>{" "}
+          service.{" "}
+          <a
+            href={brand.links.terms}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-primary hover:underline"
+          >
+            Terms of Use
+          </a>{" "}
+          &middot;{" "}
+          <a
+            href={brand.links.privacy}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-primary hover:underline"
+          >
+            Privacy Notice
+          </a>
+        </div>
+      </footer>
     </div>
   );
 }
