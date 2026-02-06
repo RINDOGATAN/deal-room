@@ -21,7 +21,9 @@
     "skill:deactivate": "tsx cli/commands/skill-deactivate.ts",
     "license:fingerprint": "tsx cli/commands/license-fingerprint.ts",
     "admin:create": "tsx cli/commands/admin-create.ts",
-    "supervisor:create": "tsx cli/commands/supervisor-create.ts"
+    "supervisor:create": "tsx cli/commands/supervisor-create.ts",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
@@ -68,6 +70,7 @@
     "zod": "^4.3.5"
   },
   "devDependencies": {
+    "@playwright/test": "^1.58.2",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/qrcode": "^1.5.6",

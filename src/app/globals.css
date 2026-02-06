@@ -178,6 +178,38 @@
     box-shadow: var(--shadow-card);
     @apply transition-all duration-200;
   }
+  .paper-card:hover {
+    box-shadow: var(--shadow-hover);
+    transform: translateY(-2px);
+  }
+  /* Landing page buttons */
+  .btn-primary {
+    @apply inline-flex items-center justify-center px-6 py-3 bg-primary text-primary-foreground rounded-full font-medium transition-all duration-200;
+    box-shadow: var(--shadow-soft);
+  }
+  .btn-primary:hover {
+    box-shadow: var(--shadow-hover);
+    transform: translateY(-1px);
+  }
+  .btn-secondary {
+    @apply inline-flex items-center justify-center px-6 py-3 bg-card text-foreground rounded-full font-medium border border-border transition-all duration-200;
+    box-shadow: var(--shadow-soft);
+  }
+  .btn-secondary:hover {
+    @apply bg-secondary;
+    box-shadow: var(--shadow-hover);
+    transform: translateY(-1px);
+  }
+  /* Navigation header glassmorphism */
+  .nav-header {
+    @apply bg-card/80 backdrop-blur-md rounded-xl border border-border;
+    box-shadow: var(--shadow-soft);
+  }
+  @media (min-width: 768px) {
+    .nav-header {
+      @apply rounded-full;
+    }
+  }
   /* Input */
   .input-brutal {
     @apply bg-[#2e2e2e] border border-[#383838] text-[#fefeff] px-4 py-3 rounded-xl;
@@ -206,6 +238,10 @@
   }
   .border-lime {
     border-color: #53aecc;
+  }
+  /* Body font utility */
+  .font-body {
+    font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
   }
   /* Display font for metrics and numbers */
   .font-display {
