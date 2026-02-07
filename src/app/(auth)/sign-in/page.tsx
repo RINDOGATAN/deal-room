@@ -3,26 +3,33 @@
 import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useTranslations } from "next-intl";
-import { Loader2, Play } from "lucide-react";
+import { Loader2, ArrowRight } from "lucide-react";
 import { brand } from "@/config/brand";
 
 export default function SignInPage() {
   const t = useTranslations("auth");
-  const [isTrialLoading, setIsTrialLoading] = useState(false);
+  const [email, setEmail] = useState("");
+  const [isEmailLoading, setIsEmailLoading] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+  const [isEmailSent, setIsEmailSent] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const handleTrialAccess = async () => {
-    setIsTrialLoading(true);
+  const handleEmailSignIn = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsEmailLoading(true);
     setError(null);
 
     try {
-      await signIn("trial", {
+      await signIn("email", {
+        email,
         callbackUrl: "/deals",
+        redirect: false,
       });
+      setIsEmailSent(true);
     } catch (err) {
-      setError(t("unexpectedError"));
-      setIsTrialLoading(false);
+      setError(t("failedMagicLink"));
+    } finally {
+      setIsEmailLoading(false);
     }
   };
 
@@ -40,59 +47,103 @@ export default function SignInPage() {
     }
   };
 
+  if (isEmailSent) {
+    return (
+      <div className="w-full max-w-md">
+        <div className="card-brutal text-center">
+          <h1 className="text-3xl font-bold mb-2 text-white uppercase tracking-wide">
+            {t("checkEmail")}
+          </h1>
+          <p className="text-muted-foreground mb-6">
+            {t.rich("magicLinkSent", {
+              email: () => (
+                <span className="text-foreground font-medium">{email}</span>
+              ),
+            })}
+          </p>
+          <p className="text-sm text-muted-foreground">
+            {t("didntReceive")}{" "}
+            <button
+              onClick={() => setIsEmailSent(false)}
+              className="text-primary hover:underline"
+            >
+              {t("tryAgain")}
+            </button>
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="w-full max-w-md">
       <div className="card-brutal">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold mb-2 text-white uppercase tracking-wide">{brand.shortName}</h1>
+          <h1 className="text-3xl font-bold mb-2 text-white uppercase tracking-wide">DEALROOM</h1>
           <p className="text-muted-foreground mb-4">
-            A contract negotiation platform powered by Agentic AI
+            {brand.tagline}
           </p>
         </div>
 
         {error && (
-          <div className="mb-6 p-4 bg-yellow-500/10 border border-yellow-500 text-yellow-600 text-sm">
+          <div className="mb-6 p-4 bg-yellow-500/10 border border-yellow-500 text-yellow-600 text-sm rounded-xl">
             {error}
           </div>
         )}
 
-        {/* Trial Access - Primary CTA */}
-        <div className="space-y-4">
+        {/* Email Magic Link */}
+        <form onSubmit={handleEmailSignIn} className="space-y-4">
+          <div className="space-y-2">
+            <label htmlFor="email" className="text-sm font-medium text-foreground">
+              {t("emailAddress")}
+            </label>
+            <input
+              id="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="you@company.com"
+              className="input-brutal w-full"
+              required
+              autoFocus
+            />
+          </div>
+
           <button
-            type="button"
-            onClick={handleTrialAccess}
-            disabled={isTrialLoading}
-            className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-full border border-border text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors disabled:opacity-50"
+            type="submit"
+            disabled={isEmailLoading || !email}
+            className="btn-brutal w-full flex items-center justify-center gap-2 disabled:opacity-50"
           >
-            {isTrialLoading ? (
+            {isEmailLoading ? (
               <>
-                <Loader2 className="w-5 h-5 animate-spin" />
-                {t("signingIn")}
+                <Loader2 className="w-4 h-4 animate-spin" />
+                {t("sending")}
               </>
             ) : (
               <>
-                <Play className="w-5 h-5" />
-                {t("tryDemo")}
+                {t("continueWithEmail")}
+                <ArrowRight className="w-4 h-4" />
               </>
             )}
           </button>
 
-          <p className="text-center text-sm text-muted-foreground">
-            {t("trialDescription")}
+          <p className="text-center text-xs text-muted-foreground">
+            {t("noPasswordNeeded")}
           </p>
-        </div>
+        </form>
 
-        {/* Google Sign In */}
+        {/* Divider */}
         <div className="mt-8 pt-6 border-t border-border">
           <p className="text-xs text-muted-foreground text-center mb-4">
             {t("orContinueWith")}
           </p>
 
+          {/* Google Sign In - Dark Mode */}
           <button
             type="button"
             onClick={handleGoogleSignIn}
             disabled={isGoogleLoading}
-            className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-full bg-white text-gray-700 border border-gray-200 hover:bg-gray-50 hover:border-gray-300 transition-colors disabled:opacity-50"
+            className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-full bg-[#131314] text-white border border-[#8e918f] hover:bg-[#232428] transition-colors disabled:opacity-50"
           >
             {isGoogleLoading ? (
               <Loader2 className="w-5 h-5 animate-spin" />
