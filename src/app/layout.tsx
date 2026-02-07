@@ -32,7 +32,7 @@ const archivoBlack = Archivo_Black({
 });
 
 export const metadata: Metadata = {
-  title: `${brand.name} - ${brand.tagline}`,
+  title: `DEALROOM - ${brand.tagline}`,
   description: brand.description,
 };
 
