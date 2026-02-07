@@ -13,8 +13,8 @@ export default function PublicLayout({
       <header className="border-b border-border">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <Link href="/" className="text-lg font-bold tracking-tight text-foreground">
-            DPO CENTRAL{" "}
-            <span className="text-sm font-normal text-muted-foreground">- Privacy Program Management Platform</span>
+            TODO.LAW<sup className="text-xs align-super">™</sup>{" "}
+            <span className="text-muted-foreground">DEALROOM</span>
           </Link>
 
           <nav className="flex items-center gap-4">
