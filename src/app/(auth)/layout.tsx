@@ -16,7 +16,7 @@ export default function AuthLayout({
         <div className="container mx-auto px-6 py-4 flex items-center justify-between">
           <Link href="/" className="text-lg font-bold tracking-tight text-foreground">
             TODO.LAW<sup className="text-xs align-super">™</sup>{" "}
-            <span className="text-muted-foreground">DEALROOM</span>
+            <span className="text-muted-foreground">DPO CENTRAL</span>
           </Link>
           <LanguageSwitcher />
         </div>
