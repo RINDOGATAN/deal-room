@@ -46,18 +46,7 @@ export default function SignInPage() {
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold mb-2 text-white uppercase tracking-wide">{brand.shortName}</h1>
           <p className="text-muted-foreground mb-4">
-            {t.rich("poweredBy", {
-              link: () => (
-                <a
-                  href={brand.links.website}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-primary hover:underline"
-                >
-                  {brand.company}
-                </a>
-              ),
-            })}
+            A contract negotiation platform powered by Agentic AI
           </p>
         </div>
 
