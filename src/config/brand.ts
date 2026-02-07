@@ -13,9 +13,9 @@
 
 export const brand = {
   // Product identity
-  name: "Deal Room",
-  shortName: "Dealroom",
-  tagline: "Contract Negotiation Platform",
+  name: "DPO CENTRAL",
+  shortName: "DPO Central",
+  tagline: "Privacy Program Management Platform",
   description: "Two-party asynchronous contract negotiation platform with intelligent compromise suggestions",
 
   // Company information

@@ -44,9 +44,9 @@ export default function SignInPage() {
     <div className="w-full max-w-md">
       <div className="card-brutal">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold mb-2 text-white uppercase tracking-wide">{brand.shortName}</h1>
+          <h1 className="text-3xl font-bold mb-2 text-white uppercase tracking-wide">{brand.name}</h1>
           <p className="text-muted-foreground mb-4">
-            A contract negotiation platform powered by Agentic AI
+            Privacy Program Management Platform
           </p>
         </div>
 
