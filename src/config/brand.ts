@@ -16,7 +16,7 @@ export const brand = {
   name: "DPO CENTRAL",
   shortName: "DPO Central",
   tagline: "Privacy Program Management Platform",
-  description: "Two-party asynchronous contract negotiation platform with intelligent compromise suggestions",
+  description: "Centralized privacy program management platform for DPOs and compliance teams",
 
   // Company information
   company: "TODO.LAW",
