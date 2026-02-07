@@ -13,7 +13,8 @@ export default function PublicLayout({
       <header className="border-b border-border">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <Link href="/" className="text-lg font-bold tracking-tight text-foreground">
-            TODO.LAW<sup className="text-xs align-super">™</sup>
+            TODO.LAW<sup className="text-xs align-super">™</sup>{" "}
+            <span className="text-muted-foreground">DEALROOM</span>
           </Link>
 
           <nav className="flex items-center gap-4">
@@ -26,7 +27,7 @@ export default function PublicLayout({
             </Link>
             <Link
               href="/sign-in"
-              className="btn-brutal-outline text-sm"
+              className="px-4 py-1.5 text-sm font-medium text-primary border border-primary rounded-full hover:bg-secondary transition-colors"
             >
               Sign In
             </Link>
