@@ -14,8 +14,9 @@ export default function AuthLayout({
       {/* Header */}
       <header className="border-b border-border">
         <div className="container mx-auto px-6 py-4 flex items-center justify-between">
-          <Link href="/" className="text-lg font-heading tracking-tight text-foreground">
-            TODO.LAW<sup className="text-[10px] ml-0.5 align-super text-muted-foreground">TM</sup>
+          <Link href="/" className="text-lg font-bold tracking-tight text-foreground">
+            TODO.LAW<sup className="text-xs align-super">™</sup>{" "}
+            <span className="text-muted-foreground">DEALROOM</span>
           </Link>
           <LanguageSwitcher />
         </div>
