@@ -31,10 +31,10 @@ export default function SupervisionPage() {
         </p>
 
         <div className="relative">
-          {/* Connection lines */}
-          <div className="absolute left-1/2 top-[72px] w-0.5 h-[calc(100%-144px)] bg-border -translate-x-1/2" />
-          <div className="absolute left-1/4 top-[200px] w-[25%] h-0.5 bg-border" />
-          <div className="absolute right-1/4 top-[200px] w-[25%] h-0.5 bg-border" />
+          {/* Connection lines: vertical from below Platform Admin to branch point, then horizontal to each box */}
+          <div className="absolute left-1/2 top-[196px] w-0.5 h-[36px] bg-border -translate-x-1/2" />
+          <div className="absolute left-1/4 top-[232px] w-[25%] h-0.5 bg-border" />
+          <div className="absolute right-1/4 top-[232px] w-[25%] h-0.5 bg-border" />
 
           <div className="relative space-y-8">
             {/* Platform Admin */}
