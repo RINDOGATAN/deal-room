@@ -8,12 +8,12 @@ export default function PublicLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background flex flex-col">
       {/* Minimal Header */}
       <header className="border-b border-border">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-          <Link href="/" className="flex items-center">
-            <img src={brand.assets.logo} alt={brand.companyShort} className="h-8" />
+          <Link href="/" className="text-lg font-bold tracking-tight text-foreground">
+            TODO.LAW<sup className="text-xs align-super">™</sup>
           </Link>
 
           <nav className="flex items-center gap-4">
@@ -35,30 +35,28 @@ export default function PublicLayout({
       </header>
 
       {/* Main Content */}
-      <main>{children}</main>
+      <main className="flex-1">{children}</main>
 
       {/* Footer */}
-      <footer className="border-t border-border mt-auto">
-        <div className="max-w-7xl mx-auto px-6 py-8">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <img src={brand.assets.logo} alt={brand.companyShort} className="h-6" />
-              <span className="text-sm text-muted-foreground">
-                {brand.shortName} by {brand.companyShort}
-              </span>
-            </div>
-            <div className="flex items-center gap-6 text-sm text-muted-foreground">
-              <Link href="/docs" className="hover:text-foreground transition-colors">
-                Documentation
-              </Link>
-              <Link href="/docs/how-it-works" className="hover:text-foreground transition-colors">
-                How It Works
-              </Link>
-              <Link href="/docs/compromise" className="hover:text-foreground transition-colors">
-                Algorithm
-              </Link>
-            </div>
-          </div>
+      <footer className="border-t border-border py-6">
+        <div className="container mx-auto px-6 flex flex-col sm:flex-row items-center justify-center gap-4 text-sm text-muted-foreground">
+          <a
+            href={brand.links.privacy}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-foreground transition-colors"
+          >
+            Privacy Policy
+          </a>
+          <span className="hidden sm:inline">&middot;</span>
+          <a
+            href={brand.links.terms}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-foreground transition-colors"
+          >
+            Terms of Service
+          </a>
         </div>
       </footer>
     </div>
