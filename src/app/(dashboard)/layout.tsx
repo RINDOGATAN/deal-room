@@ -52,8 +52,8 @@ export default function DashboardLayout({
         <div className="max-w-7xl mx-auto bg-card/80 backdrop-blur-md border border-border rounded-xl md:rounded-full px-4 md:px-6 py-3">
           <div className="flex items-center justify-between">
             <Link href="/deals" className="text-lg font-bold tracking-tight text-foreground">
-              TODO.LAW<sup className="text-xs align-super">™</sup>{" "}
-              <span className="text-muted-foreground">DEALROOM</span>
+              DPO CENTRAL{" "}
+              <span className="text-sm font-normal text-muted-foreground">- Privacy Program Management Platform</span>
             </Link>
 
             {/* Desktop nav */}
@@ -115,8 +115,8 @@ export default function DashboardLayout({
           <div className="flex flex-col h-full p-6">
             <div className="flex items-center justify-between mb-8">
               <Link href="/deals" className="text-lg font-bold tracking-tight text-foreground" onClick={() => setMobileMenuOpen(false)}>
-                TODO.LAW<sup className="text-xs align-super">™</sup>{" "}
-                <span className="text-muted-foreground">DEALROOM</span>
+                DPO CENTRAL{" "}
+                <span className="text-sm font-normal text-muted-foreground">- Privacy Program Management Platform</span>
               </Link>
               <button
                 onClick={() => setMobileMenuOpen(false)}
