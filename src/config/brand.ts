@@ -13,10 +13,10 @@
 
 export const brand = {
   // Product identity
-  name: "DPO CENTRAL",
-  shortName: "DPO Central",
-  tagline: "Privacy Program Management Platform",
-  description: "Centralized privacy program management platform for DPOs and compliance teams",
+  name: "Deal Room",
+  shortName: "Dealroom",
+  tagline: "Contract Negotiation Platform",
+  description: "Two-party asynchronous contract negotiation platform with intelligent compromise suggestions",
 
   // Company information
   company: "TODO.LAW",
