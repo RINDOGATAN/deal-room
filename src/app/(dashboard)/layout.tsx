@@ -53,7 +53,7 @@ export default function DashboardLayout({
           <div className="flex items-center justify-between">
             <Link href="/deals" className="text-lg font-bold tracking-tight text-foreground">
               TODO.LAW<sup className="text-xs align-super">™</sup>{" "}
-              <span className="text-muted-foreground">DEALROOM</span>
+              <span className="text-muted-foreground">DPO CENTRAL</span>
             </Link>
 
             {/* Desktop nav */}
@@ -116,7 +116,7 @@ export default function DashboardLayout({
             <div className="flex items-center justify-between mb-8">
               <Link href="/deals" className="text-lg font-bold tracking-tight text-foreground" onClick={() => setMobileMenuOpen(false)}>
                 TODO.LAW<sup className="text-xs align-super">™</sup>{" "}
-                <span className="text-muted-foreground">DEALROOM</span>
+                <span className="text-muted-foreground">DPO CENTRAL</span>
               </Link>
               <button
                 onClick={() => setMobileMenuOpen(false)}
