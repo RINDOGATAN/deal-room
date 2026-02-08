@@ -1,0 +1,2182 @@
+{
+  "contractType": "DPA",
+  "displayName": {
+    "en": "Data Processing Agreement",
+    "es": "Acuerdo de Tratamiento de Datos"
+  },
+  "description": {
+    "en": "Controller-to-Processor agreement for SaaS companies processing customer personal data, compliant with GDPR, UK GDPR, and CCPA/CPRA",
+    "es": "Acuerdo entre Responsable y Encargado del tratamiento para empresas SaaS que tratan datos personales de clientes, conforme al RGPD, RGPD del Reino Unido y CCPA/CPRA"
+  },
+  "version": "1.0",
+  "clauses": [
+    {
+      "id": "scope-processing",
+      "title": {
+        "en": "Scope of Processing",
+        "es": "Alcance del Tratamiento"
+      },
+      "category": "Processing",
+      "order": 1,
+      "plainDescription": {
+        "en": "What types of personal data will the processor handle, and for what purposes? This defines the boundaries of the processing relationship.",
+        "es": "¿Qué tipos de datos personales tratará el encargado y con qué fines? Esto define los límites de la relación de tratamiento."
+      },
+      "legalContext": {
+        "en": "GDPR Article 28(3) requires the DPA to specify the subject matter, duration, nature and purpose of processing, types of personal data, and categories of data subjects. CCPA §1798.140(ag) defines 'service provider' processing scope.",
+        "es": "El artículo 28(3) del RGPD exige que el acuerdo especifique el objeto, la duración, la naturaleza y la finalidad del tratamiento, los tipos de datos personales y las categorías de interesados. La CCPA §1798.140(ag) define el alcance del tratamiento del 'proveedor de servicios'."
+      },
+      "isRequired": true,
+      "options": [
+        {
+          "id": "scope-narrow",
+          "code": "narrow",
+          "label": {
+            "en": "Narrow — Named Categories Only",
+            "es": "Restringido — Solo Categorías Específicas"
+          },
+          "order": 1,
+          "plainDescription": {
+            "en": "Processing limited to explicitly listed data categories (e.g., name, email, usage logs) for stated service purposes only.",
+            "es": "El tratamiento se limita a las categorías de datos enumeradas expresamente (p. ej., nombre, correo electrónico, registros de uso) únicamente para los fines declarados del servicio."
+          },
+          "prosPartyA": {
+            "en": ["Maximum control over data scope", "Easier to audit compliance", "Minimal data exposure"],
+            "es": ["Máximo control sobre el alcance de los datos", "Más fácil auditar el cumplimiento", "Exposición mínima de datos"]
+          },
+          "consPartyA": {
+            "en": ["Must amend DPA for new data types", "May delay product changes"],
+            "es": ["Debe modificar el acuerdo para nuevos tipos de datos", "Puede retrasar cambios en el producto"]
+          },
+          "prosPartyB": {
+            "en": ["Clear processing boundaries", "Reduced liability scope"],
+            "es": ["Límites de tratamiento claros", "Alcance de responsabilidad reducido"]
+          },
+          "consPartyB": {
+            "en": ["Inflexible — new features may need amendments", "Administrative overhead for changes"],
+            "es": ["Inflexible — nuevas funcionalidades pueden requerir modificaciones", "Carga administrativa por los cambios"]
+          },
+          "legalText": {
+            "en": "The Processor shall process Personal Data only to the extent strictly necessary to provide the Services as specified in Annex 1. Processing is limited to the following data categories: [as listed in Annex 1]. Any processing beyond the stated categories requires a written amendment to this Agreement.",
+            "es": "El Encargado tratará los Datos Personales únicamente en la medida estrictamente necesaria para prestar los Servicios según se especifica en el Anexo 1. El tratamiento se limita a las siguientes categorías de datos: [según se enumeran en el Anexo 1]. Cualquier tratamiento más allá de las categorías indicadas requiere una modificación por escrito del presente Acuerdo."
+          },
+          "biasPartyA": 0.4,
+          "biasPartyB": -0.4,
+          "jurisdictionConfig": {
+            "CALIFORNIA": {
+              "available": true,
+              "note": {
+                "en": "Aligns with CCPA Service Provider restrictions — limits processing to disclosed business purposes",
+                "es": "Conforme a las restricciones de Proveedor de Servicios de la CCPA — limita el tratamiento a los fines comerciales declarados"
+              }
+            },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        },
+        {
+          "id": "scope-standard",
+          "code": "standard",
+          "label": {
+            "en": "Standard — Service-Linked Categories",
+            "es": "Estándar — Categorías Vinculadas al Servicio"
+          },
+          "order": 2,
+          "plainDescription": {
+            "en": "Processing covers all personal data reasonably necessary to deliver the contracted services, with categories defined by reference to the service agreement.",
+            "es": "El tratamiento abarca todos los datos personales razonablemente necesarios para prestar los servicios contratados, con categorías definidas por referencia al contrato de servicios."
+          },
+          "prosPartyA": {
+            "en": ["Good balance of control and flexibility", "Categories tied to actual service needs", "Industry-standard approach"],
+            "es": ["Buen equilibrio entre control y flexibilidad", "Categorías vinculadas a las necesidades reales del servicio", "Enfoque estándar en la industria"]
+          },
+          "consPartyA": {
+            "en": ["Broader than strictly necessary", "Scope may expand with service changes"],
+            "es": ["Más amplio de lo estrictamente necesario", "El alcance puede ampliarse con cambios en el servicio"]
+          },
+          "prosPartyB": {
+            "en": ["Flexible enough for normal operations", "Avoids constant amendments", "Covers reasonable service evolution"],
+            "es": ["Suficientemente flexible para operaciones normales", "Evita modificaciones constantes", "Cubre la evolución razonable del servicio"]
+          },
+          "consPartyB": {
+            "en": ["Still bounded by service agreement", "May need amendment for major pivots"],
+            "es": ["Aún limitado por el contrato de servicios", "Puede necesitar modificación para cambios importantes"]
+          },
+          "legalText": {
+            "en": "The Processor shall process Personal Data as reasonably necessary to perform the Services described in the Principal Agreement. The categories of data subjects, types of Personal Data, and purposes of processing are described in Annex 1, which may be updated by mutual agreement to reflect changes in the Services.",
+            "es": "El Encargado tratará los Datos Personales en la medida razonablemente necesaria para prestar los Servicios descritos en el Acuerdo Principal. Las categorías de interesados, los tipos de Datos Personales y las finalidades del tratamiento se describen en el Anexo 1, que podrá actualizarse de mutuo acuerdo para reflejar cambios en los Servicios."
+          },
+          "biasPartyA": 0.0,
+          "biasPartyB": 0.0,
+          "jurisdictionConfig": {
+            "CALIFORNIA": {
+              "available": true,
+              "note": {
+                "en": "Meets CCPA requirements when Annex 1 specifies the business purposes",
+                "es": "Cumple los requisitos de la CCPA cuando el Anexo 1 especifica los fines comerciales"
+              }
+            },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        },
+        {
+          "id": "scope-broad",
+          "code": "broad",
+          "label": {
+            "en": "Broad — All Data for Service Delivery",
+            "es": "Amplio — Todos los Datos para la Prestación del Servicio"
+          },
+          "order": 3,
+          "plainDescription": {
+            "en": "Processor may process any personal data provided by or collected on behalf of the controller to the extent needed for service delivery and improvement.",
+            "es": "El encargado puede tratar cualquier dato personal proporcionado por o recogido en nombre del responsable en la medida necesaria para la prestación y mejora del servicio."
+          },
+          "prosPartyA": {
+            "en": ["No amendment needed for new data types", "Supports rapid product iteration"],
+            "es": ["No necesita modificación para nuevos tipos de datos", "Apoya la iteración rápida del producto"]
+          },
+          "consPartyA": {
+            "en": ["Less control over what is processed", "Harder to audit", "May conflict with data minimization"],
+            "es": ["Menos control sobre lo que se trata", "Más difícil de auditar", "Puede entrar en conflicto con la minimización de datos"]
+          },
+          "prosPartyB": {
+            "en": ["Maximum operational flexibility", "Can adapt without contractual changes", "Supports product improvement"],
+            "es": ["Máxima flexibilidad operativa", "Puede adaptarse sin cambios contractuales", "Apoya la mejora del producto"]
+          },
+          "consPartyB": {
+            "en": ["Greater liability exposure", "Broader compliance obligations"],
+            "es": ["Mayor exposición a responsabilidad", "Obligaciones de cumplimiento más amplias"]
+          },
+          "legalText": {
+            "en": "The Processor may process all Personal Data provided by or collected on behalf of the Controller to the extent necessary for providing, maintaining, and improving the Services. The Processor shall not process Personal Data for purposes unrelated to the Services without prior written consent of the Controller.",
+            "es": "El Encargado podrá tratar todos los Datos Personales proporcionados por o recogidos en nombre del Responsable en la medida necesaria para prestar, mantener y mejorar los Servicios. El Encargado no tratará Datos Personales para fines no relacionados con los Servicios sin el consentimiento previo por escrito del Responsable."
+          },
+          "biasPartyA": -0.4,
+          "biasPartyB": 0.4,
+          "jurisdictionConfig": {
+            "CALIFORNIA": {
+              "available": true,
+              "warning": {
+                "en": "Broad scope may risk CCPA Service Provider status — ensure processing is limited to disclosed business purposes",
+                "es": "El alcance amplio puede poner en riesgo el estatus de Proveedor de Servicios bajo la CCPA — asegúrese de que el tratamiento se limite a los fines comerciales declarados"
+              }
+            },
+            "ENGLAND_WALES": {
+              "available": true,
+              "warning": {
+                "en": "ICO guidance expects specific and documented processing purposes under UK GDPR Art 28",
+                "es": "La guía del ICO espera finalidades de tratamiento específicas y documentadas conforme al Art. 28 del RGPD del Reino Unido"
+              }
+            },
+            "SPAIN": {
+              "available": true,
+              "warning": {
+                "en": "AEPD expects detailed processing descriptions — broad scope may face scrutiny",
+                "es": "La AEPD espera descripciones detalladas del tratamiento — el alcance amplio puede ser objeto de escrutinio"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "processing-instructions",
+      "title": {
+        "en": "Processing Instructions",
+        "es": "Instrucciones de Tratamiento"
+      },
+      "category": "Processing",
+      "order": 2,
+      "plainDescription": {
+        "en": "How strictly must the processor follow the controller's instructions when handling personal data?",
+        "es": "¿Con qué rigurosidad debe el encargado seguir las instrucciones del responsable al tratar datos personales?"
+      },
+      "legalContext": {
+        "en": "GDPR Article 28(3)(a) requires the processor to process data only on documented instructions from the controller. CCPA §1798.140(ag) requires service providers to process data only as specified in the contract.",
+        "es": "El artículo 28(3)(a) del RGPD exige que el encargado trate los datos solo según las instrucciones documentadas del responsable. La CCPA §1798.140(ag) exige que los proveedores de servicios traten los datos solo según lo especificado en el contrato."
+      },
+      "isRequired": true,
+      "options": [
+        {
+          "id": "instructions-strict",
+          "code": "strict",
+          "label": {
+            "en": "Strict — Documented Instructions Only",
+            "es": "Estricto — Solo Instrucciones Documentadas"
+          },
+          "order": 1,
+          "plainDescription": {
+            "en": "Processor acts only on written, documented instructions from the controller. Any deviation requires prior written authorization.",
+            "es": "El encargado actúa solo según instrucciones escritas y documentadas del responsable. Cualquier desviación requiere autorización previa por escrito."
+          },
+          "prosPartyA": {
+            "en": ["Full control over processing activities", "Clear accountability trail", "Strongest GDPR compliance position"],
+            "es": ["Control total sobre las actividades de tratamiento", "Trazabilidad clara de responsabilidad", "Posición de cumplimiento del RGPD más sólida"]
+          },
+          "consPartyA": {
+            "en": ["Must document all instructions in advance", "May slow down service delivery"],
+            "es": ["Debe documentar todas las instrucciones de antemano", "Puede ralentizar la prestación del servicio"]
+          },
+          "prosPartyB": {
+            "en": ["Clear scope of authorized processing", "Protected from unauthorized processing claims"],
+            "es": ["Alcance claro del tratamiento autorizado", "Protegido contra reclamaciones de tratamiento no autorizado"]
+          },
+          "consPartyB": {
+            "en": ["Cannot adapt processing without new instructions", "Operational rigidity", "Must flag every edge case"],
+            "es": ["No puede adaptar el tratamiento sin nuevas instrucciones", "Rigidez operativa", "Debe señalar cada caso límite"]
+          },
+          "legalText": {
+            "en": "The Processor shall process Personal Data only on the documented instructions of the Controller, including with regard to transfers of Personal Data to a third country. The Processor shall immediately inform the Controller if, in its opinion, an instruction infringes applicable data protection law.",
+            "es": "El Encargado tratará los Datos Personales únicamente siguiendo las instrucciones documentadas del Responsable, incluyendo las relativas a transferencias de Datos Personales a terceros países. El Encargado informará inmediatamente al Responsable si, en su opinión, una instrucción infringe la normativa de protección de datos aplicable."
+          },
+          "biasPartyA": 0.5,
+          "biasPartyB": -0.5,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        },
+        {
+          "id": "instructions-standard",
+          "code": "standard",
+          "label": {
+            "en": "Standard — Documented with Reasonable Discretion",
+            "es": "Estándar — Documentadas con Discreción Razonable"
+          },
+          "order": 2,
+          "plainDescription": {
+            "en": "Processor follows documented instructions but may exercise reasonable technical discretion for routine operational matters (e.g., security patching, backup schedules).",
+            "es": "El encargado sigue las instrucciones documentadas pero puede ejercer discreción técnica razonable en asuntos operativos rutinarios (p. ej., parches de seguridad, programación de copias de seguridad)."
+          },
+          "prosPartyA": {
+            "en": ["Good balance of control and practicality", "Processor can handle routine operations", "Industry-standard approach"],
+            "es": ["Buen equilibrio entre control y practicidad", "El encargado puede gestionar operaciones rutinarias", "Enfoque estándar en la industria"]
+          },
+          "consPartyA": {
+            "en": ["Some processing decisions delegated", "Less granular control over technical operations"],
+            "es": ["Algunas decisiones de tratamiento delegadas", "Menor control granular sobre operaciones técnicas"]
+          },
+          "prosPartyB": {
+            "en": ["Operational flexibility for technical matters", "Can optimize without constant approval", "Practical and workable"],
+            "es": ["Flexibilidad operativa para asuntos técnicos", "Puede optimizar sin aprobación constante", "Práctico y viable"]
+          },
+          "consPartyB": {
+            "en": ["Must still follow core instructions", "Discretion limited to routine matters"],
+            "es": ["Debe seguir las instrucciones fundamentales", "Discreción limitada a asuntos rutinarios"]
+          },
+          "legalText": {
+            "en": "The Processor shall process Personal Data in accordance with the Controller's documented instructions. The Processor may exercise reasonable technical discretion in routine operational matters (such as infrastructure maintenance, security updates, and backup operations) provided such actions do not alter the nature, scope, or purposes of processing. The Processor shall inform the Controller if any instruction would, in the Processor's reasonable opinion, infringe applicable data protection law.",
+            "es": "El Encargado tratará los Datos Personales de conformidad con las instrucciones documentadas del Responsable. El Encargado podrá ejercer discreción técnica razonable en asuntos operativos rutinarios (como mantenimiento de infraestructura, actualizaciones de seguridad y operaciones de copia de seguridad) siempre que dichas acciones no alteren la naturaleza, el alcance o las finalidades del tratamiento. El Encargado informará al Responsable si alguna instrucción, en su opinión razonable, infringiera la normativa de protección de datos aplicable."
+          },
+          "biasPartyA": 0.0,
+          "biasPartyB": 0.0,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        },
+        {
+          "id": "instructions-service-agreement",
+          "code": "service-agreement",
+          "label": {
+            "en": "Flexible — Per Service Agreement Terms",
+            "es": "Flexible — Según Términos del Contrato de Servicios"
+          },
+          "order": 3,
+          "plainDescription": {
+            "en": "The service agreement itself constitutes the controller's instructions. Processor has discretion on how to implement the services.",
+            "es": "El propio contrato de servicios constituye las instrucciones del responsable. El encargado tiene discreción sobre cómo implementar los servicios."
+          },
+          "prosPartyA": {
+            "en": ["Simplest to administer", "No need for separate instruction documents"],
+            "es": ["Más sencillo de administrar", "No necesita documentos de instrucciones separados"]
+          },
+          "consPartyA": {
+            "en": ["Less direct control over processing methods", "Harder to enforce specific requirements", "Weaker compliance position under GDPR"],
+            "es": ["Menos control directo sobre los métodos de tratamiento", "Más difícil imponer requisitos específicos", "Posición de cumplimiento más débil bajo el RGPD"]
+          },
+          "prosPartyB": {
+            "en": ["Maximum operational freedom", "Can optimize service delivery independently", "Minimal approval overhead"],
+            "es": ["Máxima libertad operativa", "Puede optimizar la prestación del servicio de forma independiente", "Mínima carga de aprobación"]
+          },
+          "consPartyB": {
+            "en": ["Greater responsibility for compliance decisions", "Less protection from controller-directed claims"],
+            "es": ["Mayor responsabilidad por decisiones de cumplimiento", "Menor protección frente a reclamaciones dirigidas por el responsable"]
+          },
+          "legalText": {
+            "en": "The Controller's instructions to the Processor are set forth in the Principal Agreement and any applicable order forms or statements of work. The Processor shall process Personal Data as necessary to provide the Services in accordance with such instructions. The Controller may issue additional written instructions consistent with the terms of this Agreement.",
+            "es": "Las instrucciones del Responsable al Encargado se establecen en el Acuerdo Principal y en los formularios de pedido o pliegos de condiciones aplicables. El Encargado tratará los Datos Personales según sea necesario para prestar los Servicios de acuerdo con dichas instrucciones. El Responsable podrá emitir instrucciones escritas adicionales consistentes con los términos del presente Acuerdo."
+          },
+          "biasPartyA": -0.4,
+          "biasPartyB": 0.4,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": {
+              "available": true,
+              "warning": {
+                "en": "ICO may expect more specific documented instructions under UK GDPR Art 28(3)(a)",
+                "es": "El ICO puede esperar instrucciones documentadas más específicas conforme al Art. 28(3)(a) del RGPD del Reino Unido"
+              }
+            },
+            "SPAIN": {
+              "available": true,
+              "warning": {
+                "en": "AEPD guidance favors detailed, documented processing instructions",
+                "es": "La guía de la AEPD favorece instrucciones de tratamiento detalladas y documentadas"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "subprocessor-approval",
+      "title": {
+        "en": "Sub-processors",
+        "es": "Subencargados"
+      },
+      "category": "Sub-Processing",
+      "order": 3,
+      "plainDescription": {
+        "en": "How must the processor obtain approval before engaging other companies (sub-processors) to help process personal data?",
+        "es": "¿Cómo debe el encargado obtener aprobación antes de contratar a otras empresas (subencargados) para ayudar a tratar datos personales?"
+      },
+      "legalContext": {
+        "en": "GDPR Article 28(2) requires processors to obtain prior written authorization from the controller before engaging sub-processors — either specific (per sub-processor) or general (with notification and objection rights). CCPA requires contractual restrictions to flow down to subcontractors.",
+        "es": "El artículo 28(2) del RGPD exige que los encargados obtengan autorización previa por escrito del responsable antes de contratar subencargados — ya sea específica (por subencargado) o general (con notificación y derecho de objeción). La CCPA exige que las restricciones contractuales se trasladen a los subcontratistas."
+      },
+      "isRequired": true,
+      "options": [
+        {
+          "id": "subproc-specific",
+          "code": "specific",
+          "label": {
+            "en": "Specific Prior Written Approval",
+            "es": "Aprobación Previa Específica por Escrito"
+          },
+          "order": 1,
+          "plainDescription": {
+            "en": "Controller must approve each sub-processor individually before engagement. No general authorization.",
+            "es": "El responsable debe aprobar cada subencargado individualmente antes de su contratación. Sin autorización general."
+          },
+          "prosPartyA": {
+            "en": ["Maximum control over data supply chain", "Approve each vendor individually", "Full visibility into sub-processing"],
+            "es": ["Máximo control sobre la cadena de suministro de datos", "Aprobar cada proveedor individualmente", "Visibilidad total del subtratamiento"]
+          },
+          "consPartyA": {
+            "en": ["Administrative burden of approving each request", "May slow processor operations"],
+            "es": ["Carga administrativa de aprobar cada solicitud", "Puede ralentizar las operaciones del encargado"]
+          },
+          "prosPartyB": {
+            "en": ["Clear approval framework", "No ambiguity about authorized vendors"],
+            "es": ["Marco de aprobación claro", "Sin ambigüedad sobre proveedores autorizados"]
+          },
+          "consPartyB": {
+            "en": ["Must wait for approval before adding vendors", "Operational delays", "Cannot quickly respond to infrastructure needs"],
+            "es": ["Debe esperar aprobación antes de agregar proveedores", "Retrasos operativos", "No puede responder rápidamente a necesidades de infraestructura"]
+          },
+          "legalText": {
+            "en": "The Processor shall not engage any Sub-processor without the prior specific written authorization of the Controller. The Processor shall submit a written request identifying the proposed Sub-processor, the processing to be performed, and the safeguards in place. The Controller shall respond within fifteen (15) business days. The Processor shall ensure that any Sub-processor agreement imposes data protection obligations no less protective than those in this Agreement.",
+            "es": "El Encargado no contratará a ningún Subencargado sin la autorización previa específica por escrito del Responsable. El Encargado presentará una solicitud por escrito identificando al Subencargado propuesto, el tratamiento a realizar y las garantías aplicadas. El Responsable responderá en un plazo de quince (15) días hábiles. El Encargado se asegurará de que cualquier acuerdo con un Subencargado imponga obligaciones de protección de datos no menos protectoras que las del presente Acuerdo."
+          },
+          "biasPartyA": 0.5,
+          "biasPartyB": -0.5,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        },
+        {
+          "id": "subproc-general-30d",
+          "code": "general-30d",
+          "label": {
+            "en": "General Authorization — 30-Day Objection",
+            "es": "Autorización General — 30 Días para Objeción"
+          },
+          "order": 2,
+          "plainDescription": {
+            "en": "Controller gives general authorization. Processor must notify 30 days before adding a new sub-processor. Controller may object within that period.",
+            "es": "El responsable otorga autorización general. El encargado debe notificar 30 días antes de agregar un nuevo subencargado. El responsable puede objetar dentro de ese período."
+          },
+          "prosPartyA": {
+            "en": ["Reasonable notice period", "Right to object to new sub-processors", "Balance of control and practicality"],
+            "es": ["Período de notificación razonable", "Derecho a objetar nuevos subencargados", "Equilibrio entre control y practicidad"]
+          },
+          "consPartyA": {
+            "en": ["Must actively monitor notifications", "Objection may not block if no alternative exists"],
+            "es": ["Debe monitorear activamente las notificaciones", "La objeción puede no bloquear si no existe alternativa"]
+          },
+          "prosPartyB": {
+            "en": ["Operational flexibility with notice requirement", "Can plan vendor changes in advance", "Industry-standard approach"],
+            "es": ["Flexibilidad operativa con requisito de notificación", "Puede planificar cambios de proveedor con antelación", "Enfoque estándar en la industria"]
+          },
+          "consPartyB": {
+            "en": ["30-day lead time for vendor changes", "Must manage objection process"],
+            "es": ["30 días de antelación para cambios de proveedor", "Debe gestionar el proceso de objeción"]
+          },
+          "legalText": {
+            "en": "The Controller provides general written authorization for the Processor to engage Sub-processors. The Processor shall notify the Controller at least thirty (30) days in advance of any intended changes to Sub-processors, providing sufficient detail for the Controller to assess the change. The Controller may object to such changes on reasonable data protection grounds within the notice period. If the Controller objects, the parties shall negotiate in good faith to resolve the concern. The Processor shall ensure each Sub-processor is bound by data protection obligations no less protective than those in this Agreement.",
+            "es": "El Responsable otorga autorización general por escrito para que el Encargado contrate Subencargados. El Encargado notificará al Responsable con al menos treinta (30) días de antelación cualquier cambio previsto en los Subencargados, proporcionando detalle suficiente para que el Responsable evalúe el cambio. El Responsable podrá objetar dichos cambios por motivos razonables de protección de datos dentro del período de notificación. Si el Responsable objeta, las partes negociarán de buena fe para resolver la preocupación. El Encargado se asegurará de que cada Subencargado esté sujeto a obligaciones de protección de datos no menos protectoras que las del presente Acuerdo."
+          },
+          "biasPartyA": 0.1,
+          "biasPartyB": -0.1,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        },
+        {
+          "id": "subproc-general-14d",
+          "code": "general-14d",
+          "label": {
+            "en": "General Authorization — 14-Day Objection",
+            "es": "Autorización General — 14 Días para Objeción"
+          },
+          "order": 3,
+          "plainDescription": {
+            "en": "General authorization with a 14-day notice period before adding new sub-processors.",
+            "es": "Autorización general con un período de notificación de 14 días antes de agregar nuevos subencargados."
+          },
+          "prosPartyA": {
+            "en": ["Retains objection rights", "Faster vendor onboarding than 30-day"],
+            "es": ["Conserva derechos de objeción", "Incorporación de proveedores más rápida que con 30 días"]
+          },
+          "consPartyA": {
+            "en": ["Short window to evaluate new sub-processors", "May miss notification deadlines"],
+            "es": ["Período corto para evaluar nuevos subencargados", "Puede perder plazos de notificación"]
+          },
+          "prosPartyB": {
+            "en": ["Faster vendor onboarding", "Good operational agility", "Still provides controller notice"],
+            "es": ["Incorporación de proveedores más rápida", "Buena agilidad operativa", "Aún proporciona notificación al responsable"]
+          },
+          "consPartyB": {
+            "en": ["Must still manage notification process", "Controller may still object"],
+            "es": ["Debe gestionar el proceso de notificación", "El responsable aún puede objetar"]
+          },
+          "legalText": {
+            "en": "The Controller provides general written authorization for the Processor to engage Sub-processors. The Processor shall notify the Controller at least fourteen (14) days in advance of any intended changes to Sub-processors. The Controller may object on reasonable data protection grounds within the notice period. If no objection is raised, the change shall be deemed approved. The Processor shall ensure each Sub-processor is bound by data protection obligations no less protective than those in this Agreement.",
+            "es": "El Responsable otorga autorización general por escrito para que el Encargado contrate Subencargados. El Encargado notificará al Responsable con al menos catorce (14) días de antelación cualquier cambio previsto en los Subencargados. El Responsable podrá objetar por motivos razonables de protección de datos dentro del período de notificación. Si no se presenta objeción, el cambio se considerará aprobado. El Encargado se asegurará de que cada Subencargado esté sujeto a obligaciones de protección de datos no menos protectoras que las del presente Acuerdo."
+          },
+          "biasPartyA": -0.2,
+          "biasPartyB": 0.2,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        },
+        {
+          "id": "subproc-no-objection",
+          "code": "no-objection",
+          "label": {
+            "en": "Notification Only — No Objection Right",
+            "es": "Solo Notificación — Sin Derecho de Objeción"
+          },
+          "order": 4,
+          "plainDescription": {
+            "en": "Processor notifies the controller of sub-processor changes but the controller has no right to object. Notification is informational only.",
+            "es": "El encargado notifica al responsable de los cambios de subencargados pero el responsable no tiene derecho a objetar. La notificación es solo informativa."
+          },
+          "prosPartyA": {
+            "en": ["At least informed of changes", "Transparency into sub-processing chain"],
+            "es": ["Al menos informado de los cambios", "Transparencia en la cadena de subtratamiento"]
+          },
+          "consPartyA": {
+            "en": ["No power to block unsuitable sub-processors", "Weaker control over data supply chain", "May not satisfy GDPR authorization requirement"],
+            "es": ["Sin poder para bloquear subencargados inadecuados", "Control más débil sobre la cadena de suministro de datos", "Puede no satisfacer el requisito de autorización del RGPD"]
+          },
+          "prosPartyB": {
+            "en": ["Full operational flexibility", "No approval delays", "Can respond immediately to business needs"],
+            "es": ["Flexibilidad operativa total", "Sin retrasos de aprobación", "Puede responder inmediatamente a necesidades del negocio"]
+          },
+          "consPartyB": {
+            "en": ["Controller dissatisfaction risk", "May face regulatory scrutiny in EU/UK"],
+            "es": ["Riesgo de insatisfacción del responsable", "Puede enfrentar escrutinio regulatorio en la UE/Reino Unido"]
+          },
+          "legalText": {
+            "en": "The Processor may engage Sub-processors as necessary for the provision of the Services. The Processor shall maintain an up-to-date list of Sub-processors and shall notify the Controller of any changes. The Processor shall ensure each Sub-processor is bound by written data protection obligations no less protective than those in this Agreement.",
+            "es": "El Encargado podrá contratar Subencargados según sea necesario para la prestación de los Servicios. El Encargado mantendrá una lista actualizada de Subencargados y notificará al Responsable de cualquier cambio. El Encargado se asegurará de que cada Subencargado esté sujeto a obligaciones de protección de datos por escrito no menos protectoras que las del presente Acuerdo."
+          },
+          "biasPartyA": -0.5,
+          "biasPartyB": 0.5,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": {
+              "available": true,
+              "warning": {
+                "en": "UK GDPR Art 28(2) requires 'prior specific or general written authorisation' with opportunity to object — notification-only may not satisfy this requirement",
+                "es": "El Art. 28(2) del RGPD del Reino Unido requiere 'autorización previa específica o general por escrito' con oportunidad de objeción — solo notificación puede no satisfacer este requisito"
+              }
+            },
+            "SPAIN": {
+              "available": true,
+              "warning": {
+                "en": "GDPR Art 28(2) requires controller authorization for sub-processors — notification-only may not comply",
+                "es": "El Art. 28(2) del RGPD requiere autorización del responsable para subencargados — solo notificación puede no cumplir"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "data-transfer",
+      "title": {
+        "en": "International Data Transfers",
+        "es": "Transferencias Internacionales de Datos"
+      },
+      "category": "Transfers",
+      "order": 4,
+      "plainDescription": {
+        "en": "Under what conditions may personal data be transferred outside the controller's jurisdiction?",
+        "es": "¿Bajo qué condiciones pueden transferirse datos personales fuera de la jurisdicción del responsable?"
+      },
+      "legalContext": {
+        "en": "GDPR Chapter V restricts transfers outside the EEA unless adequacy decisions, Standard Contractual Clauses (SCCs), or other safeguards apply. UK GDPR requires the UK International Data Transfer Agreement (IDTA) or UK Addendum to SCCs. CCPA does not restrict international transfers but requires contractual safeguards.",
+        "es": "El Capítulo V del RGPD restringe las transferencias fuera del EEE salvo que existan decisiones de adecuación, Cláusulas Contractuales Tipo (CCT) u otras garantías. El RGPD del Reino Unido requiere el Acuerdo Internacional de Transferencia de Datos del Reino Unido (IDTA) o la Adenda del Reino Unido a las CCT. La CCPA no restringe las transferencias internacionales pero requiere garantías contractuales."
+      },
+      "isRequired": true,
+      "options": [
+        {
+          "id": "transfer-none",
+          "code": "no-transfers",
+          "label": {
+            "en": "No International Transfers",
+            "es": "Sin Transferencias Internacionales"
+          },
+          "order": 1,
+          "plainDescription": {
+            "en": "All personal data must be processed and stored within the controller's jurisdiction. No cross-border transfers permitted.",
+            "es": "Todos los datos personales deben tratarse y almacenarse dentro de la jurisdicción del responsable. No se permiten transferencias transfronterizas."
+          },
+          "prosPartyA": {
+            "en": ["Maximum data sovereignty", "No transfer mechanism complexity", "Strongest compliance position"],
+            "es": ["Máxima soberanía de datos", "Sin complejidad de mecanismos de transferencia", "Posición de cumplimiento más fuerte"]
+          },
+          "consPartyA": {
+            "en": ["Limits processor vendor choices", "May increase costs", "May not be practical for cloud services"],
+            "es": ["Limita las opciones de proveedores del encargado", "Puede aumentar costes", "Puede no ser práctico para servicios en la nube"]
+          },
+          "prosPartyB": {
+            "en": ["No transfer compliance burden", "Simple geographic scope"],
+            "es": ["Sin carga de cumplimiento de transferencias", "Alcance geográfico simple"]
+          },
+          "consPartyB": {
+            "en": ["Restricts infrastructure choices", "May need local-only hosting", "Higher operational costs"],
+            "es": ["Restringe opciones de infraestructura", "Puede necesitar alojamiento solo local", "Mayores costes operativos"]
+          },
+          "legalText": {
+            "en": "The Processor shall not transfer Personal Data outside the jurisdiction of the Controller, nor permit any Sub-processor to do so. All processing, storage, and backup of Personal Data shall take place within [EEA/United Kingdom/United States] as applicable to the governing law of this Agreement.",
+            "es": "El Encargado no transferirá Datos Personales fuera de la jurisdicción del Responsable, ni permitirá que ningún Subencargado lo haga. Todo el tratamiento, almacenamiento y copia de seguridad de Datos Personales se realizará dentro del [EEE/Reino Unido/Estados Unidos] según corresponda a la ley aplicable del presente Acuerdo."
+          },
+          "biasPartyA": 0.5,
+          "biasPartyB": -0.5,
+          "jurisdictionConfig": {
+            "CALIFORNIA": {
+              "available": false,
+              "warning": {
+                "en": "Impractical for most US-based SaaS — US data commonly flows between states and to cloud regions globally",
+                "es": "Impracticable para la mayoría de SaaS en EE.UU. — los datos en EE.UU. comúnmente fluyen entre estados y a regiones de nube globalmente"
+              }
+            },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        },
+        {
+          "id": "transfer-sccs",
+          "code": "sccs",
+          "label": {
+            "en": "Standard Contractual Clauses (SCCs)",
+            "es": "Cláusulas Contractuales Tipo (CCT)"
+          },
+          "order": 2,
+          "plainDescription": {
+            "en": "International transfers permitted only under EU-approved Standard Contractual Clauses (with UK IDTA addendum where applicable).",
+            "es": "Transferencias internacionales permitidas solo bajo las Cláusulas Contractuales Tipo aprobadas por la UE (con adenda IDTA del Reino Unido cuando corresponda)."
+          },
+          "prosPartyA": {
+            "en": ["Well-established legal mechanism", "Pre-approved by EU Commission", "Strong data protection safeguards"],
+            "es": ["Mecanismo legal bien establecido", "Preaprobado por la Comisión Europea", "Fuertes garantías de protección de datos"]
+          },
+          "consPartyA": {
+            "en": ["SCCs add contractual complexity", "Transfer impact assessments needed"],
+            "es": ["Las CCT añaden complejidad contractual", "Se necesitan evaluaciones de impacto de transferencias"]
+          },
+          "prosPartyB": {
+            "en": ["Can use global infrastructure", "Clear legal basis for transfers", "Widely accepted by regulators"],
+            "es": ["Puede usar infraestructura global", "Base legal clara para transferencias", "Ampliamente aceptado por reguladores"]
+          },
+          "consPartyB": {
+            "en": ["Must execute SCCs with each data importer", "Ongoing compliance monitoring required"],
+            "es": ["Debe ejecutar CCT con cada importador de datos", "Requiere monitoreo continuo de cumplimiento"]
+          },
+          "legalText": {
+            "en": "The Processor may transfer Personal Data outside the EEA or United Kingdom only where such transfer is subject to the European Commission's Standard Contractual Clauses (Module Two: Controller to Processor) as adopted by Commission Implementing Decision (EU) 2021/914. For transfers from the United Kingdom, the UK International Data Transfer Addendum shall apply. The Processor shall conduct a transfer impact assessment prior to any new transfer and shall implement supplementary measures where required.",
+            "es": "El Encargado podrá transferir Datos Personales fuera del EEE o del Reino Unido solo cuando dicha transferencia esté sujeta a las Cláusulas Contractuales Tipo de la Comisión Europea (Módulo Dos: Responsable a Encargado) adoptadas por la Decisión de Ejecución (UE) 2021/914. Para transferencias desde el Reino Unido, se aplicará la Adenda de Transferencia Internacional de Datos del Reino Unido. El Encargado realizará una evaluación de impacto de transferencia antes de cualquier nueva transferencia e implementará medidas complementarias cuando sea necesario."
+          },
+          "biasPartyA": 0.2,
+          "biasPartyB": -0.2,
+          "jurisdictionConfig": {
+            "CALIFORNIA": {
+              "available": true,
+              "note": {
+                "en": "SCCs are not required under CCPA but provide additional contractual safeguards",
+                "es": "Las CCT no son requeridas por la CCPA pero proporcionan garantías contractuales adicionales"
+              }
+            },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        },
+        {
+          "id": "transfer-adequacy-sccs",
+          "code": "adequacy-or-sccs",
+          "label": {
+            "en": "Adequacy Decision or SCCs",
+            "es": "Decisión de Adecuación o CCT"
+          },
+          "order": 3,
+          "plainDescription": {
+            "en": "Transfers allowed to countries with an adequacy decision, or under SCCs for all others. Gives processor flexibility to use regions with adequacy findings.",
+            "es": "Transferencias permitidas a países con decisión de adecuación, o bajo CCT para todos los demás. Da flexibilidad al encargado para usar regiones con hallazgos de adecuación."
+          },
+          "prosPartyA": {
+            "en": ["Covers most transfer scenarios", "Leverages EU adequacy framework", "Practical and comprehensive"],
+            "es": ["Cubre la mayoría de escenarios de transferencia", "Aprovecha el marco de adecuación de la UE", "Práctico y completo"]
+          },
+          "consPartyA": {
+            "en": ["Adequacy decisions can be revoked (e.g., Schrems II)", "Less restrictive than SCCs-only"],
+            "es": ["Las decisiones de adecuación pueden revocarse (ej. Schrems II)", "Menos restrictivo que solo CCT"]
+          },
+          "prosPartyB": {
+            "en": ["Wider choice of data center regions", "Simpler compliance for adequate countries", "Flexible approach"],
+            "es": ["Mayor elección de regiones de centros de datos", "Cumplimiento más sencillo para países adecuados", "Enfoque flexible"]
+          },
+          "consPartyB": {
+            "en": ["Must track adequacy decisions", "SCCs still needed for non-adequate countries"],
+            "es": ["Debe rastrear decisiones de adecuación", "Aún se necesitan CCT para países no adecuados"]
+          },
+          "legalText": {
+            "en": "The Processor may transfer Personal Data outside the EEA or United Kingdom to a country that benefits from an adequacy decision by the European Commission or the UK Secretary of State. For transfers to countries without an adequacy decision, the Processor shall ensure appropriate safeguards through Standard Contractual Clauses (with UK IDTA where applicable) or other approved transfer mechanisms under applicable data protection law.",
+            "es": "El Encargado podrá transferir Datos Personales fuera del EEE o del Reino Unido a un país que se beneficie de una decisión de adecuación de la Comisión Europea o del Secretario de Estado del Reino Unido. Para transferencias a países sin decisión de adecuación, el Encargado garantizará las salvaguardas apropiadas mediante Cláusulas Contractuales Tipo (con IDTA del Reino Unido cuando corresponda) u otros mecanismos de transferencia aprobados conforme a la normativa de protección de datos aplicable."
+          },
+          "biasPartyA": 0.0,
+          "biasPartyB": 0.0,
+          "jurisdictionConfig": {
+            "CALIFORNIA": {
+              "available": true,
+              "note": {
+                "en": "CCPA does not restrict international transfers — this provides additional safeguards beyond CCPA requirements",
+                "es": "La CCPA no restringe las transferencias internacionales — esto proporciona garantías adicionales más allá de los requisitos de la CCPA"
+              }
+            },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        },
+        {
+          "id": "transfer-discretion",
+          "code": "processor-discretion",
+          "label": {
+            "en": "Processor Discretion with Safeguards",
+            "es": "Discreción del Encargado con Garantías"
+          },
+          "order": 4,
+          "plainDescription": {
+            "en": "Processor may transfer data to any location provided it implements appropriate safeguards and complies with applicable transfer laws.",
+            "es": "El encargado puede transferir datos a cualquier ubicación siempre que implemente garantías apropiadas y cumpla con las leyes de transferencia aplicables."
+          },
+          "prosPartyA": {
+            "en": ["Processor bears transfer compliance burden", "Simplest contractual approach"],
+            "es": ["El encargado asume la carga de cumplimiento de transferencias", "Enfoque contractual más sencillo"]
+          },
+          "consPartyA": {
+            "en": ["Least control over data location", "Reliant on processor's compliance judgment", "May not satisfy controller accountability obligations"],
+            "es": ["Menor control sobre la ubicación de los datos", "Dependiente del juicio de cumplimiento del encargado", "Puede no satisfacer las obligaciones de responsabilidad proactiva del responsable"]
+          },
+          "prosPartyB": {
+            "en": ["Maximum infrastructure flexibility", "Can optimize for cost and performance", "No pre-approval needed for new regions"],
+            "es": ["Máxima flexibilidad de infraestructura", "Puede optimizar por coste y rendimiento", "No necesita aprobación previa para nuevas regiones"]
+          },
+          "consPartyB": {
+            "en": ["Full legal responsibility for transfer compliance", "Must implement safeguards independently"],
+            "es": ["Responsabilidad legal total por el cumplimiento de transferencias", "Debe implementar garantías de forma independiente"]
+          },
+          "legalText": {
+            "en": "The Processor may transfer Personal Data to any country or territory provided that the Processor: (a) complies with all applicable data protection transfer requirements; (b) implements appropriate safeguards as required by applicable law; and (c) maintains a record of all transfer mechanisms relied upon. The Processor shall promptly inform the Controller of the locations where Personal Data is processed upon request.",
+            "es": "El Encargado podrá transferir Datos Personales a cualquier país o territorio siempre que el Encargado: (a) cumpla con todos los requisitos de transferencia de protección de datos aplicables; (b) implemente las garantías apropiadas según la ley aplicable; y (c) mantenga un registro de todos los mecanismos de transferencia utilizados. El Encargado informará puntualmente al Responsable de las ubicaciones donde se tratan los Datos Personales cuando se le solicite."
+          },
+          "biasPartyA": -0.4,
+          "biasPartyB": 0.4,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": {
+              "available": true,
+              "warning": {
+                "en": "Controller remains accountable for transfers under UK GDPR — delegating discretion may not satisfy Art 28 requirements",
+                "es": "El responsable sigue siendo responsable de las transferencias bajo el RGPD del Reino Unido — delegar discreción puede no satisfacer los requisitos del Art. 28"
+              }
+            },
+            "SPAIN": {
+              "available": true,
+              "warning": {
+                "en": "AEPD expects controllers to maintain oversight of international transfers — full processor discretion may face scrutiny",
+                "es": "La AEPD espera que los responsables mantengan supervisión de las transferencias internacionales — la discreción total del encargado puede ser objeto de escrutinio"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "security-measures",
+      "title": {
+        "en": "Security Measures (TOMs)",
+        "es": "Medidas de Seguridad (MOT)"
+      },
+      "category": "Security",
+      "order": 5,
+      "plainDescription": {
+        "en": "What technical and organizational security measures must the processor implement to protect personal data?",
+        "es": "¿Qué medidas de seguridad técnicas y organizativas debe implementar el encargado para proteger los datos personales?"
+      },
+      "legalContext": {
+        "en": "GDPR Article 32 requires both controllers and processors to implement appropriate technical and organizational measures (TOMs) including encryption, pseudonymization, ongoing confidentiality, and regular testing. CCPA §1798.150 creates a private right of action for breaches resulting from failure to implement reasonable security.",
+        "es": "El artículo 32 del RGPD exige tanto a responsables como a encargados implementar medidas técnicas y organizativas (MOT) apropiadas, incluyendo cifrado, seudonimización, confidencialidad continua y pruebas regulares. La CCPA §1798.150 crea un derecho de acción privada por brechas resultantes de la falta de implementación de seguridad razonable."
+      },
+      "isRequired": true,
+      "options": [
+        {
+          "id": "security-iso27001",
+          "code": "iso27001",
+          "label": {
+            "en": "ISO 27001 Certified",
+            "es": "Certificado ISO 27001"
+          },
+          "order": 1,
+          "plainDescription": {
+            "en": "Processor must maintain ISO 27001 certification and implement all controls in Annex A relevant to personal data processing.",
+            "es": "El encargado debe mantener la certificación ISO 27001 e implementar todos los controles del Anexo A relevantes para el tratamiento de datos personales."
+          },
+          "prosPartyA": {
+            "en": ["Internationally recognized standard", "Third-party audited certification", "Comprehensive control framework"],
+            "es": ["Estándar reconocido internacionalmente", "Certificación auditada por terceros", "Marco de controles integral"]
+          },
+          "consPartyA": {
+            "en": ["Limits vendor pool to certified processors", "May increase service costs"],
+            "es": ["Limita el grupo de proveedores a encargados certificados", "Puede aumentar los costes del servicio"]
+          },
+          "prosPartyB": {
+            "en": ["Clear security baseline", "Certification demonstrates compliance", "Recognized by regulators globally"],
+            "es": ["Línea base de seguridad clara", "La certificación demuestra cumplimiento", "Reconocido por reguladores a nivel mundial"]
+          },
+          "consPartyB": {
+            "en": ["Expensive to obtain and maintain", "Annual audit requirements", "Must cover all relevant processing"],
+            "es": ["Costoso de obtener y mantener", "Requisitos de auditoría anual", "Debe cubrir todo el tratamiento relevante"]
+          },
+          "legalText": {
+            "en": "The Processor shall maintain ISO/IEC 27001 certification covering the systems and processes used to process Personal Data under this Agreement. The Processor shall implement all controls from ISO 27001 Annex A that are relevant to the processing, including but not limited to encryption of Personal Data at rest and in transit, access controls, incident management, and business continuity. The Processor shall provide the Controller with a copy of its current certificate upon request.",
+            "es": "El Encargado mantendrá la certificación ISO/IEC 27001 que cubra los sistemas y procesos utilizados para tratar Datos Personales en virtud del presente Acuerdo. El Encargado implementará todos los controles del Anexo A de la ISO 27001 relevantes para el tratamiento, incluyendo, entre otros, cifrado de Datos Personales en reposo y en tránsito, controles de acceso, gestión de incidentes y continuidad del negocio. El Encargado proporcionará al Responsable una copia de su certificado vigente cuando se le solicite."
+          },
+          "biasPartyA": 0.5,
+          "biasPartyB": -0.5,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        },
+        {
+          "id": "security-soc2",
+          "code": "soc2",
+          "label": {
+            "en": "SOC 2 Type II",
+            "es": "SOC 2 Tipo II"
+          },
+          "order": 2,
+          "plainDescription": {
+            "en": "Processor must maintain SOC 2 Type II attestation covering security, availability, and confidentiality trust service criteria.",
+            "es": "El encargado debe mantener la certificación SOC 2 Tipo II que cubra los criterios de servicio de confianza de seguridad, disponibilidad y confidencialidad."
+          },
+          "prosPartyA": {
+            "en": ["Independently audited over time period", "Common in US SaaS market", "Covers key trust service criteria"],
+            "es": ["Auditado independientemente durante un período", "Común en el mercado SaaS de EE.UU.", "Cubre criterios clave de servicio de confianza"]
+          },
+          "consPartyA": {
+            "en": ["US-centric standard", "Less recognized in EU/UK than ISO"],
+            "es": ["Estándar centrado en EE.UU.", "Menos reconocido en la UE/Reino Unido que la ISO"]
+          },
+          "prosPartyB": {
+            "en": ["Industry standard for US SaaS", "Flexible trust criteria selection", "Well-understood by auditors"],
+            "es": ["Estándar de la industria para SaaS en EE.UU.", "Selección flexible de criterios de confianza", "Bien comprendido por auditores"]
+          },
+          "consPartyB": {
+            "en": ["Annual audit cycle", "Report may not cover all processing activities"],
+            "es": ["Ciclo de auditoría anual", "El informe puede no cubrir todas las actividades de tratamiento"]
+          },
+          "legalText": {
+            "en": "The Processor shall maintain a SOC 2 Type II attestation report covering the Security, Availability, and Confidentiality trust service criteria for the systems used to process Personal Data. The attestation shall be performed by an independent certified public accounting firm and shall cover a period of no less than twelve (12) months. The Processor shall provide the Controller with a copy of the most recent report upon request, subject to confidentiality obligations.",
+            "es": "El Encargado mantendrá un informe de certificación SOC 2 Tipo II que cubra los criterios de servicio de confianza de Seguridad, Disponibilidad y Confidencialidad para los sistemas utilizados para tratar Datos Personales. La certificación será realizada por una firma de contadores públicos certificados independiente y cubrirá un período no inferior a doce (12) meses. El Encargado proporcionará al Responsable una copia del informe más reciente cuando se le solicite, sujeto a obligaciones de confidencialidad."
+          },
+          "biasPartyA": 0.2,
+          "biasPartyB": -0.2,
+          "jurisdictionConfig": {
+            "CALIFORNIA": {
+              "available": true,
+              "note": {
+                "en": "SOC 2 is the predominant security standard for US SaaS companies",
+                "es": "SOC 2 es el estándar de seguridad predominante para empresas SaaS en EE.UU."
+              }
+            },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        },
+        {
+          "id": "security-annex",
+          "code": "annex-defined",
+          "label": {
+            "en": "Annex-Defined TOMs",
+            "es": "MOT Definidas en Anexo"
+          },
+          "order": 3,
+          "plainDescription": {
+            "en": "Security measures are defined in a detailed technical annex, without requiring a specific certification. Processor implements the listed measures.",
+            "es": "Las medidas de seguridad se definen en un anexo técnico detallado, sin requerir una certificación específica. El encargado implementa las medidas enumeradas."
+          },
+          "prosPartyA": {
+            "en": ["Tailored to specific processing needs", "No certification cost barrier", "Can specify exact requirements"],
+            "es": ["Adaptadas a las necesidades específicas de tratamiento", "Sin barrera de coste de certificación", "Puede especificar requisitos exactos"]
+          },
+          "consPartyA": {
+            "en": ["No third-party verification", "Must draft and maintain the annex", "Harder to verify compliance"],
+            "es": ["Sin verificación por terceros", "Debe redactar y mantener el anexo", "Más difícil verificar el cumplimiento"]
+          },
+          "prosPartyB": {
+            "en": ["No expensive certification required", "Flexible implementation approach", "Can use existing security practices"],
+            "es": ["No requiere certificación costosa", "Enfoque de implementación flexible", "Puede usar prácticas de seguridad existentes"]
+          },
+          "consPartyB": {
+            "en": ["Must meet all listed measures", "Annex may be amended by controller"],
+            "es": ["Debe cumplir todas las medidas listadas", "El anexo puede ser modificado por el responsable"]
+          },
+          "legalText": {
+            "en": "The Processor shall implement and maintain the technical and organizational security measures described in Annex 2 to this Agreement. Such measures shall include, at a minimum: encryption of Personal Data at rest and in transit, access controls and authentication, regular vulnerability assessments, incident response procedures, and employee security training. The Processor shall not materially reduce the overall level of security without prior written notice to the Controller.",
+            "es": "El Encargado implementará y mantendrá las medidas de seguridad técnicas y organizativas descritas en el Anexo 2 del presente Acuerdo. Dichas medidas incluirán, como mínimo: cifrado de Datos Personales en reposo y en tránsito, controles de acceso y autenticación, evaluaciones periódicas de vulnerabilidades, procedimientos de respuesta a incidentes y formación en seguridad de los empleados. El Encargado no reducirá materialmente el nivel general de seguridad sin notificación previa por escrito al Responsable."
+          },
+          "biasPartyA": 0.0,
+          "biasPartyB": 0.0,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        },
+        {
+          "id": "security-discretion",
+          "code": "processor-discretion",
+          "label": {
+            "en": "Processor Discretion — Industry-Standard",
+            "es": "Discreción del Encargado — Estándar de la Industria"
+          },
+          "order": 4,
+          "plainDescription": {
+            "en": "Processor implements security measures it deems appropriate and consistent with industry standards, without specific certification or annex requirements.",
+            "es": "El encargado implementa las medidas de seguridad que considere apropiadas y consistentes con los estándares de la industria, sin requisitos específicos de certificación o anexo."
+          },
+          "prosPartyA": {
+            "en": ["Simplest contractual approach", "Processor bears security design burden"],
+            "es": ["Enfoque contractual más sencillo", "El encargado asume la carga del diseño de seguridad"]
+          },
+          "consPartyA": {
+            "en": ["Least specific requirements", "Hard to enforce or audit", "Vague 'industry standard' benchmark"],
+            "es": ["Requisitos menos específicos", "Difícil de hacer cumplir o auditar", "Referencia vaga de 'estándar de la industria'"]
+          },
+          "prosPartyB": {
+            "en": ["Maximum implementation flexibility", "No certification costs", "Can evolve security practices freely"],
+            "es": ["Máxima flexibilidad de implementación", "Sin costes de certificación", "Puede evolucionar las prácticas de seguridad libremente"]
+          },
+          "consPartyB": {
+            "en": ["Liable if measures deemed insufficient", "Vague standard may work against processor in disputes"],
+            "es": ["Responsable si las medidas se consideran insuficientes", "El estándar vago puede obrar en contra del encargado en disputas"]
+          },
+          "legalText": {
+            "en": "The Processor shall implement appropriate technical and organizational measures to ensure a level of security appropriate to the risk, taking into account the state of the art, the costs of implementation, and the nature, scope, context and purposes of processing. The Processor shall regularly assess and improve such measures in accordance with industry best practices.",
+            "es": "El Encargado implementará medidas técnicas y organizativas apropiadas para garantizar un nivel de seguridad adecuado al riesgo, teniendo en cuenta el estado de la técnica, los costes de implementación y la naturaleza, alcance, contexto y fines del tratamiento. El Encargado evaluará y mejorará regularmente dichas medidas de conformidad con las mejores prácticas de la industria."
+          },
+          "biasPartyA": -0.4,
+          "biasPartyB": 0.4,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": {
+              "available": true,
+              "warning": {
+                "en": "ICO expects specific, documented TOMs under UK GDPR Art 32 — vague 'industry standard' may not suffice",
+                "es": "El ICO espera MOT específicas y documentadas conforme al Art. 32 del RGPD del Reino Unido — el vago 'estándar de la industria' puede no ser suficiente"
+              }
+            },
+            "SPAIN": {
+              "available": true,
+              "warning": {
+                "en": "AEPD requires documented security measures — general industry standard references may not satisfy Art 32",
+                "es": "La AEPD exige medidas de seguridad documentadas — las referencias generales a estándares de la industria pueden no satisfacer el Art. 32"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "breach-notification",
+      "title": {
+        "en": "Data Breach Notification",
+        "es": "Notificación de Brechas de Datos"
+      },
+      "category": "Security",
+      "order": 6,
+      "plainDescription": {
+        "en": "How quickly must the processor notify the controller of a personal data breach, and what information must be provided?",
+        "es": "¿Con qué rapidez debe el encargado notificar al responsable una brecha de datos personales, y qué información debe proporcionar?"
+      },
+      "legalContext": {
+        "en": "GDPR Article 33 requires controllers to notify supervisory authorities within 72 hours of becoming aware of a breach. This means processors must notify controllers promptly enough for controllers to meet this deadline. CCPA does not impose a specific breach notification timeline on service providers but California Civil Code §1798.82 requires consumer notification 'in the most expedient time possible'.",
+        "es": "El artículo 33 del RGPD exige a los responsables notificar a las autoridades de control en un plazo de 72 horas desde que tengan conocimiento de una brecha. Esto significa que los encargados deben notificar a los responsables con suficiente rapidez para que estos cumplan este plazo. La CCPA no impone un plazo específico de notificación de brechas a los proveedores de servicios, pero el Código Civil de California §1798.82 exige la notificación al consumidor 'en el tiempo más rápido posible'."
+      },
+      "isRequired": true,
+      "options": [
+        {
+          "id": "breach-24h",
+          "code": "24h",
+          "label": {
+            "en": "24 Hours",
+            "es": "24 Horas"
+          },
+          "order": 1,
+          "plainDescription": {
+            "en": "Processor must notify the controller within 24 hours of becoming aware of a personal data breach.",
+            "es": "El encargado debe notificar al responsable en un plazo de 24 horas desde que tenga conocimiento de una brecha de datos personales."
+          },
+          "prosPartyA": {
+            "en": ["Maximum time for controller to assess and report", "48 hours buffer before GDPR 72h deadline", "Shows processor takes breaches seriously"],
+            "es": ["Máximo tiempo para que el responsable evalúe e informe", "48 horas de margen antes del plazo de 72h del RGPD", "Demuestra que el encargado toma las brechas en serio"]
+          },
+          "consPartyA": {
+            "en": ["May receive incomplete initial reports", "Processor may over-report incidents"],
+            "es": ["Puede recibir informes iniciales incompletos", "El encargado puede sobre-reportar incidentes"]
+          },
+          "prosPartyB": {
+            "en": ["Demonstrates strong incident response", "Controller alerted quickly"],
+            "es": ["Demuestra respuesta a incidentes sólida", "Responsable alertado rápidamente"]
+          },
+          "consPartyB": {
+            "en": ["Very tight timeline for investigation", "May not have full details within 24h", "Risk of premature or inaccurate reporting"],
+            "es": ["Plazo muy ajustado para investigación", "Puede no tener todos los detalles en 24h", "Riesgo de informes prematuros o inexactos"]
+          },
+          "legalText": {
+            "en": "The Processor shall notify the Controller without undue delay and in any event within twenty-four (24) hours of becoming aware of a Personal Data breach. The notification shall include: (a) the nature of the breach including, where possible, the categories and approximate number of data subjects and records affected; (b) the likely consequences of the breach; (c) the measures taken or proposed to address the breach; and (d) the contact point for further information. Where full details are not available within the notification period, the Processor shall provide information in phases as it becomes available.",
+            "es": "El Encargado notificará al Responsable sin dilación indebida y en cualquier caso en un plazo de veinticuatro (24) horas desde que tenga conocimiento de una brecha de Datos Personales. La notificación incluirá: (a) la naturaleza de la brecha incluyendo, cuando sea posible, las categorías y número aproximado de interesados y registros afectados; (b) las consecuencias probables de la brecha; (c) las medidas adoptadas o propuestas para abordar la brecha; y (d) el punto de contacto para más información. Cuando los detalles completos no estén disponibles dentro del período de notificación, el Encargado proporcionará la información por fases a medida que esté disponible."
+          },
+          "biasPartyA": 0.5,
+          "biasPartyB": -0.5,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        },
+        {
+          "id": "breach-48h",
+          "code": "48h",
+          "label": {
+            "en": "48 Hours",
+            "es": "48 Horas"
+          },
+          "order": 2,
+          "plainDescription": {
+            "en": "Processor must notify the controller within 48 hours of becoming aware of a breach.",
+            "es": "El encargado debe notificar al responsable en un plazo de 48 horas desde que tenga conocimiento de una brecha."
+          },
+          "prosPartyA": {
+            "en": ["24 hours for controller before GDPR deadline", "Processor can provide more detail", "Balanced approach"],
+            "es": ["24 horas para el responsable antes del plazo del RGPD", "El encargado puede proporcionar más detalle", "Enfoque equilibrado"]
+          },
+          "consPartyA": {
+            "en": ["Tighter window for controller assessment", "Less margin for complex incidents"],
+            "es": ["Ventana más ajustada para la evaluación del responsable", "Menos margen para incidentes complejos"]
+          },
+          "prosPartyB": {
+            "en": ["More time for initial investigation", "Can provide more accurate initial report"],
+            "es": ["Más tiempo para investigación inicial", "Puede proporcionar un informe inicial más preciso"]
+          },
+          "consPartyB": {
+            "en": ["Still a tight deadline", "Must have incident response procedures in place"],
+            "es": ["Sigue siendo un plazo ajustado", "Debe tener procedimientos de respuesta a incidentes implementados"]
+          },
+          "legalText": {
+            "en": "The Processor shall notify the Controller without undue delay and in any event within forty-eight (48) hours of becoming aware of a Personal Data breach. The notification shall include the nature of the breach, the categories and approximate number of data subjects affected, the likely consequences, and the measures taken or proposed to mitigate the breach. The Processor shall provide supplementary information as it becomes available.",
+            "es": "El Encargado notificará al Responsable sin dilación indebida y en cualquier caso en un plazo de cuarenta y ocho (48) horas desde que tenga conocimiento de una brecha de Datos Personales. La notificación incluirá la naturaleza de la brecha, las categorías y número aproximado de interesados afectados, las consecuencias probables y las medidas adoptadas o propuestas para mitigar la brecha. El Encargado proporcionará información complementaria a medida que esté disponible."
+          },
+          "biasPartyA": 0.2,
+          "biasPartyB": -0.2,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        },
+        {
+          "id": "breach-72h",
+          "code": "72h",
+          "label": {
+            "en": "72 Hours",
+            "es": "72 Horas"
+          },
+          "order": 3,
+          "plainDescription": {
+            "en": "Processor must notify the controller within 72 hours — aligned with the GDPR supervisory authority notification deadline.",
+            "es": "El encargado debe notificar al responsable en un plazo de 72 horas — alineado con el plazo de notificación a la autoridad de control del RGPD."
+          },
+          "prosPartyA": {
+            "en": ["Matches GDPR authority deadline", "Processor can investigate thoroughly"],
+            "es": ["Coincide con el plazo de la autoridad del RGPD", "El encargado puede investigar exhaustivamente"]
+          },
+          "consPartyA": {
+            "en": ["No buffer time for controller's own assessment", "Controller may miss GDPR deadline", "Risky for complex cross-border incidents"],
+            "es": ["Sin tiempo de margen para la evaluación del responsable", "El responsable puede incumplir el plazo del RGPD", "Arriesgado para incidentes transfronterizos complejos"]
+          },
+          "prosPartyB": {
+            "en": ["Full investigation window", "More complete and accurate notifications", "Aligned with GDPR timeline"],
+            "es": ["Ventana de investigación completa", "Notificaciones más completas y precisas", "Alineado con la línea temporal del RGPD"]
+          },
+          "consPartyB": {
+            "en": ["Must still meet the 72-hour deadline", "Controllers may push back wanting faster notice"],
+            "es": ["Debe cumplir el plazo de 72 horas", "Los responsables pueden presionar pidiendo notificación más rápida"]
+          },
+          "legalText": {
+            "en": "The Processor shall notify the Controller without undue delay and in any event within seventy-two (72) hours of becoming aware of a Personal Data breach. The notification shall include all information required under Article 33(3) of the GDPR or equivalent applicable law. The Processor shall cooperate with the Controller in investigating and remediating the breach and in fulfilling the Controller's notification obligations to supervisory authorities and data subjects.",
+            "es": "El Encargado notificará al Responsable sin dilación indebida y en cualquier caso en un plazo de setenta y dos (72) horas desde que tenga conocimiento de una brecha de Datos Personales. La notificación incluirá toda la información requerida conforme al artículo 33(3) del RGPD o la normativa aplicable equivalente. El Encargado cooperará con el Responsable en la investigación y remediación de la brecha y en el cumplimiento de las obligaciones de notificación del Responsable a las autoridades de control y a los interesados."
+          },
+          "biasPartyA": -0.2,
+          "biasPartyB": 0.2,
+          "jurisdictionConfig": {
+            "CALIFORNIA": {
+              "available": true,
+              "note": {
+                "en": "CCPA has no mandatory processor-to-controller notification timeframe — 72 hours is generous by US standards",
+                "es": "La CCPA no tiene plazo obligatorio de notificación del encargado al responsable — 72 horas es generoso según estándares de EE.UU."
+              }
+            },
+            "ENGLAND_WALES": {
+              "available": true,
+              "warning": {
+                "en": "72 hours matches the ICO notification deadline — leaves no buffer for controller assessment before reporting",
+                "es": "72 horas coincide con el plazo de notificación al ICO — no deja margen para la evaluación del responsable antes de informar"
+              }
+            },
+            "SPAIN": {
+              "available": true,
+              "warning": {
+                "en": "72 hours matches the AEPD notification deadline — controller has no additional time for assessment",
+                "es": "72 horas coincide con el plazo de notificación a la AEPD — el responsable no tiene tiempo adicional para la evaluación"
+              }
+            }
+          }
+        },
+        {
+          "id": "breach-undue-delay",
+          "code": "undue-delay",
+          "label": {
+            "en": "Without Undue Delay (No Fixed Deadline)",
+            "es": "Sin Dilación Indebida (Sin Plazo Fijo)"
+          },
+          "order": 4,
+          "plainDescription": {
+            "en": "Processor must notify 'without undue delay' but no specific hour deadline is set. Mirrors GDPR language for processor-to-controller notification.",
+            "es": "El encargado debe notificar 'sin dilación indebida' pero no se establece un plazo horario específico. Refleja el lenguaje del RGPD para la notificación del encargado al responsable."
+          },
+          "prosPartyA": {
+            "en": ["Mirrors GDPR wording", "Flexible based on circumstances"],
+            "es": ["Refleja la redacción del RGPD", "Flexible según las circunstancias"]
+          },
+          "consPartyA": {
+            "en": ["No guaranteed timeline", "Disputes about what constitutes 'undue delay'", "Risk of late notification"],
+            "es": ["Sin plazo garantizado", "Disputas sobre lo que constituye 'dilación indebida'", "Riesgo de notificación tardía"]
+          },
+          "prosPartyB": {
+            "en": ["Maximum flexibility for investigation", "Can assess severity before notifying", "No risk of missing arbitrary deadline"],
+            "es": ["Máxima flexibilidad para investigación", "Puede evaluar la gravedad antes de notificar", "Sin riesgo de incumplir un plazo arbitrario"]
+          },
+          "consPartyB": {
+            "en": ["Legal uncertainty about timing", "May face claims of 'undue' delay"],
+            "es": ["Incertidumbre legal sobre el plazo", "Puede enfrentar reclamaciones de dilación 'indebida'"]
+          },
+          "legalText": {
+            "en": "The Processor shall notify the Controller without undue delay after becoming aware of a Personal Data breach. The Processor shall provide sufficient information to enable the Controller to fulfil its obligations to notify the competent supervisory authority and affected data subjects where required. The Processor shall cooperate with the Controller and take reasonable steps to assist in the investigation, mitigation, and remediation of the breach.",
+            "es": "El Encargado notificará al Responsable sin dilación indebida tras tener conocimiento de una brecha de Datos Personales. El Encargado proporcionará información suficiente para permitir al Responsable cumplir sus obligaciones de notificación a la autoridad de control competente y a los interesados afectados cuando sea necesario. El Encargado cooperará con el Responsable y tomará medidas razonables para asistir en la investigación, mitigación y remediación de la brecha."
+          },
+          "biasPartyA": -0.4,
+          "biasPartyB": 0.4,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        }
+      ]
+    },
+    {
+      "id": "data-subject-rights",
+      "title": {
+        "en": "Data Subject Rights Assistance",
+        "es": "Asistencia con los Derechos de los Interesados"
+      },
+      "category": "Rights",
+      "order": 7,
+      "plainDescription": {
+        "en": "How must the processor assist the controller in responding to data subject requests (access, deletion, portability, etc.)?",
+        "es": "¿Cómo debe el encargado asistir al responsable en la respuesta a solicitudes de los interesados (acceso, supresión, portabilidad, etc.)?"
+      },
+      "legalContext": {
+        "en": "GDPR Articles 15-22 give data subjects rights to access, rectify, erase, restrict, port, and object to processing of their data. Controllers must respond within one month. CCPA §§1798.100-125 grant California consumers rights to know, delete, opt-out, and correct. Processors must assist controllers in fulfilling these obligations.",
+        "es": "Los artículos 15-22 del RGPD otorgan a los interesados derechos de acceso, rectificación, supresión, limitación, portabilidad y oposición al tratamiento de sus datos. Los responsables deben responder en un mes. La CCPA §§1798.100-125 otorga a los consumidores de California derechos a conocer, eliminar, excluirse y corregir. Los encargados deben asistir a los responsables en el cumplimiento de estas obligaciones."
+      },
+      "isRequired": true,
+      "options": [
+        {
+          "id": "rights-full",
+          "code": "full",
+          "label": {
+            "en": "Full Assistance — Processor Handles Requests",
+            "es": "Asistencia Completa — El Encargado Gestiona las Solicitudes"
+          },
+          "order": 1,
+          "plainDescription": {
+            "en": "Processor handles data subject requests directly on behalf of the controller, with automated tools and dedicated support. Responds within 5 business days.",
+            "es": "El encargado gestiona las solicitudes de los interesados directamente en nombre del responsable, con herramientas automatizadas y soporte dedicado. Responde en 5 días hábiles."
+          },
+          "prosPartyA": {
+            "en": ["Minimal administrative burden on controller", "Faster response to data subjects", "Professional handling of requests"],
+            "es": ["Carga administrativa mínima para el responsable", "Respuesta más rápida a los interesados", "Gestión profesional de las solicitudes"]
+          },
+          "consPartyA": {
+            "en": ["Less direct control over responses", "Relies on processor's competence"],
+            "es": ["Menos control directo sobre las respuestas", "Depende de la competencia del encargado"]
+          },
+          "prosPartyB": {
+            "en": ["Demonstrates strong service commitment", "Can use automated tooling at scale"],
+            "es": ["Demuestra fuerte compromiso de servicio", "Puede usar herramientas automatizadas a escala"]
+          },
+          "consPartyB": {
+            "en": ["Significant operational commitment", "Must maintain request-handling infrastructure", "Tight 5-day response window"],
+            "es": ["Compromiso operativo significativo", "Debe mantener infraestructura de gestión de solicitudes", "Ventana ajustada de 5 días para responder"]
+          },
+          "legalText": {
+            "en": "The Processor shall assist the Controller in fulfilling its obligations to respond to data subject requests under applicable data protection law. The Processor shall: (a) promptly notify the Controller of any request received directly from a data subject; (b) provide tools or processes enabling the Controller to respond to access, deletion, rectification, portability, and objection requests; (c) execute verified requests within five (5) business days of the Controller's instruction; and (d) maintain audit logs of all data subject request activities. The costs of such assistance shall be included in the service fees.",
+            "es": "El Encargado asistirá al Responsable en el cumplimiento de sus obligaciones de responder a las solicitudes de los interesados conforme a la normativa de protección de datos aplicable. El Encargado: (a) notificará prontamente al Responsable cualquier solicitud recibida directamente de un interesado; (b) proporcionará herramientas o procesos que permitan al Responsable responder a solicitudes de acceso, supresión, rectificación, portabilidad y oposición; (c) ejecutará las solicitudes verificadas en un plazo de cinco (5) días hábiles desde la instrucción del Responsable; y (d) mantendrá registros de auditoría de todas las actividades de solicitudes de interesados. Los costes de dicha asistencia estarán incluidos en las tarifas del servicio."
+          },
+          "biasPartyA": 0.5,
+          "biasPartyB": -0.5,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        },
+        {
+          "id": "rights-standard",
+          "code": "standard",
+          "label": {
+            "en": "Standard — Processor Assists on Request",
+            "es": "Estándar — El Encargado Asiste Bajo Solicitud"
+          },
+          "order": 2,
+          "plainDescription": {
+            "en": "Processor assists the controller by providing requested data and executing instructions within 10 business days. Controller manages the relationship with data subjects.",
+            "es": "El encargado asiste al responsable proporcionando los datos solicitados y ejecutando instrucciones en 10 días hábiles. El responsable gestiona la relación con los interesados."
+          },
+          "prosPartyA": {
+            "en": ["Retains control over data subject communications", "Reasonable assistance timeline", "Industry-standard approach"],
+            "es": ["Conserva el control sobre las comunicaciones con los interesados", "Plazo de asistencia razonable", "Enfoque estándar en la industria"]
+          },
+          "consPartyA": {
+            "en": ["Must manage request workflow", "10-day processor response may pressure GDPR timelines"],
+            "es": ["Debe gestionar el flujo de solicitudes", "La respuesta de 10 días del encargado puede presionar los plazos del RGPD"]
+          },
+          "prosPartyB": {
+            "en": ["Reasonable assistance obligation", "Controller manages complexity", "Manageable operational commitment"],
+            "es": ["Obligación de asistencia razonable", "El responsable gestiona la complejidad", "Compromiso operativo manejable"]
+          },
+          "consPartyB": {
+            "en": ["Must respond within 10 business days", "May need to extract and format data"],
+            "es": ["Debe responder en 10 días hábiles", "Puede necesitar extraer y formatear datos"]
+          },
+          "legalText": {
+            "en": "The Processor shall assist the Controller, by appropriate technical and organizational measures, in fulfilling the Controller's obligations to respond to requests from data subjects exercising their rights under applicable data protection law. Upon receiving the Controller's written instructions, the Processor shall provide the requested information or execute the requested action within ten (10) business days. The Processor shall promptly redirect to the Controller any data subject request received directly. Reasonable costs for assistance beyond standard operations may be charged at agreed rates.",
+            "es": "El Encargado asistirá al Responsable, mediante medidas técnicas y organizativas apropiadas, en el cumplimiento de las obligaciones del Responsable de responder a las solicitudes de los interesados que ejercen sus derechos conforme a la normativa de protección de datos aplicable. Al recibir las instrucciones escritas del Responsable, el Encargado proporcionará la información solicitada o ejecutará la acción requerida en un plazo de diez (10) días hábiles. El Encargado redirigirá prontamente al Responsable cualquier solicitud de un interesado recibida directamente. Los costes razonables de asistencia más allá de las operaciones estándar podrán facturarse a tarifas acordadas."
+          },
+          "biasPartyA": 0.0,
+          "biasPartyB": 0.0,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        },
+        {
+          "id": "rights-self-service",
+          "code": "self-service",
+          "label": {
+            "en": "Self-Service — Controller Uses Platform Tools",
+            "es": "Autoservicio — El Responsable Usa Herramientas de la Plataforma"
+          },
+          "order": 3,
+          "plainDescription": {
+            "en": "Processor provides self-service tools (admin dashboards, APIs) for the controller to fulfill data subject requests independently. Manual assistance only for edge cases.",
+            "es": "El encargado proporciona herramientas de autoservicio (paneles de administración, APIs) para que el responsable atienda las solicitudes de los interesados de forma independiente. Asistencia manual solo para casos excepcionales."
+          },
+          "prosPartyA": {
+            "en": ["Immediate access to data via tools", "No waiting for processor response", "Full control over process"],
+            "es": ["Acceso inmediato a datos mediante herramientas", "Sin esperar respuesta del encargado", "Control total sobre el proceso"]
+          },
+          "consPartyA": {
+            "en": ["Operational burden on controller", "Must learn and use processor's tools", "Limited support for complex requests"],
+            "es": ["Carga operativa sobre el responsable", "Debe aprender y usar las herramientas del encargado", "Soporte limitado para solicitudes complejas"]
+          },
+          "prosPartyB": {
+            "en": ["Minimal manual intervention needed", "Scalable approach", "Lower operational costs"],
+            "es": ["Intervención manual mínima necesaria", "Enfoque escalable", "Menores costes operativos"]
+          },
+          "consPartyB": {
+            "en": ["Must build and maintain self-service tools", "Still liable for tool accuracy"],
+            "es": ["Debe construir y mantener herramientas de autoservicio", "Sigue siendo responsable de la precisión de las herramientas"]
+          },
+          "legalText": {
+            "en": "The Processor shall provide the Controller with self-service tools (including administrative interfaces and/or APIs) enabling the Controller to independently fulfill data subject requests for access, deletion, rectification, and data portability. The Processor shall provide reasonable technical assistance for requests that cannot be fulfilled through the self-service tools. The Controller acknowledges that self-service tools are the primary mechanism for data subject request fulfillment.",
+            "es": "El Encargado proporcionará al Responsable herramientas de autoservicio (incluyendo interfaces administrativas y/o APIs) que permitan al Responsable atender de forma independiente las solicitudes de los interesados de acceso, supresión, rectificación y portabilidad de datos. El Encargado proporcionará asistencia técnica razonable para solicitudes que no puedan atenderse mediante las herramientas de autoservicio. El Responsable reconoce que las herramientas de autoservicio son el mecanismo principal para atender las solicitudes de los interesados."
+          },
+          "biasPartyA": -0.3,
+          "biasPartyB": 0.3,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        }
+      ]
+    },
+    {
+      "id": "audit-rights",
+      "title": {
+        "en": "Audit Rights",
+        "es": "Derechos de Auditoría"
+      },
+      "category": "Accountability",
+      "order": 8,
+      "plainDescription": {
+        "en": "What rights does the controller have to audit or inspect the processor's data protection practices?",
+        "es": "¿Qué derechos tiene el responsable para auditar o inspeccionar las prácticas de protección de datos del encargado?"
+      },
+      "legalContext": {
+        "en": "GDPR Article 28(3)(h) requires the processor to make available all information necessary to demonstrate compliance and allow for audits, including inspections, by the controller or an auditor mandated by the controller. This is a mandatory GDPR provision.",
+        "es": "El artículo 28(3)(h) del RGPD exige que el encargado ponga a disposición toda la información necesaria para demostrar el cumplimiento y permita auditorías, incluidas inspecciones, por parte del responsable o un auditor designado por el responsable. Esta es una disposición obligatoria del RGPD."
+      },
+      "isRequired": true,
+      "options": [
+        {
+          "id": "audit-full",
+          "code": "full-onsite",
+          "label": {
+            "en": "Full On-Site Audit Rights",
+            "es": "Derechos de Auditoría Completa In Situ"
+          },
+          "order": 1,
+          "plainDescription": {
+            "en": "Controller or its appointed auditor may conduct on-site inspections of the processor's facilities, systems, and records relevant to personal data processing, with reasonable notice.",
+            "es": "El responsable o su auditor designado puede realizar inspecciones in situ de las instalaciones, sistemas y registros del encargado relacionados con el tratamiento de datos personales, con preaviso razonable."
+          },
+          "prosPartyA": {
+            "en": ["Maximum audit capability", "Direct physical inspection rights", "Strongest compliance verification"],
+            "es": ["Máxima capacidad de auditoría", "Derechos de inspección física directa", "Verificación de cumplimiento más sólida"]
+          },
+          "consPartyA": {
+            "en": ["Expensive to conduct on-site audits", "Requires auditor expertise"],
+            "es": ["Costoso realizar auditorías in situ", "Requiere experiencia del auditor"]
+          },
+          "prosPartyB": {
+            "en": ["Demonstrates transparency", "Builds controller trust"],
+            "es": ["Demuestra transparencia", "Genera confianza del responsable"]
+          },
+          "consPartyB": {
+            "en": ["Operational disruption from on-site visits", "Must allocate staff for audit support", "Security concerns with facility access"],
+            "es": ["Interrupción operativa por visitas in situ", "Debe asignar personal para soporte de auditoría", "Preocupaciones de seguridad con el acceso a instalaciones"]
+          },
+          "legalText": {
+            "en": "The Processor shall make available to the Controller all information necessary to demonstrate compliance with this Agreement and applicable data protection law. The Controller or its appointed third-party auditor may conduct audits, including on-site inspections of the Processor's facilities, systems, and records relevant to the processing of Personal Data, upon thirty (30) days' prior written notice. The Processor shall cooperate fully with such audits and provide reasonable access during normal business hours. Audits shall be conducted no more than once per year unless a data breach or material compliance concern has been identified.",
+            "es": "El Encargado pondrá a disposición del Responsable toda la información necesaria para demostrar el cumplimiento del presente Acuerdo y la normativa de protección de datos aplicable. El Responsable o su auditor externo designado podrá realizar auditorías, incluidas inspecciones in situ de las instalaciones, sistemas y registros del Encargado relacionados con el tratamiento de Datos Personales, con un preaviso por escrito de treinta (30) días. El Encargado cooperará plenamente con dichas auditorías y proporcionará acceso razonable durante el horario laboral habitual. Las auditorías se realizarán como máximo una vez al año salvo que se haya identificado una brecha de datos o una preocupación material de cumplimiento."
+          },
+          "biasPartyA": 0.5,
+          "biasPartyB": -0.5,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        },
+        {
+          "id": "audit-hybrid",
+          "code": "hybrid",
+          "label": {
+            "en": "Hybrid — Reports + On-Site on Cause",
+            "es": "Híbrido — Informes + In Situ por Causa"
+          },
+          "order": 2,
+          "plainDescription": {
+            "en": "Processor provides annual compliance reports and certifications. On-site audits allowed only where there is reasonable cause (e.g., after a breach or compliance concern).",
+            "es": "El encargado proporciona informes anuales de cumplimiento y certificaciones. Auditorías in situ permitidas solo cuando exista causa razonable (p. ej., después de una brecha o preocupación de cumplimiento)."
+          },
+          "prosPartyA": {
+            "en": ["Regular compliance visibility via reports", "On-site rights preserved for serious concerns", "Cost-effective monitoring"],
+            "es": ["Visibilidad regular del cumplimiento mediante informes", "Derechos in situ preservados para preocupaciones graves", "Monitoreo rentable"]
+          },
+          "consPartyA": {
+            "en": ["Cannot conduct routine on-site inspections", "Reports may not reveal all issues"],
+            "es": ["No puede realizar inspecciones in situ rutinarias", "Los informes pueden no revelar todos los problemas"]
+          },
+          "prosPartyB": {
+            "en": ["Minimal routine disruption", "On-site only when justified", "Reports satisfy most controller needs"],
+            "es": ["Mínima interrupción rutinaria", "In situ solo cuando está justificado", "Los informes satisfacen la mayoría de necesidades del responsable"]
+          },
+          "consPartyB": {
+            "en": ["Must produce annual reports", "On-site still possible after incidents"],
+            "es": ["Debe producir informes anuales", "In situ aún posible después de incidentes"]
+          },
+          "legalText": {
+            "en": "The Processor shall provide the Controller with an annual compliance report summarizing its data protection practices, security measures, sub-processor usage, and any incidents during the reporting period. The Processor shall also make available current certifications (ISO 27001, SOC 2, or equivalent). The Controller may request an on-site audit where there is reasonable cause, such as a data breach, regulatory investigation, or material compliance concern, upon thirty (30) days' prior written notice. The Processor shall bear the costs of producing reports; the Controller shall bear the costs of any on-site audit.",
+            "es": "El Encargado proporcionará al Responsable un informe anual de cumplimiento que resuma sus prácticas de protección de datos, medidas de seguridad, uso de subencargados y cualquier incidente durante el período del informe. El Encargado también pondrá a disposición las certificaciones vigentes (ISO 27001, SOC 2 o equivalente). El Responsable podrá solicitar una auditoría in situ cuando exista causa razonable, como una brecha de datos, investigación regulatoria o preocupación material de cumplimiento, con un preaviso por escrito de treinta (30) días. El Encargado asumirá los costes de producir informes; el Responsable asumirá los costes de cualquier auditoría in situ."
+          },
+          "biasPartyA": 0.1,
+          "biasPartyB": -0.1,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        },
+        {
+          "id": "audit-reports",
+          "code": "reports-only",
+          "label": {
+            "en": "Reports and Certifications Only",
+            "es": "Solo Informes y Certificaciones"
+          },
+          "order": 3,
+          "plainDescription": {
+            "en": "Controller receives compliance reports and certifications but has no on-site audit rights. Processor provides documentation upon request.",
+            "es": "El responsable recibe informes de cumplimiento y certificaciones pero no tiene derechos de auditoría in situ. El encargado proporciona documentación bajo solicitud."
+          },
+          "prosPartyA": {
+            "en": ["Regular documentation of compliance", "No audit logistics or costs"],
+            "es": ["Documentación regular del cumplimiento", "Sin logística ni costes de auditoría"]
+          },
+          "consPartyA": {
+            "en": ["No physical verification rights", "Reliant on processor's self-reporting", "May not satisfy GDPR audit requirements"],
+            "es": ["Sin derechos de verificación física", "Dependiente del autoinforme del encargado", "Puede no satisfacer los requisitos de auditoría del RGPD"]
+          },
+          "prosPartyB": {
+            "en": ["No operational disruption from audits", "Full control over facility access", "Lowest compliance overhead"],
+            "es": ["Sin interrupción operativa por auditorías", "Control total sobre el acceso a instalaciones", "Menor carga de cumplimiento"]
+          },
+          "consPartyB": {
+            "en": ["Must maintain and produce reports", "Controller may seek stronger audit rights"],
+            "es": ["Debe mantener y producir informes", "El responsable puede buscar derechos de auditoría más fuertes"]
+          },
+          "legalText": {
+            "en": "The Processor shall make available to the Controller, upon request and no more than once per year, a summary of its data protection compliance program including certifications, audit reports from independent assessors, and responses to a reasonable compliance questionnaire. The Controller acknowledges that such documentation satisfies the Controller's audit rights under this Agreement.",
+            "es": "El Encargado pondrá a disposición del Responsable, bajo solicitud y no más de una vez al año, un resumen de su programa de cumplimiento de protección de datos incluyendo certificaciones, informes de auditoría de evaluadores independientes y respuestas a un cuestionario de cumplimiento razonable. El Responsable reconoce que dicha documentación satisface los derechos de auditoría del Responsable en virtud del presente Acuerdo."
+          },
+          "biasPartyA": -0.3,
+          "biasPartyB": 0.3,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": {
+              "available": true,
+              "warning": {
+                "en": "UK GDPR Art 28(3)(h) requires the processor to 'allow for and contribute to audits, including inspections' — reports-only may not fully satisfy this",
+                "es": "El Art. 28(3)(h) del RGPD del Reino Unido exige que el encargado 'permita y contribuya a auditorías, incluidas inspecciones' — solo informes puede no satisfacer completamente este requisito"
+              }
+            },
+            "SPAIN": {
+              "available": true,
+              "warning": {
+                "en": "GDPR Art 28(3)(h) requires the processor to allow audits including inspections — reports-only may not comply",
+                "es": "El Art. 28(3)(h) del RGPD exige que el encargado permita auditorías incluidas inspecciones — solo informes puede no cumplir"
+              }
+            }
+          }
+        },
+        {
+          "id": "audit-questionnaire",
+          "code": "questionnaire",
+          "label": {
+            "en": "Questionnaire-Based Assessment",
+            "es": "Evaluación Basada en Cuestionario"
+          },
+          "order": 4,
+          "plainDescription": {
+            "en": "Controller may submit an annual data protection questionnaire. No reports, certifications, or on-site rights provided proactively.",
+            "es": "El responsable puede enviar un cuestionario anual de protección de datos. No se proporcionan proactivamente informes, certificaciones ni derechos in situ."
+          },
+          "prosPartyA": {
+            "en": ["Can ask targeted questions", "Low cost for controller"],
+            "es": ["Puede hacer preguntas específicas", "Bajo coste para el responsable"]
+          },
+          "consPartyA": {
+            "en": ["Weakest audit mechanism", "No independent verification", "Self-reported answers only"],
+            "es": ["Mecanismo de auditoría más débil", "Sin verificación independiente", "Solo respuestas autoinformadas"]
+          },
+          "prosPartyB": {
+            "en": ["Minimal compliance burden", "No external auditor access", "Controlled disclosure"],
+            "es": ["Carga de cumplimiento mínima", "Sin acceso de auditor externo", "Divulgación controlada"]
+          },
+          "consPartyB": {
+            "en": ["Must respond to questionnaires", "May face pressure for stronger audit rights"],
+            "es": ["Debe responder cuestionarios", "Puede enfrentar presión por derechos de auditoría más fuertes"]
+          },
+          "legalText": {
+            "en": "The Controller may submit a written data protection compliance questionnaire to the Processor no more than once per year. The Processor shall provide complete and accurate responses within thirty (30) days of receipt. The Processor shall provide reasonable additional information if the Controller identifies specific areas of concern based on the questionnaire responses.",
+            "es": "El Responsable podrá enviar un cuestionario escrito de cumplimiento de protección de datos al Encargado no más de una vez al año. El Encargado proporcionará respuestas completas y precisas en un plazo de treinta (30) días desde la recepción. El Encargado proporcionará información adicional razonable si el Responsable identifica áreas específicas de preocupación basadas en las respuestas del cuestionario."
+          },
+          "biasPartyA": -0.5,
+          "biasPartyB": 0.5,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": {
+              "available": true,
+              "warning": {
+                "en": "Questionnaire-only does not satisfy UK GDPR Art 28(3)(h) requirement to 'allow for and contribute to audits, including inspections'",
+                "es": "Solo cuestionario no satisface el requisito del Art. 28(3)(h) del RGPD del Reino Unido de 'permitir y contribuir a auditorías, incluidas inspecciones'"
+              }
+            },
+            "SPAIN": {
+              "available": true,
+              "warning": {
+                "en": "Questionnaire-only does not satisfy GDPR Art 28(3)(h) audit requirement — AEPD expects inspection rights",
+                "es": "Solo cuestionario no satisface el requisito de auditoría del Art. 28(3)(h) del RGPD — la AEPD espera derechos de inspección"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "data-deletion",
+      "title": {
+        "en": "Data Deletion/Return",
+        "es": "Supresión/Devolución de Datos"
+      },
+      "category": "Data Handling",
+      "order": 9,
+      "plainDescription": {
+        "en": "What happens to personal data when the service agreement ends? Must the processor return and/or delete all data, and within what timeframe?",
+        "es": "¿Qué sucede con los datos personales cuando finaliza el contrato de servicios? ¿Debe el encargado devolver y/o suprimir todos los datos, y en qué plazo?"
+      },
+      "legalContext": {
+        "en": "GDPR Article 28(3)(g) requires the processor, at the controller's choice, to delete or return all personal data after the end of the service and delete existing copies unless EU/member state law requires storage. This is a mandatory GDPR provision.",
+        "es": "El artículo 28(3)(g) del RGPD exige que el encargado, a elección del responsable, suprima o devuelva todos los datos personales tras la finalización del servicio y suprima las copias existentes a menos que el derecho de la UE o del Estado miembro exija su conservación. Esta es una disposición obligatoria del RGPD."
+      },
+      "isRequired": true,
+      "options": [
+        {
+          "id": "deletion-return-30d",
+          "code": "return-delete-30d",
+          "label": {
+            "en": "Return + Delete Within 30 Days",
+            "es": "Devolver + Suprimir en 30 Días"
+          },
+          "order": 1,
+          "plainDescription": {
+            "en": "Processor returns all data in a standard format, then certifies deletion of all copies within 30 days of service termination.",
+            "es": "El encargado devuelve todos los datos en un formato estándar, luego certifica la supresión de todas las copias en 30 días desde la terminación del servicio."
+          },
+          "prosPartyA": {
+            "en": ["Fastest data recovery and cleanup", "Written deletion certification", "Minimizes post-termination exposure"],
+            "es": ["Recuperación y limpieza de datos más rápida", "Certificación de supresión por escrito", "Minimiza la exposición post-terminación"]
+          },
+          "consPartyA": {
+            "en": ["Tight window for data export", "Must act quickly after termination"],
+            "es": ["Plazo ajustado para exportación de datos", "Debe actuar rápidamente después de la terminación"]
+          },
+          "prosPartyB": {
+            "en": ["Clear timeline and obligations", "Quick end to data responsibilities"],
+            "es": ["Plazo y obligaciones claros", "Fin rápido de las responsabilidades sobre datos"]
+          },
+          "consPartyB": {
+            "en": ["Very tight deletion deadline", "Must purge from all systems including backups", "Certification requirement adds complexity"],
+            "es": ["Plazo de supresión muy ajustado", "Debe purgar de todos los sistemas incluidas las copias de seguridad", "El requisito de certificación añade complejidad"]
+          },
+          "legalText": {
+            "en": "Upon termination or expiry of the Principal Agreement, the Processor shall, at the Controller's election: (a) return all Personal Data to the Controller in a commonly used, machine-readable format; and/or (b) securely delete all Personal Data in its possession, including all copies, backups, and archives. Such return and/or deletion shall be completed within thirty (30) days. The Processor shall provide written certification of deletion upon the Controller's request. Data retained pursuant to applicable legal obligations shall be identified and subject to continued protection under this Agreement.",
+            "es": "A la terminación o expiración del Acuerdo Principal, el Encargado, a elección del Responsable: (a) devolverá todos los Datos Personales al Responsable en un formato comúnmente utilizado y legible por máquina; y/o (b) suprimirá de forma segura todos los Datos Personales en su posesión, incluidas todas las copias, copias de seguridad y archivos. Dicha devolución y/o supresión se completará en un plazo de treinta (30) días. El Encargado proporcionará certificación escrita de la supresión cuando el Responsable lo solicite. Los datos conservados conforme a obligaciones legales aplicables serán identificados y seguirán sujetos a la protección del presente Acuerdo."
+          },
+          "biasPartyA": 0.5,
+          "biasPartyB": -0.5,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        },
+        {
+          "id": "deletion-return-or-delete-60d",
+          "code": "return-or-delete-60d",
+          "label": {
+            "en": "Return or Delete Within 60 Days",
+            "es": "Devolver o Suprimir en 60 Días"
+          },
+          "order": 2,
+          "plainDescription": {
+            "en": "Controller has 30 days to request data return; processor then deletes all remaining data within 60 days of termination.",
+            "es": "El responsable tiene 30 días para solicitar la devolución de datos; el encargado luego suprime todos los datos restantes en 60 días desde la terminación."
+          },
+          "prosPartyA": {
+            "en": ["Reasonable export window", "Choice between return and deletion", "Industry-standard timeline"],
+            "es": ["Ventana de exportación razonable", "Elección entre devolución y supresión", "Plazo estándar de la industria"]
+          },
+          "consPartyA": {
+            "en": ["Longer post-termination data retention", "Must request return within 30 days"],
+            "es": ["Retención de datos post-terminación más larga", "Debe solicitar devolución en 30 días"]
+          },
+          "prosPartyB": {
+            "en": ["Practical deletion timeline", "Covers backup rotation cycles", "Standard industry approach"],
+            "es": ["Plazo de supresión práctico", "Cubre ciclos de rotación de copias de seguridad", "Enfoque estándar de la industria"]
+          },
+          "consPartyB": {
+            "en": ["Must track and execute deletion", "May need to handle return request"],
+            "es": ["Debe rastrear y ejecutar la supresión", "Puede necesitar gestionar solicitud de devolución"]
+          },
+          "legalText": {
+            "en": "Upon termination or expiry of the Principal Agreement, the Controller may request return of Personal Data within thirty (30) days. The Processor shall provide such data in a commonly used, machine-readable format. Following the return period (or upon the Controller's instruction), the Processor shall securely delete all remaining Personal Data within sixty (60) days of termination. The Processor shall certify deletion in writing upon request.",
+            "es": "A la terminación o expiración del Acuerdo Principal, el Responsable podrá solicitar la devolución de los Datos Personales en un plazo de treinta (30) días. El Encargado proporcionará dichos datos en un formato comúnmente utilizado y legible por máquina. Tras el período de devolución (o según instrucciones del Responsable), el Encargado suprimirá de forma segura todos los Datos Personales restantes en un plazo de sesenta (60) días desde la terminación. El Encargado certificará la supresión por escrito cuando se le solicite."
+          },
+          "biasPartyA": 0.1,
+          "biasPartyB": -0.1,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        },
+        {
+          "id": "deletion-delete-90d",
+          "code": "delete-90d",
+          "label": {
+            "en": "Delete Within 90 Days",
+            "es": "Suprimir en 90 Días"
+          },
+          "order": 3,
+          "plainDescription": {
+            "en": "Processor deletes all personal data within 90 days of termination. No formal return process — controller should export data before termination.",
+            "es": "El encargado suprime todos los datos personales en 90 días desde la terminación. Sin proceso formal de devolución — el responsable debe exportar los datos antes de la terminación."
+          },
+          "prosPartyA": {
+            "en": ["Generous cleanup timeline", "Accounts for complex data systems"],
+            "es": ["Plazo de limpieza generoso", "Tiene en cuenta sistemas de datos complejos"]
+          },
+          "consPartyA": {
+            "en": ["Extended data retention post-termination", "No formal return obligation", "Must self-serve export before termination"],
+            "es": ["Retención de datos extendida post-terminación", "Sin obligación formal de devolución", "Debe auto-exportar antes de la terminación"]
+          },
+          "prosPartyB": {
+            "en": ["Comfortable deletion timeline", "Covers all backup and archive cycles", "Practical for complex infrastructure"],
+            "es": ["Plazo de supresión cómodo", "Cubre todos los ciclos de copia de seguridad y archivo", "Práctico para infraestructura compleja"]
+          },
+          "consPartyB": {
+            "en": ["Longer period of data responsibility", "Must track deletion across all systems"],
+            "es": ["Período más largo de responsabilidad sobre datos", "Debe rastrear la supresión en todos los sistemas"]
+          },
+          "legalText": {
+            "en": "Upon termination or expiry of the Principal Agreement, the Processor shall securely delete all Personal Data within ninety (90) days, including all copies in production systems, backups, and archives. The Controller is responsible for exporting any required data prior to termination using the Processor's standard export tools. The Processor shall confirm deletion in writing upon request. Data retained pursuant to applicable legal requirements shall be isolated and protected.",
+            "es": "A la terminación o expiración del Acuerdo Principal, el Encargado suprimirá de forma segura todos los Datos Personales en un plazo de noventa (90) días, incluidas todas las copias en sistemas de producción, copias de seguridad y archivos. El Responsable es responsable de exportar los datos necesarios antes de la terminación utilizando las herramientas de exportación estándar del Encargado. El Encargado confirmará la supresión por escrito cuando se le solicite. Los datos conservados conforme a requisitos legales aplicables serán aislados y protegidos."
+          },
+          "biasPartyA": -0.2,
+          "biasPartyB": 0.2,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        },
+        {
+          "id": "deletion-retain",
+          "code": "retain",
+          "label": {
+            "en": "Retain with Anonymization Option",
+            "es": "Conservar con Opción de Anonimización"
+          },
+          "order": 4,
+          "plainDescription": {
+            "en": "Processor may retain anonymized/aggregated data indefinitely for analytics. Identifiable personal data deleted within 90 days unless legally required to retain.",
+            "es": "El encargado puede conservar datos anonimizados/agregados indefinidamente para análisis. Los datos personales identificables se suprimen en 90 días a menos que exista obligación legal de conservarlos."
+          },
+          "prosPartyA": {
+            "en": ["May benefit from processor's analytics insights", "Identifiable data still deleted"],
+            "es": ["Puede beneficiarse de las perspectivas analíticas del encargado", "Los datos identificables aún se suprimen"]
+          },
+          "consPartyA": {
+            "en": ["Risk of re-identification", "Less control over derived data", "Weaker GDPR compliance position"],
+            "es": ["Riesgo de reidentificación", "Menos control sobre datos derivados", "Posición de cumplimiento del RGPD más débil"]
+          },
+          "prosPartyB": {
+            "en": ["Can retain valuable aggregated data", "Supports product improvement and analytics", "Flexible data retention approach"],
+            "es": ["Puede conservar datos agregados valiosos", "Apoya la mejora del producto y análisis", "Enfoque flexible de retención de datos"]
+          },
+          "consPartyB": {
+            "en": ["Must ensure proper anonymization", "Regulatory risk if anonymization insufficient"],
+            "es": ["Debe garantizar la anonimización adecuada", "Riesgo regulatorio si la anonimización es insuficiente"]
+          },
+          "legalText": {
+            "en": "Upon termination or expiry of the Principal Agreement, the Processor shall delete all identifiable Personal Data within ninety (90) days. The Processor may retain data that has been irreversibly anonymized or aggregated such that it no longer constitutes Personal Data under applicable law. Such anonymized data may be used for statistical analysis, product improvement, and benchmarking purposes. The Controller is responsible for exporting any required data prior to termination.",
+            "es": "A la terminación o expiración del Acuerdo Principal, el Encargado suprimirá todos los Datos Personales identificables en un plazo de noventa (90) días. El Encargado podrá conservar datos que hayan sido anonimizados o agregados de forma irreversible de manera que ya no constituyan Datos Personales conforme a la normativa aplicable. Dichos datos anonimizados podrán utilizarse para análisis estadístico, mejora del producto y propósitos de evaluación comparativa. El Responsable es responsable de exportar los datos necesarios antes de la terminación."
+          },
+          "biasPartyA": -0.4,
+          "biasPartyB": 0.4,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": {
+              "available": true,
+              "warning": {
+                "en": "UK GDPR Art 28(3)(g) requires deletion of all personal data — retention even in anonymized form may face ICO scrutiny if anonymization is insufficient",
+                "es": "El Art. 28(3)(g) del RGPD del Reino Unido exige la supresión de todos los datos personales — la conservación incluso anonimizada puede ser objeto de escrutinio del ICO si la anonimización es insuficiente"
+              }
+            },
+            "SPAIN": {
+              "available": true,
+              "warning": {
+                "en": "GDPR Art 28(3)(g) requires deletion or return — AEPD may scrutinize whether anonymization meets the threshold to fall outside GDPR scope",
+                "es": "El Art. 28(3)(g) del RGPD exige la supresión o devolución — la AEPD puede escrutar si la anonimización cumple el umbral para quedar fuera del ámbito del RGPD"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "confidentiality",
+      "title": {
+        "en": "Confidentiality",
+        "es": "Confidencialidad"
+      },
+      "category": "Personnel",
+      "order": 10,
+      "plainDescription": {
+        "en": "What confidentiality obligations apply to the processor's personnel who access personal data?",
+        "es": "¿Qué obligaciones de confidencialidad se aplican al personal del encargado que accede a datos personales?"
+      },
+      "legalContext": {
+        "en": "GDPR Article 28(3)(b) requires the processor to ensure that persons authorized to process personal data have committed themselves to confidentiality or are under an appropriate statutory obligation of confidentiality. CCPA §1798.140(ag) requires service providers to not sell or use personal data for purposes other than those specified in the contract.",
+        "es": "El artículo 28(3)(b) del RGPD exige que el encargado garantice que las personas autorizadas para tratar datos personales se hayan comprometido a respetar la confidencialidad o estén sujetas a una obligación legal de confidencialidad apropiada. La CCPA §1798.140(ag) exige que los proveedores de servicios no vendan ni usen datos personales para fines distintos a los especificados en el contrato."
+      },
+      "isRequired": true,
+      "options": [
+        {
+          "id": "confidentiality-strict",
+          "code": "strict",
+          "label": {
+            "en": "Strict — Binding Agreements + Background Checks",
+            "es": "Estricto — Acuerdos Vinculantes + Verificación de Antecedentes"
+          },
+          "order": 1,
+          "plainDescription": {
+            "en": "All personnel with data access must sign individual confidentiality agreements and pass background checks. Access restricted to need-to-know basis.",
+            "es": "Todo el personal con acceso a datos debe firmar acuerdos de confidencialidad individuales y pasar verificación de antecedentes. Acceso restringido a necesidad de conocer."
+          },
+          "prosPartyA": {
+            "en": ["Strongest personnel controls", "Individual accountability", "Background verification adds assurance"],
+            "es": ["Controles de personal más fuertes", "Responsabilidad individual", "La verificación de antecedentes añade garantía"]
+          },
+          "consPartyA": {
+            "en": ["May limit processor's hiring flexibility", "Higher service costs"],
+            "es": ["Puede limitar la flexibilidad de contratación del encargado", "Mayores costes de servicio"]
+          },
+          "prosPartyB": {
+            "en": ["Clear framework for employee obligations", "Demonstrates security commitment"],
+            "es": ["Marco claro para obligaciones de empleados", "Demuestra compromiso con la seguridad"]
+          },
+          "consPartyB": {
+            "en": ["Expensive background check program", "Must track individual agreements", "May slow onboarding"],
+            "es": ["Programa costoso de verificación de antecedentes", "Debe rastrear acuerdos individuales", "Puede ralentizar la incorporación"]
+          },
+          "legalText": {
+            "en": "The Processor shall ensure that all personnel authorized to process Personal Data: (a) have executed individual written confidentiality agreements with obligations surviving termination of employment; (b) have undergone background checks appropriate to their role and access level; (c) access Personal Data only on a need-to-know basis; and (d) receive regular training on data protection obligations. The Processor shall not permit Personal Data to be sold, shared for cross-context behavioral advertising, or used for any purpose other than performing the Services.",
+            "es": "El Encargado garantizará que todo el personal autorizado para tratar Datos Personales: (a) haya suscrito acuerdos de confidencialidad escritos individuales con obligaciones que sobrevivan la terminación del empleo; (b) haya pasado verificaciones de antecedentes apropiadas a su función y nivel de acceso; (c) acceda a los Datos Personales solo con base en la necesidad de conocer; y (d) reciba formación regular sobre obligaciones de protección de datos. El Encargado no permitirá que los Datos Personales sean vendidos, compartidos para publicidad conductual intercontextual, ni utilizados para ningún fin distinto a la prestación de los Servicios."
+          },
+          "biasPartyA": 0.4,
+          "biasPartyB": -0.4,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        },
+        {
+          "id": "confidentiality-standard",
+          "code": "standard",
+          "label": {
+            "en": "Standard — Contractual Confidentiality + Training",
+            "es": "Estándar — Confidencialidad Contractual + Formación"
+          },
+          "order": 2,
+          "plainDescription": {
+            "en": "Personnel bound by confidentiality through employment contracts or statutory obligations. Regular data protection training required.",
+            "es": "El personal está sujeto a confidencialidad mediante contratos de empleo u obligaciones legales. Se requiere formación regular en protección de datos."
+          },
+          "prosPartyA": {
+            "en": ["Meets GDPR confidentiality requirement", "Training ensures awareness", "Industry-standard approach"],
+            "es": ["Cumple el requisito de confidencialidad del RGPD", "La formación garantiza concienciación", "Enfoque estándar de la industria"]
+          },
+          "consPartyA": {
+            "en": ["No individual agreements required", "No background checks"],
+            "es": ["No se requieren acuerdos individuales", "Sin verificación de antecedentes"]
+          },
+          "prosPartyB": {
+            "en": ["Practical and achievable", "Uses existing employment framework", "Training supports compliance culture"],
+            "es": ["Práctico y alcanzable", "Usa el marco laboral existente", "La formación apoya la cultura de cumplimiento"]
+          },
+          "consPartyB": {
+            "en": ["Must maintain training program", "Must ensure employment contracts include confidentiality"],
+            "es": ["Debe mantener programa de formación", "Debe asegurar que los contratos de empleo incluyan confidencialidad"]
+          },
+          "legalText": {
+            "en": "The Processor shall ensure that persons authorized to process Personal Data are bound by confidentiality obligations, whether through contractual terms of employment or statutory obligation. The Processor shall provide regular data protection training to all personnel who access Personal Data. The Processor shall implement access controls to ensure that Personal Data is accessible only to authorized personnel with a legitimate need.",
+            "es": "El Encargado garantizará que las personas autorizadas para tratar Datos Personales estén sujetas a obligaciones de confidencialidad, ya sea mediante términos contractuales de empleo u obligación legal. El Encargado proporcionará formación regular en protección de datos a todo el personal que acceda a Datos Personales. El Encargado implementará controles de acceso para garantizar que los Datos Personales solo sean accesibles para el personal autorizado con una necesidad legítima."
+          },
+          "biasPartyA": 0.0,
+          "biasPartyB": 0.0,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        },
+        {
+          "id": "confidentiality-basic",
+          "code": "basic",
+          "label": {
+            "en": "Basic — Employment Terms Only",
+            "es": "Básico — Solo Términos de Empleo"
+          },
+          "order": 3,
+          "plainDescription": {
+            "en": "Confidentiality handled through standard employment contracts. No specific data protection training or access control requirements specified.",
+            "es": "La confidencialidad se gestiona mediante contratos de empleo estándar. No se especifican requisitos de formación en protección de datos ni controles de acceso."
+          },
+          "prosPartyA": {
+            "en": ["Simplest requirement", "Low barrier for processor"],
+            "es": ["Requisito más sencillo", "Baja barrera para el encargado"]
+          },
+          "consPartyA": {
+            "en": ["Minimal assurance", "No training requirement", "Weaker GDPR compliance position"],
+            "es": ["Garantía mínima", "Sin requisito de formación", "Posición de cumplimiento del RGPD más débil"]
+          },
+          "prosPartyB": {
+            "en": ["Lowest compliance overhead", "Uses existing employment framework only"],
+            "es": ["Menor carga de cumplimiento", "Usa solo el marco laboral existente"]
+          },
+          "consPartyB": {
+            "en": ["May face scrutiny from regulators", "Higher breach risk from untrained staff"],
+            "es": ["Puede enfrentar escrutinio de reguladores", "Mayor riesgo de brecha por personal no formado"]
+          },
+          "legalText": {
+            "en": "The Processor shall ensure that its employees and contractors who access Personal Data are subject to appropriate confidentiality obligations under their terms of employment or engagement. The Processor shall take reasonable steps to ensure the reliability of personnel who have access to Personal Data.",
+            "es": "El Encargado garantizará que sus empleados y contratistas que accedan a Datos Personales estén sujetos a obligaciones de confidencialidad apropiadas conforme a sus términos de empleo o contratación. El Encargado tomará medidas razonables para garantizar la fiabilidad del personal que tenga acceso a Datos Personales."
+          },
+          "biasPartyA": -0.3,
+          "biasPartyB": 0.3,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": {
+              "available": true,
+              "warning": {
+                "en": "ICO guidance recommends specific confidentiality commitments and training beyond basic employment terms",
+                "es": "La guía del ICO recomienda compromisos de confidencialidad específicos y formación más allá de los términos básicos de empleo"
+              }
+            },
+            "SPAIN": {
+              "available": true,
+              "warning": {
+                "en": "AEPD expects documented confidentiality commitments and data protection training for personnel",
+                "es": "La AEPD espera compromisos de confidencialidad documentados y formación en protección de datos para el personal"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "liability-indemnification",
+      "title": {
+        "en": "Liability & Indemnification",
+        "es": "Responsabilidad e Indemnización"
+      },
+      "category": "Commercial",
+      "order": 11,
+      "plainDescription": {
+        "en": "What are the limits on the processor's liability for data protection breaches, and what indemnification obligations apply?",
+        "es": "¿Cuáles son los límites de responsabilidad del encargado por incumplimientos de protección de datos, y qué obligaciones de indemnización se aplican?"
+      },
+      "legalContext": {
+        "en": "GDPR Article 82 establishes joint and several liability for controllers and processors for damage caused by non-compliant processing. Either party may be held liable to the data subject. The processor is exempt only if it proves it was not responsible. CCPA §1798.150 creates statutory damages of $100-$750 per consumer per incident for certain data breaches.",
+        "es": "El artículo 82 del RGPD establece la responsabilidad solidaria de responsables y encargados por los daños causados por un tratamiento no conforme. Cualquiera de las partes puede ser considerada responsable ante el interesado. El encargado queda exento solo si demuestra que no fue responsable. La CCPA §1798.150 establece daños legales de $100-$750 por consumidor por incidente para ciertas brechas de datos."
+      },
+      "isRequired": true,
+      "options": [
+        {
+          "id": "liability-unlimited",
+          "code": "unlimited",
+          "label": {
+            "en": "Unlimited Liability",
+            "es": "Responsabilidad Ilimitada"
+          },
+          "order": 1,
+          "plainDescription": {
+            "en": "No cap on processor's liability for data protection breaches. Full indemnification for all losses, fines, and damages.",
+            "es": "Sin límite en la responsabilidad del encargado por incumplimientos de protección de datos. Indemnización total por todas las pérdidas, multas y daños."
+          },
+          "prosPartyA": {
+            "en": ["Maximum financial protection", "Full recovery for all losses", "Strongest deterrent against negligence"],
+            "es": ["Máxima protección financiera", "Recuperación total por todas las pérdidas", "Mayor disuasión contra la negligencia"]
+          },
+          "consPartyA": {
+            "en": ["May increase service costs significantly", "Processor may resist or add insurance costs"],
+            "es": ["Puede aumentar significativamente los costes del servicio", "El encargado puede resistirse o añadir costes de seguro"]
+          },
+          "prosPartyB": {
+            "en": ["Shows confidence in data protection practices"],
+            "es": ["Muestra confianza en las prácticas de protección de datos"]
+          },
+          "consPartyB": {
+            "en": ["Unlimited financial exposure", "May not be insurable", "Existential risk for small processors"],
+            "es": ["Exposición financiera ilimitada", "Puede no ser asegurable", "Riesgo existencial para encargados pequeños"]
+          },
+          "legalText": {
+            "en": "The Processor shall indemnify and hold harmless the Controller from and against all claims, damages, losses, costs, and expenses (including reasonable legal fees) arising from the Processor's breach of this Agreement or applicable data protection law, including but not limited to regulatory fines, compensation paid to data subjects, and costs of breach notification and remediation. The Processor's liability under this section is not subject to any limitation of liability set forth in the Principal Agreement.",
+            "es": "El Encargado indemnizará y mantendrá indemne al Responsable frente a todas las reclamaciones, daños, pérdidas, costes y gastos (incluidos honorarios legales razonables) derivados del incumplimiento del presente Acuerdo o la normativa de protección de datos aplicable por parte del Encargado, incluyendo, entre otros, multas regulatorias, compensaciones pagadas a los interesados y costes de notificación y remediación de brechas. La responsabilidad del Encargado en virtud de esta sección no está sujeta a ninguna limitación de responsabilidad establecida en el Acuerdo Principal."
+          },
+          "biasPartyA": 0.5,
+          "biasPartyB": -0.5,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        },
+        {
+          "id": "liability-2x",
+          "code": "2x-fees",
+          "label": {
+            "en": "Capped at 2x Annual Fees",
+            "es": "Limitada a 2x Cuotas Anuales"
+          },
+          "order": 2,
+          "plainDescription": {
+            "en": "Processor's total liability for data protection claims capped at two times the annual fees paid under the service agreement.",
+            "es": "La responsabilidad total del encargado por reclamaciones de protección de datos se limita a dos veces las cuotas anuales pagadas bajo el contrato de servicios."
+          },
+          "prosPartyA": {
+            "en": ["Meaningful cap relative to contract value", "Reasonable deterrent", "Balance of protection and cost"],
+            "es": ["Límite significativo en relación al valor del contrato", "Disuasión razonable", "Equilibrio entre protección y coste"]
+          },
+          "consPartyA": {
+            "en": ["May not cover large-scale breach costs", "Fines can exceed 2x annual fees"],
+            "es": ["Puede no cubrir los costes de brechas a gran escala", "Las multas pueden exceder 2x las cuotas anuales"]
+          },
+          "prosPartyB": {
+            "en": ["Predictable maximum exposure", "Insurable risk level", "Commercially reasonable"],
+            "es": ["Exposición máxima predecible", "Nivel de riesgo asegurable", "Comercialmente razonable"]
+          },
+          "consPartyB": {
+            "en": ["Still significant financial exposure", "Must account for in pricing"],
+            "es": ["Aún exposición financiera significativa", "Debe tenerse en cuenta en la fijación de precios"]
+          },
+          "legalText": {
+            "en": "The Processor shall indemnify the Controller for losses arising from the Processor's breach of this Agreement or applicable data protection law, subject to a total aggregate liability cap equal to two (2) times the annual fees paid or payable by the Controller under the Principal Agreement in the twelve (12) months preceding the claim. This cap applies to all data protection claims collectively but does not limit liability for intentional misconduct or gross negligence.",
+            "es": "El Encargado indemnizará al Responsable por las pérdidas derivadas del incumplimiento del presente Acuerdo o la normativa de protección de datos aplicable por parte del Encargado, sujeto a un límite de responsabilidad total agregada igual a dos (2) veces las cuotas anuales pagadas o pagaderas por el Responsable en virtud del Acuerdo Principal en los doce (12) meses anteriores a la reclamación. Este límite se aplica a todas las reclamaciones de protección de datos colectivamente pero no limita la responsabilidad por conducta dolosa o negligencia grave."
+          },
+          "biasPartyA": 0.2,
+          "biasPartyB": -0.2,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        },
+        {
+          "id": "liability-1x",
+          "code": "1x-fees",
+          "label": {
+            "en": "Capped at 1x Annual Fees",
+            "es": "Limitada a 1x Cuotas Anuales"
+          },
+          "order": 3,
+          "plainDescription": {
+            "en": "Processor's total liability capped at one times the annual fees. Lower exposure than 2x but still proportional to contract value.",
+            "es": "La responsabilidad total del encargado se limita a una vez las cuotas anuales. Menor exposición que 2x pero aún proporcional al valor del contrato."
+          },
+          "prosPartyA": {
+            "en": ["Proportional to contract value", "Some financial protection"],
+            "es": ["Proporcional al valor del contrato", "Algo de protección financiera"]
+          },
+          "consPartyA": {
+            "en": ["Lower recovery cap", "May not cover regulatory fines", "Weaker deterrent"],
+            "es": ["Menor límite de recuperación", "Puede no cubrir multas regulatorias", "Disuasión más débil"]
+          },
+          "prosPartyB": {
+            "en": ["Lower financial exposure", "Easier to insure", "Standard in many SaaS agreements"],
+            "es": ["Menor exposición financiera", "Más fácil de asegurar", "Estándar en muchos acuerdos SaaS"]
+          },
+          "consPartyB": {
+            "en": ["Still liable up to annual fees", "Controller may push for higher cap"],
+            "es": ["Aún responsable hasta las cuotas anuales", "El responsable puede presionar por un límite más alto"]
+          },
+          "legalText": {
+            "en": "The Processor's total aggregate liability for all claims arising under or in connection with this Agreement, including data protection breaches, shall not exceed the total fees paid or payable by the Controller under the Principal Agreement in the twelve (12) months preceding the first event giving rise to the claim. This limitation does not apply to liability arising from the Processor's intentional misconduct or gross negligence.",
+            "es": "La responsabilidad total agregada del Encargado por todas las reclamaciones derivadas de o en relación con el presente Acuerdo, incluidos los incumplimientos de protección de datos, no excederá el total de las cuotas pagadas o pagaderas por el Responsable en virtud del Acuerdo Principal en los doce (12) meses anteriores al primer evento que dé lugar a la reclamación. Esta limitación no se aplica a la responsabilidad derivada de conducta dolosa o negligencia grave del Encargado."
+          },
+          "biasPartyA": -0.2,
+          "biasPartyB": 0.2,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        },
+        {
+          "id": "liability-per-incident",
+          "code": "per-incident",
+          "label": {
+            "en": "Per-Incident Cap",
+            "es": "Límite por Incidente"
+          },
+          "order": 4,
+          "plainDescription": {
+            "en": "Each data protection incident has a separate liability cap (e.g., 50% of annual fees per incident), with no aggregate cap across incidents.",
+            "es": "Cada incidente de protección de datos tiene un límite de responsabilidad separado (p. ej., 50% de las cuotas anuales por incidente), sin límite agregado entre incidentes."
+          },
+          "prosPartyA": {
+            "en": ["No aggregate cap limits total recovery", "Multiple incidents = multiple recoveries", "Scales with incident frequency"],
+            "es": ["Sin límite agregado que limite la recuperación total", "Múltiples incidentes = múltiples recuperaciones", "Escala con la frecuencia de incidentes"]
+          },
+          "consPartyA": {
+            "en": ["Lower per-incident cap", "Complex claim tracking"],
+            "es": ["Menor límite por incidente", "Seguimiento complejo de reclamaciones"]
+          },
+          "prosPartyB": {
+            "en": ["Predictable per-incident exposure", "Each incident capped separately"],
+            "es": ["Exposición predecible por incidente", "Cada incidente limitado por separado"]
+          },
+          "consPartyB": {
+            "en": ["Multiple incidents = cumulative exposure", "No aggregate protection", "Harder to insure"],
+            "es": ["Múltiples incidentes = exposición acumulativa", "Sin protección agregada", "Más difícil de asegurar"]
+          },
+          "legalText": {
+            "en": "The Processor's liability for each separate data protection incident shall not exceed fifty percent (50%) of the annual fees paid or payable under the Principal Agreement. There is no aggregate cap on the Processor's total liability across all incidents. For the purpose of this clause, a 'data protection incident' means a single event or related series of events giving rise to a data protection claim. This limitation does not apply to intentional misconduct or gross negligence.",
+            "es": "La responsabilidad del Encargado por cada incidente de protección de datos separado no excederá el cincuenta por ciento (50%) de las cuotas anuales pagadas o pagaderas en virtud del Acuerdo Principal. No existe un límite agregado sobre la responsabilidad total del Encargado a través de todos los incidentes. A los efectos de esta cláusula, un 'incidente de protección de datos' significa un evento único o una serie de eventos relacionados que dan lugar a una reclamación de protección de datos. Esta limitación no se aplica a la conducta dolosa o negligencia grave."
+          },
+          "biasPartyA": -0.1,
+          "biasPartyB": 0.1,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        }
+      ]
+    },
+    {
+      "id": "term-termination",
+      "title": {
+        "en": "Term & Termination",
+        "es": "Duración y Terminación"
+      },
+      "category": "Commercial",
+      "order": 12,
+      "plainDescription": {
+        "en": "How long does this DPA last, and under what conditions can either party terminate it?",
+        "es": "¿Cuánto dura este acuerdo, y bajo qué condiciones puede cualquiera de las partes terminarlo?"
+      },
+      "legalContext": {
+        "en": "DPAs typically co-terminate with the underlying service agreement. The key question is whether there are additional termination rights specific to data protection breaches, and whether there is a cure period for breaches. Minimal jurisdiction variation applies to term and termination provisions.",
+        "es": "Los acuerdos de tratamiento de datos típicamente terminan junto con el contrato de servicios subyacente. La cuestión clave es si existen derechos de terminación adicionales específicos para incumplimientos de protección de datos, y si hay un período de subsanación para los incumplimientos. La variación jurisdiccional es mínima para las disposiciones de duración y terminación."
+      },
+      "isRequired": true,
+      "options": [
+        {
+          "id": "term-immediate-breach",
+          "code": "immediate-breach",
+          "label": {
+            "en": "Immediate Termination on Material Breach",
+            "es": "Terminación Inmediata por Incumplimiento Material"
+          },
+          "order": 1,
+          "plainDescription": {
+            "en": "Either party may terminate immediately if the other party materially breaches data protection obligations and fails to cure within 5 business days.",
+            "es": "Cualquiera de las partes puede terminar inmediatamente si la otra parte incumple materialmente las obligaciones de protección de datos y no subsana en 5 días hábiles."
+          },
+          "prosPartyA": {
+            "en": ["Fastest exit from non-compliant processor", "Strong incentive for processor compliance", "Short cure period"],
+            "es": ["Salida más rápida de un encargado no conforme", "Fuerte incentivo para el cumplimiento del encargado", "Período de subsanación corto"]
+          },
+          "consPartyA": {
+            "en": ["Processor could also terminate", "Service disruption risk", "Must have migration plan ready"],
+            "es": ["El encargado también podría terminar", "Riesgo de interrupción del servicio", "Debe tener plan de migración preparado"]
+          },
+          "prosPartyB": {
+            "en": ["Can exit if controller's instructions are unlawful", "Clear termination framework"],
+            "es": ["Puede salir si las instrucciones del responsable son ilegales", "Marco de terminación claro"]
+          },
+          "consPartyB": {
+            "en": ["Very short cure period", "Risk of losing contract over curable issues", "May need rapid remediation capabilities"],
+            "es": ["Período de subsanación muy corto", "Riesgo de perder el contrato por problemas subsanables", "Puede necesitar capacidades de remediación rápida"]
+          },
+          "legalText": {
+            "en": "This Agreement shall remain in effect for the duration of the Principal Agreement. Either party may terminate this Agreement and the Principal Agreement immediately upon written notice if the other party materially breaches its data protection obligations under this Agreement and fails to cure such breach within five (5) business days of receiving written notice specifying the breach. Termination does not relieve either party of obligations that accrued prior to termination or obligations that by their nature survive termination (including data deletion and confidentiality).",
+            "es": "El presente Acuerdo permanecerá vigente durante la duración del Acuerdo Principal. Cualquiera de las partes podrá terminar el presente Acuerdo y el Acuerdo Principal inmediatamente mediante notificación por escrito si la otra parte incumple materialmente sus obligaciones de protección de datos en virtud del presente Acuerdo y no subsana dicho incumplimiento en un plazo de cinco (5) días hábiles desde la recepción de la notificación por escrito especificando el incumplimiento. La terminación no exime a ninguna de las partes de las obligaciones devengadas antes de la terminación ni de las obligaciones que por su naturaleza sobreviven a la terminación (incluidas la supresión de datos y la confidencialidad)."
+          },
+          "biasPartyA": 0.4,
+          "biasPartyB": -0.4,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        },
+        {
+          "id": "term-30d-cure",
+          "code": "30d-cure",
+          "label": {
+            "en": "30-Day Cure Period",
+            "es": "Período de Subsanación de 30 Días"
+          },
+          "order": 2,
+          "plainDescription": {
+            "en": "Breaching party has 30 days to cure a material data protection breach before the other party may terminate.",
+            "es": "La parte incumplidora tiene 30 días para subsanar un incumplimiento material de protección de datos antes de que la otra parte pueda terminar."
+          },
+          "prosPartyA": {
+            "en": ["Reasonable time for processor to fix issues", "Avoids hasty termination", "Standard commercial approach"],
+            "es": ["Tiempo razonable para que el encargado solucione problemas", "Evita terminación precipitada", "Enfoque comercial estándar"]
+          },
+          "consPartyA": {
+            "en": ["Must wait 30 days to exit", "Data may remain at risk during cure period"],
+            "es": ["Debe esperar 30 días para salir", "Los datos pueden permanecer en riesgo durante el período de subsanación"]
+          },
+          "prosPartyB": {
+            "en": ["Meaningful opportunity to cure breaches", "Preserves business relationship", "Time for proper remediation"],
+            "es": ["Oportunidad significativa de subsanar incumplimientos", "Preserva la relación comercial", "Tiempo para remediación adecuada"]
+          },
+          "consPartyB": {
+            "en": ["Must demonstrate cure within 30 days", "Controller may reduce engagement during cure period"],
+            "es": ["Debe demostrar subsanación en 30 días", "El responsable puede reducir la colaboración durante el período de subsanación"]
+          },
+          "legalText": {
+            "en": "This Agreement shall remain in effect for the duration of the Principal Agreement. Either party may terminate this Agreement upon written notice if the other party materially breaches its data protection obligations and fails to cure such breach within thirty (30) days of receiving written notice. During the cure period, the breaching party shall take all reasonable steps to mitigate any ongoing risk to Personal Data. Data deletion and confidentiality obligations survive termination.",
+            "es": "El presente Acuerdo permanecerá vigente durante la duración del Acuerdo Principal. Cualquiera de las partes podrá terminar el presente Acuerdo mediante notificación por escrito si la otra parte incumple materialmente sus obligaciones de protección de datos y no subsana dicho incumplimiento en un plazo de treinta (30) días desde la recepción de la notificación por escrito. Durante el período de subsanación, la parte incumplidora tomará todas las medidas razonables para mitigar cualquier riesgo continuo para los Datos Personales. Las obligaciones de supresión de datos y confidencialidad sobreviven a la terminación."
+          },
+          "biasPartyA": 0.0,
+          "biasPartyB": 0.0,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        },
+        {
+          "id": "term-convenience",
+          "code": "convenience",
+          "label": {
+            "en": "Termination for Convenience (60-Day Notice)",
+            "es": "Terminación por Conveniencia (Preaviso de 60 Días)"
+          },
+          "order": 3,
+          "plainDescription": {
+            "en": "Either party may terminate the DPA with 60 days' written notice, for any reason. Also immediate termination for material breach with 30-day cure.",
+            "es": "Cualquiera de las partes puede terminar el acuerdo con 60 días de preaviso por escrito, por cualquier motivo. También terminación inmediata por incumplimiento material con 30 días de subsanación."
+          },
+          "prosPartyA": {
+            "en": ["Can exit the relationship at any time", "No need to prove breach", "Maximum flexibility"],
+            "es": ["Puede salir de la relación en cualquier momento", "No necesita demostrar incumplimiento", "Máxima flexibilidad"]
+          },
+          "consPartyA": {
+            "en": ["Processor can also terminate for convenience", "May lose favorable service terms"],
+            "es": ["El encargado también puede terminar por conveniencia", "Puede perder términos de servicio favorables"]
+          },
+          "prosPartyB": {
+            "en": ["Can also exit if relationship is unprofitable", "Clean exit mechanism"],
+            "es": ["Puede también salir si la relación no es rentable", "Mecanismo de salida limpio"]
+          },
+          "consPartyB": {
+            "en": ["Controller may leave without cause", "Less revenue predictability"],
+            "es": ["El responsable puede irse sin causa", "Menor previsibilidad de ingresos"]
+          },
+          "legalText": {
+            "en": "This Agreement shall remain in effect for the duration of the Principal Agreement. Either party may terminate this Agreement by providing sixty (60) days' prior written notice to the other party. Either party may also terminate immediately if the other party materially breaches its data protection obligations and fails to cure within thirty (30) days of written notice. Upon any termination, the data deletion provisions of this Agreement shall apply. Obligations that by their nature survive termination shall continue in effect.",
+            "es": "El presente Acuerdo permanecerá vigente durante la duración del Acuerdo Principal. Cualquiera de las partes podrá terminar el presente Acuerdo proporcionando un preaviso por escrito de sesenta (60) días a la otra parte. Cualquiera de las partes también podrá terminar inmediatamente si la otra parte incumple materialmente sus obligaciones de protección de datos y no subsana en treinta (30) días desde la notificación por escrito. Tras cualquier terminación, se aplicarán las disposiciones de supresión de datos del presente Acuerdo. Las obligaciones que por su naturaleza sobreviven a la terminación continuarán vigentes."
+          },
+          "biasPartyA": 0.1,
+          "biasPartyB": -0.1,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        },
+        {
+          "id": "term-fixed-renew",
+          "code": "fixed-renew",
+          "label": {
+            "en": "Fixed Annual Term with Auto-Renewal",
+            "es": "Duración Anual Fija con Renovación Automática"
+          },
+          "order": 4,
+          "plainDescription": {
+            "en": "DPA has a fixed annual term that auto-renews unless either party gives 90 days' notice of non-renewal. Material breach still triggers immediate termination right.",
+            "es": "El acuerdo tiene una duración anual fija que se renueva automáticamente a menos que cualquiera de las partes notifique la no renovación con 90 días de antelación. El incumplimiento material aún activa el derecho de terminación inmediata."
+          },
+          "prosPartyA": {
+            "en": ["Predictable annual review cycle", "Natural exit point each year", "Stability during each term"],
+            "es": ["Ciclo de revisión anual predecible", "Punto de salida natural cada año", "Estabilidad durante cada período"]
+          },
+          "consPartyA": {
+            "en": ["Locked in during annual term", "Must plan non-renewal 90 days ahead"],
+            "es": ["Comprometido durante el período anual", "Debe planificar la no renovación con 90 días de antelación"]
+          },
+          "prosPartyB": {
+            "en": ["Revenue predictability", "Committed engagement period", "Stability for operations"],
+            "es": ["Previsibilidad de ingresos", "Período de compromiso establecido", "Estabilidad para operaciones"]
+          },
+          "consPartyB": {
+            "en": ["Must track renewal dates", "Controller may non-renew unexpectedly"],
+            "es": ["Debe rastrear fechas de renovación", "El responsable puede no renovar inesperadamente"]
+          },
+          "legalText": {
+            "en": "This Agreement shall have an initial term of one (1) year from the effective date and shall automatically renew for successive one-year periods unless either party provides written notice of non-renewal at least ninety (90) days prior to the end of the then-current term. Either party may terminate immediately for material breach of data protection obligations that remains uncured for thirty (30) days after written notice. This Agreement shall in any event terminate upon termination of the Principal Agreement.",
+            "es": "El presente Acuerdo tendrá una duración inicial de un (1) año desde la fecha de entrada en vigor y se renovará automáticamente por períodos sucesivos de un año a menos que cualquiera de las partes proporcione notificación por escrito de no renovación al menos noventa (90) días antes del final del período vigente. Cualquiera de las partes podrá terminar inmediatamente por incumplimiento material de las obligaciones de protección de datos que permanezca sin subsanar durante treinta (30) días después de la notificación por escrito. El presente Acuerdo terminará en cualquier caso tras la terminación del Acuerdo Principal."
+          },
+          "biasPartyA": -0.2,
+          "biasPartyB": 0.2,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -5,7 +5,8 @@ import * as crypto from "crypto";
 
 const prisma = new PrismaClient();
 
-const SKILLS_DIR = process.env.SKILLS_DIR || "/Users/sme/NEL/legalskills";
+const BUILTIN_SKILLS_DIR = path.join(__dirname, "..", "skills");
+const SKILLS_DIR = process.env.SKILLS_DIR || "";
 
 interface SkillMetadata {
   contractType: string;
@@ -109,26 +110,55 @@ function resolveArray(value: string[] | Record<string, string[]> | undefined): s
 async function main() {
   console.log("Starting database seed...");
 
-  // Find all skill directories
-  const skillDirs = fs.readdirSync(SKILLS_DIR).filter((dir) => {
-    const fullPath = path.join(SKILLS_DIR, dir);
-    return fs.statSync(fullPath).isDirectory();
-  });
+  // Build combined skill entries: scan built-in skills first, then external/proprietary
+  const skillEntries: { name: string; path: string }[] = [];
 
-  console.log(`Found ${skillDirs.length} skill directories: ${skillDirs.join(", ")}`);
+  // 1. Built-in skills (repo root /skills/)
+  if (fs.existsSync(BUILTIN_SKILLS_DIR)) {
+    const builtinDirs = fs.readdirSync(BUILTIN_SKILLS_DIR).filter((dir) => {
+      const fullPath = path.join(BUILTIN_SKILLS_DIR, dir);
+      return fs.statSync(fullPath).isDirectory();
+    });
+    for (const dir of builtinDirs) {
+      skillEntries.push({ name: dir, path: path.join(BUILTIN_SKILLS_DIR, dir) });
+    }
+    console.log(`Found ${builtinDirs.length} built-in skills: ${builtinDirs.join(", ")}`);
+  }
 
-  for (const skillDir of skillDirs) {
-    const skillPath = path.join(SKILLS_DIR, skillDir);
+  // 2. External/proprietary skills (SKILLS_DIR env var)
+  if (SKILLS_DIR && fs.existsSync(SKILLS_DIR)) {
+    const externalDirs = fs.readdirSync(SKILLS_DIR).filter((dir) => {
+      const fullPath = path.join(SKILLS_DIR, dir);
+      return fs.statSync(fullPath).isDirectory();
+    });
+    for (const dir of externalDirs) {
+      // External skills override built-in skills with same name
+      const existingIdx = skillEntries.findIndex((e) => e.name === dir);
+      if (existingIdx >= 0) {
+        skillEntries[existingIdx] = { name: dir, path: path.join(SKILLS_DIR, dir) };
+      } else {
+        skillEntries.push({ name: dir, path: path.join(SKILLS_DIR, dir) });
+      }
+    }
+    console.log(`Found ${externalDirs.length} external skills: ${externalDirs.join(", ")}`);
+  } else if (!SKILLS_DIR) {
+    console.log("No SKILLS_DIR set — seeding built-in skills only");
+  }
+
+  console.log(`Total skills to process: ${skillEntries.length}`);
+
+  for (const entry of skillEntries) {
+    const skillPath = entry.path;
     const clausesPath = path.join(skillPath, "clauses.json");
     const metadataPath = path.join(skillPath, "metadata.json");
     const manifestPath = path.join(skillPath, "manifest.json");
 
     if (!fs.existsSync(clausesPath)) {
-      console.log(`Skipping ${skillDir}: no clauses.json found`);
+      console.log(`Skipping ${entry.name}: no clauses.json found`);
       continue;
     }
 
-    console.log(`Processing skill: ${skillDir}`);
+    console.log(`Processing skill: ${entry.name}`);
 
     const clausesData: SkillClauses = JSON.parse(
       fs.readFileSync(clausesPath, "utf-8")
@@ -180,7 +210,7 @@ async function main() {
       where: { contractType: clausesData.contractType },
       create: {
         contractType: clausesData.contractType,
-        displayName: resolveString(clausesData.displayName) || metadata?.displayName || skillDir.toUpperCase(),
+        displayName: resolveString(clausesData.displayName) || metadata?.displayName || entry.name.toUpperCase(),
         description: metadata?.description,
         version: clausesData.version || metadata?.version || "1.0",
         skillPath: skillPath,

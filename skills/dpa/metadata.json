@@ -1,0 +1,7 @@
+{
+  "contractType": "DPA",
+  "displayName": "Data Processing Agreement",
+  "description": "Controller-to-Processor agreement for SaaS companies processing customer personal data, compliant with GDPR, UK GDPR, and CCPA/CPRA",
+  "version": "1.0",
+  "clauseCount": 12
+}
