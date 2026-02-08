@@ -19,6 +19,8 @@ export const skillsRouter = createTRPCRouter({
         displayName: true,
         description: true,
         version: true,
+        templateFamily: true,
+        nativeJurisdiction: true,
         skillPackageId: true, // Include to check if licensed
         _count: {
           select: {
@@ -36,6 +38,8 @@ export const skillsRouter = createTRPCRouter({
       description: t.description,
       version: t.version,
       clauseCount: t._count.clauses,
+      templateFamily: t.templateFamily,
+      nativeJurisdiction: t.nativeJurisdiction,
       requiresLicense: !!t.skillPackageId, // true = paid skill, false = free
     }));
   }),
@@ -56,6 +60,8 @@ export const skillsRouter = createTRPCRouter({
         displayName: true,
         description: true,
         version: true,
+        templateFamily: true,
+        nativeJurisdiction: true,
         skillPackageId: true,
         skillPackage: {
           select: {
@@ -105,6 +111,8 @@ export const skillsRouter = createTRPCRouter({
         description: t.description,
         version: t.version,
         clauseCount: t._count.clauses,
+        templateFamily: t.templateFamily,
+        nativeJurisdiction: t.nativeJurisdiction,
         requiresLicense,
         // Access info for licensed skills
         hasAccess: !requiresLicense || !!entitlement,
@@ -113,6 +121,57 @@ export const skillsRouter = createTRPCRouter({
       };
     });
   }),
+
+  // Resolve which template to use for a family + jurisdiction combination
+  getTemplateForFamily: publicProcedure
+    .input(z.object({
+      templateFamily: z.string(),
+      jurisdiction: z.string(),
+    }))
+    .query(async ({ ctx, input }) => {
+      // Try to find a native template for this jurisdiction
+      const nativeTemplate = await ctx.prisma.contractTemplate.findFirst({
+        where: {
+          templateFamily: input.templateFamily,
+          nativeJurisdiction: input.jurisdiction as any,
+          isActive: true,
+        },
+        select: {
+          id: true,
+          contractType: true,
+          displayName: true,
+          nativeJurisdiction: true,
+        },
+      });
+
+      if (nativeTemplate) {
+        return { ...nativeTemplate, isNative: true };
+      }
+
+      // Fall back to the first template in the family (usually the default/California one)
+      const defaultTemplate = await ctx.prisma.contractTemplate.findFirst({
+        where: {
+          templateFamily: input.templateFamily,
+          isActive: true,
+        },
+        select: {
+          id: true,
+          contractType: true,
+          displayName: true,
+          nativeJurisdiction: true,
+        },
+        orderBy: { createdAt: "asc" },
+      });
+
+      if (!defaultTemplate) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: `No template found for family ${input.templateFamily}`,
+        });
+      }
+
+      return { ...defaultTemplate, isNative: false };
+    }),
 
   // Get a specific template with all clauses and options
   getTemplate: publicProcedure
