@@ -9,7 +9,8 @@ import {
   type LocalizedStringArray,
 } from "./i18n";
 
-// Skills directory path - can be configured via env
+// Skills directory paths
+const BUILTIN_SKILLS_DIR = path.join(process.cwd(), "skills");
 const SKILLS_DIR = process.env.SKILLS_DIR || path.join(process.cwd(), "data/skills");
 const INSTALLED_SKILLS_DIR = process.env.INSTALLED_SKILLS_DIR || path.join(process.cwd(), "data/skills/installed");
 
@@ -648,21 +649,18 @@ export function loadSkillFromDirectory(
 }
 
 /**
- * Scan skills directory and load all skills
+ * Scan a single directory for skills
  */
-export function scanSkillsDirectory(): Map<string, SkillData> {
-  const skills = new Map<string, SkillData>();
-
-  if (!fs.existsSync(SKILLS_DIR)) {
-    console.warn(`Skills directory not found: ${SKILLS_DIR}`);
-    return skills;
+function scanDirectory(dir: string, skills: Map<string, SkillData>): void {
+  if (!fs.existsSync(dir)) {
+    return;
   }
 
-  const entries = fs.readdirSync(SKILLS_DIR, { withFileTypes: true });
+  const entries = fs.readdirSync(dir, { withFileTypes: true });
 
   for (const entry of entries) {
     if (entry.isDirectory()) {
-      const skillDir = path.join(SKILLS_DIR, entry.name);
+      const skillDir = path.join(dir, entry.name);
       const skillData = loadSkillFromDirectory(skillDir);
       if (skillData) {
         skills.set(skillData.clauses.contractType, skillData);
@@ -672,6 +670,23 @@ export function scanSkillsDirectory(): Map<string, SkillData> {
         );
       }
     }
+  }
+}
+
+/**
+ * Scan skills directories and load all skills (built-in first, then data/skills)
+ */
+export function scanSkillsDirectory(): Map<string, SkillData> {
+  const skills = new Map<string, SkillData>();
+
+  // Built-in skills (repo root /skills/) — loaded first
+  scanDirectory(BUILTIN_SKILLS_DIR, skills);
+
+  // Legacy data/skills directory — can override built-in
+  scanDirectory(SKILLS_DIR, skills);
+
+  if (skills.size === 0) {
+    console.warn(`No skills found in ${BUILTIN_SKILLS_DIR} or ${SKILLS_DIR}`);
   }
 
   return skills;
