@@ -3,32 +3,40 @@
 import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useTranslations } from "next-intl";
-import { Loader2, ArrowRight } from "lucide-react";
-import { brand } from "@/config/brand";
+import { Loader2, Mail } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 export default function SignInPage() {
   const t = useTranslations("auth");
   const [email, setEmail] = useState("");
   const [isEmailLoading, setIsEmailLoading] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
-  const [isEmailSent, setIsEmailSent] = useState(false);
+  const [emailSent, setEmailSent] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const handleEmailSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!email.trim()) return;
+
     setIsEmailLoading(true);
     setError(null);
 
     try {
-      await signIn("email", {
-        email,
-        callbackUrl: "/deals",
+      const result = await signIn("email", {
+        email: email.trim(),
         redirect: false,
+        callbackUrl: "/deals",
       });
-      setIsEmailSent(true);
+
+      if (result?.error) {
+        setError(t("failedMagicLink"));
+        setIsEmailLoading(false);
+      } else {
+        setEmailSent(true);
+      }
     } catch (err) {
-      setError(t("failedMagicLink"));
-    } finally {
+      setError(t("unexpectedError"));
       setIsEmailLoading(false);
     }
   };
@@ -47,29 +55,31 @@ export default function SignInPage() {
     }
   };
 
-  if (isEmailSent) {
+  // Show email sent confirmation
+  if (emailSent) {
     return (
       <div className="w-full max-w-md">
-        <div className="card-brutal text-center">
-          <h1 className="text-3xl font-bold mb-2 text-white uppercase tracking-wide">
-            {t("checkEmail")}
-          </h1>
-          <p className="text-muted-foreground mb-6">
-            {t.rich("magicLinkSent", {
-              email: () => (
-                <span className="text-foreground font-medium">{email}</span>
-              ),
-            })}
-          </p>
-          <p className="text-sm text-muted-foreground">
-            {t("didntReceive")}{" "}
+        <div className="card-brutal">
+          <div className="text-center">
+            <div className="w-16 h-16 bg-primary/20 flex items-center justify-center mx-auto mb-6">
+              <Mail className="w-8 h-8 text-primary" />
+            </div>
+            <h1 className="text-2xl font-bold mb-2">{t("checkEmail")}</h1>
+            <p className="text-muted-foreground">
+              {t.rich("magicLinkSent", {
+                email: () => <strong className="text-foreground">{email}</strong>,
+              })}
+            </p>
             <button
-              onClick={() => setIsEmailSent(false)}
-              className="text-primary hover:underline"
+              onClick={() => {
+                setEmailSent(false);
+                setIsEmailLoading(false);
+              }}
+              className="mt-6 text-sm text-primary hover:underline"
             >
-              {t("tryAgain")}
+              {t("didntReceive")} {t("tryAgain")}
             </button>
-          </p>
+          </div>
         </div>
       </div>
     );
@@ -79,50 +89,58 @@ export default function SignInPage() {
     <div className="w-full max-w-md">
       <div className="card-brutal">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold mb-2 text-white uppercase tracking-wide">DEALROOM</h1>
+          <h1 className="text-3xl font-bold mb-2 text-white uppercase tracking-wide">{t("dealroom")}</h1>
           <p className="text-muted-foreground mb-4">
-            {brand.tagline}
+            {t.rich("poweredBy", {
+              link: () => (
+                <a
+                  href="https://northend.law"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary hover:underline"
+                >
+                  North End Law
+                </a>
+              ),
+            })}
           </p>
         </div>
 
         {error && (
-          <div className="mb-6 p-4 bg-yellow-500/10 border border-yellow-500 text-yellow-600 text-sm rounded-xl">
+          <div className="mb-6 p-4 bg-yellow-500/10 border border-yellow-500 text-yellow-600 text-sm">
             {error}
           </div>
         )}
 
-        {/* Email Magic Link */}
+        {/* Magic Link Email Form */}
         <form onSubmit={handleEmailSignIn} className="space-y-4">
           <div className="space-y-2">
-            <label htmlFor="email" className="text-sm font-medium text-foreground">
-              {t("emailAddress")}
-            </label>
-            <input
+            <Label htmlFor="email">{t("emailAddress")}</Label>
+            <Input
               id="email"
               type="email"
+              placeholder="you@company.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="you@company.com"
-              className="input-brutal w-full"
               required
-              autoFocus
+              className="bg-background"
             />
           </div>
 
           <button
             type="submit"
-            disabled={isEmailLoading || !email}
-            className="btn-brutal w-full flex items-center justify-center gap-2 disabled:opacity-50"
+            disabled={isEmailLoading || !email.trim()}
+            className="btn-brutal w-full flex items-center justify-center gap-3 py-3 disabled:opacity-50"
           >
             {isEmailLoading ? (
               <>
-                <Loader2 className="w-4 h-4 animate-spin" />
+                <Loader2 className="w-5 h-5 animate-spin" />
                 {t("sending")}
               </>
             ) : (
               <>
+                <Mail className="w-5 h-5" />
                 {t("continueWithEmail")}
-                <ArrowRight className="w-4 h-4" />
               </>
             )}
           </button>
@@ -132,18 +150,17 @@ export default function SignInPage() {
           </p>
         </form>
 
-        {/* Divider */}
+        {/* Google Sign In */}
         <div className="mt-8 pt-6 border-t border-border">
           <p className="text-xs text-muted-foreground text-center mb-4">
             {t("orContinueWith")}
           </p>
 
-          {/* Google Sign In - Dark Mode */}
           <button
             type="button"
             onClick={handleGoogleSignIn}
             disabled={isGoogleLoading}
-            className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-full bg-transparent text-foreground border border-border hover:bg-secondary transition-colors disabled:opacity-50"
+            className="w-full flex items-center justify-center gap-3 px-4 py-3 bg-white text-gray-700 border-2 border-gray-200 hover:bg-gray-50 hover:border-gray-300 transition-colors disabled:opacity-50"
           >
             {isGoogleLoading ? (
               <Loader2 className="w-5 h-5 animate-spin" />
@@ -178,7 +195,7 @@ export default function SignInPage() {
             {t.rich("bySigningIn", {
               termsLink: () => (
                 <a
-                  href={brand.links.terms}
+                  href="https://northend.law/terms-of-use"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-primary hover:underline"
@@ -188,7 +205,7 @@ export default function SignInPage() {
               ),
               privacyLink: () => (
                 <a
-                  href={brand.links.privacy}
+                  href="https://northend.law/privacy-policy"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-primary hover:underline"
