@@ -24,6 +24,22 @@ interface SkillManifest {
   languages: string[];
   author?: string;
   license?: string;
+  templateFamily?: string;
+  nativeJurisdiction?: string;
+}
+
+interface ClauseMappingEntry {
+  source: string | null;
+  target: string;
+  type: string;
+  notes?: string;
+}
+
+interface ClauseMappingsFile {
+  family: string;
+  sourceTemplate: string;
+  targetTemplate: string;
+  mappings: ClauseMappingEntry[];
 }
 
 interface JurisdictionRule {
@@ -169,6 +185,8 @@ async function main() {
         version: clausesData.version || metadata?.version || "1.0",
         skillPath: skillPath,
         skillPackageId: skillPackage?.id,
+        templateFamily: manifest?.templateFamily || null,
+        nativeJurisdiction: manifest?.nativeJurisdiction as any || null,
         isActive: true,
       },
       update: {
@@ -177,6 +195,8 @@ async function main() {
         version: clausesData.version || metadata?.version,
         skillPath: skillPath,
         skillPackageId: skillPackage?.id,
+        templateFamily: manifest?.templateFamily || null,
+        nativeJurisdiction: manifest?.nativeJurisdiction as any || null,
       },
     });
 
@@ -254,6 +274,57 @@ async function main() {
       }
 
       console.log(`    - ${resolveString(clause.title)} (${clause.options.length} options)`);
+    }
+
+    // Process clause mappings if file exists
+    const mappingsPath = path.join(skillPath, "clause-mappings.json");
+    if (fs.existsSync(mappingsPath)) {
+      const mappingsData: ClauseMappingsFile = JSON.parse(
+        fs.readFileSync(mappingsPath, "utf-8")
+      );
+      console.log(`  Processing clause mappings: ${mappingsData.family} (${mappingsData.mappings.length} mappings)`);
+
+      // Resolve source and target template IDs
+      const sourceTemplate = await prisma.contractTemplate.findUnique({
+        where: { contractType: mappingsData.sourceTemplate },
+      });
+      const targetTemplate = await prisma.contractTemplate.findUnique({
+        where: { contractType: mappingsData.targetTemplate },
+      });
+
+      if (sourceTemplate && targetTemplate) {
+        for (const mapping of mappingsData.mappings) {
+          // For "new" type mappings, sourceClauseId is the targetClauseId (self-referencing)
+          const sourceClauseId = mapping.source || mapping.target;
+          await prisma.clauseMapping.upsert({
+            where: {
+              familyKey_sourceClauseId_targetClauseId: {
+                familyKey: mappingsData.family,
+                sourceClauseId,
+                targetClauseId: mapping.target,
+              },
+            },
+            create: {
+              familyKey: mappingsData.family,
+              sourceClauseId,
+              targetClauseId: mapping.target,
+              sourceTemplateId: sourceTemplate.id,
+              targetTemplateId: targetTemplate.id,
+              mappingType: mapping.type,
+              notes: mapping.notes || null,
+            },
+            update: {
+              sourceTemplateId: sourceTemplate.id,
+              targetTemplateId: targetTemplate.id,
+              mappingType: mapping.type,
+              notes: mapping.notes || null,
+            },
+          });
+        }
+        console.log(`    Synced ${mappingsData.mappings.length} clause mappings`);
+      } else {
+        console.warn(`    Could not resolve templates for mappings: source=${mappingsData.sourceTemplate} target=${mappingsData.targetTemplate}`);
+      }
     }
   }
 

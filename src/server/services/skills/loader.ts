@@ -165,6 +165,39 @@ export type ClausesFile = z.infer<typeof ClausesFileSchema>;
 export type SkillMetadata = z.infer<typeof MetadataSchema>;
 export type Boilerplate = z.infer<typeof BoilerplateSchema>;
 
+// Manifest schema (includes template family fields)
+const ManifestSchema = z.object({
+  skillId: z.string(),
+  name: z.string(),
+  displayName: z.string(),
+  version: z.string(),
+  jurisdictions: z.array(z.string()),
+  languages: z.array(z.string()),
+  author: z.string().optional(),
+  license: z.string().optional(),
+  templateFamily: z.string().optional(),
+  nativeJurisdiction: z.string().optional(),
+});
+
+export type SkillManifest = z.infer<typeof ManifestSchema>;
+
+// Clause mappings schema
+const ClauseMappingEntrySchema = z.object({
+  source: z.string().nullable(),
+  target: z.string(),
+  type: z.enum(["equivalent", "split", "merged", "new"]),
+  notes: z.string().optional(),
+});
+
+const ClauseMappingsFileSchema = z.object({
+  family: z.string(),
+  sourceTemplate: z.string(),
+  targetTemplate: z.string(),
+  mappings: z.array(ClauseMappingEntrySchema),
+});
+
+export type ClauseMappingsFile = z.infer<typeof ClauseMappingsFileSchema>;
+
 // ============================================================
 // I18N CONTENT NORMALIZATION
 // ============================================================
@@ -316,6 +349,8 @@ function normalizeClausesFile(
 interface SkillData {
   clauses: ClausesFile;
   boilerplate: Boilerplate | null;
+  manifest: SkillManifest | null;
+  clauseMappings: ClauseMappingsFile | null;
 }
 
 interface SkillLoadResult {
@@ -507,6 +542,64 @@ export function loadBoilerplateFromDirectory(
 }
 
 /**
+ * Load manifest from a skill directory
+ */
+export function loadManifestFromDirectory(
+  skillDir: string
+): SkillManifest | null {
+  const manifestPath = path.join(skillDir, "manifest.json");
+
+  if (!fs.existsSync(manifestPath)) {
+    return null;
+  }
+
+  try {
+    const content = fs.readFileSync(manifestPath, "utf-8");
+    const data = JSON.parse(content);
+    const parsed = ManifestSchema.safeParse(data);
+
+    if (!parsed.success) {
+      console.warn(`Manifest validation errors in ${manifestPath}:`, parsed.error.issues);
+      return null;
+    }
+
+    return parsed.data;
+  } catch (e) {
+    console.warn(`Error loading manifest from ${manifestPath}:`, e);
+    return null;
+  }
+}
+
+/**
+ * Load clause mappings from a skill directory
+ */
+export function loadClauseMappingsFromDirectory(
+  skillDir: string
+): ClauseMappingsFile | null {
+  const mappingsPath = path.join(skillDir, "clause-mappings.json");
+
+  if (!fs.existsSync(mappingsPath)) {
+    return null;
+  }
+
+  try {
+    const content = fs.readFileSync(mappingsPath, "utf-8");
+    const data = JSON.parse(content);
+    const parsed = ClauseMappingsFileSchema.safeParse(data);
+
+    if (!parsed.success) {
+      console.warn(`Clause mappings validation errors in ${mappingsPath}:`, parsed.error.issues);
+      return null;
+    }
+
+    return parsed.data;
+  } catch (e) {
+    console.warn(`Error loading clause mappings from ${mappingsPath}:`, e);
+    return null;
+  }
+}
+
+/**
  * Load a skill from a directory
  */
 export function loadSkillFromDirectory(
@@ -538,9 +631,15 @@ export function loadSkillFromDirectory(
     // Also load boilerplate if available
     const boilerplate = loadBoilerplateFromDirectory(skillDir);
 
+    // Load manifest and clause mappings
+    const manifest = loadManifestFromDirectory(skillDir);
+    const clauseMappings = loadClauseMappingsFromDirectory(skillDir);
+
     return {
       clauses: data as ClausesFile,
       boilerplate,
+      manifest,
+      clauseMappings,
     };
   } catch (e) {
     console.error(`Error loading ${clausesPath}:`, e);
@@ -567,8 +666,9 @@ export function scanSkillsDirectory(): Map<string, SkillData> {
       const skillData = loadSkillFromDirectory(skillDir);
       if (skillData) {
         skills.set(skillData.clauses.contractType, skillData);
+        const familyInfo = skillData.manifest?.templateFamily ? `, family: ${skillData.manifest.templateFamily}` : '';
         console.log(
-          `Loaded skill: ${skillData.clauses.displayName} (${skillData.clauses.clauses.length} clauses, boilerplate: ${skillData.boilerplate ? "yes" : "no"})`
+          `Loaded skill: ${skillData.clauses.displayName} (${skillData.clauses.clauses.length} clauses, boilerplate: ${skillData.boilerplate ? "yes" : "no"}${familyInfo})`
         );
       }
     }
@@ -624,9 +724,13 @@ export function scanInstalledSkillsDirectory(): Map<string, SkillData> {
               }
 
               const normalized = normalizeClausesFile(data, DEFAULT_LANGUAGE);
+              const manifest = loadManifestFromDirectory(subDir) || loadManifestFromDirectory(contentDir);
+              const clauseMappings = loadClauseMappingsFromDirectory(subDir) || loadClauseMappingsFromDirectory(contentDir);
               skills.set(normalized.contractType, {
                 clauses: data as ClausesFile,
                 boilerplate,
+                manifest,
+                clauseMappings,
               });
               console.log(`Loaded installed skill: ${normalized.displayName}`);
             }
@@ -663,8 +767,11 @@ export async function syncSkillsToDatabase(
 
   const results: SkillLoadResult[] = [];
 
+  // Collect clause mappings for second pass (need all templates created first)
+  const pendingMappings: Array<{ data: SkillData; contractType: string }> = [];
+
   for (const [contractType, skillData] of allSkills) {
-    const { clauses: rawSkill, boilerplate } = skillData;
+    const { clauses: rawSkill, boilerplate, manifest } = skillData;
 
     // Normalize i18n content
     const skill = normalizeClausesFile(rawSkill, language);
@@ -680,12 +787,16 @@ export async function syncSkillsToDatabase(
           version: skill.version || "1.0",
           skillPath: path.join(SKILLS_DIR, contractType.toLowerCase()),
           boilerplate: boilerplate || undefined,
+          templateFamily: manifest?.templateFamily || null,
+          nativeJurisdiction: (manifest?.nativeJurisdiction as any) || null,
         },
         update: {
           displayName: skill.displayName,
           description: skill.description,
           version: skill.version || "1.0",
           boilerplate: boilerplate || undefined,
+          templateFamily: manifest?.templateFamily || null,
+          nativeJurisdiction: (manifest?.nativeJurisdiction as any) || null,
         },
       });
 
@@ -729,6 +840,11 @@ export async function syncSkillsToDatabase(
         });
       }
 
+      // Track for clause mappings second pass
+      if (skillData.clauseMappings) {
+        pendingMappings.push({ data: skillData, contractType });
+      }
+
       results.push({
         contractType,
         displayName: skill.displayName,
@@ -745,6 +861,52 @@ export async function syncSkillsToDatabase(
         status: "error",
         error: String(error),
       });
+    }
+  }
+
+  // Second pass: sync clause mappings (all templates now exist)
+  for (const { data: skillData } of pendingMappings) {
+    const mappings = skillData.clauseMappings!;
+    try {
+      const sourceTemplate = await prisma.contractTemplate.findUnique({
+        where: { contractType: mappings.sourceTemplate },
+      });
+      const targetTemplate = await prisma.contractTemplate.findUnique({
+        where: { contractType: mappings.targetTemplate },
+      });
+
+      if (sourceTemplate && targetTemplate) {
+        for (const mapping of mappings.mappings) {
+          const sourceClauseId = mapping.source || mapping.target;
+          await prisma.clauseMapping.upsert({
+            where: {
+              familyKey_sourceClauseId_targetClauseId: {
+                familyKey: mappings.family,
+                sourceClauseId,
+                targetClauseId: mapping.target,
+              },
+            },
+            create: {
+              familyKey: mappings.family,
+              sourceClauseId,
+              targetClauseId: mapping.target,
+              sourceTemplateId: sourceTemplate.id,
+              targetTemplateId: targetTemplate.id,
+              mappingType: mapping.type,
+              notes: mapping.notes || null,
+            },
+            update: {
+              sourceTemplateId: sourceTemplate.id,
+              targetTemplateId: targetTemplate.id,
+              mappingType: mapping.type,
+              notes: mapping.notes || null,
+            },
+          });
+        }
+        console.log(`Synced ${mappings.mappings.length} clause mappings for family ${mappings.family}`);
+      }
+    } catch (error) {
+      console.error(`Failed to sync clause mappings for family ${mappings.family}:`, error);
     }
   }
 

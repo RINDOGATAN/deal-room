@@ -30,14 +30,90 @@ import {
 } from "@/components/ui/dialog";
 import { getContactMailto } from "@/config/brand";
 
-const contractIcons = {
+const contractIcons: Record<string, typeof FileText> = {
   NDA: Shield,
   DPA: Shield,
   MSA: Briefcase,
   SAAS: Cloud,
+  FOUNDERS: Briefcase,
+  PACTO_SOCIOS: Briefcase,
+  SAFE: FileText,
 };
 
 type GoverningLaw = "CALIFORNIA" | "ENGLAND_WALES" | "SPAIN";
+
+// Template type from the API
+interface TemplateInfo {
+  id: string;
+  contractType: string;
+  displayName: string;
+  description: string | null;
+  version: string;
+  clauseCount: number;
+  templateFamily: string | null;
+  nativeJurisdiction: string | null;
+  requiresLicense: boolean;
+  hasAccess: boolean;
+  entitledJurisdictions: string[];
+  expiresAt: Date | null;
+}
+
+// Group templates by family for display
+interface TemplateFamily {
+  family: string;
+  displayName: string;
+  description: string | null;
+  templates: TemplateInfo[];
+  primaryTemplate: TemplateInfo;
+}
+
+function groupTemplatesByFamily(
+  templates: TemplateInfo[]
+): TemplateFamily[] {
+  const familyMap = new Map<string, TemplateFamily>();
+  const ungrouped: TemplateInfo[] = [];
+
+  for (const t of templates) {
+    if (t.templateFamily) {
+      if (!familyMap.has(t.templateFamily)) {
+        familyMap.set(t.templateFamily, {
+          family: t.templateFamily,
+          displayName: t.displayName,
+          description: t.description,
+          templates: [t],
+          primaryTemplate: t,
+        });
+      } else {
+        familyMap.get(t.templateFamily)!.templates.push(t);
+      }
+    } else {
+      ungrouped.push(t);
+    }
+  }
+
+  // Build result: families first, then ungrouped
+  const result: TemplateFamily[] = [];
+  for (const family of familyMap.values()) {
+    // Use the non-native (original) template as the primary display
+    const primary = family.templates.find((t) => !t.nativeJurisdiction || t.nativeJurisdiction === "CALIFORNIA") || family.templates[0];
+    family.primaryTemplate = primary;
+    family.displayName = primary.displayName;
+    family.description = primary.description;
+    result.push(family);
+  }
+
+  for (const t of ungrouped) {
+    result.push({
+      family: t.contractType,
+      displayName: t.displayName,
+      description: t.description,
+      templates: [t],
+      primaryTemplate: t,
+    });
+  }
+
+  return result;
+}
 type ContractLanguage = "en" | "es";
 
 const contractLanguageOptions: {
@@ -94,14 +170,17 @@ export default function NewDealPage() {
   const router = useRouter();
   const t = useTranslations("newDeal");
   const tCommon = useTranslations("common");
+  const [selectedFamily, setSelectedFamily] = useState<string | null>(null);
   const [selectedType, setSelectedType] = useState<string | null>(null);
   const [selectedJurisdiction, setSelectedJurisdiction] = useState<GoverningLaw | null>(null);
   const [selectedLanguage, setSelectedLanguage] = useState<ContractLanguage>("en");
   const [dealName, setDealName] = useState("");
   const [company, setCompany] = useState("");
   const [entitlementError, setEntitlementError] = useState<string | null>(null);
+  const [resolvedNativeTemplate, setResolvedNativeTemplate] = useState<string | null>(null);
 
   const { data: templates, isLoading } = trpc.skills.listTemplatesWithAccess.useQuery();
+  const templateFamilies = templates ? groupTemplatesByFamily(templates) : [];
   const createDeal = trpc.deal.create.useMutation({
     onSuccess: (deal) => {
       toast.success("Deal room created");
@@ -116,6 +195,26 @@ export default function NewDealPage() {
       }
     },
   });
+
+  // Resolve which template to use when jurisdiction changes
+  const resolveTemplate = (family: string, jurisdiction: GoverningLaw) => {
+    if (!templates) return;
+    const familyGroup = templateFamilies.find((f) => f.family === family);
+    if (!familyGroup) return;
+
+    // Find native template for this jurisdiction
+    const nativeTemplate = familyGroup.templates.find(
+      (t) => t.nativeJurisdiction === jurisdiction
+    );
+    if (nativeTemplate) {
+      setSelectedType(nativeTemplate.contractType);
+      setResolvedNativeTemplate(nativeTemplate.contractType);
+    } else {
+      // Fall back to primary template
+      setSelectedType(familyGroup.primaryTemplate.contractType);
+      setResolvedNativeTemplate(null);
+    }
+  };
 
   const handleCreate = () => {
     if (!selectedType || !selectedJurisdiction || !dealName.trim()) {
@@ -206,23 +305,26 @@ export default function NewDealPage() {
           </Label>
         </div>
         <div className="grid grid-cols-2 gap-4">
-          {templates?.map((template) => {
-            const Icon = contractIcons[template.contractType as keyof typeof contractIcons] || FileText;
-            const isSelected = selectedType === template.contractType;
-            const isLocked = template.requiresLicense && !template.hasAccess;
+          {templateFamilies.map((family) => {
+            const Icon = contractIcons[family.primaryTemplate.contractType] || FileText;
+            const isSelected = selectedFamily === family.family;
+            // A family is locked if ALL its templates require license and user has no access
+            const isLocked = family.templates.every((t) => t.requiresLicense && !t.hasAccess);
+            const variantCount = family.templates.length;
 
             return (
               <button
-                key={template.id}
+                key={family.family}
                 onClick={() => {
                   if (isLocked) {
-                    // Show contact dialog for locked skills
                     setEntitlementError(t("toUseContract"));
                     return;
                   }
-                  setSelectedType(template.contractType);
+                  setSelectedFamily(family.family);
+                  setSelectedType(family.primaryTemplate.contractType);
+                  setResolvedNativeTemplate(null);
                   // Reset jurisdiction when changing contract type
-                  if (template.contractType !== selectedType) {
+                  if (family.family !== selectedFamily) {
                     setSelectedJurisdiction(null);
                   }
                 }}
@@ -259,18 +361,23 @@ export default function NewDealPage() {
                     <Icon className="w-5 h-5" />
                   </div>
                   <div>
-                    <h3 className="font-semibold">{template.displayName}</h3>
+                    <h3 className="font-semibold">{family.displayName}</h3>
                     <p className="text-sm text-muted-foreground mt-1">
                       {isLocked
                         ? t("accessRequired")
-                        : t("negotiableClauses", { count: template.clauseCount })
+                        : t("negotiableClauses", { count: family.primaryTemplate.clauseCount })
                       }
                     </p>
+                    {variantCount > 1 && !isLocked && (
+                      <p className="text-xs text-primary mt-1">
+                        {variantCount} jurisdiction variants
+                      </p>
+                    )}
                   </div>
                 </div>
-                {template.description && (
+                {family.description && (
                   <p className="text-sm text-muted-foreground mt-4 line-clamp-2">
-                    {template.description}
+                    {family.description}
                   </p>
                 )}
               </button>
@@ -280,7 +387,7 @@ export default function NewDealPage() {
       </div>
 
       {/* Step 2: Governing Law Selection */}
-      {selectedType && (
+      {selectedFamily && (
         <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-300">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold rounded-full">
@@ -312,7 +419,12 @@ export default function NewDealPage() {
               return (
                 <button
                   key={jurisdiction.value}
-                  onClick={() => setSelectedJurisdiction(jurisdiction.value)}
+                  onClick={() => {
+                    setSelectedJurisdiction(jurisdiction.value);
+                    if (selectedFamily) {
+                      resolveTemplate(selectedFamily, jurisdiction.value);
+                    }
+                  }}
                   className={`
                     card-brutal text-left relative transition-colors p-4
                     ${isSelected
@@ -333,10 +445,24 @@ export default function NewDealPage() {
                       <p className="text-sm text-muted-foreground mt-1">
                         {jurisdiction.description}
                       </p>
-                      <p className="text-xs text-muted-foreground mt-2 flex items-center gap-1">
-                        <Globe className="w-3 h-3" />
-                        Default forum: {jurisdiction.defaultCourt}
-                      </p>
+                      {/* Show native template badge if available for this jurisdiction */}
+                      {selectedFamily && (() => {
+                        const familyGroup = templateFamilies.find((f) => f.family === selectedFamily);
+                        const hasNative = familyGroup?.templates.some(
+                          (t) => t.nativeJurisdiction === jurisdiction.value
+                        );
+                        return hasNative ? (
+                          <p className="text-xs text-emerald-600 mt-2 flex items-center gap-1 font-medium">
+                            <Scale className="w-3 h-3" />
+                            Native law template available
+                          </p>
+                        ) : (
+                          <p className="text-xs text-muted-foreground mt-2 flex items-center gap-1">
+                            <Globe className="w-3 h-3" />
+                            Default forum: {jurisdiction.defaultCourt}
+                          </p>
+                        );
+                      })()}
                     </div>
                   </div>
                 </button>
@@ -346,8 +472,25 @@ export default function NewDealPage() {
         </div>
       )}
 
+      {/* Native template indicator */}
+      {resolvedNativeTemplate && selectedJurisdiction && (
+        <div className="card-brutal border-emerald-500/50 bg-emerald-500/5 animate-in fade-in slide-in-from-bottom-4 duration-300">
+          <div className="flex items-start gap-3">
+            <Scale className="w-5 h-5 text-emerald-500 mt-0.5" />
+            <div>
+              <p className="text-sm font-medium">
+                Native {jurisdictionOptions.find((j) => j.value === selectedJurisdiction)?.label} template
+              </p>
+              <p className="text-sm text-muted-foreground mt-1">
+                Using jurisdiction-native clauses authored specifically for this legal system, not translated from another jurisdiction.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Step 3: Contract Language Selection */}
-      {selectedType && selectedJurisdiction && (
+      {selectedFamily && selectedJurisdiction && (
         <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-300">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold rounded-full">
@@ -402,7 +545,7 @@ export default function NewDealPage() {
       )}
 
       {/* Step 4: Deal Details */}
-      {selectedType && selectedJurisdiction && (
+      {selectedFamily && selectedJurisdiction && (
         <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-300">
           <div className="space-y-4">
             <div className="flex items-center gap-3">
@@ -421,6 +564,9 @@ export default function NewDealPage() {
                   <span className="text-muted-foreground">{t("contract")}</span>
                   <span className="font-medium">
                     {templates?.find((tmpl) => tmpl.contractType === selectedType)?.displayName}
+                    {resolvedNativeTemplate && (
+                      <span className="ml-2 text-xs text-emerald-600 font-normal">(native)</span>
+                    )}
                   </span>
                 </div>
                 <div className="flex items-center justify-between mt-2">

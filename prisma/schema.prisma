@@ -263,6 +263,8 @@ model ContractTemplate {
   version         String   @default("1.0")
   skillPath       String   // Path to skill folder
   boilerplate     Json?    // Standard contract sections (preamble, definitions, etc.)
+  templateFamily     String?       // e.g., "FOUNDERS", "SAFE" — groups jurisdiction variants
+  nativeJurisdiction GoverningLaw? // Which jurisdiction this template is native to (null = universal)
   isActive        Boolean  @default(true)
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
@@ -273,6 +275,8 @@ model ContractTemplate {
 
   clauses   ClauseTemplate[]
   dealRooms DealRoom[]
+  sourceMappings ClauseMapping[] @relation("sourceMappings")
+  targetMappings ClauseMapping[] @relation("targetMappings")
 
   @@map("contract_templates")
 }
@@ -608,4 +612,26 @@ model AuditLog {
   @@index([userId])
   @@index([createdAt])
   @@map("audit_logs")
+}
+
+// ============================================================
+// CLAUSE MAPPINGS (Cross-jurisdiction clause equivalences)
+// ============================================================
+
+model ClauseMapping {
+  id               String   @id @default(cuid())
+  familyKey        String   // e.g., "FOUNDERS"
+  sourceClauseId   String   // clauseId from source template (e.g., "equity-split")
+  targetClauseId   String   // clauseId from target template (e.g., "distribucion-participaciones")
+  sourceTemplateId String
+  targetTemplateId String
+  mappingType      String   // "equivalent", "split", "merged", "new"
+  notes            String?  @db.Text
+  createdAt        DateTime @default(now())
+
+  sourceTemplate ContractTemplate @relation("sourceMappings", fields: [sourceTemplateId], references: [id])
+  targetTemplate ContractTemplate @relation("targetMappings", fields: [targetTemplateId], references: [id])
+
+  @@unique([familyKey, sourceClauseId, targetClauseId])
+  @@map("clause_mappings")
 }

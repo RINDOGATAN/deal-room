@@ -209,7 +209,7 @@ export const dealRouter = createTRPCRouter({
       const userName = ctx.session.user.name;
 
       // Find the contract template
-      const template = await ctx.prisma.contractTemplate.findUnique({
+      let template = await ctx.prisma.contractTemplate.findUnique({
         where: { contractType: input.contractType },
         include: {
           clauses: {
@@ -224,6 +224,28 @@ export const dealRouter = createTRPCRouter({
           code: "NOT_FOUND",
           message: "Contract template not found",
         });
+      }
+
+      // Auto-resolve to jurisdiction-native template if available
+      if (template.templateFamily) {
+        const nativeTemplate = await ctx.prisma.contractTemplate.findFirst({
+          where: {
+            templateFamily: template.templateFamily,
+            nativeJurisdiction: input.governingLaw as any,
+            isActive: true,
+            id: { not: template.id }, // Don't match self
+          },
+          include: {
+            clauses: {
+              orderBy: { order: "asc" },
+            },
+            skillPackage: true,
+          },
+        });
+
+        if (nativeTemplate) {
+          template = nativeTemplate;
+        }
       }
 
       // Check entitlement if this is a licensed skill
