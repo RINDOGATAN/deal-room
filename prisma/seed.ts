@@ -42,14 +42,14 @@ interface JurisdictionConfig {
 interface ClauseOption {
   id: string;
   code: string;
-  label: string;
+  label: LocalizedString;
   order: number;
-  plainDescription: string;
-  prosPartyA: string[];
-  consPartyA: string[];
-  prosPartyB: string[];
-  consPartyB: string[];
-  legalText: string;
+  plainDescription: LocalizedString;
+  prosPartyA: LocalizedArray;
+  consPartyA: LocalizedArray;
+  prosPartyB: LocalizedArray;
+  consPartyB: LocalizedArray;
+  legalText: LocalizedString;
   biasPartyA: number;
   biasPartyB: number;
   jurisdictionConfig?: JurisdictionConfig;
@@ -57,20 +57,37 @@ interface ClauseOption {
 
 interface Clause {
   id: string;
-  title: string;
+  title: LocalizedString;
   category: string;
   order: number;
-  plainDescription: string;
-  legalContext?: string;
+  plainDescription: LocalizedString;
+  legalContext?: LocalizedString;
   isRequired?: boolean;
   options: ClauseOption[];
 }
 
+type LocalizedString = string | Record<string, string>;
+type LocalizedArray = string[] | Record<string, string[]>;
+
 interface SkillClauses {
   contractType: string;
-  displayName: string;
+  displayName: LocalizedString;
   version: string;
   clauses: Clause[];
+}
+
+// Resolve i18n value to a flat string (default language: "en")
+function resolveString(value: string | Record<string, string> | undefined, fallback = ""): string {
+  if (!value) return fallback;
+  if (typeof value === "string") return value;
+  return value.en || Object.values(value)[0] || fallback;
+}
+
+// Resolve i18n array to a flat string array (default language: "en")
+function resolveArray(value: string[] | Record<string, string[]> | undefined): string[] {
+  if (!value) return [];
+  if (Array.isArray(value)) return value;
+  return value.en || Object.values(value)[0] || [];
 }
 
 async function main() {
@@ -147,7 +164,7 @@ async function main() {
       where: { contractType: clausesData.contractType },
       create: {
         contractType: clausesData.contractType,
-        displayName: clausesData.displayName || metadata?.displayName || skillDir.toUpperCase(),
+        displayName: resolveString(clausesData.displayName) || metadata?.displayName || skillDir.toUpperCase(),
         description: metadata?.description,
         version: clausesData.version || metadata?.version || "1.0",
         skillPath: skillPath,
@@ -155,7 +172,7 @@ async function main() {
         isActive: true,
       },
       update: {
-        displayName: clausesData.displayName || metadata?.displayName,
+        displayName: resolveString(clausesData.displayName) || metadata?.displayName,
         description: metadata?.description,
         version: clausesData.version || metadata?.version,
         skillPath: skillPath,
@@ -177,19 +194,19 @@ async function main() {
         create: {
           contractTemplateId: template.id,
           clauseId: clause.id,
-          title: clause.title,
+          title: resolveString(clause.title),
           category: clause.category,
           order: clause.order,
-          plainDescription: clause.plainDescription,
-          legalContext: clause.legalContext,
+          plainDescription: resolveString(clause.plainDescription),
+          legalContext: resolveString(clause.legalContext),
           isRequired: clause.isRequired ?? true,
         },
         update: {
-          title: clause.title,
+          title: resolveString(clause.title),
           category: clause.category,
           order: clause.order,
-          plainDescription: clause.plainDescription,
-          legalContext: clause.legalContext,
+          plainDescription: resolveString(clause.plainDescription),
+          legalContext: resolveString(clause.legalContext),
           isRequired: clause.isRequired ?? true,
         },
       });
@@ -207,28 +224,28 @@ async function main() {
             clauseTemplateId: clauseTemplate.id,
             optionId: option.id,
             code: option.code,
-            label: option.label,
+            label: resolveString(option.label),
             order: option.order,
-            plainDescription: option.plainDescription,
-            prosPartyA: option.prosPartyA,
-            consPartyA: option.consPartyA,
-            prosPartyB: option.prosPartyB,
-            consPartyB: option.consPartyB,
-            legalText: option.legalText,
+            plainDescription: resolveString(option.plainDescription),
+            prosPartyA: resolveArray(option.prosPartyA),
+            consPartyA: resolveArray(option.consPartyA),
+            prosPartyB: resolveArray(option.prosPartyB),
+            consPartyB: resolveArray(option.consPartyB),
+            legalText: resolveString(option.legalText),
             biasPartyA: option.biasPartyA,
             biasPartyB: option.biasPartyB,
             jurisdictionConfig: option.jurisdictionConfig as Prisma.InputJsonValue | undefined,
           },
           update: {
             code: option.code,
-            label: option.label,
+            label: resolveString(option.label),
             order: option.order,
-            plainDescription: option.plainDescription,
-            prosPartyA: option.prosPartyA,
-            consPartyA: option.consPartyA,
-            prosPartyB: option.prosPartyB,
-            consPartyB: option.consPartyB,
-            legalText: option.legalText,
+            plainDescription: resolveString(option.plainDescription),
+            prosPartyA: resolveArray(option.prosPartyA),
+            consPartyA: resolveArray(option.consPartyA),
+            prosPartyB: resolveArray(option.prosPartyB),
+            consPartyB: resolveArray(option.consPartyB),
+            legalText: resolveString(option.legalText),
             biasPartyA: option.biasPartyA,
             biasPartyB: option.biasPartyB,
             jurisdictionConfig: option.jurisdictionConfig as Prisma.InputJsonValue | undefined,
@@ -236,7 +253,7 @@ async function main() {
         });
       }
 
-      console.log(`    - ${clause.title} (${clause.options.length} options)`);
+      console.log(`    - ${resolveString(clause.title)} (${clause.options.length} options)`);
     }
   }
 
