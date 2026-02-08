@@ -36,15 +36,20 @@ export const supervisorAuthOptions: NextAuthOptions = {
           await resend.emails.send({
             from: process.env.EMAIL_FROM || "onboarding@resend.dev",
             to: email,
-            subject: `Sign in to ${brand.name} - Supervisor Portal`,
+            subject: `Sign in to DEALROOM - Supervisor Portal`,
             html: `
-              <div style="font-family: sans-serif; max-width: 500px; margin: 0 auto;">
-                <h1 style="color: ${emailStyles.supervisorHeader.color}; background: ${emailStyles.supervisorHeader.background}; padding: 20px; margin: 0;">${brand.name} - Supervisor Portal</h1>
-                <div style="padding: 20px; background: #f5f5f5;">
-                  <p>Click the button below to sign in to the Supervisor Portal:</p>
-                  <a href="${supervisorUrl}" style="display: inline-block; background: ${emailStyles.supervisorButton.background}; color: ${emailStyles.supervisorButton.color}; padding: 12px 24px; text-decoration: none; font-weight: bold; margin: 20px 0;">Sign In as Supervisor</a>
-                  <p style="color: #666; font-size: 14px;">If you didn't request this email, you can safely ignore it.</p>
-                  <p style="color: #666; font-size: 12px;">Or copy this link: ${supervisorUrl}</p>
+              <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 500px; margin: 0 auto; background: ${brand.colors.background}; border-radius: 12px; overflow: hidden;">
+                <div style="padding: 24px 24px 16px; border-bottom: 1px solid ${brand.colors.border};">
+                  <span style="font-size: 20px; font-weight: 700; color: ${brand.colors.foreground}; letter-spacing: 0.05em;">DEALROOM</span>
+                  <span style="font-size: 13px; color: ${brand.colors.muted}; margin-left: 10px;">Supervisor Portal</span>
+                </div>
+                <div style="padding: 32px 24px;">
+                  <p style="color: #e5e5e5; font-size: 15px; line-height: 1.6; margin: 0 0 24px;">Click the button below to sign in to the Supervisor Portal:</p>
+                  <a href="${supervisorUrl}" style="display: inline-block; background: ${brand.colors.primary}; color: ${brand.colors.background}; padding: 12px 28px; text-decoration: none; font-weight: 600; font-size: 14px; border-radius: 24px;">Sign In as Supervisor</a>
+                  <p style="color: ${brand.colors.muted}; font-size: 13px; line-height: 1.5; margin: 24px 0 0;">If you didn't request this email, you can safely ignore it.</p>
+                </div>
+                <div style="padding: 16px 24px; border-top: 1px solid ${brand.colors.border};">
+                  <p style="color: #666666; font-size: 11px; margin: 0;">TODO.LAW\u2122 \u00b7 DEALROOM \u00b7 <a href="https://dealroom.todo.law" style="color: ${brand.colors.primary}; text-decoration: none;">dealroom.todo.law</a></p>
                 </div>
               </div>
             `,
