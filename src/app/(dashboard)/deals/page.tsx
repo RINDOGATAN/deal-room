@@ -89,7 +89,7 @@ export default function DealsPage() {
             {t("manageNegotiations")}
           </p>
         </div>
-        <Link href="/deals/new" className="btn-brutal flex items-center gap-2">
+        <Link href="/deals/new" className="btn-brutal flex items-center gap-2 py-2 text-sm md:py-3 md:text-base">
           <Plus className="w-4 h-4" />
           {t("newDeal")}
         </Link>
