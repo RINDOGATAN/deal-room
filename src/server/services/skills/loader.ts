@@ -129,10 +129,12 @@ const ClausesFileSchema = z.union([LegacyClausesFileSchema, I18nClausesFileSchem
 
 const MetadataSchema = z.object({
   contractType: z.string(),
-  displayName: z.string(),
-  description: z.string().optional(),
+  displayName: z.union([z.string(), z.record(z.string(), z.string())]),
+  description: z.union([z.string(), z.record(z.string(), z.string())]).optional(),
   version: z.string().optional().default("1.0"),
   clauseCount: z.number().optional(),
+  jurisdictions: z.array(z.string()).optional(),
+  languages: z.array(z.string()).optional(),
 });
 
 // Boilerplate schema for standard contract sections
@@ -345,6 +347,83 @@ function normalizeClausesFile(
     version: (file.version as string) || "1.0",
     clauses: clauses.map((c) => normalizeClause(c, language)),
   };
+}
+
+// ============================================================
+// I18N CONTENT PRESERVATION HELPERS
+// ============================================================
+
+function isLocalized(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function buildClauseLocalizedContent(clause: Record<string, unknown>): Record<string, unknown> | undefined {
+  const content: Record<string, unknown> = {};
+  let hasLocalized = false;
+
+  if (isLocalized(clause.title)) { content.title = clause.title; hasLocalized = true; }
+  if (isLocalized(clause.plainDescription)) { content.plainDescription = clause.plainDescription; hasLocalized = true; }
+  if (clause.legalContext && isLocalized(clause.legalContext)) { content.legalContext = clause.legalContext; hasLocalized = true; }
+
+  return hasLocalized ? content : undefined;
+}
+
+function buildOptionLocalizedContent(option: Record<string, unknown>): Record<string, unknown> | undefined {
+  const content: Record<string, unknown> = {};
+  let hasLocalized = false;
+
+  // Handle both legacy (prosPartyA) and i18n (pros.partyA) formats
+  if (isLocalized(option.label)) { content.label = option.label; hasLocalized = true; }
+  if (isLocalized(option.plainDescription)) { content.plainDescription = option.plainDescription; hasLocalized = true; }
+  if (isLocalized(option.legalText)) { content.legalText = option.legalText; hasLocalized = true; }
+
+  // Legacy format fields
+  if (isLocalized(option.prosPartyA)) { content.prosPartyA = option.prosPartyA; hasLocalized = true; }
+  if (isLocalized(option.consPartyA)) { content.consPartyA = option.consPartyA; hasLocalized = true; }
+  if (isLocalized(option.prosPartyB)) { content.prosPartyB = option.prosPartyB; hasLocalized = true; }
+  if (isLocalized(option.consPartyB)) { content.consPartyB = option.consPartyB; hasLocalized = true; }
+
+  // New i18n format (pros/cons objects)
+  const pros = option.pros as Record<string, unknown> | undefined;
+  const cons = option.cons as Record<string, unknown> | undefined;
+  if (pros?.partyA && isLocalized(pros.partyA)) { content.prosPartyA = pros.partyA; hasLocalized = true; }
+  if (pros?.partyB && isLocalized(pros.partyB)) { content.prosPartyB = pros.partyB; hasLocalized = true; }
+  if (cons?.partyA && isLocalized(cons.partyA)) { content.consPartyA = cons.partyA; hasLocalized = true; }
+  if (cons?.partyB && isLocalized(cons.partyB)) { content.consPartyB = cons.partyB; hasLocalized = true; }
+
+  return hasLocalized ? content : undefined;
+}
+
+function inferJurisdictionsFromClauses(rawData: unknown): string[] {
+  const data = rawData as Record<string, unknown>;
+  const clauses = (data.clauses as Array<Record<string, unknown>>) || [];
+  const jurisdictions = new Set<string>();
+  for (const clause of clauses) {
+    const options = (clause.options as Array<Record<string, unknown>>) || [];
+    for (const option of options) {
+      const jc = option.jurisdictionConfig as Record<string, unknown> | undefined;
+      if (jc) {
+        for (const key of Object.keys(jc)) {
+          jurisdictions.add(key);
+        }
+      }
+    }
+  }
+  return jurisdictions.size > 0 ? Array.from(jurisdictions) : [];
+}
+
+function inferLanguagesFromClauses(rawData: unknown): string[] {
+  const data = rawData as Record<string, unknown>;
+  const clauses = (data.clauses as Array<Record<string, unknown>>) || [];
+  for (const clause of clauses) {
+    const options = (clause.options as Array<Record<string, unknown>>) || [];
+    for (const option of options) {
+      if (isLocalized(option.label)) {
+        return Object.keys(option.label as Record<string, string>);
+      }
+    }
+  }
+  return ["en"];
 }
 
 interface SkillData {
@@ -787,9 +866,43 @@ export async function syncSkillsToDatabase(
 
   for (const [contractType, skillData] of allSkills) {
     const { clauses: rawSkill, boilerplate, manifest } = skillData;
+    const rawData = rawSkill as unknown as Record<string, unknown>;
+    const rawClauses = (rawData.clauses as Array<Record<string, unknown>>) || [];
 
     // Normalize i18n content
     const skill = normalizeClausesFile(rawSkill, language);
+
+    // Load metadata for built-in skills (jurisdictions/languages)
+    let metadata: z.infer<typeof MetadataSchema> | null = null;
+    // Try to find metadata.json in known skill directories
+    for (const dir of [BUILTIN_SKILLS_DIR, SKILLS_DIR]) {
+      const metaPath = path.join(dir, contractType.toLowerCase(), "metadata.json");
+      if (fs.existsSync(metaPath)) {
+        try {
+          const parsed = MetadataSchema.safeParse(JSON.parse(fs.readFileSync(metaPath, "utf-8")));
+          if (parsed.success) metadata = parsed.data;
+        } catch { /* ignore */ }
+        break;
+      }
+    }
+
+    // Resolve jurisdictions and languages
+    const jurisdictions =
+      metadata?.jurisdictions || manifest?.jurisdictions || inferJurisdictionsFromClauses(rawSkill);
+    const languages =
+      metadata?.languages || manifest?.languages || inferLanguagesFromClauses(rawSkill);
+
+    // Build localized display name/description
+    const displayNameLocalized = isLocalized(rawData.displayName)
+      ? rawData.displayName
+      : metadata?.displayName && isLocalized(metadata.displayName)
+        ? metadata.displayName
+        : undefined;
+    const descriptionLocalized = metadata?.description && isLocalized(metadata.description)
+      ? metadata.description
+      : rawData.description && isLocalized(rawData.description)
+        ? rawData.description
+        : undefined;
 
     try {
       // Upsert the contract template
@@ -804,6 +917,10 @@ export async function syncSkillsToDatabase(
           boilerplate: boilerplate || undefined,
           templateFamily: manifest?.templateFamily || null,
           nativeJurisdiction: (manifest?.nativeJurisdiction as any) || null,
+          jurisdictions,
+          languages,
+          displayNameLocalized: (displayNameLocalized as any) || undefined,
+          descriptionLocalized: (descriptionLocalized as any) || undefined,
         },
         update: {
           displayName: skill.displayName,
@@ -812,6 +929,10 @@ export async function syncSkillsToDatabase(
           boilerplate: boilerplate || undefined,
           templateFamily: manifest?.templateFamily || null,
           nativeJurisdiction: (manifest?.nativeJurisdiction as any) || null,
+          jurisdictions,
+          languages,
+          displayNameLocalized: (displayNameLocalized as any) || undefined,
+          descriptionLocalized: (descriptionLocalized as any) || undefined,
         },
       });
 
@@ -821,7 +942,13 @@ export async function syncSkillsToDatabase(
       });
 
       // Create clauses and options
-      for (const clause of skill.clauses) {
+      for (let i = 0; i < skill.clauses.length; i++) {
+        const clause = skill.clauses[i];
+        const rawClause = rawClauses[i] || {};
+        const clauseLocalized = buildClauseLocalizedContent(rawClause);
+
+        const rawOptions = (rawClause.options as Array<Record<string, unknown>>) || [];
+
         await prisma.clauseTemplate.create({
           data: {
             contractTemplateId: template.id,
@@ -832,24 +959,30 @@ export async function syncSkillsToDatabase(
             plainDescription: clause.plainDescription,
             legalContext: clause.legalContext,
             isRequired: clause.isRequired ?? true,
+            localizedContent: (clauseLocalized as any) || undefined,
             options: {
-              create: clause.options.map((opt) => ({
-                optionId: opt.id,
-                code: opt.code,
-                label: opt.label,
-                order: opt.order,
-                plainDescription: opt.plainDescription,
-                prosPartyA: opt.prosPartyA,
-                consPartyA: opt.consPartyA,
-                prosPartyB: opt.prosPartyB,
-                consPartyB: opt.consPartyB,
-                legalText: opt.legalText,
-                biasPartyA: opt.biasPartyA,
-                biasPartyB: opt.biasPartyB,
-                jurisdictionConfig: opt.jurisdictionConfig
-                  ? JSON.parse(JSON.stringify(opt.jurisdictionConfig))
-                  : undefined,
-              })),
+              create: clause.options.map((opt, j) => {
+                const rawOpt = rawOptions[j] || {};
+                const optLocalized = buildOptionLocalizedContent(rawOpt);
+                return {
+                  optionId: opt.id,
+                  code: opt.code,
+                  label: opt.label,
+                  order: opt.order,
+                  plainDescription: opt.plainDescription,
+                  prosPartyA: opt.prosPartyA,
+                  consPartyA: opt.consPartyA,
+                  prosPartyB: opt.prosPartyB,
+                  consPartyB: opt.consPartyB,
+                  legalText: opt.legalText,
+                  biasPartyA: opt.biasPartyA,
+                  biasPartyB: opt.biasPartyB,
+                  jurisdictionConfig: opt.jurisdictionConfig
+                    ? JSON.parse(JSON.stringify(opt.jurisdictionConfig))
+                    : undefined,
+                  localizedContent: (optLocalized as any) || undefined,
+                };
+              }),
             },
           },
         });

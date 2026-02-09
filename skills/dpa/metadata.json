@@ -1,7 +1,15 @@
 {
   "contractType": "DPA",
-  "displayName": "Data Processing Agreement",
-  "description": "Controller-to-Processor agreement for SaaS companies processing customer personal data, compliant with GDPR, UK GDPR, and CCPA/CPRA",
+  "displayName": {
+    "en": "Data Processing Agreement",
+    "es": "Acuerdo de Tratamiento de Datos"
+  },
+  "description": {
+    "en": "Controller-to-Processor agreement for SaaS companies processing customer personal data, compliant with GDPR, UK GDPR, and CCPA/CPRA",
+    "es": "Acuerdo entre Responsable y Encargado del tratamiento para empresas SaaS que tratan datos personales de clientes, conforme al RGPD, RGPD del Reino Unido y CCPA/CPRA"
+  },
   "version": "1.0",
-  "clauseCount": 12
+  "clauseCount": 12,
+  "jurisdictions": ["CALIFORNIA", "ENGLAND_WALES", "SPAIN"],
+  "languages": ["en", "es"]
 }

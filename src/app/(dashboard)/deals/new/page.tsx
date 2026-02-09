@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import {
   FileText,
   Shield,
@@ -52,6 +52,8 @@ interface TemplateInfo {
   clauseCount: number;
   templateFamily: string | null;
   nativeJurisdiction: string | null;
+  jurisdictions: string[];
+  languages: string[];
   requiresLicense: boolean;
   hasAccess: boolean;
   entitledJurisdictions: string[];
@@ -170,6 +172,7 @@ export default function NewDealPage() {
   const router = useRouter();
   const t = useTranslations("newDeal");
   const tCommon = useTranslations("common");
+  const locale = useLocale();
   const [selectedFamily, setSelectedFamily] = useState<string | null>(null);
   const [selectedType, setSelectedType] = useState<string | null>(null);
   const [selectedJurisdiction, setSelectedJurisdiction] = useState<GoverningLaw | null>(null);
@@ -179,8 +182,33 @@ export default function NewDealPage() {
   const [entitlementError, setEntitlementError] = useState<string | null>(null);
   const [resolvedNativeTemplate, setResolvedNativeTemplate] = useState<string | null>(null);
 
-  const { data: templates, isLoading } = trpc.skills.listTemplatesWithAccess.useQuery();
-  const templateFamilies = templates ? groupTemplatesByFamily(templates) : [];
+  const { data: templates, isLoading } = trpc.skills.listTemplatesWithAccess.useQuery({ language: locale });
+  const allFamilies = templates ? groupTemplatesByFamily(templates) : [];
+  // Filter: only show families where at least one template supports the current platform locale
+  const templateFamilies = allFamilies.filter((family) =>
+    family.templates.some((t) => t.languages.length === 0 || t.languages.includes(locale))
+  );
+
+  // Compute available jurisdictions/languages for the selected family
+  const selectedFamilyGroup = templateFamilies.find((f) => f.family === selectedFamily);
+  const availableJurisdictions = new Set<string>();
+  const availableLanguages = new Set<string>();
+  if (selectedFamilyGroup) {
+    for (const t of selectedFamilyGroup.templates) {
+      for (const j of t.jurisdictions) availableJurisdictions.add(j);
+      for (const l of t.languages) availableLanguages.add(l);
+    }
+  }
+
+  // Compute available languages after jurisdiction is selected
+  const languagesForJurisdiction = new Set<string>();
+  if (selectedFamilyGroup && selectedJurisdiction) {
+    for (const t of selectedFamilyGroup.templates) {
+      if (t.jurisdictions.length === 0 || t.jurisdictions.includes(selectedJurisdiction)) {
+        for (const l of t.languages) languagesForJurisdiction.add(l);
+      }
+    }
+  }
   const createDeal = trpc.deal.create.useMutation({
     onSuccess: (deal) => {
       toast.success("Deal room created");
@@ -415,25 +443,45 @@ export default function NewDealPage() {
           <div className="grid grid-cols-1 gap-3">
             {jurisdictionOptions.map((jurisdiction) => {
               const isSelected = selectedJurisdiction === jurisdiction.value;
+              const isDisabled = availableJurisdictions.size > 0 && !availableJurisdictions.has(jurisdiction.value);
 
               return (
                 <button
                   key={jurisdiction.value}
+                  disabled={isDisabled}
                   onClick={() => {
+                    if (isDisabled) return;
                     setSelectedJurisdiction(jurisdiction.value);
                     if (selectedFamily) {
                       resolveTemplate(selectedFamily, jurisdiction.value);
                     }
+                    // Auto-select language if only one available for this jurisdiction
+                    if (selectedFamilyGroup) {
+                      const langs = new Set<string>();
+                      for (const t of selectedFamilyGroup.templates) {
+                        if (t.jurisdictions.length === 0 || t.jurisdictions.includes(jurisdiction.value)) {
+                          for (const l of t.languages) langs.add(l);
+                        }
+                      }
+                      if (langs.size === 1) {
+                        setSelectedLanguage([...langs][0] as ContractLanguage);
+                      } else if (!langs.has(selectedLanguage)) {
+                        // Reset if current language not available
+                        setSelectedLanguage([...langs][0] as ContractLanguage || "en");
+                      }
+                    }
                   }}
                   className={`
                     card-brutal text-left relative transition-colors p-4
-                    ${isSelected
+                    ${isDisabled
+                      ? "opacity-50 cursor-not-allowed border-dashed"
+                      : isSelected
                       ? "border-primary"
                       : "hover:border-muted-foreground"
                     }
                   `}
                 >
-                  {isSelected && (
+                  {isSelected && !isDisabled && (
                     <div className="absolute top-4 right-4 w-6 h-6 bg-primary flex items-center justify-center rounded-full">
                       <Check className="w-4 h-4 text-primary-foreground" />
                     </div>
@@ -443,10 +491,13 @@ export default function NewDealPage() {
                     <div className="flex-1">
                       <h3 className="font-semibold">{jurisdiction.label}</h3>
                       <p className="text-sm text-muted-foreground mt-1">
-                        {jurisdiction.description}
+                        {isDisabled
+                          ? t("notAvailableForContract")
+                          : jurisdiction.description
+                        }
                       </p>
                       {/* Show native template badge if available for this jurisdiction */}
-                      {selectedFamily && (() => {
+                      {!isDisabled && selectedFamily && (() => {
                         const familyGroup = templateFamilies.find((f) => f.family === selectedFamily);
                         const hasNative = familyGroup?.templates.some(
                           (t) => t.nativeJurisdiction === jurisdiction.value
@@ -513,20 +564,26 @@ export default function NewDealPage() {
           <div className="grid grid-cols-2 gap-3">
             {contractLanguageOptions.map((lang) => {
               const isSelected = selectedLanguage === lang.value;
+              const isDisabled = languagesForJurisdiction.size > 0 && !languagesForJurisdiction.has(lang.value);
 
               return (
                 <button
                   key={lang.value}
-                  onClick={() => setSelectedLanguage(lang.value)}
+                  disabled={isDisabled}
+                  onClick={() => {
+                    if (!isDisabled) setSelectedLanguage(lang.value);
+                  }}
                   className={`
                     card-brutal text-left relative transition-colors p-4
-                    ${isSelected
+                    ${isDisabled
+                      ? "opacity-50 cursor-not-allowed border-dashed"
+                      : isSelected
                       ? "border-primary"
                       : "hover:border-muted-foreground"
                     }
                   `}
                 >
-                  {isSelected && (
+                  {isSelected && !isDisabled && (
                     <div className="absolute top-4 right-4 w-6 h-6 bg-primary flex items-center justify-center rounded-full">
                       <Check className="w-4 h-4 text-primary-foreground" />
                     </div>
@@ -534,7 +591,10 @@ export default function NewDealPage() {
                   <div>
                     <h3 className="font-semibold">{lang.nativeLabel}</h3>
                     <p className="text-sm text-muted-foreground mt-1">
-                      {lang.description}
+                      {isDisabled
+                        ? t("notAvailableForContract")
+                        : lang.description
+                      }
                     </p>
                   </div>
                 </button>

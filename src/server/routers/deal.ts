@@ -3,6 +3,7 @@ import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
 import { DealRoomStatus, PartyRole, PartyStatus, ClauseStatus, InvitationStatus, GoverningLaw } from "@prisma/client";
 import { checkDealCreationEntitlement } from "../services/licensing/entitlement";
+import { resolveLocalizedString, resolveLocalizedArray } from "../services/skills/i18n";
 
 // Map GoverningLaw enum to jurisdiction strings for entitlement checking
 const GOVERNING_LAW_TO_JURISDICTION: Record<string, string> = {
@@ -182,6 +183,49 @@ export const dealRouter = createTRPCRouter({
         });
       }
 
+      // Resolve i18n content if contract language is not English
+      const lang = dealRoom.contractLanguage;
+      if (lang && lang !== "en") {
+        for (const clause of dealRoom.clauses) {
+          const ct = clause.clauseTemplate;
+          const ctLocalized = ct.localizedContent as Record<string, Record<string, string>> | null;
+          if (ctLocalized) {
+            if (ctLocalized.title) (ct as any).title = resolveLocalizedString(ctLocalized.title, lang);
+            if (ctLocalized.plainDescription) (ct as any).plainDescription = resolveLocalizedString(ctLocalized.plainDescription, lang);
+            if (ctLocalized.legalContext) (ct as any).legalContext = resolveLocalizedString(ctLocalized.legalContext, lang);
+          }
+
+          for (const opt of ct.options) {
+            const optLocalized = opt.localizedContent as Record<string, unknown> | null;
+            if (optLocalized) {
+              if (optLocalized.label) (opt as any).label = resolveLocalizedString(optLocalized.label, lang);
+              if (optLocalized.plainDescription) (opt as any).plainDescription = resolveLocalizedString(optLocalized.plainDescription, lang);
+              if (optLocalized.legalText) (opt as any).legalText = resolveLocalizedString(optLocalized.legalText, lang);
+              if (optLocalized.prosPartyA) (opt as any).prosPartyA = resolveLocalizedArray(optLocalized.prosPartyA, lang);
+              if (optLocalized.consPartyA) (opt as any).consPartyA = resolveLocalizedArray(optLocalized.consPartyA, lang);
+              if (optLocalized.prosPartyB) (opt as any).prosPartyB = resolveLocalizedArray(optLocalized.prosPartyB, lang);
+              if (optLocalized.consPartyB) (opt as any).consPartyB = resolveLocalizedArray(optLocalized.consPartyB, lang);
+            }
+
+            // Also resolve the option in selections (the denormalized option copy)
+            for (const sel of clause.selections) {
+              if (sel.option.id === opt.id) {
+                const selOptLocalized = sel.option.localizedContent as Record<string, unknown> | null;
+                if (selOptLocalized) {
+                  if (selOptLocalized.label) (sel.option as any).label = resolveLocalizedString(selOptLocalized.label, lang);
+                  if (selOptLocalized.plainDescription) (sel.option as any).plainDescription = resolveLocalizedString(selOptLocalized.plainDescription, lang);
+                  if (selOptLocalized.legalText) (sel.option as any).legalText = resolveLocalizedString(selOptLocalized.legalText, lang);
+                  if (selOptLocalized.prosPartyA) (sel.option as any).prosPartyA = resolveLocalizedArray(selOptLocalized.prosPartyA, lang);
+                  if (selOptLocalized.consPartyA) (sel.option as any).consPartyA = resolveLocalizedArray(selOptLocalized.consPartyA, lang);
+                  if (selOptLocalized.prosPartyB) (sel.option as any).prosPartyB = resolveLocalizedArray(selOptLocalized.prosPartyB, lang);
+                  if (selOptLocalized.consPartyB) (sel.option as any).consPartyB = resolveLocalizedArray(selOptLocalized.consPartyB, lang);
+                }
+              }
+            }
+          }
+        }
+      }
+
       // Get current user's party role
       const currentParty = dealRoom.parties.find((p) => p.userId === userId);
 
@@ -246,6 +290,20 @@ export const dealRouter = createTRPCRouter({
         if (nativeTemplate) {
           template = nativeTemplate;
         }
+      }
+
+      // Validate jurisdiction and language constraints
+      if (template.jurisdictions.length > 0 && !template.jurisdictions.includes(input.governingLaw)) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: `This contract template does not support the ${input.governingLaw} jurisdiction`,
+        });
+      }
+      if (template.languages.length > 0 && !template.languages.includes(input.contractLanguage)) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: `This contract template does not support the ${input.contractLanguage} language`,
+        });
       }
 
       // Check entitlement if this is a licensed skill
