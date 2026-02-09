@@ -152,6 +152,7 @@ async function main() {
     const clausesPath = path.join(skillPath, "clauses.json");
     const metadataPath = path.join(skillPath, "metadata.json");
     const manifestPath = path.join(skillPath, "manifest.json");
+    const boilerplatePath = path.join(skillPath, "boilerplate.json");
 
     if (!fs.existsSync(clausesPath)) {
       console.log(`Skipping ${entry.name}: no clauses.json found`);
@@ -172,6 +173,11 @@ async function main() {
     let manifest: SkillManifest | null = null;
     if (fs.existsSync(manifestPath)) {
       manifest = JSON.parse(fs.readFileSync(manifestPath, "utf-8"));
+    }
+
+    let boilerplate: Record<string, unknown> | null = null;
+    if (fs.existsSync(boilerplatePath)) {
+      boilerplate = JSON.parse(fs.readFileSync(boilerplatePath, "utf-8"));
     }
 
     // Create or update SkillPackage if manifest exists (enables licensing)
@@ -217,6 +223,7 @@ async function main() {
         skillPackageId: skillPackage?.id,
         templateFamily: manifest?.templateFamily || null,
         nativeJurisdiction: manifest?.nativeJurisdiction as any || null,
+        boilerplate: boilerplate as Prisma.InputJsonValue ?? Prisma.DbNull,
         isActive: true,
       },
       update: {
@@ -227,6 +234,7 @@ async function main() {
         skillPackageId: skillPackage?.id,
         templateFamily: manifest?.templateFamily || null,
         nativeJurisdiction: manifest?.nativeJurisdiction as any || null,
+        boilerplate: boilerplate as Prisma.InputJsonValue ?? Prisma.DbNull,
       },
     });
 

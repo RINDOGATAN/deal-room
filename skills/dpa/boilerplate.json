@@ -1,0 +1,110 @@
+{
+  "contractTitle": "DATA PROCESSING AGREEMENT",
+  "preamble": "This Data Processing Agreement (\"DPA\") is entered into as of {effectiveDate} (\"Effective Date\") and forms part of any existing service agreement between the parties listed below.\n\nDATA CONTROLLER:\n{partyAName}, a company with its principal place of business at {partyAAddress} (\"Controller\")\n\nDATA PROCESSOR:\n{partyBName}, a company with its principal place of business at {partyBAddress} (\"Processor\")",
+  "background": "The Controller has engaged the Processor to provide certain services. In providing those services, the Processor will process Personal Data on behalf of the Controller. This DPA sets out the terms on which the Processor will process Personal Data on behalf of the Controller, as required by: (a) Article 28 of the EU General Data Protection Regulation (Regulation (EU) 2016/679) (\"EU GDPR\"); (b) Article 28 of the UK General Data Protection Regulation as incorporated into UK law (\"UK GDPR\"); and (c) The California Consumer Privacy Act of 2018 and the California Privacy Rights Act of 2020 (\"CCPA/CPRA\"), where applicable.",
+  "definitions": [
+    {
+      "term": "Data Protection Laws",
+      "definition": "means all applicable laws relating to data protection and privacy, including: (a) EU GDPR; (b) UK GDPR and the Data Protection Act 2018; (c) CCPA/CPRA; and (d) any other applicable national implementing legislation."
+    },
+    {
+      "term": "Personal Data",
+      "definition": "means any information relating to an identified or identifiable natural person that the Processor processes on behalf of the Controller."
+    },
+    {
+      "term": "Processing",
+      "definition": "means any operation performed on Personal Data, including collection, recording, organization, storage, adaptation, retrieval, consultation, use, disclosure, combination, restriction, erasure, or destruction."
+    },
+    {
+      "term": "Personal Data Breach",
+      "definition": "means a breach of security leading to the accidental or unlawful destruction, loss, alteration, unauthorized disclosure of, or access to, Personal Data."
+    },
+    {
+      "term": "Sub-processor",
+      "definition": "means any third party engaged by the Processor to process Personal Data on behalf of the Controller."
+    },
+    {
+      "term": "Data Subject",
+      "definition": "means an identified or identifiable natural person whose Personal Data is processed."
+    },
+    {
+      "term": "Supervisory Authority",
+      "definition": "means an independent public authority responsible for monitoring the application of Data Protection Laws."
+    }
+  ],
+  "standardClauses": [
+    {
+      "title": "Processing on Instructions",
+      "text": "The Processor must:\n\n(a) Process Personal Data only on documented instructions from the Controller, including with regard to transfers to third countries, unless required to do so by applicable law (in which case the Processor must inform the Controller of that legal requirement before processing, unless the law prohibits such notification);\n\n(b) Immediately inform the Controller if, in the Processor's opinion, an instruction infringes Data Protection Laws."
+    },
+    {
+      "title": "Confidentiality",
+      "text": "The Processor must ensure that all personnel authorized to process Personal Data:\n\n(a) Have committed to confidentiality or are under an appropriate statutory obligation of confidentiality; and\n\n(b) Process Personal Data only as instructed by the Controller."
+    },
+    {
+      "title": "Security Measures",
+      "text": "The Processor must implement and maintain appropriate technical and organizational measures to protect Personal Data against unauthorized or unlawful processing, accidental loss, destruction, or damage. These measures must:\n\n(a) Be appropriate to the risk, taking into account the state of the art, costs of implementation, and the nature, scope, context, and purposes of processing;\n\n(b) Include, as appropriate: (i) Pseudonymization and encryption of Personal Data; (ii) Ability to ensure ongoing confidentiality, integrity, availability, and resilience of processing systems; (iii) Ability to restore availability and access to Personal Data in a timely manner following an incident; (iv) Regular testing and evaluation of the effectiveness of security measures."
+    },
+    {
+      "title": "Assistance with Data Subject Rights",
+      "text": "The Processor must:\n\n(a) Taking into account the nature of the processing, assist the Controller by appropriate technical and organizational measures to respond to requests from Data Subjects exercising their rights under Data Protection Laws (including access, rectification, erasure, restriction, portability, and objection);\n\n(b) Promptly notify the Controller of any request received directly from a Data Subject, and not respond to that request except as authorized by the Controller or required by law."
+    },
+    {
+      "title": "Assistance with Compliance",
+      "text": "The Processor must assist the Controller in ensuring compliance with the Controller's obligations regarding:\n\n(a) Security of processing;\n\n(b) Notification of Personal Data Breaches to supervisory authorities and Data Subjects;\n\n(c) Data protection impact assessments; and\n\n(d) Prior consultation with supervisory authorities."
+    },
+    {
+      "title": "Audit Rights",
+      "text": "The Processor must:\n\n(a) Make available to the Controller all information necessary to demonstrate compliance with this DPA and Article 28 of the GDPR;\n\n(b) Allow for and contribute to audits, including inspections, conducted by the Controller or an auditor mandated by the Controller, subject to: (i) Reasonable advance notice (at least 30 days, except in case of emergency or regulatory requirement); (ii) Reasonable scope and duration; (iii) Confidentiality obligations regarding any information obtained."
+    },
+    {
+      "title": "Controller Obligations",
+      "text": "The Controller warrants that:\n\n(a) It has obtained all necessary consents, provided all necessary notices, and otherwise has a lawful basis to transfer Personal Data to the Processor for processing under this DPA;\n\n(b) Its instructions to the Processor will comply with Data Protection Laws;\n\n(c) It will provide the Processor with accurate and complete information regarding the processing."
+    },
+    {
+      "title": "International Data Transfers",
+      "text": "The Processor must not transfer Personal Data to a country outside the European Economic Area (\"EEA\") or the United Kingdom (\"UK\") unless:\n\n(a) The transfer is to a country that has been deemed to provide an adequate level of data protection by the European Commission or UK authorities (as applicable);\n\n(b) Appropriate safeguards are in place, including Standard Contractual Clauses adopted by the European Commission; or\n\n(c) A derogation under Article 49 of the GDPR applies."
+    },
+    {
+      "title": "Liability and Indemnification",
+      "text": "Each party's liability under this DPA is subject to the limitations of liability set out in any principal agreement, except that:\n\n(a) Neither party excludes or limits liability for breaches of Data Protection Laws to the extent such exclusion or limitation is prohibited by law;\n\n(b) The Processor will be liable for damage caused by processing that violates Data Protection Laws or this DPA."
+    }
+  ],
+  "generalProvisions": [
+    {
+      "title": "Order of Precedence",
+      "text": "In the event of a conflict between this DPA and any principal agreement, this DPA will prevail with respect to data protection matters."
+    },
+    {
+      "title": "Amendments",
+      "text": "This DPA may only be amended in writing signed by both parties."
+    },
+    {
+      "title": "Term",
+      "text": "This DPA commences on the Effective Date and continues until all Personal Data is deleted or returned, or until any principal agreement terminates or expires."
+    },
+    {
+      "title": "Survival",
+      "text": "The obligations regarding deletion/return of Personal Data, confidentiality, and any provisions that by their nature should survive, will continue after termination."
+    },
+    {
+      "title": "Entire Agreement",
+      "text": "This DPA, including its Annexes, constitutes the entire agreement between the parties regarding data processing matters."
+    }
+  ],
+  "jurisdictionProvisions": {
+    "CALIFORNIA": {
+      "title": "California-Specific Provisions (CCPA/CPRA)",
+      "text": "For purposes of the CCPA/CPRA, the Processor is a \"Service Provider.\" The Processor:\n\n(a) Is prohibited from selling or sharing Personal Information;\n\n(b) Is prohibited from retaining, using, or disclosing Personal Information for any purpose other than performing the services, or as otherwise permitted by the CCPA/CPRA;\n\n(c) Is prohibited from retaining, using, or disclosing Personal Information outside the direct business relationship between the Processor and Controller;\n\n(d) Must comply with the CCPA/CPRA and provide the same level of privacy protection as required by the CCPA/CPRA;\n\n(e) Must notify the Controller if it determines it can no longer meet its CCPA/CPRA obligations;\n\n(f) Grants the Controller the right to take reasonable and appropriate steps to ensure the Processor uses Personal Information in a manner consistent with the Controller's obligations under the CCPA/CPRA;\n\n(g) Certifies that it understands and will comply with these restrictions."
+    },
+    "ENGLAND_WALES": {
+      "title": "UK-Specific Provisions",
+      "text": "(a) This DPA is governed by the UK GDPR and the Data Protection Act 2018.\n\n(b) Where Personal Data originating from the UK is transferred to a country without an adequacy decision, the parties agree to the UK International Data Transfer Addendum to the EU Standard Contractual Clauses, issued by the UK Information Commissioner.\n\n(c) The UK Information Commissioner's Office (ICO) shall be the competent supervisory authority for matters arising under this DPA relating to UK Personal Data.\n\n(d) Nothing in this DPA excludes or limits liability for fraud or fraudulent misrepresentation."
+    },
+    "SPAIN": {
+      "title": "Spain-Specific Provisions",
+      "text": "(a) This DPA is subject to the EU GDPR and the Ley Org\u00e1nica 3/2018, de Protecci\u00f3n de Datos Personales y garant\u00eda de los derechos digitales (LOPDGDD).\n\n(b) The Agencia Espa\u00f1ola de Protecci\u00f3n de Datos (AEPD) shall be the competent supervisory authority for matters arising under this DPA.\n\n(c) Where applicable, the Processor will comply with the specific requirements of Spanish data protection law regarding the processing of special categories of data.\n\n(d) Any ambiguity in this DPA will be interpreted in accordance with Spanish civil law principles."
+    }
+  },
+  "signatureBlock": "SIGNED by the parties:\n\n{partyASignatureBlock}\n\n{partyBSignatureBlock}"
+}
