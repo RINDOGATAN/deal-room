@@ -32,10 +32,17 @@ interface JurisdictionRule {
   note?: string;
 }
 
+// Raw DB form — warning/note may be localized {en, es} objects
+interface RawJurisdictionRule {
+  available: boolean;
+  warning?: string | Record<string, string>;
+  note?: string | Record<string, string>;
+}
+
 interface JurisdictionConfig {
-  CALIFORNIA?: JurisdictionRule;
-  ENGLAND_WALES?: JurisdictionRule;
-  SPAIN?: JurisdictionRule;
+  CALIFORNIA?: RawJurisdictionRule;
+  ENGLAND_WALES?: RawJurisdictionRule;
+  SPAIN?: RawJurisdictionRule;
 }
 
 const governingLawLabels: Record<GoverningLaw, string> = {
@@ -160,12 +167,26 @@ export default function NegotiatePage() {
   const progress = Math.round((selections.size / clauses.length) * 100);
   const isComplete = selections.size === clauses.length;
   const governingLaw = deal.governingLaw as GoverningLaw;
+  const contractLang = (deal as { contractLanguage?: string }).contractLanguage || "en";
 
-  // Helper to get jurisdiction rules for an option
+  // Resolve a potentially localized string ({en, es} object or plain string)
+  const resolveLocalized = (value: string | Record<string, string> | undefined): string | undefined => {
+    if (!value) return undefined;
+    if (typeof value === "string") return value;
+    return value[contractLang] || value["en"] || Object.values(value)[0];
+  };
+
+  // Helper to get jurisdiction rules for an option (resolves i18n)
   const getJurisdictionRules = (option: { jurisdictionConfig?: unknown }): JurisdictionRule | null => {
     if (!option.jurisdictionConfig) return null;
     const config = option.jurisdictionConfig as JurisdictionConfig;
-    return config[governingLaw] || null;
+    const raw = config[governingLaw];
+    if (!raw) return null;
+    return {
+      available: raw.available,
+      warning: resolveLocalized(raw.warning),
+      note: resolveLocalized(raw.note),
+    };
   };
 
   // Filter out unavailable options for this jurisdiction
