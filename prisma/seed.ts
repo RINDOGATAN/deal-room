@@ -10,10 +10,12 @@ const SKILLS_DIR = process.env.SKILLS_DIR || "";
 
 interface SkillMetadata {
   contractType: string;
-  displayName: string;
-  description?: string;
+  displayName: string | Record<string, string>;
+  description?: string | Record<string, string>;
   version: string;
   clauseCount: number;
+  jurisdictions?: string[];
+  languages?: string[];
 }
 
 interface SkillManifest {
@@ -89,6 +91,7 @@ type LocalizedArray = string[] | Record<string, string[]>;
 interface SkillClauses {
   contractType: string;
   displayName: LocalizedString;
+  description?: LocalizedString;
   version: string;
   clauses: Clause[];
 }
@@ -105,6 +108,66 @@ function resolveArray(value: string[] | Record<string, string[]> | undefined): s
   if (!value) return [];
   if (Array.isArray(value)) return value;
   return value.en || Object.values(value)[0] || [];
+}
+
+// Check if a value is a localized object (not a plain string/array)
+function isLocalized(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+// Build localizedContent JSON for a ClauseTemplate if it has i18n content
+function buildClauseLocalizedContent(clause: Clause): Record<string, unknown> | undefined {
+  const content: Record<string, unknown> = {};
+  let hasLocalized = false;
+
+  if (isLocalized(clause.title)) { content.title = clause.title; hasLocalized = true; }
+  if (isLocalized(clause.plainDescription)) { content.plainDescription = clause.plainDescription; hasLocalized = true; }
+  if (clause.legalContext && isLocalized(clause.legalContext)) { content.legalContext = clause.legalContext; hasLocalized = true; }
+
+  return hasLocalized ? content : undefined;
+}
+
+// Build localizedContent JSON for a ClauseOption if it has i18n content
+function buildOptionLocalizedContent(option: ClauseOption): Record<string, unknown> | undefined {
+  const content: Record<string, unknown> = {};
+  let hasLocalized = false;
+
+  if (isLocalized(option.label)) { content.label = option.label; hasLocalized = true; }
+  if (isLocalized(option.plainDescription)) { content.plainDescription = option.plainDescription; hasLocalized = true; }
+  if (isLocalized(option.prosPartyA)) { content.prosPartyA = option.prosPartyA; hasLocalized = true; }
+  if (isLocalized(option.consPartyA)) { content.consPartyA = option.consPartyA; hasLocalized = true; }
+  if (isLocalized(option.prosPartyB)) { content.prosPartyB = option.prosPartyB; hasLocalized = true; }
+  if (isLocalized(option.consPartyB)) { content.consPartyB = option.consPartyB; hasLocalized = true; }
+  if (isLocalized(option.legalText)) { content.legalText = option.legalText; hasLocalized = true; }
+
+  return hasLocalized ? content : undefined;
+}
+
+// Infer supported jurisdictions from jurisdictionConfig across all clause options
+function inferJurisdictionsFromClauses(data: SkillClauses): string[] {
+  const jurisdictions = new Set<string>();
+  for (const clause of data.clauses) {
+    for (const option of clause.options) {
+      if (option.jurisdictionConfig) {
+        for (const key of Object.keys(option.jurisdictionConfig)) {
+          jurisdictions.add(key);
+        }
+      }
+    }
+  }
+  return jurisdictions.size > 0 ? Array.from(jurisdictions) : [];
+}
+
+// Infer supported languages from first clause option's label
+function inferLanguagesFromClauses(data: SkillClauses): string[] {
+  for (const clause of data.clauses) {
+    for (const option of clause.options) {
+      if (isLocalized(option.label)) {
+        return Object.keys(option.label as Record<string, string>);
+      }
+    }
+  }
+  return ["en"];
 }
 
 async function main() {
@@ -211,30 +274,60 @@ async function main() {
       console.log(`  Created/updated SkillPackage: ${skillPackage.skillId} (licensing enabled)`);
     }
 
+    // Resolve jurisdictions and languages from metadata/manifest or infer from clauses
+    const jurisdictions =
+      metadata?.jurisdictions || manifest?.jurisdictions || inferJurisdictionsFromClauses(clausesData);
+    const languages =
+      metadata?.languages || manifest?.languages || inferLanguagesFromClauses(clausesData);
+
+    // Build localized display name/description if they are objects
+    const displayNameLocalized = isLocalized(clausesData.displayName)
+      ? clausesData.displayName
+      : metadata?.displayName && isLocalized(metadata.displayName)
+        ? metadata.displayName
+        : undefined;
+
+    const descriptionLocalized = metadata?.description && isLocalized(metadata.description)
+      ? metadata.description
+      : isLocalized(clausesData.description)
+        ? clausesData.description
+        : undefined;
+
+    const resolvedDisplayName = resolveString(clausesData.displayName) || resolveString(metadata?.displayName) || entry.name.toUpperCase();
+    const resolvedDescription = resolveString(metadata?.description) || resolveString(clausesData.description);
+
     // Create or update contract template
     const template = await prisma.contractTemplate.upsert({
       where: { contractType: clausesData.contractType },
       create: {
         contractType: clausesData.contractType,
-        displayName: resolveString(clausesData.displayName) || metadata?.displayName || entry.name.toUpperCase(),
-        description: metadata?.description,
+        displayName: resolvedDisplayName,
+        description: resolvedDescription,
         version: clausesData.version || metadata?.version || "1.0",
         skillPath: skillPath,
         skillPackageId: skillPackage?.id,
         templateFamily: manifest?.templateFamily || null,
         nativeJurisdiction: manifest?.nativeJurisdiction as any || null,
         boilerplate: boilerplate as Prisma.InputJsonValue ?? Prisma.DbNull,
+        jurisdictions,
+        languages,
+        displayNameLocalized: displayNameLocalized as Prisma.InputJsonValue ?? Prisma.DbNull,
+        descriptionLocalized: descriptionLocalized as Prisma.InputJsonValue ?? Prisma.DbNull,
         isActive: true,
       },
       update: {
-        displayName: resolveString(clausesData.displayName) || metadata?.displayName,
-        description: metadata?.description,
+        displayName: resolvedDisplayName,
+        description: resolvedDescription,
         version: clausesData.version || metadata?.version,
         skillPath: skillPath,
         skillPackageId: skillPackage?.id,
         templateFamily: manifest?.templateFamily || null,
         nativeJurisdiction: manifest?.nativeJurisdiction as any || null,
         boilerplate: boilerplate as Prisma.InputJsonValue ?? Prisma.DbNull,
+        jurisdictions,
+        languages,
+        displayNameLocalized: displayNameLocalized as Prisma.InputJsonValue ?? Prisma.DbNull,
+        descriptionLocalized: descriptionLocalized as Prisma.InputJsonValue ?? Prisma.DbNull,
       },
     });
 
@@ -242,6 +335,8 @@ async function main() {
 
     // Create or update clauses
     for (const clause of clausesData.clauses) {
+      const clauseLocalized = buildClauseLocalizedContent(clause);
+
       const clauseTemplate = await prisma.clauseTemplate.upsert({
         where: {
           contractTemplateId_clauseId: {
@@ -258,6 +353,7 @@ async function main() {
           plainDescription: resolveString(clause.plainDescription),
           legalContext: resolveString(clause.legalContext),
           isRequired: clause.isRequired ?? true,
+          localizedContent: clauseLocalized as Prisma.InputJsonValue ?? Prisma.DbNull,
         },
         update: {
           title: resolveString(clause.title),
@@ -266,11 +362,14 @@ async function main() {
           plainDescription: resolveString(clause.plainDescription),
           legalContext: resolveString(clause.legalContext),
           isRequired: clause.isRequired ?? true,
+          localizedContent: clauseLocalized as Prisma.InputJsonValue ?? Prisma.DbNull,
         },
       });
 
       // Create or update options
       for (const option of clause.options) {
+        const optionLocalized = buildOptionLocalizedContent(option);
+
         await prisma.clauseOption.upsert({
           where: {
             clauseTemplateId_optionId: {
@@ -293,6 +392,7 @@ async function main() {
             biasPartyA: option.biasPartyA,
             biasPartyB: option.biasPartyB,
             jurisdictionConfig: option.jurisdictionConfig as Prisma.InputJsonValue | undefined,
+            localizedContent: optionLocalized as Prisma.InputJsonValue ?? Prisma.DbNull,
           },
           update: {
             code: option.code,
@@ -307,6 +407,7 @@ async function main() {
             biasPartyA: option.biasPartyA,
             biasPartyB: option.biasPartyB,
             jurisdictionConfig: option.jurisdictionConfig as Prisma.InputJsonValue | undefined,
+            localizedContent: optionLocalized as Prisma.InputJsonValue ?? Prisma.DbNull,
           },
         });
       }

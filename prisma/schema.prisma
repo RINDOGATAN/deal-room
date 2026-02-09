@@ -265,6 +265,10 @@ model ContractTemplate {
   boilerplate     Json?    // Standard contract sections (preamble, definitions, etc.)
   templateFamily     String?       // e.g., "FOUNDERS", "SAFE" — groups jurisdiction variants
   nativeJurisdiction GoverningLaw? // Which jurisdiction this template is native to (null = universal)
+  jurisdictions          String[]  // Supported jurisdictions (e.g., ["CALIFORNIA","ENGLAND_WALES","SPAIN"])
+  languages              String[]  // Supported languages (e.g., ["en","es"])
+  displayNameLocalized   Json?     // {"en":"...","es":"..."}
+  descriptionLocalized   Json?     // {"en":"...","es":"..."}
   isActive        Boolean  @default(true)
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
@@ -291,6 +295,7 @@ model ClauseTemplate {
   plainDescription String   @db.Text
   legalContext     String?  @db.Text
   isRequired       Boolean  @default(true)
+  localizedContent Json?    // {"title":{"en":"...","es":"..."},"plainDescription":{...},"legalContext":{...}}
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
 
@@ -318,6 +323,7 @@ model ClauseOption {
   biasPartyA       Float    // -1 to 1, how much this option favors Party A
   biasPartyB       Float    // -1 to 1, how much this option favors Party B
   jurisdictionConfig Json?  // Jurisdiction-specific availability and warnings
+  localizedContent Json?    // {"label":{...},"plainDescription":{...},"prosPartyA":{...},...,"legalText":{...}}
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
 

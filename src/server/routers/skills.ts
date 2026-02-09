@@ -21,6 +21,8 @@ export const skillsRouter = createTRPCRouter({
         version: true,
         templateFamily: true,
         nativeJurisdiction: true,
+        jurisdictions: true,
+        languages: true,
         skillPackageId: true, // Include to check if licensed
         _count: {
           select: {
@@ -40,13 +42,20 @@ export const skillsRouter = createTRPCRouter({
       clauseCount: t._count.clauses,
       templateFamily: t.templateFamily,
       nativeJurisdiction: t.nativeJurisdiction,
+      jurisdictions: t.jurisdictions,
+      languages: t.languages,
       requiresLicense: !!t.skillPackageId, // true = paid skill, false = free
     }));
   }),
 
   // List templates with user's entitlement status (for authenticated users)
-  listTemplatesWithAccess: protectedProcedure.query(async ({ ctx }) => {
+  listTemplatesWithAccess: protectedProcedure
+    .input(z.object({
+      language: z.string().optional(),
+    }).optional())
+    .query(async ({ ctx, input }) => {
     const userEmail = ctx.session.user.email;
+    const language = input?.language;
 
     // Get all active templates
     const templates = await ctx.prisma.contractTemplate.findMany({
@@ -62,6 +71,10 @@ export const skillsRouter = createTRPCRouter({
         version: true,
         templateFamily: true,
         nativeJurisdiction: true,
+        jurisdictions: true,
+        languages: true,
+        displayNameLocalized: true,
+        descriptionLocalized: true,
         skillPackageId: true,
         skillPackage: {
           select: {
@@ -104,15 +117,27 @@ export const skillsRouter = createTRPCRouter({
         ? entitlementMap.get(t.skillPackageId)
         : null;
 
+      // Resolve localized displayName/description if language specified
+      let displayName = t.displayName;
+      let description = t.description;
+      if (language && language !== "en") {
+        const dnLocalized = t.displayNameLocalized as Record<string, string> | null;
+        const descLocalized = t.descriptionLocalized as Record<string, string> | null;
+        if (dnLocalized?.[language]) displayName = dnLocalized[language];
+        if (descLocalized?.[language]) description = descLocalized[language];
+      }
+
       return {
         id: t.id,
         contractType: t.contractType,
-        displayName: t.displayName,
-        description: t.description,
+        displayName,
+        description,
         version: t.version,
         clauseCount: t._count.clauses,
         templateFamily: t.templateFamily,
         nativeJurisdiction: t.nativeJurisdiction,
+        jurisdictions: t.jurisdictions,
+        languages: t.languages,
         requiresLicense,
         // Access info for licensed skills
         hasAccess: !requiresLicense || !!entitlement,
