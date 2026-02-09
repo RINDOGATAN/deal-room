@@ -420,8 +420,8 @@ legalskills/
 ### Creating a New Skill
 
 1. Copy `_template/` to a new directory (e.g., `employment-agreement/`)
-2. Edit `metadata.json` with skill info
-3. Edit `clauses.json` with clauses and options
+2. Edit `metadata.json` with skill info (including `jurisdictions` and `languages`)
+3. Edit `clauses.json` with clauses and options (use `{en, es}` objects for i18n)
 4. Update `SKILL.md` with documentation
 5. Push to `main` branch
 
@@ -493,3 +493,97 @@ Skills with a `manifest.json` file are **licensed** and require entitlements. Sk
 | Licensed skill, no entitlement | `entitled: false` - "No entitlement found" |
 | Licensed skill, with entitlement | `entitled: true` - license type returned |
 | Unlicensed skill | `entitled: true` - "Free template"
+
+---
+
+## Jurisdiction & Language Constraints
+
+Contract legal text is jurisdiction-native — Spanish law requires Spanish legal terminology to be enforceable. Each contract skill declares which jurisdictions and languages it actually supports, and the platform enforces those constraints at deal creation time.
+
+### How It Works
+
+1. **Skill metadata declares capabilities** — `jurisdictions` and `languages` arrays in `metadata.json` (built-in) or `manifest.json` (licensed)
+2. **Seed/sync stores them on `ContractTemplate`** — also preserves full i18n content in `localizedContent` JSON on `ClauseTemplate` and `ClauseOption`
+3. **Deal creation UI enforces constraints** — unavailable jurisdictions/languages are greyed out; templates are filtered by the user's platform locale
+4. **Server validates on create** — the `deal.create` mutation rejects requests with unsupported jurisdiction or language
+5. **Negotiate page resolves i18n** — `deal.getById` resolves `localizedContent` to the deal's `contractLanguage`, so Spanish deals render Spanish labels, descriptions, pros/cons, and legal text
+
+### Metadata Fields
+
+#### `metadata.json` (built-in skills)
+
+```json
+{
+  "contractType": "DPA",
+  "displayName": { "en": "Data Processing Agreement", "es": "Acuerdo de Tratamiento de Datos" },
+  "description": { "en": "...", "es": "..." },
+  "version": "1.0",
+  "clauseCount": 12,
+  "jurisdictions": ["CALIFORNIA", "ENGLAND_WALES", "SPAIN"],
+  "languages": ["en", "es"]
+}
+```
+
+#### `manifest.json` (licensed skills)
+
+Licensed skills already declare `jurisdictions` and `languages` in their manifest. These are read by the seed and stored on `ContractTemplate`.
+
+### Database Schema
+
+Added to `ContractTemplate`:
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `jurisdictions` | `String[]` | Supported jurisdictions (e.g., `["CALIFORNIA","ENGLAND_WALES","SPAIN"]`) |
+| `languages` | `String[]` | Supported languages (e.g., `["en","es"]`) |
+| `displayNameLocalized` | `Json?` | `{"en":"...","es":"..."}` |
+| `descriptionLocalized` | `Json?` | `{"en":"...","es":"..."}` |
+
+Added to `ClauseTemplate`:
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `localizedContent` | `Json?` | `{"title":{"en":"...","es":"..."},"plainDescription":{...},"legalContext":{...}}` |
+
+Added to `ClauseOption`:
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `localizedContent` | `Json?` | `{"label":{...},"plainDescription":{...},"prosPartyA":{...},"consPartyA":{...},"prosPartyB":{...},"consPartyB":{...},"legalText":{...}}` |
+
+Flat English fields (`title`, `label`, `plainDescription`, etc.) are still populated as before — `localizedContent` is additive and used only for non-English resolution.
+
+### Inference Fallbacks
+
+If `jurisdictions` or `languages` are not explicitly set in metadata/manifest, the seed infers them:
+
+- **Jurisdictions**: scanned from `jurisdictionConfig` keys across all clause options
+- **Languages**: detected from the first localized string (e.g., `option.label` with `{en, es}` keys)
+
+### Deal Creation UI Behavior
+
+| Scenario | UI Behavior |
+|----------|-------------|
+| Template has `languages: ["en","es"]`, user locale is `es` | Template is visible |
+| Template has `languages: ["en"]`, user locale is `es` | Template is hidden |
+| Template has `jurisdictions: ["CALIFORNIA","SPAIN"]` | England & Wales is greyed out |
+| Only one language available for selected jurisdiction | Language auto-selected |
+| User selects unsupported combination | Server returns `BAD_REQUEST` |
+
+### i18n Content in `clauses.json`
+
+Clause files use `{en, es}` objects for all translatable fields:
+
+```json
+{
+  "title": { "en": "Scope of Processing", "es": "Alcance del Tratamiento" },
+  "plainDescription": { "en": "...", "es": "..." },
+  "options": [{
+    "label": { "en": "Narrow", "es": "Restringido" },
+    "prosPartyA": { "en": ["..."], "es": ["..."] },
+    "legalText": { "en": "...", "es": "..." }
+  }]
+}
+```
+
+Plain strings (without localization) are treated as English and continue to work as before — this is fully backwards-compatible
