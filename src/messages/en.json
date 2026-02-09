@@ -40,14 +40,12 @@
     "signingIn": "Signing in...",
     "tryDemo": "Try Demo",
     "trialDescription": "No sign-up required. Explore the platform instantly.",
-    "bySigningIn": "By signing in, you agree to our {termsLink} and {privacyLink}",
-    "termsOfUse": "Terms of Use",
-    "privacyPolicy": "Privacy Policy",
+    "bySigningIn": "By signing in, you agree to our <termsLink>Terms of Use</termsLink> and <privacyLink>Privacy Policy</privacyLink>",
     "failedMagicLink": "Failed to send magic link. Please try again.",
     "unexpectedError": "An unexpected error occurred.",
     "googleSignInFailed": "Google sign-in failed.",
     "dealroom": "Dealroom",
-    "poweredBy": "A contract negotiation platform powered by {link}",
+    "poweredBy": "A contract negotiation platform powered by <link>North End Law</link>",
     "secureContract": "Secure contract negotiation platform"
   },
   "deals": {

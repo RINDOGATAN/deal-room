@@ -92,14 +92,14 @@ export default function SignInPage() {
           <h1 className="text-3xl font-bold mb-2 text-white uppercase tracking-wide">{t("dealroom")}</h1>
           <p className="text-muted-foreground mb-4">
             {t.rich("poweredBy", {
-              link: () => (
+              link: (chunks) => (
                 <a
                   href="https://northend.law"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-primary hover:underline"
                 >
-                  North End Law
+                  {chunks}
                 </a>
               ),
             })}
@@ -193,24 +193,24 @@ export default function SignInPage() {
         <div className="mt-6 pt-6 border-t border-border text-center">
           <p className="text-xs text-muted-foreground">
             {t.rich("bySigningIn", {
-              termsLink: () => (
+              termsLink: (chunks) => (
                 <a
                   href="https://northend.law/terms-of-use"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-primary hover:underline"
                 >
-                  {t("termsOfUse")}
+                  {chunks}
                 </a>
               ),
-              privacyLink: () => (
+              privacyLink: (chunks) => (
                 <a
                   href="https://northend.law/privacy-policy"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-primary hover:underline"
                 >
-                  {t("privacyPolicy")}
+                  {chunks}
                 </a>
               ),
             })}
