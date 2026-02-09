@@ -52,7 +52,7 @@ export const authOptions: NextAuthOptions = {
         sameSite: "lax",
         path: "/",
         secure: true,
-        domain: process.env.NODE_ENV === "production" ? ".northend.law" : undefined,
+        domain: process.env.NODE_ENV === "production" ? ".todo.law" : undefined,
       },
     },
     callbackUrl: {
@@ -61,7 +61,7 @@ export const authOptions: NextAuthOptions = {
         sameSite: "lax",
         path: "/",
         secure: true,
-        domain: process.env.NODE_ENV === "production" ? ".northend.law" : undefined,
+        domain: process.env.NODE_ENV === "production" ? ".todo.law" : undefined,
       },
     },
     csrfToken: {
