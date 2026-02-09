@@ -172,6 +172,9 @@
     "submitAllSelections": "Submit All Selections",
     "submitting": "Submitting...",
     "saving": "Saving...",
+    "allClausesSelected": "All clauses pre-selected",
+    "allClausesSelectedDescription": "You can review each clause individually or skip ahead to submit.",
+    "skipToSubmit": "Skip to Submit",
     "toastMessages": {
       "bothPartiesSubmitted": "Both parties have submitted! Generating compromise suggestions...",
       "selectionsSubmitted": "Selections submitted successfully!",
