@@ -91,18 +91,7 @@ export default function SignInPage() {
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold mb-2 text-white uppercase tracking-wide">{t("dealroom")}</h1>
           <p className="text-muted-foreground mb-4">
-            {t.rich("poweredBy", {
-              link: (chunks) => (
-                <a
-                  href="https://northend.law"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-primary hover:underline"
-                >
-                  {chunks}
-                </a>
-              ),
-            })}
+            {t("poweredBy")}
           </p>
         </div>
 
