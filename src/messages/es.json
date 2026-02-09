@@ -172,6 +172,9 @@
     "submitAllSelections": "Enviar Todas las Selecciones",
     "submitting": "Enviando...",
     "saving": "Guardando...",
+    "allClausesSelected": "Todas las cláusulas pre-seleccionadas",
+    "allClausesSelectedDescription": "Puedes revisar cada cláusula individualmente o ir directamente al envío.",
+    "skipToSubmit": "Ir al Envío",
     "toastMessages": {
       "bothPartiesSubmitted": "¡Ambas partes han enviado! Generando sugerencias de compromiso...",
       "selectionsSubmitted": "¡Selecciones enviadas exitosamente!",

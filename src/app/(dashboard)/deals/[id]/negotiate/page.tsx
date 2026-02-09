@@ -17,6 +17,7 @@ import {
   Sliders,
   Copy,
   List,
+  ChevronsRight,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
@@ -229,6 +230,23 @@ export default function NegotiatePage() {
     }
   };
 
+  const handleSkipToSubmit = async () => {
+    const selectionsArray = Array.from(selections.values());
+    if (selectionsArray.length > 0) {
+      try {
+        await saveSelections.mutateAsync({
+          dealRoomId: dealId,
+          selections: selectionsArray,
+        });
+      } catch (e) {
+        // Silent save failure — don't block navigation
+      }
+    }
+    setCurrentClauseIndex(clauses.length - 1);
+    setExpandedOption(null);
+    setShowProsConsFor(null);
+  };
+
   const handleSubmit = async () => {
     if (!isComplete) {
       toast.error(t("toastMessages.pleaseSelectAll"));
@@ -305,6 +323,26 @@ export default function NegotiatePage() {
               </div>
             </button>
           </label>
+        </div>
+      )}
+
+      {/* Skip to Submit banner — shown when all clauses selected but not on last clause */}
+      {isComplete && currentClauseIndex < clauses.length - 1 && (
+        <div className="card-brutal mb-6 border-primary/30 bg-primary/5">
+          <div className="flex items-center justify-between gap-4">
+            <div>
+              <p className="font-semibold">{t("allClausesSelected")}</p>
+              <p className="text-sm text-muted-foreground">{t("allClausesSelectedDescription")}</p>
+            </div>
+            <button
+              onClick={handleSkipToSubmit}
+              disabled={saveSelections.isPending}
+              className="btn-brutal flex items-center gap-2 flex-shrink-0 disabled:opacity-50"
+            >
+              {saveSelections.isPending ? t("saving") : t("skipToSubmit")}
+              <ChevronsRight className="w-4 h-4" />
+            </button>
+          </div>
         </div>
       )}
 
