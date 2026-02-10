@@ -5,6 +5,7 @@
  */
 
 import prisma from "@/lib/prisma";
+import { resolveLocalizedString } from "@/server/services/skills/i18n";
 
 export interface PartyData {
   name: string;
@@ -38,6 +39,7 @@ export interface BoilerplateData {
   generalProvisions: StandardClause[];
   jurisdictionProvision: StandardClause | null;
   signatureBlock: string;
+  partyLabels?: { partyA: string; partyB: string };
 }
 
 export interface ContractData {
@@ -50,12 +52,22 @@ export interface ContractData {
   partyB: PartyData;
   clauses: ClauseData[];
   boilerplate: BoilerplateData | null;
+  language: string;
 }
 
-const GOVERNING_LAW_DISPLAY: Record<string, string> = {
-  CALIFORNIA: "State of California, United States of America",
-  ENGLAND_WALES: "England and Wales, United Kingdom",
-  SPAIN: "Kingdom of Spain",
+const GOVERNING_LAW_DISPLAY: Record<string, Record<string, string>> = {
+  CALIFORNIA: {
+    en: "State of California, United States of America",
+    es: "Estado de California, EE.UU.",
+  },
+  ENGLAND_WALES: {
+    en: "England and Wales, United Kingdom",
+    es: "Inglaterra y Gales, Reino Unido",
+  },
+  SPAIN: {
+    en: "Kingdom of Spain",
+    es: "Reino de España",
+  },
 };
 
 /**
@@ -91,6 +103,7 @@ function processBoilerplate(
     generalProvisions?: Array<{ title: string; text: string }>;
     jurisdictionProvisions?: Record<string, { title: string; text: string }>;
     signatureBlock?: string;
+    partyLabels?: { partyA: string; partyB: string };
   };
 
   // Get jurisdiction-specific provision
@@ -124,6 +137,7 @@ function processBoilerplate(
     })),
     jurisdictionProvision,
     signatureBlock: interpolateText(bp.signatureBlock || "", variables),
+    partyLabels: bp.partyLabels || undefined,
   };
 }
 
@@ -171,6 +185,10 @@ export async function generateContractData(
     return null;
   }
 
+  // Determine contract language
+  const language = deal.contractLanguage || "en";
+  const dateLocale = language === "es" ? "es-ES" : "en-US";
+
   // Compile clauses with agreed options
   const clauses: ClauseData[] = [];
 
@@ -178,6 +196,12 @@ export async function generateContractData(
     if (clause.status !== "AGREED" || !clause.agreedOptionId) {
       continue;
     }
+
+    // Resolve localized clause title
+    const ctLocalized = clause.clauseTemplate.localizedContent as Record<string, Record<string, string>> | null;
+    const clauseTitle = ctLocalized?.title
+      ? resolveLocalizedString(ctLocalized.title, language)
+      : clause.clauseTemplate.title;
 
     // Find the agreed option from the clause template options
     const agreedOption = clause.clauseTemplate.options.find(
@@ -188,26 +212,38 @@ export async function generateContractData(
       // Fallback: try to find from selection if agreedOptionId doesn't match
       const selection = clause.selections[0];
       if (selection?.option) {
+        const selLocalized = selection.option.localizedContent as Record<string, unknown> | null;
         clauses.push({
-          title: clause.clauseTemplate.title,
+          title: clauseTitle,
           category: clause.clauseTemplate.category,
-          agreedOption: selection.option.label,
-          legalText: selection.option.legalText,
+          agreedOption: selLocalized?.label
+            ? resolveLocalizedString(selLocalized.label, language)
+            : selection.option.label,
+          legalText: selLocalized?.legalText
+            ? resolveLocalizedString(selLocalized.legalText, language)
+            : selection.option.legalText,
         });
       }
       continue;
     }
 
+    // Resolve localized option fields
+    const optLocalized = agreedOption.localizedContent as Record<string, unknown> | null;
+
     clauses.push({
-      title: clause.clauseTemplate.title,
+      title: clauseTitle,
       category: clause.clauseTemplate.category,
-      agreedOption: agreedOption.label,
-      legalText: agreedOption.legalText,
+      agreedOption: optLocalized?.label
+        ? resolveLocalizedString(optLocalized.label, language)
+        : agreedOption.label,
+      legalText: optLocalized?.legalText
+        ? resolveLocalizedString(optLocalized.legalText, language)
+        : agreedOption.legalText,
     });
   }
 
   // Format date for boilerplate
-  const effectiveDate = deal.createdAt.toLocaleDateString("en-US", {
+  const effectiveDate = deal.createdAt.toLocaleDateString(dateLocale, {
     year: "numeric",
     month: "long",
     day: "numeric",
@@ -241,7 +277,9 @@ export async function generateContractData(
     dealName: deal.name,
     contractType: deal.contractTemplate.displayName,
     governingLaw:
-      GOVERNING_LAW_DISPLAY[deal.governingLaw] || deal.governingLaw,
+      GOVERNING_LAW_DISPLAY[deal.governingLaw]?.[language] ||
+      GOVERNING_LAW_DISPLAY[deal.governingLaw]?.en ||
+      deal.governingLaw,
     governingLawKey: deal.governingLaw,
     createdAt: deal.createdAt,
     partyA: {
@@ -256,6 +294,7 @@ export async function generateContractData(
     },
     clauses,
     boilerplate,
+    language,
   };
 }
 

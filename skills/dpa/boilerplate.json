@@ -106,5 +106,9 @@
       "text": "(a) This DPA is subject to the EU GDPR and the Ley Org\u00e1nica 3/2018, de Protecci\u00f3n de Datos Personales y garant\u00eda de los derechos digitales (LOPDGDD).\n\n(b) The Agencia Espa\u00f1ola de Protecci\u00f3n de Datos (AEPD) shall be the competent supervisory authority for matters arising under this DPA.\n\n(c) Where applicable, the Processor will comply with the specific requirements of Spanish data protection law regarding the processing of special categories of data.\n\n(d) Any ambiguity in this DPA will be interpreted in accordance with Spanish civil law principles."
     }
   },
-  "signatureBlock": "SIGNED by the parties:\n\n{partyASignatureBlock}\n\n{partyBSignatureBlock}"
+  "signatureBlock": "SIGNED by the parties:\n\n{partyASignatureBlock}\n\n{partyBSignatureBlock}",
+  "partyLabels": {
+    "partyA": "Controller",
+    "partyB": "Processor"
+  }
 }
