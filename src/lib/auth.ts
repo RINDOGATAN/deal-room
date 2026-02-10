@@ -1,4 +1,5 @@
 import { type NextAuthOptions } from "next-auth";
+import CredentialsProvider from "next-auth/providers/credentials";
 import EmailProvider from "next-auth/providers/email";
 import GoogleProvider from "next-auth/providers/google";
 import { PrismaAdapter } from "@auth/prisma-adapter";
@@ -6,6 +7,7 @@ import { Resend } from "resend";
 import prisma from "@/lib/prisma";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
+const isProduction = process.env.NODE_ENV === "production";
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma) as NextAuthOptions["adapter"],
@@ -40,37 +42,72 @@ export const authOptions: NextAuthOptions = {
         }
       },
     }),
+    // E2E test credentials provider — only active when E2E_CREDENTIALS_SECRET is set
+    ...(process.env.E2E_CREDENTIALS_SECRET
+      ? [
+          CredentialsProvider({
+            id: "e2e-credentials",
+            name: "E2E Test",
+            credentials: {
+              email: { type: "email" },
+              secret: { type: "password" },
+            },
+            async authorize(credentials) {
+              if (
+                !credentials?.secret ||
+                credentials.secret !== process.env.E2E_CREDENTIALS_SECRET
+              ) {
+                return null;
+              }
+              const email = credentials.email;
+              let user = await prisma.user.findUnique({ where: { email } });
+              if (!user) {
+                user = await prisma.user.create({
+                  data: { email, emailVerified: new Date() },
+                });
+              }
+              return { id: user.id, email: user.email, name: user.name };
+            },
+          }),
+        ]
+      : []),
   ],
   session: {
     strategy: "jwt",
   },
   cookies: {
     sessionToken: {
-      name: `__Secure-next-auth.session-token`,
+      name: isProduction
+        ? `__Secure-next-auth.session-token`
+        : `next-auth.session-token`,
       options: {
         httpOnly: true,
         sameSite: "lax",
         path: "/",
-        secure: true,
-        domain: process.env.NODE_ENV === "production" ? ".todo.law" : undefined,
+        secure: isProduction,
+        domain: isProduction ? ".todo.law" : undefined,
       },
     },
     callbackUrl: {
-      name: `__Secure-next-auth.callback-url`,
+      name: isProduction
+        ? `__Secure-next-auth.callback-url`
+        : `next-auth.callback-url`,
       options: {
         sameSite: "lax",
         path: "/",
-        secure: true,
-        domain: process.env.NODE_ENV === "production" ? ".todo.law" : undefined,
+        secure: isProduction,
+        domain: isProduction ? ".todo.law" : undefined,
       },
     },
     csrfToken: {
-      name: `__Host-next-auth.csrf-token`,
+      name: isProduction
+        ? `__Host-next-auth.csrf-token`
+        : `next-auth.csrf-token`,
       options: {
         httpOnly: true,
         sameSite: "lax",
         path: "/",
-        secure: true,
+        secure: isProduction,
       },
     },
   },
