@@ -333,7 +333,9 @@ export function ContractPDF({ data }: ContractPDFProps) {
               : data.contractType}
           </Text>
           <Text style={styles.subtitle}>
-            {labels.effectiveDate}: {formatDate(data.createdAt, lang)}
+            {lang === "es"
+              ? formatDate(data.createdAt, lang)
+              : `${labels.effectiveDate}: ${formatDate(data.createdAt, lang)}`}
           </Text>
         </View>
 
