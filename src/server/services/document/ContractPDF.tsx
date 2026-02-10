@@ -258,8 +258,50 @@ const styles = StyleSheet.create({
   },
 });
 
-function formatDate(date: Date): string {
-  return date.toLocaleDateString("en-US", {
+const PDF_LABELS: Record<string, Record<string, string>> = {
+  en: {
+    effectiveDate: "Effective Date",
+    background: "Background",
+    definitions: "Definitions",
+    inThisAgreement: "In this Agreement:",
+    negotiatedTerms: "Negotiated Terms",
+    generalProvisions: "General Provisions",
+    governingLaw: "Governing Law",
+    signatures: "Signatures",
+    inWitnessWhereof:
+      "IN WITNESS WHEREOF, the parties have executed this Agreement as of the Effective Date.",
+    date: "Date:",
+    parties: "Parties",
+    termsAndConditions: "Terms and Conditions",
+    page: "Page",
+    of: "of",
+    partyA: "Party A",
+    partyB: "Party B",
+  },
+  es: {
+    effectiveDate: "Fecha de Efecto",
+    background: "Antecedentes",
+    definitions: "Definiciones",
+    inThisAgreement: "En el presente Acuerdo:",
+    negotiatedTerms: "Términos Negociados",
+    generalProvisions: "Disposiciones Generales",
+    governingLaw: "Ley Aplicable",
+    signatures: "Firmas",
+    inWitnessWhereof:
+      "EN FE DE LO CUAL, las partes han suscrito el presente Acuerdo en la Fecha de Efecto.",
+    date: "Fecha:",
+    parties: "Partes",
+    termsAndConditions: "Términos y Condiciones",
+    page: "Página",
+    of: "de",
+    partyA: "Parte A",
+    partyB: "Parte B",
+  },
+};
+
+function formatDate(date: Date, language: string = "en"): string {
+  const locale = language === "es" ? "es-ES" : "en-US";
+  return date.toLocaleDateString(locale, {
     year: "numeric",
     month: "long",
     day: "numeric",
@@ -273,6 +315,8 @@ interface ContractPDFProps {
 export function ContractPDF({ data }: ContractPDFProps) {
   const hasBoilerplate = data.boilerplate !== null;
   let sectionNumber = 1;
+  const lang = data.language || "en";
+  const labels = PDF_LABELS[lang] || PDF_LABELS.en;
 
   return (
     <Document
@@ -289,7 +333,7 @@ export function ContractPDF({ data }: ContractPDFProps) {
               : data.contractType}
           </Text>
           <Text style={styles.subtitle}>
-            Effective Date: {formatDate(data.createdAt)}
+            {labels.effectiveDate}: {formatDate(data.createdAt, lang)}
           </Text>
         </View>
 
@@ -305,7 +349,7 @@ export function ContractPDF({ data }: ContractPDFProps) {
             {/* Background (if present) */}
             {data.boilerplate!.background && (
               <View style={styles.section}>
-                <Text style={styles.sectionTitle}>Background</Text>
+                <Text style={styles.sectionTitle}>{labels.background}</Text>
                 <Text style={styles.backgroundText}>
                   {data.boilerplate!.background}
                 </Text>
@@ -316,10 +360,10 @@ export function ContractPDF({ data }: ContractPDFProps) {
             {data.boilerplate!.definitions.length > 0 && (
               <View style={styles.section}>
                 <Text style={styles.sectionTitle}>
-                  {sectionNumber++}. Definitions
+                  {sectionNumber++}. {labels.definitions}
                 </Text>
                 <Text style={{ fontSize: 10, marginBottom: 10 }}>
-                  In this Agreement:
+                  {labels.inThisAgreement}
                 </Text>
                 {data.boilerplate!.definitions.map((def, index) => (
                   <View key={index} style={styles.definitionContainer}>
@@ -349,7 +393,7 @@ export function ContractPDF({ data }: ContractPDFProps) {
             {data.clauses.length > 0 && (
               <View style={styles.section}>
                 <Text style={styles.negotiatedTermsHeader}>
-                  {sectionNumber++}. Negotiated Terms
+                  {sectionNumber++}. {labels.negotiatedTerms}
                 </Text>
                 {data.clauses.map((clause, index) => (
                   <View
@@ -373,7 +417,7 @@ export function ContractPDF({ data }: ContractPDFProps) {
             {data.boilerplate!.generalProvisions.length > 0 && (
               <View style={styles.section}>
                 <Text style={styles.sectionTitle}>
-                  {sectionNumber++}. General Provisions
+                  {sectionNumber++}. {labels.generalProvisions}
                 </Text>
                 {data.boilerplate!.generalProvisions.map((provision, index) => (
                   <View
@@ -405,28 +449,20 @@ export function ContractPDF({ data }: ContractPDFProps) {
 
             {/* Governing Law Box */}
             <View style={styles.governingLawBox}>
-              <Text style={styles.governingLawLabel}>Governing Law</Text>
+              <Text style={styles.governingLawLabel}>{labels.governingLaw}</Text>
               <Text style={styles.governingLawText}>{data.governingLaw}</Text>
             </View>
 
             {/* Signature Section */}
             <View style={styles.signatureSection} wrap={false}>
-              <Text style={styles.sectionTitle}>{sectionNumber}. Signatures</Text>
+              <Text style={styles.sectionTitle}>{sectionNumber}. {labels.signatures}</Text>
               <Text style={styles.signatureText}>
-                IN WITNESS WHEREOF, the parties have executed this Agreement as
-                of the Effective Date.
+                {labels.inWitnessWhereof}
               </Text>
               <View style={styles.signatureGrid}>
                 <View style={styles.signatureBox}>
                   <Text style={styles.signatureLabel}>
-                    {data.boilerplate!.contractTitle.includes("NDA")
-                      ? "Party A"
-                      : data.boilerplate!.contractTitle.includes("DPA")
-                        ? "Controller"
-                        : data.boilerplate!.contractTitle.includes("MSA") ||
-                            data.boilerplate!.contractTitle.includes("SaaS")
-                          ? "Provider"
-                          : "Party A"}
+                    {data.boilerplate!.partyLabels?.partyA || labels.partyA}
                   </Text>
                   <View style={styles.signatureLine} />
                   <Text style={styles.signaturePartyName}>
@@ -437,19 +473,12 @@ export function ContractPDF({ data }: ContractPDFProps) {
                       {data.partyA.name}
                     </Text>
                   )}
-                  <Text style={styles.signatureDate}>Date:</Text>
+                  <Text style={styles.signatureDate}>{labels.date}</Text>
                   <View style={styles.dateLine} />
                 </View>
                 <View style={styles.signatureBox}>
                   <Text style={styles.signatureLabel}>
-                    {data.boilerplate!.contractTitle.includes("NDA")
-                      ? "Party B"
-                      : data.boilerplate!.contractTitle.includes("DPA")
-                        ? "Processor"
-                        : data.boilerplate!.contractTitle.includes("MSA") ||
-                            data.boilerplate!.contractTitle.includes("SaaS")
-                          ? "Customer"
-                          : "Party B"}
+                    {data.boilerplate!.partyLabels?.partyB || labels.partyB}
                   </Text>
                   <View style={styles.signatureLine} />
                   <Text style={styles.signaturePartyName}>
@@ -460,7 +489,7 @@ export function ContractPDF({ data }: ContractPDFProps) {
                       {data.partyB.name}
                     </Text>
                   )}
-                  <Text style={styles.signatureDate}>Date:</Text>
+                  <Text style={styles.signatureDate}>{labels.date}</Text>
                   <View style={styles.dateLine} />
                 </View>
               </View>
@@ -471,10 +500,10 @@ export function ContractPDF({ data }: ContractPDFProps) {
             {/* Fallback: Simple format when no boilerplate */}
             {/* Parties */}
             <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Parties</Text>
+              <Text style={styles.sectionTitle}>{labels.parties}</Text>
               <View style={styles.partiesGrid}>
                 <View style={styles.partyBox}>
-                  <Text style={styles.partyLabel}>Party A</Text>
+                  <Text style={styles.partyLabel}>{labels.partyA}</Text>
                   <Text style={styles.partyName}>{data.partyA.name}</Text>
                   {data.partyA.company && (
                     <Text style={styles.partyCompany}>
@@ -484,7 +513,7 @@ export function ContractPDF({ data }: ContractPDFProps) {
                   <Text style={styles.partyEmail}>{data.partyA.email}</Text>
                 </View>
                 <View style={styles.partyBox}>
-                  <Text style={styles.partyLabel}>Party B</Text>
+                  <Text style={styles.partyLabel}>{labels.partyB}</Text>
                   <Text style={styles.partyName}>{data.partyB.name}</Text>
                   {data.partyB.company && (
                     <Text style={styles.partyCompany}>
@@ -498,13 +527,13 @@ export function ContractPDF({ data }: ContractPDFProps) {
 
             {/* Governing Law */}
             <View style={styles.governingLawBox}>
-              <Text style={styles.governingLawLabel}>Governing Law</Text>
+              <Text style={styles.governingLawLabel}>{labels.governingLaw}</Text>
               <Text style={styles.governingLawText}>{data.governingLaw}</Text>
             </View>
 
             {/* Terms and Conditions */}
             <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Terms and Conditions</Text>
+              <Text style={styles.sectionTitle}>{labels.termsAndConditions}</Text>
               {data.clauses.map((clause, index) => (
                 <View
                   key={index}
@@ -522,14 +551,13 @@ export function ContractPDF({ data }: ContractPDFProps) {
 
             {/* Signature Section */}
             <View style={styles.signatureSection} wrap={false}>
-              <Text style={styles.sectionTitle}>Signatures</Text>
+              <Text style={styles.sectionTitle}>{labels.signatures}</Text>
               <Text style={{ fontSize: 10, marginBottom: 20 }}>
-                IN WITNESS WHEREOF, the parties have executed this Agreement as
-                of the date first written above.
+                {labels.inWitnessWhereof}
               </Text>
               <View style={styles.signatureGrid}>
                 <View style={styles.signatureBox}>
-                  <Text style={styles.signatureLabel}>Party A</Text>
+                  <Text style={styles.signatureLabel}>{labels.partyA}</Text>
                   <View style={styles.signatureLine} />
                   <Text style={styles.signaturePartyName}>
                     {data.partyA.name}
@@ -539,11 +567,11 @@ export function ContractPDF({ data }: ContractPDFProps) {
                       {data.partyA.company}
                     </Text>
                   )}
-                  <Text style={styles.signatureDate}>Date:</Text>
+                  <Text style={styles.signatureDate}>{labels.date}</Text>
                   <View style={styles.dateLine} />
                 </View>
                 <View style={styles.signatureBox}>
-                  <Text style={styles.signatureLabel}>Party B</Text>
+                  <Text style={styles.signatureLabel}>{labels.partyB}</Text>
                   <View style={styles.signatureLine} />
                   <Text style={styles.signaturePartyName}>
                     {data.partyB.name}
@@ -553,7 +581,7 @@ export function ContractPDF({ data }: ContractPDFProps) {
                       {data.partyB.company}
                     </Text>
                   )}
-                  <Text style={styles.signatureDate}>Date:</Text>
+                  <Text style={styles.signatureDate}>{labels.date}</Text>
                   <View style={styles.dateLine} />
                 </View>
               </View>
@@ -565,7 +593,7 @@ export function ContractPDF({ data }: ContractPDFProps) {
         <Text
           style={styles.footer}
           render={({ pageNumber, totalPages }) =>
-            `${data.dealName} | Page ${pageNumber} of ${totalPages}`
+            `${data.dealName} | ${labels.page} ${pageNumber} ${labels.of} ${totalPages}`
           }
           fixed
         />

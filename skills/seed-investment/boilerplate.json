@@ -1,0 +1,110 @@
+{
+  "contractTitle": "SEED INVESTMENT AGREEMENT",
+  "preamble": "This Seed Investment Agreement (this \"Agreement\") is entered into as of {effectiveDate} (the \"Effective Date\") by and between:\n\nTHE COMPANY:\n{partyAName}, a company with its registered address at {partyAAddress} (the \"Company\")\n\nTHE INVESTOR:\n{partyBName}, with address at {partyBAddress} (the \"Investor\")",
+  "background": "WHEREAS the Company is engaged in [description of business] and seeks to raise capital to fund its operations and growth; and WHEREAS the Investor wishes to invest in the Company on the terms and conditions set forth herein; NOW, THEREFORE, in consideration of the mutual promises and covenants contained in this Agreement, and for other good and valuable consideration, the receipt and sufficiency of which are hereby acknowledged, the parties agree as follows:",
+  "definitions": [
+    {
+      "term": "Shares",
+      "definition": "means the preferred shares (or participaciones preferentes, as applicable) of the Company to be issued to the Investor pursuant to this Agreement."
+    },
+    {
+      "term": "Preferred Stock",
+      "definition": "means the series of preferred shares designated as Series Seed Preferred Stock, having the rights, preferences, and privileges set forth in this Agreement and the Company's constitutional documents."
+    },
+    {
+      "term": "Common Stock",
+      "definition": "means the ordinary shares (or participaciones ordinarias, as applicable) of the Company."
+    },
+    {
+      "term": "Qualified Financing",
+      "definition": "means a bona fide equity financing transaction in which the Company issues and sells shares of its preferred stock with aggregate gross proceeds of at least [amount], excluding any conversion of convertible instruments."
+    },
+    {
+      "term": "Liquidation Event",
+      "definition": "means: (a) the voluntary or involuntary liquidation, dissolution, or winding up of the Company; (b) a merger, consolidation, or similar transaction in which the Company's shareholders immediately prior to such transaction hold less than fifty percent (50%) of the voting power of the surviving entity; or (c) the sale, lease, or other transfer of all or substantially all of the Company's assets."
+    },
+    {
+      "term": "Board",
+      "definition": "means the Board of Directors (or Órgano de Administración, as applicable) of the Company, as constituted from time to time in accordance with this Agreement and the Company's constitutional documents."
+    },
+    {
+      "term": "Pro-Rata Rights",
+      "definition": "means the right of the Investor to purchase its proportionate share of new securities issued by the Company in future financing rounds, as set forth in this Agreement."
+    },
+    {
+      "term": "ROFR",
+      "definition": "means the right of first refusal, being the right of the Company and/or its shareholders to purchase shares proposed to be transferred by another shareholder, on the same terms offered by the proposed transferee."
+    },
+    {
+      "term": "Founder",
+      "definition": "means each individual listed in Schedule A hereto who is a co-founder and key contributor to the Company as of the Effective Date."
+    },
+    {
+      "term": "Closing",
+      "definition": "means the completion of the transactions contemplated by this Agreement, including the payment of the Investment Amount and the issuance of the Shares to the Investor."
+    }
+  ],
+  "standardClauses": [
+    {
+      "title": "Closing Conditions",
+      "text": "The Closing shall be subject to the satisfaction or waiver of the following conditions:\n\n(a) The Company shall have adopted amended constitutional documents reflecting the rights of the Preferred Stock;\n\n(b) The Company shall have obtained all necessary corporate approvals, including shareholder and board resolutions;\n\n(c) The Investor shall have completed satisfactory due diligence;\n\n(d) Each party shall have executed all transaction documents;\n\n(e) The Company shall deliver to the Investor a duly executed share certificate (or evidence of book-entry registration) representing the Shares;\n\n(f) No material adverse change shall have occurred in the Company's business, assets, or financial condition since the date of the most recent financial information provided to the Investor."
+    },
+    {
+      "title": "Use of Proceeds",
+      "text": "The Company shall use the proceeds of the investment solely for: (a) general working capital and operating expenses; (b) product development and engineering; (c) sales, marketing, and business development; and (d) such other purposes as approved by the Board. The Company shall not use the proceeds for: (i) personal expenses of any Founder or officer; (ii) repayment of shareholder loans not previously disclosed to the Investor; or (iii) any purpose unrelated to the Company's business."
+    },
+    {
+      "title": "Expenses",
+      "text": "Each party shall bear its own legal and professional fees incurred in connection with the negotiation and execution of this Agreement. Notwithstanding the foregoing, the Company shall reimburse the Investor for its reasonable legal fees actually incurred in connection with the transaction, up to a maximum of [amount], payable at or promptly following the Closing."
+    },
+    {
+      "title": "Representations and Warranties",
+      "text": "The Company represents and warrants to the Investor that, as of the Effective Date and the Closing Date:\n\n(a) Organization: The Company is duly organized, validly existing, and in good standing under the laws of its jurisdiction of incorporation;\n\n(b) Authorization: The execution and delivery of this Agreement and the issuance of the Shares have been duly authorized by all necessary corporate action;\n\n(c) Capitalization: The Company's capitalization is as set forth in Schedule B, and no shares are subject to preemptive rights, rights of first refusal, or similar rights not disclosed herein;\n\n(d) Intellectual Property: The Company owns or has valid rights to all intellectual property material to its business;\n\n(e) Litigation: There is no pending or threatened litigation that would materially affect the Company;\n\n(f) Compliance: The Company is in material compliance with all applicable laws and regulations.\n\nThe Investor represents and warrants that: (i) the Investor has the authority and capacity to enter into this Agreement; (ii) the Investor is an accredited investor (or equivalent) as applicable; and (iii) the Shares are being acquired for investment purposes and not with a view to distribution."
+    },
+    {
+      "title": "Indemnification",
+      "text": "The Company shall indemnify and hold harmless the Investor and its affiliates, officers, directors, and agents from and against any and all losses, damages, liabilities, costs, and expenses (including reasonable attorneys' fees) arising out of or relating to: (a) any breach of the Company's representations and warranties; (b) any breach of the Company's covenants or obligations under this Agreement; or (c) any misrepresentation in materials provided to the Investor. This indemnification obligation shall survive the Closing and shall be subject to a cap equal to the Investment Amount."
+    }
+  ],
+  "generalProvisions": [
+    {
+      "title": "Amendments",
+      "text": "This Agreement may not be amended, modified, or supplemented except by a written instrument signed by the Company and holders of a majority of the outstanding Preferred Stock issued under this Agreement."
+    },
+    {
+      "title": "Entire Agreement",
+      "text": "This Agreement (including all schedules and exhibits) constitutes the entire agreement between the parties with respect to the subject matter hereof and supersedes all prior negotiations, representations, warranties, commitments, offers, and agreements, whether written or oral."
+    },
+    {
+      "title": "Severability",
+      "text": "If any provision of this Agreement is held to be invalid, illegal, or unenforceable in any jurisdiction, such invalidity, illegality, or unenforceability shall not affect any other provision of this Agreement, and this Agreement shall be construed as if such invalid, illegal, or unenforceable provision had never been contained herein."
+    },
+    {
+      "title": "Notices",
+      "text": "All notices and other communications under this Agreement shall be in writing and shall be deemed given: (a) when delivered personally; (b) when sent by confirmed electronic mail; (c) one (1) business day after being sent by internationally recognized overnight courier; or (d) three (3) business days after being mailed by registered or certified mail, postage prepaid, to the parties at their respective addresses set forth above (or such other address as a party may designate by written notice)."
+    },
+    {
+      "title": "Survival",
+      "text": "The representations and warranties, indemnification obligations, confidentiality provisions, and any provisions that by their nature are intended to survive, shall survive the Closing and any termination of this Agreement."
+    }
+  ],
+  "jurisdictionProvisions": {
+    "CALIFORNIA": {
+      "title": "California-Specific Provisions",
+      "text": "(a) Securities Compliance: The issuance of the Shares shall comply with the Securities Act of 1933, as amended, and the California Corporate Securities Law of 1968 (Cal. Corp. Code §25000 et seq.), including any applicable exemptions from registration or qualification.\n\n(b) Blue Sky Laws: The Company shall take all actions necessary to ensure the offer and sale of the Shares comply with applicable state securities laws (\"Blue Sky Laws\") in each jurisdiction where such compliance is required.\n\n(c) Jury Waiver: EACH PARTY HEREBY IRREVOCABLY WAIVES, TO THE FULLEST EXTENT PERMITTED BY APPLICABLE LAW, ALL RIGHTS TO TRIAL BY JURY IN ANY ACTION, PROCEEDING, OR COUNTERCLAIM ARISING OUT OF OR RELATING TO THIS AGREEMENT.\n\n(d) The Company shall maintain its qualification to do business in the State of California and shall comply with all applicable provisions of the California Corporations Code."
+    },
+    "ENGLAND_WALES": {
+      "title": "England & Wales-Specific Provisions",
+      "text": "(a) Companies Act 2006 Compliance: The issuance of the Shares shall comply with the Companies Act 2006, including the requirements for allotment of shares (s.549–551), pre-emption rights (s.560–577), and payment for shares (s.580–609).\n\n(b) Pre-Emption Rights: To the extent required, the Company shall procure the disapplication of statutory pre-emption rights under s.561 of the Companies Act 2006 by special resolution of the shareholders prior to the issuance of the Shares.\n\n(c) Share Premium: Any amount paid for the Shares in excess of their nominal value shall be credited to the Company's share premium account in accordance with s.610 of the Companies Act 2006.\n\n(d) Stamp Duty: The Investor shall be responsible for any stamp duty or stamp duty reserve tax payable on the allotment or transfer of the Shares.\n\n(e) Nothing in this Agreement shall exclude or limit any liability that cannot be excluded or limited under applicable law, including liability for fraud."
+    },
+    "SPAIN": {
+      "title": "Spain-Specific Provisions (Disposiciones Específicas para España)",
+      "text": "(a) Ley de Sociedades de Capital: This Agreement shall comply with the Real Decreto Legislativo 1/2010 (Ley de Sociedades de Capital, \"LSC\"), including the provisions governing the issuance of participaciones sociales and the rights of socios.\n\n(b) Junta General: The issuance of the Shares and any amendment to the estatutos sociales required by this Agreement shall be approved by the Junta General of the Company with the majority required by the LSC (art.199 and art.201).\n\n(c) Participaciones Sociales: References to \"shares\" or \"stock\" in this Agreement shall be interpreted as references to participaciones sociales of the Company, and the rights and restrictions applicable thereto shall be as set forth in the estatutos sociales.\n\n(d) Derecho de Suscripción Preferente: The statutory derecho de suscripción preferente of existing socios under art.304 LSC shall be addressed as set forth in the Junta General resolution approving the capital increase contemplated by this Agreement.\n\n(e) Registro Mercantil: The capital increase and any amendments to the estatutos sociales contemplated by this Agreement shall be formalized in escritura pública and registered with the Registro Mercantil within the legally required timeframe.\n\n(f) In the event of any conflict between the provisions of this Agreement and mandatory provisions of the LSC, the mandatory provisions of the LSC shall prevail."
+    }
+  },
+  "signatureBlock": "SIGNED by the parties:\n\n{partyASignatureBlock}\n\n{partyBSignatureBlock}",
+  "partyLabels": {
+    "partyA": "Company",
+    "partyB": "Investor"
+  }
+}
