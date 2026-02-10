@@ -217,6 +217,61 @@ export const supervisorRouter = createTRPCRouter({
       return deal;
     }),
 
+  // Approve attorney review for a deal party
+  approveReview: supervisorProcedure
+    .input(z.object({ dealRoomId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const supervisor = await requireVerified2FA(
+        ctx.supervisorSession.email,
+        ctx.getCookie,
+        ctx.prisma
+      );
+
+      // Find the party that requested review from this supervisor
+      const party = await ctx.prisma.dealRoomParty.findFirst({
+        where: {
+          dealRoomId: input.dealRoomId,
+          attorneySupervisorId: supervisor.id,
+          attorneyReviewRequested: true,
+          attorneyReviewApprovedAt: null,
+        },
+        include: {
+          dealRoom: true,
+        },
+      });
+
+      if (!party) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "No pending review found for this deal",
+        });
+      }
+
+      const now = new Date();
+
+      await ctx.prisma.$transaction([
+        ctx.prisma.dealRoomParty.update({
+          where: { id: party.id },
+          data: { attorneyReviewApprovedAt: now },
+        }),
+        ctx.prisma.auditLog.create({
+          data: {
+            dealRoomId: input.dealRoomId,
+            action: "ATTORNEY_REVIEW_APPROVED",
+            details: {
+              supervisorId: supervisor.id,
+              supervisorName: supervisor.name,
+              supervisorEmail: supervisor.email,
+              partyRole: party.role,
+              approvedAt: now.toISOString(),
+            },
+          },
+        }),
+      ]);
+
+      return { success: true, approvedAt: now };
+    }),
+
   // Get audit log for a deal (only if assigned)
   getAuditLog: supervisorProcedure
     .input(z.object({ dealId: z.string() }))

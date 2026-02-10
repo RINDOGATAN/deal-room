@@ -17,6 +17,7 @@ import {
   Building,
   User,
   PenTool,
+  Shield,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -31,6 +32,7 @@ export default function SigningPage() {
 
   const { data: deal, isLoading: dealLoading } = trpc.deal.getById.useQuery({ id: dealId });
   const { data: signingRequest, isLoading: signingLoading, refetch } = trpc.signing.getRequest.useQuery({ dealRoomId: dealId });
+  const { data: reviewStatus } = trpc.attorneyReview.getReviewStatus.useQuery({ dealRoomId: dealId });
 
   const initiateSigning = trpc.signing.initiate.useMutation({
     onSuccess: () => {
@@ -104,6 +106,40 @@ export default function SigningPage() {
           <h2 className="text-lg font-semibold mb-2">Not Ready for Signing</h2>
           <p className="text-muted-foreground mb-6 max-w-md mx-auto">
             All clauses must be agreed upon by both parties before the contract can be signed.
+          </p>
+          <button
+            onClick={() => router.push(`/deals/${dealId}/review`)}
+            className="btn-brutal-outline"
+          >
+            Return to Review
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // Block signing while attorney review is in progress
+  if (reviewStatus && !reviewStatus.canProceedToSigning) {
+    return (
+      <div className="max-w-4xl mx-auto space-y-6">
+        <div className="flex items-center gap-4">
+          <button
+            onClick={() => router.push(`/deals/${dealId}`)}
+            className="p-2 text-muted-foreground hover:text-foreground"
+          >
+            <ArrowLeft className="w-5 h-5" />
+          </button>
+          <div>
+            <h1 className="text-xl font-bold">E-Signature</h1>
+            <p className="text-sm text-muted-foreground">{deal.name}</p>
+          </div>
+        </div>
+
+        <div className="card-brutal border-purple-500/50 text-center py-8">
+          <Shield className="w-12 h-12 text-purple-500 mx-auto mb-4" />
+          <h2 className="text-lg font-semibold mb-2">Attorney Review In Progress</h2>
+          <p className="text-muted-foreground mb-6 max-w-md mx-auto">
+            Signing will be available once all attorney reviews are complete.
           </p>
           <button
             onClick={() => router.push(`/deals/${dealId}/review`)}

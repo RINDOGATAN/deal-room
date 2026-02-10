@@ -8,6 +8,7 @@ import { signingRouter } from "./signing";
 import { adminRouter } from "./admin";
 import { twoFactorRouter } from "./twoFactor";
 import { skillManagerRouter } from "./skillManager";
+import { attorneyReviewRouter } from "./attorneyReview";
 import { supervisorRouter } from "./supervisor";
 import { supervisorTwoFactorRouter } from "./supervisorTwoFactor";
 import { platformAdminRouter } from "./platformAdmin";
@@ -23,6 +24,7 @@ export const appRouter = createTRPCRouter({
   admin: adminRouter, // Legacy admin router (for backward compatibility)
   twoFactor: twoFactorRouter,
   skillManager: skillManagerRouter,
+  attorneyReview: attorneyReviewRouter,
   // New two-level admin system
   supervisor: supervisorRouter,
   supervisorTwoFactor: supervisorTwoFactorRouter,

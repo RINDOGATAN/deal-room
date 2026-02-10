@@ -54,6 +54,17 @@ export const signingRouter = createTRPCRouter({
         });
       }
 
+      // Check no active attorney reviews are in progress
+      const activeReviews = party.dealRoom.parties.filter(
+        (p) => p.attorneyReviewRequested && !p.attorneyReviewApprovedAt
+      );
+      if (activeReviews.length > 0) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Cannot initiate signing while attorney review is in progress",
+        });
+      }
+
       // Check if there's already an active signing request
       const existingRequest = await ctx.prisma.signingRequest.findFirst({
         where: {

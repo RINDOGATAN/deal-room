@@ -17,6 +17,11 @@ import {
   RefreshCw,
   ChevronDown,
   ChevronUp,
+  Shield,
+  Download,
+  Loader2,
+  UserCheck,
+  XCircle,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
@@ -42,11 +47,20 @@ export default function ReviewPage() {
   const [selectedOptionId, setSelectedOptionId] = useState<string>("");
   const [rationale, setRationale] = useState<string>("");
   const [expandedClause, setExpandedClause] = useState<string | null>(null);
+  const [showAttorneyModal, setShowAttorneyModal] = useState(false);
+  const [selectedAttorneyId, setSelectedAttorneyId] = useState<string>("");
 
   const { data: deal, isLoading: dealLoading } = trpc.deal.getById.useQuery({ id: dealId });
   const { data: suggestions, isLoading: suggestionsLoading, refetch } = trpc.compromise.getCurrent.useQuery({ dealRoomId: dealId });
   const { data: satisfactionScores } = trpc.compromise.getSatisfactionScores.useQuery({ dealRoomId: dealId });
   const { data: counterProposals, refetch: refetchCounterProposals } = trpc.compromise.getCounterProposals.useQuery({ dealRoomId: dealId });
+
+  // Attorney review queries
+  const { data: reviewStatus, refetch: refetchReviewStatus } = trpc.attorneyReview.getReviewStatus.useQuery({ dealRoomId: dealId });
+  const { data: availableAttorneys } = trpc.attorneyReview.listAvailableAttorneys.useQuery(
+    { dealRoomId: dealId },
+    { enabled: showAttorneyModal }
+  );
 
   const generateCompromise = trpc.compromise.generate.useMutation({
     onSuccess: () => {
@@ -89,6 +103,28 @@ export default function ReviewPage() {
     },
     onError: (error) => {
       toast.error(`Failed to submit counter-proposal: ${error.message}`);
+    },
+  });
+
+  const requestReview = trpc.attorneyReview.requestReview.useMutation({
+    onSuccess: () => {
+      toast.success("Attorney review requested");
+      setShowAttorneyModal(false);
+      setSelectedAttorneyId("");
+      refetchReviewStatus();
+    },
+    onError: (error) => {
+      toast.error(`Failed to request review: ${error.message}`);
+    },
+  });
+
+  const cancelReview = trpc.attorneyReview.cancelReview.useMutation({
+    onSuccess: () => {
+      toast.success("Attorney review cancelled");
+      refetchReviewStatus();
+    },
+    onError: (error) => {
+      toast.error(`Failed to cancel review: ${error.message}`);
     },
   });
 
@@ -199,7 +235,7 @@ export default function ReviewPage() {
               {regenerateCompromise.isPending ? "Generating..." : "New Round"}
             </button>
           )}
-          {allAgreed && (
+          {allAgreed && reviewStatus?.canProceedToSigning && (
             <button
               onClick={() => router.push(`/deals/${dealId}/sign`)}
               className="btn-brutal flex items-center gap-2"
@@ -593,22 +629,242 @@ export default function ReviewPage() {
         </div>
       )}
 
-      {/* All Agreed Banner */}
-      {allAgreed && (
-        <div className="card-brutal border-primary text-center py-8">
-          <Check className="w-12 h-12 text-primary mx-auto mb-4" />
-          <h2 className="text-lg font-semibold mb-2">All Clauses Agreed!</h2>
-          <p className="text-muted-foreground mb-6">
-            Congratulations! Both parties have agreed on all clauses. Proceed to e-signature.
-          </p>
-          <button
-            onClick={() => router.push(`/deals/${dealId}/sign`)}
-            className="btn-brutal flex items-center gap-2 mx-auto"
-          >
-            <FileSignature className="w-4 h-4" />
-            Proceed to Signing
-          </button>
+      {/* Attorney Selection Modal */}
+      {showAttorneyModal && (
+        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
+          <div className="card-brutal max-w-lg w-full">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-lg font-bold">Select Reviewing Attorney</h2>
+              <button
+                onClick={() => {
+                  setShowAttorneyModal(false);
+                  setSelectedAttorneyId("");
+                }}
+                className="p-1 text-muted-foreground hover:text-foreground"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <p className="text-sm text-muted-foreground mb-4">
+              Choose a supervising attorney to review the agreed contract before signing.
+            </p>
+            <div className="space-y-2 mb-6 max-h-64 overflow-y-auto">
+              {availableAttorneys?.map((attorney) => (
+                <button
+                  key={attorney.id}
+                  onClick={() => !attorney.unavailable && setSelectedAttorneyId(attorney.id)}
+                  disabled={attorney.unavailable}
+                  className={`
+                    w-full text-left p-4 border transition-colors
+                    ${attorney.unavailable
+                      ? "border-border opacity-50 cursor-not-allowed"
+                      : selectedAttorneyId === attorney.id
+                        ? "border-primary bg-primary/10"
+                        : "border-border hover:border-muted-foreground"
+                    }
+                  `}
+                >
+                  <p className="font-semibold">
+                    {attorney.name || attorney.email}
+                    {attorney.unavailable && (
+                      <span className="text-xs text-muted-foreground ml-2">(Selected by other party)</span>
+                    )}
+                  </p>
+                  <p className="text-sm text-muted-foreground">{attorney.email}</p>
+                </button>
+              ))}
+              {availableAttorneys?.length === 0 && (
+                <p className="text-sm text-muted-foreground text-center py-4">
+                  No attorneys available. Contact your administrator.
+                </p>
+              )}
+            </div>
+            <div className="flex items-center justify-end gap-3">
+              <button
+                onClick={() => {
+                  setShowAttorneyModal(false);
+                  setSelectedAttorneyId("");
+                }}
+                className="px-4 py-2 text-muted-foreground hover:text-foreground"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => {
+                  if (selectedAttorneyId) {
+                    requestReview.mutate({
+                      dealRoomId: dealId,
+                      supervisorId: selectedAttorneyId,
+                    });
+                  }
+                }}
+                disabled={!selectedAttorneyId || requestReview.isPending}
+                className="btn-brutal disabled:opacity-50"
+              >
+                {requestReview.isPending ? "Requesting..." : "Assign Attorney"}
+              </button>
+            </div>
+          </div>
         </div>
+      )}
+
+      {/* All Agreed Section — with attorney review flow */}
+      {allAgreed && (
+        <>
+          {/* My review in progress */}
+          {reviewStatus?.myReview && !reviewStatus.myReview.approvedAt && (
+            <div className="card-brutal border-purple-500/50">
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 bg-purple-500/20 flex items-center justify-center flex-shrink-0">
+                  <Shield className="w-6 h-6 text-purple-500" />
+                </div>
+                <div className="flex-1">
+                  <h2 className="text-lg font-semibold mb-1">Attorney Review In Progress</h2>
+                  <p className="text-sm text-muted-foreground mb-3">
+                    <span className="font-medium text-foreground">{reviewStatus.myReview.supervisorName}</span>
+                    {" "}is reviewing the contract on your behalf.
+                    {reviewStatus.myReview.requestedAt && (
+                      <> Requested on {new Date(reviewStatus.myReview.requestedAt).toLocaleDateString()}.</>
+                    )}
+                  </p>
+                  <div className="flex items-center gap-3">
+                    <a
+                      href={`/api/deals/${dealId}/document/docx`}
+                      className="btn-brutal-outline inline-flex items-center gap-2 text-sm"
+                    >
+                      <Download className="w-4 h-4" />
+                      Download DOCX
+                    </a>
+                    <a
+                      href={`/api/deals/${dealId}/document`}
+                      className="btn-brutal-outline inline-flex items-center gap-2 text-sm"
+                    >
+                      <Download className="w-4 h-4" />
+                      Download PDF
+                    </a>
+                    <button
+                      onClick={() => cancelReview.mutate({ dealRoomId: dealId })}
+                      disabled={cancelReview.isPending}
+                      className="flex items-center gap-2 px-4 py-2 text-sm border border-yellow-500 text-yellow-600 hover:bg-yellow-500 hover:text-white transition-colors"
+                    >
+                      <XCircle className="w-4 h-4" />
+                      {cancelReview.isPending ? "Cancelling..." : "Cancel Review"}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* My review approved */}
+          {reviewStatus?.myReview?.approvedAt && (
+            <div className="card-brutal border-primary">
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 bg-primary/20 flex items-center justify-center flex-shrink-0">
+                  <UserCheck className="w-6 h-6 text-primary" />
+                </div>
+                <div>
+                  <h2 className="text-lg font-semibold mb-1">Review Approved</h2>
+                  <p className="text-sm text-muted-foreground">
+                    <span className="font-medium text-foreground">{reviewStatus.myReview.supervisorName}</span>
+                    {" "}approved the contract on {new Date(reviewStatus.myReview.approvedAt).toLocaleDateString()}.
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Other party has active review, I don't */}
+          {reviewStatus?.otherPartyReviewActive && !reviewStatus.myReview && (
+            <div className="card-brutal border-blue-500/50">
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 bg-blue-500/20 flex items-center justify-center flex-shrink-0">
+                  <Shield className="w-6 h-6 text-blue-500" />
+                </div>
+                <div>
+                  <h2 className="text-lg font-semibold mb-1">Other Party Requested Attorney Review</h2>
+                  <p className="text-sm text-muted-foreground mb-3">
+                    The other party has requested a supervising attorney to review the contract.
+                    You may also request your own review.
+                  </p>
+                  <button
+                    onClick={() => setShowAttorneyModal(true)}
+                    className="btn-brutal-outline inline-flex items-center gap-2 text-sm"
+                  >
+                    <Shield className="w-4 h-4" />
+                    Request Your Own Review
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* No reviews or all approved — show proceed + option to request */}
+          {reviewStatus?.canProceedToSigning && (
+            <div className="card-brutal border-primary text-center py-8">
+              <Check className="w-12 h-12 text-primary mx-auto mb-4" />
+              <h2 className="text-lg font-semibold mb-2">All Clauses Agreed!</h2>
+              <p className="text-muted-foreground mb-6">
+                {reviewStatus.myReview?.approvedAt
+                  ? "Attorney review is complete. You can now proceed to e-signature."
+                  : "Congratulations! Both parties have agreed on all clauses. You can proceed to e-signature or request an attorney review first."
+                }
+              </p>
+              <div className="flex items-center justify-center gap-3">
+                <button
+                  onClick={() => router.push(`/deals/${dealId}/sign`)}
+                  className="btn-brutal flex items-center gap-2"
+                >
+                  <FileSignature className="w-4 h-4" />
+                  Proceed to Signing
+                </button>
+                {!reviewStatus.myReview && (
+                  <button
+                    onClick={() => setShowAttorneyModal(true)}
+                    className="btn-brutal-outline flex items-center gap-2"
+                  >
+                    <Shield className="w-4 h-4" />
+                    Request Attorney Review
+                  </button>
+                )}
+                <a
+                  href={`/api/deals/${dealId}/document/docx`}
+                  className="btn-brutal-outline flex items-center gap-2"
+                >
+                  <Download className="w-4 h-4" />
+                  Download DOCX
+                </a>
+              </div>
+            </div>
+          )}
+
+          {/* Reviews active — signing blocked */}
+          {!reviewStatus?.canProceedToSigning && !reviewStatus?.myReview && !reviewStatus?.otherPartyReviewActive && (
+            <div className="card-brutal border-primary text-center py-8">
+              <Check className="w-12 h-12 text-primary mx-auto mb-4" />
+              <h2 className="text-lg font-semibold mb-2">All Clauses Agreed!</h2>
+              <p className="text-muted-foreground mb-6">
+                Congratulations! Both parties have agreed on all clauses.
+              </p>
+              <div className="flex items-center justify-center gap-3">
+                <button
+                  onClick={() => router.push(`/deals/${dealId}/sign`)}
+                  className="btn-brutal flex items-center gap-2"
+                >
+                  <FileSignature className="w-4 h-4" />
+                  Proceed to Signing
+                </button>
+                <button
+                  onClick={() => setShowAttorneyModal(true)}
+                  className="btn-brutal-outline flex items-center gap-2"
+                >
+                  <Shield className="w-4 h-4" />
+                  Request Attorney Review
+                </button>
+              </div>
+            </div>
+          )}
+        </>
       )}
     </div>
   );
