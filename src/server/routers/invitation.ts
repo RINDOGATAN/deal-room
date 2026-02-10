@@ -8,6 +8,7 @@ import {
   InvitationStatus,
 } from "@prisma/client";
 import { addDays } from "date-fns";
+import { sendInvitationEmail } from "@/lib/email";
 
 export const invitationRouter = createTRPCRouter({
   // Send an invitation to the respondent
@@ -119,8 +120,12 @@ export const invitationRouter = createTRPCRouter({
         },
       });
 
-      // In production, send email via Resend here
-      // await sendInvitationEmail(input.email, invitation.token, dealRoom.name);
+      await sendInvitationEmail({
+        to: input.email,
+        token: invitation.token,
+        dealName: dealRoom.name,
+        inviterName: ctx.session.user.name || ctx.session.user.email || "Someone",
+      });
 
       return { invitationId: invitation.id, token: invitation.token };
     }),
@@ -366,7 +371,12 @@ export const invitationRouter = createTRPCRouter({
         },
       });
 
-      // In production, resend email via Resend here
+      await sendInvitationEmail({
+        to: invitation.email,
+        token: invitation.token,
+        dealName: invitation.dealRoom.name,
+        inviterName: ctx.session.user.name || ctx.session.user.email || "Someone",
+      });
 
       return { success: true };
     }),
