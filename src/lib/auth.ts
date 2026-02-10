@@ -3,10 +3,8 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import EmailProvider from "next-auth/providers/email";
 import GoogleProvider from "next-auth/providers/google";
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import { Resend } from "resend";
 import prisma from "@/lib/prisma";
-
-const resend = new Resend(process.env.RESEND_API_KEY);
+import { resend } from "@/lib/email";
 const isProduction = process.env.NODE_ENV === "production";
 
 export const authOptions: NextAuthOptions = {
