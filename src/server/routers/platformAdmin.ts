@@ -433,6 +433,21 @@ export const platformAdminRouter = createTRPCRouter({
       }
     }),
 
+  // User management (read-only)
+  listUsers: adminProcedure.query(async ({ ctx }) => {
+    await requireVerified2FA(ctx.adminSession.email, ctx.getCookie, ctx.prisma);
+
+    return ctx.prisma.user.findMany({
+      orderBy: { createdAt: "desc" },
+      include: {
+        accounts: true,
+        _count: {
+          select: { dealRoomParties: true },
+        },
+      },
+    });
+  }),
+
   // Skill management
   listSkillPackages: adminProcedure.query(async ({ ctx }) => {
     await requireVerified2FA(ctx.adminSession.email, ctx.getCookie, ctx.prisma);
