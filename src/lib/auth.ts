@@ -23,13 +23,18 @@ export const authOptions: NextAuthOptions = {
             to: email,
             subject: "Sign in to DEALROOM",
             html: `
-              <div style="font-family: sans-serif; max-width: 500px; margin: 0 auto;">
-                <h1 style="color: #13e9d1; background: #1c1f37; padding: 20px; margin: 0;">DEALROOM</h1>
-                <div style="padding: 20px; background: #f5f5f5;">
-                  <p>Click the button below to sign in to DEALROOM:</p>
-                  <a href="${url}" style="display: inline-block; background: #1c1f37; color: #13e9d1; padding: 12px 24px; text-decoration: none; font-weight: bold; margin: 20px 0;">Sign In</a>
-                  <p style="color: #666; font-size: 14px;">If you didn't request this email, you can safely ignore it.</p>
-                  <p style="color: #666; font-size: 12px;">Or copy this link: ${url}</p>
+              <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 500px; margin: 0 auto; background: #1a1a1a; border-radius: 12px; overflow: hidden;">
+                <div style="padding: 24px 24px 16px; border-bottom: 1px solid #2a2a2a;">
+                  <span style="font-size: 20px; font-weight: 700; color: #ffffff; letter-spacing: 0.05em;">DEALROOM</span>
+                  <span style="font-size: 13px; color: #a6a6a6; margin-left: 10px;">Contract Negotiation</span>
+                </div>
+                <div style="padding: 32px 24px;">
+                  <p style="color: #e5e5e5; font-size: 15px; line-height: 1.6; margin: 0 0 24px;">Click the button below to sign in to your DEALROOM account:</p>
+                  <a href="${url}" style="display: inline-block; background: #53aecc; color: #1a1a1a; padding: 12px 28px; text-decoration: none; font-weight: 600; font-size: 14px; border-radius: 24px;">Sign In to DEALROOM</a>
+                  <p style="color: #a6a6a6; font-size: 13px; line-height: 1.5; margin: 24px 0 0;">If you didn't request this email, you can safely ignore it.</p>
+                </div>
+                <div style="padding: 16px 24px; border-top: 1px solid #2a2a2a;">
+                  <p style="color: #666666; font-size: 11px; margin: 0;">TODO.LAW&#8482; &middot; DEALROOM &middot; <a href="https://dealroom.todo.law" style="color: #53aecc; text-decoration: none;">dealroom.todo.law</a></p>
                 </div>
               </div>
             `,
