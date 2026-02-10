@@ -248,6 +248,7 @@ export default function NegotiatePage() {
       setCurrentClauseIndex(currentClauseIndex + 1);
       setExpandedOption(null);
       setShowProsConsFor(null);
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
 
@@ -266,6 +267,7 @@ export default function NegotiatePage() {
     setCurrentClauseIndex(clauses.length - 1);
     setExpandedOption(null);
     setShowProsConsFor(null);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const handleSubmit = async () => {
@@ -416,6 +418,7 @@ export default function NegotiatePage() {
                               setCurrentClauseIndex(globalIdx);
                               setExpandedOption(null);
                               setSidebarOpen(false);
+                              window.scrollTo({ top: 0, behavior: "smooth" });
                             }}
                             className={`
                               w-full text-left px-3 py-2.5 text-sm flex items-center gap-2
@@ -467,6 +470,7 @@ export default function NegotiatePage() {
                         onClick={() => {
                           setCurrentClauseIndex(globalIdx);
                           setExpandedOption(null);
+                          window.scrollTo({ top: 0, behavior: "smooth" });
                         }}
                         className={`
                           w-full text-left px-3 py-2.5 text-sm flex items-center gap-2
@@ -737,6 +741,7 @@ export default function NegotiatePage() {
                 if (currentClauseIndex > 0) {
                   setCurrentClauseIndex(currentClauseIndex - 1);
                   setExpandedOption(null);
+                  window.scrollTo({ top: 0, behavior: "smooth" });
                 }
               }}
               disabled={currentClauseIndex === 0}
