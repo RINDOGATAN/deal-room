@@ -38,7 +38,7 @@ test.describe("Internationalization", () => {
     if (isMobile) {
       await page.locator("button").filter({ has: page.locator("svg.lucide-menu") }).click();
     }
-    await expect(page.locator("button", { hasText: "ES" })).toBeVisible();
+    await expect(page.locator("button", { hasText: "ES" }).first()).toBeVisible();
   });
 
   test("switch back to EN works", async ({ page }) => {
@@ -57,7 +57,7 @@ test.describe("Internationalization", () => {
     if (isMobile) {
       await page.locator("button").filter({ has: page.locator("svg.lucide-menu") }).click();
     }
-    await page.locator("button", { hasText: "ES" }).click();
+    await page.locator("button", { hasText: "ES" }).first().click();
     await expect(page.locator("text=My Deals").first()).toBeVisible({ timeout: 10_000 });
   });
 });

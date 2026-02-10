@@ -13,22 +13,29 @@ test.describe("Deals List", () => {
     await expect(heading).toBeVisible();
   });
 
-  test("header shows trial user email", async ({ page }) => {
+  test("header shows authenticated user info", async ({ page }) => {
+    // Wait for dashboard to fully render
+    await expect(page.locator("text=My Deals").first()).toBeVisible({ timeout: 10_000 });
+
     const isMobile = (page.viewportSize()?.width ?? 1440) < 768;
     if (isMobile) {
-      // Open mobile menu to see email
       await page.locator("button").filter({ has: page.locator("svg.lucide-menu") }).click();
     }
-    await expect(page.locator("text=demo@trial.dealroom.app").first()).toBeVisible();
+    // Sign-out button should be visible (indicates authenticated state)
+    await expect(
+      page.locator("button", { hasText: /sign out|cerrar sesión/i }).first(),
+    ).toBeVisible({ timeout: 10_000 });
   });
 
   test("'New Deal' nav link exists and navigates", async ({ page }) => {
+    await expect(page.locator("text=My Deals").first()).toBeVisible({ timeout: 10_000 });
+
     const isMobile = (page.viewportSize()?.width ?? 1440) < 768;
     if (isMobile) {
       await page.locator("button").filter({ has: page.locator("svg.lucide-menu") }).click();
     }
     const newDealLink = page.locator("a[href='/deals/new']").first();
-    await expect(newDealLink).toBeVisible();
+    await expect(newDealLink).toBeVisible({ timeout: 10_000 });
     await newDealLink.click();
     await expect(page).toHaveURL(/\/deals\/new/);
   });

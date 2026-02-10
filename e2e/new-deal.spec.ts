@@ -11,8 +11,8 @@ test.describe("Deal Creation", () => {
     await expect(page.locator("h1", { hasText: "Create New Deal" })).toBeVisible();
     // Wait for templates to load (skeleton disappears, real cards appear)
     await expect(page.locator("text=Loading contract types")).toBeHidden({ timeout: 10_000 });
-    // Should show at least NDA
-    await expect(page.locator("h3", { hasText: "NDA" }).first()).toBeVisible({ timeout: 10_000 });
+    // Should show at least DPA
+    await expect(page.locator("h3", { hasText: "Data Processing Agreement" }).first()).toBeVisible({ timeout: 10_000 });
   });
 
   test("locked skills show lock icon", async ({ page }) => {
@@ -28,9 +28,9 @@ test.describe("Deal Creation", () => {
 
   test("step 2: jurisdiction options appear after type selection", async ({ page }) => {
     await expect(page.locator("text=Loading contract types")).toBeHidden({ timeout: 10_000 });
-    // Select NDA (first available unlocked template)
-    const ndaCard = page.locator("h3", { hasText: "NDA" }).first();
-    await ndaCard.click();
+    // Select DPA (first available unlocked template)
+    const dpaCard = page.locator("h3", { hasText: "Data Processing Agreement" }).first();
+    await dpaCard.click();
 
     // Step 2 should now be visible with jurisdiction options
     await expect(page.locator("text=Governing Law")).toBeVisible();
@@ -42,7 +42,7 @@ test.describe("Deal Creation", () => {
   test("step 3: language options appear", async ({ page }) => {
     await expect(page.locator("text=Loading contract types")).toBeHidden({ timeout: 10_000 });
     // Select type
-    await page.locator("h3", { hasText: "NDA" }).first().click();
+    await page.locator("h3", { hasText: "Data Processing Agreement" }).first().click();
     // Select jurisdiction
     await page.locator("text=California, USA").click();
 
@@ -53,7 +53,7 @@ test.describe("Deal Creation", () => {
 
   test("step 4: deal name input and summary box", async ({ page }) => {
     await expect(page.locator("text=Loading contract types")).toBeHidden({ timeout: 10_000 });
-    await page.locator("h3", { hasText: "NDA" }).first().click();
+    await page.locator("h3", { hasText: "Data Processing Agreement" }).first().click();
     await page.locator("text=California, USA").click();
 
     // Step 4 should have the deal name input
@@ -62,11 +62,11 @@ test.describe("Deal Creation", () => {
     await expect(page.locator("text=California, USA").nth(1)).toBeVisible();
   });
 
-  test("full flow: NDA -> California -> English -> name -> Continue -> lands on /negotiate", async ({ page }) => {
+  test("full flow: DPA -> California -> English -> name -> Continue -> lands on /negotiate", async ({ page }) => {
     await expect(page.locator("text=Loading contract types")).toBeHidden({ timeout: 10_000 });
 
-    // Step 1: Select NDA
-    await page.locator("h3", { hasText: "NDA" }).first().click();
+    // Step 1: Select DPA
+    await page.locator("h3", { hasText: "Data Processing Agreement" }).first().click();
 
     // Step 2: Select California
     await page.locator("text=California, USA").click();

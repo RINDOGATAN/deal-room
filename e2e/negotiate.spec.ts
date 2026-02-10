@@ -7,7 +7,7 @@ async function createDealAndNavigate(page: import("@playwright/test").Page) {
   await page.goto("/deals/new");
   await expect(page.locator("text=Loading contract types")).toBeHidden({ timeout: 10_000 });
 
-  await page.locator("h3", { hasText: "NDA" }).first().click();
+  await page.locator("h3", { hasText: "Data Processing Agreement" }).first().click();
   await page.locator("text=California, USA").click();
   await page.locator("input#dealName").fill(`E2E Negotiate ${Date.now()}`);
   await page.locator("button", { hasText: "Continue" }).click();
