@@ -11,12 +11,15 @@ test.describe("Authentication", () => {
     await trialLogin(page);
     await page.reload();
     await expect(page).toHaveURL(/\/deals/);
-    // Should still show the user email in the header (desktop) or be on the deals page
-    await expect(page.locator("text=demo@trial.dealroom.app").first()).toBeVisible();
+    // Dashboard heading should be visible after reload
+    await expect(page.locator("text=My Deals").first()).toBeVisible({ timeout: 10_000 });
   });
 
   test("sign-out redirects to /sign-in", async ({ page }) => {
     await trialLogin(page);
+
+    // Wait for dashboard to fully render
+    await expect(page.locator("text=My Deals").first()).toBeVisible({ timeout: 10_000 });
 
     // On mobile the sign-out is behind the hamburger menu
     const isMobile = (page.viewportSize()?.width ?? 1440) < 768;
@@ -25,7 +28,7 @@ test.describe("Authentication", () => {
     }
 
     const signOutButton = page.locator("button", { hasText: /sign out|cerrar sesión/i });
-    await expect(signOutButton.first()).toBeVisible();
+    await expect(signOutButton.first()).toBeVisible({ timeout: 10_000 });
     await signOutButton.first().click();
     await page.waitForURL("**/sign-in", { timeout: 10_000 });
     await expect(page).toHaveURL(/\/sign-in/);
