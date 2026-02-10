@@ -649,8 +649,8 @@ export default function NewDealPage() {
                   id="dealName"
                   value={dealName}
                   onChange={(e) => setDealName(e.target.value)}
-                  placeholder="e.g., Acme Corp Partnership NDA"
-                  className="input-brutal"
+                  placeholder="Deal name"
+                  className={`input-brutal ${!dealName.trim() ? "border-primary" : ""}`}
                 />
                 <p className="text-xs text-muted-foreground">
                   A descriptive name to identify this deal
@@ -663,8 +663,8 @@ export default function NewDealPage() {
                   id="company"
                   value={company}
                   onChange={(e) => setCompany(e.target.value)}
-                  placeholder="e.g., Your Company Inc."
-                  className="input-brutal"
+                  placeholder="Company name"
+                  className={`input-brutal ${!company.trim() ? "border-primary" : ""}`}
                 />
                 <p className="text-xs text-muted-foreground">
                   Will be shown to the other party
