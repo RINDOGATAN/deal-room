@@ -210,13 +210,13 @@ export default function DealDetailPage() {
             {isInitiator && <Badge variant="outline" className="text-xs">{tCommon("you")}</Badge>}
           </div>
           <div className="space-y-3">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-primary flex items-center justify-center text-primary-foreground font-semibold">
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="w-10 h-10 bg-primary flex items-center justify-center text-primary-foreground font-semibold flex-shrink-0">
                 {(initiator?.name || initiator?.email || "?")[0].toUpperCase()}
               </div>
-              <div>
-                <p className="font-medium">{initiator?.name || "—"}</p>
-                <p className="text-sm text-muted-foreground">{initiator?.email}</p>
+              <div className="min-w-0">
+                <p className="font-medium truncate">{initiator?.name || "—"}</p>
+                <p className="text-sm text-muted-foreground truncate hidden md:block">{initiator?.email}</p>
               </div>
             </div>
             {initiator?.company && (
@@ -239,13 +239,13 @@ export default function DealDetailPage() {
           </div>
           {respondent ? (
             <div className="space-y-3">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-muted flex items-center justify-center text-muted-foreground font-semibold">
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="w-10 h-10 bg-muted flex items-center justify-center text-muted-foreground font-semibold flex-shrink-0">
                   {(respondent.name || respondent.email || "?")[0].toUpperCase()}
                 </div>
-                <div>
-                  <p className="font-medium">{respondent.name || "—"}</p>
-                  <p className="text-sm text-muted-foreground">{respondent.email}</p>
+                <div className="min-w-0">
+                  <p className="font-medium truncate">{respondent.name || "—"}</p>
+                  <p className="text-sm text-muted-foreground truncate hidden md:block">{respondent.email}</p>
                 </div>
               </div>
               {respondent.company && (
@@ -268,7 +268,8 @@ export default function DealDetailPage() {
                 className="btn-brutal-outline flex items-center gap-2 w-full justify-center"
               >
                 <Mail className="w-4 h-4" />
-                {t("inviteCounterparty")}
+                <span className="md:hidden">{t("invite")}</span>
+                <span className="hidden md:inline">{t("inviteCounterparty")}</span>
               </button>
             </div>
           ) : (

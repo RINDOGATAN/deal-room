@@ -126,6 +126,7 @@
     "acceptedPendingSelections": "Accepted, Pending Selections",
     "invitationPending": "Invitation Pending",
     "noCounterpartyInvited": "No counterparty invited yet. Send an invitation to begin negotiation.",
+    "invite": "Invite",
     "inviteCounterparty": "Invite Counterparty",
     "completeSelectionsFirst": "Complete your selections before inviting the counterparty.",
     "cancelDeal": "Cancel Deal",
