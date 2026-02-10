@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Shield, LogOut, Home, Users, FileText, Package, BarChart, UserCog } from "lucide-react";
+import { Shield, LogOut, Home, Users, UserCheck, FileText, Package, BarChart, UserCog } from "lucide-react";
 import { brand } from "@/config/brand";
 
 export default function AdminLayout({
@@ -50,6 +50,7 @@ export default function AdminLayout({
     { href: "/admin/supervisors", label: "Supervisors", icon: UserCog },
     { href: "/admin/deals", label: "All Deals", icon: FileText },
     { href: "/admin/customers", label: "Customers", icon: Users },
+    { href: "/admin/users", label: "Users", icon: UserCheck },
     { href: "/admin/skills", label: "Skills", icon: Package },
     { href: "/admin/analytics", label: "Analytics", icon: BarChart },
   ];
