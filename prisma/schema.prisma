@@ -62,6 +62,7 @@ model Supervisor {
 
   twoFactorSecret SupervisorTwoFactor?
   assignments     SupervisorAssignment[]
+  partyReviews    DealRoomParty[]
 
   @@map("supervisors")
 }
@@ -404,8 +405,15 @@ model DealRoomParty {
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
 
+  // Attorney Review
+  attorneyReviewRequested   Boolean    @default(false)
+  attorneyReviewRequestedAt DateTime?
+  attorneySupervisorId      String?
+  attorneyReviewApprovedAt  DateTime?  // Set by the supervisor
+
   dealRoom   DealRoom         @relation(fields: [dealRoomId], references: [id], onDelete: Cascade)
   user       User?            @relation(fields: [userId], references: [id])
+  attorneySupervisor Supervisor? @relation(fields: [attorneySupervisorId], references: [id])
   selections PartySelection[]
   counterProposals CounterProposal[]
 

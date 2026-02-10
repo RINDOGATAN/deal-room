@@ -4,6 +4,8 @@ import { trpc } from "@/lib/trpc";
 import { format } from "date-fns";
 import Link from "next/link";
 import { useRouter, useParams } from "next/navigation";
+import { useState } from "react";
+import { toast } from "sonner";
 import {
   FileText,
   Users,
@@ -14,6 +16,9 @@ import {
   Scale,
   Activity,
   Loader2,
+  Shield,
+  UserCheck,
+  Download,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
@@ -39,10 +44,20 @@ export default function SupervisorDealDetailPage() {
   const params = useParams();
   const dealId = params.id as string;
 
-  const { data: deal, isLoading, error } = trpc.supervisor.getDealDetails.useQuery(
+  const { data: deal, isLoading, error, refetch } = trpc.supervisor.getDealDetails.useQuery(
     { dealId },
     { enabled: !!dealId }
   );
+
+  const approveReview = trpc.supervisor.approveReview.useMutation({
+    onSuccess: () => {
+      toast.success("Review approved successfully");
+      refetch();
+    },
+    onError: (error) => {
+      toast.error(`Failed to approve review: ${error.message}`);
+    },
+  });
 
   if (isLoading) {
     return (
@@ -90,6 +105,15 @@ export default function SupervisorDealDetailPage() {
   const agreedClauses = deal.clauses.filter((c) => c.status === "AGREED").length;
   const totalClauses = deal.clauses.length;
 
+  // Find if this supervisor is reviewing for a party
+  const reviewParty = deal.parties.find(
+    (p) => p.attorneyReviewRequested && p.attorneySupervisorId
+  );
+  // We show the review banner if the party requested review (supervisor is linked via assignment)
+  // The supervisor's own ID isn't in the deal data, but we can check via the assignment existence
+  const hasReviewAssignment = reviewParty && !reviewParty.attorneyReviewApprovedAt;
+  const reviewApproved = reviewParty?.attorneyReviewApprovedAt;
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -114,6 +138,82 @@ export default function SupervisorDealDetailPage() {
           </Badge>
         </div>
       </div>
+
+      {/* Attorney Review Banner */}
+      {hasReviewAssignment && reviewParty && (
+        <div className="card-brutal border-purple-500/50 bg-purple-500/5">
+          <div className="flex items-start justify-between">
+            <div className="flex items-start gap-4">
+              <div className="w-12 h-12 bg-purple-500/20 flex items-center justify-center flex-shrink-0">
+                <Shield className="w-6 h-6 text-purple-500" />
+              </div>
+              <div>
+                <h2 className="text-lg font-semibold mb-1">Attorney Review Requested</h2>
+                <p className="text-sm text-muted-foreground">
+                  You are reviewing this contract for{" "}
+                  <span className="font-medium text-foreground">
+                    {reviewParty.name || reviewParty.email}
+                  </span>
+                  {reviewParty.company && (
+                    <> ({reviewParty.company})</>
+                  )}
+                  .
+                  {reviewParty.attorneyReviewRequestedAt && (
+                    <> Requested on {format(new Date(reviewParty.attorneyReviewRequestedAt), "MMM d, yyyy")}.</>
+                  )}
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3 flex-shrink-0">
+              <a
+                href={`/api/supervise/deals/${dealId}/document/docx`}
+                className="btn-brutal-outline inline-flex items-center gap-2 text-sm"
+              >
+                <Download className="w-4 h-4" />
+                Download DOCX
+              </a>
+              <button
+                onClick={() => approveReview.mutate({ dealRoomId: dealId })}
+                disabled={approveReview.isPending}
+                className="btn-brutal flex items-center gap-2"
+              >
+                {approveReview.isPending ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    Approving...
+                  </>
+                ) : (
+                  <>
+                    <UserCheck className="w-4 h-4" />
+                    Approve Review
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Review Approved Banner */}
+      {reviewApproved && reviewParty && (
+        <div className="card-brutal border-primary bg-primary/5">
+          <div className="flex items-start gap-4">
+            <div className="w-12 h-12 bg-primary/20 flex items-center justify-center flex-shrink-0">
+              <UserCheck className="w-6 h-6 text-primary" />
+            </div>
+            <div>
+              <h2 className="text-lg font-semibold mb-1">Review Approved</h2>
+              <p className="text-sm text-muted-foreground">
+                You approved the contract review for{" "}
+                <span className="font-medium text-foreground">
+                  {reviewParty.name || reviewParty.email}
+                </span>
+                {" "}on {format(new Date(reviewApproved), "MMM d, yyyy")}.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Deal Overview */}
       <div className="grid grid-cols-3 gap-6">
