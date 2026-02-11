@@ -44,7 +44,7 @@ export default function DashboardLayout({
 
   const { data: lawyerProfile } = trpc.lawyer.getProfile.useQuery(
     undefined,
-    { enabled: status === "authenticated" }
+    { enabled: status === "authenticated", retry: false }
   );
   const utils = trpc.useUtils();
   const registerLawyer = trpc.lawyer.register.useMutation({
