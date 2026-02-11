@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 import { useTranslations, useLocale } from "next-intl";
@@ -170,8 +170,10 @@ const jurisdictionOptions: {
 
 export default function NewDealPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const t = useTranslations("newDeal");
   const tCommon = useTranslations("common");
+  const tLawyer = useTranslations("lawyer");
   const locale = useLocale();
   const [selectedFamily, setSelectedFamily] = useState<string | null>(null);
   const [selectedType, setSelectedType] = useState<string | null>(null);
@@ -181,6 +183,26 @@ export default function NewDealPage() {
   const [company, setCompany] = useState("");
   const [entitlementError, setEntitlementError] = useState<string | null>(null);
   const [resolvedNativeTemplate, setResolvedNativeTemplate] = useState<string | null>(null);
+
+  // Lawyer vetting flow
+  const vettingId = searchParams.get("vetting");
+  const invitationToken = searchParams.get("invitation");
+  const isVettingFlow = !!vettingId;
+
+  // If coming from vetting flow, fetch vetting summary (doesn't require lawyer access)
+  const { data: vettingData } = trpc.lawyer.getVettingSummary.useQuery(
+    { vettingId: vettingId!, token: invitationToken! },
+    { enabled: isVettingFlow && !!invitationToken }
+  );
+
+  // Pre-populate from vetting
+  useEffect(() => {
+    if (vettingData) {
+      setSelectedType(vettingData.contractTemplate.contractType);
+      setSelectedJurisdiction(vettingData.governingLaw as GoverningLaw);
+      setSelectedLanguage(vettingData.contractLanguage as ContractLanguage);
+    }
+  }, [vettingData]);
 
   const { data: templates, isLoading } = trpc.skills.listTemplatesWithAccess.useQuery({ language: locale });
   const allFamilies = templates ? groupTemplatesByFamily(templates) : [];
@@ -256,6 +278,7 @@ export default function NewDealPage() {
       governingLaw: selectedJurisdiction,
       contractLanguage: selectedLanguage,
       initiatorCompany: company.trim() || undefined,
+      lawyerVettingId: vettingId || undefined,
     });
   };
 
@@ -274,6 +297,95 @@ export default function NewDealPage() {
           {[1, 2, 3, 4].map((i) => (
             <div key={i} className="card-brutal animate-pulse h-32"></div>
           ))}
+        </div>
+      </div>
+    );
+  }
+
+  // Vetting flow: skip template selection, show summary + deal details directly
+  if (isVettingFlow && vettingData && selectedType) {
+    const vTemplateDisplayName = vettingData.contractTemplate.displayName;
+    const vJurisdictionInfo = jurisdictionOptions.find((j) => j.value === vettingData.governingLaw);
+    const vLanguage = contractLanguageOptions.find((l) => l.value === vettingData.contractLanguage);
+
+    return (
+      <div className="max-w-3xl mx-auto space-y-8">
+        <div>
+          <h1 className="text-2xl font-bold">{t("createNewDeal")}</h1>
+          <p className="text-muted-foreground mt-1">{tLawyer("contractPrepared")}</p>
+        </div>
+
+        {/* Vetting summary banner */}
+        <div className="card-brutal border-primary bg-primary/5">
+          <div className="flex items-start gap-3">
+            <Scale className="w-5 h-5 text-primary mt-0.5" />
+            <div>
+              <p className="text-sm font-medium">{tLawyer("vettedContract")}</p>
+              <p className="text-sm text-muted-foreground mt-1">
+                {tLawyer("vettedBy", { name: vettingData.lawyer.name || vettingData.lawyer.email })}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Locked selections summary */}
+        <div className="card-brutal space-y-6">
+          <div className="p-3 bg-muted/30 border border-border text-sm rounded-xl">
+            <div className="flex items-center justify-between">
+              <span className="text-muted-foreground">{t("contract")}</span>
+              <span className="font-medium">{vTemplateDisplayName}</span>
+            </div>
+            <div className="flex items-center justify-between mt-2">
+              <span className="text-muted-foreground">{t("governingLaw")}:</span>
+              <span className="font-medium">{vJurisdictionInfo?.flag} {vJurisdictionInfo?.label}</span>
+            </div>
+            <div className="flex items-center justify-between mt-2">
+              <span className="text-muted-foreground">{t("contractLanguage")}:</span>
+              <span className="font-medium">{vLanguage?.nativeLabel}</span>
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="dealName">Deal Name *</Label>
+            <Input
+              id="dealName"
+              value={dealName}
+              onChange={(e) => setDealName(e.target.value)}
+              placeholder="Deal name"
+              className={`input-brutal ${!dealName.trim() ? "border-primary" : ""}`}
+            />
+            <p className="text-xs text-muted-foreground">
+              A descriptive name to identify this deal
+            </p>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="company">Your Company (Optional)</Label>
+            <Input
+              id="company"
+              value={company}
+              onChange={(e) => setCompany(e.target.value)}
+              placeholder="Company name"
+              className={`input-brutal ${!company.trim() ? "border-primary" : ""}`}
+            />
+            <p className="text-xs text-muted-foreground">
+              Will be shown to the other party
+            </p>
+          </div>
+        </div>
+
+        <div className="flex items-center justify-between pt-4 border-t border-border">
+          <p className="text-sm text-muted-foreground">
+            You'll select your preferred options next
+          </p>
+          <button
+            onClick={handleCreate}
+            disabled={!dealName.trim() || createDeal.isPending}
+            className="btn-brutal flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {createDeal.isPending ? "Creating..." : "Continue"}
+            <ArrowRight className="w-4 h-4" />
+          </button>
         </div>
       </div>
     );

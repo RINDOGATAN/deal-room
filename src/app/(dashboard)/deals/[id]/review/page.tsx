@@ -785,15 +785,34 @@ export default function ReviewPage() {
                   <h2 className="text-lg font-semibold mb-1">Other Party Requested Attorney Review</h2>
                   <p className="text-sm text-muted-foreground mb-3">
                     The other party has requested a supervising attorney to review the contract.
-                    You may also request your own review.
+                    {!reviewStatus.suppressReviewForInitiator && " You may also request your own review."}
                   </p>
-                  <button
-                    onClick={() => setShowAttorneyModal(true)}
-                    className="btn-brutal-outline inline-flex items-center gap-2 text-sm"
-                  >
-                    <Shield className="w-4 h-4" />
-                    Request Your Own Review
-                  </button>
+                  {!reviewStatus.suppressReviewForInitiator && (
+                    <button
+                      onClick={() => setShowAttorneyModal(true)}
+                      className="btn-brutal-outline inline-flex items-center gap-2 text-sm"
+                    >
+                      <Shield className="w-4 h-4" />
+                      Request Your Own Review
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Lawyer-vetted note for initiator */}
+          {reviewStatus?.suppressReviewForInitiator && (
+            <div className="card-brutal border-primary/50 bg-primary/5">
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 bg-primary/20 flex items-center justify-center flex-shrink-0 rounded-2xl">
+                  <Scale className="w-6 h-6 text-primary" />
+                </div>
+                <div>
+                  <h2 className="text-lg font-semibold mb-1">Attorney-Vetted Contract</h2>
+                  <p className="text-sm text-muted-foreground">
+                    This contract was vetted by <span className="font-medium text-foreground">{reviewStatus.vettingLawyerName}</span>. Attorney review is not required for your side.
+                  </p>
                 </div>
               </div>
             </div>
@@ -807,6 +826,8 @@ export default function ReviewPage() {
               <p className="text-muted-foreground mb-6">
                 {reviewStatus.myReview?.approvedAt
                   ? "Attorney review is complete. You can now proceed to e-signature."
+                  : reviewStatus.suppressReviewForInitiator
+                  ? "All clauses agreed and your lawyer has vetted this contract. Proceed to e-signature."
                   : "Congratulations! Both parties have agreed on all clauses. You can proceed to e-signature or request an attorney review first."
                 }
               </p>
@@ -818,7 +839,7 @@ export default function ReviewPage() {
                   <FileSignature className="w-4 h-4" />
                   Proceed to Signing
                 </button>
-                {!reviewStatus.myReview && (
+                {!reviewStatus.myReview && !reviewStatus.suppressReviewForInitiator && (
                   <button
                     onClick={() => setShowAttorneyModal(true)}
                     className="btn-brutal-outline flex items-center gap-2"
@@ -854,13 +875,15 @@ export default function ReviewPage() {
                   <FileSignature className="w-4 h-4" />
                   Proceed to Signing
                 </button>
-                <button
-                  onClick={() => setShowAttorneyModal(true)}
-                  className="btn-brutal-outline flex items-center gap-2"
-                >
-                  <Shield className="w-4 h-4" />
-                  Request Attorney Review
-                </button>
+                {!reviewStatus?.suppressReviewForInitiator && (
+                  <button
+                    onClick={() => setShowAttorneyModal(true)}
+                    className="btn-brutal-outline flex items-center gap-2"
+                  >
+                    <Shield className="w-4 h-4" />
+                    Request Attorney Review
+                  </button>
+                )}
               </div>
             </div>
           )}

@@ -245,6 +245,7 @@ export const dealRouter = createTRPCRouter({
         governingLaw: z.enum(["CALIFORNIA", "ENGLAND_WALES", "SPAIN"]),
         contractLanguage: z.enum(["en", "es"]).default("en"),
         initiatorCompany: z.string().optional(),
+        lawyerVettingId: z.string().optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -343,6 +344,7 @@ export const dealRouter = createTRPCRouter({
           contractTemplateId: template.id,
           governingLaw: input.governingLaw as GoverningLaw,
           contractLanguage: input.contractLanguage,
+          lawyerVettingId: input.lawyerVettingId,
           status: DealRoomStatus.DRAFT,
           parties: {
             create: {

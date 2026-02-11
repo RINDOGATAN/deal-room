@@ -18,6 +18,7 @@ import {
   Copy,
   List,
   ChevronsRight,
+  Scale,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
@@ -64,6 +65,7 @@ export default function NegotiatePage() {
   const dealId = params.id as string;
   const t = useTranslations("negotiate");
   const tCommon = useTranslations("common");
+  const tLawyer = useTranslations("lawyer");
 
   const [currentClauseIndex, setCurrentClauseIndex] = useState(0);
   const [selections, setSelections] = useState<Map<string, Selection>>(new Map());
@@ -73,6 +75,7 @@ export default function NegotiatePage() {
 
   const { data: deal, isLoading, error } = trpc.deal.getById.useQuery({ id: dealId });
   const { data: existingSelections } = trpc.selections.getMySelections.useQuery({ dealRoomId: dealId });
+  const { data: lawyerData } = trpc.lawyer.getRecommendations.useQuery({ dealRoomId: dealId });
 
   // Check if the user is a respondent and if counterparty selections are available
   const isRespondent = deal?.currentUserRole === "RESPONDENT";
@@ -173,6 +176,17 @@ export default function NegotiatePage() {
   const isComplete = selections.size === clauses.length;
   const governingLaw = deal.governingLaw as GoverningLaw;
   const contractLang = (deal as { contractLanguage?: string }).contractLanguage || "en";
+
+  // Lawyer recommendation lookup: clauseTemplateId -> recommended optionId + note
+  const recommendationMap = new Map<string, { clauseOptionId: string; note: string | null }>();
+  if (lawyerData) {
+    for (const rec of lawyerData.recommendations) {
+      recommendationMap.set(rec.clauseTemplateId, {
+        clauseOptionId: rec.clauseOptionId,
+        note: rec.note,
+      });
+    }
+  }
 
   // Resolve a potentially localized string ({en, es} object or plain string)
   const resolveLocalized = (value: string | Record<string, string> | undefined): string | undefined => {
@@ -555,6 +569,8 @@ export default function NegotiatePage() {
               const jurisdictionRules = getJurisdictionRules(option);
               const hasWarning = jurisdictionRules?.warning;
               const hasNote = jurisdictionRules?.note;
+              const lawyerRec = recommendationMap.get(currentClause.clauseTemplateId);
+              const isLawyerRecommended = lawyerRec?.clauseOptionId === option.id;
 
               return (
                 <div
@@ -576,8 +592,14 @@ export default function NegotiatePage() {
                         {isSelected && <div className="w-2 h-2 rounded-full bg-primary-foreground" />}
                       </div>
                       <div>
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2 flex-wrap">
                           <p className="font-heading text-base">{option.label}</p>
+                          {isLawyerRecommended && (
+                            <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full flex items-center gap-1 font-medium">
+                              <Scale className="w-3 h-3" />
+                              {tLawyer("recommendedByLawyer")}
+                            </span>
+                          )}
                           {hasWarning && (
                             <AlertTriangle className="w-4 h-4 text-warning" />
                           )}
@@ -611,6 +633,17 @@ export default function NegotiatePage() {
                     <div className="mt-3 p-3 bg-blue-500/10 border border-blue-500/30 rounded-xl flex items-start gap-2">
                       <Info className="w-4 h-4 text-blue-400 mt-0.5 flex-shrink-0" />
                       <p className="text-sm text-blue-200">{jurisdictionRules.note}</p>
+                    </div>
+                  )}
+
+                  {/* Lawyer's note */}
+                  {isLawyerRecommended && lawyerRec?.note && (
+                    <div className="mt-3 p-3 bg-primary/5 border border-primary/20 rounded-xl flex items-start gap-2">
+                      <Scale className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
+                      <div>
+                        <p className="text-xs text-primary font-medium mb-0.5">{tLawyer("lawyerNote")}</p>
+                        <p className="text-sm text-muted-foreground">{lawyerRec.note}</p>
+                      </div>
                     </div>
                   )}
 

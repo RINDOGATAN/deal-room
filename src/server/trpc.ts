@@ -148,3 +148,24 @@ const enforceSupervisorIsAuthed = t.middleware(({ ctx, next }) => {
 });
 
 export const supervisorProcedure = t.procedure.use(enforceSupervisorIsAuthed);
+
+// Lawyer procedure - requires authenticated user with isLawyer flag
+const enforceUserIsLawyer = t.middleware(async ({ ctx, next }) => {
+  if (!ctx.session || !ctx.session.user) {
+    throw new TRPCError({ code: "UNAUTHORIZED" });
+  }
+  const user = await prisma.user.findUnique({
+    where: { id: ctx.session.user.id },
+    select: { isLawyer: true },
+  });
+  if (!user?.isLawyer) {
+    throw new TRPCError({ code: "FORBIDDEN", message: "Lawyer access required" });
+  }
+  return next({
+    ctx: {
+      session: { ...ctx.session, user: ctx.session.user },
+    },
+  });
+});
+
+export const lawyerProcedure = t.procedure.use(enforceUserIsLawyer);
