@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
@@ -37,6 +37,18 @@ export default function VettingDetailPage() {
   const locale = useLocale();
 
   const [expandedClause, setExpandedClause] = useState<string | null>(null);
+  const clauseRefs = useRef<Record<string, HTMLDivElement | null>>({});
+
+  const handleExpandClause = useCallback((clauseId: string) => {
+    const isExpanding = expandedClause !== clauseId;
+    setExpandedClause(isExpanding ? clauseId : null);
+    if (isExpanding) {
+      // Scroll the clause title into view after the content renders
+      requestAnimationFrame(() => {
+        clauseRefs.current[clauseId]?.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    }
+  }, [expandedClause]);
   const [notes, setNotes] = useState<Record<string, string>>({});
   // Local optimistic state for recommendations (clauseTemplateId -> clauseOptionId)
   const [localSelections, setLocalSelections] = useState<Record<string, string>>({});
@@ -226,9 +238,13 @@ export default function VettingDetailPage() {
           );
 
           return (
-            <div key={clause.id} className="card-brutal">
+            <div
+              key={clause.id}
+              ref={(el) => { clauseRefs.current[clause.id] = el; }}
+              className="card-brutal scroll-mt-20"
+            >
               <button
-                onClick={() => setExpandedClause(isExpanded ? null : clause.id)}
+                onClick={() => handleExpandClause(clause.id)}
                 className="w-full text-left flex items-center justify-between"
               >
                 <div className="flex items-center gap-3">
