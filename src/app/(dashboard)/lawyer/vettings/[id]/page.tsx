@@ -38,6 +38,8 @@ export default function VettingDetailPage() {
 
   const [expandedClause, setExpandedClause] = useState<string | null>(null);
   const [notes, setNotes] = useState<Record<string, string>>({});
+  // Local optimistic state for recommendations (clauseTemplateId -> clauseOptionId)
+  const [localSelections, setLocalSelections] = useState<Record<string, string>>({});
   const [inviteEmail, setInviteEmail] = useState("");
   const [inviteName, setInviteName] = useState("");
   const [inviteCompany, setInviteCompany] = useState("");
@@ -48,22 +50,28 @@ export default function VettingDetailPage() {
     { id: vettingId }
   );
 
-  // Pre-populate notes from existing recommendations
+  // Pre-populate notes and selections from existing recommendations
   useEffect(() => {
     if (vetting) {
       const noteMap: Record<string, string> = {};
+      const selMap: Record<string, string> = {};
       for (const rec of vetting.recommendations) {
         if (rec.note) noteMap[rec.clauseTemplateId] = rec.note;
+        selMap[rec.clauseTemplateId] = rec.clauseOptionId;
       }
       setNotes(noteMap);
+      setLocalSelections((prev) => {
+        // Only set if we don't already have local state (avoid overwriting optimistic updates)
+        const merged = { ...selMap };
+        for (const [k, v] of Object.entries(prev)) {
+          if (v) merged[k] = v;
+        }
+        return merged;
+      });
     }
   }, [vetting]);
 
-  const saveRecommendation = trpc.lawyer.saveRecommendation.useMutation({
-    onSuccess: () => {
-      utils.lawyer.getVetting.invalidate({ id: vettingId });
-    },
-  });
+  const saveRecommendation = trpc.lawyer.saveRecommendation.useMutation();
 
   const approveVetting = trpc.lawyer.approveVetting.useMutation({
     onSuccess: () => {
@@ -97,14 +105,22 @@ export default function VettingDetailPage() {
   }
 
   const clauses = vetting.contractTemplate.clauses;
+  // Merge server recommendations with local optimistic selections
   const recommendationMap = new Map(
     vetting.recommendations.map((r) => [r.clauseTemplateId, r])
   );
-  const allRecommended = clauses.every((c) => recommendationMap.has(c.id));
+  // For UI display, use localSelections (includes optimistic updates)
+  const effectiveSelections = { ...Object.fromEntries(
+    vetting.recommendations.map((r) => [r.clauseTemplateId, r.clauseOptionId])
+  ), ...localSelections };
+  const allRecommended = clauses.every((c) => effectiveSelections[c.id]);
   const isApproved = vetting.status === "APPROVED";
 
   const handleSelectOption = (clauseTemplateId: string, clauseOptionId: string) => {
     if (isApproved) return;
+    // Optimistic local update — instant UI response
+    setLocalSelections((prev) => ({ ...prev, [clauseTemplateId]: clauseOptionId }));
+    // Fire-and-forget save to server
     saveRecommendation.mutate({
       vettingId,
       clauseTemplateId,
@@ -114,12 +130,12 @@ export default function VettingDetailPage() {
   };
 
   const handleSaveNote = (clauseTemplateId: string) => {
-    const rec = recommendationMap.get(clauseTemplateId);
-    if (!rec || isApproved) return;
+    const optionId = effectiveSelections[clauseTemplateId];
+    if (!optionId || isApproved) return;
     saveRecommendation.mutate({
       vettingId,
       clauseTemplateId,
-      clauseOptionId: rec.clauseOptionId,
+      clauseOptionId: optionId,
       note: notes[clauseTemplateId] || undefined,
     });
   };
@@ -195,6 +211,8 @@ export default function VettingDetailPage() {
 
         {clauses.map((clause, index) => {
           const rec = recommendationMap.get(clause.id);
+          const selectedOptionId = effectiveSelections[clause.id];
+          const hasSelection = !!selectedOptionId;
           const isExpanded = expandedClause === clause.id;
           const title = resolveLocalized(
             (clause.localizedContent as any)?.title,
@@ -215,15 +233,15 @@ export default function VettingDetailPage() {
               >
                 <div className="flex items-center gap-3">
                   <div className={`w-8 h-8 flex items-center justify-center text-sm font-bold rounded-full ${
-                    rec ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
+                    hasSelection ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
                   }`}>
-                    {rec ? <Check className="w-4 h-4" /> : index + 1}
+                    {hasSelection ? <Check className="w-4 h-4" /> : index + 1}
                   </div>
                   <div>
                     <h3 className="font-semibold">{title}</h3>
-                    {rec && (
+                    {hasSelection && (
                       <p className="text-xs text-primary mt-0.5">
-                        {clause.options.find((o) => o.id === rec.clauseOptionId)?.label}
+                        {clause.options.find((o) => o.id === selectedOptionId)?.label}
                       </p>
                     )}
                   </div>
@@ -242,7 +260,7 @@ export default function VettingDetailPage() {
                   {/* Options */}
                   <div className="space-y-2">
                     {clause.options.map((option) => {
-                      const isSelected = rec?.clauseOptionId === option.id;
+                      const isSelected = selectedOptionId === option.id;
                       const optLabel = resolveLocalized(
                         (option.localizedContent as any)?.label,
                         locale,
@@ -289,7 +307,7 @@ export default function VettingDetailPage() {
                   </div>
 
                   {/* Note */}
-                  {rec && !isApproved && (
+                  {hasSelection && !isApproved && (
                     <div className="space-y-2">
                       <Label className="text-sm">{t("addNote")}</Label>
                       <textarea
