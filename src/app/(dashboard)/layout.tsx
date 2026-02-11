@@ -13,9 +13,21 @@ import {
   User,
   Menu,
   X,
+  Scale,
+  ClipboardCheck,
 } from "lucide-react";
 import { brand } from "@/config/brand";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { trpc } from "@/lib/trpc";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { toast } from "sonner";
 
 export default function DashboardLayout({
   children,
@@ -26,7 +38,22 @@ export default function DashboardLayout({
   const pathname = usePathname();
   const t = useTranslations("nav");
   const tCommon = useTranslations("common");
+  const tLawyer = useTranslations("lawyer");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [showLawyerDialog, setShowLawyerDialog] = useState(false);
+
+  const { data: lawyerProfile } = trpc.lawyer.getProfile.useQuery(
+    undefined,
+    { enabled: status === "authenticated" }
+  );
+  const utils = trpc.useUtils();
+  const registerLawyer = trpc.lawyer.register.useMutation({
+    onSuccess: () => {
+      toast.success(tLawyer("registered"));
+      setShowLawyerDialog(false);
+      utils.lawyer.getProfile.invalidate();
+    },
+  });
 
   if (status === "loading") {
     return (
@@ -43,6 +70,9 @@ export default function DashboardLayout({
   const navItems = [
     { href: "/deals", label: t("myDeals"), icon: FileText },
     { href: "/deals/new", label: t("newDeal"), icon: Plus },
+    ...(lawyerProfile?.isLawyer
+      ? [{ href: "/lawyer/vettings", label: tLawyer("myVettings"), icon: ClipboardCheck }]
+      : []),
   ];
 
   return (
@@ -85,6 +115,15 @@ export default function DashboardLayout({
 
             <div className="hidden md:flex items-center gap-4">
               <LanguageSwitcher />
+              {lawyerProfile && !lawyerProfile.isLawyer && (
+                <button
+                  onClick={() => setShowLawyerDialog(true)}
+                  className="flex items-center gap-1.5 px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground rounded-full hover:bg-secondary transition-colors border border-border"
+                >
+                  <Scale className="w-3.5 h-3.5" />
+                  {tLawyer("iAmALawyer")}
+                </button>
+              )}
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <User className="w-4 h-4" />
                 <span>{session?.user?.email}</span>
@@ -155,6 +194,15 @@ export default function DashboardLayout({
 
             <div className="border-t border-border pt-6 space-y-4">
               <LanguageSwitcher />
+              {lawyerProfile && !lawyerProfile.isLawyer && (
+                <button
+                  onClick={() => { setMobileMenuOpen(false); setShowLawyerDialog(true); }}
+                  className="flex items-center gap-2 px-4 py-3 text-sm text-muted-foreground hover:text-foreground rounded-xl hover:bg-secondary transition-colors w-full"
+                >
+                  <Scale className="w-4 h-4" />
+                  {tLawyer("iAmALawyer")}
+                </button>
+              )}
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <User className="w-4 h-4" />
                 <span>{session?.user?.email}</span>
@@ -208,6 +256,40 @@ export default function DashboardLayout({
           </a>
         </div>
       </footer>
+
+      {/* Lawyer Registration Dialog */}
+      <Dialog open={showLawyerDialog} onOpenChange={setShowLawyerDialog}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 bg-primary/20 rounded-2xl flex items-center justify-center">
+                <Scale className="w-6 h-6 text-primary" />
+              </div>
+              <div>
+                <DialogTitle>{tLawyer("registerTitle")}</DialogTitle>
+                <DialogDescription className="mt-1">
+                  {tLawyer("registerDescription")}
+                </DialogDescription>
+              </div>
+            </div>
+          </DialogHeader>
+          <DialogFooter className="gap-2 sm:gap-0 mt-4">
+            <button
+              onClick={() => setShowLawyerDialog(false)}
+              className="px-4 py-2 border border-border text-sm hover:bg-muted/50 rounded-full"
+            >
+              {tCommon("cancel")}
+            </button>
+            <button
+              onClick={() => registerLawyer.mutate()}
+              disabled={registerLawyer.isPending}
+              className="btn-brutal text-sm"
+            >
+              {registerLawyer.isPending ? tLawyer("registering") : tLawyer("registerConfirm")}
+            </button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

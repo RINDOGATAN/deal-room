@@ -271,6 +271,11 @@ export const attorneyReviewRouter = createTRPCRouter({
                   },
                 },
               },
+              lawyerVetting: {
+                include: {
+                  lawyer: { select: { name: true, email: true } },
+                },
+              },
             },
           },
         },
@@ -313,10 +318,24 @@ export const attorneyReviewRouter = createTRPCRouter({
 
       const canProceedToSigning = !myReviewActive && !otherPartyReviewActive;
 
+      // Lawyer vetting info
+      const vetting = party.dealRoom.lawyerVetting;
+      const lawyerVetted = !!vetting;
+      const vettingLawyerName = vetting
+        ? vetting.lawyer.name || vetting.lawyer.email
+        : null;
+
+      // If lawyer-vetted and user is the initiator, they don't need attorney review
+      const isInitiator = myParty.role === "INITIATOR";
+      const suppressReviewForInitiator = lawyerVetted && isInitiator;
+
       return {
         myReview,
         otherPartyReviewActive,
         canProceedToSigning,
+        lawyerVetted,
+        vettingLawyerName,
+        suppressReviewForInitiator,
       };
     }),
 });

@@ -21,6 +21,7 @@ model User {
   emailVerified DateTime?
   image         String?
   company       String?
+  isLawyer      Boolean   @default(false)
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
@@ -33,6 +34,10 @@ model User {
   dealRoomParties DealRoomParty[]
   invitations     Invitation[]
   auditLogs       AuditLog[]
+
+  // Lawyer relations
+  lawyerVettings    LawyerVetting[]
+  clientInvitations ClientInvitation[]
 
   @@map("users")
 }
@@ -282,6 +287,7 @@ model ContractTemplate {
   dealRooms DealRoom[]
   sourceMappings ClauseMapping[] @relation("sourceMappings")
   targetMappings ClauseMapping[] @relation("targetMappings")
+  lawyerVettings LawyerVetting[]
 
   @@map("contract_templates")
 }
@@ -303,6 +309,7 @@ model ClauseTemplate {
   contractTemplate ContractTemplate @relation(fields: [contractTemplateId], references: [id], onDelete: Cascade)
   options          ClauseOption[]
   dealRoomClauses  DealRoomClause[]
+  lawyerRecommendations LawyerRecommendation[]
 
   @@unique([contractTemplateId, clauseId])
   @@map("clause_templates")
@@ -332,6 +339,7 @@ model ClauseOption {
   partySelections   PartySelection[]
   compromiseSuggestions CompromiseSuggestion[]
   counterProposals  CounterProposal[]
+  lawyerRecommendations LawyerRecommendation[]
 
   @@unique([clauseTemplateId, optionId])
   @@map("clause_options")
@@ -377,10 +385,12 @@ model DealRoom {
   contractLanguage   String         @default("en") // "en" or "es" for contract output language
   status             DealRoomStatus @default(DRAFT)
   currentRound       Int            @default(0)
+  lawyerVettingId    String?
   createdAt          DateTime       @default(now())
   updatedAt          DateTime       @updatedAt
 
   contractTemplate        ContractTemplate       @relation(fields: [contractTemplateId], references: [id])
+  lawyerVetting           LawyerVetting?         @relation(fields: [lawyerVettingId], references: [id])
   parties                 DealRoomParty[]
   clauses                 DealRoomClause[]
   invitations             Invitation[]
@@ -626,6 +636,77 @@ model AuditLog {
   @@index([userId])
   @@index([createdAt])
   @@map("audit_logs")
+}
+
+// ============================================================
+// LAWYER VETTING & CLIENT INVITATIONS
+// ============================================================
+
+model LawyerVetting {
+  id                   String              @id @default(cuid())
+  lawyerId             String
+  contractTemplateId   String
+  governingLaw         GoverningLaw
+  contractLanguage     String              @default("en")
+  status               LawyerVettingStatus @default(DRAFT)
+  approvedAt           DateTime?
+  createdAt            DateTime            @default(now())
+  updatedAt            DateTime            @updatedAt
+
+  lawyer             User                 @relation(fields: [lawyerId], references: [id])
+  contractTemplate   ContractTemplate     @relation(fields: [contractTemplateId], references: [id])
+  recommendations    LawyerRecommendation[]
+  clientInvitations  ClientInvitation[]
+  dealRooms          DealRoom[]
+
+  @@map("lawyer_vettings")
+}
+
+enum LawyerVettingStatus {
+  DRAFT
+  APPROVED
+}
+
+model LawyerRecommendation {
+  id               String   @id @default(cuid())
+  vettingId        String
+  clauseTemplateId String
+  clauseOptionId   String
+  note             String?  @db.Text
+
+  vetting        LawyerVetting  @relation(fields: [vettingId], references: [id], onDelete: Cascade)
+  clauseTemplate ClauseTemplate @relation(fields: [clauseTemplateId], references: [id])
+  clauseOption   ClauseOption   @relation(fields: [clauseOptionId], references: [id])
+
+  @@unique([vettingId, clauseTemplateId])
+  @@map("lawyer_recommendations")
+}
+
+model ClientInvitation {
+  id          String                 @id @default(cuid())
+  vettingId   String
+  lawyerId    String
+  email       String
+  contactName String?
+  company     String?
+  token       String                 @unique @default(cuid())
+  status      ClientInvitationStatus @default(PENDING)
+  sentAt      DateTime               @default(now())
+  expiresAt   DateTime
+  acceptedAt  DateTime?
+  createdAt   DateTime               @default(now())
+
+  vetting LawyerVetting @relation(fields: [vettingId], references: [id])
+  lawyer  User          @relation(fields: [lawyerId], references: [id])
+
+  @@map("client_invitations")
+}
+
+enum ClientInvitationStatus {
+  PENDING
+  ACCEPTED
+  EXPIRED
+  CANCELLED
 }
 
 // ============================================================
