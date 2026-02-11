@@ -14,8 +14,18 @@ import {
   Check,
   Scale,
   Languages,
+  Lock,
 } from "lucide-react";
 import { Label } from "@/components/ui/label";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { getContactMailto } from "@/config/brand";
 
 const contractIcons: Record<string, typeof FileText> = {
   NDA: Shield,
@@ -68,11 +78,13 @@ export default function NewVettingPage() {
   const router = useRouter();
   const t = useTranslations("lawyer");
   const tNew = useTranslations("newDeal");
+  const tCommon = useTranslations("common");
   const locale = useLocale();
 
   const [selectedTemplateId, setSelectedTemplateId] = useState<string | null>(null);
   const [selectedJurisdiction, setSelectedJurisdiction] = useState<GoverningLaw | null>(null);
   const [selectedLanguage, setSelectedLanguage] = useState<ContractLanguage>("en");
+  const [entitlementError, setEntitlementError] = useState<string | null>(null);
 
   const { data: templates, isLoading } = trpc.skills.listTemplatesWithAccess.useQuery({ language: locale });
 
@@ -81,7 +93,11 @@ export default function NewVettingPage() {
       router.push(`/lawyer/vettings/${vetting.id}`);
     },
     onError: (error) => {
-      toast.error(error.message);
+      if (error.data?.code === "FORBIDDEN") {
+        setEntitlementError(error.message);
+      } else {
+        toast.error(error.message);
+      }
     },
   });
 
@@ -119,6 +135,40 @@ export default function NewVettingPage() {
 
   return (
     <div className="max-w-3xl mx-auto space-y-8">
+      {/* Entitlement Error Modal */}
+      <Dialog open={!!entitlementError} onOpenChange={(open) => !open && setEntitlementError(null)}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 bg-yellow-500/20 rounded-2xl flex items-center justify-center">
+                <Lock className="w-6 h-6 text-yellow-500" />
+              </div>
+              <div>
+                <DialogTitle>{tNew("accessRequired")}</DialogTitle>
+                <DialogDescription className="mt-1">
+                  {entitlementError}
+                </DialogDescription>
+              </div>
+            </div>
+          </DialogHeader>
+          <DialogFooter className="gap-2 sm:gap-0 mt-4">
+            <button
+              onClick={() => setEntitlementError(null)}
+              className="px-4 py-2 border border-border text-sm hover:bg-muted/50 rounded-full"
+            >
+              {tCommon("close")}
+            </button>
+            <a
+              href={getContactMailto("Dealroom Access Request")}
+              className="btn-brutal inline-flex items-center gap-2 text-sm"
+            >
+              {tNew("contactUs")}
+              <ArrowRight className="w-4 h-4" />
+            </a>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
       <div>
         <h1 className="text-2xl font-bold">{t("vetNewTemplate")}</h1>
         <p className="text-muted-foreground mt-1">{t("selectTemplate")}</p>
@@ -134,33 +184,54 @@ export default function NewVettingPage() {
           {templates?.map((template) => {
             const Icon = contractIcons[template.contractType] || FileText;
             const isSelected = selectedTemplateId === template.id;
+            const isLocked = template.requiresLicense && !template.hasAccess;
 
             return (
               <button
                 key={template.id}
                 onClick={() => {
+                  if (isLocked) {
+                    setEntitlementError(tNew("toUseContract"));
+                    return;
+                  }
                   setSelectedTemplateId(template.id);
                   setSelectedJurisdiction(null);
                 }}
                 className={`card-brutal text-left relative transition-colors ${
-                  isSelected ? "border-primary" : "hover:border-muted-foreground"
+                  isLocked
+                    ? "opacity-60 border-dashed"
+                    : isSelected
+                    ? "border-primary"
+                    : "hover:border-muted-foreground"
                 }`}
               >
-                {isSelected && (
+                {isSelected && !isLocked && (
                   <div className="absolute top-4 right-4 w-6 h-6 bg-primary flex items-center justify-center rounded-full">
                     <Check className="w-4 h-4 text-primary-foreground" />
                   </div>
                 )}
+                {isLocked && (
+                  <div className="absolute top-4 right-4 w-6 h-6 bg-muted flex items-center justify-center rounded-full">
+                    <Lock className="w-4 h-4 text-muted-foreground" />
+                  </div>
+                )}
                 <div className="flex items-start gap-4">
                   <div className={`w-10 h-10 flex items-center justify-center rounded-xl ${
-                    isSelected ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
+                    isLocked
+                      ? "bg-muted text-muted-foreground"
+                      : isSelected
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-muted text-muted-foreground"
                   }`}>
                     <Icon className="w-5 h-5" />
                   </div>
                   <div>
                     <h3 className="font-semibold">{template.displayName}</h3>
                     <p className="text-sm text-muted-foreground mt-1">
-                      {tNew("negotiableClauses", { count: template.clauseCount })}
+                      {isLocked
+                        ? tNew("accessRequired")
+                        : tNew("negotiableClauses", { count: template.clauseCount })
+                      }
                     </p>
                   </div>
                 </div>

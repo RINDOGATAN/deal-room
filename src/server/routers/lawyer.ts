@@ -3,6 +3,13 @@ import { createTRPCRouter, protectedProcedure, lawyerProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
 import { GoverningLaw } from "@prisma/client";
 import { sendClientInvitationEmail } from "@/lib/email";
+import { checkDealCreationEntitlement } from "../services/licensing/entitlement";
+
+const GOVERNING_LAW_TO_JURISDICTION: Record<string, string> = {
+  CALIFORNIA: "US-CA",
+  ENGLAND_WALES: "GB",
+  SPAIN: "ES",
+};
 
 export const lawyerRouter = createTRPCRouter({
   /** Set current user as a lawyer */
@@ -35,9 +42,39 @@ export const lawyerRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const template = await ctx.prisma.contractTemplate.findUnique({
         where: { id: input.contractTemplateId },
+        include: { skillPackage: true },
       });
       if (!template) {
         throw new TRPCError({ code: "NOT_FOUND", message: "Template not found" });
+      }
+
+      // Check entitlement for licensed skills
+      if (template.skillPackageId) {
+        const userEmail = ctx.session.user.email!;
+        const customer = await ctx.prisma.customer.findFirst({
+          where: { email: userEmail },
+        });
+
+        if (!customer) {
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message: "This contract skill has not been enabled on your account. Please contact us to get access.",
+          });
+        }
+
+        const jurisdiction = GOVERNING_LAW_TO_JURISDICTION[input.governingLaw];
+        const entitlement = await checkDealCreationEntitlement(
+          customer.id,
+          template.contractType,
+          jurisdiction
+        );
+
+        if (!entitlement.entitled) {
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message: "This contract skill has not been enabled on your account. Please contact us to get access.",
+          });
+        }
       }
 
       const vetting = await ctx.prisma.lawyerVetting.create({
