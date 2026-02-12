@@ -255,7 +255,9 @@ export default function NewVettingPage() {
                   setSelectedJurisdiction(null);
                 }}
                 className={`card-brutal text-left relative transition-colors ${
-                  isLocked
+                  isLocked && selfServiceUpgrade
+                    ? "border-warning/50"
+                    : isLocked
                     ? "opacity-60 border-dashed"
                     : isSelected
                     ? "border-primary"
@@ -267,14 +269,26 @@ export default function NewVettingPage() {
                     <Check className="w-4 h-4 text-primary-foreground" />
                   </div>
                 )}
-                {isLocked && (
+                {!isSelected && !isLocked && (
+                  <span className="absolute top-4 right-4 bg-primary/10 text-primary text-xs font-medium px-2.5 py-0.5 rounded-full">
+                    {tNew("included")}
+                  </span>
+                )}
+                {isLocked && selfServiceUpgrade && (
+                  <span className="absolute top-4 right-4 bg-warning/20 text-warning text-xs font-semibold px-2.5 py-0.5 rounded-full">
+                    {tNew("premiumSkill")}
+                  </span>
+                )}
+                {isLocked && !selfServiceUpgrade && (
                   <div className="absolute top-4 right-4 w-6 h-6 bg-muted flex items-center justify-center rounded-full">
                     <Lock className="w-4 h-4 text-muted-foreground" />
                   </div>
                 )}
                 <div className="flex items-start gap-4">
                   <div className={`w-10 h-10 flex items-center justify-center rounded-xl ${
-                    isLocked
+                    isLocked && selfServiceUpgrade
+                      ? "bg-warning/20 text-warning"
+                      : isLocked
                       ? "bg-muted text-muted-foreground"
                       : isSelected
                       ? "bg-primary text-primary-foreground"
@@ -284,9 +298,9 @@ export default function NewVettingPage() {
                   </div>
                   <div>
                     <h3 className="font-semibold">{template.displayName}</h3>
-                    <p className="text-sm text-muted-foreground mt-1">
+                    <p className={`text-sm mt-1 ${isLocked && selfServiceUpgrade ? "text-warning font-medium" : "text-muted-foreground"}`}>
                       {isLocked
-                        ? (selfServiceUpgrade ? tNew("premiumSkill") : tNew("accessRequired"))
+                        ? (selfServiceUpgrade ? tNew("clickToEnable") : tNew("accessRequired"))
                         : tNew("negotiableClauses", { count: template.clauseCount })
                       }
                     </p>

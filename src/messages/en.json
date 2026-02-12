@@ -96,6 +96,8 @@
     "contactUs": "Contact Us",
     "toUseContract": "To use this contract type, you'll need to have it enabled on your account. Get in touch with us and we'll help you get started.",
     "premiumSkill": "€9/mo",
+    "included": "Included",
+    "clickToEnable": "Click to enable",
     "notAvailableForContract": "Not available for this contract",
     "jurisdictions": {
       "california": "California, USA",
