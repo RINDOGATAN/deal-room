@@ -333,7 +333,13 @@
     "vettingApproved": "Template approved",
     "vettingApprovedDescription": "You can now send this to your customers.",
     "lawyerVettedNote": "This contract was vetted by {name}",
-    "missingRecommendations": "Missing recommendations for {count} clause(s)"
+    "missingRecommendations": "Missing recommendations for {count} clause(s)",
+    "vettedContractsInfoTitle": "Build Now, Send Later",
+    "vettedContractsInfoBody": "You can review templates and prepare vetted contracts at no cost. A subscription (€9/mo) is only needed when you're ready to send recommendations to clients.",
+    "vettedContractsInfoDismiss": "Got it",
+    "viewBilling": "View Billing",
+    "sendRequiresSubscription": "A Vetted Contracts subscription (€9/mo) is required to send recommendations to clients.",
+    "enableSubscription": "Enable — €9/mo"
   },
   "billing": {
     "title": "Billing",

@@ -15,6 +15,7 @@ import {
   Scale,
   Languages,
   Lock,
+  Sparkles,
 } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import {
@@ -85,8 +86,12 @@ export default function NewVettingPage() {
   const [selectedJurisdiction, setSelectedJurisdiction] = useState<GoverningLaw | null>(null);
   const [selectedLanguage, setSelectedLanguage] = useState<ContractLanguage>("en");
   const [entitlementError, setEntitlementError] = useState<string | null>(null);
+  const [infoModalDismissed, setInfoModalDismissed] = useState(false);
 
   const { data: templates, isLoading } = trpc.skills.listTemplatesWithAccess.useQuery({ language: locale });
+  const { data: vettedStatus } = trpc.billing.hasVettedContracts.useQuery();
+
+  const showInfoModal = vettedStatus && !vettedStatus.active && !infoModalDismissed;
 
   const createVetting = trpc.lawyer.createVetting.useMutation({
     onSuccess: (vetting) => {
@@ -165,6 +170,39 @@ export default function NewVettingPage() {
               {tNew("contactUs")}
               <ArrowRight className="w-4 h-4" />
             </a>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Vetted Contracts Info Modal */}
+      <Dialog open={!!showInfoModal} onOpenChange={(open) => !open && setInfoModalDismissed(true)}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 bg-primary/20 rounded-2xl flex items-center justify-center">
+                <Sparkles className="w-6 h-6 text-primary" />
+              </div>
+              <div>
+                <DialogTitle>{t("vettedContractsInfoTitle")}</DialogTitle>
+                <DialogDescription className="mt-1">
+                  {t("vettedContractsInfoBody")}
+                </DialogDescription>
+              </div>
+            </div>
+          </DialogHeader>
+          <DialogFooter className="gap-2 sm:gap-0 mt-4">
+            <a
+              href="/billing"
+              className="px-4 py-2 border border-border text-sm hover:bg-muted/50 rounded-full"
+            >
+              {t("viewBilling")}
+            </a>
+            <button
+              onClick={() => setInfoModalDismissed(true)}
+              className="btn-brutal text-sm"
+            >
+              {t("vettedContractsInfoDismiss")}
+            </button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
