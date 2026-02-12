@@ -29,6 +29,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { getContactMailto } from "@/config/brand";
+import { EnableFeatureModal } from "@/components/premium/enable-feature-modal";
 
 const contractIcons: Record<string, typeof FileText> = {
   NDA: Shield,
@@ -55,6 +56,7 @@ interface TemplateInfo {
   jurisdictions: string[];
   languages: string[];
   requiresLicense: boolean;
+  skillPackageId: string | null;
   hasAccess: boolean;
   entitledJurisdictions: string[];
   expiresAt: Date | null;
@@ -182,6 +184,7 @@ export default function NewDealPage() {
   const [dealName, setDealName] = useState("");
   const [company, setCompany] = useState("");
   const [entitlementError, setEntitlementError] = useState<string | null>(null);
+  const [enableModalSkill, setEnableModalSkill] = useState<{ id: string; name: string } | null>(null);
   const [resolvedNativeTemplate, setResolvedNativeTemplate] = useState<string | null>(null);
 
   // Lawyer vetting flow
@@ -205,6 +208,8 @@ export default function NewDealPage() {
   }, [vettingData]);
 
   const { data: templates, isLoading } = trpc.skills.listTemplatesWithAccess.useQuery({ language: locale });
+  const { data: billingConfig } = trpc.billing.getConfig.useQuery();
+  const selfServiceUpgrade = billingConfig?.selfServiceUpgrade ?? false;
   const allFamilies = templates ? groupTemplatesByFamily(templates) : [];
   // Filter: only show families where at least one template supports the current platform locale
   const templateFamilies = allFamilies.filter((family) =>
@@ -434,6 +439,16 @@ export default function NewDealPage() {
         </DialogContent>
       </Dialog>
 
+      {/* Self-service purchase modal for locked premium templates */}
+      {enableModalSkill && (
+        <EnableFeatureModal
+          open
+          onClose={() => setEnableModalSkill(null)}
+          skillPackageId={enableModalSkill.id}
+          skillName={enableModalSkill.name}
+        />
+      )}
+
       {/* Step 1: Contract Type Selection */}
       <div className="space-y-4">
         <div className="flex items-center gap-3">
@@ -457,7 +472,11 @@ export default function NewDealPage() {
                 key={family.family}
                 onClick={() => {
                   if (isLocked) {
-                    setEntitlementError(t("toUseContract"));
+                    if (selfServiceUpgrade && family.primaryTemplate.skillPackageId) {
+                      setEnableModalSkill({ id: family.primaryTemplate.skillPackageId, name: family.displayName });
+                    } else {
+                      setEntitlementError(t("toUseContract"));
+                    }
                     return;
                   }
                   setSelectedFamily(family.family);
@@ -504,7 +523,7 @@ export default function NewDealPage() {
                     <h3 className="font-semibold">{family.displayName}</h3>
                     <p className="text-sm text-muted-foreground mt-1">
                       {isLocked
-                        ? t("accessRequired")
+                        ? (selfServiceUpgrade ? t("premiumSkill") : t("accessRequired"))
                         : t("negotiableClauses", { count: family.primaryTemplate.clauseCount })
                       }
                     </p>
