@@ -360,16 +360,10 @@ export default function VettingDetailPage() {
 
           {vettedStatus && !vettedStatus.active ? (
             <>
-              <div className={`card-brutal relative ${vettedStatus.selfServiceUpgrade ? "border-warning/50" : "border-dashed"}`}>
-                {vettedStatus.selfServiceUpgrade ? (
-                  <span className="absolute top-4 right-4 bg-warning/20 text-warning text-xs font-semibold px-2.5 py-0.5 rounded-full">
-                    {tBilling("pricePerMonth")}
-                  </span>
-                ) : (
-                  <div className="absolute top-4 right-4 w-8 h-8 bg-muted flex items-center justify-center rounded-full">
-                    <Lock className="w-4 h-4 text-muted-foreground" />
-                  </div>
-                )}
+              <div className="card-brutal relative border-warning/50">
+                <span className="absolute top-4 right-4 bg-warning/20 text-warning text-xs font-semibold px-2.5 py-0.5 rounded-full">
+                  {tBilling("pricePerMonth")}
+                </span>
                 <p className="text-sm text-muted-foreground mb-4">
                   {t("sendRequiresSubscription")}
                 </p>
