@@ -12,6 +12,7 @@ interface SkillMetadata {
   contractType: string;
   displayName: string | Record<string, string>;
   description?: string | Record<string, string>;
+  category?: string | Record<string, string>;
   version: string;
   clauseCount: number;
   jurisdictions?: string[];
@@ -296,6 +297,11 @@ async function main() {
     const resolvedDisplayName = resolveString(clausesData.displayName) || resolveString(metadata?.displayName) || entry.name.toUpperCase();
     const resolvedDescription = resolveString(metadata?.description) || resolveString(clausesData.description);
 
+    // Resolve category from metadata
+    const categoryLocalized = metadata?.category && isLocalized(metadata.category)
+      ? metadata.category : undefined;
+    const resolvedCategory = resolveString(metadata?.category) || null;
+
     // Create or update contract template
     const template = await prisma.contractTemplate.upsert({
       where: { contractType: clausesData.contractType },
@@ -313,6 +319,8 @@ async function main() {
         languages,
         displayNameLocalized: displayNameLocalized as Prisma.InputJsonValue ?? Prisma.DbNull,
         descriptionLocalized: descriptionLocalized as Prisma.InputJsonValue ?? Prisma.DbNull,
+        category: resolvedCategory,
+        categoryLocalized: categoryLocalized as Prisma.InputJsonValue ?? Prisma.DbNull,
         isActive: true,
       },
       update: {
@@ -328,6 +336,8 @@ async function main() {
         languages,
         displayNameLocalized: displayNameLocalized as Prisma.InputJsonValue ?? Prisma.DbNull,
         descriptionLocalized: descriptionLocalized as Prisma.InputJsonValue ?? Prisma.DbNull,
+        category: resolvedCategory,
+        categoryLocalized: categoryLocalized as Prisma.InputJsonValue ?? Prisma.DbNull,
       },
     });
 
@@ -474,6 +484,12 @@ async function main() {
     "com.nel.skills.founders",
     "com.nel.skills.safe",
     "com.nel.skills.pacto-socios",
+    "com.nel.skills.employment",
+    "com.nel.skills.consulting",
+    "com.nel.skills.shareholders",
+    "com.nel.skills.convertible-note",
+    "com.nel.skills.ip-assignment",
+    "com.nel.skills.term-sheet",
   ];
 
   for (const skillId of premiumSkillIds) {

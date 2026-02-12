@@ -1,5 +1,6 @@
 {
   "contractType": "DPA",
+  "category": { "en": "Privacy", "es": "Privacidad" },
   "displayName": {
     "en": "Data Processing Agreement",
     "es": "Acuerdo de Tratamiento de Datos"

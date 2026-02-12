@@ -283,6 +283,8 @@ model ContractTemplate {
   languages              String[]  // Supported languages (e.g., ["en","es"])
   displayNameLocalized   Json?     // {"en":"...","es":"..."}
   descriptionLocalized   Json?     // {"en":"...","es":"..."}
+  category               String?   // e.g., "corporate", "investment", "privacy"
+  categoryLocalized      Json?     // {"en":"Corporate","es":"Societario"}
   isActive        Boolean  @default(true)
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
@@ -49,6 +49,7 @@ interface TemplateInfo {
   contractType: string;
   displayName: string;
   description: string | null;
+  category: string | null;
   version: string;
   clauseCount: number;
   templateFamily: string | null;
@@ -67,6 +68,7 @@ interface TemplateFamily {
   family: string;
   displayName: string;
   description: string | null;
+  category: string | null;
   templates: TemplateInfo[];
   primaryTemplate: TemplateInfo;
 }
@@ -84,6 +86,7 @@ function groupTemplatesByFamily(
           family: t.templateFamily,
           displayName: t.displayName,
           description: t.description,
+          category: t.category,
           templates: [t],
           primaryTemplate: t,
         });
@@ -103,6 +106,7 @@ function groupTemplatesByFamily(
     family.primaryTemplate = primary;
     family.displayName = primary.displayName;
     family.description = primary.description;
+    family.category = primary.category;
     result.push(family);
   }
 
@@ -111,6 +115,7 @@ function groupTemplatesByFamily(
       family: t.contractType,
       displayName: t.displayName,
       description: t.description,
+      category: t.category,
       templates: [t],
       primaryTemplate: t,
     });
@@ -147,6 +152,7 @@ export default function NewDealPage() {
   const [entitlementError, setEntitlementError] = useState<string | null>(null);
   const [enableModalSkill, setEnableModalSkill] = useState<{ id: string; name: string } | null>(null);
   const [resolvedNativeTemplate, setResolvedNativeTemplate] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
   // Lawyer vetting flow
   const vettingId = searchParams.get("vetting");
@@ -183,6 +189,31 @@ export default function NewDealPage() {
       const bLocked = b.templates.every((t) => t.requiresLicense && !t.hasAccess);
       return Number(aLocked) - Number(bLocked);
     });
+
+  // Derive unique categories from template families
+  const categories = useMemo(() => {
+    const cats = new Set<string>();
+    templateFamilies.forEach(f => { if (f.category) cats.add(f.category); });
+    return Array.from(cats).sort();
+  }, [templateFamilies]);
+
+  // Filter families by selected category
+  const filteredFamilies = selectedCategory
+    ? templateFamilies.filter(f => f.category === selectedCategory)
+    : templateFamilies;
+
+  // Reset selection when filter hides the currently selected family
+  useEffect(() => {
+    if (selectedCategory && selectedFamily) {
+      const stillVisible = templateFamilies.some(
+        f => f.family === selectedFamily && f.category === selectedCategory
+      );
+      if (!stillVisible) {
+        setSelectedFamily(null);
+        setSelectedType(null);
+      }
+    }
+  }, [selectedCategory]);
 
   // Compute available jurisdictions/languages for the selected family
   const selectedFamilyGroup = templateFamilies.find((f) => f.family === selectedFamily);
@@ -427,8 +458,37 @@ export default function NewDealPage() {
             {t("contractType")}
           </Label>
         </div>
+        {categories.length > 1 && (
+          <div className="flex gap-2 overflow-x-auto pb-1 -mx-1 px-1 scrollbar-hide">
+            <button
+              onClick={() => setSelectedCategory(null)}
+              className={`
+                shrink-0 px-4 py-1.5 rounded-full text-sm font-medium border transition-colors
+                ${selectedCategory === null
+                  ? "bg-primary text-primary-foreground border-primary"
+                  : "bg-muted/50 text-muted-foreground border-border hover:border-muted-foreground"}
+              `}
+            >
+              {t("allCategories")}
+            </button>
+            {categories.map(cat => (
+              <button
+                key={cat}
+                onClick={() => setSelectedCategory(selectedCategory === cat ? null : cat)}
+                className={`
+                  shrink-0 px-4 py-1.5 rounded-full text-sm font-medium border transition-colors
+                  ${selectedCategory === cat
+                    ? "bg-primary text-primary-foreground border-primary"
+                    : "bg-muted/50 text-muted-foreground border-border hover:border-muted-foreground"}
+                `}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+        )}
         <div className="grid grid-cols-2 gap-4">
-          {templateFamilies.map((family) => {
+          {filteredFamilies.map((family) => {
             const Icon = contractIcons[family.primaryTemplate.contractType] || FileText;
             const isSelected = selectedFamily === family.family;
             // A family is locked if ALL its templates require license and user has no access
