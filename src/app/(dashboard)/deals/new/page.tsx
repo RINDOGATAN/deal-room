@@ -120,54 +120,15 @@ function groupTemplatesByFamily(
 }
 type ContractLanguage = "en" | "es";
 
-const contractLanguageOptions: {
-  value: ContractLanguage;
-  label: string;
-  nativeLabel: string;
-  description: string;
-}[] = [
-  {
-    value: "en",
-    label: "English",
-    nativeLabel: "English",
-    description: "Contract text in English",
-  },
-  {
-    value: "es",
-    label: "Spanish",
-    nativeLabel: "Español",
-    description: "Texto del contrato en español",
-  },
+const contractLanguageMeta = [
+  { value: "en" as ContractLanguage, tKey: "english" as const },
+  { value: "es" as ContractLanguage, tKey: "spanish" as const },
 ];
 
-const jurisdictionOptions: {
-  value: GoverningLaw;
-  label: string;
-  flag: string;
-  description: string;
-  defaultCourt: string;
-}[] = [
-  {
-    value: "CALIFORNIA",
-    label: "California, USA",
-    flag: "🇺🇸",
-    description: "U.S. law framework with Silicon Valley standards",
-    defaultCourt: "State and federal courts in San Francisco, California",
-  },
-  {
-    value: "ENGLAND_WALES",
-    label: "England & Wales, UK",
-    flag: "🇬🇧",
-    description: "English common law, widely used internationally",
-    defaultCourt: "Courts of England and Wales, London",
-  },
-  {
-    value: "SPAIN",
-    label: "Spain, EU",
-    flag: "🇪🇸",
-    description: "Spanish civil law within EU regulatory framework",
-    defaultCourt: "Courts of Madrid, Spain",
-  },
+const jurisdictionMeta = [
+  { value: "CALIFORNIA" as GoverningLaw, flag: "🇺🇸", tKey: "california" as const },
+  { value: "ENGLAND_WALES" as GoverningLaw, flag: "🇬🇧", tKey: "englandWales" as const },
+  { value: "SPAIN" as GoverningLaw, flag: "🇪🇸", tKey: "spain" as const },
 ];
 
 export default function NewDealPage() {
@@ -245,7 +206,7 @@ export default function NewDealPage() {
   }
   const createDeal = trpc.deal.create.useMutation({
     onSuccess: (deal) => {
-      toast.success("Deal room created");
+      toast.success(t("dealRoomCreated"));
       router.push(`/deals/${deal.id}/negotiate`);
     },
     onError: (error) => {
@@ -253,7 +214,7 @@ export default function NewDealPage() {
       if (error.data?.code === "FORBIDDEN") {
         setEntitlementError(error.message);
       } else {
-        toast.error(`Failed to create deal: ${error.message}`);
+        toast.error(t("createFailed", { error: error.message }));
       }
     },
   });
@@ -280,7 +241,7 @@ export default function NewDealPage() {
 
   const handleCreate = () => {
     if (!selectedType || !selectedJurisdiction || !dealName.trim()) {
-      toast.error("Please complete all required fields");
+      toast.error(t("completeAllFields"));
       return;
     }
 
@@ -294,7 +255,7 @@ export default function NewDealPage() {
     });
   };
 
-  const selectedJurisdictionInfo = jurisdictionOptions.find(
+  const selectedJurisdictionMeta = jurisdictionMeta.find(
     (j) => j.value === selectedJurisdiction
   );
 
@@ -302,8 +263,8 @@ export default function NewDealPage() {
     return (
       <div className="max-w-3xl mx-auto space-y-8">
         <div>
-          <h1 className="text-2xl font-bold">Create New Deal</h1>
-          <p className="text-muted-foreground mt-1">Loading contract types...</p>
+          <h1 className="text-2xl font-bold">{t("createNewDeal")}</h1>
+          <p className="text-muted-foreground mt-1">{t("loadingContractTypes")}</p>
         </div>
         <div className="grid grid-cols-2 gap-4">
           {[1, 2, 3, 4].map((i) => (
@@ -317,8 +278,8 @@ export default function NewDealPage() {
   // Vetting flow: skip template selection, show summary + deal details directly
   if (isVettingFlow && vettingData && selectedType) {
     const vTemplateDisplayName = vettingData.contractTemplate.displayName;
-    const vJurisdictionInfo = jurisdictionOptions.find((j) => j.value === vettingData.governingLaw);
-    const vLanguage = contractLanguageOptions.find((l) => l.value === vettingData.contractLanguage);
+    const vJurisdictionMeta = jurisdictionMeta.find((j) => j.value === vettingData.governingLaw);
+    const vLanguageMeta = contractLanguageMeta.find((l) => l.value === vettingData.contractLanguage);
 
     return (
       <div className="max-w-3xl mx-auto space-y-8">
@@ -349,53 +310,53 @@ export default function NewDealPage() {
             </div>
             <div className="flex items-center justify-between mt-2">
               <span className="text-muted-foreground">{t("governingLaw")}:</span>
-              <span className="font-medium">{vJurisdictionInfo?.flag} {vJurisdictionInfo?.label}</span>
+              <span className="font-medium">{vJurisdictionMeta?.flag} {vJurisdictionMeta ? t(`jurisdictions.${vJurisdictionMeta.tKey}`) : ""}</span>
             </div>
             <div className="flex items-center justify-between mt-2">
               <span className="text-muted-foreground">{t("contractLanguage")}:</span>
-              <span className="font-medium">{vLanguage?.nativeLabel}</span>
+              <span className="font-medium">{vLanguageMeta ? t(`languages.${vLanguageMeta.tKey}`) : ""}</span>
             </div>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="dealName">Deal Name *</Label>
+            <Label htmlFor="dealName">{t("dealName")} *</Label>
             <Input
               id="dealName"
               value={dealName}
               onChange={(e) => setDealName(e.target.value)}
-              placeholder="Deal name"
+              placeholder={t("dealNamePlaceholder")}
               className={`input-brutal ${!dealName.trim() ? "border-primary" : ""}`}
             />
             <p className="text-xs text-muted-foreground">
-              A descriptive name to identify this deal
+              {t("dealNameDescription")}
             </p>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="company">Your Company (Optional)</Label>
+            <Label htmlFor="company">{t("yourCompany")} ({tCommon("optional")})</Label>
             <Input
               id="company"
               value={company}
               onChange={(e) => setCompany(e.target.value)}
-              placeholder="Company name"
+              placeholder={t("yourCompanyPlaceholder")}
               className={`input-brutal ${!company.trim() ? "border-primary" : ""}`}
             />
             <p className="text-xs text-muted-foreground">
-              Will be shown to the other party
+              {t("yourCompanyDescription")}
             </p>
           </div>
         </div>
 
         <div className="flex items-center justify-between pt-4 border-t border-border">
           <p className="text-sm text-muted-foreground">
-            You'll select your preferred options next
+            {t("selectOptionsNext")}
           </p>
           <button
             onClick={handleCreate}
             disabled={!dealName.trim() || createDeal.isPending}
             className="btn-brutal flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {createDeal.isPending ? "Creating..." : "Continue"}
+            {createDeal.isPending ? t("creating") : tCommon("continue")}
             <ArrowRight className="w-4 h-4" />
           </button>
         </div>
@@ -406,9 +367,9 @@ export default function NewDealPage() {
   return (
     <div className="max-w-3xl mx-auto space-y-8">
       <div>
-        <h1 className="text-2xl font-bold">Create New Deal</h1>
+        <h1 className="text-2xl font-bold">{t("createNewDeal")}</h1>
         <p className="text-muted-foreground mt-1">
-          Select a contract type and configure your deal room
+          {t("selectContractType")}
         </p>
       </div>
 
@@ -463,7 +424,7 @@ export default function NewDealPage() {
             1
           </div>
           <Label className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
-            Contract Type
+            {t("contractType")}
           </Label>
         </div>
         <div className="grid grid-cols-2 gap-4">
@@ -536,7 +497,7 @@ export default function NewDealPage() {
                     </p>
                     {variantCount > 1 && !isLocked && (
                       <p className="text-xs text-primary mt-1">
-                        {variantCount} jurisdiction variants
+                        {t("jurisdictionVariants", { count: variantCount })}
                       </p>
                     )}
                   </div>
@@ -560,26 +521,25 @@ export default function NewDealPage() {
               2
             </div>
             <Label className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
-              Governing Law
+              {t("governingLaw")}
             </Label>
-            <span className="text-xs text-muted-foreground">(cannot be changed later)</span>
+            <span className="text-xs text-muted-foreground">({t("cannotChangeLater")})</span>
           </div>
 
           <div className="card-brutal border-yellow-500/50 bg-yellow-500/5">
             <div className="flex items-start gap-3">
               <Scale className="w-5 h-5 text-yellow-500 mt-0.5" />
               <div>
-                <p className="text-sm font-medium">This determines the legal framework</p>
+                <p className="text-sm font-medium">{t("determinesLegalFramework")}</p>
                 <p className="text-sm text-muted-foreground mt-1">
-                  The governing law affects which clauses are presented and their default options.
-                  This choice is final and will apply to the entire agreement.
+                  {t("governingLawExplainer")}
                 </p>
               </div>
             </div>
           </div>
 
           <div className="grid grid-cols-1 gap-3">
-            {jurisdictionOptions.map((jurisdiction) => {
+            {jurisdictionMeta.map((jurisdiction) => {
               const isSelected = selectedJurisdiction === jurisdiction.value;
               const isDisabled = availableJurisdictions.size > 0 && !availableJurisdictions.has(jurisdiction.value);
 
@@ -596,9 +556,9 @@ export default function NewDealPage() {
                     // Auto-select language if only one available for this jurisdiction
                     if (selectedFamilyGroup) {
                       const langs = new Set<string>();
-                      for (const t of selectedFamilyGroup.templates) {
-                        if (t.jurisdictions.length === 0 || t.jurisdictions.includes(jurisdiction.value)) {
-                          for (const l of t.languages) langs.add(l);
+                      for (const tmpl of selectedFamilyGroup.templates) {
+                        if (tmpl.jurisdictions.length === 0 || tmpl.jurisdictions.includes(jurisdiction.value)) {
+                          for (const l of tmpl.languages) langs.add(l);
                         }
                       }
                       if (langs.size === 1) {
@@ -627,28 +587,28 @@ export default function NewDealPage() {
                   <div className="flex items-start gap-4">
                     <div className="text-2xl">{jurisdiction.flag}</div>
                     <div className="flex-1">
-                      <h3 className="font-semibold">{jurisdiction.label}</h3>
+                      <h3 className="font-semibold">{t(`jurisdictions.${jurisdiction.tKey}`)}</h3>
                       <p className="text-sm text-muted-foreground mt-1">
                         {isDisabled
                           ? t("notAvailableForContract")
-                          : jurisdiction.description
+                          : t(`jurisdictions.${jurisdiction.tKey}Description`)
                         }
                       </p>
                       {/* Show native template badge if available for this jurisdiction */}
                       {!isDisabled && selectedFamily && (() => {
                         const familyGroup = templateFamilies.find((f) => f.family === selectedFamily);
                         const hasNative = familyGroup?.templates.some(
-                          (t) => t.nativeJurisdiction === jurisdiction.value
+                          (tmpl) => tmpl.nativeJurisdiction === jurisdiction.value
                         );
                         return hasNative ? (
                           <p className="text-xs text-emerald-600 mt-2 flex items-center gap-1 font-medium">
                             <Scale className="w-3 h-3" />
-                            Native law template available
+                            {t("nativeTemplateAvailable")}
                           </p>
                         ) : (
                           <p className="text-xs text-muted-foreground mt-2 flex items-center gap-1">
                             <Globe className="w-3 h-3" />
-                            Default forum: {jurisdiction.defaultCourt}
+                            {t("defaultForum", { court: t(`jurisdictions.${jurisdiction.tKey}Court`) })}
                           </p>
                         );
                       })()}
@@ -668,10 +628,10 @@ export default function NewDealPage() {
             <Scale className="w-5 h-5 text-emerald-500 mt-0.5" />
             <div>
               <p className="text-sm font-medium">
-                Native {jurisdictionOptions.find((j) => j.value === selectedJurisdiction)?.label} template
+                {t("nativeTemplate", { jurisdiction: selectedJurisdictionMeta ? t(`jurisdictions.${selectedJurisdictionMeta.tKey}`) : "" })}
               </p>
               <p className="text-sm text-muted-foreground mt-1">
-                Using jurisdiction-native clauses authored specifically for this legal system, not translated from another jurisdiction.
+                {t("nativeTemplateDescription")}
               </p>
             </div>
           </div>
@@ -700,7 +660,7 @@ export default function NewDealPage() {
           </div>
 
           <div className="grid grid-cols-2 gap-3">
-            {contractLanguageOptions.map((lang) => {
+            {contractLanguageMeta.map((lang) => {
               const isSelected = selectedLanguage === lang.value;
               const isDisabled = languagesForJurisdiction.size > 0 && !languagesForJurisdiction.has(lang.value);
 
@@ -727,11 +687,11 @@ export default function NewDealPage() {
                     </div>
                   )}
                   <div>
-                    <h3 className="font-semibold">{lang.nativeLabel}</h3>
+                    <h3 className="font-semibold">{t(`languages.${lang.tKey}`)}</h3>
                     <p className="text-sm text-muted-foreground mt-1">
                       {isDisabled
                         ? t("notAvailableForContract")
-                        : lang.description
+                        : t(`languages.${lang.tKey}Description`)
                       }
                     </p>
                   </div>
@@ -763,49 +723,49 @@ export default function NewDealPage() {
                   <span className="font-medium">
                     {templates?.find((tmpl) => tmpl.contractType === selectedType)?.displayName}
                     {resolvedNativeTemplate && (
-                      <span className="ml-2 text-xs text-emerald-600 font-normal">(native)</span>
+                      <span className="ml-2 text-xs text-emerald-600 font-normal">{t("nativeBadge")}</span>
                     )}
                   </span>
                 </div>
                 <div className="flex items-center justify-between mt-2">
                   <span className="text-muted-foreground">{t("governingLaw")}:</span>
                   <span className="font-medium">
-                    {selectedJurisdictionInfo?.flag} {selectedJurisdictionInfo?.label}
+                    {selectedJurisdictionMeta?.flag} {selectedJurisdictionMeta ? t(`jurisdictions.${selectedJurisdictionMeta.tKey}`) : ""}
                   </span>
                 </div>
                 <div className="flex items-center justify-between mt-2">
                   <span className="text-muted-foreground">{t("contractLanguage")}:</span>
                   <span className="font-medium">
-                    {contractLanguageOptions.find((l) => l.value === selectedLanguage)?.nativeLabel}
+                    {t(`languages.${contractLanguageMeta.find((l) => l.value === selectedLanguage)?.tKey ?? "english"}`)}
                   </span>
                 </div>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="dealName">Deal Name *</Label>
+                <Label htmlFor="dealName">{t("dealName")} *</Label>
                 <Input
                   id="dealName"
                   value={dealName}
                   onChange={(e) => setDealName(e.target.value)}
-                  placeholder="Deal name"
+                  placeholder={t("dealNamePlaceholder")}
                   className={`input-brutal ${!dealName.trim() ? "border-primary" : ""}`}
                 />
                 <p className="text-xs text-muted-foreground">
-                  A descriptive name to identify this deal
+                  {t("dealNameDescription")}
                 </p>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="company">Your Company (Optional)</Label>
+                <Label htmlFor="company">{t("yourCompany")} ({tCommon("optional")})</Label>
                 <Input
                   id="company"
                   value={company}
                   onChange={(e) => setCompany(e.target.value)}
-                  placeholder="Company name"
+                  placeholder={t("yourCompanyPlaceholder")}
                   className={`input-brutal ${!company.trim() ? "border-primary" : ""}`}
                 />
                 <p className="text-xs text-muted-foreground">
-                  Will be shown to the other party
+                  {t("yourCompanyDescription")}
                 </p>
               </div>
             </div>
@@ -813,14 +773,14 @@ export default function NewDealPage() {
 
           <div className="flex items-center justify-between pt-4 border-t border-border">
             <p className="text-sm text-muted-foreground">
-              You'll select your preferred options next
+              {t("selectOptionsNext")}
             </p>
             <button
               onClick={handleCreate}
               disabled={!dealName.trim() || createDeal.isPending}
               className="btn-brutal flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {createDeal.isPending ? "Creating..." : "Continue"}
+              {createDeal.isPending ? t("creating") : tCommon("continue")}
               <ArrowRight className="w-4 h-4" />
             </button>
           </div>
