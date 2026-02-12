@@ -83,13 +83,19 @@ export async function POST(request: NextRequest) {
       session.user.name || undefined
     );
 
+    // Group line items by price ID (Stripe doesn't allow duplicate price entries)
+    const priceQuantities = new Map<string, number>();
+    for (const item of lineItems) {
+      priceQuantities.set(item.priceId, (priceQuantities.get(item.priceId) || 0) + 1);
+    }
+
     const origin = request.headers.get("origin") || process.env.NEXTAUTH_URL;
     const checkoutSession = await createCheckoutSession({
       stripeCustomerId,
       customerEmail: session.user.email,
       customerId,
       skillPackageIds: lineItems.map((l) => l.packageId),
-      lineItems: lineItems.map((l) => ({ price: l.priceId, quantity: 1 })),
+      lineItems: [...priceQuantities.entries()].map(([price, quantity]) => ({ price, quantity })),
       successUrl: `${origin}/billing?success=true`,
       cancelUrl: `${origin}/billing?cancelled=true`,
     });
