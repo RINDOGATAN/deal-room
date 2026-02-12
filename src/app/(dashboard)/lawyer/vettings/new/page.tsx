@@ -273,7 +273,7 @@ export default function NewVettingPage() {
                   </span>
                 )}
                 <div className="flex items-start gap-4">
-                  <div className={`w-10 h-10 flex items-center justify-center rounded-xl ${
+                  <div className={`hidden sm:flex w-10 h-10 items-center justify-center rounded-xl ${
                     isLocked
                       ? "bg-warning/20 text-warning"
                       : isSelected
