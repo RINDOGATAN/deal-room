@@ -244,7 +244,7 @@ export default function NewVettingPage() {
                 key={template.id}
                 onClick={() => {
                   if (isLocked) {
-                    if (selfServiceUpgrade && template.skillPackageId) {
+                    if (template.skillPackageId) {
                       setEnableModalSkill({ id: template.skillPackageId, name: template.displayName });
                     } else {
                       setEntitlementError(tNew("toUseContract"));

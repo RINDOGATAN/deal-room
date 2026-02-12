@@ -472,7 +472,7 @@ export default function NewDealPage() {
                 key={family.family}
                 onClick={() => {
                   if (isLocked) {
-                    if (selfServiceUpgrade && family.primaryTemplate.skillPackageId) {
+                    if (family.primaryTemplate.skillPackageId) {
                       setEnableModalSkill({ id: family.primaryTemplate.skillPackageId, name: family.displayName });
                     } else {
                       setEntitlementError(t("toUseContract"));
