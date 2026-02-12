@@ -3,16 +3,8 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import { createCheckoutSession, getOrCreateStripeCustomer } from "@/lib/stripe";
-import { features } from "@/config/features";
 
 export async function POST(request: NextRequest) {
-  if (!features.selfServiceUpgrade) {
-    return NextResponse.json(
-      { error: "Self-service upgrade is not enabled" },
-      { status: 403 }
-    );
-  }
-
   try {
     const session = await getServerSession(authOptions);
     if (!session?.user?.email) {
