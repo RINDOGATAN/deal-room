@@ -91,7 +91,15 @@ export default function NewVettingPage() {
   const [enableModalSkill, setEnableModalSkill] = useState<{ id: string; name: string } | null>(null);
   const [infoModalDismissed, setInfoModalDismissed] = useState(false);
 
-  const { data: templates, isLoading } = trpc.skills.listTemplatesWithAccess.useQuery({ language: locale });
+  const { data: rawTemplates, isLoading } = trpc.skills.listTemplatesWithAccess.useQuery({ language: locale });
+  // Sort: free templates first, locked (premium) at the bottom
+  const templates = rawTemplates
+    ? [...rawTemplates].sort((a, b) => {
+        const aLocked = a.requiresLicense && !a.hasAccess;
+        const bLocked = b.requiresLicense && !b.hasAccess;
+        return Number(aLocked) - Number(bLocked);
+      })
+    : undefined;
   const { data: billingConfig } = trpc.billing.getConfig.useQuery();
   const selfServiceUpgrade = billingConfig?.selfServiceUpgrade ?? false;
   const { data: vettedStatus } = trpc.billing.hasVettedContracts.useQuery();
@@ -256,7 +264,7 @@ export default function NewVettingPage() {
                 }}
                 className={`card-brutal text-left relative transition-colors ${
                   isLocked
-                    ? "border-warning/50"
+                    ? "border-warning/50 opacity-75"
                     : isSelected
                     ? "border-primary"
                     : "hover:border-muted-foreground"

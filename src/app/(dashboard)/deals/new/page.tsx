@@ -212,9 +212,16 @@ export default function NewDealPage() {
   const selfServiceUpgrade = billingConfig?.selfServiceUpgrade ?? false;
   const allFamilies = templates ? groupTemplatesByFamily(templates) : [];
   // Filter: only show families where at least one template supports the current platform locale
-  const templateFamilies = allFamilies.filter((family) =>
-    family.templates.some((t) => t.languages.length === 0 || t.languages.includes(locale))
-  );
+  // Sort: free templates first, locked (premium) templates at the bottom
+  const templateFamilies = allFamilies
+    .filter((family) =>
+      family.templates.some((t) => t.languages.length === 0 || t.languages.includes(locale))
+    )
+    .sort((a, b) => {
+      const aLocked = a.templates.every((t) => t.requiresLicense && !t.hasAccess);
+      const bLocked = b.templates.every((t) => t.requiresLicense && !t.hasAccess);
+      return Number(aLocked) - Number(bLocked);
+    });
 
   // Compute available jurisdictions/languages for the selected family
   const selectedFamilyGroup = templateFamilies.find((f) => f.family === selectedFamily);
@@ -490,7 +497,7 @@ export default function NewDealPage() {
                 className={`
                   card-brutal text-left relative transition-colors
                   ${isLocked
-                    ? "border-warning/50"
+                    ? "border-warning/50 opacity-75"
                     : isSelected
                     ? "border-primary"
                     : "hover:border-muted-foreground"
