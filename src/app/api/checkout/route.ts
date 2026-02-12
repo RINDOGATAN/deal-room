@@ -21,17 +21,20 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Look up all requested skill packages
-    const skillPackages = await prisma.skillPackage.findMany({
+    // Look up all requested skill packages (deduplicate in case id and skillId match the same row)
+    const skillPackagesRaw = await prisma.skillPackage.findMany({
       where: {
         OR: skillPackageIds.flatMap((id) => [{ id }, { skillId: id }]),
         isPremium: true,
       },
     });
+    const skillPackages = [...new Map(skillPackagesRaw.map((p: any) => [p.id, p])).values()];
 
-    if (skillPackages.length !== skillPackageIds.length) {
+    if (skillPackages.length < skillPackageIds.length) {
+      const foundIds = new Set(skillPackages.flatMap((p: any) => [p.id, p.skillId]));
+      const missing = skillPackageIds.filter((id) => !foundIds.has(id));
       return NextResponse.json(
-        { error: "One or more skill packages not found" },
+        { error: `Skill packages not found: ${missing.join(", ")}` },
         { status: 404 }
       );
     }
