@@ -371,7 +371,9 @@
     "visitBilling": "Visit the Billing page to subscribe."
   },
   "footer": {
-    "service": "Dealroom is a {link} service.",
+    "service": "DEALROOM is a <link>TODO.LAW</link> service.",
+    "userGuide": "User Guide",
+    "billing": "Billing",
     "termsOfUse": "Terms of Use",
     "privacyNotice": "Privacy Notice"
   }

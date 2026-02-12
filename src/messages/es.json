@@ -371,7 +371,9 @@
     "visitBilling": "Visita la página de Facturación para suscribirte."
   },
   "footer": {
-    "service": "Dealroom es un servicio de {link}.",
+    "service": "DEALROOM es un servicio de <link>TODO.LAW</link>.",
+    "userGuide": "Guía de Usuario",
+    "billing": "Facturación",
     "termsOfUse": "Términos de Uso",
     "privacyNotice": "Aviso de Privacidad"
   }
