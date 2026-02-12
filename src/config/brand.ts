@@ -49,6 +49,7 @@ export const brand = {
   // External links
   links: {
     website: "https://todo.law",
+    userGuide: "https://todo.law/guide/dealroom",
     terms: "https://todo.law/terms",
     privacy: "https://todo.law/privacy",
   },

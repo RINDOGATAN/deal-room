@@ -15,6 +15,8 @@ import {
   X,
   Scale,
   ClipboardCheck,
+  BookOpen,
+  CreditCard,
 } from "lucide-react";
 import { brand } from "@/config/brand";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
@@ -39,6 +41,7 @@ export default function DashboardLayout({
   const t = useTranslations("nav");
   const tCommon = useTranslations("common");
   const tLawyer = useTranslations("lawyer");
+  const tFooter = useTranslations("footer");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [showLawyerDialog, setShowLawyerDialog] = useState(false);
 
@@ -114,7 +117,6 @@ export default function DashboardLayout({
             </nav>
 
             <div className="hidden md:flex items-center gap-4">
-              <LanguageSwitcher />
               {lawyerProfile && !lawyerProfile.isLawyer && (
                 <button
                   onClick={() => setShowLawyerDialog(true)}
@@ -193,7 +195,6 @@ export default function DashboardLayout({
             </nav>
 
             <div className="border-t border-border pt-6 space-y-4">
-              <LanguageSwitcher />
               {lawyerProfile && !lawyerProfile.isLawyer && (
                 <button
                   onClick={() => { setMobileMenuOpen(false); setShowLawyerDialog(true); }}
@@ -226,42 +227,60 @@ export default function DashboardLayout({
 
       {/* Footer */}
       <footer className="py-4 px-6 border-t border-border">
-        <div className="max-w-7xl mx-auto text-center text-sm text-muted-foreground">
-          {brand.shortName} is a{" "}
-          <a
-            href={brand.links.website}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-primary hover:underline"
-          >
-            {brand.company}
-          </a>{" "}
-          service.{" "}
-          {process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY && (
-            <>
-              <Link href="/billing" className="text-primary hover:underline">
-                Billing
-              </Link>{" "}
-              &middot;{" "}
-            </>
-          )}
-          <a
-            href={brand.links.terms}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-primary hover:underline"
-          >
-            Terms of Use
-          </a>{" "}
-          &middot;{" "}
-          <a
-            href={brand.links.privacy}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-primary hover:underline"
-          >
-            Privacy Notice
-          </a>
+        <div className="max-w-7xl mx-auto flex flex-col items-center gap-2 text-sm text-muted-foreground">
+          <p>
+            {tFooter.rich("service", {
+              link: (chunks) => (
+                <a
+                  href={brand.links.website}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary hover:underline"
+                >
+                  {chunks}
+                </a>
+              ),
+            })}
+          </p>
+          <div className="flex items-center gap-3 flex-wrap justify-center">
+            <a
+              href={brand.links.userGuide}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1.5 hover:text-foreground transition-colors"
+            >
+              <BookOpen className="w-3.5 h-3.5" />
+              {tFooter("userGuide")}
+            </a>
+            <span className="text-border">&middot;</span>
+            <Link
+              href="/billing"
+              className="flex items-center gap-1.5 hover:text-foreground transition-colors"
+            >
+              <CreditCard className="w-3.5 h-3.5" />
+              {tFooter("billing")}
+            </Link>
+            <span className="text-border">&middot;</span>
+            <a
+              href={brand.links.terms}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-foreground transition-colors"
+            >
+              {tFooter("termsOfUse")}
+            </a>
+            <span className="text-border">&middot;</span>
+            <a
+              href={brand.links.privacy}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-foreground transition-colors"
+            >
+              {tFooter("privacyNotice")}
+            </a>
+            <span className="text-border">&middot;</span>
+            <LanguageSwitcher />
+          </div>
         </div>
       </footer>
 
