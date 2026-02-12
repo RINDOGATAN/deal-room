@@ -469,6 +469,7 @@ async function main() {
 
   // ── Mark licensed skills as premium + set Stripe price ──
   const STRIPE_PRICE_ID = process.env.STRIPE_PRICE_ID || null;
+  const STRIPE_PRICE_VETTED = process.env.STRIPE_PRICE_VETTED || STRIPE_PRICE_ID;
   const premiumSkillIds = [
     "com.nel.skills.founders",
     "com.nel.skills.safe",
@@ -503,7 +504,7 @@ async function main() {
       jurisdictions: [],
       languages: ["en", "es"],
       isPremium: true,
-      stripePriceId: STRIPE_PRICE_ID,
+      stripePriceId: STRIPE_PRICE_VETTED,
       priceAmount: 900,
       priceCurrency: "eur",
       description: "Send attorney-vetted contract templates to clients via email invitation",
@@ -512,7 +513,7 @@ async function main() {
     update: {
       displayName: "Vetted Contracts",
       isPremium: true,
-      stripePriceId: STRIPE_PRICE_ID,
+      stripePriceId: STRIPE_PRICE_VETTED,
       priceAmount: 900,
       priceCurrency: "eur",
       description: "Send attorney-vetted contract templates to clients via email invitation",
