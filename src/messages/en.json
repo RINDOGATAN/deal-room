@@ -335,6 +335,28 @@
     "lawyerVettedNote": "This contract was vetted by {name}",
     "missingRecommendations": "Missing recommendations for {count} clause(s)"
   },
+  "billing": {
+    "title": "Billing",
+    "subtitle": "Manage your add-on subscriptions",
+    "addOnFeatures": "Add-on Features",
+    "active": "Active",
+    "inactive": "Inactive",
+    "enable": "Enable",
+    "enableSelected": "Enable Selected",
+    "pricePerMonth": "€9/mo",
+    "month": "month",
+    "featuresSelected": "feature(s) selected",
+    "renews": "Renews",
+    "monthlyTotal": "Your current monthly total",
+    "monthlyTotalDescription": "Based on {count} active add-on(s) at €9/month each.",
+    "manageBilling": "Manage Billing",
+    "checkoutSuccess": "Subscription activated successfully!",
+    "checkoutCancelled": "Checkout was cancelled.",
+    "upgradeRequired": "Upgrade required",
+    "vettedContractsRequired": "A Vetted Contracts subscription is required to send client invitations.",
+    "skillRequired": "An active subscription for this contract skill is required.",
+    "visitBilling": "Visit the Billing page to subscribe."
+  },
   "footer": {
     "service": "Dealroom is a {link} service.",
     "termsOfUse": "Terms of Use",

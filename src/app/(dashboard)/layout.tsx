@@ -237,6 +237,14 @@ export default function DashboardLayout({
             {brand.company}
           </a>{" "}
           service.{" "}
+          {process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY && (
+            <>
+              <Link href="/billing" className="text-primary hover:underline">
+                Billing
+              </Link>{" "}
+              &middot;{" "}
+            </>
+          )}
           <a
             href={brand.links.terms}
             target="_blank"
