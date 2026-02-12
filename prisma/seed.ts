@@ -467,6 +467,59 @@ async function main() {
     }
   }
 
+  // ── Mark licensed skills as premium + set Stripe price ──
+  const STRIPE_PRICE_ID = process.env.STRIPE_PRICE_ID || null;
+  const premiumSkillIds = [
+    "com.nel.skills.founders",
+    "com.nel.skills.safe",
+    "com.nel.skills.pacto-socios",
+  ];
+
+  for (const skillId of premiumSkillIds) {
+    const existing = await prisma.skillPackage.findUnique({ where: { skillId } });
+    if (existing) {
+      await prisma.skillPackage.update({
+        where: { skillId },
+        data: {
+          isPremium: true,
+          stripePriceId: STRIPE_PRICE_ID,
+          priceAmount: 900,
+          priceCurrency: "eur",
+        },
+      });
+      console.log(`  Marked ${skillId} as premium (€9/mo)`);
+    }
+  }
+
+  // ── Upsert "Vetted Contracts" feature package ──
+  await prisma.skillPackage.upsert({
+    where: { skillId: "com.nel.features.vetted-contracts" },
+    create: {
+      skillId: "com.nel.features.vetted-contracts",
+      name: "vetted-contracts",
+      displayName: "Vetted Contracts",
+      version: "1.0.0",
+      packageHash: crypto.createHash("sha256").update("vetted-contracts").digest("hex"),
+      jurisdictions: [],
+      languages: ["en", "es"],
+      isPremium: true,
+      stripePriceId: STRIPE_PRICE_ID,
+      priceAmount: 900,
+      priceCurrency: "eur",
+      description: "Send attorney-vetted contract templates to clients via email invitation",
+      isActive: true,
+    },
+    update: {
+      displayName: "Vetted Contracts",
+      isPremium: true,
+      stripePriceId: STRIPE_PRICE_ID,
+      priceAmount: 900,
+      priceCurrency: "eur",
+      description: "Send attorney-vetted contract templates to clients via email invitation",
+    },
+  });
+  console.log("  Created/updated Vetted Contracts feature package");
+
   console.log("\nSeed completed successfully!");
 }
 

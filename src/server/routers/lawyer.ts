@@ -231,7 +231,9 @@ export const lawyerRouter = createTRPCRouter({
       const vetting = await ctx.prisma.lawyerVetting.findFirst({
         where: { id: input.vettingId, lawyerId: ctx.session.user.id },
         include: {
-          contractTemplate: { select: { displayName: true } },
+          contractTemplate: {
+            select: { displayName: true, skillPackageId: true },
+          },
         },
       });
       if (!vetting) {
@@ -239,6 +241,55 @@ export const lawyerRouter = createTRPCRouter({
       }
       if (vetting.status !== "APPROVED") {
         throw new TRPCError({ code: "BAD_REQUEST", message: "Vetting must be approved before sending invitations" });
+      }
+
+      // Check "Vetted Contracts" entitlement
+      const lawyerEmail = ctx.session.user.email;
+      if (lawyerEmail) {
+        const customer = await ctx.prisma.customer.findUnique({
+          where: { email: lawyerEmail },
+        });
+        const vettedPkg = await ctx.prisma.skillPackage.findUnique({
+          where: { skillId: "com.nel.features.vetted-contracts" },
+        });
+        if (vettedPkg?.isPremium) {
+          const vettedEntitlement = customer
+            ? await ctx.prisma.skillEntitlement.findUnique({
+                where: {
+                  customerId_skillPackageId: {
+                    customerId: customer.id,
+                    skillPackageId: vettedPkg.id,
+                  },
+                },
+              })
+            : null;
+          if (!vettedEntitlement || vettedEntitlement.status !== "ACTIVE") {
+            throw new TRPCError({
+              code: "FORBIDDEN",
+              message: "A Vetted Contracts subscription is required to send client invitations. Visit the Billing page to subscribe.",
+            });
+          }
+        }
+
+        // Check premium skill entitlement if template is premium
+        if (vetting.contractTemplate.skillPackageId) {
+          const skillEntitlement = customer
+            ? await ctx.prisma.skillEntitlement.findUnique({
+                where: {
+                  customerId_skillPackageId: {
+                    customerId: customer.id,
+                    skillPackageId: vetting.contractTemplate.skillPackageId,
+                  },
+                },
+              })
+            : null;
+          if (!skillEntitlement || skillEntitlement.status !== "ACTIVE") {
+            throw new TRPCError({
+              code: "FORBIDDEN",
+              message: "An active subscription for this contract skill is required. Visit the Billing page to subscribe.",
+            });
+          }
+        }
       }
 
       const expiresAt = new Date();

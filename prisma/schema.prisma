@@ -200,6 +200,13 @@ model SkillPackage {
   installedAt     DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
+  // Billing
+  stripePriceId   String?            // Stripe Price ID (shared "TODO.LAW Add-on")
+  priceAmount     Int?               // Price in cents (900 = €9.00)
+  priceCurrency   String?  @default("eur")
+  isPremium       Boolean  @default(false)
+  description     String?  @db.Text
+
   contractTemplate ContractTemplate?
   entitlements     SkillEntitlement[]
 
@@ -225,11 +232,12 @@ model SkillEntitlement {
   id              String            @id @default(cuid())
   customerId      String
   skillPackageId  String
-  licenseKey      String            @unique
+  licenseKey      String            @unique @default(cuid())
   licenseType     LicenseType       // TRIAL | SUBSCRIPTION | PERPETUAL
   status          EntitlementStatus @default(ACTIVE)
   maxActivations  Int               @default(1)
   jurisdictions   String[]          // Subset of jurisdictions customer paid for
+  stripeSubscriptionId String?      // Stripe subscription ID for self-service
   expiresAt       DateTime?
   createdAt       DateTime          @default(now())
   updatedAt       DateTime          @updatedAt
