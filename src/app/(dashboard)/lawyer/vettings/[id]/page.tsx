@@ -17,10 +17,12 @@ import {
   Clock,
   XCircle,
   Scale,
+  Lock,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
+import { EnableFeatureModal } from "@/components/premium/enable-feature-modal";
 
 function resolveLocalized(localized: unknown, locale: string, fallback: string): string {
   if (!localized || typeof localized !== "object") return fallback;
@@ -55,8 +57,10 @@ export default function VettingDetailPage() {
   const [inviteEmail, setInviteEmail] = useState("");
   const [inviteName, setInviteName] = useState("");
   const [inviteCompany, setInviteCompany] = useState("");
+  const [showEnableModal, setShowEnableModal] = useState(false);
 
   const utils = trpc.useUtils();
+  const { data: vettedStatus } = trpc.billing.hasVettedContracts.useQuery();
 
   const { data: vetting, isLoading } = trpc.lawyer.getVetting.useQuery(
     { id: vettingId }
@@ -353,52 +357,89 @@ export default function VettingDetailPage() {
         <div className="space-y-6">
           <h2 className="text-lg font-semibold">{t("sendToCustomer")}</h2>
 
-          <div className="card-brutal space-y-4">
-            <div className="space-y-2">
-              <Label>{t("clientEmail")} *</Label>
-              <Input
-                type="email"
-                value={inviteEmail}
-                onChange={(e) => setInviteEmail(e.target.value)}
-                placeholder="client@company.com"
-                className="input-brutal"
-              />
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label>{t("clientName")}</Label>
-                <Input
-                  value={inviteName}
-                  onChange={(e) => setInviteName(e.target.value)}
-                  placeholder="John Smith"
-                  className="input-brutal"
-                />
+          {vettedStatus && !vettedStatus.active ? (
+            <>
+              <div className="card-brutal border-dashed relative">
+                <div className="absolute top-4 right-4 w-8 h-8 bg-muted flex items-center justify-center rounded-full">
+                  <Lock className="w-4 h-4 text-muted-foreground" />
+                </div>
+                <p className="text-sm text-muted-foreground mb-4">
+                  {t("sendRequiresSubscription")}
+                </p>
+                <div className="flex items-center gap-3">
+                  {vettedStatus.selfServiceUpgrade && vettedStatus.skillPackageId && (
+                    <button
+                      onClick={() => setShowEnableModal(true)}
+                      className="btn-brutal text-sm"
+                    >
+                      {t("enableSubscription")}
+                    </button>
+                  )}
+                  <Link
+                    href="/billing"
+                    className="text-sm text-muted-foreground hover:text-foreground underline underline-offset-4"
+                  >
+                    {t("viewBilling")}
+                  </Link>
+                </div>
               </div>
-              <div className="space-y-2">
-                <Label>{t("clientCompany")}</Label>
-                <Input
-                  value={inviteCompany}
-                  onChange={(e) => setInviteCompany(e.target.value)}
-                  placeholder="Acme Corp"
-                  className="input-brutal"
+              {vettedStatus.selfServiceUpgrade && vettedStatus.skillPackageId && (
+                <EnableFeatureModal
+                  open={showEnableModal}
+                  onClose={() => setShowEnableModal(false)}
+                  skillPackageId={vettedStatus.skillPackageId}
+                  skillName="Vetted Contracts"
                 />
-              </div>
-            </div>
-            <button
-              onClick={handleSendInvitation}
-              disabled={!inviteEmail.trim() || sendInvitation.isPending}
-              className="btn-brutal flex items-center gap-2 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {sendInvitation.isPending ? (
-                t("sending")
-              ) : (
-                <>
-                  <Send className="w-4 h-4" />
-                  {t("sendInvitation")}
-                </>
               )}
-            </button>
-          </div>
+            </>
+          ) : (
+            <div className="card-brutal space-y-4">
+              <div className="space-y-2">
+                <Label>{t("clientEmail")} *</Label>
+                <Input
+                  type="email"
+                  value={inviteEmail}
+                  onChange={(e) => setInviteEmail(e.target.value)}
+                  placeholder="client@company.com"
+                  className="input-brutal"
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>{t("clientName")}</Label>
+                  <Input
+                    value={inviteName}
+                    onChange={(e) => setInviteName(e.target.value)}
+                    placeholder="John Smith"
+                    className="input-brutal"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>{t("clientCompany")}</Label>
+                  <Input
+                    value={inviteCompany}
+                    onChange={(e) => setInviteCompany(e.target.value)}
+                    placeholder="Acme Corp"
+                    className="input-brutal"
+                  />
+                </div>
+              </div>
+              <button
+                onClick={handleSendInvitation}
+                disabled={!inviteEmail.trim() || sendInvitation.isPending}
+                className="btn-brutal flex items-center gap-2 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {sendInvitation.isPending ? (
+                  t("sending")
+                ) : (
+                  <>
+                    <Send className="w-4 h-4" />
+                    {t("sendInvitation")}
+                  </>
+                )}
+              </button>
+            </div>
+          )}
 
           {/* Invitations list */}
           {vetting.clientInvitations.length > 0 && (

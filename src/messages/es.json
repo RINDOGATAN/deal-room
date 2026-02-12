@@ -333,7 +333,13 @@
     "vettingApproved": "Plantilla aprobada",
     "vettingApprovedDescription": "Ahora puedes enviar esto a tus clientes.",
     "lawyerVettedNote": "Este contrato ha sido revisado por {name}",
-    "missingRecommendations": "Faltan recomendaciones para {count} cláusula(s)"
+    "missingRecommendations": "Faltan recomendaciones para {count} cláusula(s)",
+    "vettedContractsInfoTitle": "Prepara ahora, envía después",
+    "vettedContractsInfoBody": "Puedes revisar plantillas y preparar contratos revisados sin coste. Solo necesitarás una suscripción (€9/mes) cuando quieras enviar recomendaciones a tus clientes.",
+    "vettedContractsInfoDismiss": "Entendido",
+    "viewBilling": "Ver facturación",
+    "sendRequiresSubscription": "Se requiere una suscripción a Contratos Revisados (€9/mes) para enviar recomendaciones a clientes.",
+    "enableSubscription": "Activar — €9/mes"
   },
   "billing": {
     "title": "Facturación",

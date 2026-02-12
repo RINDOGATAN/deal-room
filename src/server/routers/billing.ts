@@ -46,6 +46,34 @@ export const billingRouter = createTRPCRouter({
     };
   }),
 
+  hasVettedContracts: protectedProcedure.query(async ({ ctx }) => {
+    const email = ctx.session.user.email;
+    if (!email) return { active: false, selfServiceUpgrade: features.selfServiceUpgrade, skillPackageId: null };
+
+    const vettedPkg = await ctx.prisma.skillPackage.findUnique({
+      where: { skillId: "com.nel.features.vetted-contracts" },
+      select: { id: true },
+    });
+
+    if (!vettedPkg) return { active: false, selfServiceUpgrade: features.selfServiceUpgrade, skillPackageId: null };
+
+    const customer = await ctx.prisma.customer.findUnique({
+      where: { email },
+      include: {
+        entitlements: {
+          where: { skillPackageId: vettedPkg.id, status: "ACTIVE" },
+          take: 1,
+        },
+      },
+    });
+
+    return {
+      active: (customer?.entitlements.length ?? 0) > 0,
+      selfServiceUpgrade: features.selfServiceUpgrade,
+      skillPackageId: vettedPkg.id,
+    };
+  }),
+
   getAvailablePlans: protectedProcedure.query(async ({ ctx }) => {
     const email = ctx.session.user.email;
 
