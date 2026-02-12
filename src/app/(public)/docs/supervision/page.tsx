@@ -8,6 +8,7 @@ import {
   Lock,
   UserCog,
   Building,
+  ArrowDown,
 } from "lucide-react";
 
 export default function SupervisionPage() {
@@ -30,72 +31,70 @@ export default function SupervisionPage() {
           Three distinct roles with escalating access levels:
         </p>
 
-        <div className="relative">
-          {/* Connection lines: vertical from below Platform Admin to branch point, then horizontal to each box */}
-          <div className="absolute left-1/2 top-[196px] w-0.5 h-[36px] bg-border -translate-x-1/2" />
-          <div className="absolute left-1/4 top-[232px] w-[25%] h-0.5 bg-border" />
-          <div className="absolute right-1/4 top-[232px] w-[25%] h-0.5 bg-border" />
-
-          <div className="relative space-y-8">
-            {/* Platform Admin */}
-            <div className="max-w-md mx-auto">
-              <div className="p-6 border-2 border-primary bg-primary/5">
-                <div className="flex items-center gap-4 mb-3">
-                  <div className="w-12 h-12 border-2 border-primary bg-primary flex items-center justify-center">
-                    <Shield className="w-6 h-6 text-primary-foreground" />
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-bold text-primary">Platform Admin</h3>
-                    <p className="text-xs text-muted-foreground">/admin portal</p>
-                  </div>
+        <div className="space-y-4">
+          {/* Platform Admin */}
+          <div className="max-w-md mx-auto">
+            <div className="p-6 border border-primary bg-primary/5 rounded-2xl">
+              <div className="flex items-center gap-4 mb-3">
+                <div className="w-12 h-12 border-2 border-primary bg-primary rounded-xl flex items-center justify-center">
+                  <Shield className="w-6 h-6 text-primary-foreground" />
                 </div>
-                <ul className="text-sm space-y-1 text-muted-foreground">
-                  <li>• Full system access and configuration</li>
-                  <li>• Manage supervisors and customers</li>
-                  <li>• View all deals and analytics</li>
-                  <li>• Manage skills and licensing</li>
-                </ul>
+                <div>
+                  <h3 className="text-lg font-bold text-primary">Platform Admin</h3>
+                  <p className="text-xs text-muted-foreground">/admin portal</p>
+                </div>
               </div>
+              <ul className="text-sm space-y-1 text-muted-foreground">
+                <li>• Full system access and configuration</li>
+                <li>• Manage supervisors and customers</li>
+                <li>• View all deals and analytics</li>
+                <li>• Manage skills and licensing</li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Arrow connector */}
+          <div className="flex justify-center">
+            <ArrowDown className="w-6 h-6 text-muted-foreground" />
+          </div>
+
+          {/* Supervisor + Deal Parties */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="p-6 border border-border rounded-2xl">
+              <div className="flex items-center gap-4 mb-3">
+                <div className="w-12 h-12 border-2 border-muted-foreground rounded-xl flex items-center justify-center">
+                  <Eye className="w-6 h-6 text-muted-foreground" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold">Supervisor</h3>
+                  <p className="text-xs text-muted-foreground">/supervise portal</p>
+                </div>
+              </div>
+              <ul className="text-sm space-y-1 text-muted-foreground">
+                <li>• View assigned deals only</li>
+                <li>• Read-only access (no modifications)</li>
+                <li>• Monitor negotiation progress</li>
+                <li>• Review clause selections</li>
+              </ul>
             </div>
 
-            {/* Supervisor */}
-            <div className="grid grid-cols-2 gap-6">
-              <div className="p-6 border-2 border-border">
-                <div className="flex items-center gap-4 mb-3">
-                  <div className="w-12 h-12 border-2 border-muted-foreground flex items-center justify-center">
-                    <Eye className="w-6 h-6 text-muted-foreground" />
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-bold">Supervisor</h3>
-                    <p className="text-xs text-muted-foreground">/supervise portal</p>
-                  </div>
+            {/* Deal Users */}
+            <div className="p-6 border border-border rounded-2xl">
+              <div className="flex items-center gap-4 mb-3">
+                <div className="w-12 h-12 border-2 border-muted-foreground rounded-xl flex items-center justify-center">
+                  <Users className="w-6 h-6 text-muted-foreground" />
                 </div>
-                <ul className="text-sm space-y-1 text-muted-foreground">
-                  <li>• View assigned deals only</li>
-                  <li>• Read-only access (no modifications)</li>
-                  <li>• Monitor negotiation progress</li>
-                  <li>• Review clause selections</li>
-                </ul>
-              </div>
-
-              {/* Deal Users */}
-              <div className="p-6 border-2 border-border">
-                <div className="flex items-center gap-4 mb-3">
-                  <div className="w-12 h-12 border-2 border-muted-foreground flex items-center justify-center">
-                    <Users className="w-6 h-6 text-muted-foreground" />
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-bold">Deal Parties</h3>
-                    <p className="text-xs text-muted-foreground">/deals portal</p>
-                  </div>
+                <div>
+                  <h3 className="text-lg font-bold">Deal Parties</h3>
+                  <p className="text-xs text-muted-foreground">/deals portal</p>
                 </div>
-                <ul className="text-sm space-y-1 text-muted-foreground">
-                  <li>• Create and participate in deals</li>
-                  <li>• Make selections and negotiate</li>
-                  <li>• Sign completed contracts</li>
-                  <li>• View own deals only</li>
-                </ul>
               </div>
+              <ul className="text-sm space-y-1 text-muted-foreground">
+                <li>• Create and participate in deals</li>
+                <li>• Make selections and negotiate</li>
+                <li>• Sign completed contracts</li>
+                <li>• View own deals only</li>
+              </ul>
             </div>
           </div>
         </div>
@@ -104,8 +103,8 @@ export default function SupervisionPage() {
       {/* Two Portal System */}
       <div className="space-y-4">
         <h2 className="text-xl font-bold">Two-Level Administration</h2>
-        <div className="grid grid-cols-2 gap-6">
-          <div className="p-6 border-2 border-primary">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="p-6 border border-primary rounded-2xl">
             <div className="flex items-center gap-3 mb-4">
               <Building className="w-5 h-5 text-primary" />
               <h3 className="font-bold text-primary">Platform Admin Portal</h3>
@@ -114,25 +113,25 @@ export default function SupervisionPage() {
               Full administrative control over the entire platform.
             </p>
             <div className="space-y-2 text-sm">
-              <div className="p-3 bg-muted/30 border border-border">
+              <div className="p-3 bg-muted/30 border border-border rounded-xl">
                 <p className="font-medium">Dashboard & Analytics</p>
                 <p className="text-xs text-muted-foreground">
                   System-wide metrics and reports
                 </p>
               </div>
-              <div className="p-3 bg-muted/30 border border-border">
+              <div className="p-3 bg-muted/30 border border-border rounded-xl">
                 <p className="font-medium">Supervisor Management</p>
                 <p className="text-xs text-muted-foreground">
                   Create, assign, and manage supervisors
                 </p>
               </div>
-              <div className="p-3 bg-muted/30 border border-border">
+              <div className="p-3 bg-muted/30 border border-border rounded-xl">
                 <p className="font-medium">Customer Management</p>
                 <p className="text-xs text-muted-foreground">
                   View and manage all users
                 </p>
               </div>
-              <div className="p-3 bg-muted/30 border border-border">
+              <div className="p-3 bg-muted/30 border border-border rounded-xl">
                 <p className="font-medium">Skill Administration</p>
                 <p className="text-xs text-muted-foreground">
                   Install, configure, and license skills
@@ -141,7 +140,7 @@ export default function SupervisionPage() {
             </div>
           </div>
 
-          <div className="p-6 border-2 border-border">
+          <div className="p-6 border border-border rounded-2xl">
             <div className="flex items-center gap-3 mb-4">
               <Eye className="w-5 h-5" />
               <h3 className="font-bold">Supervisor Portal</h3>
@@ -150,25 +149,25 @@ export default function SupervisionPage() {
               Scoped oversight of assigned deals only.
             </p>
             <div className="space-y-2 text-sm">
-              <div className="p-3 bg-muted/30 border border-border">
+              <div className="p-3 bg-muted/30 border border-border rounded-xl">
                 <p className="font-medium">Assigned Deals List</p>
                 <p className="text-xs text-muted-foreground">
                   View only deals assigned by admin
                 </p>
               </div>
-              <div className="p-3 bg-muted/30 border border-border">
+              <div className="p-3 bg-muted/30 border border-border rounded-xl">
                 <p className="font-medium">Deal Details (Read-Only)</p>
                 <p className="text-xs text-muted-foreground">
                   View parties, clauses, selections
                 </p>
               </div>
-              <div className="p-3 bg-muted/30 border border-border">
+              <div className="p-3 bg-muted/30 border border-border rounded-xl">
                 <p className="font-medium">Negotiation History</p>
                 <p className="text-xs text-muted-foreground">
                   Review all actions and decisions
                 </p>
               </div>
-              <div className="p-3 bg-muted/30 border border-border opacity-50">
+              <div className="p-3 bg-muted/30 border border-border rounded-xl opacity-50">
                 <p className="font-medium">No Modification Rights</p>
                 <p className="text-xs text-muted-foreground">
                   Cannot alter deal or selections
@@ -187,8 +186,8 @@ export default function SupervisionPage() {
           administrator. This ensures:
         </p>
 
-        <div className="grid grid-cols-3 gap-4">
-          <div className="p-5 border border-border">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="card-brutal p-5">
             <div className="flex items-center gap-2 mb-3">
               <Lock className="w-4 h-4 text-primary" />
               <h3 className="font-bold">Confidentiality</h3>
@@ -197,7 +196,7 @@ export default function SupervisionPage() {
               Supervisors cannot browse unassigned deals, protecting party privacy.
             </p>
           </div>
-          <div className="p-5 border border-border">
+          <div className="card-brutal p-5">
             <div className="flex items-center gap-2 mb-3">
               <UserCog className="w-4 h-4 text-primary" />
               <h3 className="font-bold">Specialization</h3>
@@ -207,7 +206,7 @@ export default function SupervisionPage() {
               jurisdictions.
             </p>
           </div>
-          <div className="p-5 border border-border">
+          <div className="card-brutal p-5">
             <div className="flex items-center gap-2 mb-3">
               <FileSearch className="w-4 h-4 text-primary" />
               <h3 className="font-bold">Accountability</h3>
@@ -219,9 +218,9 @@ export default function SupervisionPage() {
         </div>
 
         {/* Visibility Matrix */}
-        <div className="p-5 border border-border">
+        <div className="p-5 border border-border rounded-xl">
           <h3 className="font-bold mb-4">Access Matrix</h3>
-          <div className="overflow-x-auto">
+          <div className="rounded-xl overflow-hidden">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-border">
@@ -287,7 +286,7 @@ export default function SupervisionPage() {
           All actions are logged for compliance and dispute resolution:
         </p>
 
-        <div className="p-5 border border-border bg-card">
+        <div className="p-5 border border-border bg-card rounded-2xl">
           <div className="space-y-3">
             {[
               {
@@ -323,7 +322,7 @@ export default function SupervisionPage() {
                 <span className="text-xs text-muted-foreground font-mono whitespace-nowrap">
                   {entry.time}
                 </span>
-                <span className="text-xs px-2 py-0.5 bg-muted border border-border whitespace-nowrap">
+                <span className="text-xs px-2 py-0.5 bg-muted border border-border rounded-full whitespace-nowrap">
                   {entry.actor}
                 </span>
                 <span className="text-foreground">{entry.action}</span>
@@ -336,8 +335,8 @@ export default function SupervisionPage() {
       {/* Security */}
       <div className="space-y-4">
         <h2 className="text-xl font-bold">Security Features</h2>
-        <div className="grid grid-cols-2 gap-6">
-          <div className="p-5 border border-border">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="card-brutal p-5">
             <div className="flex items-center gap-3 mb-3">
               <Key className="w-5 h-5 text-primary" />
               <h3 className="font-bold">Two-Factor Authentication</h3>
@@ -347,7 +346,7 @@ export default function SupervisionPage() {
               sign-in. Time-based codes provide an additional security layer.
             </p>
           </div>
-          <div className="p-5 border border-border">
+          <div className="card-brutal p-5">
             <div className="flex items-center gap-3 mb-3">
               <Clock className="w-5 h-5 text-primary" />
               <h3 className="font-bold">Session Management</h3>
@@ -359,17 +358,17 @@ export default function SupervisionPage() {
           </div>
         </div>
 
-        <div className="p-4 bg-muted/30 border border-border">
+        <div className="p-4 bg-muted/30 border border-border rounded-xl">
           <p className="text-sm text-muted-foreground">
             <strong className="text-foreground">Technical note:</strong> Admin and
             supervisor authentication use separate NextAuth instances with custom
             adapters mapping to PlatformAdmin and Supervisor database tables
             respectively. See{" "}
-            <code className="text-xs bg-card px-1 py-0.5 border border-border">
+            <code className="text-xs bg-card px-1 py-0.5 border border-border rounded">
               src/lib/auth-admin.ts
             </code>{" "}
             and{" "}
-            <code className="text-xs bg-card px-1 py-0.5 border border-border">
+            <code className="text-xs bg-card px-1 py-0.5 border border-border rounded">
               src/lib/auth-supervisor.ts
             </code>
             .

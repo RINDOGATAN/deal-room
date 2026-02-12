@@ -425,6 +425,19 @@
     "skillRequired": "An active subscription for this contract skill is required.",
     "visitBilling": "Visit the Billing page to subscribe."
   },
+  "docs": {
+    "title": "User Guide",
+    "gettingStarted": "Getting Started",
+    "dashboardOverview": "Dashboard Overview",
+    "navigation": "Deal Lifecycle",
+    "negotiation": "Negotiation",
+    "compromiseAlgorithm": "Compromise Algorithm",
+    "skillsLicensing": "Skills & Licensing",
+    "lawyerVetting": "Lawyer Vetting",
+    "howVettingWorks": "How Vetting Works",
+    "administration": "Administration",
+    "supervision": "Supervision"
+  },
   "footer": {
     "service": "DEALROOM is a <link>TODO.LAW</link> service.",
     "userGuide": "User Guide",

@@ -5,15 +5,23 @@ import {
   Eye,
   Scale,
   ArrowRight,
+  ClipboardCheck,
 } from "lucide-react";
 
 const sections = [
   {
     href: "/docs/how-it-works",
     icon: Workflow,
-    title: "How It Works",
+    title: "Deal Lifecycle",
     description:
       "Learn the complete deal lifecycle from creation to signature, including the 6-stage workflow.",
+  },
+  {
+    href: "/docs/compromise",
+    icon: Scale,
+    title: "Compromise Algorithm",
+    description:
+      "Discover the weighted stake-based algorithm that suggests fair compromises. Try it interactively.",
   },
   {
     href: "/docs/skills",
@@ -23,18 +31,18 @@ const sections = [
       "Understand how attorney-created contract templates power negotiations with multi-language support.",
   },
   {
+    href: "/docs/vetting",
+    icon: ClipboardCheck,
+    title: "Lawyer Vetting",
+    description:
+      "How attorneys review templates and pre-select recommended options before sharing with clients.",
+  },
+  {
     href: "/docs/supervision",
     icon: Eye,
     title: "Supervision",
     description:
       "Explore the two-level administration system with platform admins and supervisors.",
-  },
-  {
-    href: "/docs/compromise",
-    icon: Scale,
-    title: "Compromise Algorithm",
-    description:
-      "Discover the weighted stake-based algorithm that suggests fair compromises. Try it interactively.",
   },
 ];
 
@@ -53,20 +61,20 @@ export default function DocsPage() {
       </div>
 
       {/* Value Props */}
-      <div className="grid grid-cols-3 gap-4">
-        <div className="p-4 border border-border">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="card-brutal p-4">
           <p className="font-semibold mb-1">Asynchronous</p>
           <p className="text-sm text-muted-foreground">
             Negotiate on your schedule. No coordinated meetings required.
           </p>
         </div>
-        <div className="p-4 border border-border">
+        <div className="card-brutal p-4">
           <p className="font-semibold mb-1">Fair Algorithm</p>
           <p className="text-sm text-muted-foreground">
             Stake-weighted suggestions that balance both parties' priorities.
           </p>
         </div>
-        <div className="p-4 border border-border">
+        <div className="card-brutal p-4">
           <p className="font-semibold mb-1">Attorney-Crafted</p>
           <p className="text-sm text-muted-foreground">
             Professional contract templates with jurisdiction-aware options.
@@ -77,17 +85,17 @@ export default function DocsPage() {
       {/* Section Cards */}
       <div>
         <h2 className="text-xl font-bold mb-6">Documentation Sections</h2>
-        <div className="grid grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {sections.map((section) => {
             const Icon = section.icon;
             return (
               <Link
                 key={section.href}
                 href={section.href}
-                className="group block p-6 border-2 border-border hover:border-primary transition-colors"
+                className="group card-brutal block p-6 hover:border-primary transition-colors"
               >
                 <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 border border-border flex items-center justify-center group-hover:border-primary group-hover:text-primary transition-colors">
+                  <div className="w-10 h-10 rounded-xl border border-border flex items-center justify-center group-hover:border-primary group-hover:text-primary transition-colors">
                     <Icon className="w-5 h-5" />
                   </div>
                   <div className="flex-1">
@@ -107,7 +115,7 @@ export default function DocsPage() {
       </div>
 
       {/* Quick Start */}
-      <div className="border-2 border-primary/30 p-6 bg-primary/5">
+      <div className="border border-primary/30 p-6 bg-primary/5 rounded-2xl">
         <h2 className="text-xl font-bold mb-4">Quick Start</h2>
         <div className="space-y-3">
           <p className="text-muted-foreground">

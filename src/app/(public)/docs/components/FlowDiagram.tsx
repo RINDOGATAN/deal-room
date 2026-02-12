@@ -43,7 +43,7 @@ export function FlowDiagram({
             <div
               className={`
                 flex flex-col items-center justify-center
-                px-4 py-3 border-2 transition-colors min-w-[140px]
+                px-4 py-3 border rounded-xl transition-colors min-w-[140px]
                 ${
                   isActive
                     ? "border-primary bg-primary/10 text-primary"
@@ -103,7 +103,7 @@ export function FlowDiagramCompact({
           <div key={step.id} className="flex items-center">
             <span
               className={`
-                px-2 py-1 text-xs font-mono border
+                px-2 py-1 text-xs font-mono border rounded-lg
                 ${
                   isActive
                     ? "border-primary text-primary bg-primary/10"

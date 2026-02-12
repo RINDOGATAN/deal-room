@@ -22,7 +22,7 @@ export function WorkflowStep({
   return (
     <div
       className={`
-        p-6 border-2 transition-colors
+        p-6 border rounded-2xl transition-colors
         ${
           status === "active"
             ? "border-primary bg-primary/5"
@@ -36,7 +36,7 @@ export function WorkflowStep({
         {/* Step Number */}
         <div
           className={`
-            w-10 h-10 flex items-center justify-center border-2 flex-shrink-0
+            w-10 h-10 flex items-center justify-center border-2 rounded-full flex-shrink-0
             ${
               status === "completed"
                 ? "border-primary bg-primary text-primary-foreground"
@@ -71,7 +71,7 @@ export function WorkflowStep({
               {title}
             </h3>
             {actor && (
-              <span className="text-xs px-2 py-1 bg-muted text-muted-foreground border border-border">
+              <span className="text-xs px-2 py-1 bg-muted text-muted-foreground border border-border rounded-full">
                 {actor}
               </span>
             )}
@@ -106,7 +106,7 @@ export function WorkflowTimeline({
             {/* Circle */}
             <div
               className={`
-                w-10 h-10 flex items-center justify-center border-2 bg-background z-10
+                w-10 h-10 flex items-center justify-center border-2 rounded-full bg-background z-10
                 ${
                   step.status === "completed"
                     ? "border-primary bg-primary text-primary-foreground"
