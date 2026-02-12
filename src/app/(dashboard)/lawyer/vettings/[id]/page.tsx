@@ -360,31 +360,47 @@ export default function VettingDetailPage() {
 
           {vettedStatus && !vettedStatus.active ? (
             <>
-              <div className="card-brutal relative border-warning/50">
-                <span className="absolute top-4 right-4 bg-warning/20 text-warning text-xs font-semibold px-2.5 py-0.5 rounded-full">
-                  {tBilling("pricePerMonth")}
-                </span>
-                <p className="text-sm text-muted-foreground mb-4">
-                  {t("sendRequiresSubscription")}
-                </p>
-                <div className="flex items-center gap-3">
-                  {vettedStatus.selfServiceUpgrade && vettedStatus.skillPackageId && (
-                    <button
-                      onClick={() => setShowEnableModal(true)}
-                      className="btn-brutal bg-warning text-white hover:bg-warning/90 text-sm"
-                    >
-                      {t("enableSubscription")}
-                    </button>
-                  )}
-                  <Link
-                    href="/billing"
-                    className="text-sm text-muted-foreground hover:text-foreground underline underline-offset-4"
-                  >
-                    {t("viewBilling")}
-                  </Link>
+              <div className="card-brutal relative border-warning/50 overflow-hidden">
+                <div className="absolute top-0 left-0 right-0 h-1 bg-warning" />
+                <div className="flex items-start gap-4">
+                  <div className="hidden sm:flex w-10 h-10 items-center justify-center rounded-xl bg-warning/20 text-warning flex-shrink-0">
+                    <Send className="w-5 h-5" />
+                  </div>
+                  <div className="flex-1 space-y-3">
+                    <div className="flex items-start justify-between gap-2">
+                      <div>
+                        <p className="font-semibold">{t("sendRequiresSubscription")}</p>
+                      </div>
+                      <span className="bg-warning/20 text-warning text-xs font-semibold px-2.5 py-0.5 rounded-full whitespace-nowrap flex-shrink-0">
+                        {tBilling("pricePerMonth")}
+                      </span>
+                    </div>
+                    <ul className="space-y-1.5">
+                      <li className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <Check className="w-3.5 h-3.5 text-warning flex-shrink-0" />
+                        {t("enableBenefitShare")}
+                      </li>
+                      <li className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <Check className="w-3.5 h-3.5 text-warning flex-shrink-0" />
+                        {t("enableBenefitBranded")}
+                      </li>
+                      <li className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <Check className="w-3.5 h-3.5 text-warning flex-shrink-0" />
+                        {t("enableBenefitCancel")}
+                      </li>
+                    </ul>
+                    {vettedStatus.skillPackageId && (
+                      <button
+                        onClick={() => setShowEnableModal(true)}
+                        className="btn-brutal bg-warning text-white hover:bg-warning/90 text-sm w-full sm:w-auto"
+                      >
+                        {t("enableSubscription")}
+                      </button>
+                    )}
+                  </div>
                 </div>
               </div>
-              {vettedStatus.selfServiceUpgrade && vettedStatus.skillPackageId && (
+              {vettedStatus.skillPackageId && (
                 <EnableFeatureModal
                   open={showEnableModal}
                   onClose={() => setShowEnableModal(false)}

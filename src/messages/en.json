@@ -341,8 +341,12 @@
     "vettedContractsInfoBody": "You can review templates and prepare vetted contracts at no cost. A subscription (€9/mo) is only needed when you're ready to send recommendations to clients.",
     "vettedContractsInfoDismiss": "Got it",
     "viewBilling": "View Billing",
-    "sendRequiresSubscription": "Unlock a Vetted Contracts subscription (€9/mo) to share this contract with up to 100 customers per month.",
-    "enableSubscription": "Enable — €9/mo"
+    "sendRequiresSubscription": "Your contract is ready. Start sharing it with clients in seconds.",
+    "enableSubscription": "Enable — €9/mo",
+    "enableBenefitShare": "Share with up to 100 clients/month",
+    "enableBenefitBranded": "Clients get your vetted recommendations",
+    "enableBenefitCancel": "Cancel anytime, no commitment",
+    "clickToEnable": "Click to enable"
   },
   "billing": {
     "title": "Billing",
