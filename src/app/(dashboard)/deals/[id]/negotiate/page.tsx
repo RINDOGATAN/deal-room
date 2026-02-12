@@ -46,10 +46,10 @@ interface JurisdictionConfig {
   SPAIN?: RawJurisdictionRule;
 }
 
-const governingLawLabels: Record<GoverningLaw, string> = {
-  CALIFORNIA: "California",
-  ENGLAND_WALES: "England & Wales",
-  SPAIN: "Spain",
+const governingLawTKey: Record<GoverningLaw, string> = {
+  CALIFORNIA: "california",
+  ENGLAND_WALES: "englandWales",
+  SPAIN: "spain",
 };
 
 interface Selection {
@@ -66,6 +66,7 @@ export default function NegotiatePage() {
   const t = useTranslations("negotiate");
   const tCommon = useTranslations("common");
   const tLawyer = useTranslations("lawyer");
+  const tNewDeal = useTranslations("newDeal");
 
   const [currentClauseIndex, setCurrentClauseIndex] = useState(0);
   const [selections, setSelections] = useState<Map<string, Selection>>(new Map());
@@ -163,7 +164,7 @@ export default function NegotiatePage() {
       <div className="card-brutal border-warning">
         <div className="flex items-center gap-3 text-warning">
           <AlertCircle className="w-5 h-5" />
-          <span>Failed to load deal: {error?.message || "Not found"}</span>
+          <span>{t("failedToLoad", { error: error?.message || "Not found" })}</span>
         </div>
       </div>
     );
@@ -328,13 +329,13 @@ export default function NegotiatePage() {
           <div>
             <h1 className="text-xl font-heading">{deal.name}</h1>
             <p className="text-sm text-muted-foreground">
-              {deal.contractTemplate.displayName} • Clause <span className="metric text-foreground">{currentClauseIndex + 1}</span> of <span className="metric">{clauses.length}</span>
+              {deal.contractTemplate.displayName} • {t("clause")} <span className="metric text-foreground">{currentClauseIndex + 1}</span> {t("of")} <span className="metric">{clauses.length}</span>
             </p>
           </div>
         </div>
         <div className="flex items-center gap-4">
           <div className="text-right">
-            <p className="text-sm text-muted-foreground">Progress</p>
+            <p className="text-sm text-muted-foreground">{t("progress")}</p>
             <p className="metric"><span className="text-primary">{selections.size}</span><span className="text-muted-foreground">/{clauses.length}</span></p>
           </div>
           <Progress value={progress} className="w-32 h-1.5" />
@@ -355,10 +356,10 @@ export default function NegotiatePage() {
               </div>
               <div>
                 <p className="font-semibold">
-                  {isPrePopulating ? "Loading..." : "Pre-populate with my counterparty's selections"}
+                  {isPrePopulating ? t("prePopulateLoading") : t("prePopulate")}
                 </p>
                 <p className="text-sm text-muted-foreground">
-                  Save time by starting with the other party&apos;s choices. You can still adjust any selection before submitting.
+                  {t("prePopulateDescription")}
                 </p>
               </div>
             </button>
@@ -407,7 +408,7 @@ export default function NegotiatePage() {
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex items-center justify-between mb-6">
-                <p className="section-label text-primary">Clauses</p>
+                <p className="section-label text-primary">{t("clauses")}</p>
                 <button
                   onClick={() => setSidebarOpen(false)}
                   className="p-2 text-muted-foreground hover:text-foreground"
@@ -524,7 +525,7 @@ export default function NegotiatePage() {
                 <h2 className="text-xl font-heading">{currentClause.clauseTemplate.title}</h2>
               </div>
               <span className="text-sm text-muted-foreground">
-                {currentClause.clauseTemplate.isRequired ? "Required" : "Optional"}
+                {currentClause.clauseTemplate.isRequired ? tCommon("required") : tCommon("optional")}
               </span>
             </div>
             <p className="mt-4 text-muted-foreground">
@@ -546,10 +547,10 @@ export default function NegotiatePage() {
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <p className="section-label">
-                Select Your Preferred Option
+                {t("selectPreferredOption")}
               </p>
               <Badge variant="outline" className="text-xs">
-                {governingLawLabels[governingLaw]} Law
+                {tNewDeal(`jurisdictions.${governingLawTKey[governingLaw]}`)} {t("law")}
               </Badge>
             </div>
 
@@ -558,7 +559,7 @@ export default function NegotiatePage() {
               <div className="p-3 border border-warning/50 bg-warning/10 rounded-xl flex items-start gap-2">
                 <AlertTriangle className="w-4 h-4 text-warning mt-0.5 flex-shrink-0" />
                 <p className="text-sm text-warning">
-                  Your previous selection is not available under {governingLawLabels[governingLaw]} law. Please select a different option.
+                  {t("previousSelectionUnavailable", { law: tNewDeal(`jurisdictions.${governingLawTKey[governingLaw]}`) })}
                 </p>
               </div>
             )}
@@ -665,7 +666,7 @@ export default function NegotiatePage() {
                         {/* Pros/Cons */}
                         <div className="grid grid-cols-2 gap-4">
                           <div>
-                            <p className="text-xs font-medium text-primary uppercase tracking-wider mb-2">Pros for You</p>
+                            <p className="text-xs font-medium text-primary uppercase tracking-wider mb-2">{t("prosForYou")}</p>
                             <ul className="space-y-1">
                               {(deal.currentUserRole === "INITIATOR" ? option.prosPartyA : option.prosPartyB).map((pro, i) => (
                                 <li key={i} className="text-sm text-muted-foreground flex items-start gap-2">
@@ -676,7 +677,7 @@ export default function NegotiatePage() {
                             </ul>
                           </div>
                           <div>
-                            <p className="text-xs font-medium text-warning uppercase tracking-wider mb-2">Cons for You</p>
+                            <p className="text-xs font-medium text-warning uppercase tracking-wider mb-2">{t("consForYou")}</p>
                             <ul className="space-y-1">
                               {(deal.currentUserRole === "INITIATOR" ? option.consPartyA : option.consPartyB).map((con, i) => (
                                 <li key={i} className="text-sm text-muted-foreground flex items-start gap-2">
@@ -690,7 +691,7 @@ export default function NegotiatePage() {
 
                         {/* Legal Text Preview */}
                         <div>
-                          <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2">Legal Text</p>
+                          <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2">{t("legalText")}</p>
                           <p className="text-sm text-muted-foreground italic bg-muted/30 p-3 border border-border rounded-xl">
                             {option.legalText}
                           </p>
@@ -709,7 +710,7 @@ export default function NegotiatePage() {
               <div className="flex items-center gap-2">
                 <Sliders className="w-4 h-4 text-muted-foreground" />
                 <span className="section-label">
-                  Importance Settings
+                  {t("importanceSettings")}
                 </span>
               </div>
 
@@ -717,8 +718,8 @@ export default function NegotiatePage() {
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="font-medium">Priority</p>
-                      <p className="text-xs text-muted-foreground">How important is this clause to you?</p>
+                      <p className="font-medium">{t("priority")}</p>
+                      <p className="text-xs text-muted-foreground">{t("priorityDescription")}</p>
                     </div>
                     <div className="flex items-center gap-1">
                       {[1, 2, 3, 4, 5].map((n) => (
@@ -738,16 +739,16 @@ export default function NegotiatePage() {
                     className="w-full"
                   />
                   <div className="flex justify-between text-xs text-muted-foreground">
-                    <span>Low priority</span>
-                    <span>High priority</span>
+                    <span>{t("lowPriority")}</span>
+                    <span>{t("highPriority")}</span>
                   </div>
                 </div>
 
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="font-medium">Flexibility</p>
-                      <p className="text-xs text-muted-foreground">How willing are you to compromise?</p>
+                      <p className="font-medium">{t("flexibility")}</p>
+                      <p className="text-xs text-muted-foreground">{t("flexibilityDescription")}</p>
                     </div>
                     <span className="text-sm font-medium">{currentSelection.flexibility}/5</span>
                   </div>
@@ -760,8 +761,8 @@ export default function NegotiatePage() {
                     className="w-full"
                   />
                   <div className="flex justify-between text-xs text-muted-foreground">
-                    <span>Must have my way</span>
-                    <span>Very flexible</span>
+                    <span>{t("mustHaveMyWay")}</span>
+                    <span>{t("veryFlexible")}</span>
                   </div>
                 </div>
               </div>
@@ -781,7 +782,7 @@ export default function NegotiatePage() {
               className="flex items-center gap-2 px-4 py-2 text-muted-foreground hover:text-foreground disabled:opacity-50 rounded-full hover:bg-secondary transition-colors"
             >
               <ArrowLeft className="w-4 h-4" />
-              Previous
+              {tCommon("previous")}
             </button>
 
             <div className="flex items-center gap-3">
@@ -791,7 +792,7 @@ export default function NegotiatePage() {
                   disabled={!isComplete || submitSelections.isPending}
                   className="btn-brutal flex items-center gap-2 disabled:opacity-50"
                 >
-                  {submitSelections.isPending ? "Submitting..." : "Submit All Selections"}
+                  {submitSelections.isPending ? t("submitting") : t("submitAllSelections")}
                   <Check className="w-4 h-4" />
                 </button>
               ) : (
@@ -800,7 +801,7 @@ export default function NegotiatePage() {
                   disabled={!currentSelection}
                   className="btn-brutal flex items-center gap-2 disabled:opacity-50"
                 >
-                  {saveSelections.isPending ? "Saving..." : "Continue"}
+                  {saveSelections.isPending ? t("saving") : tCommon("continue")}
                   <ArrowRight className="w-4 h-4" />
                 </button>
               )}
