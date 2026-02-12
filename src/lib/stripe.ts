@@ -102,6 +102,13 @@ export function verifyWebhookSignature(
   return stripe.webhooks.constructEvent(payload, signature, webhookSecret);
 }
 
+export async function cancelSubscription(
+  subscriptionId: string
+): Promise<Stripe.Subscription> {
+  const stripe = getStripe();
+  return stripe.subscriptions.cancel(subscriptionId);
+}
+
 export async function getSubscription(
   subscriptionId: string
 ): Promise<Stripe.Subscription> {

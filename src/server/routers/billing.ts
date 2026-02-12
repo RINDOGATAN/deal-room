@@ -1,5 +1,8 @@
+import { z } from "zod";
+import { TRPCError } from "@trpc/server";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { features } from "@/config/features";
+import { cancelSubscription } from "@/lib/stripe";
 
 export const billingRouter = createTRPCRouter({
   getConfig: protectedProcedure.query(() => {
@@ -111,4 +114,35 @@ export const billingRouter = createTRPCRouter({
       isEntitled: entitledSkillPackageIds.has(pkg.id),
     }));
   }),
+
+  cancelSubscription: protectedProcedure
+    .input(z.object({ entitlementId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const email = ctx.session.user.email;
+      if (!email) {
+        throw new TRPCError({ code: "BAD_REQUEST", message: "No email on session" });
+      }
+
+      const entitlement = await ctx.prisma.skillEntitlement.findUnique({
+        where: { id: input.entitlementId },
+        include: { customer: { select: { email: true } } },
+      });
+
+      if (!entitlement || entitlement.customer.email !== email) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Entitlement not found" });
+      }
+
+      if (entitlement.status !== "ACTIVE" || !entitlement.stripeSubscriptionId) {
+        throw new TRPCError({ code: "BAD_REQUEST", message: "Subscription is not active" });
+      }
+
+      await cancelSubscription(entitlement.stripeSubscriptionId);
+
+      await ctx.prisma.skillEntitlement.update({
+        where: { id: input.entitlementId },
+        data: { status: "EXPIRED" },
+      });
+
+      return { success: true };
+    }),
 });

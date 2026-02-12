@@ -2,11 +2,18 @@
 
 import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
-import { Loader2, CheckCircle2, Circle } from "lucide-react";
+import { Loader2, CheckCircle2, Circle, XCircle } from "lucide-react";
 import { trpc } from "@/lib/trpc";
-import { ManageBillingButton } from "@/components/billing/manage-billing-button";
 import { EnableFeatureModal } from "@/components/premium/enable-feature-modal";
 import { EnableMultipleFeaturesModal } from "@/components/premium/enable-multiple-features-modal";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 
@@ -21,12 +28,30 @@ export default function BillingPage() {
     { id: string; name: string }[] | null
   >(null);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [cancelTarget, setCancelTarget] = useState<{
+    entitlementId: string;
+    name: string;
+  } | null>(null);
+
+  const utils = trpc.useUtils();
 
   const { data: status, isLoading: statusLoading } =
     trpc.billing.getSubscriptionStatus.useQuery();
 
   const { data: plans, isLoading: plansLoading } =
     trpc.billing.getAvailablePlans.useQuery();
+
+  const cancelMutation = trpc.billing.cancelSubscription.useMutation({
+    onSuccess: () => {
+      toast.success(t("cancelSuccess"));
+      setCancelTarget(null);
+      utils.billing.getSubscriptionStatus.invalidate();
+      utils.billing.getAvailablePlans.invalidate();
+    },
+    onError: (err) => {
+      toast.error(err.message);
+    },
+  });
 
   // Show toast on checkout redirect
   useEffect(() => {
@@ -59,6 +84,8 @@ export default function BillingPage() {
       name: pkg.name,
       description: pkg.description,
       isActive,
+      entitlementId: entitlement?.id ?? null,
+      hasStripeSubscription: !!entitlement?.stripeSubscriptionId,
       renewsAt: entitlement?.expiresAt
         ? new Date(entitlement.expiresAt).toLocaleDateString()
         : null,
@@ -135,14 +162,30 @@ export default function BillingPage() {
               </div>
               <div className="flex items-center gap-3">
                 {row.isActive ? (
-                  <div className="text-right">
-                    <span className="inline-block px-2 py-0.5 text-xs font-medium bg-green-500/10 text-green-600 rounded-full">
-                      {t("active")}
-                    </span>
-                    {row.renewsAt && (
-                      <p className="text-xs text-muted-foreground mt-1">
-                        {t("renews")} {row.renewsAt}
-                      </p>
+                  <div className="flex items-center gap-3">
+                    <div className="text-right">
+                      <span className="inline-block px-2 py-0.5 text-xs font-medium bg-green-500/10 text-green-600 rounded-full">
+                        {t("active")}
+                      </span>
+                      {row.renewsAt && (
+                        <p className="text-xs text-muted-foreground mt-1">
+                          {t("renews")} {row.renewsAt}
+                        </p>
+                      )}
+                    </div>
+                    {row.entitlementId && row.hasStripeSubscription && (
+                      <button
+                        onClick={() =>
+                          setCancelTarget({
+                            entitlementId: row.entitlementId!,
+                            name: row.name,
+                          })
+                        }
+                        className="text-xs text-muted-foreground hover:text-destructive flex items-center gap-1 transition-colors"
+                      >
+                        <XCircle className="h-3.5 w-3.5" />
+                        {t("cancel")}
+                      </button>
                     )}
                   </div>
                 ) : (
@@ -195,8 +238,45 @@ export default function BillingPage() {
         </div>
       )}
 
-      {/* Manage Billing */}
-      {status?.stripeCustomerId && <ManageBillingButton />}
+      {/* Cancel confirmation dialog */}
+      <Dialog
+        open={!!cancelTarget}
+        onOpenChange={(open) => {
+          if (!open) setCancelTarget(null);
+        }}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>
+              {t("cancelTitle", { name: cancelTarget?.name ?? "" })}
+            </DialogTitle>
+            <DialogDescription>{t("cancelDescription")}</DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <button
+              onClick={() => setCancelTarget(null)}
+              className="btn-brutal text-xs px-4 py-2"
+            >
+              {t("keepSubscription")}
+            </button>
+            <button
+              onClick={() => {
+                if (cancelTarget) {
+                  cancelMutation.mutate({
+                    entitlementId: cancelTarget.entitlementId,
+                  });
+                }
+              }}
+              disabled={cancelMutation.isPending}
+              className="text-xs px-4 py-2 rounded-full bg-destructive text-white hover:bg-destructive/90 disabled:opacity-50 transition-colors"
+            >
+              {cancelMutation.isPending
+                ? t("cancelling")
+                : t("cancelConfirm")}
+            </button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {/* Enable single feature modal */}
       {enableSkill && (
