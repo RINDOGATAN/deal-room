@@ -243,15 +243,14 @@ export default function DashboardLayout({
             })}
           </p>
           <div className="flex items-center gap-3 flex-wrap justify-center">
-            <a
+            <Link
               href={brand.links.userGuide}
               target="_blank"
-              rel="noopener noreferrer"
               className="flex items-center gap-1.5 hover:text-foreground transition-colors"
             >
               <BookOpen className="w-3.5 h-3.5" />
               {tFooter("userGuide")}
-            </a>
+            </Link>
             <span className="text-border">&middot;</span>
             <Link
               href="/billing"
