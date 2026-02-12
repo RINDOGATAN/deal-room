@@ -4,6 +4,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 import {
   ArrowLeft,
   Check,
@@ -43,6 +44,9 @@ export default function ReviewPage() {
   const router = useRouter();
   const dealId = params.id as string;
 
+  const t = useTranslations("review");
+  const tCommon = useTranslations("common");
+
   const [counterProposalForm, setCounterProposalForm] = useState<CounterProposalForm | null>(null);
   const [selectedOptionId, setSelectedOptionId] = useState<string>("");
   const [rationale, setRationale] = useState<string>("");
@@ -64,22 +68,22 @@ export default function ReviewPage() {
 
   const generateCompromise = trpc.compromise.generate.useMutation({
     onSuccess: () => {
-      toast.success("Compromise suggestions generated");
+      toast.success(t("toastMessages.compromiseGenerated"));
       refetch();
     },
     onError: (error) => {
-      toast.error(`Failed to generate compromises: ${error.message}`);
+      toast.error(t("toastMessages.generateFailed", { error: error.message }));
     },
   });
 
   const regenerateCompromise = trpc.compromise.regenerate.useMutation({
     onSuccess: (data) => {
-      toast.success(`Round ${data.roundNumber}: New suggestions generated`);
+      toast.success(t("toastMessages.newSuggestionsGenerated", { number: data.roundNumber }));
       refetch();
       refetchCounterProposals();
     },
     onError: (error) => {
-      toast.error(`Failed to regenerate: ${error.message}`);
+      toast.error(t("toastMessages.regenerateFailed", { error: error.message }));
     },
   });
 
@@ -88,13 +92,13 @@ export default function ReviewPage() {
       refetch();
     },
     onError: (error) => {
-      toast.error(`Failed to respond: ${error.message}`);
+      toast.error(t("toastMessages.respondFailed", { error: error.message }));
     },
   });
 
   const submitCounterProposal = trpc.compromise.counterPropose.useMutation({
     onSuccess: () => {
-      toast.success("Counter-proposal submitted");
+      toast.success(t("toastMessages.counterProposalSubmitted"));
       setCounterProposalForm(null);
       setSelectedOptionId("");
       setRationale("");
@@ -102,47 +106,47 @@ export default function ReviewPage() {
       refetchCounterProposals();
     },
     onError: (error) => {
-      toast.error(`Failed to submit counter-proposal: ${error.message}`);
+      toast.error(t("toastMessages.submitFailed", { error: error.message }));
     },
   });
 
   const requestReview = trpc.attorneyReview.requestReview.useMutation({
     onSuccess: () => {
-      toast.success("Attorney review requested");
+      toast.success(t("toastMessages.attorneyReviewRequested"));
       setShowAttorneyModal(false);
       setSelectedAttorneyId("");
       refetchReviewStatus();
     },
     onError: (error) => {
-      toast.error(`Failed to request review: ${error.message}`);
+      toast.error(t("toastMessages.requestFailed", { error: error.message }));
     },
   });
 
   const cancelReview = trpc.attorneyReview.cancelReview.useMutation({
     onSuccess: () => {
-      toast.success("Attorney review cancelled");
+      toast.success(t("toastMessages.attorneyReviewCancelled"));
       refetchReviewStatus();
     },
     onError: (error) => {
-      toast.error(`Failed to cancel review: ${error.message}`);
+      toast.error(t("toastMessages.cancelFailed", { error: error.message }));
     },
   });
 
   const respondToCounterProposal = trpc.compromise.respondToCounterProposal.useMutation({
     onSuccess: (data) => {
       if (data.accepted) {
-        toast.success("Counter-proposal accepted");
+        toast.success(t("toastMessages.counterProposalAccepted"));
         if (data.allAgreed) {
-          toast.success("All clauses agreed! Proceeding to signing...");
+          toast.success(t("toastMessages.allAgreedProceeding"));
         }
       } else {
-        toast.success("Counter-proposal rejected");
+        toast.success(t("toastMessages.counterProposalRejected"));
       }
       refetch();
       refetchCounterProposals();
     },
     onError: (error) => {
-      toast.error(`Failed to respond: ${error.message}`);
+      toast.error(t("toastMessages.respondFailed", { error: error.message }));
     },
   });
 
@@ -162,7 +166,7 @@ export default function ReviewPage() {
       <div className="card-brutal border-yellow-500">
         <div className="flex items-center gap-3 text-yellow-600">
           <AlertCircle className="w-5 h-5" />
-          <span>Failed to load review data</span>
+          <span>{t("failedToLoad")}</span>
         </div>
       </div>
     );
@@ -216,10 +220,10 @@ export default function ReviewPage() {
             <ArrowLeft className="w-5 h-5" />
           </button>
           <div>
-            <h1 className="text-xl font-bold">Review Compromises</h1>
+            <h1 className="text-xl font-bold">{t("reviewCompromises")}</h1>
             <p className="text-sm text-muted-foreground">
               {deal.name} • {deal.contractTemplate.displayName}
-              {deal.currentRound > 0 && ` • Round ${deal.currentRound}`}
+              {deal.currentRound > 0 && ` • ${t("round", { number: deal.currentRound })}`}
             </p>
           </div>
         </div>
@@ -232,7 +236,7 @@ export default function ReviewPage() {
               className="flex items-center gap-2 px-4 py-2 border border-border hover:border-primary"
             >
               <RefreshCw className={`w-4 h-4 ${regenerateCompromise.isPending ? "animate-spin" : ""}`} />
-              {regenerateCompromise.isPending ? "Generating..." : "New Round"}
+              {regenerateCompromise.isPending ? t("generating") : t("newRound")}
             </button>
           )}
           {allAgreed && reviewStatus?.canProceedToSigning && (
@@ -241,7 +245,7 @@ export default function ReviewPage() {
               className="btn-brutal flex items-center gap-2"
             >
               <FileSignature className="w-4 h-4" />
-              Proceed to Signing
+              {t("proceedToSigning")}
             </button>
           )}
         </div>
@@ -254,10 +258,10 @@ export default function ReviewPage() {
             <MessageSquare className="w-5 h-5 text-yellow-500 mt-0.5" />
             <div>
               <p className="font-semibold text-yellow-200">
-                {pendingCounterProposalsForMe.length} Counter-Proposal{pendingCounterProposalsForMe.length > 1 ? "s" : ""} Awaiting Your Response
+                {t("counterProposalsPending", { count: pendingCounterProposalsForMe.length, plural: pendingCounterProposalsForMe.length > 1 ? "s" : "" })}
               </p>
               <p className="text-sm text-muted-foreground mt-1">
-                The other party has proposed alternatives for some clauses. Review and respond below.
+                {t("counterProposalsDescription")}
               </p>
             </div>
           </div>
@@ -269,14 +273,14 @@ export default function ReviewPage() {
         <div className="card-brutal">
           <div className="flex items-center gap-2 mb-4">
             <Scale className="w-5 h-5 text-muted-foreground" />
-            <span className="font-semibold">Overall Satisfaction</span>
+            <span className="font-semibold">{t("overallSatisfaction")}</span>
           </div>
           <div className="grid grid-cols-2 gap-8">
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <span className="text-sm text-muted-foreground">
                   {satisfactionScores.partyA.name}
-                  {isInitiator && " (You)"}
+                  {isInitiator && ` (${tCommon("you")})`}
                 </span>
                 <span className="font-semibold text-primary">{satisfactionScores.partyA.satisfaction}%</span>
               </div>
@@ -286,7 +290,7 @@ export default function ReviewPage() {
               <div className="flex items-center justify-between">
                 <span className="text-sm text-muted-foreground">
                   {satisfactionScores.partyB.name}
-                  {!isInitiator && " (You)"}
+                  {!isInitiator && ` (${tCommon("you")})`}
                 </span>
                 <span className="font-semibold">{satisfactionScores.partyB.satisfaction}%</span>
               </div>
@@ -300,15 +304,15 @@ export default function ReviewPage() {
       <div className="grid grid-cols-3 gap-4">
         <div className="card-brutal text-center">
           <p className="text-3xl font-bold text-primary">{agreedCount}</p>
-          <p className="text-sm text-muted-foreground">Agreed</p>
+          <p className="text-sm text-muted-foreground">{tCommon("agreed")}</p>
         </div>
         <div className="card-brutal text-center">
           <p className="text-3xl font-bold">{pendingCount}</p>
-          <p className="text-sm text-muted-foreground">Pending</p>
+          <p className="text-sm text-muted-foreground">{tCommon("pending")}</p>
         </div>
         <div className="card-brutal text-center">
           <p className="text-3xl font-bold">{suggestions.length}</p>
-          <p className="text-sm text-muted-foreground">Total Clauses</p>
+          <p className="text-sm text-muted-foreground">{t("totalClauses")}</p>
         </div>
       </div>
 
@@ -316,16 +320,16 @@ export default function ReviewPage() {
       {needsGeneration && (
         <div className="card-brutal text-center py-8">
           <Scale className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-          <h2 className="text-lg font-semibold mb-2">Ready to Generate Compromises</h2>
+          <h2 className="text-lg font-semibold mb-2">{t("readyToGenerate")}</h2>
           <p className="text-muted-foreground mb-6 max-w-md mx-auto">
-            Both parties have submitted their selections. Generate AI-powered compromise suggestions based on priorities and flexibility.
+            {t("readyToGenerateDescription")}
           </p>
           <button
             onClick={() => generateCompromise.mutate({ dealRoomId: dealId })}
             disabled={generateCompromise.isPending}
             className="btn-brutal"
           >
-            {generateCompromise.isPending ? "Generating..." : "Generate Compromise Suggestions"}
+            {generateCompromise.isPending ? t("generating") : t("generateCompromiseSuggestions")}
           </button>
         </div>
       )}
@@ -335,7 +339,7 @@ export default function ReviewPage() {
         <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
           <div className="card-brutal max-w-2xl w-full max-h-[80vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-lg font-bold">Counter-Propose: {counterProposalForm.clauseTitle}</h2>
+              <h2 className="text-lg font-bold">{t("counterProposeTitle", { title: counterProposalForm.clauseTitle })}</h2>
               <button
                 onClick={() => {
                   setCounterProposalForm(null);
@@ -349,7 +353,7 @@ export default function ReviewPage() {
             </div>
 
             <p className="text-sm text-muted-foreground mb-4">
-              Select an alternative option you'd like to propose:
+              {t("selectAlternative")}
             </p>
 
             <div className="space-y-3 mb-6">
@@ -373,12 +377,12 @@ export default function ReviewPage() {
 
             <div className="mb-6">
               <label className="block text-sm font-medium text-muted-foreground mb-2">
-                Rationale (optional)
+                {t("rationale")}
               </label>
               <textarea
                 value={rationale}
                 onChange={(e) => setRationale(e.target.value)}
-                placeholder="Explain why you're proposing this alternative..."
+                placeholder={t("rationalePlaceholder")}
                 className="w-full p-3 bg-background border border-border focus:border-primary outline-none resize-none h-24"
               />
             </div>
@@ -392,14 +396,14 @@ export default function ReviewPage() {
                 }}
                 className="px-4 py-2 text-muted-foreground hover:text-foreground"
               >
-                Cancel
+                {tCommon("cancel")}
               </button>
               <button
                 onClick={handleSubmitCounterProposal}
                 disabled={!selectedOptionId || submitCounterProposal.isPending}
                 className="btn-brutal disabled:opacity-50"
               >
-                {submitCounterProposal.isPending ? "Submitting..." : "Submit Counter-Proposal"}
+                {submitCounterProposal.isPending ? t("generating") : t("submitCounterProposal")}
               </button>
             </div>
           </div>
@@ -440,13 +444,13 @@ export default function ReviewPage() {
                       {item.status === "AGREED" && (
                         <Badge className="bg-primary/20 text-primary">
                           <Check className="w-3 h-3 mr-1" />
-                          Agreed
+                          {tCommon("agreed")}
                         </Badge>
                       )}
                       {clauseCounterProposals.length > 0 && (
                         <Badge className="bg-yellow-500/20 text-yellow-500">
                           <MessageSquare className="w-3 h-3 mr-1" />
-                          Counter-Proposal
+                          {t("counterProposalBadge")}
                         </Badge>
                       )}
                     </div>
@@ -464,7 +468,7 @@ export default function ReviewPage() {
                 {clauseCounterProposals.length > 0 && (
                   <div className="mb-4 p-4 border border-yellow-500/30 bg-yellow-500/10">
                     <p className="text-sm font-medium text-yellow-200 mb-3">
-                      The other party has proposed an alternative:
+                      {t("otherPartyProposed")}
                     </p>
                     {clauseCounterProposals.map((cp) => (
                       <div key={cp.id} className="space-y-3">
@@ -489,7 +493,7 @@ export default function ReviewPage() {
                             className="flex items-center gap-2 px-4 py-2 border border-yellow-500 text-yellow-600 hover:bg-yellow-500 hover:text-white transition-colors"
                           >
                             <ThumbsDown className="w-4 h-4" />
-                            Reject
+                            {t("reject")}
                           </button>
                           <button
                             onClick={() => respondToCounterProposal.mutate({
@@ -500,7 +504,7 @@ export default function ReviewPage() {
                             className="btn-brutal flex items-center gap-2"
                           >
                             <ThumbsUp className="w-4 h-4" />
-                            Accept
+                            {t("accept")}
                           </button>
                         </div>
                       </div>
@@ -511,17 +515,17 @@ export default function ReviewPage() {
                 {/* Selections Comparison */}
                 <div className="grid grid-cols-3 gap-4 mb-4">
                   <div className="p-4 bg-muted/30 border border-border">
-                    <p className="text-xs text-muted-foreground uppercase tracking-wider mb-2">Your Selection</p>
+                    <p className="text-xs text-muted-foreground uppercase tracking-wider mb-2">{t("yourSelection")}</p>
                     <p className="font-medium">{mySelection?.option.label || "—"}</p>
                   </div>
                   <div className="p-4 bg-primary/10 border border-primary">
-                    <p className="text-xs text-primary uppercase tracking-wider mb-2">Suggested</p>
+                    <p className="text-xs text-primary uppercase tracking-wider mb-2">{t("suggested")}</p>
                     <p className="font-medium text-primary">
                       {suggestion?.suggestedOption.label || "—"}
                     </p>
                   </div>
                   <div className="p-4 bg-muted/30 border border-border">
-                    <p className="text-xs text-muted-foreground uppercase tracking-wider mb-2">Their Selection</p>
+                    <p className="text-xs text-muted-foreground uppercase tracking-wider mb-2">{t("theirSelection")}</p>
                     <p className="font-medium">{otherSelection?.option.label || "—"}</p>
                   </div>
                 </div>
@@ -537,7 +541,7 @@ export default function ReviewPage() {
                     {/* Satisfaction for this clause */}
                     <div className="grid grid-cols-2 gap-4 mb-4">
                       <div className="flex items-center gap-3">
-                        <span className="text-xs text-muted-foreground">Your satisfaction:</span>
+                        <span className="text-xs text-muted-foreground">{t("yourSatisfaction")}</span>
                         <Progress
                           value={isInitiator ? suggestion.satisfactionPartyA : suggestion.satisfactionPartyB}
                           className="flex-1 h-2"
@@ -547,7 +551,7 @@ export default function ReviewPage() {
                         </span>
                       </div>
                       <div className="flex items-center gap-3">
-                        <span className="text-xs text-muted-foreground">Their satisfaction:</span>
+                        <span className="text-xs text-muted-foreground">{t("theirSatisfaction")}</span>
                         <Progress
                           value={isInitiator ? suggestion.satisfactionPartyB : suggestion.satisfactionPartyA}
                           className="flex-1 h-2"
@@ -565,16 +569,16 @@ export default function ReviewPage() {
                   <div className="flex items-center justify-between pt-4 border-t border-border">
                     <div className="flex items-center gap-4 text-sm">
                       <div className="flex items-center gap-2">
-                        <span className="text-muted-foreground">You:</span>
-                        {myAccepted === true && <Badge className="bg-primary/20 text-primary">Accepted</Badge>}
-                        {myAccepted === false && <Badge className="bg-yellow-500/20 text-yellow-600">Rejected</Badge>}
-                        {myAccepted === null && <Badge variant="outline">Pending</Badge>}
+                        <span className="text-muted-foreground">{tCommon("you")}:</span>
+                        {myAccepted === true && <Badge className="bg-primary/20 text-primary">{t("accepted")}</Badge>}
+                        {myAccepted === false && <Badge className="bg-yellow-500/20 text-yellow-600">{t("rejected")}</Badge>}
+                        {myAccepted === null && <Badge variant="outline">{tCommon("pending")}</Badge>}
                       </div>
                       <div className="flex items-center gap-2">
-                        <span className="text-muted-foreground">They:</span>
-                        {otherAccepted === true && <Badge className="bg-primary/20 text-primary">Accepted</Badge>}
-                        {otherAccepted === false && <Badge className="bg-yellow-500/20 text-yellow-600">Rejected</Badge>}
-                        {otherAccepted === null && <Badge variant="outline">Pending</Badge>}
+                        <span className="text-muted-foreground">{t("they")}</span>
+                        {otherAccepted === true && <Badge className="bg-primary/20 text-primary">{t("accepted")}</Badge>}
+                        {otherAccepted === false && <Badge className="bg-yellow-500/20 text-yellow-600">{t("rejected")}</Badge>}
+                        {otherAccepted === null && <Badge variant="outline">{tCommon("pending")}</Badge>}
                       </div>
                     </div>
 
@@ -595,7 +599,7 @@ export default function ReviewPage() {
                           className="flex items-center gap-2 px-4 py-2 border border-muted-foreground text-muted-foreground hover:border-yellow-500 hover:text-yellow-600 transition-colors"
                         >
                           <MessageSquare className="w-4 h-4" />
-                          Counter-Propose
+                          {t("counterPropose")}
                         </button>
                         <button
                           onClick={() => respondToSuggestion.mutate({
@@ -606,7 +610,7 @@ export default function ReviewPage() {
                           className="flex items-center gap-2 px-4 py-2 border border-yellow-500 text-yellow-600 hover:bg-yellow-500 hover:text-white transition-colors"
                         >
                           <ThumbsDown className="w-4 h-4" />
-                          Reject
+                          {t("reject")}
                         </button>
                         <button
                           onClick={() => respondToSuggestion.mutate({
@@ -617,7 +621,7 @@ export default function ReviewPage() {
                           className="btn-brutal flex items-center gap-2"
                         >
                           <ThumbsUp className="w-4 h-4" />
-                          Accept
+                          {t("accept")}
                         </button>
                       </div>
                     )}
@@ -634,7 +638,7 @@ export default function ReviewPage() {
         <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
           <div className="card-brutal max-w-lg w-full">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-lg font-bold">Select Reviewing Attorney</h2>
+              <h2 className="text-lg font-bold">{t("selectReviewingAttorney")}</h2>
               <button
                 onClick={() => {
                   setShowAttorneyModal(false);
@@ -646,7 +650,7 @@ export default function ReviewPage() {
               </button>
             </div>
             <p className="text-sm text-muted-foreground mb-4">
-              Choose a supervising attorney to review the agreed contract before signing.
+              {t("chooseAttorneyDescription")}
             </p>
             <div className="space-y-2 mb-6 max-h-64 overflow-y-auto">
               {availableAttorneys?.map((attorney) => (
@@ -667,7 +671,7 @@ export default function ReviewPage() {
                   <p className="font-semibold">
                     {attorney.name || attorney.email}
                     {attorney.unavailable && (
-                      <span className="text-xs text-muted-foreground ml-2">(Selected by other party)</span>
+                      <span className="text-xs text-muted-foreground ml-2">{t("selectedByOtherParty")}</span>
                     )}
                   </p>
                   <p className="text-sm text-muted-foreground">{attorney.email}</p>
@@ -675,7 +679,7 @@ export default function ReviewPage() {
               ))}
               {availableAttorneys?.length === 0 && (
                 <p className="text-sm text-muted-foreground text-center py-4">
-                  No attorneys available. Contact your administrator.
+                  {t("noAttorneysAvailable")}
                 </p>
               )}
             </div>
@@ -687,7 +691,7 @@ export default function ReviewPage() {
                 }}
                 className="px-4 py-2 text-muted-foreground hover:text-foreground"
               >
-                Cancel
+                {tCommon("cancel")}
               </button>
               <button
                 onClick={() => {
@@ -701,7 +705,7 @@ export default function ReviewPage() {
                 disabled={!selectedAttorneyId || requestReview.isPending}
                 className="btn-brutal disabled:opacity-50"
               >
-                {requestReview.isPending ? "Requesting..." : "Assign Attorney"}
+                {requestReview.isPending ? t("requesting") : t("assignAttorney")}
               </button>
             </div>
           </div>
@@ -719,12 +723,11 @@ export default function ReviewPage() {
                   <Shield className="w-6 h-6 text-purple-500" />
                 </div>
                 <div className="flex-1">
-                  <h2 className="text-lg font-semibold mb-1">Attorney Review In Progress</h2>
+                  <h2 className="text-lg font-semibold mb-1">{t("attorneyReviewInProgress")}</h2>
                   <p className="text-sm text-muted-foreground mb-3">
-                    <span className="font-medium text-foreground">{reviewStatus.myReview.supervisorName}</span>
-                    {" "}is reviewing the contract on your behalf.
+                    {t("reviewingOnBehalf", { name: reviewStatus.myReview.supervisorName ?? "" })}
                     {reviewStatus.myReview.requestedAt && (
-                      <> Requested on {new Date(reviewStatus.myReview.requestedAt).toLocaleDateString()}.</>
+                      <> {t("requestedOn", { date: new Date(reviewStatus.myReview.requestedAt).toLocaleDateString() })}</>
                     )}
                   </p>
                   <div className="flex items-center gap-3">
@@ -733,14 +736,14 @@ export default function ReviewPage() {
                       className="btn-brutal-outline inline-flex items-center gap-2 text-sm"
                     >
                       <Download className="w-4 h-4" />
-                      Download DOCX
+                      {t("downloadDocx")}
                     </a>
                     <a
                       href={`/api/deals/${dealId}/document`}
                       className="btn-brutal-outline inline-flex items-center gap-2 text-sm"
                     >
                       <Download className="w-4 h-4" />
-                      Download PDF
+                      {t("downloadPdf")}
                     </a>
                     <button
                       onClick={() => cancelReview.mutate({ dealRoomId: dealId })}
@@ -748,7 +751,7 @@ export default function ReviewPage() {
                       className="flex items-center gap-2 px-4 py-2 text-sm border border-yellow-500 text-yellow-600 hover:bg-yellow-500 hover:text-white transition-colors"
                     >
                       <XCircle className="w-4 h-4" />
-                      {cancelReview.isPending ? "Cancelling..." : "Cancel Review"}
+                      {cancelReview.isPending ? t("cancelling") : t("cancelReview")}
                     </button>
                   </div>
                 </div>
@@ -764,10 +767,9 @@ export default function ReviewPage() {
                   <UserCheck className="w-6 h-6 text-primary" />
                 </div>
                 <div>
-                  <h2 className="text-lg font-semibold mb-1">Review Approved</h2>
+                  <h2 className="text-lg font-semibold mb-1">{t("reviewApproved")}</h2>
                   <p className="text-sm text-muted-foreground">
-                    <span className="font-medium text-foreground">{reviewStatus.myReview.supervisorName}</span>
-                    {" "}approved the contract on {new Date(reviewStatus.myReview.approvedAt).toLocaleDateString()}.
+                    {t("approvedOn", { name: reviewStatus.myReview.supervisorName ?? "", date: new Date(reviewStatus.myReview.approvedAt!).toLocaleDateString() })}
                   </p>
                 </div>
               </div>
@@ -782,10 +784,10 @@ export default function ReviewPage() {
                   <Shield className="w-6 h-6 text-blue-500" />
                 </div>
                 <div>
-                  <h2 className="text-lg font-semibold mb-1">Other Party Requested Attorney Review</h2>
+                  <h2 className="text-lg font-semibold mb-1">{t("otherPartyRequestedReview")}</h2>
                   <p className="text-sm text-muted-foreground mb-3">
-                    The other party has requested a supervising attorney to review the contract.
-                    {!reviewStatus.suppressReviewForInitiator && " You may also request your own review."}
+                    {t("otherPartyRequestedReviewDescription")}
+                    {!reviewStatus.suppressReviewForInitiator && ` ${t("youMayRequestReview")}`}
                   </p>
                   {!reviewStatus.suppressReviewForInitiator && (
                     <button
@@ -793,7 +795,7 @@ export default function ReviewPage() {
                       className="btn-brutal-outline inline-flex items-center gap-2 text-sm"
                     >
                       <Shield className="w-4 h-4" />
-                      Request Your Own Review
+                      {t("requestYourOwnReview")}
                     </button>
                   )}
                 </div>
@@ -809,9 +811,9 @@ export default function ReviewPage() {
                   <Scale className="w-6 h-6 text-primary" />
                 </div>
                 <div>
-                  <h2 className="text-lg font-semibold mb-1">Attorney-Vetted Contract</h2>
+                  <h2 className="text-lg font-semibold mb-1">{t("attorneyVettedContract")}</h2>
                   <p className="text-sm text-muted-foreground">
-                    This contract was vetted by <span className="font-medium text-foreground">{reviewStatus.vettingLawyerName}</span>. Attorney review is not required for your side.
+                    {t("contractVettedBy", { name: reviewStatus.vettingLawyerName ?? "" })}
                   </p>
                 </div>
               </div>
@@ -822,13 +824,13 @@ export default function ReviewPage() {
           {reviewStatus?.canProceedToSigning && (
             <div className="card-brutal border-primary text-center py-8">
               <Check className="w-12 h-12 text-primary mx-auto mb-4" />
-              <h2 className="text-lg font-semibold mb-2">All Clauses Agreed!</h2>
+              <h2 className="text-lg font-semibold mb-2">{t("allClausesAgreed")}</h2>
               <p className="text-muted-foreground mb-6">
                 {reviewStatus.myReview?.approvedAt
-                  ? "Attorney review is complete. You can now proceed to e-signature."
+                  ? t("allAgreedReviewComplete")
                   : reviewStatus.suppressReviewForInitiator
-                  ? "All clauses agreed and your lawyer has vetted this contract. Proceed to e-signature."
-                  : "Congratulations! Both parties have agreed on all clauses. You can proceed to e-signature or request an attorney review first."
+                  ? t("allAgreedLawyerVetted")
+                  : t("allAgreedBothParties")
                 }
               </p>
               <div className="flex items-center justify-center gap-3">
@@ -837,7 +839,7 @@ export default function ReviewPage() {
                   className="btn-brutal flex items-center gap-2"
                 >
                   <FileSignature className="w-4 h-4" />
-                  Proceed to Signing
+                  {t("proceedToSigning")}
                 </button>
                 {!reviewStatus.myReview && !reviewStatus.suppressReviewForInitiator && (
                   <button
@@ -845,7 +847,7 @@ export default function ReviewPage() {
                     className="btn-brutal-outline flex items-center gap-2"
                   >
                     <Shield className="w-4 h-4" />
-                    Request Attorney Review
+                    {t("requestAttorneyReview")}
                   </button>
                 )}
                 <a
@@ -853,7 +855,7 @@ export default function ReviewPage() {
                   className="btn-brutal-outline flex items-center gap-2"
                 >
                   <Download className="w-4 h-4" />
-                  Download DOCX
+                  {t("downloadDocx")}
                 </a>
               </div>
             </div>
@@ -863,9 +865,9 @@ export default function ReviewPage() {
           {!reviewStatus?.canProceedToSigning && !reviewStatus?.myReview && !reviewStatus?.otherPartyReviewActive && (
             <div className="card-brutal border-primary text-center py-8">
               <Check className="w-12 h-12 text-primary mx-auto mb-4" />
-              <h2 className="text-lg font-semibold mb-2">All Clauses Agreed!</h2>
+              <h2 className="text-lg font-semibold mb-2">{t("allClausesAgreed")}</h2>
               <p className="text-muted-foreground mb-6">
-                Congratulations! Both parties have agreed on all clauses.
+                {t("allAgreedSimple")}
               </p>
               <div className="flex items-center justify-center gap-3">
                 <button
@@ -873,7 +875,7 @@ export default function ReviewPage() {
                   className="btn-brutal flex items-center gap-2"
                 >
                   <FileSignature className="w-4 h-4" />
-                  Proceed to Signing
+                  {t("proceedToSigning")}
                 </button>
                 {!reviewStatus?.suppressReviewForInitiator && (
                   <button
@@ -881,7 +883,7 @@ export default function ReviewPage() {
                     className="btn-brutal-outline flex items-center gap-2"
                   >
                     <Shield className="w-4 h-4" />
-                    Request Attorney Review
+                    {t("requestAttorneyReview")}
                   </button>
                 )}
               </div>
