@@ -1,5 +1,6 @@
 {
   "contractType": "MSA",
+  "category": { "en": "Sales", "es": "Ventas" },
   "displayName": "Master Services Agreement",
   "description": "Framework agreement for professional and consulting services, providing consistent terms across multiple Statements of Work and project engagements.",
   "version": "1.0",
