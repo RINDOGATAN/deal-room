@@ -27,6 +27,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { getContactMailto } from "@/config/brand";
+import { EnableFeatureModal } from "@/components/premium/enable-feature-modal";
 
 const contractIcons: Record<string, typeof FileText> = {
   NDA: Shield,
@@ -72,6 +73,7 @@ interface TemplateInfo {
   jurisdictions: string[];
   languages: string[];
   requiresLicense: boolean;
+  skillPackageId: string | null;
   hasAccess: boolean;
 }
 
@@ -86,9 +88,12 @@ export default function NewVettingPage() {
   const [selectedJurisdiction, setSelectedJurisdiction] = useState<GoverningLaw | null>(null);
   const [selectedLanguage, setSelectedLanguage] = useState<ContractLanguage>("en");
   const [entitlementError, setEntitlementError] = useState<string | null>(null);
+  const [enableModalSkill, setEnableModalSkill] = useState<{ id: string; name: string } | null>(null);
   const [infoModalDismissed, setInfoModalDismissed] = useState(false);
 
   const { data: templates, isLoading } = trpc.skills.listTemplatesWithAccess.useQuery({ language: locale });
+  const { data: billingConfig } = trpc.billing.getConfig.useQuery();
+  const selfServiceUpgrade = billingConfig?.selfServiceUpgrade ?? false;
   const { data: vettedStatus } = trpc.billing.hasVettedContracts.useQuery();
 
   const showInfoModal = vettedStatus && !vettedStatus.active && !infoModalDismissed;
@@ -207,6 +212,16 @@ export default function NewVettingPage() {
         </DialogContent>
       </Dialog>
 
+      {/* Self-service purchase modal for locked premium templates */}
+      {enableModalSkill && (
+        <EnableFeatureModal
+          open
+          onClose={() => setEnableModalSkill(null)}
+          skillPackageId={enableModalSkill.id}
+          skillName={enableModalSkill.name}
+        />
+      )}
+
       <div>
         <h1 className="text-2xl font-bold">{t("vetNewTemplate")}</h1>
         <p className="text-muted-foreground mt-1">{t("selectTemplate")}</p>
@@ -229,7 +244,11 @@ export default function NewVettingPage() {
                 key={template.id}
                 onClick={() => {
                   if (isLocked) {
-                    setEntitlementError(tNew("toUseContract"));
+                    if (selfServiceUpgrade && template.skillPackageId) {
+                      setEnableModalSkill({ id: template.skillPackageId, name: template.displayName });
+                    } else {
+                      setEntitlementError(tNew("toUseContract"));
+                    }
                     return;
                   }
                   setSelectedTemplateId(template.id);
@@ -267,7 +286,7 @@ export default function NewVettingPage() {
                     <h3 className="font-semibold">{template.displayName}</h3>
                     <p className="text-sm text-muted-foreground mt-1">
                       {isLocked
-                        ? tNew("accessRequired")
+                        ? (selfServiceUpgrade ? tNew("premiumSkill") : tNew("accessRequired"))
                         : tNew("negotiableClauses", { count: template.clauseCount })
                       }
                     </p>

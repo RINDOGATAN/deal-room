@@ -139,6 +139,7 @@ export const skillsRouter = createTRPCRouter({
         jurisdictions: t.jurisdictions,
         languages: t.languages,
         requiresLicense,
+        skillPackageId: t.skillPackageId,
         // Access info for licensed skills
         hasAccess: !requiresLicense || !!entitlement,
         entitledJurisdictions: entitlement?.jurisdictions || [],
