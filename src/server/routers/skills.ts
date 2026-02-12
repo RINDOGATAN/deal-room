@@ -75,6 +75,8 @@ export const skillsRouter = createTRPCRouter({
         languages: true,
         displayNameLocalized: true,
         descriptionLocalized: true,
+        category: true,
+        categoryLocalized: true,
         skillPackageId: true,
         skillPackage: {
           select: {
@@ -117,14 +119,17 @@ export const skillsRouter = createTRPCRouter({
         ? entitlementMap.get(t.skillPackageId)
         : null;
 
-      // Resolve localized displayName/description if language specified
+      // Resolve localized displayName/description/category if language specified
       let displayName = t.displayName;
       let description = t.description;
+      let category = t.category;
       if (language && language !== "en") {
         const dnLocalized = t.displayNameLocalized as Record<string, string> | null;
         const descLocalized = t.descriptionLocalized as Record<string, string> | null;
+        const catLocalized = t.categoryLocalized as Record<string, string> | null;
         if (dnLocalized?.[language]) displayName = dnLocalized[language];
         if (descLocalized?.[language]) description = descLocalized[language];
+        if (catLocalized?.[language]) category = catLocalized[language];
       }
 
       return {
@@ -132,6 +137,7 @@ export const skillsRouter = createTRPCRouter({
         contractType: t.contractType,
         displayName,
         description,
+        category,
         version: t.version,
         clauseCount: t._count.clauses,
         templateFamily: t.templateFamily,
