@@ -25,9 +25,11 @@ export function EnableFeatureModal({
   skillName,
 }: EnableFeatureModalProps) {
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleEnable = async () => {
     setLoading(true);
+    setError(null);
     try {
       const res = await fetch("/api/checkout", {
         method: "POST",
@@ -38,10 +40,11 @@ export function EnableFeatureModal({
       if (data.url) {
         window.location.href = data.url;
       } else {
-        console.error("Checkout error:", data.error);
+        setError(data.error || "Something went wrong. Please try again.");
         setLoading(false);
       }
     } catch {
+      setError("Network error. Please check your connection and try again.");
       setLoading(false);
     }
   };
@@ -56,6 +59,9 @@ export function EnableFeatureModal({
             anytime from the billing portal.
           </DialogDescription>
         </DialogHeader>
+        {error && (
+          <p className="text-sm text-destructive bg-destructive/10 px-3 py-2 rounded-xl">{error}</p>
+        )}
         <DialogFooter className="gap-2 sm:gap-0 mt-4">
           <button
             onClick={onClose}
