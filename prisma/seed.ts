@@ -490,6 +490,9 @@ async function main() {
     "com.nel.skills.convertible-note",
     "com.nel.skills.ip-assignment",
     "com.nel.skills.term-sheet",
+    "com.nel.skills.contrato-laboral",
+    "com.nel.skills.contrato-servicios",
+    "com.nel.skills.cesion-pi",
   ];
 
   for (const skillId of premiumSkillIds) {
