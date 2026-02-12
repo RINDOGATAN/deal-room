@@ -59,6 +59,20 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Resolve Stripe price for each package
+    const fallbackPriceId = process.env.STRIPE_PRICE_ID;
+    const lineItems: { priceId: string; packageId: string }[] = [];
+    for (const pkg of skillPackages) {
+      const priceId = pkg.stripePriceId || fallbackPriceId;
+      if (!priceId) {
+        return NextResponse.json(
+          { error: `Stripe price not configured for ${pkg.displayName}` },
+          { status: 500 }
+        );
+      }
+      lineItems.push({ priceId, packageId: pkg.id });
+    }
+
     // Get or create Stripe customer
     const { customerId, stripeCustomerId } = await getOrCreateStripeCustomer(
       prisma,
@@ -66,21 +80,13 @@ export async function POST(request: NextRequest) {
       session.user.name || undefined
     );
 
-    const priceId = process.env.STRIPE_PRICE_ID;
-    if (!priceId) {
-      return NextResponse.json(
-        { error: "Stripe price not configured" },
-        { status: 500 }
-      );
-    }
-
     const origin = request.headers.get("origin") || process.env.NEXTAUTH_URL;
     const checkoutSession = await createCheckoutSession({
       stripeCustomerId,
       customerEmail: session.user.email,
       customerId,
-      skillPackageIds: skillPackages.map((p) => p.id),
-      priceId,
+      skillPackageIds: lineItems.map((l) => l.packageId),
+      lineItems: lineItems.map((l) => ({ price: l.priceId, quantity: 1 })),
       successUrl: `${origin}/billing?success=true`,
       cancelUrl: `${origin}/billing?cancelled=true`,
     });

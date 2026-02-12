@@ -27,7 +27,7 @@ export interface CreateCheckoutParams {
   customerEmail: string;
   customerId: string;
   skillPackageIds: string[];
-  priceId: string;
+  lineItems: { price: string; quantity: number }[];
   successUrl: string;
   cancelUrl: string;
 }
@@ -40,10 +40,7 @@ export async function createCheckoutSession(
   const sessionParams: Stripe.Checkout.SessionCreateParams = {
     mode: "subscription",
     payment_method_types: ["card"],
-    line_items: params.skillPackageIds.map(() => ({
-      price: params.priceId,
-      quantity: 1,
-    })),
+    line_items: params.lineItems,
     success_url: params.successUrl,
     cancel_url: params.cancelUrl,
     metadata: {

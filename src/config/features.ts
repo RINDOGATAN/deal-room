@@ -1,4 +1,4 @@
 export const features = {
   stripeEnabled: !!process.env.STRIPE_SECRET_KEY,
-  selfServiceUpgrade: !!(process.env.STRIPE_SECRET_KEY && process.env.STRIPE_PRICE_ID),
+  selfServiceUpgrade: !!process.env.STRIPE_SECRET_KEY,
 } as const;
