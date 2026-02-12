@@ -88,56 +88,58 @@ function interpolateText(
 function processBoilerplate(
   rawBoilerplate: Record<string, unknown> | null,
   governingLawKey: string,
-  variables: Record<string, string>
+  variables: Record<string, string>,
+  language: string = "en"
 ): BoilerplateData | null {
   if (!rawBoilerplate) {
     return null;
   }
 
-  const bp = rawBoilerplate as {
-    contractTitle?: string;
-    preamble?: string;
-    background?: string;
-    definitions?: Array<{ term: string; definition: string }>;
-    standardClauses?: Array<{ title: string; text: string }>;
-    generalProvisions?: Array<{ title: string; text: string }>;
-    jurisdictionProvisions?: Record<string, { title: string; text: string }>;
-    signatureBlock?: string;
-    partyLabels?: { partyA: string; partyB: string };
-  };
+  const bp = rawBoilerplate as Record<string, unknown>;
+
+  // Helper: resolve i18n then interpolate variables
+  const resolve = (val: unknown): string =>
+    interpolateText(resolveLocalizedString(val, language), variables);
 
   // Get jurisdiction-specific provision
-  const jurisdictionProvision = bp.jurisdictionProvisions?.[governingLawKey]
-    ? {
-        title: bp.jurisdictionProvisions[governingLawKey].title,
-        text: interpolateText(
-          bp.jurisdictionProvisions[governingLawKey].text,
-          variables
-        ),
-      }
+  const jpMap = bp.jurisdictionProvisions as Record<string, Record<string, unknown>> | undefined;
+  const jp = jpMap?.[governingLawKey];
+  const jurisdictionProvision = jp
+    ? { title: resolve(jp.title), text: resolve(jp.text) }
     : null;
 
+  const definitions = (bp.definitions as Array<Record<string, unknown>> || []).map((d) => ({
+    term: resolveLocalizedString(d.term, language),
+    definition: resolve(d.definition),
+  }));
+
+  const standardClauses = (bp.standardClauses as Array<Record<string, unknown>> || []).map((c) => ({
+    title: resolveLocalizedString(c.title, language),
+    text: resolve(c.text),
+  }));
+
+  const generalProvisions = (bp.generalProvisions as Array<Record<string, unknown>> || []).map((p) => ({
+    title: resolveLocalizedString(p.title, language),
+    text: resolve(p.text),
+  }));
+
+  const partyLabels = bp.partyLabels as Record<string, unknown> | undefined;
+
   return {
-    contractTitle: bp.contractTitle || "",
-    preamble: interpolateText(bp.preamble || "", variables),
-    background: bp.background
-      ? interpolateText(bp.background, variables)
-      : undefined,
-    definitions: (bp.definitions || []).map((d) => ({
-      term: d.term,
-      definition: interpolateText(d.definition, variables),
-    })),
-    standardClauses: (bp.standardClauses || []).map((c) => ({
-      title: c.title,
-      text: interpolateText(c.text, variables),
-    })),
-    generalProvisions: (bp.generalProvisions || []).map((p) => ({
-      title: p.title,
-      text: interpolateText(p.text, variables),
-    })),
+    contractTitle: resolveLocalizedString(bp.contractTitle, language) || "",
+    preamble: resolve(bp.preamble),
+    background: bp.background ? resolve(bp.background) : undefined,
+    definitions,
+    standardClauses,
+    generalProvisions,
     jurisdictionProvision,
-    signatureBlock: interpolateText(bp.signatureBlock || "", variables),
-    partyLabels: bp.partyLabels || undefined,
+    signatureBlock: resolve(bp.signatureBlock),
+    partyLabels: partyLabels
+      ? {
+          partyA: resolveLocalizedString(partyLabels.partyA, language),
+          partyB: resolveLocalizedString(partyLabels.partyB, language),
+        }
+      : undefined,
   };
 }
 
@@ -266,11 +268,12 @@ export async function generateContractData(
     partyBSignatureBlock: `For and on behalf of ${partyBName}:\n\nSignature: _______________________________\n\nName: ${respondent.name || "[Name]"}\n\nTitle: [Title]\n\nDate: ___________________________________`,
   };
 
-  // Process boilerplate with variable interpolation
+  // Process boilerplate with variable interpolation and i18n
   const boilerplate = processBoilerplate(
     deal.contractTemplate.boilerplate as Record<string, unknown> | null,
     deal.governingLaw,
-    variables
+    variables,
+    language
   );
 
   return {
