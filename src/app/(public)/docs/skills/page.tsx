@@ -30,8 +30,8 @@ export default function SkillsPage() {
           A skill is a packaged contract template created by legal professionals. It
           defines:
         </p>
-        <div className="grid grid-cols-2 gap-6">
-          <div className="p-5 border border-border">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="card-brutal p-5">
             <div className="flex items-center gap-3 mb-3">
               <FileCode className="w-5 h-5 text-primary" />
               <h3 className="font-bold">Contract Structure</h3>
@@ -40,7 +40,7 @@ export default function SkillsPage() {
               The overall template with static sections and negotiable clauses
             </p>
           </div>
-          <div className="p-5 border border-border">
+          <div className="card-brutal p-5">
             <div className="flex items-center gap-3 mb-3">
               <Layers className="w-5 h-5 text-primary" />
               <h3 className="font-bold">Clause Templates</h3>
@@ -49,7 +49,7 @@ export default function SkillsPage() {
               Individual negotiation points with 2-5 options each
             </p>
           </div>
-          <div className="p-5 border border-border">
+          <div className="card-brutal p-5">
             <div className="flex items-center gap-3 mb-3">
               <Scale className="w-5 h-5 text-primary" />
               <h3 className="font-bold">Bias Scores</h3>
@@ -58,7 +58,7 @@ export default function SkillsPage() {
               How each option favors Party A vs Party B (-1 to +1)
             </p>
           </div>
-          <div className="p-5 border border-border">
+          <div className="card-brutal p-5">
             <div className="flex items-center gap-3 mb-3">
               <Globe className="w-5 h-5 text-primary" />
               <h3 className="font-bold">Jurisdiction Rules</h3>
@@ -76,7 +76,7 @@ export default function SkillsPage() {
         <p className="text-muted-foreground">
           Each skill is distributed as a ZIP archive containing:
         </p>
-        <div className="p-5 border border-border bg-card font-mono text-sm">
+        <div className="p-5 border border-border bg-card font-mono text-sm rounded-2xl">
           <div className="space-y-1">
             <p className="text-muted-foreground">skill-package.zip/</p>
             <p className="pl-4">
@@ -120,10 +120,10 @@ export default function SkillsPage() {
         </p>
 
         {/* Example Clause */}
-        <div className="border-2 border-border p-6 space-y-4">
+        <div className="border border-border p-6 rounded-2xl space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <span className="text-xs px-2 py-1 bg-muted text-muted-foreground border border-border">
+              <span className="text-xs px-2 py-1 bg-muted text-muted-foreground border border-border rounded-full">
                 Payment Terms
               </span>
               <h3 className="font-bold text-lg mt-2">Payment Schedule</h3>
@@ -137,10 +137,10 @@ export default function SkillsPage() {
 
           {/* Options */}
           <div className="space-y-3">
-            <div className="p-4 border border-blue-400/30 bg-blue-400/5">
+            <div className="p-4 border border-blue-400/30 bg-blue-400/5 rounded-xl">
               <div className="flex items-center justify-between mb-2">
                 <span className="font-medium">Option A: Net 15</span>
-                <span className="text-xs px-2 py-0.5 bg-blue-400/20 text-blue-400 border border-blue-400/30">
+                <span className="text-xs px-2 py-0.5 bg-blue-400/20 text-blue-400 border border-blue-400/30 rounded-full">
                   Favors Party A
                 </span>
               </div>
@@ -164,10 +164,10 @@ export default function SkillsPage() {
               </div>
             </div>
 
-            <div className="p-4 border border-border">
+            <div className="p-4 border border-border rounded-xl">
               <div className="flex items-center justify-between mb-2">
                 <span className="font-medium">Option B: Net 30</span>
-                <span className="text-xs px-2 py-0.5 bg-muted text-muted-foreground border border-border">
+                <span className="text-xs px-2 py-0.5 bg-muted text-muted-foreground border border-border rounded-full">
                   Balanced
                 </span>
               </div>
@@ -176,10 +176,10 @@ export default function SkillsPage() {
               </p>
             </div>
 
-            <div className="p-4 border border-orange-400/30 bg-orange-400/5">
+            <div className="p-4 border border-orange-400/30 bg-orange-400/5 rounded-xl">
               <div className="flex items-center justify-between mb-2">
                 <span className="font-medium">Option C: Net 60</span>
-                <span className="text-xs px-2 py-0.5 bg-orange-400/20 text-orange-400 border border-orange-400/30">
+                <span className="text-xs px-2 py-0.5 bg-orange-400/20 text-orange-400 border border-orange-400/30 rounded-full">
                   Favors Party B
                 </span>
               </div>
@@ -198,8 +198,8 @@ export default function SkillsPage() {
           Skills come in two licensing tiers:
         </p>
 
-        <div className="grid grid-cols-2 gap-6">
-          <div className="border-2 border-border p-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="border border-border p-6 rounded-2xl">
             <div className="flex items-center gap-3 mb-4">
               <Unlock className="w-6 h-6 text-muted-foreground" />
               <h3 className="text-lg font-bold">Taster Mode</h3>
@@ -227,7 +227,7 @@ export default function SkillsPage() {
             </ul>
           </div>
 
-          <div className="border-2 border-primary p-6">
+          <div className="border border-primary p-6 rounded-2xl">
             <div className="flex items-center gap-3 mb-4">
               <Lock className="w-6 h-6 text-primary" />
               <h3 className="text-lg font-bold text-primary">Premium Mode</h3>
@@ -266,9 +266,9 @@ export default function SkillsPage() {
           synchronized.
         </p>
 
-        <div className="p-5 border border-border">
+        <div className="card-brutal p-5">
           <div className="flex items-center gap-6">
-            <div className="flex-1 p-4 border border-blue-400/30 bg-blue-400/5">
+            <div className="flex-1 p-4 border border-blue-400/30 bg-blue-400/5 rounded-xl">
               <p className="text-xs text-blue-400 mb-1">Party A (English)</p>
               <p className="font-medium">Net 30 Payment</p>
               <p className="text-sm text-muted-foreground">
@@ -276,7 +276,7 @@ export default function SkillsPage() {
               </p>
             </div>
             <div className="text-muted-foreground">=</div>
-            <div className="flex-1 p-4 border border-orange-400/30 bg-orange-400/5">
+            <div className="flex-1 p-4 border border-orange-400/30 bg-orange-400/5 rounded-xl">
               <p className="text-xs text-orange-400 mb-1">Party B (Spanish)</p>
               <p className="font-medium">Pago a 30 Dias</p>
               <p className="text-sm text-muted-foreground">
@@ -297,9 +297,9 @@ export default function SkillsPage() {
           Premium skills require license activation. The process:
         </p>
 
-        <div className="grid grid-cols-4 gap-4">
-          <div className="p-4 border border-border text-center">
-            <div className="w-8 h-8 mx-auto mb-2 border border-muted-foreground flex items-center justify-center text-sm font-bold">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="p-4 border border-border rounded-xl text-center">
+            <div className="w-8 h-8 mx-auto mb-2 border border-muted-foreground rounded-full flex items-center justify-center text-sm font-bold">
               1
             </div>
             <p className="text-sm font-medium">Generate Fingerprint</p>
@@ -307,8 +307,8 @@ export default function SkillsPage() {
               Machine-specific ID
             </p>
           </div>
-          <div className="p-4 border border-border text-center">
-            <div className="w-8 h-8 mx-auto mb-2 border border-muted-foreground flex items-center justify-center text-sm font-bold">
+          <div className="p-4 border border-border rounded-xl text-center">
+            <div className="w-8 h-8 mx-auto mb-2 border border-muted-foreground rounded-full flex items-center justify-center text-sm font-bold">
               2
             </div>
             <p className="text-sm font-medium">Request License</p>
@@ -316,8 +316,8 @@ export default function SkillsPage() {
               From skill author
             </p>
           </div>
-          <div className="p-4 border border-border text-center">
-            <div className="w-8 h-8 mx-auto mb-2 border border-muted-foreground flex items-center justify-center text-sm font-bold">
+          <div className="p-4 border border-border rounded-xl text-center">
+            <div className="w-8 h-8 mx-auto mb-2 border border-muted-foreground rounded-full flex items-center justify-center text-sm font-bold">
               3
             </div>
             <p className="text-sm font-medium">Install Key</p>
@@ -325,8 +325,8 @@ export default function SkillsPage() {
               Activate premium
             </p>
           </div>
-          <div className="p-4 border border-primary text-center">
-            <div className="w-8 h-8 mx-auto mb-2 border border-primary bg-primary flex items-center justify-center text-sm font-bold text-primary-foreground">
+          <div className="p-4 border border-primary rounded-xl text-center">
+            <div className="w-8 h-8 mx-auto mb-2 border border-primary bg-primary rounded-full flex items-center justify-center text-sm font-bold text-primary-foreground">
               4
             </div>
             <p className="text-sm font-medium text-primary">Full Access</p>
@@ -336,7 +336,7 @@ export default function SkillsPage() {
           </div>
         </div>
 
-        <div className="p-4 bg-muted/30 border border-border text-sm">
+        <div className="p-4 bg-muted/30 border border-border rounded-xl text-sm">
           <p className="text-muted-foreground">
             <strong className="text-foreground">CLI commands:</strong>
           </p>

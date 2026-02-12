@@ -425,6 +425,19 @@
     "skillRequired": "Se requiere una suscripción activa para este tipo de contrato.",
     "visitBilling": "Visita la página de Facturación para suscribirte."
   },
+  "docs": {
+    "title": "Guía de Usuario",
+    "gettingStarted": "Primeros Pasos",
+    "dashboardOverview": "Visión General",
+    "navigation": "Ciclo del Acuerdo",
+    "negotiation": "Negociación",
+    "compromiseAlgorithm": "Algoritmo de Compromiso",
+    "skillsLicensing": "Habilidades y Licencias",
+    "lawyerVetting": "Revisión Legal",
+    "howVettingWorks": "Cómo Funciona",
+    "administration": "Administración",
+    "supervision": "Supervisión"
+  },
   "footer": {
     "service": "DEALROOM es un servicio de <link>TODO.LAW</link>.",
     "userGuide": "Guía de Usuario",

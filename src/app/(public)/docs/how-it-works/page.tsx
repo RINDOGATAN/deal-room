@@ -55,19 +55,19 @@ export default function HowItWorksPage() {
             actor="Initiator"
           >
             <div className="grid grid-cols-3 gap-3 text-sm">
-              <div className="p-3 bg-muted/30 border border-border">
+              <div className="p-3 bg-muted/30 border border-border rounded-xl">
                 <p className="font-medium text-foreground">Contract Type</p>
                 <p className="text-muted-foreground text-xs mt-1">
                   Select from available skill packages
                 </p>
               </div>
-              <div className="p-3 bg-muted/30 border border-border">
+              <div className="p-3 bg-muted/30 border border-border rounded-xl">
                 <p className="font-medium text-foreground">Jurisdiction</p>
                 <p className="text-muted-foreground text-xs mt-1">
                   California, England & Wales, or Spain
                 </p>
               </div>
-              <div className="p-3 bg-muted/30 border border-border">
+              <div className="p-3 bg-muted/30 border border-border rounded-xl">
                 <p className="font-medium text-foreground">Deal Name</p>
                 <p className="text-muted-foreground text-xs mt-1">
                   A friendly name for reference
@@ -83,7 +83,7 @@ export default function HowItWorksPage() {
             icon={<Mail className="w-5 h-5" />}
             actor="Initiator"
           >
-            <div className="p-3 bg-muted/30 border border-border text-sm">
+            <div className="p-3 bg-muted/30 border border-border rounded-xl text-sm">
               <p className="text-muted-foreground">
                 The invitation email includes a secure, time-limited token. When the
                 respondent clicks the link, they can create an account or sign in,
@@ -104,19 +104,19 @@ export default function HowItWorksPage() {
                 For each clause, parties select:
               </p>
               <div className="grid grid-cols-3 gap-3 text-sm">
-                <div className="p-3 border border-border">
+                <div className="p-3 border border-border rounded-xl">
                   <p className="font-medium text-foreground">Option</p>
                   <p className="text-muted-foreground text-xs mt-1">
                     Choose from 2-5 pre-defined options per clause
                   </p>
                 </div>
-                <div className="p-3 border border-border">
+                <div className="p-3 border border-border rounded-xl">
                   <p className="font-medium text-foreground">Priority (1-5)</p>
                   <p className="text-muted-foreground text-xs mt-1">
                     How important is this clause to you?
                   </p>
                 </div>
-                <div className="p-3 border border-border">
+                <div className="p-3 border border-border rounded-xl">
                   <p className="font-medium text-foreground">Flexibility (1-5)</p>
                   <p className="text-muted-foreground text-xs mt-1">
                     How willing are you to compromise?
@@ -136,11 +136,11 @@ export default function HowItWorksPage() {
             icon={<Cpu className="w-5 h-5" />}
             actor="System"
           >
-            <div className="p-4 border border-primary/30 bg-primary/5">
+            <div className="p-4 border border-primary/30 bg-primary/5 rounded-xl">
               <p className="text-sm font-medium text-primary mb-2">
                 The Stake Formula
               </p>
-              <code className="text-xs block p-2 bg-card border border-border text-muted-foreground">
+              <code className="text-xs block p-2 bg-card border border-border rounded-lg text-muted-foreground">
                 stake = (priority/5 × 0.4) + ((5-flexibility)/5 × 0.3) + (|bias| × 0.3)
               </code>
               <p className="text-xs text-muted-foreground mt-2">
@@ -162,13 +162,13 @@ export default function HowItWorksPage() {
           >
             <div className="space-y-3 text-sm">
               <div className="grid grid-cols-2 gap-3">
-                <div className="p-3 border border-primary/30">
+                <div className="p-3 border border-primary/30 rounded-xl">
                   <p className="font-medium text-primary">Accept</p>
                   <p className="text-muted-foreground text-xs mt-1">
                     Agree to the suggested option for this clause
                   </p>
                 </div>
-                <div className="p-3 border border-border">
+                <div className="p-3 border border-border rounded-xl">
                   <p className="font-medium text-foreground">Counter</p>
                   <p className="text-muted-foreground text-xs mt-1">
                     Propose a different option with reasoning
@@ -190,18 +190,18 @@ export default function HowItWorksPage() {
             actor="Both Parties"
           >
             <div className="flex items-center gap-4 text-sm">
-              <div className="flex items-center gap-2 p-3 border border-border">
-                <div className="w-4 h-4 border border-muted-foreground" />
+              <div className="flex items-center gap-2 p-3 border border-border rounded-xl">
+                <div className="w-4 h-4 border border-muted-foreground rounded" />
                 <span className="text-muted-foreground">Party A Signature</span>
               </div>
               <ArrowRight className="w-4 h-4 text-muted-foreground" />
-              <div className="flex items-center gap-2 p-3 border border-border">
-                <div className="w-4 h-4 border border-muted-foreground" />
+              <div className="flex items-center gap-2 p-3 border border-border rounded-xl">
+                <div className="w-4 h-4 border border-muted-foreground rounded" />
                 <span className="text-muted-foreground">Party B Signature</span>
               </div>
               <ArrowRight className="w-4 h-4 text-muted-foreground" />
-              <div className="flex items-center gap-2 p-3 border border-primary text-primary">
-                <div className="w-4 h-4 bg-primary" />
+              <div className="flex items-center gap-2 p-3 border border-primary rounded-xl text-primary">
+                <div className="w-4 h-4 bg-primary rounded" />
                 <span className="font-medium">Complete</span>
               </div>
             </div>
@@ -212,8 +212,8 @@ export default function HowItWorksPage() {
       {/* Key Concepts */}
       <div className="space-y-4">
         <h2 className="text-xl font-bold">Key Concepts</h2>
-        <div className="grid grid-cols-2 gap-6">
-          <div className="p-5 border border-border">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="card-brutal p-5">
             <h3 className="font-bold mb-2">Asynchronous Negotiation</h3>
             <p className="text-sm text-muted-foreground">
               Unlike traditional negotiation, parties don't need to be online
@@ -221,14 +221,14 @@ export default function HowItWorksPage() {
               notifies them when action is needed.
             </p>
           </div>
-          <div className="p-5 border border-border">
+          <div className="card-brutal p-5">
             <h3 className="font-bold mb-2">Blind Submission</h3>
             <p className="text-sm text-muted-foreground">
               Initial selections are hidden until both parties submit. This
               prevents anchoring bias and encourages honest preference disclosure.
             </p>
           </div>
-          <div className="p-5 border border-border">
+          <div className="card-brutal p-5">
             <h3 className="font-bold mb-2">Weighted Compromise</h3>
             <p className="text-sm text-muted-foreground">
               The algorithm considers not just what each party wants, but how much
@@ -236,7 +236,7 @@ export default function HowItWorksPage() {
               outcomes.
             </p>
           </div>
-          <div className="p-5 border border-border">
+          <div className="card-brutal p-5">
             <h3 className="font-bold mb-2">Jurisdiction-Aware</h3>
             <p className="text-sm text-muted-foreground">
               Options are filtered and flagged based on the selected governing law.

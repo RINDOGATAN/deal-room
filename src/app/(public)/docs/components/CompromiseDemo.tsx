@@ -228,7 +228,7 @@ export function CompromiseDemo() {
       </div>
 
       {/* Result Panel */}
-      <div className="border-2 border-primary bg-primary/5 p-6">
+      <div className="border border-primary bg-primary/5 p-6 rounded-2xl">
         <div className="flex items-center gap-2 mb-4">
           <ArrowRight className="w-5 h-5 text-primary" />
           <h3 className="text-lg font-bold text-primary">Algorithm Suggestion</h3>
@@ -238,7 +238,7 @@ export function CompromiseDemo() {
           {/* Suggested Option */}
           <div className="col-span-2">
             <div className="flex items-center gap-3 mb-3">
-              <div className="w-8 h-8 border-2 border-primary bg-primary flex items-center justify-center">
+              <div className="w-8 h-8 border-2 border-primary bg-primary rounded-full flex items-center justify-center">
                 <Check className="w-5 h-5 text-primary-foreground" />
               </div>
               <div>
@@ -258,9 +258,9 @@ export function CompromiseDemo() {
                 <span className="text-blue-400">Party A Satisfaction</span>
                 <span className="font-bold">{result.satisfactionA}%</span>
               </div>
-              <div className="h-2 bg-card border border-border">
+              <div className="h-2 bg-card border border-border rounded-full">
                 <div
-                  className="h-full bg-blue-400 transition-all duration-300"
+                  className="h-full bg-blue-400 rounded-full transition-all duration-300"
                   style={{ width: `${result.satisfactionA}%` }}
                 />
               </div>
@@ -270,9 +270,9 @@ export function CompromiseDemo() {
                 <span className="text-orange-400">Party B Satisfaction</span>
                 <span className="font-bold">{result.satisfactionB}%</span>
               </div>
-              <div className="h-2 bg-card border border-border">
+              <div className="h-2 bg-card border border-border rounded-full">
                 <div
-                  className="h-full bg-orange-400 transition-all duration-300"
+                  className="h-full bg-orange-400 rounded-full transition-all duration-300"
                   style={{ width: `${result.satisfactionB}%` }}
                 />
               </div>
@@ -296,7 +296,7 @@ export function CompromiseDemo() {
               <div key={opt.id} className="flex-1 relative">
                 <div
                   className={`
-                    h-12 border-2 flex items-center justify-center text-xs font-medium
+                    h-12 border rounded-xl flex items-center justify-center text-xs font-medium
                     transition-colors
                     ${
                       isSuggested
@@ -310,12 +310,12 @@ export function CompromiseDemo() {
                 {/* Party indicators */}
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2 flex gap-1">
                   {isPartyAChoice && (
-                    <span className="w-5 h-5 bg-blue-400 text-[10px] font-bold flex items-center justify-center text-background">
+                    <span className="w-5 h-5 bg-blue-400 rounded-full text-[10px] font-bold flex items-center justify-center text-background">
                       A
                     </span>
                   )}
                   {isPartyBChoice && (
-                    <span className="w-5 h-5 bg-orange-400 text-[10px] font-bold flex items-center justify-center text-background">
+                    <span className="w-5 h-5 bg-orange-400 rounded-full text-[10px] font-bold flex items-center justify-center text-background">
                       B
                     </span>
                   )}
@@ -361,13 +361,13 @@ function PartyCard({
   onChange: (state: PartyState) => void;
 }) {
   return (
-    <div className={`border-2 ${borderColor} p-5`}>
+    <div className={`border ${borderColor} p-5 rounded-2xl`}>
       <div className="flex items-center justify-between mb-4">
         <div>
           <h4 className={`font-bold text-lg ${accentColor}`}>{label}</h4>
           <p className="text-xs text-muted-foreground">{sublabel}</p>
         </div>
-        <div className={`px-3 py-1 ${bgColor} border ${borderColor}`}>
+        <div className={`px-3 py-1 ${bgColor} border ${borderColor} rounded-full`}>
           <span className="text-xs text-muted-foreground">Stake: </span>
           <span className={`font-bold ${accentColor}`}>{(stake * 100).toFixed(0)}%</span>
         </div>
@@ -381,7 +381,7 @@ function PartyCard({
           onChange={(e) =>
             onChange({ ...state, selectedOption: parseInt(e.target.value) })
           }
-          className="w-full bg-card border border-border px-3 py-2 text-sm"
+          className="w-full bg-card border border-border px-3 py-2 text-sm rounded-xl"
         >
           {options.map((opt) => (
             <option key={opt.id} value={opt.order}>
