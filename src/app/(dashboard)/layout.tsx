@@ -228,7 +228,7 @@ export default function DashboardLayout({
       {/* Footer */}
       <footer className="py-4 px-6 border-t border-border">
         <div className="max-w-7xl mx-auto flex flex-col items-center gap-2 text-sm text-muted-foreground">
-          <p>
+          <p className="hidden sm:block">
             {tFooter.rich("service", {
               link: (chunks) => (
                 <a
@@ -242,7 +242,45 @@ export default function DashboardLayout({
               ),
             })}
           </p>
-          <div className="flex items-center gap-3 flex-wrap justify-center">
+          {/* Mobile: 2-column grid */}
+          <div className="grid grid-cols-2 gap-x-6 gap-y-2 text-center sm:hidden">
+            <Link
+              href={brand.links.userGuide}
+              target="_blank"
+              className="flex items-center justify-center gap-1.5 hover:text-foreground transition-colors"
+            >
+              <BookOpen className="w-3.5 h-3.5" />
+              {tFooter("userGuide")}
+            </Link>
+            <Link
+              href="/billing"
+              className="flex items-center justify-center gap-1.5 hover:text-foreground transition-colors"
+            >
+              <CreditCard className="w-3.5 h-3.5" />
+              {tFooter("billing")}
+            </Link>
+            <a
+              href={brand.links.terms}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-foreground transition-colors"
+            >
+              {tFooter("termsOfUse")}
+            </a>
+            <a
+              href={brand.links.privacy}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-foreground transition-colors"
+            >
+              {tFooter("privacyNotice")}
+            </a>
+            <div className="col-span-2 flex justify-center pt-1">
+              <LanguageSwitcher />
+            </div>
+          </div>
+          {/* Desktop: inline row */}
+          <div className="hidden sm:flex items-center gap-3">
             <Link
               href={brand.links.userGuide}
               target="_blank"
