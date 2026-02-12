@@ -36,6 +36,7 @@ export default function VettingDetailPage() {
   const vettingId = params.id as string;
   const t = useTranslations("lawyer");
   const tCommon = useTranslations("common");
+  const tBilling = useTranslations("billing");
   const locale = useLocale();
 
   const [expandedClause, setExpandedClause] = useState<string | null>(null);
@@ -359,10 +360,16 @@ export default function VettingDetailPage() {
 
           {vettedStatus && !vettedStatus.active ? (
             <>
-              <div className="card-brutal border-dashed relative">
-                <div className="absolute top-4 right-4 w-8 h-8 bg-muted flex items-center justify-center rounded-full">
-                  <Lock className="w-4 h-4 text-muted-foreground" />
-                </div>
+              <div className={`card-brutal relative ${vettedStatus.selfServiceUpgrade ? "border-warning/50" : "border-dashed"}`}>
+                {vettedStatus.selfServiceUpgrade ? (
+                  <span className="absolute top-4 right-4 bg-warning/20 text-warning text-xs font-semibold px-2.5 py-0.5 rounded-full">
+                    {tBilling("pricePerMonth")}
+                  </span>
+                ) : (
+                  <div className="absolute top-4 right-4 w-8 h-8 bg-muted flex items-center justify-center rounded-full">
+                    <Lock className="w-4 h-4 text-muted-foreground" />
+                  </div>
+                )}
                 <p className="text-sm text-muted-foreground mb-4">
                   {t("sendRequiresSubscription")}
                 </p>
@@ -370,7 +377,7 @@ export default function VettingDetailPage() {
                   {vettedStatus.selfServiceUpgrade && vettedStatus.skillPackageId && (
                     <button
                       onClick={() => setShowEnableModal(true)}
-                      className="btn-brutal text-sm"
+                      className="btn-brutal bg-warning text-white hover:bg-warning/90 text-sm"
                     >
                       {t("enableSubscription")}
                     </button>
