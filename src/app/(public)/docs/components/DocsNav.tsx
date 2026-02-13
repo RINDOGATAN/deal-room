@@ -9,6 +9,7 @@ import {
   Scale,
   ChevronDown,
   ClipboardCheck,
+  HardDrive,
 } from "lucide-react";
 
 interface NavItem {
@@ -48,6 +49,12 @@ const navSections: NavSection[] = [
     label: "Lawyer Vetting",
     icon: ClipboardCheck,
     items: [{ href: "/docs/vetting", label: "How Vetting Works" }],
+  },
+  {
+    id: "self-hosted",
+    label: "Self-Hosted",
+    icon: HardDrive,
+    items: [{ href: "/docs/local-deployment", label: "Local Deployment" }],
   },
   {
     id: "administration",
