@@ -1,0 +1,71 @@
+/**
+ * API Key Authentication Middleware
+ *
+ * Authenticates requests using Bearer tokens with the `drk_` prefix.
+ * API keys are hashed with SHA-256 and stored in the database.
+ */
+
+import { NextRequest } from "next/server";
+import prisma from "@/lib/prisma";
+import { sha256 } from "@/lib/crypto";
+import type { Customer } from "@prisma/client";
+
+export interface ApiKeyAuth {
+  customer: Customer;
+  apiKey: { id: string; name: string; scopes: string[] };
+  scopes: string[];
+}
+
+/**
+ * Authenticate a request using an API key from the Authorization header.
+ * Returns null if authentication fails.
+ */
+export async function authenticateApiKey(
+  req: NextRequest
+): Promise<ApiKeyAuth | null> {
+  const auth = req.headers.get("Authorization");
+  if (!auth?.startsWith("Bearer drk_")) return null;
+
+  const rawKey = auth.slice(7); // Remove "Bearer " prefix
+  const keyHash = sha256(rawKey);
+
+  const apiKey = await prisma.apiKey.findUnique({
+    where: { keyHash },
+    include: { customer: true },
+  });
+
+  if (!apiKey?.isActive) return null;
+  if (apiKey.expiresAt && apiKey.expiresAt < new Date()) return null;
+
+  // Update lastUsedAt (fire-and-forget)
+  prisma.apiKey
+    .update({ where: { id: apiKey.id }, data: { lastUsedAt: new Date() } })
+    .catch(() => {});
+
+  return {
+    customer: apiKey.customer,
+    apiKey: { id: apiKey.id, name: apiKey.name, scopes: apiKey.scopes },
+    scopes: apiKey.scopes,
+  };
+}
+
+/**
+ * Check if the authenticated API key has the required scope.
+ * Throws an error object with status 403 if the scope is missing.
+ */
+export function requireScope(
+  auth: ApiKeyAuth,
+  scope: string
+): void {
+  if (!auth.scopes.includes(scope)) {
+    throw new ApiScopeError(scope);
+  }
+}
+
+export class ApiScopeError extends Error {
+  public status = 403;
+  constructor(scope: string) {
+    super(`API key missing required scope: ${scope}`);
+    this.name = "ApiScopeError";
+  }
+}

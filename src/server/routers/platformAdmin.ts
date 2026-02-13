@@ -1,7 +1,8 @@
 import { z } from "zod";
+import { randomBytes } from "crypto";
 import { createTRPCRouter, adminProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
-import { generateLicenseKey } from "@/lib/crypto";
+import { generateLicenseKey, sha256 } from "@/lib/crypto";
 import {
   createEntitlement,
   suspendEntitlement,
@@ -525,4 +526,125 @@ export const platformAdminRouter = createTRPCRouter({
       })),
     };
   }),
+
+  // ────────────────────────────────────────────────────────────
+  // API Key Management (for Agent Negotiation API)
+  // ────────────────────────────────────────────────────────────
+
+  listApiKeys: adminProcedure
+    .input(z.object({ customerId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      await requireVerified2FA(ctx.adminSession.email, ctx.getCookie, ctx.prisma);
+
+      return ctx.prisma.apiKey.findMany({
+        where: { customerId: input.customerId },
+        orderBy: { createdAt: "desc" },
+        select: {
+          id: true,
+          name: true,
+          keyPrefix: true,
+          scopes: true,
+          isActive: true,
+          lastUsedAt: true,
+          expiresAt: true,
+          createdAt: true,
+        },
+      });
+    }),
+
+  createApiKey: adminProcedure
+    .input(z.object({
+      customerId: z.string(),
+      name: z.string().min(1, "Name is required"),
+      scopes: z.array(z.string()).min(1, "At least one scope is required"),
+      expiresAt: z.string().datetime().optional(),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      await requireVerified2FA(ctx.adminSession.email, ctx.getCookie, ctx.prisma);
+
+      const customer = await ctx.prisma.customer.findUnique({
+        where: { id: input.customerId },
+      });
+
+      if (!customer) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Customer not found",
+        });
+      }
+
+      // Generate the raw API key
+      const rawKey = `drk_${randomBytes(32).toString("hex")}`;
+      const keyHash = sha256(rawKey);
+      const keyPrefix = rawKey.slice(0, 12); // "drk_" + 8 hex chars
+
+      const apiKey = await ctx.prisma.apiKey.create({
+        data: {
+          customerId: input.customerId,
+          name: input.name,
+          keyHash,
+          keyPrefix,
+          scopes: input.scopes,
+          expiresAt: input.expiresAt ? new Date(input.expiresAt) : undefined,
+        },
+      });
+
+      // Return the raw key ONLY on creation — it cannot be retrieved later
+      return {
+        id: apiKey.id,
+        name: apiKey.name,
+        key: rawKey,
+        keyPrefix: apiKey.keyPrefix,
+        scopes: apiKey.scopes,
+        expiresAt: apiKey.expiresAt,
+        createdAt: apiKey.createdAt,
+      };
+    }),
+
+  revokeApiKey: adminProcedure
+    .input(z.object({ apiKeyId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      await requireVerified2FA(ctx.adminSession.email, ctx.getCookie, ctx.prisma);
+
+      const apiKey = await ctx.prisma.apiKey.findUnique({
+        where: { id: input.apiKeyId },
+      });
+
+      if (!apiKey) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "API key not found",
+        });
+      }
+
+      await ctx.prisma.apiKey.update({
+        where: { id: input.apiKeyId },
+        data: { isActive: false },
+      });
+
+      return { success: true };
+    }),
+
+  deleteApiKey: adminProcedure
+    .input(z.object({ apiKeyId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      await requireVerified2FA(ctx.adminSession.email, ctx.getCookie, ctx.prisma);
+
+      const apiKey = await ctx.prisma.apiKey.findUnique({
+        where: { id: input.apiKeyId },
+      });
+
+      if (!apiKey) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "API key not found",
+        });
+      }
+
+      await ctx.prisma.apiKey.delete({
+        where: { id: input.apiKeyId },
+      });
+
+      return { success: true };
+    }),
 });
