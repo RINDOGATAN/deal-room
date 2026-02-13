@@ -183,7 +183,14 @@ Examples:
   }
 }
 
-main().catch((error) => {
-  console.error("Fatal error:", error);
-  process.exit(1);
-});
+// Only run main() when executed directly, not when imported
+const isDirectRun =
+  process.argv[1]?.endsWith("skill-package.ts") &&
+  !process.argv[1]?.endsWith("skill-package-all.ts");
+
+if (isDirectRun) {
+  main().catch((error) => {
+    console.error("Fatal error:", error);
+    process.exit(1);
+  });
+}
