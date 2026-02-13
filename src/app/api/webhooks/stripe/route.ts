@@ -5,6 +5,7 @@ import prisma from "@/lib/prisma";
 import { verifyWebhookSignature, getSubscription } from "@/lib/stripe";
 import { features } from "@/config/features";
 import { resend } from "@/lib/email";
+import { generateDownloadToken } from "@/lib/crypto";
 
 function parseSkillPackageIds(metadata: Record<string, string> | null): string[] {
   if (!metadata) return [];
@@ -158,6 +159,55 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
   console.log(
     `Created entitlements for customer ${customer.id}, skills: ${skillPackageIds.join(", ")}`
   );
+
+  // Send download links for self-hosted customers
+  if (customer.type === "SELF_HOSTED" && customer.email) {
+    const downloadablePackages = skillPackages.filter((p) => p.packageUrl);
+    if (downloadablePackages.length > 0) {
+      const baseUrl = process.env.NEXTAUTH_URL || "https://dealroom.todo.law";
+      const downloadLinks = downloadablePackages.map((pkg) => {
+        const token = generateDownloadToken(customer.id, pkg.skillId, 7 * 86400); // 7 days
+        return {
+          name: pkg.displayName,
+          url: `${baseUrl}/api/skills/${pkg.skillId}/download?token=${token}`,
+        };
+      });
+
+      try {
+        await resend.emails.send({
+          from: process.env.EMAIL_FROM || "noreply@todo.law",
+          to: customer.email,
+          subject: "DEALROOM — Your Skill Packages Are Ready",
+          html: `
+            <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 500px; margin: 0 auto; background: #1a1a1a; border-radius: 12px; overflow: hidden;">
+              <div style="padding: 24px 24px 16px; border-bottom: 1px solid #2a2a2a;">
+                <span style="font-size: 20px; font-weight: 700; color: #ffffff; letter-spacing: 0.05em;">DEALROOM</span>
+              </div>
+              <div style="padding: 32px 24px;">
+                <p style="color: #e5e5e5; font-size: 15px; line-height: 1.6; margin: 0 0 16px;">Your skill packages are ready to download and install on your self-hosted instance.</p>
+                ${downloadLinks
+                  .map(
+                    (link) => `
+                  <div style="margin: 12px 0;">
+                    <a href="${link.url}" style="display: inline-block; background: #53aecc; color: #1a1a1a; padding: 10px 24px; text-decoration: none; font-weight: 600; font-size: 14px; border-radius: 24px;">Download ${link.name}</a>
+                  </div>
+                `
+                  )
+                  .join("")}
+                <p style="color: #999; font-size: 13px; line-height: 1.5; margin: 24px 0 0;">These links expire in 7 days. You can always download again from your <a href="${baseUrl}/billing" style="color: #53aecc; text-decoration: none;">billing page</a>.</p>
+                <p style="color: #999; font-size: 13px; line-height: 1.5; margin: 16px 0 0;">Install with: <code style="background: #2a2a2a; padding: 2px 8px; border-radius: 4px; color: #e5e5e5;">npx deal-room skill:install ./package.skill</code></p>
+              </div>
+              <div style="padding: 16px 24px; border-top: 1px solid #2a2a2a;">
+                <p style="color: #666666; font-size: 11px; margin: 0;">TODO.LAW\u2122 \u00b7 DEALROOM \u00b7 <a href="https://dealroom.todo.law" style="color: #53aecc; text-decoration: none;">dealroom.todo.law</a></p>
+              </div>
+            </div>
+          `,
+        });
+      } catch (emailErr) {
+        console.error("Failed to send download email:", emailErr);
+      }
+    }
+  }
 }
 
 async function handleSubscriptionChange(subscription: Stripe.Subscription) {

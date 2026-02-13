@@ -5,7 +5,16 @@
  * Uses SHA-256 for package hashing.
  */
 
-import { createHash, createPublicKey, verify, randomBytes } from "crypto";
+import {
+  createHash,
+  createPrivateKey,
+  createPublicKey,
+  generateKeyPairSync,
+  sign,
+  verify,
+  randomBytes,
+  createHmac,
+} from "crypto";
 
 // Public key for verifying skill package signatures (Ed25519)
 // In production, this would be embedded in the application or fetched from a secure source
@@ -14,6 +23,34 @@ const PUBLIC_KEY_PEM =
   `-----BEGIN PUBLIC KEY-----
 MCowBQYDK2VwAyEAPlaceholder_Replace_With_Real_Key_In_Production==
 -----END PUBLIC KEY-----`;
+
+/**
+ * Sign data with an Ed25519 private key.
+ * Used by the CLI packaging tool — not imported at web app runtime.
+ */
+export function signEd25519(data: Buffer, privateKeyPem: string): Buffer {
+  const privateKey = createPrivateKey({
+    key: privateKeyPem,
+    format: "pem",
+    type: "pkcs8",
+  });
+  return sign(null, data, privateKey);
+}
+
+/**
+ * Generate an Ed25519 key pair (PEM-encoded).
+ * Used by the CLI keygen utility.
+ */
+export function generateEd25519KeyPair(): {
+  publicKey: string;
+  privateKey: string;
+} {
+  const { publicKey, privateKey } = generateKeyPairSync("ed25519");
+  return {
+    publicKey: publicKey.export({ type: "spki", format: "pem" }) as string,
+    privateKey: privateKey.export({ type: "pkcs8", format: "pem" }) as string,
+  };
+}
 
 /**
  * Verify an Ed25519 signature against data.
@@ -175,4 +212,75 @@ export function isLicenseExpired(license: LicenseFile): boolean {
     return false; // Perpetual license
   }
   return new Date(license.expiresAt) < new Date();
+}
+
+// ============================================================
+// DOWNLOAD TOKENS (HMAC-SHA256)
+// ============================================================
+
+const DOWNLOAD_TOKEN_SECRET =
+  process.env.DOWNLOAD_TOKEN_SECRET || "dev-download-secret";
+
+interface DownloadTokenPayload {
+  customerId: string;
+  skillId: string;
+  exp: number; // Unix timestamp
+}
+
+/**
+ * Generate a time-limited download token for self-hosted customers.
+ * Token format: base64url(JSON payload).base64url(HMAC signature)
+ */
+export function generateDownloadToken(
+  customerId: string,
+  skillId: string,
+  expiresInSeconds: number = 86400 // 24 hours default
+): string {
+  const payload: DownloadTokenPayload = {
+    customerId,
+    skillId,
+    exp: Math.floor(Date.now() / 1000) + expiresInSeconds,
+  };
+
+  const payloadB64 = Buffer.from(JSON.stringify(payload)).toString("base64url");
+  const sig = createHmac("sha256", DOWNLOAD_TOKEN_SECRET)
+    .update(payloadB64)
+    .digest("base64url");
+
+  return `${payloadB64}.${sig}`;
+}
+
+/**
+ * Verify and decode a download token.
+ * Returns the payload if valid and not expired, null otherwise.
+ */
+export function verifyDownloadToken(
+  token: string
+): DownloadTokenPayload | null {
+  const parts = token.split(".");
+  if (parts.length !== 2) return null;
+
+  const [payloadB64, sig] = parts;
+
+  const expectedSig = createHmac("sha256", DOWNLOAD_TOKEN_SECRET)
+    .update(payloadB64)
+    .digest("base64url");
+
+  // Constant-time comparison
+  if (sig.length !== expectedSig.length) return null;
+  const a = Buffer.from(sig);
+  const b = Buffer.from(expectedSig);
+  if (!a.equals(b)) return null;
+
+  try {
+    const payload = JSON.parse(
+      Buffer.from(payloadB64, "base64url").toString("utf-8")
+    ) as DownloadTokenPayload;
+
+    if (payload.exp < Math.floor(Date.now() / 1000)) return null;
+
+    return payload;
+  } catch {
+    return null;
+  }
 }

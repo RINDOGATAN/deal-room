@@ -9,6 +9,7 @@
  *   npx deal-room skill:verify ./skills/nda/  --skip-signature
  */
 
+import AdmZip from "adm-zip";
 import { SkillPackageValidator } from "../../src/server/services/skills/validator";
 import * as fs from "fs";
 import * as path from "path";
@@ -93,11 +94,80 @@ Examples:
       console.log("⚠ Signature verification requires .skill package file");
     }
   } else {
-    // Full package verification
-    console.error(
-      "Error: .skill file verification not yet implemented. Use directory validation with --skip-signature."
-    );
-    process.exit(1);
+    // Full .skill package verification
+    const buffer = fs.readFileSync(packagePath);
+    const zip = new AdmZip(buffer);
+    const entries = zip.getEntries();
+
+    const files = new Map<string, Buffer>();
+    let signature: Buffer | null = null;
+
+    for (const entry of entries) {
+      if (entry.isDirectory) continue;
+      if (entry.entryName === "signature.sig") {
+        signature = entry.getData();
+      } else {
+        files.set(entry.entryName, entry.getData());
+      }
+    }
+
+    console.log(`  Files in package: ${files.size}`);
+    for (const name of files.keys()) {
+      console.log(`    ${name}`);
+    }
+    console.log("");
+
+    if (skipSignature) {
+      // Content-only validation
+      const clausesContent = files.get("content/clauses.json");
+      if (!clausesContent) {
+        console.error("Error: No content/clauses.json found in package");
+        process.exit(1);
+      }
+      const result = validator.validateContentOnly(clausesContent.toString("utf-8"));
+      if (result.valid) {
+        console.log("✓ Content validation passed");
+      } else {
+        console.log("✗ Content validation failed");
+        for (const error of result.errors) {
+          console.log(`  - ${error.code}: ${error.message}`);
+        }
+        process.exit(1);
+      }
+      console.log("⊘ Signature verification skipped (--skip-signature)");
+    } else {
+      // Full validation including signature
+      if (!signature) {
+        console.error("Error: No signature.sig found in package");
+        process.exit(1);
+      }
+
+      const result = await validator.validatePackage(files, signature);
+      if (result.valid) {
+        console.log("✓ Manifest validation passed");
+        console.log("✓ File integrity check passed");
+        console.log("✓ Signature verification passed");
+        console.log("✓ Content validation passed");
+        if (result.manifest) {
+          console.log(`\n  Skill: ${result.manifest.displayName} (${result.manifest.skillId})`);
+          console.log(`  Version: ${result.manifest.version}`);
+          console.log(`  Jurisdictions: ${result.manifest.jurisdictions.join(", ")}`);
+          console.log(`  Languages: ${result.manifest.languages.join(", ")}`);
+        }
+      } else {
+        console.log("✗ Verification failed\n");
+        for (const error of result.errors) {
+          console.log(`  - ${error.code}: ${error.message}`);
+        }
+        process.exit(1);
+      }
+      if (result.warnings?.length) {
+        console.log("\nWarnings:");
+        for (const w of result.warnings) {
+          console.log(`  - ${w}`);
+        }
+      }
+    }
   }
 
   console.log("\nVerification complete.");

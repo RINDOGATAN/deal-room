@@ -8,18 +8,13 @@
  * - Version management and upgrades
  */
 
-import { createReadStream, promises as fs } from "fs";
-import { join, basename } from "path";
-import { createHash } from "crypto";
-import { Readable } from "stream";
+import { promises as fs } from "fs";
+import { join } from "path";
+import AdmZip from "adm-zip";
 import { SkillPackageValidator, ValidationResult } from "./validator";
 import { computePackageHash, PackageManifest } from "@/lib/crypto";
 import { prisma } from "@/lib/prisma";
 import { resolveLocalizedString, resolveLocalizedArray } from "./i18n";
-
-// We'll use a streaming unzip approach
-// In production, use a library like 'unzipper' or 'adm-zip'
-// For now, we'll implement a simple version using built-in modules
 
 interface ExtractedPackage {
   files: Map<string, Buffer>;
@@ -147,27 +142,33 @@ export class SkillPackageInstaller {
   }
 
   /**
-   * Extract a .skill package from buffer.
-   * Uses a simple ZIP extraction - in production, use 'adm-zip' or 'unzipper'
+   * Extract a .skill package (ZIP format) from buffer.
    */
   private async extractPackageFromBuffer(buffer: Buffer): Promise<ExtractedPackage> {
-    // For now, we'll implement a simple extraction
-    // In production, use a proper ZIP library
     const files = new Map<string, Buffer>();
     let signature: Buffer | null = null;
 
-    // Check for ZIP signature (PK\x03\x04)
-    if (buffer[0] === 0x50 && buffer[1] === 0x4b) {
-      // This is a ZIP file - use adm-zip or similar in production
-      // For now, throw an error prompting to use the library
-      throw new Error(
-        "ZIP extraction requires 'adm-zip' package. Install it and update this method."
-      );
+    const zip = new AdmZip(buffer);
+    const entries = zip.getEntries();
+
+    for (const entry of entries) {
+      if (entry.isDirectory) continue;
+
+      const name = entry.entryName;
+      const data = entry.getData();
+
+      if (name === "signature.sig") {
+        signature = data;
+      } else {
+        files.set(name, data);
+      }
     }
 
-    // Assume it's a directory-based install for development
-    // In production, this would handle the actual ZIP extraction
-    throw new Error("Direct buffer extraction not implemented. Use installFromDirectory.");
+    if (files.size === 0) {
+      throw new Error("ZIP archive contains no files");
+    }
+
+    return { files, signature };
   }
 
   /**
