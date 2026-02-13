@@ -10,6 +10,7 @@ import {
   ChevronDown,
   ClipboardCheck,
   HardDrive,
+  Bot,
 } from "lucide-react";
 
 interface NavItem {
@@ -55,6 +56,12 @@ const navSections: NavSection[] = [
     label: "Self-Hosted",
     icon: HardDrive,
     items: [{ href: "/docs/local-deployment", label: "Local Deployment" }],
+  },
+  {
+    id: "agent-api",
+    label: "Agent API",
+    icon: Bot,
+    items: [{ href: "/docs/agent-api", label: "Negotiation API" }],
   },
   {
     id: "administration",
