@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
 import {
   BookOpen,
   Eye,
@@ -15,64 +16,64 @@ import {
 
 interface NavItem {
   href: string;
-  label: string;
+  labelKey: string;
   exact?: boolean;
 }
 
 interface NavSection {
   id: string;
-  label: string;
+  labelKey: string;
   icon: React.ElementType;
   items: NavItem[];
 }
 
-const navSections: NavSection[] = [
+const navSectionsDef: NavSection[] = [
   {
     id: "getting-started",
-    label: "Getting Started",
+    labelKey: "gettingStarted",
     icon: BookOpen,
     items: [
-      { href: "/docs", label: "Dashboard Overview", exact: true },
-      { href: "/docs/how-it-works", label: "Deal Lifecycle" },
+      { href: "/docs", labelKey: "dashboardOverview", exact: true },
+      { href: "/docs/how-it-works", labelKey: "navigation" },
     ],
   },
   {
     id: "negotiation",
-    label: "Negotiation",
+    labelKey: "negotiation",
     icon: Scale,
     items: [
-      { href: "/docs/compromise", label: "Compromise Algorithm" },
-      { href: "/docs/skills", label: "Skills & Licensing" },
+      { href: "/docs/compromise", labelKey: "compromiseAlgorithm" },
+      { href: "/docs/skills", labelKey: "skillsLicensing" },
     ],
   },
   {
     id: "lawyer-vetting",
-    label: "Lawyer Vetting",
+    labelKey: "lawyerVetting",
     icon: ClipboardCheck,
-    items: [{ href: "/docs/vetting", label: "How Vetting Works" }],
+    items: [{ href: "/docs/vetting", labelKey: "howVettingWorks" }],
   },
   {
     id: "self-hosted",
-    label: "Self-Hosted",
+    labelKey: "selfHosted",
     icon: HardDrive,
-    items: [{ href: "/docs/local-deployment", label: "Local Deployment" }],
+    items: [{ href: "/docs/local-deployment", labelKey: "localDeployment" }],
   },
   {
     id: "agent-api",
-    label: "Agent API",
+    labelKey: "agentApi",
     icon: Bot,
-    items: [{ href: "/docs/agent-api", label: "Negotiation API" }],
+    items: [{ href: "/docs/agent-api", labelKey: "negotiationApi" }],
   },
   {
     id: "administration",
-    label: "Administration",
+    labelKey: "administration",
     icon: Eye,
-    items: [{ href: "/docs/supervision", label: "Supervision" }],
+    items: [{ href: "/docs/supervision", labelKey: "supervision" }],
   },
 ];
 
 function getSectionForPath(pathname: string): string | null {
-  for (const section of navSections) {
+  for (const section of navSectionsDef) {
     for (const item of section.items) {
       if (item.exact ? pathname === item.href : pathname.startsWith(item.href)) {
         return section.id;
@@ -84,6 +85,7 @@ function getSectionForPath(pathname: string): string | null {
 
 export function DocsNav({ onNavigate }: { onNavigate?: () => void }) {
   const pathname = usePathname();
+  const t = useTranslations("docs");
   const activeSection = getSectionForPath(pathname);
 
   const [openSections, setOpenSections] = useState<Set<string>>(() => {
@@ -119,10 +121,10 @@ export function DocsNav({ onNavigate }: { onNavigate?: () => void }) {
   return (
     <nav className="space-y-1">
       <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-4 px-3">
-        User Guide
+        {t("title")}
       </p>
 
-      {navSections.map((section) => {
+      {navSectionsDef.map((section) => {
         const Icon = section.icon;
         const isOpen = openSections.has(section.id);
         const isSectionActive = activeSection === section.id;
@@ -143,7 +145,7 @@ export function DocsNav({ onNavigate }: { onNavigate?: () => void }) {
               `}
             >
               <Icon className="w-4 h-4 flex-shrink-0" />
-              <span className="flex-1 text-left">{section.label}</span>
+              <span className="flex-1 text-left">{t(section.labelKey)}</span>
               <ChevronDown
                 className={`w-4 h-4 transition-transform ${
                   isOpen ? "rotate-0" : "-rotate-90"
@@ -173,7 +175,7 @@ export function DocsNav({ onNavigate }: { onNavigate?: () => void }) {
                         }
                       `}
                     >
-                      {item.label}
+                      {t(item.labelKey)}
                     </Link>
                   );
                 })}

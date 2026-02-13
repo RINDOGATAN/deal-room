@@ -451,6 +451,8 @@
     "howVettingWorks": "How Vetting Works",
     "selfHosted": "Self-Hosted",
     "localDeployment": "Local Deployment",
+    "agentApi": "Agent API",
+    "negotiationApi": "Negotiation API",
     "administration": "Administration",
     "supervision": "Supervision"
   },
