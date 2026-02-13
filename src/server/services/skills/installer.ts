@@ -425,25 +425,13 @@ export class SkillPackageInstaller {
             label: resolveLocalizedString(option.label, lang),
             order: option.order as number,
             plainDescription: resolveLocalizedString(option.plainDescription, lang),
-            prosPartyA: resolveLocalizedArray(
-              (option.pros as Record<string, unknown>)?.partyA,
-              lang
-            ),
-            consPartyA: resolveLocalizedArray(
-              (option.cons as Record<string, unknown>)?.partyA,
-              lang
-            ),
-            prosPartyB: resolveLocalizedArray(
-              (option.pros as Record<string, unknown>)?.partyB,
-              lang
-            ),
-            consPartyB: resolveLocalizedArray(
-              (option.cons as Record<string, unknown>)?.partyB,
-              lang
-            ),
+            prosPartyA: resolveLocalizedArray(option.prosPartyA, lang),
+            consPartyA: resolveLocalizedArray(option.consPartyA, lang),
+            prosPartyB: resolveLocalizedArray(option.prosPartyB, lang),
+            consPartyB: resolveLocalizedArray(option.consPartyB, lang),
             legalText: resolveLocalizedString(option.legalText, lang),
-            biasPartyA: (option.bias as Record<string, number>)?.partyA ?? 0,
-            biasPartyB: (option.bias as Record<string, number>)?.partyB ?? 0,
+            biasPartyA: (option.biasPartyA as number) ?? 0,
+            biasPartyB: (option.biasPartyB as number) ?? 0,
             jurisdictionConfig: option.jurisdictionConfig as
               | Record<string, unknown>
               | undefined,

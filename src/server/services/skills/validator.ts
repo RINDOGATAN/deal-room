@@ -61,19 +61,14 @@ export const ClauseOptionSchema = z.object({
   label: LocalizedStringSchema,
   order: z.number().int().min(1),
   plainDescription: LocalizedStringSchema,
-  pros: z.object({
-    partyA: LocalizedStringArraySchema,
-    partyB: LocalizedStringArraySchema,
-  }),
-  cons: z.object({
-    partyA: LocalizedStringArraySchema,
-    partyB: LocalizedStringArraySchema,
-  }),
+  // Flat format: prosPartyA, consPartyA, etc.
+  prosPartyA: LocalizedStringArraySchema,
+  prosPartyB: LocalizedStringArraySchema,
+  consPartyA: LocalizedStringArraySchema,
+  consPartyB: LocalizedStringArraySchema,
   legalText: LocalizedStringSchema,
-  bias: z.object({
-    partyA: z.number().min(-1).max(1),
-    partyB: z.number().min(-1).max(1),
-  }),
+  biasPartyA: z.number().min(-1).max(1),
+  biasPartyB: z.number().min(-1).max(1),
   jurisdictionConfig: z
     .record(
       z.string(),
@@ -112,30 +107,14 @@ export const ClausesFileSchema = z.object({
   clauses: z.array(ClauseSchema),
 });
 
-export const BoilerplateSchema = z.object({
-  preamble: LocalizedStringSchema.optional(),
-  definitions: z.record(z.string(), LocalizedStringSchema).optional(),
-  standardSections: z
-    .array(
-      z.object({
-        title: LocalizedStringSchema,
-        content: LocalizedStringSchema,
-        order: z.number().int(),
-      })
-    )
-    .optional(),
-  signatureBlock: LocalizedStringSchema.optional(),
-  jurisdictionProvisions: z
-    .record(
-      z.string(),
-      z.object({
-        governingLaw: LocalizedStringSchema,
-        disputeResolution: LocalizedStringSchema,
-        notices: LocalizedStringSchema.optional(),
-      })
-    )
-    .optional(),
-});
+// Boilerplate structure varies across skills (different fields, array vs record
+// for definitions, etc.) and is stored as freeform Json in the database.
+// We validate it's a non-empty object with at least a signatureBlock or preamble.
+export const BoilerplateSchema = z
+  .record(z.string(), z.unknown())
+  .refine((obj) => Object.keys(obj).length > 0, {
+    message: "Boilerplate must not be empty",
+  });
 
 // ============================================================
 // VALIDATION RESULT TYPES
