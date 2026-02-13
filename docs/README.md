@@ -4,6 +4,7 @@
 
 | Document | Description |
 |----------|-------------|
+| [agent-api.md](./agent-api.md) | Agent Negotiation REST API reference — authentication, playbooks, negotiation flow, endpoints |
 | [skills-and-licensing.md](./skills-and-licensing.md) | Complete guide to skill packages, licensing, activation, and i18n |
 
 ## Generating FAQ Pages
