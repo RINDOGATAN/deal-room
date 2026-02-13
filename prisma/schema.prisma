@@ -207,6 +207,10 @@ model SkillPackage {
   isPremium       Boolean  @default(false)
   description     String?  @db.Text
 
+  // Marketplace / distribution
+  packageUrl      String?            // Vercel Blob URL to .skill file
+  packageSize     Int?               // File size in bytes
+
   contractTemplate ContractTemplate?
   entitlements     SkillEntitlement[]
 
@@ -224,6 +228,8 @@ model Customer {
 
   entitlements SkillEntitlement[]
   activations  SkillActivation[]
+  apiKeys      ApiKey[]
+  playbooks    Playbook[]
 
   @@map("customers")
 }
@@ -408,6 +414,7 @@ model DealRoom {
   auditLogs               AuditLog[]
   signingRequest          SigningRequest?
   supervisorAssignments   SupervisorAssignment[]
+  agentDealRoom           AgentDealRoom?
 
   @@map("deal_rooms")
 }
@@ -739,4 +746,108 @@ model ClauseMapping {
 
   @@unique([familyKey, sourceClauseId, targetClauseId])
   @@map("clause_mappings")
+}
+
+// ============================================================
+// API KEYS (Agent Authentication)
+// ============================================================
+
+model ApiKey {
+  id          String    @id @default(cuid())
+  customerId  String
+  name        String
+  keyHash     String    @unique
+  keyPrefix   String
+  scopes      String[]
+  isActive    Boolean   @default(true)
+  lastUsedAt  DateTime?
+  expiresAt   DateTime?
+  createdAt   DateTime  @default(now())
+
+  customer Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
+  @@map("api_keys")
+}
+
+// ============================================================
+// PLAYBOOKS (Agent Negotiation Preferences)
+// ============================================================
+
+model Playbook {
+  id               String          @id @default(cuid())
+  customerId       String
+  name             String
+  contractType     String
+  governingLaw     GoverningLaw
+  contractLanguage String          @default("en")
+  isDefault        Boolean         @default(false)
+  isActive         Boolean         @default(true)
+  metadata         Json?
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+
+  customer Customer        @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  entries  PlaybookEntry[]
+  initiatedAgentDeals  AgentDealRoom[] @relation("initiatorPlaybook")
+  respondedAgentDeals  AgentDealRoom[] @relation("respondentPlaybook")
+
+  @@unique([customerId, name])
+  @@map("playbooks")
+}
+
+model PlaybookEntry {
+  id                String   @id @default(cuid())
+  playbookId        String
+  clauseId          String
+  preferredOptionId String
+  priority          Int      @default(3)
+  flexibility       Int      @default(3)
+  isRedLine         Boolean  @default(false)
+  acceptableOptions String[]
+  notes             String?  @db.Text
+
+  playbook Playbook @relation(fields: [playbookId], references: [id], onDelete: Cascade)
+
+  @@unique([playbookId, clauseId])
+  @@map("playbook_entries")
+}
+
+// ============================================================
+// AGENT DEAL ROOMS (Automated Negotiations)
+// ============================================================
+
+enum AgentDealStatus {
+  PENDING_RESPONDENT
+  NEGOTIATING
+  AGREED
+  FAILED
+}
+
+model AgentDealRoom {
+  id                    String          @id @default(cuid())
+  dealRoomId            String?         @unique
+  negotiationToken      String          @unique
+  initiatorCustomerId   String
+  respondentCustomerId  String?
+  initiatorPlaybookId   String
+  respondentPlaybookId  String?
+  status                AgentDealStatus @default(PENDING_RESPONDENT)
+  contractType          String
+  governingLaw          GoverningLaw
+  contractLanguage      String          @default("en")
+  dealName              String
+  initiatorCompany      String
+  initiatorEmail        String
+  respondentCompany     String?
+  respondentEmail       String?
+  negotiationLog        Json?
+  failureReason         String?
+  resolvedAt            DateTime?
+  createdAt             DateTime        @default(now())
+
+  dealRoom           DealRoom? @relation(fields: [dealRoomId], references: [id])
+  initiatorPlaybook  Playbook  @relation("initiatorPlaybook", fields: [initiatorPlaybookId], references: [id])
+  respondentPlaybook Playbook? @relation("respondentPlaybook", fields: [respondentPlaybookId], references: [id])
+
+  @@map("agent_deal_rooms")
 }

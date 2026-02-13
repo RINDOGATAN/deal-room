@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
-import { Loader2, CheckCircle2, Circle, XCircle } from "lucide-react";
+import { Loader2, CheckCircle2, Circle, XCircle, Download } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { EnableFeatureModal } from "@/components/premium/enable-feature-modal";
 import { EnableMultipleFeaturesModal } from "@/components/premium/enable-multiple-features-modal";
@@ -89,6 +89,7 @@ export default function BillingPage() {
       renewsAt: entitlement?.expiresAt
         ? new Date(entitlement.expiresAt).toLocaleDateString()
         : null,
+      downloadUrl: `/api/skills/${pkg.skillId}/download`,
     };
   });
 
@@ -173,6 +174,15 @@ export default function BillingPage() {
                         </p>
                       )}
                     </div>
+                    {row.isActive && (
+                      <a
+                        href={row.downloadUrl}
+                        className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-1 transition-colors"
+                      >
+                        <Download className="h-3.5 w-3.5" />
+                        {t("download")}
+                      </a>
+                    )}
                     {row.entitlementId && row.hasStripeSubscription && (
                       <button
                         onClick={() =>

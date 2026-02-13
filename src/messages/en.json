@@ -423,7 +423,21 @@
     "upgradeRequired": "Upgrade required",
     "vettedContractsRequired": "A Vetted Contracts subscription is required to send client invitations.",
     "skillRequired": "An active subscription for this contract skill is required.",
-    "visitBilling": "Visit the Billing page to subscribe."
+    "visitBilling": "Visit the Billing page to subscribe.",
+    "download": "Download"
+  },
+  "marketplace": {
+    "title": "Skill Marketplace",
+    "subtitle": "Browse and enable premium contract skills",
+    "allJurisdictions": "All Jurisdictions",
+    "allLanguages": "All Languages",
+    "noSkillsFound": "No skills match your filters.",
+    "active": "Active",
+    "month": "mo",
+    "contactUs": "Contact Us",
+    "createDeal": "Create Deal",
+    "download": "Download",
+    "enable": "Enable"
   },
   "docs": {
     "title": "User Guide",
@@ -441,6 +455,7 @@
   "footer": {
     "service": "DEALROOM is a <link>TODO.LAW</link> service.",
     "userGuide": "User Guide",
+    "marketplace": "Marketplace",
     "billing": "Billing",
     "termsOfUse": "Terms of Use",
     "privacyNotice": "Privacy Notice"

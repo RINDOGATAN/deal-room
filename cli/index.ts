@@ -11,9 +11,12 @@
  *   skill:install     Install a skill package
  *   skill:list        List installed skill packages
  *   skill:verify      Verify a skill package
+ *   skill:package     Package a skill directory into .skill archive
+ *   skill:package-all Batch-package all skills in a directory
  *   skill:activate    Activate a skill license
  *   skill:deactivate  Deactivate a skill license
  *   license:fingerprint  Show machine fingerprint
+ *   keygen            Generate Ed25519 key pair
  */
 
 import { spawn } from "child_process";
@@ -23,9 +26,12 @@ const COMMANDS: Record<string, string> = {
   "skill:install": "skill-install.ts",
   "skill:list": "skill-list.ts",
   "skill:verify": "skill-verify.ts",
+  "skill:package": "skill-package.ts",
+  "skill:package-all": "skill-package-all.ts",
   "skill:activate": "skill-activate.ts",
   "skill:deactivate": "skill-deactivate.ts",
   "license:fingerprint": "license-fingerprint.ts",
+  keygen: "keygen.ts",
 };
 
 function showHelp() {
@@ -38,9 +44,12 @@ Commands:
   skill:install         Install a skill package (.skill file or directory)
   skill:list            List installed skill packages
   skill:verify          Verify a skill package signature and content
+  skill:package         Package a skill directory into a signed .skill archive
+  skill:package-all     Batch-package all skills in a directory
   skill:activate        Activate a skill license on this machine
   skill:deactivate      Deactivate a skill license on this machine
   license:fingerprint   Show machine fingerprint for offline activation
+  keygen                Generate Ed25519 key pair for skill signing
 
 Options:
   --help, -h            Show help for a command

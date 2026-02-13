@@ -17,6 +17,7 @@ import {
   ClipboardCheck,
   BookOpen,
   CreditCard,
+  Store,
 } from "lucide-react";
 import { brand } from "@/config/brand";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
@@ -253,6 +254,13 @@ export default function DashboardLayout({
               {tFooter("userGuide")}
             </Link>
             <Link
+              href="/marketplace"
+              className="flex items-center justify-center gap-1.5 hover:text-foreground transition-colors"
+            >
+              <Store className="w-3.5 h-3.5" />
+              {tFooter("marketplace")}
+            </Link>
+            <Link
               href="/billing"
               className="flex items-center justify-center gap-1.5 hover:text-foreground transition-colors"
             >
@@ -288,6 +296,14 @@ export default function DashboardLayout({
             >
               <BookOpen className="w-3.5 h-3.5" />
               {tFooter("userGuide")}
+            </Link>
+            <span className="text-border">&middot;</span>
+            <Link
+              href="/marketplace"
+              className="flex items-center gap-1.5 hover:text-foreground transition-colors"
+            >
+              <Store className="w-3.5 h-3.5" />
+              {tFooter("marketplace")}
             </Link>
             <span className="text-border">&middot;</span>
             <Link

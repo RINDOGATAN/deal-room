@@ -44,6 +44,86 @@ const LicenseFileSchema = z.object({
 
 export const skillManagerRouter = createTRPCRouter({
   /**
+   * List all premium skills for the marketplace.
+   * Public endpoint with optional auth for entitlement status.
+   */
+  listMarketplace: publicProcedure.query(async ({ ctx }) => {
+    const packages = await ctx.prisma.skillPackage.findMany({
+      where: { isActive: true, isPremium: true },
+      include: {
+        contractTemplate: {
+          select: {
+            id: true,
+            contractType: true,
+            displayName: true,
+            description: true,
+            category: true,
+            categoryLocalized: true,
+            displayNameLocalized: true,
+            descriptionLocalized: true,
+          },
+        },
+        _count: { select: { entitlements: true } },
+      },
+      orderBy: { displayName: "asc" },
+    });
+
+    // Check entitlements if authenticated
+    let entitledSkillIds = new Set<string>();
+    let entitlementMap = new Map<
+      string,
+      { status: string; expiresAt: Date | null }
+    >();
+
+    if (ctx.session?.user?.email) {
+      const customer = await ctx.prisma.customer.findUnique({
+        where: { email: ctx.session.user.email },
+        include: {
+          entitlements: {
+            where: { skillPackageId: { in: packages.map((p) => p.id) } },
+          },
+        },
+      });
+
+      if (customer) {
+        for (const e of customer.entitlements) {
+          if (e.status === "ACTIVE") {
+            entitledSkillIds.add(e.skillPackageId);
+          }
+          entitlementMap.set(e.skillPackageId, {
+            status: e.status,
+            expiresAt: e.expiresAt,
+          });
+        }
+      }
+    }
+
+    return packages.map((pkg) => {
+      const ent = entitlementMap.get(pkg.id);
+      // Count clauses from the contract template relationship
+      return {
+        id: pkg.id,
+        skillId: pkg.skillId,
+        name: pkg.name,
+        displayName: pkg.displayName,
+        description: pkg.description,
+        jurisdictions: pkg.jurisdictions,
+        languages: pkg.languages,
+        priceAmount: pkg.priceAmount,
+        priceCurrency: pkg.priceCurrency,
+        category: pkg.contractTemplate?.category ?? null,
+        categoryLocalized: pkg.contractTemplate?.categoryLocalized ?? null,
+        displayNameLocalized: pkg.contractTemplate?.displayNameLocalized ?? null,
+        descriptionLocalized: pkg.contractTemplate?.descriptionLocalized ?? null,
+        hasPackageFile: !!pkg.packageUrl,
+        entitlementStatus: ent?.status ?? null,
+        entitlementExpiresAt: ent?.expiresAt ?? null,
+        isEntitled: entitledSkillIds.has(pkg.id),
+      };
+    });
+  }),
+
+  /**
    * List all installed skill packages.
    * Public endpoint - anyone can see what skills are available.
    */
