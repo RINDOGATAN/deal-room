@@ -122,7 +122,21 @@ Or via the Platform Admin portal at `/admin/supervisors`.
 4. Select supervisor from dropdown
 5. Confirm assignment
 
-Supervisors receive no notification - they simply see the deal when they next log in.
+Supervisors receive no notification for admin-initiated assignments — they simply see the deal when they next log in.
+
+However, when a **party requests attorney review** on an agreed deal, the assigned supervisor receives an email notification via Resend with a link to the `/supervise` portal.
+
+### Pre-Seeded Supervisor
+
+The database seed (`prisma/seed.ts`) creates a default supervisory attorney:
+
+| Field | Value |
+|-------|-------|
+| Email | `smaldonado@privacycloud.com` |
+| Name | `Sergio Maldonado (#367079 State Bar of California)` |
+| Active | `true` |
+
+This is upserted on `email`, so re-running `npx prisma db seed` is safe.
 
 ---
 
@@ -587,3 +601,188 @@ Clause files use `{en, es}` objects for all translatable fields:
 ```
 
 Plain strings (without localization) are treated as English and continue to work as before — this is fully backwards-compatible
+
+---
+
+## Signing & Execution Details
+
+### Overview
+
+Once all clauses reach AGREED status, the deal transitions through an optional attorney review step and then into the signing flow at `/deals/[id]/sign`. Before signing, each party must confirm their **execution details** — the legal information that appears in the final contract document.
+
+### Flow
+
+```
+AGREED → (optional) Attorney Review → /deals/[id]/sign
+                                          │
+                                          ├─ 1. Confirm execution details (both parties)
+                                          ├─ 2. Initiate signing process
+                                          ├─ 3. Type-to-sign (both parties)
+                                          └─ 4. COMPLETED — PDF/DOCX generation
+```
+
+### Execution Details Fields
+
+Each party fills in the following on the signing page, **before** they can sign:
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| **Legal Name** | Yes | Full legal name of the entity (pre-filled from party `company`) |
+| **Address** | Yes | Registered address of the entity |
+| **Tax ID** | No | Tax identification number (NIF/CIF/EIN) |
+| **Signatory Name** | Yes | Full name of the person signing (pre-filled from party `name`) |
+| **Signatory Title** | Yes | Title or role of the signatory (e.g., CEO, Managing Director) |
+
+These are stored as JSON in `DealRoomParty.signingDetails`:
+
+```json
+{
+  "legalName": "Acme Corp, Inc.",
+  "address": "123 Main St, San Francisco, CA 94105",
+  "taxId": "12-3456789",
+  "signatoryName": "Jane Smith",
+  "signatoryTitle": "CEO"
+}
+```
+
+### Detail States
+
+| State | Behavior |
+|-------|----------|
+| **Not yet confirmed** | Editable form shown; signing is blocked |
+| **Confirmed** | Read-only display with "Edit" button; can be modified until signed |
+| **Frozen (after signing)** | Read-only, greyed out; cannot be changed |
+
+The other party's confirmed details are visible once submitted, or a "Waiting for other party" placeholder is shown.
+
+### Signing Gate
+
+The type-to-sign section is blocked until the party's own execution details are confirmed. An amber warning is shown:
+
+> "Please confirm your execution details above before signing."
+
+### Reassurance Hint
+
+On the review page (`/deals/[id]/review`), when all clauses are agreed and the "Proceed to Signing" button is shown, an info message appears:
+
+> "You will still have a chance to provide accurate company or signatory details before the contract is executed."
+
+This ensures parties are aware that the name/company provided during deal creation is not final.
+
+### Attorney Review Email Notification
+
+When a party requests attorney review via the review page:
+
+1. Party selects a supervisor from the available list
+2. A `SupervisorAssignment` is created and the request is logged in the audit trail
+3. An email is sent to the supervisor (fire-and-forget via Resend) with:
+   - The deal name and requesting party's name
+   - A link to the supervisor portal (`/supervise`)
+4. The supervisor logs in and reviews the contract terms
+
+The email follows the same dark-themed template as invitation emails.
+
+### tRPC Procedures
+
+| Router | Procedure | Description |
+|--------|-----------|-------------|
+| `signing` | `getSigningDetails` | Get both parties' execution details |
+| `signing` | `submitSigningDetails` | Save/update execution details for current party |
+| `signing` | `initiate` | Create `SigningRequest`, transition to SIGNING |
+| `signing` | `getRequest` | Get signing request status and signatures |
+| `signing` | `recordSignature` | Record typed signature for current party |
+| `attorneyReview` | `listAvailableAttorneys` | List active supervisors (marks conflict-of-interest) |
+| `attorneyReview` | `requestReview` | Assign supervisor + send email notification |
+| `attorneyReview` | `cancelReview` | Cancel pending (unapproved) review |
+| `attorneyReview` | `getReviewStatus` | Review status for both parties |
+
+---
+
+## Scenario Testing & Demo Content
+
+### Deal Simulator
+
+`scripts/simulate-deals.ts` smoke-tests the full deal lifecycle for every built-in contract skill and produces completed demo deals visible in the `/deals` dashboard.
+
+```bash
+npm run deal:simulate            # create demo deals (idempotent)
+npm run deal:simulate -- --clean # delete and recreate from scratch
+```
+
+**Prerequisites:** Templates must be seeded first (`npx prisma db seed`).
+
+#### What it does
+
+For each deal variant the script runs the full 10-step lifecycle:
+
+1. Create DealRoom (DRAFT) with initiator party and clauses
+2. Party A makes selections (bias-driven strategy)
+3. Submit Party A (SUBMITTED)
+4. Create respondent party + accepted invitation (AWAITING_RESPONSE)
+5. Party B makes selections (bias-driven strategy)
+6. Submit Party B (NEGOTIATING)
+7. Run compromise engine (`calculateCompromise` + `globalFairnessPass`)
+8. Create CompromiseSuggestion records (both parties accept)
+9. Finalize (AGREED)
+10. Sign via type-to-sign (COMPLETED)
+
+#### Deal variants
+
+| Template | Jurisdiction | Lang | Boilerplate |
+|----------|-------------|------|-------------|
+| DPA | CALIFORNIA | en | Yes |
+| DPA | SPAIN | es | Yes |
+| NDA | CALIFORNIA | en | No |
+| MSA | CALIFORNIA | en | No |
+| SAAS | CALIFORNIA | en | No |
+| SEED_INVESTMENT | CALIFORNIA | en | Yes |
+| SEED_INVESTMENT | SPAIN | es | Yes |
+
+Templates that support Spanish + SPAIN jurisdiction get an additional Spanish-language variant.
+
+#### Demo accounts
+
+| User | Email | Company |
+|------|-------|---------|
+| Alice Johnson | `alice@demo.todo.law` | Acme Corp |
+| Bob Smith | `bob@demo.todo.law` | Widget Inc |
+
+Users are created via `upsert` so the script is safe to re-run.
+
+#### Selection strategy
+
+Selections are deterministic and designed to produce ~50% agreement / ~50% divergence:
+
+- **Party A:** sorts options by `biasPartyA` descending. Even-ordered clauses pick index 0 (most A-favorable), odd-ordered clauses pick index 1.
+- **Party B:** same logic using `biasPartyB`.
+- **Priority:** 5 if |bias| > 0.3, 4 if > 0.1, else 3.
+- **Flexibility:** 1 if |bias| > 0.3, 2 if > 0.1, else 3.
+
+#### Contract validation
+
+After each deal completes, the script runs 14 inline checks:
+
+1. Contract data is non-null
+2. Party A name present and not a placeholder
+3. Party B name present and not a placeholder
+4. Party A company present
+5. Party B company present
+6. All clauses have legal text >20 chars
+7. All clauses have non-empty titles
+8. Clause count matches template
+9. Boilerplate present (DPA, SEED_INVESTMENT only)
+10. Preamble non-empty (when boilerplate exists)
+11. No unresolved `{variable}` placeholders
+12. Governing law display string non-empty
+13. Language matches expected value
+14. Date is valid
+
+#### Idempotency
+
+- Without `--clean`: skips deals that already exist (matched by name)
+- With `--clean`: deletes all `"Demo: *"` deals first, then recreates
+- Demo users always use `upsert`
+
+#### Implementation notes
+
+The script uses direct `PrismaClient` instantiation (like `seed.ts`) and imports the compromise engine functions via relative paths. Contract validation logic is inlined from `generator.ts` to avoid `@/lib/prisma` path alias issues in the scripts directory.
