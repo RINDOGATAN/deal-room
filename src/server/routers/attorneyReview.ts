@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
+import { sendAttorneyReviewRequestEmail } from "@/lib/email";
 
 export const attorneyReviewRouter = createTRPCRouter({
   /**
@@ -171,6 +172,17 @@ export const attorneyReviewRouter = createTRPCRouter({
           },
         }),
       ]);
+
+      // Fire-and-forget email notification to the attorney
+      sendAttorneyReviewRequestEmail({
+        to: supervisor.email,
+        supervisorName: supervisor.name || supervisor.email,
+        dealName: party.dealRoom.name || "Untitled Deal",
+        partyName: party.name || "A party",
+        dealRoomId: input.dealRoomId,
+      }).catch((err) =>
+        console.error("Failed to send attorney review email:", err)
+      );
 
       return { success: true };
     }),

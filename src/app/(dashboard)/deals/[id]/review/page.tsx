@@ -23,6 +23,7 @@ import {
   Loader2,
   UserCheck,
   XCircle,
+  Info,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
@@ -833,6 +834,10 @@ export default function ReviewPage() {
                   : t("allAgreedBothParties")
                 }
               </p>
+              <p className="text-sm text-muted-foreground mb-6 flex items-center justify-center gap-2">
+                <Info className="w-4 h-4 flex-shrink-0" />
+                {t("signingDetailsHint")}
+              </p>
               <div className="flex items-center justify-center gap-3">
                 <button
                   onClick={() => router.push(`/deals/${dealId}/sign`)}
@@ -868,6 +873,10 @@ export default function ReviewPage() {
               <h2 className="text-lg font-semibold mb-2">{t("allClausesAgreed")}</h2>
               <p className="text-muted-foreground mb-6">
                 {t("allAgreedSimple")}
+              </p>
+              <p className="text-sm text-muted-foreground mb-6 flex items-center justify-center gap-2">
+                <Info className="w-4 h-4 flex-shrink-0" />
+                {t("signingDetailsHint")}
               </p>
               <div className="flex items-center justify-center gap-3">
                 <button

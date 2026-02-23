@@ -78,7 +78,7 @@ interface ClauseOption {
 interface Clause {
   id: string;
   title: LocalizedString;
-  category: string;
+  category: LocalizedString;
   order: number;
   plainDescription: LocalizedString;
   legalContext?: LocalizedString;
@@ -122,6 +122,7 @@ function buildClauseLocalizedContent(clause: Clause): Record<string, unknown> | 
   let hasLocalized = false;
 
   if (isLocalized(clause.title)) { content.title = clause.title; hasLocalized = true; }
+  if (isLocalized(clause.category)) { content.category = clause.category; hasLocalized = true; }
   if (isLocalized(clause.plainDescription)) { content.plainDescription = clause.plainDescription; hasLocalized = true; }
   if (clause.legalContext && isLocalized(clause.legalContext)) { content.legalContext = clause.legalContext; hasLocalized = true; }
 
@@ -217,6 +218,7 @@ async function main() {
     const metadataPath = path.join(skillPath, "metadata.json");
     const manifestPath = path.join(skillPath, "manifest.json");
     const boilerplatePath = path.join(skillPath, "boilerplate.json");
+    const parametersPath = path.join(skillPath, "parameters.json");
 
     if (!fs.existsSync(clausesPath)) {
       console.log(`Skipping ${entry.name}: no clauses.json found`);
@@ -242,6 +244,12 @@ async function main() {
     let boilerplate: Record<string, unknown> | null = null;
     if (fs.existsSync(boilerplatePath)) {
       boilerplate = JSON.parse(fs.readFileSync(boilerplatePath, "utf-8"));
+    }
+
+    let parameterSchema: Record<string, unknown> | null = null;
+    if (fs.existsSync(parametersPath)) {
+      parameterSchema = JSON.parse(fs.readFileSync(parametersPath, "utf-8"));
+      console.log(`  Found parameters.json (${(parameterSchema as any)?.parameters?.length || 0} parameters)`);
     }
 
     // Create or update SkillPackage if manifest exists (enables licensing)
@@ -321,6 +329,7 @@ async function main() {
         descriptionLocalized: descriptionLocalized as Prisma.InputJsonValue ?? Prisma.DbNull,
         category: resolvedCategory,
         categoryLocalized: categoryLocalized as Prisma.InputJsonValue ?? Prisma.DbNull,
+        parameterSchema: parameterSchema as Prisma.InputJsonValue ?? Prisma.DbNull,
         isActive: true,
       },
       update: {
@@ -338,6 +347,7 @@ async function main() {
         descriptionLocalized: descriptionLocalized as Prisma.InputJsonValue ?? Prisma.DbNull,
         category: resolvedCategory,
         categoryLocalized: categoryLocalized as Prisma.InputJsonValue ?? Prisma.DbNull,
+        parameterSchema: parameterSchema as Prisma.InputJsonValue ?? Prisma.DbNull,
       },
     });
 
@@ -358,7 +368,7 @@ async function main() {
           contractTemplateId: template.id,
           clauseId: clause.id,
           title: resolveString(clause.title),
-          category: clause.category,
+          category: resolveString(clause.category),
           order: clause.order,
           plainDescription: resolveString(clause.plainDescription),
           legalContext: resolveString(clause.legalContext),
@@ -367,7 +377,7 @@ async function main() {
         },
         update: {
           title: resolveString(clause.title),
-          category: clause.category,
+          category: resolveString(clause.category),
           order: clause.order,
           plainDescription: resolveString(clause.plainDescription),
           legalContext: resolveString(clause.legalContext),
@@ -539,6 +549,21 @@ async function main() {
     },
   });
   console.log("  Created/updated Vetted Contracts feature package");
+
+  // ── Seed pre-approved supervisory attorney ──
+  await prisma.supervisor.upsert({
+    where: { email: "smaldonado@privacycloud.com" },
+    create: {
+      email: "smaldonado@privacycloud.com",
+      name: "Sergio Maldonado (#367079 State Bar of California)",
+      isActive: true,
+    },
+    update: {
+      name: "Sergio Maldonado (#367079 State Bar of California)",
+      isActive: true,
+    },
+  });
+  console.log("  Created/updated Supervisor: Sergio Maldonado");
 
   console.log("\nSeed completed successfully!");
 }

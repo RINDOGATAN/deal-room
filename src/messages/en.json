@@ -124,7 +124,10 @@
       "englishDescription": "Contract text in English",
       "spanish": "Español",
       "spanishDescription": "Texto del contrato en español"
-    }
+    },
+    "dealParameters": "Deal Parameters",
+    "dealParametersDescription": "Fill in the deal-specific values below. These will appear in the contract text.",
+    "parameterRequired": "Please fill in all required parameters"
   },
   "dealDetail": {
     "makeSelections": "Make Selections",
@@ -253,6 +256,7 @@
     "allAgreedLawyerVetted": "All clauses agreed and your lawyer has vetted this contract. Proceed to e-signature.",
     "allAgreedBothParties": "Congratulations! Both parties have agreed on all clauses. You can proceed to e-signature or request an attorney review first.",
     "allAgreedSimple": "Congratulations! Both parties have agreed on all clauses.",
+    "signingDetailsHint": "You will still have a chance to provide accurate company or signatory details before the contract is executed.",
     "requestAttorneyReview": "Request Attorney Review",
     "selectReviewingAttorney": "Select Reviewing Attorney",
     "chooseAttorneyDescription": "Choose a supervising attorney to review the agreed contract before signing.",
@@ -321,6 +325,30 @@
       "initiationFailed": "Failed to initiate signing: {error}",
       "signatureRecorded": "Signature recorded successfully!",
       "signatureFailed": "Failed to record signature: {error}"
+    },
+    "signingDetails": {
+      "title": "Execution Details",
+      "description": "Provide your company and signatory details for the contract. Each party fills in their own information.",
+      "yourDetails": "Your Details",
+      "otherPartyDetails": "Other Party",
+      "confirmed": "Confirmed",
+      "legalName": "Legal Entity Name",
+      "legalNamePlaceholder": "e.g., Acme Corp, Inc.",
+      "address": "Registered Address",
+      "addressPlaceholder": "e.g., 123 Main St, San Francisco, CA 94105",
+      "taxId": "Tax ID",
+      "taxIdPlaceholder": "e.g., EIN, CIF, NIF",
+      "signatoryName": "Signatory Name",
+      "signatoryNamePlaceholder": "e.g., John Smith",
+      "signatoryTitle": "Signatory Title",
+      "signatoryTitlePlaceholder": "e.g., CEO, Managing Director",
+      "confirmDetails": "Confirm Details",
+      "saving": "Saving...",
+      "saved": "Execution details saved",
+      "edit": "Edit details",
+      "frozenAfterSigning": "Details are locked after signing",
+      "waitingForOtherParty": "The other party has not yet submitted their details",
+      "requiredBeforeSigning": "Please confirm your execution details above before signing"
     }
   },
   "settings": {
