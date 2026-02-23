@@ -124,7 +124,10 @@
       "englishDescription": "Texto del contrato en inglés",
       "spanish": "Español",
       "spanishDescription": "Texto del contrato en español"
-    }
+    },
+    "dealParameters": "Datos del Acuerdo",
+    "dealParametersDescription": "Introduce los valores específicos del acuerdo. Aparecerán en el texto del contrato.",
+    "parameterRequired": "Por favor, completa todos los datos obligatorios"
   },
   "dealDetail": {
     "makeSelections": "Elegir Opciones",
@@ -253,6 +256,7 @@
     "allAgreedLawyerVetted": "Todas las cláusulas acordadas y tu abogado/a ha revisado este contrato. Procede a la firma electrónica.",
     "allAgreedBothParties": "¡Felicidades! Ambas partes han acordado todas las cláusulas. Puedes proceder a la firma electrónica o solicitar una revisión legal primero.",
     "allAgreedSimple": "¡Felicidades! Ambas partes han acordado todas las cláusulas.",
+    "signingDetailsHint": "Todavía tendrás oportunidad de facilitar detalles precisos de empresa o representante antes de la ejecución del contrato.",
     "requestAttorneyReview": "Solicitar Revisión Legal",
     "selectReviewingAttorney": "Seleccionar Abogado/a Revisor/a",
     "chooseAttorneyDescription": "Elige un abogado/a supervisor/a para revisar el contrato acordado antes de la firma.",
@@ -321,6 +325,30 @@
       "initiationFailed": "Error al iniciar la firma: {error}",
       "signatureRecorded": "¡Firma registrada correctamente!",
       "signatureFailed": "Error al registrar firma: {error}"
+    },
+    "signingDetails": {
+      "title": "Datos de Ejecución",
+      "description": "Introduce los datos de tu empresa y del firmante para el contrato. Cada parte rellena su propia información.",
+      "yourDetails": "Tus Datos",
+      "otherPartyDetails": "Otra Parte",
+      "confirmed": "Confirmado",
+      "legalName": "Denominación Social",
+      "legalNamePlaceholder": "ej., Acme Corp, S.L.",
+      "address": "Domicilio Social",
+      "addressPlaceholder": "ej., Calle Mayor 1, 28001 Madrid",
+      "taxId": "NIF/CIF",
+      "taxIdPlaceholder": "ej., B12345678",
+      "signatoryName": "Nombre del Firmante",
+      "signatoryNamePlaceholder": "ej., Juan Pérez García",
+      "signatoryTitle": "Cargo del Firmante",
+      "signatoryTitlePlaceholder": "ej., Administrador/a Único/a, CEO",
+      "confirmDetails": "Confirmar Datos",
+      "saving": "Guardando...",
+      "saved": "Datos de ejecución guardados",
+      "edit": "Editar datos",
+      "frozenAfterSigning": "Los datos quedan bloqueados tras firmar",
+      "waitingForOtherParty": "La otra parte aún no ha enviado sus datos",
+      "requiredBeforeSigning": "Confirma tus datos de ejecución arriba antes de firmar"
     }
   },
   "settings": {
