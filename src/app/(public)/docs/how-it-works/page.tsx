@@ -1,3 +1,6 @@
+"use client";
+
+import { useTranslations } from "next-intl";
 import {
   FileText,
   Mail,
@@ -10,32 +13,33 @@ import {
 import { FlowDiagram } from "../components/FlowDiagram";
 import { WorkflowStep } from "../components/WorkflowStep";
 
-const dealStatuses = [
-  { id: "DRAFT", label: "Draft" },
-  { id: "AWAITING_RESPONSE", label: "Awaiting Response" },
-  { id: "NEGOTIATING", label: "Negotiating" },
-  { id: "AGREED", label: "Agreed" },
-  { id: "SIGNING", label: "Signing" },
-  { id: "COMPLETED", label: "Completed" },
-];
-
 export default function HowItWorksPage() {
+  const t = useTranslations("howItWorks");
+
+  const dealStatuses = [
+    { id: "DRAFT", label: t("statusDraft") },
+    { id: "AWAITING_RESPONSE", label: t("statusAwaitingResponse") },
+    { id: "NEGOTIATING", label: t("statusNegotiating") },
+    { id: "AGREED", label: t("statusAgreed") },
+    { id: "SIGNING", label: t("statusSigning") },
+    { id: "COMPLETED", label: t("statusCompleted") },
+  ];
+
   return (
     <div className="space-y-12">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold mb-4">How It Works</h1>
+        <h1 className="text-3xl font-bold mb-4">{t("title")}</h1>
         <p className="text-lg text-muted-foreground">
-          Dealroom guides both parties through a structured negotiation process,
-          from creating the deal to signing the final contract.
+          {t("subtitle")}
         </p>
       </div>
 
       {/* Deal Status Flow */}
       <div className="space-y-4">
-        <h2 className="text-xl font-bold">Deal Lifecycle</h2>
+        <h2 className="text-xl font-bold">{t("lifecycleHeading")}</h2>
         <p className="text-muted-foreground">
-          Every deal progresses through these six stages:
+          {t("lifecycleIntro")}
         </p>
         <div className="overflow-x-auto py-4">
           <FlowDiagram steps={dealStatuses} currentStep="NEGOTIATING" />
@@ -44,33 +48,33 @@ export default function HowItWorksPage() {
 
       {/* Detailed Steps */}
       <div className="space-y-6">
-        <h2 className="text-xl font-bold">The Negotiation Process</h2>
+        <h2 className="text-xl font-bold">{t("processHeading")}</h2>
 
         <div className="space-y-4">
           <WorkflowStep
             number={1}
-            title="Create a Deal"
-            description="The initiator selects a contract type (skill) and jurisdiction, then names the deal. The system loads all relevant clauses with their available options."
+            title={t("ws1Title")}
+            description={t("ws1Desc")}
             icon={<FileText className="w-5 h-5" />}
-            actor="Initiator"
+            actor={t("actorInitiator")}
           >
-            <div className="grid grid-cols-3 gap-3 text-sm">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
               <div className="p-3 bg-muted/30 border border-border rounded-xl">
-                <p className="font-medium text-foreground">Contract Type</p>
+                <p className="font-medium text-foreground">{t("ws1ContractType")}</p>
                 <p className="text-muted-foreground text-xs mt-1">
-                  Select from available skill packages
+                  {t("ws1ContractTypeDesc")}
                 </p>
               </div>
               <div className="p-3 bg-muted/30 border border-border rounded-xl">
-                <p className="font-medium text-foreground">Jurisdiction</p>
+                <p className="font-medium text-foreground">{t("ws1Jurisdiction")}</p>
                 <p className="text-muted-foreground text-xs mt-1">
-                  California, England & Wales, or Spain
+                  {t("ws1JurisdictionDesc")}
                 </p>
               </div>
               <div className="p-3 bg-muted/30 border border-border rounded-xl">
-                <p className="font-medium text-foreground">Deal Name</p>
+                <p className="font-medium text-foreground">{t("ws1DealName")}</p>
                 <p className="text-muted-foreground text-xs mt-1">
-                  A friendly name for reference
+                  {t("ws1DealNameDesc")}
                 </p>
               </div>
             </div>
@@ -78,131 +82,130 @@ export default function HowItWorksPage() {
 
           <WorkflowStep
             number={2}
-            title="Invite the Other Party"
-            description="The initiator sends an email invitation to the respondent. The respondent receives a secure link to join the Dealroom."
+            title={t("ws2Title")}
+            description={t("ws2Desc")}
             icon={<Mail className="w-5 h-5" />}
-            actor="Initiator"
+            actor={t("actorInitiator")}
           >
             <div className="p-3 bg-muted/30 border border-border rounded-xl text-sm">
               <p className="text-muted-foreground">
-                The invitation email includes a secure, time-limited token. When the
-                respondent clicks the link, they can create an account or sign in,
-                then they're automatically connected to the deal.
+                {t("ws2Detail")}
               </p>
             </div>
           </WorkflowStep>
 
           <WorkflowStep
             number={3}
-            title="Both Parties Submit Preferences"
-            description="Each party independently selects their preferred option for every clause, along with priority (how important) and flexibility (how willing to compromise) scores."
+            title={t("ws3Title")}
+            description={t("ws3Desc")}
             icon={<Users className="w-5 h-5" />}
-            actor="Both Parties"
+            actor={t("actorBothParties")}
           >
             <div className="space-y-3">
               <p className="text-sm text-muted-foreground">
-                For each clause, parties select:
+                {t("ws3SelectIntro")}
               </p>
-              <div className="grid grid-cols-3 gap-3 text-sm">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
                 <div className="p-3 border border-border rounded-xl">
-                  <p className="font-medium text-foreground">Option</p>
+                  <p className="font-medium text-foreground">{t("ws3Option")}</p>
                   <p className="text-muted-foreground text-xs mt-1">
-                    Choose from 2-5 pre-defined options per clause
+                    {t("ws3OptionDesc")}
                   </p>
                 </div>
                 <div className="p-3 border border-border rounded-xl">
-                  <p className="font-medium text-foreground">Priority (1-5)</p>
+                  <p className="font-medium text-foreground">{t("ws3Priority")}</p>
                   <p className="text-muted-foreground text-xs mt-1">
-                    How important is this clause to you?
+                    {t("ws3PriorityDesc")}
                   </p>
                 </div>
                 <div className="p-3 border border-border rounded-xl">
-                  <p className="font-medium text-foreground">Flexibility (1-5)</p>
+                  <p className="font-medium text-foreground">{t("ws3Flexibility")}</p>
                   <p className="text-muted-foreground text-xs mt-1">
-                    How willing are you to compromise?
+                    {t("ws3FlexibilityDesc")}
                   </p>
                 </div>
               </div>
               <p className="text-xs text-muted-foreground">
-                Parties cannot see each other's selections until both have submitted.
+                {t("ws3BlindNote")}
               </p>
             </div>
           </WorkflowStep>
 
           <WorkflowStep
             number={4}
-            title="Algorithm Suggests Compromises"
-            description="Once both parties submit, the weighted compromise algorithm calculates a fair suggestion for each clause based on stake scores."
+            title={t("ws4Title")}
+            description={t("ws4Desc")}
             icon={<Cpu className="w-5 h-5" />}
-            actor="System"
+            actor={t("actorSystem")}
           >
             <div className="p-4 border border-primary/30 bg-primary/5 rounded-xl">
               <p className="text-sm font-medium text-primary mb-2">
-                The Stake Formula
+                {t("ws4FormulaLabel")}
               </p>
               <code className="text-xs block p-2 bg-card border border-border rounded-lg text-muted-foreground">
                 stake = (priority/5 × 0.4) + ((5-flexibility)/5 × 0.3) + (|bias| × 0.3)
               </code>
               <p className="text-xs text-muted-foreground mt-2">
-                The party with higher stake gets preference. When stakes are similar,
-                a middle-ground option is suggested.{" "}
-                <a href="/docs/compromise" className="text-primary hover:underline">
-                  Learn more about the algorithm →
-                </a>
+                {t.rich("ws4FormulaNote", {
+                  link: (chunks) => (
+                    <a href="/docs/compromise" className="text-primary hover:underline">
+                      {chunks}
+                    </a>
+                  ),
+                })}
               </p>
             </div>
           </WorkflowStep>
 
           <WorkflowStep
             number={5}
-            title="Accept or Counter"
-            description="Both parties review the suggestions. They can accept individual clauses or propose counters. The process continues until all clauses are agreed."
+            title={t("ws5Title")}
+            description={t("ws5Desc")}
             icon={<MessageSquare className="w-5 h-5" />}
-            actor="Both Parties"
+            actor={t("actorBothParties")}
           >
             <div className="space-y-3 text-sm">
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div className="p-3 border border-primary/30 rounded-xl">
-                  <p className="font-medium text-primary">Accept</p>
+                  <p className="font-medium text-primary">{t("ws5Accept")}</p>
                   <p className="text-muted-foreground text-xs mt-1">
-                    Agree to the suggested option for this clause
+                    {t("ws5AcceptDesc")}
                   </p>
                 </div>
                 <div className="p-3 border border-border rounded-xl">
-                  <p className="font-medium text-foreground">Counter</p>
+                  <p className="font-medium text-foreground">{t("ws5Counter")}</p>
                   <p className="text-muted-foreground text-xs mt-1">
-                    Propose a different option with reasoning
+                    {t("ws5CounterDesc")}
                   </p>
                 </div>
               </div>
               <p className="text-xs text-muted-foreground">
-                When one party counters, the other party sees the counter-proposal
-                and can accept it or make their own counter.
+                {t("ws5CounterNote")}
               </p>
             </div>
           </WorkflowStep>
 
           <WorkflowStep
             number={6}
-            title="Sign the Contract"
-            description="Once all clauses are agreed, the system generates the final contract document. Both parties sign electronically to complete the deal."
+            title={t("ws6Title")}
+            description={t("ws6Desc")}
             icon={<PenTool className="w-5 h-5" />}
-            actor="Both Parties"
+            actor={t("actorBothParties")}
           >
             <div className="flex items-center gap-4 text-sm">
               <div className="flex items-center gap-2 p-3 border border-border rounded-xl">
                 <div className="w-4 h-4 border border-muted-foreground rounded" />
-                <span className="text-muted-foreground">Party A Signature</span>
+                <span className="text-muted-foreground">{t("ws6PartyA")}</span>
               </div>
               <ArrowRight className="w-4 h-4 text-muted-foreground" />
               <div className="flex items-center gap-2 p-3 border border-border rounded-xl">
                 <div className="w-4 h-4 border border-muted-foreground rounded" />
-                <span className="text-muted-foreground">Party B Signature</span>
+                <span className="text-muted-foreground">{t("ws6PartyB")}</span>
               </div>
               <ArrowRight className="w-4 h-4 text-muted-foreground" />
               <div className="flex items-center gap-2 p-3 border border-primary rounded-xl text-primary">
                 <div className="w-4 h-4 bg-primary rounded" />
-                <span className="font-medium">Complete</span>
+                <span className="font-medium">{t("ws6Complete")}</span>
               </div>
             </div>
           </WorkflowStep>
@@ -211,37 +214,30 @@ export default function HowItWorksPage() {
 
       {/* Key Concepts */}
       <div className="space-y-4">
-        <h2 className="text-xl font-bold">Key Concepts</h2>
+        <h2 className="text-xl font-bold">{t("conceptsHeading")}</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="card-brutal p-5">
-            <h3 className="font-bold mb-2">Asynchronous Negotiation</h3>
+            <h3 className="font-bold mb-2">{t("conceptAsyncTitle")}</h3>
             <p className="text-sm text-muted-foreground">
-              Unlike traditional negotiation, parties don't need to be online
-              simultaneously. Each party works at their own pace, and the system
-              notifies them when action is needed.
+              {t("conceptAsyncDesc")}
             </p>
           </div>
           <div className="card-brutal p-5">
-            <h3 className="font-bold mb-2">Blind Submission</h3>
+            <h3 className="font-bold mb-2">{t("conceptBlindTitle")}</h3>
             <p className="text-sm text-muted-foreground">
-              Initial selections are hidden until both parties submit. This
-              prevents anchoring bias and encourages honest preference disclosure.
+              {t("conceptBlindDesc")}
             </p>
           </div>
           <div className="card-brutal p-5">
-            <h3 className="font-bold mb-2">Weighted Compromise</h3>
+            <h3 className="font-bold mb-2">{t("conceptWeightedTitle")}</h3>
             <p className="text-sm text-muted-foreground">
-              The algorithm considers not just what each party wants, but how much
-              they care (priority) and how flexible they are. This produces fairer
-              outcomes.
+              {t("conceptWeightedDesc")}
             </p>
           </div>
           <div className="card-brutal p-5">
-            <h3 className="font-bold mb-2">Jurisdiction-Aware</h3>
+            <h3 className="font-bold mb-2">{t("conceptJurisdictionTitle")}</h3>
             <p className="text-sm text-muted-foreground">
-              Options are filtered and flagged based on the selected governing law.
-              Some options may be unavailable or come with warnings in certain
-              jurisdictions.
+              {t("conceptJurisdictionDesc")}
             </p>
           </div>
         </div>

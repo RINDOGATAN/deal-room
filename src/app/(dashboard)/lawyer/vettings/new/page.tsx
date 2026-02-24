@@ -142,7 +142,7 @@ export default function NewVettingPage() {
     return (
       <div className="max-w-3xl mx-auto space-y-8">
         <h1 className="text-2xl font-bold">{t("vetNewTemplate")}</h1>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {[1, 2, 3, 4].map((i) => (
             <div key={i} className="card-brutal animate-pulse h-32"></div>
           ))}
@@ -241,7 +241,7 @@ export default function NewVettingPage() {
           <div className="w-8 h-8 bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold rounded-full">1</div>
           <Label className="text-sm font-medium text-muted-foreground uppercase tracking-wider">{tNew("contractType")}</Label>
         </div>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {templates?.map((template) => {
             const Icon = contractIcons[template.contractType] || FileText;
             const isSelected = selectedTemplateId === template.id;
@@ -360,7 +360,7 @@ export default function NewVettingPage() {
             <div className="w-8 h-8 bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold rounded-full">3</div>
             <Label className="text-sm font-medium text-muted-foreground uppercase tracking-wider">{tNew("contractLanguage")}</Label>
           </div>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {languageOptions.map((lang) => {
               const isSelected = selectedLanguage === lang.value;
               const isDisabled = availableLanguages.size > 0 && !availableLanguages.has(lang.value);

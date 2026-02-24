@@ -276,7 +276,7 @@ export default function ReviewPage() {
             <Scale className="w-5 h-5 text-muted-foreground" />
             <span className="font-semibold">{t("overallSatisfaction")}</span>
           </div>
-          <div className="grid grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <span className="text-sm text-muted-foreground">
@@ -302,7 +302,7 @@ export default function ReviewPage() {
       )}
 
       {/* Progress Summary */}
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div className="card-brutal text-center">
           <p className="text-3xl font-bold text-primary">{agreedCount}</p>
           <p className="text-sm text-muted-foreground">{tCommon("agreed")}</p>
@@ -514,7 +514,7 @@ export default function ReviewPage() {
                 )}
 
                 {/* Selections Comparison */}
-                <div className="grid grid-cols-3 gap-4 mb-4">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
                   <div className="p-4 bg-muted/30 border border-border">
                     <p className="text-xs text-muted-foreground uppercase tracking-wider mb-2">{t("yourSelection")}</p>
                     <p className="font-medium">{mySelection?.option.label || "—"}</p>
@@ -540,7 +540,7 @@ export default function ReviewPage() {
                     </div>
 
                     {/* Satisfaction for this clause */}
-                    <div className="grid grid-cols-2 gap-4 mb-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                       <div className="flex items-center gap-3">
                         <span className="text-xs text-muted-foreground">{t("yourSatisfaction")}</span>
                         <Progress

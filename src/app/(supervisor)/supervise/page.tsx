@@ -232,7 +232,7 @@ export default function SupervisorDashboard() {
                 {isExpanded && (
                   <div className="mt-6 pt-6 border-t border-border space-y-6">
                     {/* Progress Bars */}
-                    <div className="grid grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
                         <div className="flex items-center justify-between text-sm mb-2">
                           <span className="text-muted-foreground">Party A Progress</span>

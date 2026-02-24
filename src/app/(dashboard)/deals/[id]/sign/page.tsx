@@ -255,7 +255,7 @@ export default function SigningPage() {
           <FileText className="w-5 h-5 text-muted-foreground" />
           {t("contractSummary")}
         </h2>
-        <div className="grid grid-cols-2 gap-6 mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <div className="space-y-4">
             <div className="p-4 bg-muted/30 border border-border">
               <p className="text-xs text-muted-foreground uppercase tracking-wider mb-2">{t("partyA")}</p>
@@ -580,7 +580,7 @@ export default function SigningPage() {
             {t("signingStatus")}
           </h2>
 
-          <div className="grid grid-cols-2 gap-4 mb-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
             <div className="p-4 border border-border">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm text-muted-foreground">{t("partyASignature")}</span>

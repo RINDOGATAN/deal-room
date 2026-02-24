@@ -173,7 +173,7 @@ export default function DealDetailPage() {
 
       {/* Progress */}
       {progress && (
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div className="stat-card-neutral">
             <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-3">{t("yourSelections")}</p>
             <div className="flex items-baseline gap-2 mb-3">
@@ -202,7 +202,7 @@ export default function DealDetailPage() {
       )}
 
       {/* Parties */}
-      <div className="grid grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Initiator */}
         <div className="card-brutal">
           <div className="flex items-center gap-2 mb-4">
