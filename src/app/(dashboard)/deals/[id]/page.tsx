@@ -130,9 +130,9 @@ export default function DealDetailPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-start justify-between">
+      <div className="space-y-4">
         <div className="space-y-2">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 flex-wrap">
             <h1 className="text-2xl font-bold">{deal.name}</h1>
             <Badge className={statusColor}>
               <StatusIcon className="w-3 h-3 mr-1" />
@@ -156,7 +156,7 @@ export default function DealDetailPage() {
               className="btn-brutal flex items-center gap-2"
             >
               <Edit className="w-4 h-4" />
-              {isInitiator && initiator?.status === "PENDING" ? t("makeSelections") : t("continueNegotiation")}
+              <span className="hidden sm:inline">{isInitiator && initiator?.status === "PENDING" ? t("makeSelections") : t("continueNegotiation")}</span>
             </Link>
           )}
           {deal.status === "NEGOTIATING" && (
@@ -164,7 +164,7 @@ export default function DealDetailPage() {
               href={`/deals/${deal.id}/review`}
               className="btn-brutal-outline flex items-center gap-2"
             >
-              {t("reviewCompromises")}
+              <span className="hidden sm:inline">{t("reviewCompromises")}</span>
               <ArrowRight className="w-4 h-4" />
             </Link>
           )}
@@ -255,7 +255,13 @@ export default function DealDetailPage() {
                 </div>
               )}
               <Badge variant="outline" className="text-xs">
-                {respondent.status === "SUBMITTED" ? t("selectionsSubmitted") : respondent.userId ? t("acceptedPendingSelections") : t("invitationPending")}
+                {respondent.status === "SUBMITTED" ? (
+                  <><CheckCircle className="w-3 h-3 mr-1 inline" />{t("selectionsSubmitted")}</>
+                ) : respondent.userId ? (
+                  <><Clock className="w-3 h-3 mr-1 inline" /><span className="hidden sm:inline">{t("acceptedPendingSelections")}</span><span className="sm:hidden">{tCommon("pending")}</span></>
+                ) : (
+                  <><Mail className="w-3 h-3 mr-1 inline" /><span className="hidden sm:inline">{t("invitationPending")}</span><span className="sm:hidden">{tCommon("pending")}</span></>
+                )}
               </Badge>
             </div>
           ) : canInvite ? (

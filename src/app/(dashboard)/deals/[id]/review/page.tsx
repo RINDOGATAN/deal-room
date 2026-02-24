@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 import {
   ArrowLeft,
+  ArrowRight,
   Check,
   X,
   AlertCircle,
@@ -212,17 +213,17 @@ export default function ReviewPage() {
   return (
     <div className="max-w-5xl mx-auto space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="space-y-4">
         <div className="flex items-center gap-4">
           <button
             onClick={() => router.push(`/deals/${dealId}`)}
-            className="p-2 text-muted-foreground hover:text-foreground"
+            className="p-2 text-muted-foreground hover:text-foreground flex-shrink-0"
           >
             <ArrowLeft className="w-5 h-5" />
           </button>
-          <div>
+          <div className="min-w-0">
             <h1 className="text-xl font-bold">{t("reviewCompromises")}</h1>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm text-muted-foreground truncate">
               {deal.name} • {deal.contractTemplate.displayName}
               {deal.currentRound > 0 && ` • ${t("round", { number: deal.currentRound })}`}
             </p>
@@ -234,10 +235,10 @@ export default function ReviewPage() {
             <button
               onClick={() => regenerateCompromise.mutate({ dealRoomId: dealId })}
               disabled={regenerateCompromise.isPending}
-              className="flex items-center gap-2 px-4 py-2 border border-border hover:border-primary"
+              className="flex items-center gap-2 px-4 py-2 border border-border hover:border-primary rounded-full"
             >
               <RefreshCw className={`w-4 h-4 ${regenerateCompromise.isPending ? "animate-spin" : ""}`} />
-              {regenerateCompromise.isPending ? t("generating") : t("newRound")}
+              <span className="hidden sm:inline">{regenerateCompromise.isPending ? t("generating") : t("newRound")}</span>
             </button>
           )}
           {allAgreed && reviewStatus?.canProceedToSigning && (
@@ -246,7 +247,8 @@ export default function ReviewPage() {
               className="btn-brutal flex items-center gap-2"
             >
               <FileSignature className="w-4 h-4" />
-              {t("proceedToSigning")}
+              <span className="hidden sm:inline">{t("proceedToSigning")}</span>
+              <ArrowRight className="w-4 h-4 sm:hidden" />
             </button>
           )}
         </div>
@@ -484,14 +486,14 @@ export default function ReviewPage() {
                             "{cp.rationale}"
                           </p>
                         )}
-                        <div className="flex items-center gap-2 pt-2">
+                        <div className="flex items-center gap-2 pt-2 flex-wrap">
                           <button
                             onClick={() => respondToCounterProposal.mutate({
                               counterProposalId: cp.id,
                               accept: false,
                             })}
                             disabled={respondToCounterProposal.isPending}
-                            className="flex items-center gap-2 px-4 py-2 border border-yellow-500 text-yellow-600 hover:bg-yellow-500 hover:text-white transition-colors"
+                            className="flex items-center gap-2 px-3 py-2 border border-yellow-500 text-yellow-600 hover:bg-yellow-500 hover:text-white transition-colors rounded-full text-sm"
                           >
                             <ThumbsDown className="w-4 h-4" />
                             {t("reject")}
@@ -502,7 +504,7 @@ export default function ReviewPage() {
                               accept: true,
                             })}
                             disabled={respondToCounterProposal.isPending}
-                            className="btn-brutal flex items-center gap-2"
+                            className="btn-brutal flex items-center gap-2 text-sm"
                           >
                             <ThumbsUp className="w-4 h-4" />
                             {t("accept")}
@@ -567,7 +569,7 @@ export default function ReviewPage() {
 
                 {/* Accept/Reject Status & Buttons */}
                 {suggestion && item.status !== "AGREED" && (
-                  <div className="flex items-center justify-between pt-4 border-t border-border">
+                  <div className="pt-4 border-t border-border space-y-3">
                     <div className="flex items-center gap-4 text-sm">
                       <div className="flex items-center gap-2">
                         <span className="text-muted-foreground">{tCommon("you")}:</span>
@@ -584,7 +586,7 @@ export default function ReviewPage() {
                     </div>
 
                     {myAccepted === null && (
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2 flex-wrap">
                         <button
                           onClick={() => handleRejectWithCounter(
                             item.clauseId,
@@ -597,10 +599,10 @@ export default function ReviewPage() {
                             })),
                             suggestion.id
                           )}
-                          className="flex items-center gap-2 px-4 py-2 border border-muted-foreground text-muted-foreground hover:border-yellow-500 hover:text-yellow-600 transition-colors"
+                          className="flex items-center gap-2 px-3 py-2 border border-muted-foreground text-muted-foreground hover:border-yellow-500 hover:text-yellow-600 transition-colors rounded-full text-sm"
                         >
                           <MessageSquare className="w-4 h-4" />
-                          {t("counterPropose")}
+                          <span className="hidden sm:inline">{t("counterPropose")}</span>
                         </button>
                         <button
                           onClick={() => respondToSuggestion.mutate({
@@ -608,7 +610,7 @@ export default function ReviewPage() {
                             accept: false,
                           })}
                           disabled={respondToSuggestion.isPending}
-                          className="flex items-center gap-2 px-4 py-2 border border-yellow-500 text-yellow-600 hover:bg-yellow-500 hover:text-white transition-colors"
+                          className="flex items-center gap-2 px-3 py-2 border border-yellow-500 text-yellow-600 hover:bg-yellow-500 hover:text-white transition-colors rounded-full text-sm"
                         >
                           <ThumbsDown className="w-4 h-4" />
                           {t("reject")}
@@ -619,7 +621,7 @@ export default function ReviewPage() {
                             accept: true,
                           })}
                           disabled={respondToSuggestion.isPending}
-                          className="btn-brutal flex items-center gap-2"
+                          className="btn-brutal flex items-center gap-2 text-sm"
                         >
                           <ThumbsUp className="w-4 h-4" />
                           {t("accept")}
@@ -742,28 +744,30 @@ export default function ReviewPage() {
                       <> {t("requestedOn", { date: new Date(reviewStatus.myReview.requestedAt).toLocaleDateString() })}</>
                     )}
                   </p>
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-3 flex-wrap">
                     <a
                       href={`/api/deals/${dealId}/document/docx`}
                       className="btn-brutal-outline inline-flex items-center gap-2 text-sm"
                     >
                       <Download className="w-4 h-4" />
-                      {t("downloadDocx")}
+                      <span className="hidden sm:inline">{t("downloadDocx")}</span>
+                      <span className="sm:hidden">DOCX</span>
                     </a>
                     <a
                       href={`/api/deals/${dealId}/document`}
                       className="btn-brutal-outline inline-flex items-center gap-2 text-sm"
                     >
                       <Download className="w-4 h-4" />
-                      {t("downloadPdf")}
+                      <span className="hidden sm:inline">{t("downloadPdf")}</span>
+                      <span className="sm:hidden">PDF</span>
                     </a>
                     <button
                       onClick={() => cancelReview.mutate({ dealRoomId: dealId })}
                       disabled={cancelReview.isPending}
-                      className="flex items-center gap-2 px-4 py-2 text-sm border border-yellow-500 text-yellow-600 hover:bg-yellow-500 hover:text-white transition-colors"
+                      className="flex items-center gap-2 px-3 py-2 text-sm border border-yellow-500 text-yellow-600 hover:bg-yellow-500 hover:text-white transition-colors rounded-full"
                     >
                       <XCircle className="w-4 h-4" />
-                      {cancelReview.isPending ? t("cancelling") : t("cancelReview")}
+                      <span className="hidden sm:inline">{cancelReview.isPending ? t("cancelling") : t("cancelReview")}</span>
                     </button>
                   </div>
                 </div>
@@ -849,18 +853,19 @@ export default function ReviewPage() {
                 <Info className="w-4 h-4 flex-shrink-0" />
                 {t("signingDetailsHint")}
               </p>
-              <div className="flex items-center justify-center gap-3">
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
                 <button
                   onClick={() => router.push(`/deals/${dealId}/sign`)}
-                  className="btn-brutal flex items-center gap-2"
+                  className="btn-brutal flex items-center gap-2 w-full sm:w-auto justify-center"
                 >
                   <FileSignature className="w-4 h-4" />
-                  {t("proceedToSigning")}
+                  <span className="hidden sm:inline">{t("proceedToSigning")}</span>
+                  <ArrowRight className="w-4 h-4 sm:hidden" />
                 </button>
                 {!reviewStatus.myReview && !reviewStatus.suppressReviewForInitiator && (
                   <button
                     onClick={() => setShowAttorneyModal(true)}
-                    className="btn-brutal-outline flex items-center gap-2"
+                    className="btn-brutal-outline flex items-center gap-2 w-full sm:w-auto justify-center"
                   >
                     <Shield className="w-4 h-4" />
                     {t("requestAttorneyReview")}
@@ -868,7 +873,7 @@ export default function ReviewPage() {
                 )}
                 <a
                   href={`/api/deals/${dealId}/document/docx`}
-                  className="btn-brutal-outline flex items-center gap-2"
+                  className="btn-brutal-outline flex items-center gap-2 w-full sm:w-auto justify-center"
                 >
                   <Download className="w-4 h-4" />
                   {t("downloadDocx")}
@@ -889,18 +894,19 @@ export default function ReviewPage() {
                 <Info className="w-4 h-4 flex-shrink-0" />
                 {t("signingDetailsHint")}
               </p>
-              <div className="flex items-center justify-center gap-3">
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
                 <button
                   onClick={() => router.push(`/deals/${dealId}/sign`)}
-                  className="btn-brutal flex items-center gap-2"
+                  className="btn-brutal flex items-center gap-2 w-full sm:w-auto justify-center"
                 >
                   <FileSignature className="w-4 h-4" />
-                  {t("proceedToSigning")}
+                  <span className="hidden sm:inline">{t("proceedToSigning")}</span>
+                  <ArrowRight className="w-4 h-4 sm:hidden" />
                 </button>
                 {!reviewStatus?.suppressReviewForInitiator && (
                   <button
                     onClick={() => setShowAttorneyModal(true)}
-                    className="btn-brutal-outline flex items-center gap-2"
+                    className="btn-brutal-outline flex items-center gap-2 w-full sm:w-auto justify-center"
                   >
                     <Shield className="w-4 h-4" />
                     {t("requestAttorneyReview")}
