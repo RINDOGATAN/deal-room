@@ -40,6 +40,8 @@ The same email address can have access to multiple contexts simultaneously.
 - View all supervisors with status
 - Activate/deactivate supervisors
 - See deal assignment counts per supervisor
+- Manage bar admissions per supervisor (jurisdiction + bar number)
+- Bar admissions control which deals a supervisor can review (Stage A and B jurisdiction filtering)
 
 #### Deal Management (`/admin/deals`)
 - View all deals platform-wide
@@ -105,6 +107,8 @@ Supervisors only see deals explicitly assigned to them by a Platform Admin. They
 - Party selections and positions (both sides visible)
 - Compromise suggestions
 - Audit log of all activity
+- Stage A banner — "Party Counsel Review Requested/Approved" per party
+- Stage B banner — "Joint Closing Counsel Pending/Active" with attorney details
 
 ### Creating a Supervisor
 
@@ -124,7 +128,9 @@ Or via the Platform Admin portal at `/admin/supervisors`.
 
 Supervisors receive no notification for admin-initiated assignments — they simply see the deal when they next log in.
 
-However, when a **party requests attorney review** on an agreed deal, the assigned supervisor receives an email notification via Resend with a link to the `/supervise` portal.
+However, supervisors receive email notifications when:
+- A **party requests attorney review** (Stage A) — link to the `/supervise` portal
+- They are assigned as **joint closing counsel** (Stage B) — link to the `/supervise` portal
 
 ### Pre-Seeded Supervisor
 
@@ -136,7 +142,14 @@ The database seed (`prisma/seed.ts`) creates a default supervisory attorney:
 | Name | `Sergio Maldonado (#367079 State Bar of California)` |
 | Active | `true` |
 
-This is upserted on `email`, so re-running `npx prisma db seed` is safe.
+The seed also creates bar admissions for this supervisor:
+
+| Jurisdiction | Bar Number |
+|-------------|------------|
+| CALIFORNIA | `367079` |
+| SPAIN | `ICAM-12345` |
+
+This is upserted on `email` / `supervisorId_jurisdiction`, so re-running `npx prisma db seed` is safe.
 
 ---
 
@@ -218,8 +231,10 @@ model Supervisor {
   isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
 
-  twoFactorSecret SupervisorTwoFactor?
-  assignments     SupervisorAssignment[]
+  twoFactorSecret   SupervisorTwoFactor?
+  assignments       SupervisorAssignment[]
+  barAdmissions     SupervisorBarAdmission[]
+  jointCounselDeals DealRoom[]               @relation("JointCounsel")
 }
 
 model SupervisorTwoFactor {
@@ -230,6 +245,17 @@ model SupervisorTwoFactor {
   createdAt    DateTime @default(now())
 
   supervisor Supervisor @relation(...)
+}
+
+model SupervisorBarAdmission {
+  id             String       @id @default(cuid())
+  supervisorId   String
+  jurisdiction   GoverningLaw
+  barNumber      String
+
+  supervisor Supervisor @relation(...)
+
+  @@unique([supervisorId, jurisdiction])
 }
 
 model SupervisorAssignment {
@@ -255,9 +281,11 @@ model SupervisorAssignment {
 | Procedure | Description |
 |-----------|-------------|
 | `getDashboardStats` | Dashboard statistics |
-| `listSupervisors` | All supervisors with assignment counts |
+| `listSupervisors` | All supervisors with assignment counts and bar admissions |
 | `createSupervisor` | Create new supervisor account |
 | `toggleSupervisorActive` | Activate/deactivate supervisor |
+| `addBarAdmission` | Add jurisdiction + bar number to supervisor |
+| `removeBarAdmission` | Remove bar admission from supervisor |
 | `assignSupervisor` | Assign supervisor to deal |
 | `removeSupervisorAssignment` | Remove supervisor from deal |
 | `listAllDeals` | All deals with supervisor assignments |
@@ -278,8 +306,9 @@ model SupervisorAssignment {
 | Procedure | Description |
 |-----------|-------------|
 | `getAssignedDeals` | Deals assigned to this supervisor |
-| `getDealDetails` | Full deal view (if assigned) |
-| `getDashboardStats` | Stats for assigned deals |
+| `getDealDetails` | Full deal view (if assigned), includes joint counsel info |
+| `approveReview` | Approve attorney review for a party |
+| `getAuditLog` | Audit log for assigned deal |
 
 ### Supervisor 2FA Router (`supervisorTwoFactor`)
 
@@ -498,9 +527,85 @@ Both parties independently select their preferred option for each clause, along 
 
 Once both parties submit, the compromise engine generates suggestions using the weighted stake formula. Parties can accept, reject, or counter-propose each suggestion. Multiple rounds are supported.
 
-### Attorney Review (Optional)
+### Lawyer Involvement
 
-After all clauses are agreed, either party may request attorney review before signing. See [Signing & Execution Details](#signing--execution-details) for the full flow.
+Lawyers can participate at three distinct stages of a deal. Each stage is independent — parties may use any combination (all three, just one, or none).
+
+```
+           ┌──────────────────────────────────────────────────────────────────┐
+           │                        DEAL TIMELINE                            │
+           │                                                                  │
+  DRAFT ───┤  Stage 0         NEGOTIATING ──┤ Stage A       AGREED ──┤ Stage B │
+           │  Pre-Vetting                   │ Party Counsel          │ Joint   │
+           │  Lawyer invites                │ Each party hires       │ Closing │
+           │  client to deal                │ own attorney           │ Counsel │
+           └──────────────────────────────────────────────────────────────────┘
+```
+
+#### Stage 0 — Pre-Vetting (Before Negotiation)
+
+A lawyer with platform access can invite their client to a deal they have pre-configured. The lawyer guides the client through deal creation, sets recommended positions, and monitors the negotiation from the supervisor portal.
+
+| Aspect | Detail |
+|--------|--------|
+| **When** | Before deal creation |
+| **Who initiates** | The lawyer (via client invitation) |
+| **Attorney role** | Advisory — recommends positions during negotiation |
+| **Platform field** | `DealRoom.lawyerVettingId` |
+| **UI** | No additional UI for the client — the lawyer's presence is implicit |
+
+#### Stage A — Party Counsel (After Submission)
+
+After a party submits their selections, they can independently hire an attorney to review their position before compromise begins. Each party chooses their own attorney — the other party is unaware of this review.
+
+| Aspect | Detail |
+|--------|--------|
+| **When** | After party submits selections (`SUBMITTED`, `REVIEWING`, `ACCEPTED`) |
+| **Who initiates** | Each party independently |
+| **Attorney role** | Advisory review of that party's position only |
+| **Jurisdiction filter** | Only attorneys admitted in the deal's governing law appear |
+| **Platform field** | `DealRoomParty.attorneyReviewRequested`, `attorneySupervisorId`, `attorneyReviewApprovedAt` |
+| **UI** | `/deals/[id]/review` — attorney selection modal + status banners |
+
+#### Stage B — Joint Closing Counsel (After Agreement)
+
+Once all clauses are agreed, the **initiator** can request a joint closing attorney to help both parties finalize the deal. The other party must acknowledge or decline the request. A joint counsel request blocks signing until resolved.
+
+| Aspect | Detail |
+|--------|--------|
+| **When** | After all clauses agreed (`AGREED` status) |
+| **Who initiates** | Initiator only |
+| **Attorney role** | Helps both parties close; neutral position |
+| **Jurisdiction filter** | Admitted in deal's governing law; **excludes** any Stage A attorneys for either party |
+| **Acknowledgment** | Other party must acknowledge or decline before signing proceeds |
+| **Platform fields** | `DealRoom.jointCounselSupervisorId`, `jointCounselRequestedAt`, `jointCounselRequestedBy`, `jointCounselAcknowledgedAt`, `jointCounselDeclinedAt` |
+| **UI** | `/deals/[id]/review` — request/acknowledge/decline cards |
+
+#### Signing Gate
+
+Signing is blocked if:
+- Either party has a pending (unapproved) Stage A attorney review
+- A Stage B joint counsel request is pending (neither acknowledged nor declined)
+
+#### Lawyer Warning Modal
+
+For deals without a pre-vetting lawyer (Stage 0), a one-time modal is shown on the deal detail and negotiate pages. It warns the party about proceeding without legal counsel and summarizes the three stages of lawyer involvement. Dismissed via `DealRoomParty.lawyerWarningDismissedAt`.
+
+| Condition | Modal shown |
+|-----------|-------------|
+| Deal has `lawyerVettingId` | Never |
+| Party already dismissed | Never |
+| Deal in `DRAFT`, `AWAITING_RESPONSE`, or `NEGOTIATING` | Yes |
+| Deal in `AGREED`, `SIGNING`, `COMPLETED` | No |
+
+#### Adaptive Waiver Text (Stage B)
+
+When joint counsel is requested, each party sees a waiver tailored to whether they used Stage A:
+
+| Party's Stage A status | Waiver text |
+|------------------------|-------------|
+| Used Stage A (had separate counsel) | "I had separate counsel review my position and consent to joint closing counsel." |
+| Skipped Stage A | "I declined separate counsel and consent to joint closing counsel." |
 
 ---
 
@@ -724,18 +829,22 @@ Plain strings (without localization) are treated as English and continue to work
 
 ### Overview
 
-Once all clauses reach AGREED status, the deal transitions through an optional attorney review step and then into the signing flow at `/deals/[id]/sign`. Before signing, each party must confirm their **execution details** — the legal information that appears in the final contract document.
+Once all clauses reach AGREED status, the deal transitions through optional lawyer involvement stages and then into the signing flow at `/deals/[id]/sign`. Before signing, each party must confirm their **execution details** — the legal information that appears in the final contract document.
 
 ### Flow
 
 ```
-AGREED → (optional) Attorney Review → /deals/[id]/sign
-                                          │
-                                          ├─ 1. Confirm execution details (both parties)
-                                          ├─ 2. Initiate signing process
-                                          ├─ 3. Type-to-sign (both parties)
-                                          └─ 4. COMPLETED — PDF/DOCX generation
+AGREED → (optional) Stage A: Party Counsel
+       → (optional) Stage B: Joint Closing Counsel
+       → /deals/[id]/sign
+             │
+             ├─ 1. Confirm execution details (both parties)
+             ├─ 2. Initiate signing process
+             ├─ 3. Type-to-sign (both parties)
+             └─ 4. COMPLETED — PDF/DOCX generation
 ```
+
+> **Note:** Stage A (party counsel) can also be used earlier — from the moment a party submits selections, not just after agreement. See [Lawyer Involvement](#lawyer-involvement) for full details.
 
 ### Execution Details Fields
 
@@ -785,18 +894,29 @@ On the review page (`/deals/[id]/review`), when all clauses are agreed and the "
 
 This ensures parties are aware that the name/company provided during deal creation is not final.
 
-### Attorney Review Email Notification
+### Email Notifications
+
+#### Stage A — Attorney Review Request
 
 When a party requests attorney review via the review page:
 
-1. Party selects a supervisor from the available list
+1. Party selects a supervisor from the jurisdiction-filtered list
 2. A `SupervisorAssignment` is created and the request is logged in the audit trail
 3. An email is sent to the supervisor (fire-and-forget via Resend) with:
    - The deal name and requesting party's name
    - A link to the supervisor portal (`/supervise`)
 4. The supervisor logs in and reviews the contract terms
 
-The email follows the same dark-themed template as invitation emails.
+#### Stage B — Joint Counsel Request
+
+When the initiator requests joint closing counsel:
+
+1. Initiator selects a supervisor (jurisdiction-filtered, Stage A attorneys excluded)
+2. Two emails are sent (fire-and-forget via Resend):
+   - **To the supervisor:** assignment notification with deal name and a link to `/supervise`
+   - **To the other party:** notification that joint counsel has been requested, with a link to `/deals/[id]/review` to acknowledge or decline
+
+All emails follow the same dark-themed template as invitation emails.
 
 ### tRPC Procedures
 
@@ -807,10 +927,16 @@ The email follows the same dark-themed template as invitation emails.
 | `signing` | `initiate` | Create `SigningRequest`, transition to SIGNING |
 | `signing` | `getRequest` | Get signing request status and signatures |
 | `signing` | `recordSignature` | Record typed signature for current party |
-| `attorneyReview` | `listAvailableAttorneys` | List active supervisors (marks conflict-of-interest) |
+| `attorneyReview` | `listAvailableAttorneys` | List active supervisors (jurisdiction-filtered, marks conflict-of-interest) |
 | `attorneyReview` | `requestReview` | Assign supervisor + send email notification |
 | `attorneyReview` | `cancelReview` | Cancel pending (unapproved) review |
 | `attorneyReview` | `getReviewStatus` | Review status for both parties |
+| `jointCounsel` | `listAvailable` | Supervisors admitted in deal jurisdiction, excluding Stage A attorneys |
+| `jointCounsel` | `request` | Initiator requests joint closing counsel |
+| `jointCounsel` | `acknowledge` | Other party acknowledges joint counsel request |
+| `jointCounsel` | `decline` | Other party declines joint counsel request |
+| `jointCounsel` | `getStatus` | Joint counsel state + adaptive waiver text |
+| `deal` | `dismissLawyerWarning` | Dismiss the lawyer warning modal for a party |
 
 ---
 
