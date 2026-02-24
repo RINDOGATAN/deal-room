@@ -287,7 +287,8 @@
       "requestFailed": "Error al solicitar revisión: {error}",
       "attorneyReviewCancelled": "Revisión legal cancelada",
       "cancelFailed": "Error al cancelar revisión: {error}"
-    }
+    },
+    "barNumber": "Colegiado/a #{number}"
   },
   "signing": {
     "eSignature": "Firma Electrónica",
@@ -462,6 +463,50 @@
     "skillRequired": "Se requiere una suscripción activa para este tipo de contrato.",
     "visitBilling": "Visita la página de Facturación para suscribirte.",
     "download": "Descargar"
+  },
+  "lawyerWarning": {
+    "title": "Procediendo sin Abogado/a",
+    "description": "Este acuerdo se creó sin un abogado/a de revisión previa.",
+    "riskWarning": "Negociar sin asesoramiento legal puede exponerte a condiciones desfavorables. Aunque la plataforma te guía por las opciones y sus implicaciones, no sustituye el asesoramiento jurídico profesional.",
+    "lawyerStages": "Fases de Intervención Legal",
+    "stage0Title": "Revisión Previa",
+    "stage0Skipped": "No aplicable a este acuerdo",
+    "stageATitle": "Abogado/a de Parte",
+    "stageADescription": "Tras enviar tus selecciones, puedes solicitar que un abogado/a revise tu posición antes de que se cierre el acuerdo.",
+    "stageBTitle": "Abogado/a de Cierre Conjunto",
+    "stageBDescription": "Una vez acordadas todas las cláusulas, el iniciador puede solicitar un abogado/a compartido/a para ayudar a ambas partes a finalizar.",
+    "dismiss": "Entendido",
+    "dismissing": "Guardando..."
+  },
+  "jointCounsel": {
+    "title": "Abogado/a de Cierre Conjunto",
+    "requestJointCounsel": "Solicitar Abogado/a de Cierre Conjunto",
+    "selectCounsel": "Seleccionar Abogado/a de Cierre",
+    "selectCounselDescription": "Elige un abogado/a supervisor/a para ayudar a ambas partes a finalizar el acuerdo. Se excluyen los abogados/as que actuaron como abogado/a de parte.",
+    "noCounselAvailable": "No hay abogados/as elegibles disponibles para esta jurisdicción.",
+    "requesting": "Solicitando...",
+    "assignCounsel": "Solicitar Abogado/a",
+    "pendingAcknowledgment": "Pendiente de Confirmación",
+    "pendingAcknowledgmentDescription": "Esperando a que la otra parte confirme o rechace la solicitud de abogado/a de cierre conjunto.",
+    "acknowledgeRequest": "Confirmar",
+    "declineRequest": "Rechazar",
+    "acknowledging": "Confirmando...",
+    "declining": "Rechazando...",
+    "jointCounselActive": "Abogado/a de Cierre Activo/a",
+    "declinedByOtherParty": "La otra parte rechazó el abogado/a de cierre conjunto.",
+    "youDeclinedJointCounsel": "Has rechazado el abogado/a de cierre conjunto.",
+    "waiverTitle": "Renuncia",
+    "toastMessages": {
+      "requested": "Abogado/a de cierre solicitado/a",
+      "requestFailed": "Error al solicitar abogado/a de cierre: {error}",
+      "acknowledged": "Abogado/a de cierre confirmado/a",
+      "acknowledgeFailed": "Error al confirmar: {error}",
+      "declined": "Abogado/a de cierre rechazado/a",
+      "declineFailed": "Error al rechazar: {error}"
+    }
+  },
+  "attorneyReview": {
+    "barNumber": "Colegiado/a #{number}"
   },
   "marketplace": {
     "title": "Skills Marketplace",

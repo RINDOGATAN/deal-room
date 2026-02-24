@@ -22,6 +22,9 @@ export default function SupervisorsPage() {
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [newEmail, setNewEmail] = useState("");
   const [newName, setNewName] = useState("");
+  const [admissionForm, setAdmissionForm] = useState<{ supervisorId: string } | null>(null);
+  const [admissionJurisdiction, setAdmissionJurisdiction] = useState<string>("CALIFORNIA");
+  const [admissionBarNumber, setAdmissionBarNumber] = useState("");
 
   const utils = trpc.useUtils();
   const { data: supervisors, isLoading, error } = trpc.platformAdmin.listSupervisors.useQuery();
@@ -40,6 +43,26 @@ export default function SupervisorsPage() {
       utils.platformAdmin.listSupervisors.invalidate();
     },
   });
+
+  const addBarAdmission = trpc.platformAdmin.addBarAdmission.useMutation({
+    onSuccess: () => {
+      utils.platformAdmin.listSupervisors.invalidate();
+      setAdmissionForm(null);
+      setAdmissionBarNumber("");
+    },
+  });
+
+  const removeBarAdmission = trpc.platformAdmin.removeBarAdmission.useMutation({
+    onSuccess: () => {
+      utils.platformAdmin.listSupervisors.invalidate();
+    },
+  });
+
+  const jurisdictionLabels: Record<string, string> = {
+    CALIFORNIA: "California",
+    ENGLAND_WALES: "England & Wales",
+    SPAIN: "Spain",
+  };
 
   const filteredSupervisors = supervisors?.filter(
     (s) =>
@@ -178,9 +201,10 @@ export default function SupervisorsPage() {
         </div>
       ) : (
         <div className="border border-border">
-          <div className="grid grid-cols-5 gap-4 p-3 bg-muted/30 text-xs font-medium text-muted-foreground uppercase">
+          <div className="grid grid-cols-6 gap-4 p-3 bg-muted/30 text-xs font-medium text-muted-foreground uppercase">
             <div>Supervisor</div>
             <div>Status</div>
+            <div>Jurisdictions</div>
             <div>Assigned Deals</div>
             <div>Created</div>
             <div>Actions</div>
@@ -188,7 +212,7 @@ export default function SupervisorsPage() {
           {filteredSupervisors?.map((supervisor) => (
             <div
               key={supervisor.id}
-              className="grid grid-cols-5 gap-4 p-3 border-t border-border items-center text-sm"
+              className="grid grid-cols-6 gap-4 p-3 border-t border-border items-center text-sm"
             >
               <div>
                 <p className="font-medium">{supervisor.name || "No name"}</p>
@@ -200,6 +224,29 @@ export default function SupervisorsPage() {
                 ) : (
                   <Badge className="bg-muted text-muted-foreground">Inactive</Badge>
                 )}
+              </div>
+              <div className="flex flex-wrap gap-1 items-center">
+                {(supervisor as any).barAdmissions?.map((ba: any) => (
+                  <span
+                    key={ba.id}
+                    className="inline-flex items-center gap-1 text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full"
+                  >
+                    {jurisdictionLabels[ba.jurisdiction] || ba.jurisdiction}
+                    <button
+                      onClick={() => removeBarAdmission.mutate({ barAdmissionId: ba.id })}
+                      className="text-primary/50 hover:text-primary ml-0.5"
+                      disabled={removeBarAdmission.isPending}
+                    >
+                      <X className="w-3 h-3" />
+                    </button>
+                  </span>
+                ))}
+                <button
+                  onClick={() => setAdmissionForm({ supervisorId: supervisor.id })}
+                  className="text-xs text-muted-foreground hover:text-primary px-1"
+                >
+                  <Plus className="w-3 h-3" />
+                </button>
               </div>
               <div className="flex items-center gap-2">
                 <FileText className="w-4 h-4 text-muted-foreground" />
@@ -228,6 +275,64 @@ export default function SupervisorsPage() {
               </div>
             </div>
           ))}
+        </div>
+      )}
+
+      {/* Add Bar Admission Form */}
+      {admissionForm && (
+        <div className="card-brutal border-primary mt-4">
+          <h3 className="font-semibold mb-4">Add Bar Admission</h3>
+          <div className="grid grid-cols-3 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="jurisdiction">Jurisdiction</Label>
+              <select
+                id="jurisdiction"
+                value={admissionJurisdiction}
+                onChange={(e) => setAdmissionJurisdiction(e.target.value)}
+                className="input-brutal w-full"
+              >
+                <option value="CALIFORNIA">California, USA</option>
+                <option value="ENGLAND_WALES">England & Wales, UK</option>
+                <option value="SPAIN">Spain, EU</option>
+              </select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="barNumber">Bar Number</Label>
+              <Input
+                id="barNumber"
+                value={admissionBarNumber}
+                onChange={(e) => setAdmissionBarNumber(e.target.value)}
+                placeholder="e.g., 367079"
+                className="input-brutal"
+              />
+            </div>
+            <div className="flex items-end gap-2">
+              <button
+                onClick={() => {
+                  addBarAdmission.mutate({
+                    supervisorId: admissionForm.supervisorId,
+                    jurisdiction: admissionJurisdiction as any,
+                    barNumber: admissionBarNumber,
+                  });
+                }}
+                disabled={addBarAdmission.isPending || !admissionBarNumber}
+                className="btn-brutal text-sm disabled:opacity-50"
+              >
+                {addBarAdmission.isPending ? "Adding..." : "Add"}
+              </button>
+              <button
+                onClick={() => setAdmissionForm(null)}
+                className="px-3 py-2 text-sm text-muted-foreground hover:text-foreground"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+          {addBarAdmission.error && (
+            <div className="mt-3 p-3 bg-yellow-500/10 border border-yellow-500 text-yellow-600 text-sm">
+              {addBarAdmission.error.message}
+            </div>
+          )}
         </div>
       )}
     </div>

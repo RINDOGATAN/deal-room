@@ -92,6 +92,7 @@ export const platformAdminRouter = createTRPCRouter({
     return ctx.prisma.supervisor.findMany({
       orderBy: { createdAt: "desc" },
       include: {
+        barAdmissions: true,
         _count: {
           select: { assignments: true },
         },
@@ -139,6 +140,63 @@ export const platformAdminRouter = createTRPCRouter({
         where: { id: input.supervisorId },
         data: { isActive: input.isActive },
       });
+    }),
+
+  addBarAdmission: adminProcedure
+    .input(z.object({
+      supervisorId: z.string(),
+      jurisdiction: z.enum(["CALIFORNIA", "ENGLAND_WALES", "SPAIN"]),
+      barNumber: z.string().min(1, "Bar number is required"),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      await requireVerified2FA(ctx.adminSession.email, ctx.getCookie, ctx.prisma);
+
+      const existing = await ctx.prisma.supervisorBarAdmission.findUnique({
+        where: {
+          supervisorId_jurisdiction: {
+            supervisorId: input.supervisorId,
+            jurisdiction: input.jurisdiction,
+          },
+        },
+      });
+
+      if (existing) {
+        throw new TRPCError({
+          code: "CONFLICT",
+          message: "Supervisor already has a bar admission for this jurisdiction",
+        });
+      }
+
+      return ctx.prisma.supervisorBarAdmission.create({
+        data: {
+          supervisorId: input.supervisorId,
+          jurisdiction: input.jurisdiction,
+          barNumber: input.barNumber,
+        },
+      });
+    }),
+
+  removeBarAdmission: adminProcedure
+    .input(z.object({ barAdmissionId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      await requireVerified2FA(ctx.adminSession.email, ctx.getCookie, ctx.prisma);
+
+      const admission = await ctx.prisma.supervisorBarAdmission.findUnique({
+        where: { id: input.barAdmissionId },
+      });
+
+      if (!admission) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Bar admission not found",
+        });
+      }
+
+      await ctx.prisma.supervisorBarAdmission.delete({
+        where: { id: input.barAdmissionId },
+      });
+
+      return { success: true };
     }),
 
   // Deal management (all deals)

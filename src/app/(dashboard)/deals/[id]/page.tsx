@@ -25,6 +25,7 @@ import { Progress } from "@/components/ui/progress";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { LawyerWarningModal } from "@/components/LawyerWarningModal";
 import {
   Dialog,
   DialogContent,
@@ -126,6 +127,12 @@ export default function DealDetailPage() {
   const isInitiator = deal.currentUserRole === "INITIATOR";
   const canInvite = isInitiator && !respondent && deal.status === "DRAFT";
   const canNegotiate = deal.status === "DRAFT" || deal.status === "AWAITING_RESPONSE" || deal.status === "NEGOTIATING";
+
+  // Lawyer warning modal
+  const myParty = deal.parties.find((p) => p.id === deal.currentPartyId);
+  const showLawyerWarning = !deal.lawyerVettingId &&
+    !(myParty as any)?.lawyerWarningDismissedAt &&
+    ["DRAFT", "AWAITING_RESPONSE", "NEGOTIATING"].includes(deal.status);
 
   return (
     <div className="space-y-6">
@@ -416,6 +423,15 @@ export default function DealDetailPage() {
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Lawyer Warning Modal */}
+      {showLawyerWarning && (
+        <LawyerWarningModal
+          dealRoomId={deal.id}
+          open={showLawyerWarning}
+          onDismiss={() => refetch()}
+        />
+      )}
     </div>
   );
 }

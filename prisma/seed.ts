@@ -551,7 +551,7 @@ async function main() {
   console.log("  Created/updated Vetted Contracts feature package");
 
   // ── Seed pre-approved supervisory attorney ──
-  await prisma.supervisor.upsert({
+  const supervisor = await prisma.supervisor.upsert({
     where: { email: "smaldonado@privacycloud.com" },
     create: {
       email: "smaldonado@privacycloud.com",
@@ -564,6 +564,41 @@ async function main() {
     },
   });
   console.log("  Created/updated Supervisor: Sergio Maldonado");
+
+  // Seed bar admissions for the supervisor
+  await prisma.supervisorBarAdmission.upsert({
+    where: {
+      supervisorId_jurisdiction: {
+        supervisorId: supervisor.id,
+        jurisdiction: "CALIFORNIA",
+      },
+    },
+    create: {
+      supervisorId: supervisor.id,
+      jurisdiction: "CALIFORNIA",
+      barNumber: "367079",
+    },
+    update: {
+      barNumber: "367079",
+    },
+  });
+  await prisma.supervisorBarAdmission.upsert({
+    where: {
+      supervisorId_jurisdiction: {
+        supervisorId: supervisor.id,
+        jurisdiction: "SPAIN",
+      },
+    },
+    create: {
+      supervisorId: supervisor.id,
+      jurisdiction: "SPAIN",
+      barNumber: "ICAM-12345",
+    },
+    update: {
+      barNumber: "ICAM-12345",
+    },
+  });
+  console.log("  Created/updated bar admissions: CALIFORNIA (#367079), SPAIN (ICAM-12345)");
 
   console.log("\nSeed completed successfully!");
 }

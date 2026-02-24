@@ -648,4 +648,36 @@ export const dealRouter = createTRPCRouter({
 
       return { success: true, bothSubmitted };
     }),
+
+  // Dismiss the lawyer warning modal for this party
+  dismissLawyerWarning: protectedProcedure
+    .input(z.object({ dealRoomId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.session.user.id;
+
+      const party = await ctx.prisma.dealRoomParty.findFirst({
+        where: {
+          dealRoomId: input.dealRoomId,
+          userId,
+        },
+      });
+
+      if (!party) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "You are not a party to this deal",
+        });
+      }
+
+      if (party.lawyerWarningDismissedAt) {
+        return { success: true };
+      }
+
+      await ctx.prisma.dealRoomParty.update({
+        where: { id: party.id },
+        data: { lawyerWarningDismissedAt: new Date() },
+      });
+
+      return { success: true };
+    }),
 });
