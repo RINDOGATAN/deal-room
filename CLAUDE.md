@@ -38,6 +38,8 @@ docs/administration.md          # Full admin, skills, lifecycle & signing docs
 npx prisma db seed                                # Seed built-in skills only
 SKILLS_DIR=/path/to/legalskills npx prisma db seed  # Seed built-in + licensed
 npm run admin:create                              # Create platform admin
+npm run deal:simulate                             # Create demo deals (idempotent)
+npm run deal:simulate -- --clean                  # Recreate all demo deals from scratch
 ```
 
 ## Quick Reference
@@ -46,4 +48,10 @@ npm run admin:create                              # Create platform admin
 
 **Enums:** `GoverningLaw`: CALIFORNIA, ENGLAND_WALES, SPAIN
 
-**Fonts:** Inter (body), Jost (metrics via `.metric` classes), Dancing Script (signatures)
+**Fonts:** Inter (fallback), Jost (body/metrics via `--font-display`), Archivo Black (headings via `--font-heading`), Dancing Script (signatures)
+
+**Mobile:** All grids use `grid-cols-1` base with `sm:` or `md:` breakpoints. Buttons use icon-only on mobile where text overflows. Dashboard header uses `backdrop-blur-sm` for mobile GPU performance.
+
+**Parameters:** Skills define parameters in `parameters.json`. Two interpolation modes: `[bracket]` tokens in clause legal text, `{curly}` variables in boilerplate. Token names are localized (e.g. `amount` → `importe` in Spanish). Values stored on `DealRoom.parameters` JSON field.
+
+**Simulate:** `npm run deal:simulate` runs full lifecycle for all contract types (DPA, NDA, MSA, SAAS, SEED_INVESTMENT) with 14 validation checks per deal including unresolved placeholder detection.
