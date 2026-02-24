@@ -62,7 +62,7 @@ export default function ReviewPage() {
 
   // Attorney review queries
   const { data: reviewStatus, refetch: refetchReviewStatus } = trpc.attorneyReview.getReviewStatus.useQuery({ dealRoomId: dealId });
-  const { data: availableAttorneys } = trpc.attorneyReview.listAvailableAttorneys.useQuery(
+  const { data: availableAttorneys, isLoading: attorneysLoading, error: attorneysError } = trpc.attorneyReview.listAvailableAttorneys.useQuery(
     { dealRoomId: dealId },
     { enabled: showAttorneyModal }
   );
@@ -654,6 +654,17 @@ export default function ReviewPage() {
               {t("chooseAttorneyDescription")}
             </p>
             <div className="space-y-2 mb-6 max-h-64 overflow-y-auto">
+              {attorneysLoading && (
+                <div className="flex items-center justify-center py-6">
+                  <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" />
+                </div>
+              )}
+              {attorneysError && (
+                <div className="flex items-center gap-2 text-sm text-destructive py-4 px-2">
+                  <AlertCircle className="w-4 h-4 flex-shrink-0" />
+                  <span>{attorneysError.message}</span>
+                </div>
+              )}
               {availableAttorneys?.map((attorney) => (
                 <button
                   key={attorney.id}
@@ -678,7 +689,7 @@ export default function ReviewPage() {
                   <p className="text-sm text-muted-foreground">{attorney.email}</p>
                 </button>
               ))}
-              {availableAttorneys?.length === 0 && (
+              {!attorneysLoading && !attorneysError && availableAttorneys?.length === 0 && (
                 <p className="text-sm text-muted-foreground text-center py-4">
                   {t("noAttorneysAvailable")}
                 </p>

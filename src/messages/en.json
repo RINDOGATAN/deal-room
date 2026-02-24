@@ -314,7 +314,7 @@
     "readyForSignaturesDescription": "All terms have been agreed upon. Start the signing process and both parties can sign by typing their full legal name.",
     "startSigningProcess": "Start Signing Process",
     "starting": "Starting...",
-    "canSignImmediately": "You'll be able to sign immediately after starting the process",
+    "canSignImmediately": "Please confirm your execution details above before starting",
     "failedToLoad": "Failed to load deal",
     "attorneyReviewInProgress": "Attorney Review In Progress",
     "signingAfterReview": "Signing will be available once all attorney reviews are complete.",
@@ -328,7 +328,8 @@
     },
     "signingDetails": {
       "title": "Execution Details",
-      "description": "Provide your company and signatory details for the contract. Each party fills in their own information.",
+      "description": "These fields are not subject to negotiation but are essential for the contract to be legally valid. Please provide the accurate legal name, registered address, and signatory details for your side.",
+      "importantNote": "Complete this section before signing. The information you provide here will appear in the final contract document.",
       "yourDetails": "Your Details",
       "otherPartyDetails": "Other Party",
       "confirmed": "Confirmed",
