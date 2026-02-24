@@ -19,6 +19,9 @@ import {
   List,
   ChevronsRight,
   Scale,
+  Loader2,
+  UserPlus,
+  CheckCircle,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
@@ -186,6 +189,15 @@ export default function NegotiatePage() {
   const isComplete = selections.size === clauses.length;
   const governingLaw = deal.governingLaw as GoverningLaw;
   const contractLang = (deal as { contractLanguage?: string }).contractLanguage || "en";
+
+  // Detect already-submitted state
+  const currentParty = deal.parties.find((p) => p.id === deal.currentPartyId);
+  const isAlreadySubmitted = currentParty?.status === "SUBMITTED" || currentParty?.status === "REVIEWING" || currentParty?.status === "ACCEPTED";
+  const isInitiator = deal.currentUserRole === "INITIATOR";
+  const respondentParty = deal.parties.find((p) => p.role === "RESPONDENT");
+  const hasRespondent = !!respondentParty?.userId;
+  const respondentSubmitted = respondentParty?.status === "SUBMITTED" || respondentParty?.status === "REVIEWING" || respondentParty?.status === "ACCEPTED";
+  const bothSubmitted = isAlreadySubmitted && respondentSubmitted;
 
   // Lawyer recommendation lookup: clauseTemplateId -> recommended optionId + note
   const recommendationMap = new Map<string, { clauseOptionId: string; note: string | null }>();
@@ -392,6 +404,26 @@ export default function NegotiatePage() {
               {saveSelections.isPending ? t("saving") : t("skipToSubmit")}
               <ChevronsRight className="w-4 h-4" />
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* Already submitted banner */}
+      {isAlreadySubmitted && currentClauseIndex === clauses.length - 1 && (
+        <div className="card-brutal mb-6 border-primary bg-primary/5">
+          <div className="flex items-start gap-4">
+            <CheckCircle className="w-6 h-6 text-primary flex-shrink-0 mt-0.5" />
+            <div>
+              <p className="font-semibold">{t("alreadySubmitted")}</p>
+              <p className="text-sm text-muted-foreground mt-1">
+                {bothSubmitted
+                  ? t("alreadySubmittedBothDone")
+                  : isInitiator && !hasRespondent
+                  ? t("alreadySubmittedInvite")
+                  : t("alreadySubmittedWaiting")
+                }
+              </p>
+            </div>
           </div>
         </div>
       )}
@@ -786,14 +818,54 @@ export default function NegotiatePage() {
             </button>
 
             <div className="flex items-center gap-3">
-              {currentClauseIndex === clauses.length - 1 ? (
+              {currentClauseIndex === clauses.length - 1 && isAlreadySubmitted ? (
+                /* Already submitted — show contextual next step */
+                bothSubmitted ? (
+                  <button
+                    onClick={() => router.push(`/deals/${dealId}/review`)}
+                    className="btn-brutal flex items-center gap-2"
+                  >
+                    {t("reviewCompromises")}
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
+                ) : isInitiator && !hasRespondent ? (
+                  <button
+                    onClick={() => router.push(`/deals/${dealId}`)}
+                    className="btn-brutal flex items-center gap-2"
+                  >
+                    <UserPlus className="w-4 h-4" />
+                    {t("inviteCounterparty")}
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => router.push(`/deals/${dealId}`)}
+                    className="btn-brutal flex items-center gap-2"
+                  >
+                    {t("goToDeal")}
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
+                )
+              ) : currentClauseIndex === clauses.length - 1 ? (
                 <button
                   onClick={handleSubmit}
                   disabled={!isComplete || submitSelections.isPending}
-                  className="btn-brutal flex items-center gap-2 disabled:opacity-50"
+                  className={`flex items-center gap-2 disabled:opacity-50 font-semibold px-6 py-3 rounded-full transition-all duration-200 ${
+                    submitSelections.isPending
+                      ? "bg-primary-foreground text-primary border-2 border-primary cursor-wait"
+                      : "btn-brutal"
+                  }`}
                 >
-                  {submitSelections.isPending ? t("submitting") : t("submitAllSelections")}
-                  <Check className="w-4 h-4" />
+                  {submitSelections.isPending ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      {t("submitting")}
+                    </>
+                  ) : (
+                    <>
+                      {t("submitAllSelections")}
+                      <Check className="w-4 h-4" />
+                    </>
+                  )}
                 </button>
               ) : (
                 <button
