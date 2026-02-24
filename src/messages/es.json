@@ -314,7 +314,7 @@
     "readyForSignaturesDescription": "Todos los términos han sido acordados. Inicia el proceso de firma y ambas partes podrán firmar escribiendo su nombre legal completo.",
     "startSigningProcess": "Iniciar Proceso de Firma",
     "starting": "Iniciando...",
-    "canSignImmediately": "Podrás firmar inmediatamente después de iniciar el proceso",
+    "canSignImmediately": "Confirma tus datos de ejecución arriba antes de comenzar",
     "failedToLoad": "Error al cargar el acuerdo",
     "attorneyReviewInProgress": "Revisión del Abogado/a en Curso",
     "signingAfterReview": "La firma estará disponible cuando se completen todas las revisiones legales.",
@@ -328,7 +328,8 @@
     },
     "signingDetails": {
       "title": "Datos de Ejecución",
-      "description": "Introduce los datos de tu empresa y del firmante para el contrato. Cada parte rellena su propia información.",
+      "description": "Estos datos no son objeto de negociación, pero son imprescindibles para que el contrato tenga validez legal. Introduce la denominación social, el domicilio registrado y los datos del firmante de tu parte.",
+      "importantNote": "Completa esta sección antes de firmar. La información que facilites aquí aparecerá en el documento final del contrato.",
       "yourDetails": "Tus Datos",
       "otherPartyDetails": "Otra Parte",
       "confirmed": "Confirmado",

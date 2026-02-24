@@ -1,7 +1,7 @@
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 import {
@@ -10,7 +10,6 @@ import {
   AlertCircle,
   Check,
   Download,
-  ExternalLink,
   Clock,
   Loader2,
   FileText,
@@ -18,6 +17,9 @@ import {
   User,
   PenTool,
   Shield,
+  MapPin,
+  Hash,
+  Briefcase,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -33,9 +35,50 @@ export default function SigningPage() {
   const [typedSignature, setTypedSignature] = useState("");
   const [confirmChecked, setConfirmChecked] = useState(false);
 
+  // Execution details form state
+  const [detailsForm, setDetailsForm] = useState({
+    legalName: "",
+    address: "",
+    taxId: "",
+    signatoryName: "",
+    signatoryTitle: "",
+  });
+
   const { data: deal, isLoading: dealLoading } = trpc.deal.getById.useQuery({ id: dealId });
   const { data: signingRequest, isLoading: signingLoading, refetch } = trpc.signing.getRequest.useQuery({ dealRoomId: dealId });
   const { data: reviewStatus } = trpc.attorneyReview.getReviewStatus.useQuery({ dealRoomId: dealId });
+  const { data: signingDetails, isLoading: detailsLoading, refetch: refetchDetails } = trpc.signing.getSigningDetails.useQuery({ dealRoomId: dealId });
+
+  // Pre-fill form from saved details or party info
+  useEffect(() => {
+    if (!signingDetails) return;
+    const saved = signingDetails.own.signingDetails;
+    if (saved) {
+      setDetailsForm({
+        legalName: saved.legalName,
+        address: saved.address,
+        taxId: saved.taxId || "",
+        signatoryName: saved.signatoryName,
+        signatoryTitle: saved.signatoryTitle,
+      });
+    } else {
+      setDetailsForm((prev) => ({
+        ...prev,
+        legalName: prev.legalName || signingDetails.own.company || "",
+        signatoryName: prev.signatoryName || signingDetails.own.name || "",
+      }));
+    }
+  }, [signingDetails]);
+
+  const submitDetails = trpc.signing.submitSigningDetails.useMutation({
+    onSuccess: () => {
+      toast.success(t("signingDetails.saved"));
+      refetchDetails();
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
 
   const initiateSigning = trpc.signing.initiate.useMutation({
     onSuccess: () => {
@@ -59,7 +102,7 @@ export default function SigningPage() {
     },
   });
 
-  const isLoading = dealLoading || signingLoading;
+  const isLoading = dealLoading || signingLoading || detailsLoading;
 
   if (isLoading) {
     return (
@@ -155,6 +198,37 @@ export default function SigningPage() {
     );
   }
 
+  // Execution details state
+  const ownDetailsConfirmed = !!signingDetails?.own.signingDetails;
+  const otherDetailsConfirmed = !!signingDetails?.other?.signingDetails;
+  const otherDetails = signingDetails?.other?.signingDetails;
+
+  // Determine if current party has already signed (frozen details)
+  const currentPartySigned = signingRequest
+    ? deal.currentUserRole === "INITIATOR"
+      ? !!signingRequest.initiatorSignedAt
+      : !!signingRequest.respondentSignedAt
+    : false;
+
+  const detailsFormValid =
+    detailsForm.legalName.trim() &&
+    detailsForm.address.trim() &&
+    detailsForm.signatoryName.trim() &&
+    detailsForm.signatoryTitle.trim();
+
+  function handleSaveDetails() {
+    submitDetails.mutate({
+      dealRoomId: dealId,
+      details: {
+        legalName: detailsForm.legalName.trim(),
+        address: detailsForm.address.trim(),
+        taxId: detailsForm.taxId.trim() || undefined,
+        signatoryName: detailsForm.signatoryName.trim(),
+        signatoryTitle: detailsForm.signatoryTitle.trim(),
+      },
+    });
+  }
+
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       {/* Header */}
@@ -221,7 +295,6 @@ export default function SigningPage() {
           <p className="text-sm text-muted-foreground mb-3">{t("agreedTerms", { count: deal.clauses.length })}</p>
           <div className="space-y-2 max-h-48 overflow-y-auto">
             {deal.clauses.map((clause) => {
-              // Find the agreed option from selections or compromise
               const selection = clause.selections[0];
               return (
                 <div key={clause.id} className="flex items-center justify-between py-2 border-b border-border last:border-0">
@@ -235,6 +308,266 @@ export default function SigningPage() {
                 </div>
               );
             })}
+          </div>
+        </div>
+      </div>
+
+      {/* Execution Details Alert */}
+      {!ownDetailsConfirmed && (
+        <div className="card-brutal border-warning/50 bg-warning/10">
+          <div className="flex items-start gap-3">
+            <AlertCircle className="w-5 h-5 text-warning mt-0.5 flex-shrink-0" />
+            <div>
+              <p className="font-semibold text-warning">{t("signingDetails.importantNote")}</p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Execution Details */}
+      <div className="card-brutal">
+        <h2 className="font-semibold mb-4 flex items-center gap-2">
+          <Building className="w-5 h-5 text-muted-foreground" />
+          {t("signingDetails.title")}
+        </h2>
+        <p className="text-sm text-muted-foreground mb-6">
+          {t("signingDetails.description")}
+        </p>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Own Details */}
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+                {t("signingDetails.yourDetails")}
+              </h3>
+              {ownDetailsConfirmed && (
+                <Badge className="bg-primary/20 text-primary">
+                  <Check className="w-3 h-3 mr-1" />
+                  {t("signingDetails.confirmed")}
+                </Badge>
+              )}
+            </div>
+
+            {ownDetailsConfirmed && !currentPartySigned ? (
+              // Show confirmed details with edit option
+              <div className="space-y-3 p-4 bg-primary/5 border border-primary/20 rounded-xl">
+                <div className="flex items-start gap-2">
+                  <Building className="w-4 h-4 text-muted-foreground mt-0.5" />
+                  <div>
+                    <p className="text-sm font-medium">{signingDetails!.own.signingDetails!.legalName}</p>
+                    <p className="text-xs text-muted-foreground">{t("signingDetails.legalName")}</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-2">
+                  <MapPin className="w-4 h-4 text-muted-foreground mt-0.5" />
+                  <div>
+                    <p className="text-sm">{signingDetails!.own.signingDetails!.address}</p>
+                    <p className="text-xs text-muted-foreground">{t("signingDetails.address")}</p>
+                  </div>
+                </div>
+                {signingDetails!.own.signingDetails!.taxId && (
+                  <div className="flex items-start gap-2">
+                    <Hash className="w-4 h-4 text-muted-foreground mt-0.5" />
+                    <div>
+                      <p className="text-sm">{signingDetails!.own.signingDetails!.taxId}</p>
+                      <p className="text-xs text-muted-foreground">{t("signingDetails.taxId")}</p>
+                    </div>
+                  </div>
+                )}
+                <div className="flex items-start gap-2">
+                  <User className="w-4 h-4 text-muted-foreground mt-0.5" />
+                  <div>
+                    <p className="text-sm">{signingDetails!.own.signingDetails!.signatoryName}</p>
+                    <p className="text-xs text-muted-foreground">{t("signingDetails.signatoryName")}</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-2">
+                  <Briefcase className="w-4 h-4 text-muted-foreground mt-0.5" />
+                  <div>
+                    <p className="text-sm">{signingDetails!.own.signingDetails!.signatoryTitle}</p>
+                    <p className="text-xs text-muted-foreground">{t("signingDetails.signatoryTitle")}</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => {
+                    const saved = signingDetails!.own.signingDetails!;
+                    setDetailsForm({
+                      legalName: saved.legalName,
+                      address: saved.address,
+                      taxId: saved.taxId || "",
+                      signatoryName: saved.signatoryName,
+                      signatoryTitle: saved.signatoryTitle,
+                    });
+                    // Clear saved to show form again
+                    submitDetails.reset();
+                    refetchDetails();
+                  }}
+                  className="text-xs text-primary hover:underline mt-2"
+                >
+                  {t("signingDetails.edit")}
+                </button>
+              </div>
+            ) : currentPartySigned ? (
+              // Frozen after signing
+              <div className="space-y-3 p-4 bg-muted/30 border border-border rounded-xl opacity-75">
+                <div className="flex items-start gap-2">
+                  <Building className="w-4 h-4 text-muted-foreground mt-0.5" />
+                  <p className="text-sm">{signingDetails?.own.signingDetails?.legalName}</p>
+                </div>
+                <div className="flex items-start gap-2">
+                  <MapPin className="w-4 h-4 text-muted-foreground mt-0.5" />
+                  <p className="text-sm">{signingDetails?.own.signingDetails?.address}</p>
+                </div>
+                <div className="flex items-start gap-2">
+                  <User className="w-4 h-4 text-muted-foreground mt-0.5" />
+                  <p className="text-sm">{signingDetails?.own.signingDetails?.signatoryName}</p>
+                </div>
+                <div className="flex items-start gap-2">
+                  <Briefcase className="w-4 h-4 text-muted-foreground mt-0.5" />
+                  <p className="text-sm">{signingDetails?.own.signingDetails?.signatoryTitle}</p>
+                </div>
+                <p className="text-xs text-muted-foreground italic">{t("signingDetails.frozenAfterSigning")}</p>
+              </div>
+            ) : (
+              // Editable form
+              <div className="space-y-3">
+                <div>
+                  <label className="block text-sm font-medium mb-1">{t("signingDetails.legalName")}</label>
+                  <Input
+                    value={detailsForm.legalName}
+                    onChange={(e) => setDetailsForm((f) => ({ ...f, legalName: e.target.value }))}
+                    placeholder={t("signingDetails.legalNamePlaceholder")}
+                    className="input-brutal"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">{t("signingDetails.address")}</label>
+                  <Input
+                    value={detailsForm.address}
+                    onChange={(e) => setDetailsForm((f) => ({ ...f, address: e.target.value }))}
+                    placeholder={t("signingDetails.addressPlaceholder")}
+                    className="input-brutal"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">
+                    {t("signingDetails.taxId")}
+                    <span className="text-muted-foreground font-normal ml-1">({tCommon("optional")})</span>
+                  </label>
+                  <Input
+                    value={detailsForm.taxId}
+                    onChange={(e) => setDetailsForm((f) => ({ ...f, taxId: e.target.value }))}
+                    placeholder={t("signingDetails.taxIdPlaceholder")}
+                    className="input-brutal"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">{t("signingDetails.signatoryName")}</label>
+                  <Input
+                    value={detailsForm.signatoryName}
+                    onChange={(e) => setDetailsForm((f) => ({ ...f, signatoryName: e.target.value }))}
+                    placeholder={t("signingDetails.signatoryNamePlaceholder")}
+                    className="input-brutal"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">{t("signingDetails.signatoryTitle")}</label>
+                  <Input
+                    value={detailsForm.signatoryTitle}
+                    onChange={(e) => setDetailsForm((f) => ({ ...f, signatoryTitle: e.target.value }))}
+                    placeholder={t("signingDetails.signatoryTitlePlaceholder")}
+                    className="input-brutal"
+                  />
+                </div>
+                <button
+                  onClick={handleSaveDetails}
+                  disabled={!detailsFormValid || submitDetails.isPending}
+                  className="w-full btn-brutal flex items-center justify-center gap-2 disabled:opacity-50"
+                >
+                  {submitDetails.isPending ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      {t("signingDetails.saving")}
+                    </>
+                  ) : (
+                    <>
+                      <Check className="w-4 h-4" />
+                      {t("signingDetails.confirmDetails")}
+                    </>
+                  )}
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* Other Party Details */}
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+                {t("signingDetails.otherPartyDetails")}
+              </h3>
+              {otherDetailsConfirmed ? (
+                <Badge className="bg-primary/20 text-primary">
+                  <Check className="w-3 h-3 mr-1" />
+                  {t("signingDetails.confirmed")}
+                </Badge>
+              ) : (
+                <Badge variant="outline">
+                  <Clock className="w-3 h-3 mr-1" />
+                  {tCommon("pending")}
+                </Badge>
+              )}
+            </div>
+
+            {otherDetailsConfirmed && otherDetails ? (
+              <div className="space-y-3 p-4 bg-muted/30 border border-border rounded-xl">
+                <div className="flex items-start gap-2">
+                  <Building className="w-4 h-4 text-muted-foreground mt-0.5" />
+                  <div>
+                    <p className="text-sm font-medium">{otherDetails.legalName}</p>
+                    <p className="text-xs text-muted-foreground">{t("signingDetails.legalName")}</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-2">
+                  <MapPin className="w-4 h-4 text-muted-foreground mt-0.5" />
+                  <div>
+                    <p className="text-sm">{otherDetails.address}</p>
+                    <p className="text-xs text-muted-foreground">{t("signingDetails.address")}</p>
+                  </div>
+                </div>
+                {otherDetails.taxId && (
+                  <div className="flex items-start gap-2">
+                    <Hash className="w-4 h-4 text-muted-foreground mt-0.5" />
+                    <div>
+                      <p className="text-sm">{otherDetails.taxId}</p>
+                      <p className="text-xs text-muted-foreground">{t("signingDetails.taxId")}</p>
+                    </div>
+                  </div>
+                )}
+                <div className="flex items-start gap-2">
+                  <User className="w-4 h-4 text-muted-foreground mt-0.5" />
+                  <div>
+                    <p className="text-sm">{otherDetails.signatoryName}</p>
+                    <p className="text-xs text-muted-foreground">{t("signingDetails.signatoryName")}</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-2">
+                  <Briefcase className="w-4 h-4 text-muted-foreground mt-0.5" />
+                  <div>
+                    <p className="text-sm">{otherDetails.signatoryTitle}</p>
+                    <p className="text-xs text-muted-foreground">{t("signingDetails.signatoryTitle")}</p>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="p-6 border border-dashed border-border rounded-xl text-center">
+                <Clock className="w-8 h-8 text-muted-foreground mx-auto mb-3" />
+                <p className="text-sm text-muted-foreground">
+                  {t("signingDetails.waitingForOtherParty")}
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -377,6 +710,18 @@ export default function SigningPage() {
                   );
                 }
 
+                // Gate: require execution details before signing
+                if (!ownDetailsConfirmed) {
+                  return (
+                    <div className="py-6 border-t border-border text-center">
+                      <AlertCircle className="w-8 h-8 text-warning mx-auto mb-3" />
+                      <p className="text-sm text-muted-foreground">
+                        {t("signingDetails.requiredBeforeSigning")}
+                      </p>
+                    </div>
+                  );
+                }
+
                 return (
                   <div className="py-6 border-t border-border">
                     <div className="max-w-md mx-auto">
@@ -471,7 +816,7 @@ export default function SigningPage() {
                         className="btn-brutal-outline inline-flex items-center gap-2"
                       >
                         <Download className="w-4 h-4" />
-                        Download Contract PDF
+                        {t("downloadContractPdf")}
                       </a>
                     </div>
                   </div>

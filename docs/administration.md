@@ -403,18 +403,129 @@ npm run admin:create -- --email=your@email.com
 
 ---
 
+## Deal Lifecycle
+
+A deal moves through six statuses from creation to completion:
+
+```
+DRAFT → SUBMITTED → AWAITING_RESPONSE → NEGOTIATING → AGREED → SIGNING → COMPLETED
+```
+
+### Deal Creation (`/deals/new`)
+
+The initiating party walks through up to five steps:
+
+| Step | Field | Notes |
+|------|-------|-------|
+| 1 | **Contract type** | Skill selection, filtered by locale; premium skills gated by entitlement |
+| 2 | **Governing law** | California, England & Wales, or Spain; locked after creation |
+| 3 | **Contract language** | `en` or `es`; constrained by jurisdiction + skill support |
+| 4 | **Deal details** | Deal name (required), company (optional) |
+| 5 | **Deal parameters** | Only shown for skills that ship a `parameters.json` |
+
+After creation the deal enters DRAFT and the initiator lands on `/deals/[id]/negotiate`.
+
+### Deal Parameters
+
+Some contracts require deal-specific values that are **not negotiable** — monetary amounts, dates, geographic scope, etc. These are defined per-skill in `parameters.json` and filled in by the initiator at deal creation (Step 5).
+
+#### Parameter Types
+
+| Type | Input | Example |
+|------|-------|---------|
+| `text` | Free text | Geographic area, project description |
+| `currency` | Number with jurisdiction-aware symbol ($, £, €) | Investment amount, base fee |
+| `number` | Numeric | Number of months, headcount |
+| `percentage` | Number with % suffix | Discount rate, equity percentage |
+| `date` | Date picker | Start date, maturity date |
+| `choice` | Pill selector from predefined options | Arbitration institution |
+
+#### `parameters.json` Format
+
+```json
+{
+  "version": "1.0",
+  "parameters": [
+    {
+      "id": "investment-amount",
+      "token": "amount",
+      "scope": "investment-amount-clause",
+      "type": "currency",
+      "required": true,
+      "label": { "en": "Investment Amount", "es": "Importe de la Inversión" },
+      "hint": { "en": "Total investment in this round", "es": "Inversión total en esta ronda" },
+      "placeholder": { "en": "e.g., 500000", "es": "ej., 500000" },
+      "boilerplateVariable": "investmentAmount"
+    }
+  ]
+}
+```
+
+- **`token`** — matches `[bracket]` placeholders in clause `legalText`
+- **`scope`** — clauseId the parameter applies to, or `"*"` for skill-wide
+- **`boilerplateVariable`** — also injects the value into `{curly}` boilerplate placeholders
+
+#### Token Interpolation
+
+At render time (negotiate UI, PDF, DOCX), `[bracket]` tokens in clause legal text are replaced with user-supplied values. Tokens are automatically translated for non-English contracts (e.g., `[amount]` → `[importe]` in Spanish).
+
+#### Skills with Parameters
+
+| Skill | Parameters |
+|-------|-----------|
+| Seed Investment | 14 |
+| Term Sheet | 15 |
+| Employment Agreement | 12 |
+| Shareholders Agreement | 12 |
+| Consulting Agreement | 10 |
+| IP Assignment | 6 |
+| Convertible Note | 3 |
+| MSA | 1 |
+
+Skills without `parameters.json` (NDA, DPA, SaaS, Founders, etc.) skip Step 5 entirely.
+
+#### tRPC Procedure
+
+| Router | Procedure | Description |
+|--------|-----------|-------------|
+| `deal` | `getParameterSchema` | Returns `ParameterSchema` for a contract type |
+
+### Negotiation
+
+Both parties independently select their preferred option for each clause, along with a priority (1–5) and flexibility (1–5) rating. Selections are **blind** — neither party sees the other's choices until both have submitted.
+
+### Compromise
+
+Once both parties submit, the compromise engine generates suggestions using the weighted stake formula. Parties can accept, reject, or counter-propose each suggestion. Multiple rounds are supported.
+
+### Attorney Review (Optional)
+
+After all clauses are agreed, either party may request attorney review before signing. See [Signing & Execution Details](#signing--execution-details) for the full flow.
+
+---
+
 ## Private Skills Library
 
 Contract skills are maintained in a separate private repository (`legalskills`) and automatically seeded to production via GitHub Actions.
 
 ### Available Licensed Skills
 
-| Skill ID | Name | Clauses | Description |
-|----------|------|---------|-------------|
-| `com.nel.skills.founders` | Founders Agreement | 10 | Co-founder equity, vesting, roles, IP, departure terms |
-| `com.nel.skills.safe` | SAFE Agreement | 10 | Simple Agreement for Future Equity for startup fundraising |
+| Skill ID | Name | Params | Description |
+|----------|------|--------|-------------|
+| `com.nel.skills.founders` | Founders Agreement | — | Co-founder equity, vesting, roles, IP, departure terms |
+| `com.nel.skills.safe` | SAFE Agreement | 2 | Simple Agreement for Future Equity |
+| `com.nel.skills.pacto-socios` | Pacto de Socios | — | Spanish shareholders' pact (native jurisdiction variant) |
+| `com.nel.skills.employment` | Employment Agreement | 12 | Employment terms, compensation, non-compete |
+| `com.nel.skills.consulting` | Consulting Agreement | 10 | Scope, rates, IP, termination |
+| `com.nel.skills.shareholders` | Shareholders Agreement | 12 | Board, transfer restrictions, exit mechanisms |
+| `com.nel.skills.convertible-note` | Convertible Note | 3 | Principal, maturity, conversion terms |
+| `com.nel.skills.ip-assignment` | IP Assignment | 6 | Scope, moral rights, consideration |
+| `com.nel.skills.term-sheet` | Term Sheet | 15 | Round structure, valuation, protective provisions |
+| `com.nel.skills.contrato-laboral` | Contrato Laboral | — | Spanish employment contract (native jurisdiction) |
+| `com.nel.skills.contrato-servicios` | Contrato de Servicios | — | Spanish service agreement (native jurisdiction) |
+| `com.nel.skills.cesion-pi` | Cesión de PI | — | Spanish IP assignment (native jurisdiction) |
 
-Licensed skills require Platform Admin to assign entitlements to customers before use.
+All premium skills are priced at €9/mo. Licensed skills require Platform Admin to assign entitlements to customers before use.
 
 ### Repository Structure
 
@@ -422,22 +533,27 @@ Licensed skills require Platform Admin to assign entitlements to customers befor
 legalskills/
 ├── .github/workflows/seed.yml   # Auto-seed on push
 ├── _template/                   # Template for new skills
-├── founders-agreement/          # Founders Agreement skill
-├── safe-agreement/              # SAFE Agreement skill
-│   ├── metadata.json
-│   ├── clauses.json
-│   ├── manifest.json
+├── founders-agreement/
+├── safe-agreement/
+│   ├── clauses.json             # Clause definitions + options (i18n)
+│   ├── manifest.json            # Licensing metadata (skillId, version)
+│   ├── parameters.json          # Deal parameters (optional)
+│   ├── boilerplate.json         # Preamble, recitals, signature block (optional)
+│   ├── clause-mappings.json     # Cross-skill clause mappings (optional)
 │   └── SKILL.md
+├── ...
 └── README.md
 ```
 
 ### Creating a New Skill
 
 1. Copy `_template/` to a new directory (e.g., `employment-agreement/`)
-2. Edit `metadata.json` with skill info (including `jurisdictions` and `languages`)
-3. Edit `clauses.json` with clauses and options (use `{en, es}` objects for i18n)
-4. Update `SKILL.md` with documentation
-5. Push to `main` branch
+2. Edit `clauses.json` with clauses and options (use `{en, es}` objects for i18n)
+3. Add `manifest.json` with licensing metadata (`skillId`, `version`, `jurisdictions`, `languages`)
+4. Add `parameters.json` if the contract has deal-specific values (amounts, dates, etc.)
+5. Add `boilerplate.json` if the contract needs preamble, recitals, or signature block text
+6. Update `SKILL.md` with documentation
+7. Push to `main` branch
 
 ### Automatic Deployment
 
