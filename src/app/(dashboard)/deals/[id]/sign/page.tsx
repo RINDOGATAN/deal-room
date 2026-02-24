@@ -297,12 +297,12 @@ export default function SigningPage() {
             {deal.clauses.map((clause) => {
               const selection = clause.selections[0];
               return (
-                <div key={clause.id} className="flex items-center justify-between py-2 border-b border-border last:border-0">
-                  <div className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-primary" />
+                <div key={clause.id} className="flex items-start justify-between gap-4 py-2 border-b border-border last:border-0">
+                  <div className="flex items-start gap-2 flex-shrink-0 max-w-[50%]">
+                    <Check className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
                     <span className="text-sm">{clause.clauseTemplate.title}</span>
                   </div>
-                  <span className="text-sm text-muted-foreground">
+                  <span className="text-sm text-muted-foreground text-right">
                     {selection?.option?.label || "—"}
                   </span>
                 </div>
