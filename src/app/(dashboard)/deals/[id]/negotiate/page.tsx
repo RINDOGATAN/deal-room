@@ -24,6 +24,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Slider } from "@/components/ui/slider";
 import { AlertTriangle } from "lucide-react";
+import { interpolateParameters, type ParameterSchema } from "@/lib/parameters";
 
 type GoverningLaw = "CALIFORNIA" | "ENGLAND_WALES" | "SPAIN";
 
@@ -77,6 +78,14 @@ export default function NegotiatePage() {
   const { data: deal, isLoading, error } = trpc.deal.getById.useQuery({ id: dealId });
   const { data: existingSelections } = trpc.selections.getMySelections.useQuery({ dealRoomId: dealId });
   const { data: lawyerData } = trpc.lawyer.getRecommendations.useQuery({ dealRoomId: dealId });
+
+  // Parameter interpolation helper
+  const paramSchema = deal?.contractTemplate?.parameterSchema as ParameterSchema | null | undefined;
+  const dealParams = (deal as any)?.parameters as Record<string, string> | undefined;
+  const interpolateLegalText = (text: string, clauseId: string) => {
+    if (!paramSchema?.parameters?.length || !dealParams) return text;
+    return interpolateParameters(text, dealParams, paramSchema, clauseId, deal?.contractLanguage || "en");
+  };
 
   // Check if the user is a respondent and if counterparty selections are available
   const isRespondent = deal?.currentUserRole === "RESPONDENT";
@@ -621,19 +630,18 @@ export default function NegotiatePage() {
                     </button>
                   </div>
 
-                  {/* Jurisdiction Warning Banner */}
-                  {hasWarning && (
-                    <div className="mt-3 p-3 bg-warning/10 border border-warning/30 rounded-xl flex items-start gap-2">
-                      <AlertTriangle className="w-4 h-4 text-warning mt-0.5 flex-shrink-0" />
-                      <p className="text-sm text-yellow-200">{jurisdictionRules.warning}</p>
-                    </div>
-                  )}
-
-                  {/* Jurisdiction Note Banner */}
-                  {hasNote && !hasWarning && (
-                    <div className="mt-3 p-3 bg-blue-500/10 border border-blue-500/30 rounded-xl flex items-start gap-2">
-                      <Info className="w-4 h-4 text-blue-400 mt-0.5 flex-shrink-0" />
-                      <p className="text-sm text-blue-200">{jurisdictionRules.note}</p>
+                  {/* Jurisdiction indicator (compact) */}
+                  {(hasWarning || hasNote) && (
+                    <div className="mt-2 flex items-start gap-1.5 text-xs">
+                      {hasWarning ? (
+                        <AlertTriangle className="w-3.5 h-3.5 text-warning flex-shrink-0 mt-px" />
+                      ) : (
+                        <Info className="w-3.5 h-3.5 text-blue-400 flex-shrink-0 mt-px" />
+                      )}
+                      <span className={hasWarning ? "text-warning/80" : "text-blue-400/80"}>
+                        {hasWarning ? jurisdictionRules.warning : jurisdictionRules.note}
+                        {hasWarning && hasNote && <> — {jurisdictionRules.note}</>}
+                      </span>
                     </div>
                   )}
 
@@ -655,16 +663,8 @@ export default function NegotiatePage() {
                   >
                     <div className="overflow-hidden">
                       <div className="pt-4 mt-4 border-t border-border space-y-4" onClick={(e) => e.stopPropagation()}>
-                        {/* Jurisdiction Note (when expanded, if there's also a warning) */}
-                        {hasNote && hasWarning && (
-                          <div className="p-3 bg-blue-500/10 border border-blue-500/30 rounded-xl flex items-start gap-2">
-                            <Info className="w-4 h-4 text-blue-400 mt-0.5 flex-shrink-0" />
-                            <p className="text-sm text-blue-200">{jurisdictionRules.note}</p>
-                          </div>
-                        )}
-
                         {/* Pros/Cons */}
-                        <div className="grid grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                           <div>
                             <p className="text-xs font-medium text-primary uppercase tracking-wider mb-2">{t("prosForYou")}</p>
                             <ul className="space-y-1">
@@ -693,7 +693,7 @@ export default function NegotiatePage() {
                         <div>
                           <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2">{t("legalText")}</p>
                           <p className="text-sm text-muted-foreground italic bg-muted/30 p-3 border border-border rounded-xl">
-                            {option.legalText}
+                            {interpolateLegalText(option.legalText, currentClause.clauseTemplate.clauseId)}
                           </p>
                         </div>
                       </div>

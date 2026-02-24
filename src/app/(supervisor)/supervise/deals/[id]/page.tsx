@@ -216,7 +216,7 @@ export default function SupervisorDealDetailPage() {
       )}
 
       {/* Deal Overview */}
-      <div className="grid grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Parties */}
         <div className="card-brutal">
           <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-4">

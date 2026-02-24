@@ -20,6 +20,8 @@ import {
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import type { ParameterDefinition, ParameterSchema } from "@/lib/parameters";
+import { resolveParamString } from "@/lib/parameters";
 import {
   Dialog,
   DialogContent,
@@ -153,6 +155,7 @@ export default function NewDealPage() {
   const [enableModalSkill, setEnableModalSkill] = useState<{ id: string; name: string } | null>(null);
   const [resolvedNativeTemplate, setResolvedNativeTemplate] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [parameterValues, setParameterValues] = useState<Record<string, string>>({});
 
   // Lawyer vetting flow
   const vettingId = searchParams.get("vetting");
@@ -175,6 +178,28 @@ export default function NewDealPage() {
   }, [vettingData]);
 
   const { data: templates, isLoading } = trpc.skills.listTemplatesWithAccess.useQuery({ language: locale });
+
+  // Fetch parameter schema when a contract type is selected
+  const { data: parameterSchema } = trpc.deal.getParameterSchema.useQuery(
+    { contractType: selectedType! },
+    { enabled: !!selectedType }
+  );
+  const hasParameters = !!(parameterSchema as ParameterSchema | null)?.parameters?.length;
+
+  // Pre-fill default values when parameter schema loads
+  useEffect(() => {
+    const schema = parameterSchema as ParameterSchema | null;
+    if (!schema?.parameters?.length) return;
+    const defaults: Record<string, string> = {};
+    for (const p of schema.parameters) {
+      if (p.default && !parameterValues[p.id]) {
+        defaults[p.id] = p.default;
+      }
+    }
+    if (Object.keys(defaults).length > 0) {
+      setParameterValues((prev) => ({ ...defaults, ...prev }));
+    }
+  }, [parameterSchema]);
   const { data: billingConfig } = trpc.billing.getConfig.useQuery();
   const selfServiceUpgrade = billingConfig?.selfServiceUpgrade ?? false;
   const allFamilies = templates ? groupTemplatesByFamily(templates) : [];
@@ -276,6 +301,18 @@ export default function NewDealPage() {
       return;
     }
 
+    // Validate required parameters
+    const schema = parameterSchema as ParameterSchema | null;
+    if (schema?.parameters?.length) {
+      const missing = schema.parameters.filter(
+        (p) => p.required && !parameterValues[p.id]?.trim()
+      );
+      if (missing.length > 0) {
+        toast.error(t("parameterRequired"));
+        return;
+      }
+    }
+
     createDeal.mutate({
       name: dealName.trim(),
       contractType: selectedType,
@@ -283,6 +320,7 @@ export default function NewDealPage() {
       contractLanguage: selectedLanguage,
       initiatorCompany: company.trim() || undefined,
       lawyerVettingId: vettingId || undefined,
+      parameters: hasParameters ? parameterValues : undefined,
     });
   };
 
@@ -297,7 +335,7 @@ export default function NewDealPage() {
           <h1 className="text-2xl font-bold">{t("createNewDeal")}</h1>
           <p className="text-muted-foreground mt-1">{t("loadingContractTypes")}</p>
         </div>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {[1, 2, 3, 4].map((i) => (
             <div key={i} className="card-brutal animate-pulse h-32"></div>
           ))}
@@ -487,7 +525,7 @@ export default function NewDealPage() {
             ))}
           </div>
         )}
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {filteredFamilies.map((family) => {
             const Icon = contractIcons[family.primaryTemplate.contractType] || FileText;
             const isSelected = selectedFamily === family.family;
@@ -719,7 +757,7 @@ export default function NewDealPage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {contractLanguageMeta.map((lang) => {
               const isSelected = selectedLanguage === lang.value;
               const isDisabled = languagesForJurisdiction.size > 0 && !languagesForJurisdiction.has(lang.value);
@@ -831,6 +869,38 @@ export default function NewDealPage() {
             </div>
           </div>
 
+          {/* Step 5: Deal Parameters (conditional) */}
+          {hasParameters && (
+            <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-300">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold rounded-full">
+                  5
+                </div>
+                <Label className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
+                  {t("dealParameters")}
+                </Label>
+              </div>
+
+              <div className="card-brutal space-y-5">
+                <p className="text-sm text-muted-foreground">
+                  {t("dealParametersDescription")}
+                </p>
+                {(parameterSchema as ParameterSchema)?.parameters.map((param) => (
+                  <ParameterField
+                    key={param.id}
+                    param={param}
+                    value={parameterValues[param.id] || ""}
+                    onChange={(val) =>
+                      setParameterValues((prev) => ({ ...prev, [param.id]: val }))
+                    }
+                    jurisdiction={selectedJurisdiction!}
+                    lang={locale}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+
           <div className="flex items-center justify-between pt-4 border-t border-border">
             <p className="text-sm text-muted-foreground">
               {t("selectOptionsNext")}
@@ -845,6 +915,87 @@ export default function NewDealPage() {
             </button>
           </div>
         </div>
+      )}
+    </div>
+  );
+}
+
+// ── Parameter field component ──────────────────────────
+
+const CURRENCY_SYMBOLS: Record<string, string> = {
+  CALIFORNIA: "$",
+  ENGLAND_WALES: "£",
+  SPAIN: "€",
+};
+
+function ParameterField({
+  param,
+  value,
+  onChange,
+  jurisdiction,
+  lang,
+}: {
+  param: ParameterDefinition;
+  value: string;
+  onChange: (val: string) => void;
+  jurisdiction: GoverningLaw;
+  lang: string;
+}) {
+  const t = useTranslations("newDeal");
+  const label = resolveParamString(param.label, lang);
+  const hint = resolveParamString(param.hint, lang);
+  const placeholder = resolveParamString(param.placeholder, lang);
+  const currencySymbol = CURRENCY_SYMBOLS[jurisdiction] || "$";
+
+  return (
+    <div className="space-y-1.5">
+      <Label htmlFor={`param-${param.id}`}>
+        {label}
+        {param.required && <span className="text-destructive ml-1">*</span>}
+      </Label>
+      {param.type === "choice" && param.options ? (
+        <div className="flex flex-wrap gap-2">
+          {param.options.map((opt) => (
+            <button
+              key={opt}
+              type="button"
+              onClick={() => onChange(opt)}
+              className={`px-3 py-1.5 rounded-full text-sm border transition-colors ${
+                value === opt
+                  ? "bg-primary text-primary-foreground border-primary"
+                  : "bg-muted/50 text-muted-foreground border-border hover:border-muted-foreground"
+              }`}
+            >
+              {opt}
+            </button>
+          ))}
+        </div>
+      ) : (
+        <div className="relative">
+          {param.type === "currency" && (
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm pointer-events-none">
+              {currencySymbol}
+            </span>
+          )}
+          <Input
+            id={`param-${param.id}`}
+            type={param.type === "number" ? "number" : param.type === "date" ? "date" : "text"}
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+            placeholder={placeholder}
+            className={`input-brutal ${param.type === "currency" ? "pl-7" : ""} ${
+              param.type === "percentage" ? "pr-8" : ""
+            }`}
+          />
+          {param.type === "percentage" && (
+            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm pointer-events-none">
+              %
+            </span>
+          )}
+        </div>
+      )}
+      {hint && (
+        <p className="text-xs text-muted-foreground">{hint}</p>
       )}
     </div>
   );

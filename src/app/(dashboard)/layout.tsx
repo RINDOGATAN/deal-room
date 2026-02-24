@@ -83,7 +83,7 @@ export default function DashboardLayout({
     <div className="min-h-screen bg-background">
       {/* Floating Glassmorphism Header */}
       <header className="sticky top-0 z-20 px-4 pt-3">
-        <div className="max-w-7xl mx-auto bg-card/80 backdrop-blur-md border border-border rounded-xl md:rounded-full px-4 md:px-6 py-3">
+        <div className="max-w-7xl mx-auto bg-card/80 backdrop-blur-sm border border-border rounded-xl md:rounded-full px-4 md:px-6 py-3">
           <div className="flex items-center justify-between">
             <Link href="/deals" className="text-lg font-bold tracking-tight text-foreground">
               TODO.LAW<sup className="text-xs align-super">™</sup>{" "}
@@ -222,12 +222,12 @@ export default function DashboardLayout({
       )}
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-6 py-8 flex-1">
+      <main className="max-w-7xl mx-auto px-4 md:px-6 py-6 md:py-8 flex-1">
         {children}
       </main>
 
       {/* Footer */}
-      <footer className="py-4 px-6 border-t border-border">
+      <footer className="py-4 px-4 md:px-6 border-t border-border">
         <div className="max-w-7xl mx-auto flex flex-col items-center gap-2 text-sm text-muted-foreground">
           <p className="hidden sm:block">
             {tFooter.rich("service", {

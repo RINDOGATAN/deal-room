@@ -197,7 +197,7 @@ export function CompromiseDemo() {
   return (
     <div className="space-y-8">
       {/* Party Cards */}
-      <div className="grid grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Party A */}
         <PartyCard
           label="Party A"
@@ -234,7 +234,7 @@ export function CompromiseDemo() {
           <h3 className="text-lg font-bold text-primary">Algorithm Suggestion</h3>
         </div>
 
-        <div className="grid grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
           {/* Suggested Option */}
           <div className="col-span-2">
             <div className="flex items-center gap-3 mb-3">
