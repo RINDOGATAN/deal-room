@@ -312,7 +312,7 @@
     "signingInProgress": "Signing...",
     "readyForSignatures": "Ready for Signatures",
     "readyForSignaturesDescription": "All terms have been agreed upon. Start the signing process and both parties can sign by typing their full legal name.",
-    "startSigningProcess": "Start Signing Process",
+    "startSigningProcess": "Final Details",
     "starting": "Starting...",
     "canSignImmediately": "Please confirm your execution details above before starting",
     "failedToLoad": "Failed to load deal",

@@ -312,7 +312,7 @@
     "signingInProgress": "Firmando...",
     "readyForSignatures": "Listo para Firmas",
     "readyForSignaturesDescription": "Todos los términos han sido acordados. Inicia el proceso de firma y ambas partes podrán firmar escribiendo su nombre legal completo.",
-    "startSigningProcess": "Iniciar Proceso de Firma",
+    "startSigningProcess": "Últimos detalles",
     "starting": "Iniciando...",
     "canSignImmediately": "Confirma tus datos de ejecución arriba antes de comenzar",
     "failedToLoad": "Error al cargar el acuerdo",

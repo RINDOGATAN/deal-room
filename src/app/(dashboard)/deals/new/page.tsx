@@ -416,14 +416,14 @@ export default function NewDealPage() {
           </div>
         </div>
 
-        <div className="flex items-center justify-between pt-4 border-t border-border">
+        <div className="flex items-center justify-between gap-4 pt-4 border-t border-border">
           <p className="text-sm text-muted-foreground">
             {t("selectOptionsNext")}
           </p>
           <button
             onClick={handleCreate}
             disabled={!dealName.trim() || createDeal.isPending}
-            className="btn-brutal flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="btn-brutal flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0"
           >
             {createDeal.isPending ? t("creating") : tCommon("continue")}
             <ArrowRight className="w-4 h-4" />
