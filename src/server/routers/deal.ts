@@ -1,9 +1,10 @@
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
-import { DealRoomStatus, PartyRole, PartyStatus, ClauseStatus, InvitationStatus, GoverningLaw } from "@prisma/client";
+import { Prisma, DealRoomStatus, PartyRole, PartyStatus, ClauseStatus, InvitationStatus, GoverningLaw } from "@prisma/client";
 import { checkDealCreationEntitlement } from "../services/licensing/entitlement";
 import { resolveLocalizedString, resolveLocalizedArray } from "../services/skills/i18n";
+import { validateRequiredParameters, type ParameterSchema } from "@/lib/parameters";
 
 // Map GoverningLaw enum to jurisdiction strings for entitlement checking
 const GOVERNING_LAW_TO_JURISDICTION: Record<string, string> = {
@@ -13,6 +14,25 @@ const GOVERNING_LAW_TO_JURISDICTION: Record<string, string> = {
 };
 
 export const dealRouter = createTRPCRouter({
+  // Get parameter schema for a contract type (used by deal creation wizard)
+  getParameterSchema: protectedProcedure
+    .input(z.object({ contractType: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const template = await ctx.prisma.contractTemplate.findUnique({
+        where: { contractType: input.contractType },
+        select: { parameterSchema: true },
+      });
+
+      if (!template) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Contract template not found",
+        });
+      }
+
+      return template.parameterSchema as ParameterSchema | null;
+    }),
+
   // List all deal rooms for the current user
   list: protectedProcedure.query(async ({ ctx }) => {
     const userId = ctx.session.user.id;
@@ -191,6 +211,7 @@ export const dealRouter = createTRPCRouter({
           const ctLocalized = ct.localizedContent as Record<string, Record<string, string>> | null;
           if (ctLocalized) {
             if (ctLocalized.title) (ct as any).title = resolveLocalizedString(ctLocalized.title, lang);
+            if (ctLocalized.category) (ct as any).category = resolveLocalizedString(ctLocalized.category, lang);
             if (ctLocalized.plainDescription) (ct as any).plainDescription = resolveLocalizedString(ctLocalized.plainDescription, lang);
             if (ctLocalized.legalContext) (ct as any).legalContext = resolveLocalizedString(ctLocalized.legalContext, lang);
           }
@@ -246,6 +267,7 @@ export const dealRouter = createTRPCRouter({
         contractLanguage: z.enum(["en", "es"]).default("en"),
         initiatorCompany: z.string().optional(),
         lawyerVettingId: z.string().optional(),
+        parameters: z.record(z.string(), z.string()).optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -337,6 +359,19 @@ export const dealRouter = createTRPCRouter({
         }
       }
 
+      // Validate required parameters if template has a parameter schema
+      const parameterSchema = template.parameterSchema as unknown as ParameterSchema | null;
+      const dealParameters: Record<string, string> = input.parameters ?? {};
+      if (parameterSchema?.parameters?.length) {
+        const missing = validateRequiredParameters(dealParameters, parameterSchema);
+        if (missing.length > 0) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: `Missing required parameters: ${missing.join(", ")}`,
+          });
+        }
+      }
+
       // Create the deal room with clauses
       const dealRoom = await ctx.prisma.dealRoom.create({
         data: {
@@ -344,6 +379,9 @@ export const dealRouter = createTRPCRouter({
           contractTemplateId: template.id,
           governingLaw: input.governingLaw as GoverningLaw,
           contractLanguage: input.contractLanguage,
+          parameters: Object.keys(dealParameters).length > 0
+            ? (dealParameters as Prisma.InputJsonValue)
+            : Prisma.DbNull,
           lawyerVettingId: input.lawyerVettingId,
           status: DealRoomStatus.DRAFT,
           parties: {

@@ -2,7 +2,124 @@ import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
 
+const signingDetailsSchema = z.object({
+  legalName: z.string().min(1),
+  address: z.string().min(1),
+  taxId: z.string().optional(),
+  signatoryName: z.string().min(1),
+  signatoryTitle: z.string().min(1),
+});
+
+export type SigningDetails = z.infer<typeof signingDetailsSchema>;
+
 export const signingRouter = createTRPCRouter({
+  getSigningDetails: protectedProcedure
+    .input(z.object({ dealRoomId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const parties = await ctx.prisma.dealRoomParty.findMany({
+        where: { dealRoomId: input.dealRoomId },
+        select: {
+          id: true,
+          role: true,
+          userId: true,
+          name: true,
+          company: true,
+          signingDetails: true,
+        },
+      });
+
+      const currentParty = parties.find(
+        (p) => p.userId === ctx.session.user.id
+      );
+      if (!currentParty) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "You do not have access to this deal",
+        });
+      }
+
+      const otherParty = parties.find(
+        (p) => p.userId !== ctx.session.user.id
+      );
+
+      return {
+        own: {
+          partyId: currentParty.id,
+          role: currentParty.role,
+          signingDetails: currentParty.signingDetails as SigningDetails | null,
+          name: currentParty.name,
+          company: currentParty.company,
+        },
+        other: otherParty
+          ? {
+              role: otherParty.role,
+              signingDetails: otherParty.signingDetails as SigningDetails | null,
+            }
+          : null,
+      };
+    }),
+
+  submitSigningDetails: protectedProcedure
+    .input(
+      z.object({
+        dealRoomId: z.string(),
+        details: signingDetailsSchema,
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const party = await ctx.prisma.dealRoomParty.findFirst({
+        where: {
+          dealRoomId: input.dealRoomId,
+          userId: ctx.session.user.id,
+        },
+        include: {
+          dealRoom: {
+            include: { signingRequest: true },
+          },
+        },
+      });
+
+      if (!party) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "You do not have access to this deal",
+        });
+      }
+
+      // Check if party has already signed
+      const sr = party.dealRoom.signingRequest;
+      if (sr) {
+        const alreadySigned =
+          (party.role === "INITIATOR" && sr.initiatorSignedAt) ||
+          (party.role === "RESPONDENT" && sr.respondentSignedAt);
+        if (alreadySigned) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "Cannot edit signing details after signing",
+          });
+        }
+      }
+
+      const updated = await ctx.prisma.dealRoomParty.update({
+        where: { id: party.id },
+        data: { signingDetails: input.details },
+      });
+
+      await ctx.prisma.auditLog.create({
+        data: {
+          dealRoomId: input.dealRoomId,
+          userId: ctx.session.user.id,
+          action: "SIGNING_DETAILS_SUBMITTED",
+          details: {
+            partyRole: party.role,
+            legalName: input.details.legalName,
+          },
+        },
+      });
+
+      return updated.signingDetails as SigningDetails;
+    }),
+
   getRequest: protectedProcedure
     .input(z.object({ dealRoomId: z.string() }))
     .query(async ({ ctx, input }) => {
@@ -160,6 +277,14 @@ export const signingRouter = createTRPCRouter({
         throw new TRPCError({
           code: "FORBIDDEN",
           message: "You are not authorized to sign as this party",
+        });
+      }
+
+      // Require signing details before signing
+      if (!party.signingDetails) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "You must submit your execution details before signing",
         });
       }
 

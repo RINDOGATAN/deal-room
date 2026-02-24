@@ -16,7 +16,7 @@
         "en": "Scope of Processing",
         "es": "Alcance del Tratamiento"
       },
-      "category": "Processing",
+      "category": { "en": "Processing", "es": "Tratamiento" },
       "order": 1,
       "plainDescription": {
         "en": "What types of personal data will the processor handle, and for what purposes? This defines the boundaries of the processing relationship.",
@@ -186,7 +186,7 @@
         "en": "Processing Instructions",
         "es": "Instrucciones de Tratamiento"
       },
-      "category": "Processing",
+      "category": { "en": "Processing", "es": "Tratamiento" },
       "order": 2,
       "plainDescription": {
         "en": "How strictly must the processor follow the controller's instructions when handling personal data?",
@@ -338,7 +338,7 @@
         "en": "Sub-processors",
         "es": "Subencargados"
       },
-      "category": "Sub-Processing",
+      "category": { "en": "Sub-Processing", "es": "Subencargo" },
       "order": 3,
       "plainDescription": {
         "en": "How must the processor obtain approval before engaging other companies (sub-processors) to help process personal data?",
@@ -530,7 +530,7 @@
         "en": "International Data Transfers",
         "es": "Transferencias Internacionales de Datos"
       },
-      "category": "Transfers",
+      "category": { "en": "Transfers", "es": "Transferencias" },
       "order": 4,
       "plainDescription": {
         "en": "Under what conditions may personal data be transferred outside the controller's jurisdiction?",
@@ -740,7 +740,7 @@
         "en": "Security Measures (TOMs)",
         "es": "Medidas de Seguridad (MOT)"
       },
-      "category": "Security",
+      "category": { "en": "Security", "es": "Seguridad" },
       "order": 5,
       "plainDescription": {
         "en": "What technical and organizational security measures must the processor implement to protect personal data?",
@@ -938,7 +938,7 @@
         "en": "Data Breach Notification",
         "es": "Notificación de Brechas de Datos"
       },
-      "category": "Security",
+      "category": { "en": "Security", "es": "Seguridad" },
       "order": 6,
       "plainDescription": {
         "en": "How quickly must the processor notify the controller of a personal data breach, and what information must be provided?",
@@ -1136,7 +1136,7 @@
         "en": "Data Subject Rights Assistance",
         "es": "Asistencia con los Derechos de los Interesados"
       },
-      "category": "Rights",
+      "category": { "en": "Rights", "es": "Derechos" },
       "order": 7,
       "plainDescription": {
         "en": "How must the processor assist the controller in responding to data subject requests (access, deletion, portability, etc.)?",
@@ -1276,7 +1276,7 @@
         "en": "Audit Rights",
         "es": "Derechos de Auditoría"
       },
-      "category": "Accountability",
+      "category": { "en": "Accountability", "es": "Responsabilidad proactiva" },
       "order": 8,
       "plainDescription": {
         "en": "What rights does the controller have to audit or inspect the processor's data protection practices?",
@@ -1480,7 +1480,7 @@
         "en": "Data Deletion/Return",
         "es": "Supresión/Devolución de Datos"
       },
-      "category": "Data Handling",
+      "category": { "en": "Data Handling", "es": "Gestión de datos" },
       "order": 9,
       "plainDescription": {
         "en": "What happens to personal data when the service agreement ends? Must the processor return and/or delete all data, and within what timeframe?",
@@ -1672,7 +1672,7 @@
         "en": "Confidentiality",
         "es": "Confidencialidad"
       },
-      "category": "Personnel",
+      "category": { "en": "Personnel", "es": "Personal" },
       "order": 10,
       "plainDescription": {
         "en": "What confidentiality obligations apply to the processor's personnel who access personal data?",
@@ -1824,7 +1824,7 @@
         "en": "Liability & Indemnification",
         "es": "Responsabilidad e Indemnización"
       },
-      "category": "Commercial",
+      "category": { "en": "Commercial", "es": "Comercial" },
       "order": 11,
       "plainDescription": {
         "en": "What are the limits on the processor's liability for data protection breaches, and what indemnification obligations apply?",
@@ -2004,7 +2004,7 @@
         "en": "Term & Termination",
         "es": "Duración y Terminación"
       },
-      "category": "Commercial",
+      "category": { "en": "Commercial", "es": "Comercial" },
       "order": 12,
       "plainDescription": {
         "en": "How long does this DPA last, and under what conditions can either party terminate it?",

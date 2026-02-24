@@ -1,3 +1,6 @@
+"use client";
+
+import { useTranslations } from "next-intl";
 import {
   Bot,
   Key,
@@ -12,19 +15,77 @@ import {
 } from "lucide-react";
 
 export default function AgentApiPage() {
+  const t = useTranslations("agentApi");
+
+  const scopes = [
+    { scope: "templates:read", desc: t("scopeTemplatesRead") },
+    { scope: "playbook:read", desc: t("scopePlaybookRead") },
+    { scope: "playbook:write", desc: t("scopePlaybookWrite") },
+    { scope: "negotiate", desc: t("scopeNegotiate") },
+    { scope: "deals:read", desc: t("scopeDealsRead") },
+  ];
+
+  const flowSteps = [
+    {
+      step: 1,
+      icon: BookOpen,
+      title: t("flowCreatePlaybooks"),
+      desc: t("flowCreatePlaybooksDesc"),
+      endpoint: "POST /playbooks",
+    },
+    {
+      step: 2,
+      icon: Send,
+      title: t("flowInitiate"),
+      desc: t("flowInitiateDesc"),
+      endpoint: "POST /negotiate",
+    },
+    {
+      step: 3,
+      icon: ArrowRightLeft,
+      title: t("flowSendToken"),
+      desc: t("flowSendTokenDesc"),
+      endpoint: null,
+    },
+    {
+      step: 4,
+      icon: Bot,
+      title: t("flowRespondentJoins"),
+      desc: t("flowRespondentJoinsDesc"),
+      endpoint: "POST /negotiate/join",
+    },
+    {
+      step: 5,
+      icon: CheckCircle,
+      title: t("flowGetResults"),
+      desc: t("flowGetResultsDesc"),
+      endpoint: "GET /deals/:id",
+    },
+  ];
+
+  const playbookEndpoints: [string, string, string][] = [
+    ["GET", "/playbooks", t("purposeListPlaybooks")],
+    ["POST", "/playbooks", t("purposeCreatePlaybook")],
+    ["GET", "/playbooks/:id", t("purposeGetPlaybook")],
+    ["PUT", "/playbooks/:id", t("purposeUpdatePlaybook")],
+    ["DELETE", "/playbooks/:id", t("purposeDeletePlaybook")],
+  ];
+
+  const dealEndpoints: [string, string, string][] = [
+    ["GET", "/deals", t("purposeListDeals")],
+    ["GET", "/deals/:id", t("purposeDealOutcome")],
+    ["GET", "/deals/:id/document", t("purposeDownloadPdf")],
+    ["GET", "/deals/:id/document/docx", t("purposeDownloadDocx")],
+  ];
+
   return (
     <div className="space-y-12">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold mb-4">Agent Negotiation API</h1>
-        <p className="text-lg text-muted-foreground">
-          REST API for automated contract negotiation between AI agents.
-          Companies pre-configure negotiation preferences (&ldquo;playbooks&rdquo;)
-          with red lines, then deploy agents that negotiate contracts in seconds
-          using the weighted compromise engine.
-        </p>
+        <h1 className="text-3xl font-bold mb-4">{t("title")}</h1>
+        <p className="text-lg text-muted-foreground">{t("subtitle")}</p>
         <div className="mt-4 p-3 border border-primary/30 bg-primary/5 rounded-xl text-sm">
-          <strong className="text-primary">Base URL:</strong>{" "}
+          <strong className="text-primary">{t("baseUrl")}:</strong>{" "}
           <code className="text-foreground">
             https://dealroom.todo.law/api/v1/agent
           </code>
@@ -33,44 +94,29 @@ export default function AgentApiPage() {
 
       {/* Authentication */}
       <div className="space-y-4">
-        <h2 className="text-xl font-bold">Authentication</h2>
-        <p className="text-muted-foreground">
-          All requests require a Bearer token with the{" "}
-          <code className="text-primary">drk_</code> prefix. API keys are
-          created by a Platform Admin. The raw key is shown once on creation and
-          cannot be retrieved later.
-        </p>
+        <h2 className="text-xl font-bold">{t("authentication")}</h2>
+        <p className="text-muted-foreground">{t("authDescription")}</p>
 
         <div className="p-4 border border-border bg-card font-mono text-sm rounded-2xl">
           <span className="text-muted-foreground">Authorization:</span>{" "}
           <span className="text-primary">Bearer drk_96eddb08b83dc09b...</span>
         </div>
 
-        <h3 className="text-lg font-bold mt-6">Scopes</h3>
-        <p className="text-muted-foreground text-sm">
-          Each API key has scopes that control what it can access. A key missing
-          a required scope receives <code>403 Forbidden</code>.
-        </p>
+        <h3 className="text-lg font-bold mt-6">{t("scopes")}</h3>
+        <p className="text-muted-foreground text-sm">{t("scopesDescription")}</p>
 
         <div className="border border-border rounded-2xl overflow-hidden">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-border bg-muted/30">
-                <th className="text-left p-3 font-medium">Scope</th>
-                <th className="text-left p-3 font-medium">Grants access to</th>
+                <th className="text-left p-3 font-medium">{t("tableScope")}</th>
+                <th className="text-left p-3 font-medium">
+                  {t("tableGrantsAccess")}
+                </th>
               </tr>
             </thead>
             <tbody>
-              {[
-                ["templates:read", "List and view contract templates"],
-                ["playbook:read", "List and view own playbooks"],
-                ["playbook:write", "Create, update, and delete playbooks"],
-                ["negotiate", "Initiate and join negotiations"],
-                [
-                  "deals:read",
-                  "List deals, view details, download documents",
-                ],
-              ].map(([scope, desc]) => (
+              {scopes.map(({ scope, desc }) => (
                 <tr key={scope} className="border-b border-border last:border-0">
                   <td className="p-3">
                     <code className="text-primary text-xs">{scope}</code>
@@ -85,51 +131,11 @@ export default function AgentApiPage() {
 
       {/* Negotiation Flow */}
       <div className="space-y-4">
-        <h2 className="text-xl font-bold">Negotiation Flow</h2>
-        <p className="text-muted-foreground">
-          The API follows a token-based invitation model. The initiator creates a
-          deal and sends a token out-of-band; the respondent joins with their
-          playbook; the server resolves everything automatically.
-        </p>
+        <h2 className="text-xl font-bold">{t("negotiationFlow")}</h2>
+        <p className="text-muted-foreground">{t("negotiationFlowDesc")}</p>
 
         <div className="space-y-3">
-          {[
-            {
-              step: 1,
-              icon: BookOpen,
-              title: "Create Playbooks",
-              desc: "Both companies create playbooks defining their preferences, priorities, flexibility, and red lines for each clause.",
-              endpoint: "POST /playbooks",
-            },
-            {
-              step: 2,
-              icon: Send,
-              title: "Initiate Negotiation",
-              desc: "The initiator starts a deal with their playbook and receives a negotiation token.",
-              endpoint: "POST /negotiate",
-            },
-            {
-              step: 3,
-              icon: ArrowRightLeft,
-              title: "Send Token Out-of-Band",
-              desc: "The initiator sends the token to the counterparty via email, webhook, Slack, or any other channel.",
-              endpoint: null,
-            },
-            {
-              step: 4,
-              icon: Bot,
-              title: "Respondent Joins",
-              desc: "The respondent's agent joins with the token and their playbook. The server resolves the deal synchronously.",
-              endpoint: "POST /negotiate/join",
-            },
-            {
-              step: 5,
-              icon: CheckCircle,
-              title: "Get Results",
-              desc: "Both parties can retrieve the agreed clauses, satisfaction scores, and download the final contract as PDF or DOCX.",
-              endpoint: "GET /deals/:id",
-            },
-          ].map(({ step, icon: Icon, title, desc, endpoint }) => (
+          {flowSteps.map(({ step, icon: Icon, title, desc, endpoint }) => (
             <div key={step} className="card-brutal p-5">
               <div className="flex items-center gap-3 mb-2">
                 <div className="w-6 h-6 border border-muted-foreground rounded-full flex items-center justify-center text-xs font-bold">
@@ -151,9 +157,9 @@ export default function AgentApiPage() {
 
       {/* Endpoints Overview */}
       <div className="space-y-4">
-        <h2 className="text-xl font-bold">Endpoints</h2>
+        <h2 className="text-xl font-bold">{t("endpoints")}</h2>
         <p className="text-muted-foreground">
-          All endpoints are under{" "}
+          {t("endpointsUnder")}{" "}
           <code className="text-primary">/api/v1/agent/</code>.
         </p>
 
@@ -161,15 +167,15 @@ export default function AgentApiPage() {
         <div className="space-y-3">
           <h3 className="text-lg font-bold flex items-center gap-2">
             <FileText className="w-4 h-4 text-primary" />
-            Templates
+            {t("sectionTemplates")}
           </h3>
           <div className="border border-border rounded-2xl overflow-hidden">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-border bg-muted/30">
-                  <th className="text-left p-3 font-medium">Method</th>
-                  <th className="text-left p-3 font-medium">Path</th>
-                  <th className="text-left p-3 font-medium">Purpose</th>
+                  <th className="text-left p-3 font-medium">{t("tableMethod")}</th>
+                  <th className="text-left p-3 font-medium">{t("tablePath")}</th>
+                  <th className="text-left p-3 font-medium">{t("tablePurpose")}</th>
                 </tr>
               </thead>
               <tbody>
@@ -181,7 +187,7 @@ export default function AgentApiPage() {
                   </td>
                   <td className="p-3 font-mono text-xs">/templates</td>
                   <td className="p-3 text-muted-foreground">
-                    List available templates (filtered by entitlements)
+                    {t("purposeListTemplates")}
                   </td>
                 </tr>
                 <tr>
@@ -194,7 +200,7 @@ export default function AgentApiPage() {
                     /templates/:contractType
                   </td>
                   <td className="p-3 text-muted-foreground">
-                    Full detail with clauses and options
+                    {t("purposeTemplateDetail")}
                   </td>
                 </tr>
               </tbody>
@@ -206,25 +212,19 @@ export default function AgentApiPage() {
         <div className="space-y-3">
           <h3 className="text-lg font-bold flex items-center gap-2">
             <BookOpen className="w-4 h-4 text-primary" />
-            Playbooks
+            {t("sectionPlaybooks")}
           </h3>
           <div className="border border-border rounded-2xl overflow-hidden">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-border bg-muted/30">
-                  <th className="text-left p-3 font-medium">Method</th>
-                  <th className="text-left p-3 font-medium">Path</th>
-                  <th className="text-left p-3 font-medium">Purpose</th>
+                  <th className="text-left p-3 font-medium">{t("tableMethod")}</th>
+                  <th className="text-left p-3 font-medium">{t("tablePath")}</th>
+                  <th className="text-left p-3 font-medium">{t("tablePurpose")}</th>
                 </tr>
               </thead>
               <tbody>
-                {[
-                  ["GET", "/playbooks", "List own playbooks"],
-                  ["POST", "/playbooks", "Create playbook with entries"],
-                  ["GET", "/playbooks/:id", "Get playbook detail"],
-                  ["PUT", "/playbooks/:id", "Update playbook + entries"],
-                  ["DELETE", "/playbooks/:id", "Delete playbook"],
-                ].map(([method, path, purpose], i) => (
+                {playbookEndpoints.map(([method, path, purpose], i) => (
                   <tr
                     key={i}
                     className="border-b border-border last:border-0"
@@ -257,15 +257,15 @@ export default function AgentApiPage() {
         <div className="space-y-3">
           <h3 className="text-lg font-bold flex items-center gap-2">
             <ArrowRightLeft className="w-4 h-4 text-primary" />
-            Negotiation
+            {t("sectionNegotiation")}
           </h3>
           <div className="border border-border rounded-2xl overflow-hidden">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-border bg-muted/30">
-                  <th className="text-left p-3 font-medium">Method</th>
-                  <th className="text-left p-3 font-medium">Path</th>
-                  <th className="text-left p-3 font-medium">Purpose</th>
+                  <th className="text-left p-3 font-medium">{t("tableMethod")}</th>
+                  <th className="text-left p-3 font-medium">{t("tablePath")}</th>
+                  <th className="text-left p-3 font-medium">{t("tablePurpose")}</th>
                 </tr>
               </thead>
               <tbody>
@@ -277,7 +277,7 @@ export default function AgentApiPage() {
                   </td>
                   <td className="p-3 font-mono text-xs">/negotiate</td>
                   <td className="p-3 text-muted-foreground">
-                    Initiate — returns <code>negotiationToken</code>
+                    {t("purposeInitiate")}
                   </td>
                 </tr>
                 <tr>
@@ -288,7 +288,7 @@ export default function AgentApiPage() {
                   </td>
                   <td className="p-3 font-mono text-xs">/negotiate/join</td>
                   <td className="p-3 text-muted-foreground">
-                    Join with token + playbook — resolves deal
+                    {t("purposeJoin")}
                   </td>
                 </tr>
               </tbody>
@@ -300,28 +300,19 @@ export default function AgentApiPage() {
         <div className="space-y-3">
           <h3 className="text-lg font-bold flex items-center gap-2">
             <Download className="w-4 h-4 text-primary" />
-            Deals
+            {t("sectionDeals")}
           </h3>
           <div className="border border-border rounded-2xl overflow-hidden">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-border bg-muted/30">
-                  <th className="text-left p-3 font-medium">Method</th>
-                  <th className="text-left p-3 font-medium">Path</th>
-                  <th className="text-left p-3 font-medium">Purpose</th>
+                  <th className="text-left p-3 font-medium">{t("tableMethod")}</th>
+                  <th className="text-left p-3 font-medium">{t("tablePath")}</th>
+                  <th className="text-left p-3 font-medium">{t("tablePurpose")}</th>
                 </tr>
               </thead>
               <tbody>
-                {[
-                  ["GET", "/deals", "List own agent deals"],
-                  [
-                    "GET",
-                    "/deals/:id",
-                    "Deal outcome: clauses, satisfaction, status",
-                  ],
-                  ["GET", "/deals/:id/document", "Download PDF"],
-                  ["GET", "/deals/:id/document/docx", "Download DOCX"],
-                ].map(([method, path, purpose], i) => (
+                {dealEndpoints.map(([method, path, purpose], i) => (
                   <tr
                     key={i}
                     className="border-b border-border last:border-0"
@@ -343,34 +334,36 @@ export default function AgentApiPage() {
 
       {/* Playbook Configuration */}
       <div className="space-y-4">
-        <h2 className="text-xl font-bold">Playbook Configuration</h2>
-        <p className="text-muted-foreground">
-          A playbook captures your company&apos;s negotiation stance: preferred
-          options, how important each clause is, how flexible you are, and which
-          clauses are non-negotiable.
-        </p>
+        <h2 className="text-xl font-bold">{t("playbookConfig")}</h2>
+        <p className="text-muted-foreground">{t("playbookConfigDesc")}</p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="card-brutal p-5">
             <div className="flex items-center gap-3 mb-3">
               <Key className="w-5 h-5 text-primary" />
-              <h3 className="font-bold">Priority (1–5)</h3>
+              <h3 className="font-bold">{t("priorityTitle")}</h3>
             </div>
             <p className="text-sm text-muted-foreground mb-3">
-              How important this clause is to your organization.
+              {t("priorityDesc")}
             </p>
             <div className="space-y-1.5 text-xs">
               <div className="flex items-center gap-2">
                 <span className="w-4 text-primary font-bold">1</span>
-                <span className="text-muted-foreground">Not important</span>
+                <span className="text-muted-foreground">
+                  {t("priorityNotImportant")}
+                </span>
               </div>
               <div className="flex items-center gap-2">
                 <span className="w-4 text-primary font-bold">3</span>
-                <span className="text-muted-foreground">Moderate</span>
+                <span className="text-muted-foreground">
+                  {t("priorityModerate")}
+                </span>
               </div>
               <div className="flex items-center gap-2">
                 <span className="w-4 text-primary font-bold">5</span>
-                <span className="text-muted-foreground">Critical</span>
+                <span className="text-muted-foreground">
+                  {t("priorityCritical")}
+                </span>
               </div>
             </div>
           </div>
@@ -378,28 +371,28 @@ export default function AgentApiPage() {
           <div className="card-brutal p-5">
             <div className="flex items-center gap-3 mb-3">
               <ArrowRightLeft className="w-5 h-5 text-primary" />
-              <h3 className="font-bold">Flexibility (1–5)</h3>
+              <h3 className="font-bold">{t("flexibilityTitle")}</h3>
             </div>
             <p className="text-sm text-muted-foreground mb-3">
-              How willing you are to accept a different option.
+              {t("flexibilityDesc")}
             </p>
             <div className="space-y-1.5 text-xs">
               <div className="flex items-center gap-2">
                 <span className="w-4 text-primary font-bold">1</span>
                 <span className="text-muted-foreground">
-                  Inflexible — strongly favors your choice
+                  {t("flexibilityInflexible")}
                 </span>
               </div>
               <div className="flex items-center gap-2">
                 <span className="w-4 text-primary font-bold">3</span>
                 <span className="text-muted-foreground">
-                  Neutral — balanced compromise
+                  {t("flexibilityNeutral")}
                 </span>
               </div>
               <div className="flex items-center gap-2">
                 <span className="w-4 text-primary font-bold">5</span>
                 <span className="text-muted-foreground">
-                  Very flexible — almost always yields
+                  {t("flexibilityVeryFlexible")}
                 </span>
               </div>
             </div>
@@ -409,11 +402,11 @@ export default function AgentApiPage() {
 
       {/* Red Lines */}
       <div className="space-y-4">
-        <h2 className="text-xl font-bold">Red Lines</h2>
+        <h2 className="text-xl font-bold">{t("redLines")}</h2>
         <p className="text-muted-foreground">
-          Mark a clause as a red line to make it non-negotiable. Use{" "}
-          <code className="text-primary">acceptableOptions</code> to define
-          which options your organization can live with.
+          {t("redLinesDesc1")}{" "}
+          <code className="text-primary">acceptableOptions</code>{" "}
+          {t("redLinesDesc2")}
         </p>
 
         <div className="p-5 border border-border bg-card font-mono text-sm rounded-2xl overflow-x-auto">
@@ -432,36 +425,33 @@ export default function AgentApiPage() {
             <div className="flex items-center gap-2 mb-2">
               <CheckCircle className="w-4 h-4 text-emerald-500" />
               <p className="font-medium text-emerald-500 text-sm">
-                Overlap exists
+                {t("redLineOverlap")}
               </p>
             </div>
             <p className="text-xs text-muted-foreground">
-              Both parties&apos; acceptable options have at least one in common.
-              Compromise picks from the overlap.
+              {t("redLineOverlapDesc")}
             </p>
           </div>
           <div className="p-4 border border-amber-500/30 bg-amber-500/5 rounded-xl">
             <div className="flex items-center gap-2 mb-2">
               <ShieldAlert className="w-4 h-4 text-amber-500" />
               <p className="font-medium text-amber-500 text-sm">
-                One-sided red line
+                {t("redLineOneSided")}
               </p>
             </div>
             <p className="text-xs text-muted-foreground">
-              Only one party has a red line. The engine respects it and picks
-              from their acceptable set.
+              {t("redLineOneSidedDesc")}
             </p>
           </div>
           <div className="p-4 border border-red-500/30 bg-red-500/5 rounded-xl">
             <div className="flex items-center gap-2 mb-2">
               <XCircle className="w-4 h-4 text-red-500" />
               <p className="font-medium text-red-500 text-sm">
-                Conflict — deal fails
+                {t("redLineConflict")}
               </p>
             </div>
             <p className="text-xs text-muted-foreground">
-              Both have red lines with no overlapping acceptable options. The
-              deal fails immediately before any compromise runs.
+              {t("redLineConflictDesc")}
             </p>
           </div>
         </div>
@@ -469,17 +459,16 @@ export default function AgentApiPage() {
 
       {/* Response Examples */}
       <div className="space-y-4">
-        <h2 className="text-xl font-bold">Response Examples</h2>
+        <h2 className="text-xl font-bold">{t("responseExamples")}</h2>
 
         {/* Success */}
         <div className="space-y-2">
           <h3 className="text-lg font-bold flex items-center gap-2">
             <CheckCircle className="w-4 h-4 text-emerald-500" />
-            Agreed Deal
+            {t("agreedDeal")}
           </h3>
           <p className="text-sm text-muted-foreground">
-            When both playbooks are compatible, the server resolves all clauses
-            and returns the agreement with per-clause satisfaction scores.
+            {t("agreedDealDesc")}
           </p>
           <div className="p-5 border border-border bg-card font-mono text-sm rounded-2xl overflow-x-auto">
             <pre className="text-xs leading-relaxed">
@@ -509,11 +498,10 @@ export default function AgentApiPage() {
         <div className="space-y-2">
           <h3 className="text-lg font-bold flex items-center gap-2">
             <XCircle className="w-4 h-4 text-red-500" />
-            Failed Deal (Red Line Conflict)
+            {t("failedDeal")}
           </h3>
           <p className="text-sm text-muted-foreground">
-            When irreconcilable red lines are detected, the deal fails
-            immediately with conflict details.
+            {t("failedDealDesc")}
           </p>
           <div className="p-5 border border-border bg-card font-mono text-sm rounded-2xl overflow-x-auto">
             <pre className="text-xs leading-relaxed">
@@ -535,15 +523,13 @@ export default function AgentApiPage() {
 
       {/* Quick Start Example */}
       <div className="space-y-4">
-        <h2 className="text-xl font-bold">Quick Start</h2>
-        <p className="text-muted-foreground">
-          End-to-end example using curl. Replace API keys and IDs with your own.
-        </p>
+        <h2 className="text-xl font-bold">{t("quickStart")}</h2>
+        <p className="text-muted-foreground">{t("quickStartDesc")}</p>
 
         <div className="space-y-3">
           <div className="p-4 border border-border rounded-xl">
             <p className="text-sm font-medium mb-2">
-              1. Discover the template
+              {t("quickStep1")}
             </p>
             <div className="p-3 bg-card border border-border rounded-lg font-mono overflow-x-auto">
               <code className="text-xs">
@@ -554,7 +540,7 @@ export default function AgentApiPage() {
           </div>
 
           <div className="p-4 border border-border rounded-xl">
-            <p className="text-sm font-medium mb-2">2. Create a playbook</p>
+            <p className="text-sm font-medium mb-2">{t("quickStep2")}</p>
             <div className="p-3 bg-card border border-border rounded-lg font-mono overflow-x-auto">
               <pre className="text-xs leading-relaxed">
                 {`curl -X POST /api/v1/agent/playbooks \\
@@ -568,7 +554,7 @@ export default function AgentApiPage() {
 
           <div className="p-4 border border-border rounded-xl">
             <p className="text-sm font-medium mb-2">
-              3. Initiate negotiation
+              {t("quickStep3")}
             </p>
             <div className="p-3 bg-card border border-border rounded-lg font-mono overflow-x-auto">
               <pre className="text-xs leading-relaxed">
@@ -579,13 +565,14 @@ export default function AgentApiPage() {
               </pre>
             </div>
             <p className="text-xs text-muted-foreground mt-2">
-              Returns a <code className="text-primary">negotiationToken</code>.
-              Send it to the counterparty.
+              {t("quickStep3Note1")}{" "}
+              <code className="text-primary">negotiationToken</code>.{" "}
+              {t("quickStep3Note2")}
             </p>
           </div>
 
           <div className="p-4 border border-border rounded-xl">
-            <p className="text-sm font-medium mb-2">4. Respondent joins</p>
+            <p className="text-sm font-medium mb-2">{t("quickStep4")}</p>
             <div className="p-3 bg-card border border-border rounded-lg font-mono overflow-x-auto">
               <pre className="text-xs leading-relaxed">
                 {`curl -X POST /api/v1/agent/negotiate/join \\
@@ -595,15 +582,16 @@ export default function AgentApiPage() {
               </pre>
             </div>
             <p className="text-xs text-muted-foreground mt-2">
-              Returns the resolved deal with status{" "}
-              <code className="text-primary">AGREED</code> or{" "}
+              {t("quickStep4Note")}{" "}
+              <code className="text-primary">AGREED</code>{" "}
+              {t("quickStep4NoteOr")}{" "}
               <code className="text-primary">FAILED</code>.
             </p>
           </div>
 
           <div className="p-4 border border-border rounded-xl">
             <p className="text-sm font-medium mb-2">
-              5. Download the contract
+              {t("quickStep5")}
             </p>
             <div className="p-3 bg-card border border-border rounded-lg font-mono overflow-x-auto">
               <pre className="text-xs leading-relaxed">
@@ -618,19 +606,18 @@ export default function AgentApiPage() {
 
       {/* Full Reference */}
       <div className="space-y-4">
-        <h2 className="text-xl font-bold">Full Reference</h2>
+        <h2 className="text-xl font-bold">{t("fullReference")}</h2>
         <div className="p-5 border border-border bg-muted/30 rounded-2xl">
           <p className="text-sm text-muted-foreground">
-            For complete request/response schemas, field-level documentation, and
-            advanced playbook strategies, see the full API reference at:
+            {t("fullReferenceDesc")}
           </p>
           <code className="block mt-3 text-xs bg-card p-3 border border-border rounded-xl">
             docs/agent-api.md
           </code>
           <p className="text-sm text-muted-foreground mt-3">
-            The API is versioned via the URL path (
-            <code className="text-primary">/v1/</code>). Breaking changes will
-            be introduced under a new version prefix.
+            {t("fullReferenceVersioning1")}
+            <code className="text-primary">/v1/</code>
+            {t("fullReferenceVersioning2")}
           </p>
         </div>
       </div>
