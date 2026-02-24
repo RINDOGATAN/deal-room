@@ -6,11 +6,21 @@
 
 import prisma from "@/lib/prisma";
 import { resolveLocalizedString } from "@/server/services/skills/i18n";
+import {
+  interpolateParameters,
+  buildBoilerplateVariables,
+  type ParameterSchema,
+} from "@/lib/parameters";
 
 export interface PartyData {
   name: string;
   email: string;
   company?: string;
+  legalName?: string;
+  address?: string;
+  taxId?: string;
+  signatoryName?: string;
+  signatoryTitle?: string;
 }
 
 export interface ClauseData {
@@ -191,6 +201,10 @@ export async function generateContractData(
   const language = deal.contractLanguage || "en";
   const dateLocale = language === "es" ? "es-ES" : "en-US";
 
+  // Parameter interpolation setup
+  const parameterSchema = deal.contractTemplate.parameterSchema as ParameterSchema | null;
+  const dealParams = (deal.parameters as Record<string, string>) || {};
+
   // Compile clauses with agreed options
   const clauses: ClauseData[] = [];
 
@@ -199,11 +213,14 @@ export async function generateContractData(
       continue;
     }
 
-    // Resolve localized clause title
+    // Resolve localized clause title and category
     const ctLocalized = clause.clauseTemplate.localizedContent as Record<string, Record<string, string>> | null;
     const clauseTitle = ctLocalized?.title
       ? resolveLocalizedString(ctLocalized.title, language)
       : clause.clauseTemplate.title;
+    const clauseCategory = ctLocalized?.category
+      ? resolveLocalizedString(ctLocalized.category, language)
+      : clause.clauseTemplate.category;
 
     // Find the agreed option from the clause template options
     const agreedOption = clause.clauseTemplate.options.find(
@@ -215,15 +232,23 @@ export async function generateContractData(
       const selection = clause.selections[0];
       if (selection?.option) {
         const selLocalized = selection.option.localizedContent as Record<string, unknown> | null;
+        let legalText = selLocalized?.legalText
+          ? resolveLocalizedString(selLocalized.legalText, language)
+          : selection.option.legalText;
+
+        // Interpolate deal parameters into clause legalText
+        legalText = interpolateParameters(
+          legalText, dealParams, parameterSchema,
+          clause.clauseTemplate.clauseId, language
+        );
+
         clauses.push({
           title: clauseTitle,
-          category: clause.clauseTemplate.category,
+          category: clauseCategory,
           agreedOption: selLocalized?.label
             ? resolveLocalizedString(selLocalized.label, language)
             : selection.option.label,
-          legalText: selLocalized?.legalText
-            ? resolveLocalizedString(selLocalized.legalText, language)
-            : selection.option.legalText,
+          legalText,
         });
       }
       continue;
@@ -232,15 +257,23 @@ export async function generateContractData(
     // Resolve localized option fields
     const optLocalized = agreedOption.localizedContent as Record<string, unknown> | null;
 
+    let legalText = optLocalized?.legalText
+      ? resolveLocalizedString(optLocalized.legalText, language)
+      : agreedOption.legalText;
+
+    // Interpolate deal parameters into clause legalText
+    legalText = interpolateParameters(
+      legalText, dealParams, parameterSchema,
+      clause.clauseTemplate.clauseId, language
+    );
+
     clauses.push({
       title: clauseTitle,
-      category: clause.clauseTemplate.category,
+      category: clauseCategory,
       agreedOption: optLocalized?.label
         ? resolveLocalizedString(optLocalized.label, language)
         : agreedOption.label,
-      legalText: optLocalized?.legalText
-        ? resolveLocalizedString(optLocalized.legalText, language)
-        : agreedOption.legalText,
+      legalText,
     });
   }
 
@@ -251,22 +284,39 @@ export async function generateContractData(
     day: "numeric",
   });
 
-  // Build party names with company fallback
-  const partyAName = initiator.company || initiator.name || initiator.email;
-  const partyBName = respondent.company || respondent.name || respondent.email;
+  // Extract signing details
+  const sdA = initiator.signingDetails as { legalName?: string; address?: string; taxId?: string; signatoryName?: string; signatoryTitle?: string } | null;
+  const sdB = respondent.signingDetails as { legalName?: string; address?: string; taxId?: string; signatoryName?: string; signatoryTitle?: string } | null;
+
+  // Build party names with signing details → company → name fallback
+  const partyAName = sdA?.legalName || initiator.company || initiator.name || initiator.email;
+  const partyBName = sdB?.legalName || respondent.company || respondent.name || respondent.email;
+
+  const partyAAddress = sdA?.address || "[Address]";
+  const partyBAddress = sdB?.address || "[Address]";
+  const partyASignatoryName = sdA?.signatoryName || initiator.name || "[Name]";
+  const partyBSignatoryName = sdB?.signatoryName || respondent.name || "[Name]";
+  const partyASignatoryTitle = sdA?.signatoryTitle || "[Title]";
+  const partyBSignatoryTitle = sdB?.signatoryTitle || "[Title]";
 
   // Variables for boilerplate interpolation
   const variables: Record<string, string> = {
     effectiveDate,
     partyAName,
     partyBName,
-    partyAAddress: "[Address]",
-    partyBAddress: "[Address]",
+    partyAAddress,
+    partyBAddress,
+    partyAId: sdA?.taxId || "",
+    partyBId: sdB?.taxId || "",
     partyAShortName: "Party A",
     partyBShortName: "Party B",
-    partyASignatureBlock: `For and on behalf of ${partyAName}:\n\nSignature: _______________________________\n\nName: ${initiator.name || "[Name]"}\n\nTitle: [Title]\n\nDate: ___________________________________`,
-    partyBSignatureBlock: `For and on behalf of ${partyBName}:\n\nSignature: _______________________________\n\nName: ${respondent.name || "[Name]"}\n\nTitle: [Title]\n\nDate: ___________________________________`,
+    partyASignatureBlock: `For and on behalf of ${partyAName}:\n\nSignature: _______________________________\n\nName: ${partyASignatoryName}\n\nTitle: ${partyASignatoryTitle}\n\nDate: ___________________________________`,
+    partyBSignatureBlock: `For and on behalf of ${partyBName}:\n\nSignature: _______________________________\n\nName: ${partyBSignatoryName}\n\nTitle: ${partyBSignatoryTitle}\n\nDate: ___________________________________`,
   };
+
+  // Merge deal parameter boilerplate variables into the variables dict
+  const paramBoilerplateVars = buildBoilerplateVariables(dealParams, parameterSchema);
+  Object.assign(variables, paramBoilerplateVars);
 
   // Process boilerplate with variable interpolation and i18n
   const boilerplate = processBoilerplate(
@@ -289,11 +339,21 @@ export async function generateContractData(
       name: initiator.name || initiator.email,
       email: initiator.email,
       company: initiator.company || undefined,
+      legalName: sdA?.legalName,
+      address: sdA?.address,
+      taxId: sdA?.taxId,
+      signatoryName: sdA?.signatoryName,
+      signatoryTitle: sdA?.signatoryTitle,
     },
     partyB: {
       name: respondent.name || respondent.email,
       email: respondent.email,
       company: respondent.company || undefined,
+      legalName: sdB?.legalName,
+      address: sdB?.address,
+      taxId: sdB?.taxId,
+      signatoryName: sdB?.signatoryName,
+      signatoryTitle: sdB?.signatoryTitle,
     },
     clauses,
     boilerplate,

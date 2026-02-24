@@ -196,7 +196,7 @@
           "consPartyA": ["Cannot exit bad client", "Stuck for full term"],
           "prosPartyB": ["Service continuity", "Provider commitment"],
           "consPartyB": ["Cannot exit if needs change", "Locked in"],
-          "legalText": "Neither Party may terminate this Agreement for convenience. This Agreement may only be terminated for cause in accordance with Section [X].",
+          "legalText": "Neither Party may terminate this Agreement for convenience. This Agreement may only be terminated for cause as otherwise provided in this Agreement.",
           "biasPartyA": 0.2,
           "biasPartyB": -0.2
         },

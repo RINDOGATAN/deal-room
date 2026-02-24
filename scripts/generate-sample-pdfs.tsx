@@ -14,6 +14,7 @@ import path from "path";
 import { renderToBuffer } from "@react-pdf/renderer";
 import { ContractPDF } from "../src/server/services/document/ContractPDF";
 import type { ContractData, ClauseData, BoilerplateData } from "../src/server/services/document/generator";
+import { interpolateParameters, buildBoilerplateVariables, type ParameterSchema } from "../src/lib/parameters";
 
 const LEGALSKILLS_DIR = "/Users/sme/NEL/legalskills";
 const BUILTIN_SKILLS_DIR = path.resolve(__dirname, "../skills");
@@ -58,6 +59,100 @@ interface SkillData {
   clauses: SkillClause[];
 }
 
+// Demo parameter values for parameterized templates
+const DEMO_PARAMETERS: Record<string, Record<string, string>> = {
+  SEED_INVESTMENT: {
+    "pre-money-valuation": "$2,000,000",
+    "investment-amount": "$500,000",
+    "share-count": "500,000",
+    "share-price": "$1.00",
+    "board-size": "3",
+    "dividend-rate": "8",
+    "qualified-financing-threshold": "$1,000,000",
+    "lock-up-months": "12",
+    "legal-fee-cap": "$25,000",
+    "business-description": "developing AI-powered legal technology solutions",
+    "court-county": "San Francisco",
+    "court-city": "Madrid",
+    "arbitration-institution": "ICC (International Chamber of Commerce)",
+    "arbitration-language": "English",
+  },
+  CONVERTIBLE_NOTE: {
+    "principal-amount": "500,000",
+    "valuation-cap-amount": "5,000,000",
+    "prepayment-premium": "5",
+  },
+  SAFE: {
+    "valuation-cap-amount": "5,000,000",
+    "pro-rata-threshold": "1,000,000",
+  },
+  TERM_SHEET: {
+    "round-amount": "3,000,000",
+    "closing-date": "December 31, 2026",
+    "series-designation": "A",
+    "round-minimum": "1,000,000",
+    "round-maximum": "5,000,000",
+    "milestone-1": "Product launch",
+    "milestone-2": "1,000 active users",
+    "round-tranche-count": "2",
+    "pre-money-valuation": "10,000,000",
+    "original-issue-price": "1.00",
+    "option-pool-pct": "10",
+    "liquidation-multiple": "1",
+    "debt-threshold": "100,000",
+    "dividend-rate": "8",
+    "legal-fee-cap": "25,000",
+  },
+  CONSULTING: {
+    "service-description": "software development and technical advisory services",
+    "monthly-hours": "40",
+    "deposit-pct": "25",
+    "hourly-rate": "250",
+    "max-hours": "160",
+    "term-months": "12",
+    "start-date": "January 1, 2026",
+    "geographic-area": "State of California",
+    "kill-fee-pct": "25",
+    "liability-multiple": "2",
+  },
+  SHAREHOLDERS: {
+    "board-size": "5",
+    "board-appoint-pct": "20",
+    "appointing-body": "Nominating Committee",
+    "transaction-threshold": "50,000",
+    "lockup-months": "24",
+    "min-distribution-pct": "30",
+    "mediation-body": "CEDR",
+    "exit-years": "5",
+    "non-compete-area": "United States",
+    "court-city": "London",
+    "court-county": "San Francisco",
+    "arbitration-body": "ICC",
+  },
+  EMPLOYMENT: {
+    "start-date": "March 1, 2026",
+    "end-date": "February 28, 2027",
+    "base-salary": "120,000",
+    "base-amount": "120,000",
+    "bonus-pct": "20",
+    "equity-shares": "10,000",
+    "office-days": "3",
+    "office-address": "100 Market St, San Francisco, CA 94105",
+    "time-zone": "Pacific Time (PT)",
+    "non-compete-area": "State of California",
+    "dispute-city": "San Francisco",
+    "arbitration-body": "JAMS",
+  },
+  IP_ASSIGNMENT: {
+    "ip-start-date": "January 1, 2024",
+    "ip-end-date": "December 31, 2025",
+    "subject-matter": "mobile application for fleet management",
+    "assignment-fee": "50,000",
+    "royalty-years": "5",
+    "royalty-pct": "5",
+  },
+};
+
 type Variant = "partyA" | "partyB" | "balanced";
 
 function getLabel(field: { en: string; es?: string } | string, lang: string = "en"): string {
@@ -94,6 +189,8 @@ function buildContractData(
   boilerplate: BoilerplateData | null,
   governingLaw: string,
   language: string = "en",
+  paramSchema: ParameterSchema | null = null,
+  paramValues: Record<string, string> = {},
 ): ContractData {
   const variantLabels: Record<Variant, string> = {
     partyA: "Party A Friendly",
@@ -105,30 +202,57 @@ function buildContractData(
 
   const clauses: ClauseData[] = skill.clauses.map((clause) => {
     const chosen = pickOption(clause.options, variant);
+    let legalText = getLegalText(chosen, language);
+    // Apply parameter interpolation
+    if (paramSchema?.parameters?.length) {
+      legalText = interpolateParameters(legalText, paramValues, paramSchema, clause.id, language);
+    }
     return {
       title: getLabel(clause.title, language),
       category: clause.category,
       agreedOption: getLabel(chosen.label, language),
-      legalText: getLegalText(chosen, language),
+      legalText,
     };
   });
 
-  const partyA = { name: "Alice Johnson", email: "alice@acmecorp.com", company: "Acme Corp" };
-  const partyB = { name: "Bob Smith", email: "bob@widgetsinc.com", company: "Widgets Inc" };
+  const partyA = {
+    name: "Alice Johnson",
+    email: "alice@acmecorp.com",
+    company: "Acme Corp",
+    legalName: "Acme Corp, Inc.",
+    address: "100 Market Street, Suite 300, San Francisco, CA 94105",
+    taxId: "94-1234567",
+    signatoryName: "Alice Johnson",
+    signatoryTitle: "Chief Executive Officer",
+  };
+  const partyB = {
+    name: "Bob Smith",
+    email: "bob@widgetsinc.com",
+    company: "Widgets Inc",
+    legalName: "Widgets Inc.",
+    address: "200 Broadway, Floor 10, New York, NY 10007",
+    taxId: "13-7654321",
+    signatoryName: "Bob Smith",
+    signatoryTitle: "Managing Director",
+  };
 
   // Interpolate boilerplate variables
   if (boilerplate) {
     const dateLocale = language === "es" ? "es-ES" : "en-US";
+    const paramVars = buildBoilerplateVariables(paramValues, paramSchema);
     const variables: Record<string, string> = {
       effectiveDate: new Date().toLocaleDateString(dateLocale, { year: "numeric", month: "long", day: "numeric" }),
-      partyAName: partyA.company,
-      partyBName: partyB.company,
-      partyAAddress: "[Address]",
-      partyBAddress: "[Address]",
+      partyAName: partyA.legalName,
+      partyBName: partyB.legalName,
+      partyAAddress: partyA.address,
+      partyBAddress: partyB.address,
+      partyAId: partyA.taxId,
+      partyBId: partyB.taxId,
       partyAShortName: "Party A",
       partyBShortName: "Party B",
-      partyASignatureBlock: `For and on behalf of ${partyA.company}:\n\nSignature: _______________________________\n\nName: ${partyA.name}\n\nTitle: [Title]\n\nDate: ___________________________________`,
-      partyBSignatureBlock: `For and on behalf of ${partyB.company}:\n\nSignature: _______________________________\n\nName: ${partyB.name}\n\nTitle: [Title]\n\nDate: ___________________________________`,
+      partyASignatureBlock: `For and on behalf of ${partyA.legalName}:\n\nSignature: _______________________________\n\nName: ${partyA.signatoryName}\n\nTitle: ${partyA.signatoryTitle}\n\nDate: ___________________________________`,
+      partyBSignatureBlock: `For and on behalf of ${partyB.legalName}:\n\nSignature: _______________________________\n\nName: ${partyB.signatoryName}\n\nTitle: ${partyB.signatoryTitle}\n\nDate: ___________________________________`,
+      ...paramVars,
     };
 
     const interpolate = (text: string) =>
@@ -174,25 +298,44 @@ function buildContractData(
   };
 }
 
-function loadBoilerplate(skillDir: string, governingLaw: string): BoilerplateData | null {
+function loadBoilerplate(skillDir: string, governingLaw: string, language: string = "en"): BoilerplateData | null {
   const boilerplatePath = path.join(skillDir, "boilerplate.json");
   if (!fs.existsSync(boilerplatePath)) return null;
 
   const raw = JSON.parse(fs.readFileSync(boilerplatePath, "utf-8"));
-  const jurisdictionProvision = raw.jurisdictionProvisions?.[governingLaw]
-    ? { title: raw.jurisdictionProvisions[governingLaw].title, text: raw.jurisdictionProvisions[governingLaw].text }
+  // resolve handles both plain strings and i18n objects {en, es}
+  const resolve = (val: unknown): string => {
+    if (typeof val === "string") return val;
+    if (val && typeof val === "object" && "en" in val) return getLabel(val as { en: string; es?: string }, language);
+    return "";
+  };
+
+  const jp = raw.jurisdictionProvisions?.[governingLaw];
+  const jurisdictionProvision = jp
+    ? { title: resolve(jp.title), text: resolve(jp.text) }
     : null;
 
   return {
-    contractTitle: raw.contractTitle || "",
-    preamble: raw.preamble || "",
-    background: raw.background || undefined,
-    definitions: raw.definitions || [],
-    standardClauses: raw.standardClauses || [],
-    generalProvisions: raw.generalProvisions || [],
+    contractTitle: resolve(raw.contractTitle),
+    preamble: resolve(raw.preamble),
+    background: raw.background ? resolve(raw.background) : undefined,
+    definitions: (raw.definitions || []).map((d: Record<string, unknown>) => ({
+      term: resolve(d.term),
+      definition: resolve(d.definition),
+    })),
+    standardClauses: (raw.standardClauses || []).map((c: Record<string, unknown>) => ({
+      title: resolve(c.title),
+      text: resolve(c.text),
+    })),
+    generalProvisions: (raw.generalProvisions || []).map((p: Record<string, unknown>) => ({
+      title: resolve(p.title),
+      text: resolve(p.text),
+    })),
     jurisdictionProvision,
-    signatureBlock: raw.signatureBlock || "",
-    partyLabels: raw.partyLabels || undefined,
+    signatureBlock: resolve(raw.signatureBlock),
+    partyLabels: raw.partyLabels
+      ? { partyA: resolve(raw.partyLabels.partyA), partyB: resolve(raw.partyLabels.partyB) }
+      : undefined,
   };
 }
 
@@ -255,10 +398,18 @@ async function main() {
     const clausesData: SkillData = JSON.parse(
       fs.readFileSync(path.join(skill.dir, "clauses.json"), "utf-8")
     );
-    const boilerplate = loadBoilerplate(skill.dir, skill.governingLaw);
+    const boilerplate = loadBoilerplate(skill.dir, skill.governingLaw, skill.language);
+
+    // Load parameters.json if present
+    let paramSchema: ParameterSchema | null = null;
+    const paramsPath = path.join(skill.dir, "parameters.json");
+    if (fs.existsSync(paramsPath)) {
+      paramSchema = JSON.parse(fs.readFileSync(paramsPath, "utf-8"));
+    }
+    const paramValues = DEMO_PARAMETERS[clausesData.contractType] || {};
 
     for (const variant of variants) {
-      const contractData = buildContractData(clausesData, variant, boilerplate, skill.governingLaw, skill.language);
+      const contractData = buildContractData(clausesData, variant, boilerplate, skill.governingLaw, skill.language, paramSchema, paramValues);
       const filename = `${skill.name}_${variant}.pdf`;
       const outPath = path.join(OUTPUT_DIR, filename);
 

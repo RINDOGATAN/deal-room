@@ -1,0 +1,156 @@
+{
+  "version": "1.0",
+  "parameters": [
+    {
+      "id": "pre-money-valuation",
+      "token": "amount",
+      "scope": "pre-money-valuation",
+      "type": "currency",
+      "required": true,
+      "label": { "en": "Pre-Money Valuation", "es": "Valoracion Pre-Money" },
+      "hint": { "en": "Agreed company value before investment", "es": "Valor acordado de la empresa antes de la inversion" },
+      "placeholder": { "en": "e.g. $2,000,000", "es": "p. ej. 2.000.000 $" }
+    },
+    {
+      "id": "investment-amount",
+      "token": "amount",
+      "scope": "investment-shares",
+      "type": "currency",
+      "required": true,
+      "label": { "en": "Investment Amount", "es": "Importe de Inversion" },
+      "hint": { "en": "Total capital to be invested", "es": "Capital total a invertir" },
+      "placeholder": { "en": "e.g. $500,000", "es": "p. ej. 500.000 $" }
+    },
+    {
+      "id": "share-count",
+      "token": "number",
+      "scope": "investment-shares",
+      "type": "number",
+      "required": true,
+      "label": { "en": "Number of Shares", "es": "Numero de Participaciones" },
+      "hint": { "en": "Preferred shares to be issued", "es": "Participaciones preferentes a emitir" },
+      "placeholder": { "en": "e.g. 500,000", "es": "p. ej. 500.000" }
+    },
+    {
+      "id": "share-price",
+      "token": "price",
+      "scope": "investment-shares",
+      "type": "currency",
+      "required": true,
+      "label": { "en": "Price Per Share", "es": "Precio por Participacion" },
+      "hint": { "en": "Price per preferred share", "es": "Precio por participacion preferente" },
+      "placeholder": { "en": "e.g. $1.00", "es": "p. ej. 1,00 $" }
+    },
+    {
+      "id": "board-size",
+      "token": "number",
+      "scope": "board-composition",
+      "type": "number",
+      "required": true,
+      "label": { "en": "Board Size", "es": "Tamano del Consejo" },
+      "hint": { "en": "Total number of board directors", "es": "Numero total de administradores" },
+      "placeholder": { "en": "e.g. 3", "es": "p. ej. 3" }
+    },
+    {
+      "id": "dividend-rate",
+      "token": "percentage",
+      "scope": "dividend-rights",
+      "type": "percentage",
+      "required": false,
+      "label": { "en": "Dividend Rate", "es": "Tipo de Dividendo" },
+      "hint": { "en": "Annual dividend percentage (if applicable)", "es": "Porcentaje de dividendo anual (si procede)" },
+      "placeholder": { "en": "e.g. 8", "es": "p. ej. 8" },
+      "default": "8"
+    },
+    {
+      "id": "qualified-financing-threshold",
+      "token": "amount",
+      "scope": "pro-rata-rights",
+      "type": "currency",
+      "required": false,
+      "label": { "en": "Qualified Financing Threshold", "es": "Umbral de Financiacion Cualificada" },
+      "hint": { "en": "Minimum round size that triggers pro-rata rights", "es": "Tamano minimo de ronda que activa derechos proporcionales" },
+      "placeholder": { "en": "e.g. $1,000,000", "es": "p. ej. 1.000.000 $" },
+      "default": "$1,000,000",
+      "boilerplateVariable": "qualifiedFinancingThreshold"
+    },
+    {
+      "id": "lock-up-months",
+      "token": "months",
+      "scope": "transfer-restrictions",
+      "type": "number",
+      "required": false,
+      "label": { "en": "Lock-Up Period (months)", "es": "Periodo de Bloqueo (meses)" },
+      "hint": { "en": "Months shares cannot be transferred after closing", "es": "Meses en que no se pueden transmitir las participaciones tras el cierre" },
+      "placeholder": { "en": "e.g. 12", "es": "p. ej. 12" },
+      "default": "12"
+    },
+    {
+      "id": "legal-fee-cap",
+      "token": "amount",
+      "scope": "*",
+      "type": "currency",
+      "required": false,
+      "label": { "en": "Legal Fee Cap", "es": "Limite de Costes Legales" },
+      "hint": { "en": "Maximum reimbursable legal fees for the investor", "es": "Maximo de honorarios legales reembolsables al inversor" },
+      "placeholder": { "en": "e.g. $25,000", "es": "p. ej. 25.000 $" },
+      "default": "$25,000",
+      "boilerplateVariable": "legalFeeCap"
+    },
+    {
+      "id": "business-description",
+      "token": "description of business",
+      "scope": "*",
+      "type": "text",
+      "required": false,
+      "label": { "en": "Business Description", "es": "Descripcion del Negocio" },
+      "hint": { "en": "Brief description of the company's business", "es": "Breve descripcion de la actividad de la empresa" },
+      "placeholder": { "en": "e.g. developing AI-powered legal tools", "es": "p. ej. desarrollo de herramientas legales con IA" },
+      "boilerplateVariable": "businessDescription"
+    },
+    {
+      "id": "court-county",
+      "token": "county",
+      "scope": "governing-law",
+      "type": "text",
+      "required": false,
+      "label": { "en": "Court County (California)", "es": "Condado del Tribunal (California)" },
+      "hint": { "en": "County for California court jurisdiction", "es": "Condado para la jurisdiccion de los tribunales de California" },
+      "placeholder": { "en": "e.g. San Francisco", "es": "p. ej. San Francisco" },
+      "default": "San Francisco"
+    },
+    {
+      "id": "court-city",
+      "token": "city",
+      "scope": "governing-law",
+      "type": "text",
+      "required": false,
+      "label": { "en": "Court City", "es": "Ciudad del Tribunal" },
+      "hint": { "en": "City for court jurisdiction or arbitration seat", "es": "Ciudad para la jurisdiccion del tribunal o sede del arbitraje" },
+      "placeholder": { "en": "e.g. Madrid", "es": "p. ej. Madrid" },
+      "default": "Madrid"
+    },
+    {
+      "id": "arbitration-institution",
+      "token": "arbitration institution",
+      "scope": "governing-law",
+      "type": "text",
+      "required": false,
+      "label": { "en": "Arbitration Institution", "es": "Institucion Arbitral" },
+      "hint": { "en": "Institution administering arbitration (if arbitration is selected)", "es": "Institucion que administra el arbitraje (si se selecciona arbitraje)" },
+      "placeholder": { "en": "e.g. ICC, LCIA, JAMS", "es": "p. ej. ICC, LCIA, CIMA" },
+      "default": "ICC (International Chamber of Commerce)"
+    },
+    {
+      "id": "arbitration-language",
+      "token": "arbitration language",
+      "scope": "governing-law",
+      "type": "choice",
+      "required": false,
+      "label": { "en": "Arbitration Language", "es": "Idioma del Arbitraje" },
+      "hint": { "en": "Language for arbitration proceedings", "es": "Idioma de los procedimientos arbitrales" },
+      "options": ["English", "Spanish"],
+      "default": "English"
+    }
+  ]
+}

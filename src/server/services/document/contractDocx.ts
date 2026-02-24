@@ -756,7 +756,7 @@ function addSignatureBlocks(
     new Paragraph({
       children: [
         new TextRun({
-          text: data.partyA.company || data.partyA.name,
+          text: data.partyA.legalName || data.partyA.company || data.partyA.name,
           bold: true,
           size: 20,
           font: "Times New Roman",
@@ -764,12 +764,24 @@ function addSignatureBlocks(
       ],
     })
   );
-  if (data.partyA.company) {
+  children.push(
+    new Paragraph({
+      children: [
+        new TextRun({
+          text: data.partyA.signatoryName || data.partyA.name,
+          size: 18,
+          color: "666666",
+          font: "Times New Roman",
+        }),
+      ],
+    })
+  );
+  if (data.partyA.signatoryTitle) {
     children.push(
       new Paragraph({
         children: [
           new TextRun({
-            text: data.partyA.name,
+            text: data.partyA.signatoryTitle,
             size: 18,
             color: "666666",
             font: "Times New Roman",
@@ -845,7 +857,7 @@ function addSignatureBlocks(
     new Paragraph({
       children: [
         new TextRun({
-          text: data.partyB.company || data.partyB.name,
+          text: data.partyB.legalName || data.partyB.company || data.partyB.name,
           bold: true,
           size: 20,
           font: "Times New Roman",
@@ -853,12 +865,24 @@ function addSignatureBlocks(
       ],
     })
   );
-  if (data.partyB.company) {
+  children.push(
+    new Paragraph({
+      children: [
+        new TextRun({
+          text: data.partyB.signatoryName || data.partyB.name,
+          size: 18,
+          color: "666666",
+          font: "Times New Roman",
+        }),
+      ],
+    })
+  );
+  if (data.partyB.signatoryTitle) {
     children.push(
       new Paragraph({
         children: [
           new TextRun({
-            text: data.partyB.name,
+            text: data.partyB.signatoryTitle,
             size: 18,
             color: "666666",
             font: "Times New Roman",

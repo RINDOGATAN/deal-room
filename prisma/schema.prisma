@@ -291,6 +291,7 @@ model ContractTemplate {
   descriptionLocalized   Json?     // {"en":"...","es":"..."}
   category               String?   // e.g., "corporate", "investment", "privacy"
   categoryLocalized      Json?     // {"en":"Corporate","es":"Societario"}
+  parameterSchema        Json?     // Parameter definitions from parameters.json
   isActive        Boolean  @default(true)
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
@@ -399,6 +400,7 @@ model DealRoom {
   contractTemplateId String
   governingLaw       GoverningLaw   // Determines applicable law framework
   contractLanguage   String         @default("en") // "en" or "es" for contract output language
+  parameters         Json?          // Deal-specific parameter values {"param-id": "value", ...}
   status             DealRoomStatus @default(DRAFT)
   currentRound       Int            @default(0)
   lawyerVettingId    String?
@@ -431,6 +433,9 @@ model DealRoomParty {
   submittedAt DateTime?   // When selections were submitted
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
+
+  // Signing / Execution Details
+  signingDetails  Json?   // { legalName, address, taxId?, signatoryName, signatoryTitle }
 
   // Attorney Review
   attorneyReviewRequested   Boolean    @default(false)

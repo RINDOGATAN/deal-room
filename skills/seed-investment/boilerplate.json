@@ -1,7 +1,7 @@
 {
   "contractTitle": "SEED INVESTMENT AGREEMENT",
   "preamble": "This Seed Investment Agreement (this \"Agreement\") is entered into as of {effectiveDate} (the \"Effective Date\") by and between:\n\nTHE COMPANY:\n{partyAName}, a company with its registered address at {partyAAddress} (the \"Company\")\n\nTHE INVESTOR:\n{partyBName}, with address at {partyBAddress} (the \"Investor\")",
-  "background": "WHEREAS the Company is engaged in [description of business] and seeks to raise capital to fund its operations and growth; and WHEREAS the Investor wishes to invest in the Company on the terms and conditions set forth herein; NOW, THEREFORE, in consideration of the mutual promises and covenants contained in this Agreement, and for other good and valuable consideration, the receipt and sufficiency of which are hereby acknowledged, the parties agree as follows:",
+  "background": "WHEREAS the Company is engaged in {businessDescription} and seeks to raise capital to fund its operations and growth; and WHEREAS the Investor wishes to invest in the Company on the terms and conditions set forth herein; NOW, THEREFORE, in consideration of the mutual promises and covenants contained in this Agreement, and for other good and valuable consideration, the receipt and sufficiency of which are hereby acknowledged, the parties agree as follows:",
   "definitions": [
     {
       "term": "Shares",
@@ -17,7 +17,7 @@
     },
     {
       "term": "Qualified Financing",
-      "definition": "means a bona fide equity financing transaction in which the Company issues and sells shares of its preferred stock with aggregate gross proceeds of at least [amount], excluding any conversion of convertible instruments."
+      "definition": "means a bona fide equity financing transaction in which the Company issues and sells shares of its preferred stock with aggregate gross proceeds of at least {qualifiedFinancingThreshold}, excluding any conversion of convertible instruments."
     },
     {
       "term": "Liquidation Event",
@@ -55,7 +55,7 @@
     },
     {
       "title": "Expenses",
-      "text": "Each party shall bear its own legal and professional fees incurred in connection with the negotiation and execution of this Agreement. Notwithstanding the foregoing, the Company shall reimburse the Investor for its reasonable legal fees actually incurred in connection with the transaction, up to a maximum of [amount], payable at or promptly following the Closing."
+      "text": "Each party shall bear its own legal and professional fees incurred in connection with the negotiation and execution of this Agreement. Notwithstanding the foregoing, the Company shall reimburse the Investor for its reasonable legal fees actually incurred in connection with the transaction, up to a maximum of {legalFeeCap}, payable at or promptly following the Closing."
     },
     {
       "title": "Representations and Warranties",

@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import {
   Workflow,
   Package,
@@ -8,85 +11,85 @@ import {
   ClipboardCheck,
 } from "lucide-react";
 
-const sections = [
+const sectionDefs = [
   {
     href: "/docs/how-it-works",
     icon: Workflow,
-    title: "Deal Lifecycle",
-    description:
-      "Learn the complete deal lifecycle from creation to signature, including the 6-stage workflow.",
+    titleKey: "sectionLifecycleTitle",
+    descKey: "sectionLifecycleDesc",
   },
   {
     href: "/docs/compromise",
     icon: Scale,
-    title: "Compromise Algorithm",
-    description:
-      "Discover the weighted stake-based algorithm that suggests fair compromises. Try it interactively.",
+    titleKey: "sectionCompromiseTitle",
+    descKey: "sectionCompromiseDesc",
   },
   {
     href: "/docs/skills",
     icon: Package,
-    title: "Skills & Licensing",
-    description:
-      "Understand how attorney-created contract templates power negotiations with multi-language support.",
+    titleKey: "sectionSkillsTitle",
+    descKey: "sectionSkillsDesc",
   },
   {
     href: "/docs/vetting",
     icon: ClipboardCheck,
-    title: "Lawyer Vetting",
-    description:
-      "How attorneys review templates and pre-select recommended options before sharing with clients.",
+    titleKey: "sectionVettingTitle",
+    descKey: "sectionVettingDesc",
   },
   {
     href: "/docs/supervision",
     icon: Eye,
-    title: "Supervision",
-    description:
-      "Explore the two-level administration system with platform admins and supervisors.",
+    titleKey: "sectionSupervisionTitle",
+    descKey: "sectionSupervisionDesc",
   },
 ];
 
 export default function DocsPage() {
+  const t = useTranslations("docsHome");
+
   return (
     <div className="space-y-12">
       {/* Hero */}
       <div className="space-y-4">
         <h1 className="text-4xl font-bold">
-          How <span className="text-primary">Dealroom</span> Works
+          {t.rich("heroTitle", {
+            highlight: (chunks) => (
+              <span className="text-primary">{chunks}</span>
+            ),
+          })}
         </h1>
         <p className="text-xl text-muted-foreground max-w-2xl">
-          Two-party asynchronous contract negotiation with a weighted compromise
-          algorithm that helps both sides reach fair agreements.
+          {t("heroSubtitle")}
         </p>
       </div>
 
       {/* Value Props */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div className="card-brutal p-4">
-          <p className="font-semibold mb-1">Asynchronous</p>
+          <p className="font-semibold mb-1">{t("propAsyncTitle")}</p>
           <p className="text-sm text-muted-foreground">
-            Negotiate on your schedule. No coordinated meetings required.
+            {t("propAsyncDesc")}
           </p>
         </div>
         <div className="card-brutal p-4">
-          <p className="font-semibold mb-1">Fair Algorithm</p>
+          <p className="font-semibold mb-1">{t("propAlgorithmTitle")}</p>
           <p className="text-sm text-muted-foreground">
-            Stake-weighted suggestions that balance both parties' priorities.
+            {t("propAlgorithmDesc")}
           </p>
         </div>
         <div className="card-brutal p-4">
-          <p className="font-semibold mb-1">Attorney-Crafted</p>
+          <p className="font-semibold mb-1">{t("propAttorneyTitle")}</p>
           <p className="text-sm text-muted-foreground">
-            Professional contract templates with jurisdiction-aware options.
+            {t("propAttorneyDesc")}
           </p>
         </div>
       </div>
 
       {/* Section Cards */}
       <div>
-        <h2 className="text-xl font-bold mb-6">Documentation Sections</h2>
+        <h2 className="text-xl font-bold mb-6">{t("sectionsHeading")}</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {sections.map((section) => {
+          {sectionDefs.map((section) => {
             const Icon = section.icon;
             return (
               <Link
@@ -100,11 +103,11 @@ export default function DocsPage() {
                   </div>
                   <div className="flex-1">
                     <h3 className="font-bold text-lg group-hover:text-primary transition-colors flex items-center gap-2">
-                      {section.title}
+                      {t(section.titleKey)}
                       <ArrowRight className="w-4 h-4 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
                     </h3>
                     <p className="text-sm text-muted-foreground mt-1">
-                      {section.description}
+                      {t(section.descKey)}
                     </p>
                   </div>
                 </div>
@@ -116,56 +119,56 @@ export default function DocsPage() {
 
       {/* Quick Start */}
       <div className="border border-primary/30 p-6 bg-primary/5 rounded-2xl">
-        <h2 className="text-xl font-bold mb-4">Quick Start</h2>
+        <h2 className="text-xl font-bold mb-4">{t("quickStartHeading")}</h2>
         <div className="space-y-3">
           <p className="text-muted-foreground">
-            The typical Dealroom workflow:
+            {t("quickStartIntro")}
           </p>
           <ol className="list-decimal list-inside space-y-2 text-sm">
             <li>
-              <span className="text-foreground font-medium">Create a deal</span>{" "}
+              <span className="text-foreground font-medium">{t("step1Label")}</span>{" "}
               <span className="text-muted-foreground">
-                — Select a contract type and jurisdiction
+                — {t("step1Desc")}
               </span>
             </li>
             <li>
               <span className="text-foreground font-medium">
-                Invite the other party
+                {t("step2Label")}
               </span>{" "}
               <span className="text-muted-foreground">
-                — They receive an email invitation to join
+                — {t("step2Desc")}
               </span>
             </li>
             <li>
               <span className="text-foreground font-medium">
-                Both parties submit preferences
+                {t("step3Label")}
               </span>{" "}
               <span className="text-muted-foreground">
-                — Select options and set priority/flexibility for each clause
+                — {t("step3Desc")}
               </span>
             </li>
             <li>
               <span className="text-foreground font-medium">
-                Algorithm suggests compromises
+                {t("step4Label")}
               </span>{" "}
               <span className="text-muted-foreground">
-                — Weighted stake calculation finds fair middle ground
+                — {t("step4Desc")}
               </span>
             </li>
             <li>
               <span className="text-foreground font-medium">
-                Accept or counter
+                {t("step5Label")}
               </span>{" "}
               <span className="text-muted-foreground">
-                — Review suggestions and negotiate if needed
+                — {t("step5Desc")}
               </span>
             </li>
             <li>
               <span className="text-foreground font-medium">
-                Sign the contract
+                {t("step6Label")}
               </span>{" "}
               <span className="text-muted-foreground">
-                — E-signature integration for final execution
+                — {t("step6Desc")}
               </span>
             </li>
           </ol>

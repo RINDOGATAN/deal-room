@@ -468,11 +468,14 @@ export function ContractPDF({ data }: ContractPDFProps) {
                   </Text>
                   <View style={styles.signatureLine} />
                   <Text style={styles.signaturePartyName}>
-                    {data.partyA.company || data.partyA.name}
+                    {data.partyA.legalName || data.partyA.company || data.partyA.name}
                   </Text>
-                  {data.partyA.company && (
+                  <Text style={{ fontSize: 9, color: "#666" }}>
+                    {data.partyA.signatoryName || data.partyA.name}
+                  </Text>
+                  {data.partyA.signatoryTitle && (
                     <Text style={{ fontSize: 9, color: "#666" }}>
-                      {data.partyA.name}
+                      {data.partyA.signatoryTitle}
                     </Text>
                   )}
                   <Text style={styles.signatureDate}>{labels.date}</Text>
@@ -484,11 +487,14 @@ export function ContractPDF({ data }: ContractPDFProps) {
                   </Text>
                   <View style={styles.signatureLine} />
                   <Text style={styles.signaturePartyName}>
-                    {data.partyB.company || data.partyB.name}
+                    {data.partyB.legalName || data.partyB.company || data.partyB.name}
                   </Text>
-                  {data.partyB.company && (
+                  <Text style={{ fontSize: 9, color: "#666" }}>
+                    {data.partyB.signatoryName || data.partyB.name}
+                  </Text>
+                  {data.partyB.signatoryTitle && (
                     <Text style={{ fontSize: 9, color: "#666" }}>
-                      {data.partyB.name}
+                      {data.partyB.signatoryTitle}
                     </Text>
                   )}
                   <Text style={styles.signatureDate}>{labels.date}</Text>
@@ -562,11 +568,14 @@ export function ContractPDF({ data }: ContractPDFProps) {
                   <Text style={styles.signatureLabel}>{labels.partyA}</Text>
                   <View style={styles.signatureLine} />
                   <Text style={styles.signaturePartyName}>
-                    {data.partyA.name}
+                    {data.partyA.legalName || data.partyA.company || data.partyA.name}
                   </Text>
-                  {data.partyA.company && (
+                  <Text style={{ fontSize: 9, color: "#666" }}>
+                    {data.partyA.signatoryName || data.partyA.name}
+                  </Text>
+                  {data.partyA.signatoryTitle && (
                     <Text style={{ fontSize: 9, color: "#666" }}>
-                      {data.partyA.company}
+                      {data.partyA.signatoryTitle}
                     </Text>
                   )}
                   <Text style={styles.signatureDate}>{labels.date}</Text>
@@ -576,11 +585,14 @@ export function ContractPDF({ data }: ContractPDFProps) {
                   <Text style={styles.signatureLabel}>{labels.partyB}</Text>
                   <View style={styles.signatureLine} />
                   <Text style={styles.signaturePartyName}>
-                    {data.partyB.name}
+                    {data.partyB.legalName || data.partyB.company || data.partyB.name}
                   </Text>
-                  {data.partyB.company && (
+                  <Text style={{ fontSize: 9, color: "#666" }}>
+                    {data.partyB.signatoryName || data.partyB.name}
+                  </Text>
+                  {data.partyB.signatoryTitle && (
                     <Text style={{ fontSize: 9, color: "#666" }}>
-                      {data.partyB.company}
+                      {data.partyB.signatoryTitle}
                     </Text>
                   )}
                   <Text style={styles.signatureDate}>{labels.date}</Text>

@@ -1,0 +1,1798 @@
+{
+  "contractType": "SEED_INVESTMENT",
+  "displayName": {
+    "en": "Seed Investment Agreement",
+    "es": "Pacto de Inversión"
+  },
+  "description": {
+    "en": "Priced equity seed investment agreement for early-stage companies, covering share issuance, investor protections, governance rights, and founder obligations",
+    "es": "Pacto de inversión en capital semilla con precio fijado para empresas en fase inicial, que cubre la emisión de participaciones, protecciones del inversor, derechos de gobernanza y obligaciones de los fundadores"
+  },
+  "version": "1.0",
+  "clauses": [
+    {
+      "id": "pre-money-valuation",
+      "title": {
+        "en": "Pre-Money Valuation",
+        "es": "Valoración Pre-Money"
+      },
+      "category": "Economics",
+      "order": 1,
+      "plainDescription": {
+        "en": "What is the company's agreed value before the investment? This determines how much equity the investor receives for their capital.",
+        "es": "¿Cuál es el valor acordado de la sociedad antes de la inversión? Esto determina cuánta participación recibe el inversor por su capital."
+      },
+      "legalContext": {
+        "en": "The pre-money valuation sets the price per share and directly determines the investor's ownership percentage. In California, this is typically documented in the Certificate of Incorporation. Under English law, it affects the share premium account. Under Spanish law (LSC), it determines the prima de emisión.",
+        "es": "La valoración pre-money fija el precio por participación y determina directamente el porcentaje de propiedad del inversor. En California, se documenta en el Certificate of Incorporation. En derecho inglés, afecta a la cuenta de prima de emisión. Conforme a la LSC española, determina la prima de emisión."
+      },
+      "isRequired": true,
+      "options": [
+        {
+          "id": "valuation-low",
+          "code": "low",
+          "label": {
+            "en": "Low — Early Traction Valuation",
+            "es": "Baja — Valoración de Tracción Inicial"
+          },
+          "order": 1,
+          "plainDescription": {
+            "en": "A conservative valuation reflecting early-stage risk, giving the investor a larger ownership stake for the same investment amount.",
+            "es": "Una valoración conservadora que refleja el riesgo de fase inicial, otorgando al inversor una mayor participación por el mismo importe de inversión."
+          },
+          "prosPartyA": {
+            "en": ["Easier to close funding quickly", "Sets achievable milestone for next round"],
+            "es": ["Más fácil cerrar la financiación rápidamente", "Establece hitos alcanzables para la siguiente ronda"]
+          },
+          "consPartyA": {
+            "en": ["Greater dilution for founders", "Less capital retained per share sold"],
+            "es": ["Mayor dilución para los fundadores", "Menos capital retenido por participación vendida"]
+          },
+          "prosPartyB": {
+            "en": ["More equity for same investment", "Better risk-adjusted entry price", "Higher potential return multiple"],
+            "es": ["Más participación por la misma inversión", "Mejor precio de entrada ajustado al riesgo", "Mayor múltiplo de retorno potencial"]
+          },
+          "consPartyB": {
+            "en": ["May signal low confidence in company", "Could create down-round pressure later"],
+            "es": ["Puede señalar poca confianza en la empresa", "Podría crear presión de ronda bajista más adelante"]
+          },
+          "legalText": {
+            "en": "The pre-money valuation of the Company is agreed at [amount] (the \"Pre-Money Valuation\"), reflecting the early-stage nature of the business and associated investment risk. The price per share shall be calculated by dividing the Pre-Money Valuation by the fully diluted share capital of the Company immediately prior to the Closing.",
+            "es": "La valoración pre-money de la Sociedad se acuerda en [importe] (la \"Valoración Pre-Money\"), reflejando la naturaleza de fase inicial del negocio y el riesgo de inversión asociado. El precio por participación se calculará dividiendo la Valoración Pre-Money entre el capital social totalmente diluido de la Sociedad inmediatamente antes del Cierre."
+          },
+          "biasPartyA": -0.4,
+          "biasPartyB": 0.4,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        },
+        {
+          "id": "valuation-standard",
+          "code": "standard",
+          "label": {
+            "en": "Standard — Market Valuation",
+            "es": "Estándar — Valoración de Mercado"
+          },
+          "order": 2,
+          "plainDescription": {
+            "en": "A market-rate valuation based on comparable seed-stage companies, balancing founder dilution against investor upside.",
+            "es": "Una valoración a precio de mercado basada en empresas comparables en fase semilla, equilibrando la dilución del fundador con el potencial del inversor."
+          },
+          "prosPartyA": {
+            "en": ["Fair dilution based on market benchmarks", "Defensible valuation for future rounds"],
+            "es": ["Dilución justa basada en referencias de mercado", "Valoración defendible para futuras rondas"]
+          },
+          "consPartyA": {
+            "en": ["Moderate founder dilution", "May require stronger traction evidence"],
+            "es": ["Dilución moderada del fundador", "Puede requerir evidencia de tracción más sólida"]
+          },
+          "prosPartyB": {
+            "en": ["Fair entry price with market validation", "Reasonable ownership percentage"],
+            "es": ["Precio de entrada justo con validación de mercado", "Porcentaje de propiedad razonable"]
+          },
+          "consPartyB": {
+            "en": ["Standard returns unless company outperforms", "Less upside than a lower valuation"],
+            "es": ["Retornos estándar salvo que la empresa supere expectativas", "Menos potencial que una valoración más baja"]
+          },
+          "legalText": {
+            "en": "The pre-money valuation of the Company is agreed at [amount] (the \"Pre-Money Valuation\"), determined on an arm's-length basis with reference to comparable market transactions. The price per share shall be calculated by dividing the Pre-Money Valuation by the fully diluted share capital of the Company immediately prior to the Closing.",
+            "es": "La valoración pre-money de la Sociedad se acuerda en [importe] (la \"Valoración Pre-Money\"), determinada en condiciones de mercado con referencia a transacciones comparables. El precio por participación se calculará dividiendo la Valoración Pre-Money entre el capital social totalmente diluido de la Sociedad inmediatamente antes del Cierre."
+          },
+          "biasPartyA": 0.0,
+          "biasPartyB": 0.0,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        },
+        {
+          "id": "valuation-high",
+          "code": "high",
+          "label": {
+            "en": "High — Premium Valuation",
+            "es": "Alta — Valoración con Prima"
+          },
+          "order": 3,
+          "plainDescription": {
+            "en": "A premium valuation reflecting strong traction or competitive demand, minimizing founder dilution but increasing investor risk.",
+            "es": "Una valoración con prima que refleja tracción sólida o demanda competitiva, minimizando la dilución del fundador pero aumentando el riesgo del inversor."
+          },
+          "prosPartyA": {
+            "en": ["Minimal founder dilution", "Signals strong market position", "More capital retained per share"],
+            "es": ["Dilución mínima del fundador", "Señala posición sólida en el mercado", "Más capital retenido por participación"]
+          },
+          "consPartyA": {
+            "en": ["Higher bar for next round valuation", "Investor may seek additional protections"],
+            "es": ["Listón más alto para la valoración de la siguiente ronda", "El inversor puede buscar protecciones adicionales"]
+          },
+          "prosPartyB": {
+            "en": ["Backing a high-confidence company", "Strong signal from founder commitment"],
+            "es": ["Respaldar una empresa de alta confianza", "Señal fuerte del compromiso del fundador"]
+          },
+          "consPartyB": {
+            "en": ["Less equity per dollar invested", "Higher risk if company underperforms", "Harder to achieve target returns"],
+            "es": ["Menos participación por unidad invertida", "Mayor riesgo si la empresa no cumple", "Más difícil alcanzar retornos objetivo"]
+          },
+          "legalText": {
+            "en": "The pre-money valuation of the Company is agreed at [amount] (the \"Pre-Money Valuation\"), reflecting the Company's demonstrated traction and competitive market position. The price per share shall be calculated by dividing the Pre-Money Valuation by the fully diluted share capital of the Company immediately prior to the Closing.",
+            "es": "La valoración pre-money de la Sociedad se acuerda en [importe] (la \"Valoración Pre-Money\"), reflejando la tracción demostrada y la posición competitiva de la Sociedad en el mercado. El precio por participación se calculará dividiendo la Valoración Pre-Money entre el capital social totalmente diluido de la Sociedad inmediatamente antes del Cierre."
+          },
+          "biasPartyA": 0.4,
+          "biasPartyB": -0.4,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        }
+      ]
+    },
+    {
+      "id": "investment-shares",
+      "title": {
+        "en": "Investment Amount & Share Price",
+        "es": "Importe de Inversión y Precio por Participación"
+      },
+      "category": "Economics",
+      "order": 2,
+      "plainDescription": {
+        "en": "How large is the investment round and how is the share price determined? This defines the total capital raised and the mechanics of share issuance.",
+        "es": "¿Cuál es el tamaño de la ronda de inversión y cómo se determina el precio por participación? Define el capital total captado y la mecánica de emisión de participaciones."
+      },
+      "legalContext": {
+        "en": "Under Delaware/California corporate law, the board sets the share price subject to fiduciary duties. Under the UK Companies Act 2006 s.580, shares cannot be issued at a discount to nominal value. Under Spanish LSC art.299, the junta general must approve share issuances with prima de emisión.",
+        "es": "Conforme al derecho societario de Delaware/California, el consejo fija el precio de las participaciones sujeto a deberes fiduciarios. Conforme a la Companies Act 2006 del Reino Unido, s.580, las acciones no pueden emitirse con descuento sobre el valor nominal. Conforme al art.299 de la LSC española, la junta general debe aprobar las ampliaciones con prima de emisión."
+      },
+      "isRequired": true,
+      "options": [
+        {
+          "id": "investment-small",
+          "code": "small",
+          "label": {
+            "en": "Small — Minimal Round",
+            "es": "Pequeña — Ronda Mínima"
+          },
+          "order": 1,
+          "plainDescription": {
+            "en": "A smaller investment round providing limited runway, preserving founder equity but with tighter operating constraints.",
+            "es": "Una ronda de inversión pequeña que proporciona pista limitada, preservando la participación del fundador pero con restricciones operativas más ajustadas."
+          },
+          "prosPartyA": {
+            "en": ["Less dilution for founders", "Simpler cap table", "Faster to close"],
+            "es": ["Menor dilución para fundadores", "Tabla de capitalización más simple", "Cierre más rápido"]
+          },
+          "consPartyA": {
+            "en": ["Limited runway", "May need to raise again sooner", "Less capital for growth"],
+            "es": ["Pista limitada", "Puede necesitar captar fondos antes", "Menos capital para crecer"]
+          },
+          "prosPartyB": {
+            "en": ["Lower capital at risk", "Can participate in follow-on rounds"],
+            "es": ["Menor capital en riesgo", "Puede participar en rondas posteriores"]
+          },
+          "consPartyB": {
+            "en": ["Smaller position in the company", "Company may struggle without sufficient capital"],
+            "es": ["Posición menor en la empresa", "La empresa puede tener dificultades sin capital suficiente"]
+          },
+          "legalText": {
+            "en": "The Investor agrees to invest [amount] (the \"Investment Amount\") in the Company in exchange for the issuance of [number] shares of Preferred Stock at a price of [price] per share (the \"Share Price\"). The Share Price is derived from the agreed Pre-Money Valuation divided by the fully diluted share capital.",
+            "es": "El Inversor se compromete a invertir [importe] (el \"Importe de Inversión\") en la Sociedad a cambio de la emisión de [número] participaciones preferentes a un precio de [precio] por participación (el \"Precio por Participación\"). El Precio por Participación se deriva de la Valoración Pre-Money acordada dividida entre el capital social totalmente diluido."
+          },
+          "biasPartyA": 0.4,
+          "biasPartyB": -0.4,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        },
+        {
+          "id": "investment-standard",
+          "code": "standard",
+          "label": {
+            "en": "Standard — Market Round",
+            "es": "Estándar — Ronda de Mercado"
+          },
+          "order": 2,
+          "plainDescription": {
+            "en": "A market-sized seed round providing 12–18 months of runway, balancing dilution against operational needs.",
+            "es": "Una ronda semilla de tamaño de mercado que proporciona 12–18 meses de pista, equilibrando dilución con necesidades operativas."
+          },
+          "prosPartyA": {
+            "en": ["Adequate runway for key milestones", "Balanced dilution", "Standard market terms"],
+            "es": ["Pista adecuada para hitos clave", "Dilución equilibrada", "Condiciones estándar de mercado"]
+          },
+          "consPartyA": {
+            "en": ["Moderate dilution", "Must deliver on milestones to raise next round"],
+            "es": ["Dilución moderada", "Debe cumplir hitos para captar la siguiente ronda"]
+          },
+          "prosPartyB": {
+            "en": ["Meaningful ownership stake", "Company well-funded for next milestones"],
+            "es": ["Participación significativa", "Empresa bien financiada para próximos hitos"]
+          },
+          "consPartyB": {
+            "en": ["Moderate capital commitment", "Standard terms limit special protections"],
+            "es": ["Compromiso de capital moderado", "Condiciones estándar limitan protecciones especiales"]
+          },
+          "legalText": {
+            "en": "The Investor agrees to invest [amount] (the \"Investment Amount\") in the Company in exchange for the issuance of [number] shares of Preferred Stock at a price of [price] per share (the \"Share Price\"). The Investment Amount is calibrated to provide the Company with sufficient working capital to achieve its next operational milestones.",
+            "es": "El Inversor se compromete a invertir [importe] (el \"Importe de Inversión\") en la Sociedad a cambio de la emisión de [número] participaciones preferentes a un precio de [precio] por participación (el \"Precio por Participación\"). El Importe de Inversión está calibrado para proporcionar a la Sociedad capital circulante suficiente para alcanzar sus próximos hitos operativos."
+          },
+          "biasPartyA": 0.0,
+          "biasPartyB": 0.0,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        },
+        {
+          "id": "investment-large",
+          "code": "large",
+          "label": {
+            "en": "Large — Extended Round",
+            "es": "Grande — Ronda Ampliada"
+          },
+          "order": 3,
+          "plainDescription": {
+            "en": "A larger round providing extended runway of 18–24+ months, giving the company more time and capital but at greater founder dilution.",
+            "es": "Una ronda mayor que proporciona pista extendida de 18–24+ meses, dando a la empresa más tiempo y capital pero con mayor dilución del fundador."
+          },
+          "prosPartyA": {
+            "en": ["Extended runway reduces fundraising pressure", "More capital for aggressive growth"],
+            "es": ["Pista extendida reduce presión de captación", "Más capital para crecimiento agresivo"]
+          },
+          "consPartyA": {
+            "en": ["Significant founder dilution", "Higher investor expectations", "More complex cap table"],
+            "es": ["Dilución significativa del fundador", "Mayores expectativas del inversor", "Tabla de capitalización más compleja"]
+          },
+          "prosPartyB": {
+            "en": ["Larger ownership stake", "Company better positioned for growth", "Stronger influence on strategy"],
+            "es": ["Mayor participación", "Empresa mejor posicionada para crecer", "Mayor influencia en la estrategia"]
+          },
+          "consPartyB": {
+            "en": ["Greater capital at risk", "Larger exposure to single company"],
+            "es": ["Mayor capital en riesgo", "Mayor exposición a una sola empresa"]
+          },
+          "legalText": {
+            "en": "The Investor agrees to invest [amount] (the \"Investment Amount\") in the Company in exchange for the issuance of [number] shares of Preferred Stock at a price of [price] per share (the \"Share Price\"). The parties acknowledge that the Investment Amount reflects an extended financing round intended to provide the Company with capital sufficient for at least eighteen (18) months of operations.",
+            "es": "El Inversor se compromete a invertir [importe] (el \"Importe de Inversión\") en la Sociedad a cambio de la emisión de [número] participaciones preferentes a un precio de [precio] por participación (el \"Precio por Participación\"). Las partes reconocen que el Importe de Inversión refleja una ronda de financiación ampliada destinada a proporcionar a la Sociedad capital suficiente para al menos dieciocho (18) meses de operaciones."
+          },
+          "biasPartyA": -0.4,
+          "biasPartyB": 0.4,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        }
+      ]
+    },
+    {
+      "id": "liquidation-preference",
+      "title": {
+        "en": "Liquidation Preference",
+        "es": "Preferencia de Liquidación"
+      },
+      "category": "Economics",
+      "order": 3,
+      "plainDescription": {
+        "en": "How are proceeds distributed when the company is sold or wound up? This determines whether the investor gets paid first and whether they also share in remaining proceeds.",
+        "es": "¿Cómo se distribuyen los ingresos cuando la sociedad se vende o se liquida? Determina si el inversor cobra primero y si también participa en los ingresos restantes."
+      },
+      "legalContext": {
+        "en": "Liquidation preferences are established in the Certificate of Incorporation (Delaware/California), Articles of Association (England), or estatutos sociales (Spain). Under Spanish LSC art.392 ff., liquidation proceeds follow statutory rules unless modified by the estatutos.",
+        "es": "Las preferencias de liquidación se establecen en el Certificate of Incorporation (Delaware/California), en los Articles of Association (Inglaterra) o en los estatutos sociales (España). Conforme a los arts.392 y ss. de la LSC española, los ingresos de liquidación siguen las reglas legales salvo modificación estatutaria."
+      },
+      "isRequired": true,
+      "options": [
+        {
+          "id": "liqpref-1x-non-participating",
+          "code": "1x-non-participating",
+          "label": {
+            "en": "1x Non-Participating",
+            "es": "1x Sin Participación"
+          },
+          "order": 1,
+          "plainDescription": {
+            "en": "Investor gets their investment back first (1x), then chooses either that amount or their pro-rata share of remaining proceeds — not both.",
+            "es": "El inversor recupera su inversión primero (1x), y luego elige entre ese importe o su parte proporcional del resto — no ambos."
+          },
+          "prosPartyA": {
+            "en": ["Founder-friendly standard", "No double-dipping by investor", "Aligns incentives for large exits"],
+            "es": ["Estándar favorable al fundador", "Sin doble cobro del inversor", "Alinea incentivos para grandes exits"]
+          },
+          "consPartyA": {
+            "en": ["Investor still has priority over common", "Reduces founder proceeds in modest exits"],
+            "es": ["El inversor aún tiene prioridad sobre las ordinarias", "Reduce los ingresos del fundador en exits modestos"]
+          },
+          "prosPartyB": {
+            "en": ["Downside protection on invested capital", "Standard market term at seed"],
+            "es": ["Protección a la baja del capital invertido", "Condición estándar de mercado en semilla"]
+          },
+          "consPartyB": {
+            "en": ["Must choose between preference and pro-rata", "Less favorable in mid-size exits"],
+            "es": ["Debe elegir entre preferencia y pro-rata", "Menos favorable en exits de tamaño medio"]
+          },
+          "legalText": {
+            "en": "In the event of a Liquidation Event, the holders of Preferred Stock shall be entitled to receive, prior to any distribution to holders of Common Stock, an amount equal to one times (1x) the original issue price per share plus any declared but unpaid dividends (the \"Liquidation Preference\"). After payment of the Liquidation Preference, the remaining proceeds shall be distributed to holders of Common Stock. Each holder of Preferred Stock may elect to convert to Common Stock and participate pro rata in lieu of receiving the Liquidation Preference.",
+            "es": "En caso de Evento de Liquidación, los titulares de Participaciones Preferentes tendrán derecho a recibir, con carácter previo a cualquier distribución a los titulares de Participaciones Ordinarias, un importe igual a una vez (1x) el precio de emisión original por participación más los dividendos declarados pero no pagados (la \"Preferencia de Liquidación\"). Tras el pago de la Preferencia de Liquidación, el remanente se distribuirá entre los titulares de Participaciones Ordinarias. Cada titular de Participaciones Preferentes podrá optar por convertir a Participaciones Ordinarias y participar a pro rata en lugar de recibir la Preferencia de Liquidación."
+          },
+          "biasPartyA": 0.4,
+          "biasPartyB": -0.4,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        },
+        {
+          "id": "liqpref-1x-participating",
+          "code": "1x-participating",
+          "label": {
+            "en": "1x Participating",
+            "es": "1x Con Participación"
+          },
+          "order": 2,
+          "plainDescription": {
+            "en": "Investor gets their investment back first (1x), then also shares pro-rata in all remaining proceeds alongside common stockholders.",
+            "es": "El inversor recupera su inversión primero (1x), y además participa a pro rata en todos los ingresos restantes junto con los titulares de participaciones ordinarias."
+          },
+          "prosPartyA": {
+            "en": ["May attract investors who need stronger downside protection"],
+            "es": ["Puede atraer inversores que necesitan mayor protección a la baja"]
+          },
+          "consPartyA": {
+            "en": ["Double-dipping reduces founder proceeds", "Less favorable than non-participating in all exit scenarios", "May deter future investors"],
+            "es": ["El doble cobro reduce los ingresos del fundador", "Menos favorable que sin participación en todos los escenarios", "Puede disuadir a futuros inversores"]
+          },
+          "prosPartyB": {
+            "en": ["Downside protection plus upside participation", "Better returns across all exit sizes"],
+            "es": ["Protección a la baja más participación al alza", "Mejores retornos en todos los tamaños de exit"]
+          },
+          "consPartyB": {
+            "en": ["May create misaligned incentives", "Future investors may demand parity"],
+            "es": ["Puede crear incentivos desalineados", "Futuros inversores pueden exigir paridad"]
+          },
+          "legalText": {
+            "en": "In the event of a Liquidation Event, the holders of Preferred Stock shall be entitled to receive, prior to any distribution to holders of Common Stock, an amount equal to one times (1x) the original issue price per share plus any declared but unpaid dividends (the \"Liquidation Preference\"). After payment of the Liquidation Preference, the remaining proceeds shall be distributed pro rata among all holders of Common Stock and Preferred Stock on an as-converted basis.",
+            "es": "En caso de Evento de Liquidación, los titulares de Participaciones Preferentes tendrán derecho a recibir, con carácter previo a cualquier distribución a los titulares de Participaciones Ordinarias, un importe igual a una vez (1x) el precio de emisión original por participación más los dividendos declarados pero no pagados (la \"Preferencia de Liquidación\"). Tras el pago de la Preferencia de Liquidación, el remanente se distribuirá a pro rata entre todos los titulares de Participaciones Ordinarias y Participaciones Preferentes sobre una base de conversión."
+          },
+          "biasPartyA": -0.2,
+          "biasPartyB": 0.2,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        },
+        {
+          "id": "liqpref-2x-non-participating",
+          "code": "2x-non-participating",
+          "label": {
+            "en": "2x Non-Participating",
+            "es": "2x Sin Participación"
+          },
+          "order": 3,
+          "plainDescription": {
+            "en": "Investor gets twice their investment back first (2x), then chooses either that amount or their pro-rata share — not both.",
+            "es": "El inversor recupera el doble de su inversión primero (2x), y luego elige entre ese importe o su parte proporcional — no ambos."
+          },
+          "prosPartyA": {
+            "en": ["No double-dipping at least", "May be acceptable trade-off for other favorable terms"],
+            "es": ["Al menos sin doble cobro", "Puede ser un compromiso aceptable a cambio de otras condiciones favorables"]
+          },
+          "consPartyA": {
+            "en": ["High hurdle before founders see proceeds", "Significant drag on modest exits", "Uncommon at seed — signals tough negotiation"],
+            "es": ["Alto umbral antes de que los fundadores vean ingresos", "Lastre significativo en exits modestos", "Infrecuente en semilla — señala negociación dura"]
+          },
+          "prosPartyB": {
+            "en": ["Strong downside protection", "2x return guaranteed before common shares"],
+            "es": ["Fuerte protección a la baja", "Retorno 2x garantizado antes que las ordinarias"]
+          },
+          "consPartyB": {
+            "en": ["Still must choose between preference and conversion", "May strain founder relationship"],
+            "es": ["Aún debe elegir entre preferencia y conversión", "Puede tensar la relación con los fundadores"]
+          },
+          "legalText": {
+            "en": "In the event of a Liquidation Event, the holders of Preferred Stock shall be entitled to receive, prior to any distribution to holders of Common Stock, an amount equal to two times (2x) the original issue price per share plus any declared but unpaid dividends (the \"Liquidation Preference\"). After payment of the Liquidation Preference, the remaining proceeds shall be distributed to holders of Common Stock. Each holder of Preferred Stock may elect to convert to Common Stock and participate pro rata in lieu of receiving the Liquidation Preference.",
+            "es": "En caso de Evento de Liquidación, los titulares de Participaciones Preferentes tendrán derecho a recibir, con carácter previo a cualquier distribución a los titulares de Participaciones Ordinarias, un importe igual a dos veces (2x) el precio de emisión original por participación más los dividendos declarados pero no pagados (la \"Preferencia de Liquidación\"). Tras el pago de la Preferencia de Liquidación, el remanente se distribuirá entre los titulares de Participaciones Ordinarias. Cada titular de Participaciones Preferentes podrá optar por convertir a Participaciones Ordinarias y participar a pro rata en lugar de recibir la Preferencia de Liquidación."
+          },
+          "biasPartyA": -0.4,
+          "biasPartyB": 0.4,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        }
+      ]
+    },
+    {
+      "id": "dividend-rights",
+      "title": {
+        "en": "Dividend Rights",
+        "es": "Derechos de Dividendo"
+      },
+      "category": "Economics",
+      "order": 4,
+      "plainDescription": {
+        "en": "Are preferred shareholders entitled to dividends, and if so, do unpaid dividends accumulate? This affects cash flow distribution and liquidation payouts.",
+        "es": "¿Tienen los titulares de participaciones preferentes derecho a dividendos, y si es así, se acumulan los dividendos no pagados? Afecta a la distribución de flujo de caja y a los pagos en liquidación."
+      },
+      "legalContext": {
+        "en": "In California/Delaware, dividend rights are specified in the Certificate of Incorporation. Under the UK Companies Act 2006 s.830, dividends can only be paid from distributable profits. Under Spanish LSC art.275, dividends require junta general approval and must comply with statutory reserves.",
+        "es": "En California/Delaware, los derechos de dividendo se especifican en el Certificate of Incorporation. Conforme a la Companies Act 2006 del Reino Unido, s.830, los dividendos solo pueden pagarse con beneficios distribuibles. Conforme al art.275 de la LSC española, los dividendos requieren aprobación de la junta general y deben cumplir con las reservas legales."
+      },
+      "isRequired": true,
+      "options": [
+        {
+          "id": "dividend-none",
+          "code": "none",
+          "label": {
+            "en": "None — No Preferential Dividends",
+            "es": "Ninguno — Sin Dividendos Preferentes"
+          },
+          "order": 1,
+          "plainDescription": {
+            "en": "Preferred shareholders have no special dividend rights. Dividends, if any, are declared at the board's discretion on a pari passu basis.",
+            "es": "Los titulares de participaciones preferentes no tienen derechos especiales de dividendo. Los dividendos, en su caso, se declaran a discreción del consejo sobre base pari passu."
+          },
+          "prosPartyA": {
+            "en": ["No cash drain from mandatory dividends", "Maximum flexibility for reinvestment", "Standard for early-stage startups"],
+            "es": ["Sin consumo de caja por dividendos obligatorios", "Máxima flexibilidad para reinversión", "Estándar para startups en fase inicial"]
+          },
+          "consPartyA": {
+            "en": ["Investor may seek other protections to compensate"],
+            "es": ["El inversor puede buscar otras protecciones como compensación"]
+          },
+          "prosPartyB": {
+            "en": ["Company can reinvest all profits for growth", "Aligned with growth-stage economics"],
+            "es": ["La empresa puede reinvertir todos los beneficios", "Alineado con la economía de fase de crecimiento"]
+          },
+          "consPartyB": {
+            "en": ["No periodic return on investment", "Entirely dependent on exit for returns"],
+            "es": ["Sin retorno periódico de la inversión", "Depende enteramente del exit para obtener retornos"]
+          },
+          "legalText": {
+            "en": "The holders of Preferred Stock shall have no preferential dividend rights. Dividends may be declared by the Board of Directors at its sole discretion, and when declared, shall be distributed to all shareholders on a pari passu, as-converted basis.",
+            "es": "Los titulares de Participaciones Preferentes no tendrán derechos preferentes de dividendo. Los dividendos podrán ser declarados por el Órgano de Administración a su entera discreción y, cuando se declaren, se distribuirán a todos los socios sobre base pari passu y de conversión."
+          },
+          "biasPartyA": 0.4,
+          "biasPartyB": -0.4,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        },
+        {
+          "id": "dividend-non-cumulative",
+          "code": "non-cumulative",
+          "label": {
+            "en": "Non-Cumulative Preferred Dividend",
+            "es": "Dividendo Preferente No Acumulativo"
+          },
+          "order": 2,
+          "plainDescription": {
+            "en": "Preferred shareholders receive dividends before common when declared, but unpaid dividends do not accumulate from year to year.",
+            "es": "Los titulares de participaciones preferentes reciben dividendos antes que las ordinarias cuando se declaran, pero los dividendos no pagados no se acumulan de un ejercicio a otro."
+          },
+          "prosPartyA": {
+            "en": ["Priority only when dividends are declared", "No accumulating obligation", "Board retains discretion on timing"],
+            "es": ["Prioridad solo cuando se declaran dividendos", "Sin obligación acumulativa", "El consejo mantiene discreción sobre el calendario"]
+          },
+          "consPartyA": {
+            "en": ["Must pay preferred first when dividends are distributed"],
+            "es": ["Debe pagar a las preferentes primero cuando se distribuyen dividendos"]
+          },
+          "prosPartyB": {
+            "en": ["Priority over common stockholders", "Some return without needing an exit"],
+            "es": ["Prioridad sobre los titulares de ordinarias", "Algún retorno sin necesitar un exit"]
+          },
+          "consPartyB": {
+            "en": ["Unpaid dividends are lost, not carried forward", "Board may simply never declare dividends"],
+            "es": ["Los dividendos no pagados se pierden, no se trasladan", "El consejo puede simplemente no declarar dividendos nunca"]
+          },
+          "legalText": {
+            "en": "The holders of Preferred Stock shall be entitled to receive, when and if declared by the Board of Directors, non-cumulative dividends at a rate of [percentage]% per annum of the original issue price, in preference to any dividends on Common Stock. Such dividends shall not accumulate if not declared in any given year.",
+            "es": "Los titulares de Participaciones Preferentes tendrán derecho a recibir, cuando y si lo declare el Órgano de Administración, dividendos no acumulativos a una tasa del [porcentaje]% anual del precio de emisión original, con preferencia sobre cualquier dividendo de las Participaciones Ordinarias. Dichos dividendos no se acumularán si no se declaran en un ejercicio determinado."
+          },
+          "biasPartyA": 0.0,
+          "biasPartyB": 0.0,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        },
+        {
+          "id": "dividend-cumulative",
+          "code": "cumulative",
+          "label": {
+            "en": "Cumulative Preferred Dividend",
+            "es": "Dividendo Preferente Acumulativo"
+          },
+          "order": 3,
+          "plainDescription": {
+            "en": "Preferred shareholders accrue dividends each year whether or not declared; unpaid dividends accumulate and must be paid before any distribution to common.",
+            "es": "Los titulares de participaciones preferentes devengan dividendos cada año, se declaren o no; los dividendos no pagados se acumulan y deben pagarse antes de cualquier distribución a las ordinarias."
+          },
+          "prosPartyA": {
+            "en": ["May attract risk-averse investors who require it"],
+            "es": ["Puede atraer inversores aversos al riesgo que lo requieran"]
+          },
+          "consPartyA": {
+            "en": ["Growing liability on the balance sheet", "Reduces proceeds to founders at exit", "Uncommon at seed stage"],
+            "es": ["Pasivo creciente en el balance", "Reduce los ingresos de los fundadores en el exit", "Infrecuente en fase semilla"]
+          },
+          "prosPartyB": {
+            "en": ["Guaranteed return accrual regardless of declarations", "Compounds downside protection with liquidation preference"],
+            "es": ["Devengo de retorno garantizado independientemente de las declaraciones", "Compone la protección a la baja con la preferencia de liquidación"]
+          },
+          "consPartyB": {
+            "en": ["Company cash flow may be strained", "May create tension with founders"],
+            "es": ["El flujo de caja de la empresa puede verse afectado", "Puede generar tensión con los fundadores"]
+          },
+          "legalText": {
+            "en": "The holders of Preferred Stock shall be entitled to receive cumulative dividends at a rate of [percentage]% per annum of the original issue price, accruing from the date of issuance whether or not declared by the Board of Directors. Accrued but unpaid dividends shall be paid in full prior to any distribution to holders of Common Stock upon a Liquidation Event or redemption.",
+            "es": "Los titulares de Participaciones Preferentes tendrán derecho a recibir dividendos acumulativos a una tasa del [porcentaje]% anual del precio de emisión original, devengándose desde la fecha de emisión, se declaren o no por el Órgano de Administración. Los dividendos devengados y no pagados se abonarán íntegramente con carácter previo a cualquier distribución a los titulares de Participaciones Ordinarias en caso de Evento de Liquidación o rescate."
+          },
+          "biasPartyA": -0.4,
+          "biasPartyB": 0.4,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        }
+      ]
+    },
+    {
+      "id": "anti-dilution",
+      "title": {
+        "en": "Anti-Dilution Protection",
+        "es": "Protección Antidilución"
+      },
+      "category": "Economics",
+      "order": 5,
+      "plainDescription": {
+        "en": "What happens to the investor's conversion price if the company issues shares at a lower price in a future round? This protects (or doesn't protect) the investor from down-round dilution.",
+        "es": "¿Qué ocurre con el precio de conversión del inversor si la sociedad emite participaciones a un precio inferior en una ronda futura? Protege (o no) al inversor de la dilución por rondas bajistas."
+      },
+      "legalContext": {
+        "en": "Anti-dilution provisions adjust the conversion ratio of preferred shares and are specified in the Certificate of Incorporation (US) or Articles of Association (UK). Under Spanish law, anti-dilution is typically addressed through contractual adjustment mechanisms in the pacto de socios or estatutos.",
+        "es": "Las disposiciones antidilución ajustan el ratio de conversión de las participaciones preferentes y se especifican en el Certificate of Incorporation (EE.UU.) o en los Articles of Association (Reino Unido). En derecho español, la antidilución se aborda típicamente mediante mecanismos de ajuste contractual en el pacto de socios o los estatutos."
+      },
+      "isRequired": true,
+      "options": [
+        {
+          "id": "antidilution-none",
+          "code": "none",
+          "label": {
+            "en": "None — No Anti-Dilution",
+            "es": "Ninguna — Sin Antidilución"
+          },
+          "order": 1,
+          "plainDescription": {
+            "en": "No adjustment to conversion price in case of a down round. The investor bears the full risk of future valuation decreases.",
+            "es": "Sin ajuste del precio de conversión en caso de ronda bajista. El inversor asume todo el riesgo de futuras bajadas de valoración."
+          },
+          "prosPartyA": {
+            "en": ["No dilutive adjustments for founders", "Simplest cap table mechanics", "Preserves founder ownership"],
+            "es": ["Sin ajustes dilutivos para fundadores", "Mecánica de capitalización más simple", "Preserva la participación del fundador"]
+          },
+          "consPartyA": {
+            "en": ["Harder to attract sophisticated investors", "May need to offer other concessions"],
+            "es": ["Más difícil atraer inversores sofisticados", "Puede necesitar ofrecer otras concesiones"]
+          },
+          "prosPartyB": {
+            "en": ["Simplicity — no conversion price complexities"],
+            "es": ["Simplicidad — sin complejidades en el precio de conversión"]
+          },
+          "consPartyB": {
+            "en": ["Full exposure to down-round dilution", "No protection for invested capital value"],
+            "es": ["Exposición total a la dilución por ronda bajista", "Sin protección del valor del capital invertido"]
+          },
+          "legalText": {
+            "en": "The conversion price of the Preferred Stock shall not be subject to adjustment by reason of the issuance of additional shares of the Company's capital stock at a price per share below the then-applicable conversion price.",
+            "es": "El precio de conversión de las Participaciones Preferentes no estará sujeto a ajuste por razón de la emisión de participaciones adicionales del capital social de la Sociedad a un precio por participación inferior al precio de conversión vigente en ese momento."
+          },
+          "biasPartyA": 0.4,
+          "biasPartyB": -0.4,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        },
+        {
+          "id": "antidilution-broad-weighted",
+          "code": "broad-weighted",
+          "label": {
+            "en": "Broad-Based Weighted Average",
+            "es": "Media Ponderada de Base Amplia"
+          },
+          "order": 2,
+          "plainDescription": {
+            "en": "Conversion price adjusts downward using a formula that accounts for the size of the down round relative to the total fully diluted share capital. The most common anti-dilution protection.",
+            "es": "El precio de conversión se ajusta a la baja mediante una fórmula que tiene en cuenta el tamaño de la ronda bajista respecto al capital social totalmente diluido. La protección antidilución más común."
+          },
+          "prosPartyA": {
+            "en": ["Industry standard — widely accepted", "Moderates the dilutive impact", "Includes all shares in the weighted average calculation"],
+            "es": ["Estándar de la industria — ampliamente aceptado", "Modera el impacto dilutivo", "Incluye todas las participaciones en el cálculo ponderado"]
+          },
+          "consPartyA": {
+            "en": ["Some dilution in down-round scenarios", "Adds complexity to cap table"],
+            "es": ["Cierta dilución en escenarios de ronda bajista", "Añade complejidad a la tabla de capitalización"]
+          },
+          "prosPartyB": {
+            "en": ["Proportional downside protection", "Standard protection at seed stage", "Fair adjustment mechanism"],
+            "es": ["Protección proporcional a la baja", "Protección estándar en fase semilla", "Mecanismo de ajuste justo"]
+          },
+          "consPartyB": {
+            "en": ["Less protection than full ratchet", "Small down rounds have limited effect"],
+            "es": ["Menos protección que el full ratchet", "Las rondas bajistas pequeñas tienen efecto limitado"]
+          },
+          "legalText": {
+            "en": "If the Company issues additional shares at a price per share less than the then-applicable conversion price of the Preferred Stock, the conversion price shall be adjusted using the broad-based weighted average formula: CP₂ = CP₁ × (A + B) ÷ (A + C), where CP₁ is the conversion price in effect prior to the new issuance, CP₂ is the adjusted conversion price, A is the total fully diluted shares outstanding prior to the issuance, B is the number of shares that the aggregate consideration received would purchase at CP₁, and C is the number of new shares actually issued.",
+            "es": "Si la Sociedad emite participaciones adicionales a un precio por participación inferior al precio de conversión vigente de las Participaciones Preferentes, el precio de conversión se ajustará mediante la fórmula de media ponderada de base amplia: PC₂ = PC₁ × (A + B) ÷ (A + C), donde PC₁ es el precio de conversión vigente antes de la nueva emisión, PC₂ es el precio de conversión ajustado, A es el total de participaciones totalmente diluidas en circulación antes de la emisión, B es el número de participaciones que la contraprestación total recibida compraría a PC₁, y C es el número de nuevas participaciones efectivamente emitidas."
+          },
+          "biasPartyA": 0.0,
+          "biasPartyB": 0.0,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        },
+        {
+          "id": "antidilution-narrow-weighted",
+          "code": "narrow-weighted",
+          "label": {
+            "en": "Narrow-Based Weighted Average",
+            "es": "Media Ponderada de Base Estrecha"
+          },
+          "order": 3,
+          "plainDescription": {
+            "en": "Similar to broad-based but the denominator only counts outstanding preferred shares, resulting in a more aggressive price adjustment favoring the investor.",
+            "es": "Similar a la de base amplia pero el denominador solo cuenta las participaciones preferentes en circulación, resultando en un ajuste de precio más agresivo a favor del inversor."
+          },
+          "prosPartyA": {
+            "en": ["Less aggressive than full ratchet"],
+            "es": ["Menos agresiva que el full ratchet"]
+          },
+          "consPartyA": {
+            "en": ["More dilutive than broad-based", "Narrower base means larger conversion adjustment", "Less common — may face pushback from future investors"],
+            "es": ["Más dilutiva que la de base amplia", "Base más estrecha implica mayor ajuste de conversión", "Menos común — puede enfrentar resistencia de futuros inversores"]
+          },
+          "prosPartyB": {
+            "en": ["Stronger protection than broad-based", "More meaningful conversion price adjustment"],
+            "es": ["Protección más fuerte que la de base amplia", "Ajuste de precio de conversión más significativo"]
+          },
+          "consPartyB": {
+            "en": ["May be seen as aggressive by co-investors", "Less standard in current market"],
+            "es": ["Puede ser vista como agresiva por co-inversores", "Menos estándar en el mercado actual"]
+          },
+          "legalText": {
+            "en": "If the Company issues additional shares at a price per share less than the then-applicable conversion price of the Preferred Stock, the conversion price shall be adjusted using the narrow-based weighted average formula, where the denominator includes only the outstanding shares of Preferred Stock (on an as-converted basis) rather than all fully diluted shares.",
+            "es": "Si la Sociedad emite participaciones adicionales a un precio por participación inferior al precio de conversión vigente de las Participaciones Preferentes, el precio de conversión se ajustará mediante la fórmula de media ponderada de base estrecha, donde el denominador incluye solo las participaciones preferentes en circulación (sobre base de conversión) en lugar de todas las participaciones totalmente diluidas."
+          },
+          "biasPartyA": -0.2,
+          "biasPartyB": 0.2,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        },
+        {
+          "id": "antidilution-full-ratchet",
+          "code": "full-ratchet",
+          "label": {
+            "en": "Full Ratchet",
+            "es": "Full Ratchet (Ajuste Total)"
+          },
+          "order": 4,
+          "plainDescription": {
+            "en": "Conversion price drops to the price of the new lower-priced round, as if the investor had invested at the lower price. The most investor-protective option.",
+            "es": "El precio de conversión baja al precio de la nueva ronda de menor precio, como si el inversor hubiera invertido al precio inferior. La opción más protectora para el inversor."
+          },
+          "prosPartyA": {
+            "en": ["May be necessary to close the deal with a demanding investor"],
+            "es": ["Puede ser necesario para cerrar el trato con un inversor exigente"]
+          },
+          "consPartyA": {
+            "en": ["Extremely dilutive in down rounds", "Even a small down round causes full repricing", "Can devastate founder ownership", "Unusual at seed — strong negative signal"],
+            "es": ["Extremadamente dilutiva en rondas bajistas", "Incluso una ronda bajista pequeña causa repricing total", "Puede devastar la participación del fundador", "Inusual en semilla — señal negativa fuerte"]
+          },
+          "prosPartyB": {
+            "en": ["Maximum downside protection", "Full price reset to new lower valuation", "Strongest conversion price guarantee"],
+            "es": ["Máxima protección a la baja", "Reset total del precio a la nueva valoración inferior", "Garantía más fuerte del precio de conversión"]
+          },
+          "consPartyB": {
+            "en": ["May discourage future financing rounds", "Can create severe founder misalignment", "Future investors may object to existing full-ratchet terms"],
+            "es": ["Puede desincentivar futuras rondas de financiación", "Puede crear desalineación severa con fundadores", "Futuros inversores pueden objetar los términos de full ratchet existentes"]
+          },
+          "legalText": {
+            "en": "If the Company issues additional shares at a price per share less than the then-applicable conversion price of the Preferred Stock, the conversion price shall be reduced to equal the price per share at which such additional shares are issued (\"Full Ratchet Anti-Dilution\"). This adjustment shall apply regardless of the number of shares issued in the subsequent financing.",
+            "es": "Si la Sociedad emite participaciones adicionales a un precio por participación inferior al precio de conversión vigente de las Participaciones Preferentes, el precio de conversión se reducirá hasta igualar el precio por participación al que se emitan dichas participaciones adicionales (\"Antidilución Full Ratchet\"). Este ajuste se aplicará independientemente del número de participaciones emitidas en la financiación posterior."
+          },
+          "biasPartyA": -0.4,
+          "biasPartyB": 0.4,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        }
+      ]
+    },
+    {
+      "id": "board-composition",
+      "title": {
+        "en": "Board Composition",
+        "es": "Composición del Órgano de Administración"
+      },
+      "category": "Governance",
+      "order": 6,
+      "plainDescription": {
+        "en": "What role does the investor have on the company's board? Options range from no involvement to a formal board seat with voting rights.",
+        "es": "¿Qué papel tiene el inversor en el órgano de administración de la sociedad? Las opciones van desde ninguna participación hasta un puesto formal con derecho a voto."
+      },
+      "legalContext": {
+        "en": "Board composition is established in the bylaws (US), Articles of Association (UK), or estatutos sociales (Spain). Under Spanish LSC art.210 ff., the junta general appoints directors. Under the UK Companies Act 2006, directors are appointed per the Articles. In Delaware/California, charter documents specify board class structure.",
+        "es": "La composición del órgano de administración se establece en los bylaws (EE.UU.), Articles of Association (Reino Unido) o estatutos sociales (España). Conforme a los arts.210 y ss. de la LSC española, la junta general nombra a los administradores. Conforme a la Companies Act 2006 del Reino Unido, los administradores se nombran según los Articles. En Delaware/California, los documentos constitutivos especifican la estructura de clases del consejo."
+      },
+      "isRequired": true,
+      "options": [
+        {
+          "id": "board-founder-only",
+          "code": "founder-only",
+          "label": {
+            "en": "Founder-Only Board",
+            "es": "Consejo Solo de Fundadores"
+          },
+          "order": 1,
+          "plainDescription": {
+            "en": "The board remains entirely controlled by founders. The investor has no board seat or observer rights.",
+            "es": "El consejo permanece controlado enteramente por los fundadores. El inversor no tiene puesto en el consejo ni derechos de observador."
+          },
+          "prosPartyA": {
+            "en": ["Full board control", "Faster decision-making", "No external oversight burden"],
+            "es": ["Control total del consejo", "Toma de decisiones más rápida", "Sin carga de supervisión externa"]
+          },
+          "consPartyA": {
+            "en": ["Investor may seek other governance levers", "Less investor engagement and mentorship"],
+            "es": ["El inversor puede buscar otras palancas de gobernanza", "Menos compromiso y mentoría del inversor"]
+          },
+          "prosPartyB": {
+            "en": ["No fiduciary duties as a director", "Less time commitment"],
+            "es": ["Sin deberes fiduciarios como administrador", "Menor compromiso de tiempo"]
+          },
+          "consPartyB": {
+            "en": ["No visibility into board-level decisions", "Limited influence on strategy", "Must rely on information rights alone"],
+            "es": ["Sin visibilidad de las decisiones del consejo", "Influencia limitada en la estrategia", "Debe confiar solo en derechos de información"]
+          },
+          "legalText": {
+            "en": "The Board of Directors shall consist of [number] directors, all of whom shall be appointed by the holders of Common Stock. The Investor shall have no right to appoint a director or board observer.",
+            "es": "El Órgano de Administración estará compuesto por [número] administradores, todos los cuales serán nombrados por los titulares de Participaciones Ordinarias. El Inversor no tendrá derecho a nombrar un administrador ni un observador del consejo."
+          },
+          "biasPartyA": 0.4,
+          "biasPartyB": -0.4,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        },
+        {
+          "id": "board-observer",
+          "code": "observer",
+          "label": {
+            "en": "Board Observer Seat",
+            "es": "Puesto de Observador en el Consejo"
+          },
+          "order": 2,
+          "plainDescription": {
+            "en": "The investor can attend board meetings and receive board materials but cannot vote on board decisions.",
+            "es": "El inversor puede asistir a las reuniones del consejo y recibir documentación pero no puede votar en las decisiones."
+          },
+          "prosPartyA": {
+            "en": ["Founders retain voting control", "Investor provides input without authority", "Common compromise at seed stage"],
+            "es": ["Los fundadores mantienen control de voto", "El inversor aporta sin autoridad", "Compromiso común en fase semilla"]
+          },
+          "consPartyA": {
+            "en": ["Observer may still influence discussions", "Confidentiality concerns with materials"],
+            "es": ["El observador puede influir en las discusiones", "Preocupaciones de confidencialidad con la documentación"]
+          },
+          "prosPartyB": {
+            "en": ["Visibility into company operations", "Access to board materials and discussions", "Can build relationship without fiduciary burden"],
+            "es": ["Visibilidad de las operaciones de la empresa", "Acceso a documentación y discusiones del consejo", "Puede desarrollar la relación sin carga fiduciaria"]
+          },
+          "consPartyB": {
+            "en": ["No vote — cannot block decisions", "Observer can be excluded from sensitive items"],
+            "es": ["Sin voto — no puede bloquear decisiones", "El observador puede ser excluido de temas sensibles"]
+          },
+          "legalText": {
+            "en": "The Board of Directors shall consist of [number] directors appointed by the holders of Common Stock. The Investor shall have the right to appoint one (1) non-voting observer to the Board (the \"Board Observer\"). The Board Observer shall be entitled to attend all meetings of the Board and receive all materials provided to Board members, provided that the Board may exclude the Board Observer from portions of meetings involving attorney-client privileged matters or conflicts of interest.",
+            "es": "El Órgano de Administración estará compuesto por [número] administradores nombrados por los titulares de Participaciones Ordinarias. El Inversor tendrá derecho a designar un (1) observador sin derecho a voto en el Consejo (el \"Observador del Consejo\"). El Observador del Consejo tendrá derecho a asistir a todas las reuniones del Consejo y recibir toda la documentación proporcionada a los miembros del Consejo, si bien el Consejo podrá excluir al Observador de aquellas partes de las reuniones que impliquen cuestiones de privilegio abogado-cliente o conflictos de interés."
+          },
+          "biasPartyA": 0.0,
+          "biasPartyB": 0.0,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        },
+        {
+          "id": "board-seat",
+          "code": "board-seat",
+          "label": {
+            "en": "Investor Board Seat",
+            "es": "Puesto del Inversor en el Consejo"
+          },
+          "order": 3,
+          "plainDescription": {
+            "en": "The investor has the right to appoint one director with full voting rights on the board.",
+            "es": "El inversor tiene derecho a nombrar un administrador con plenos derechos de voto en el consejo."
+          },
+          "prosPartyA": {
+            "en": ["Investor expertise and network at board level", "Signal of strong investor commitment"],
+            "es": ["Experiencia y red del inversor a nivel de consejo", "Señal de fuerte compromiso del inversor"]
+          },
+          "consPartyA": {
+            "en": ["Founders share board control", "Slower decision-making", "Investor can block certain actions"],
+            "es": ["Los fundadores comparten control del consejo", "Toma de decisiones más lenta", "El inversor puede bloquear ciertas acciones"]
+          },
+          "prosPartyB": {
+            "en": ["Full voting rights at board level", "Direct influence on company strategy", "Fiduciary protections as a director"],
+            "es": ["Plenos derechos de voto a nivel de consejo", "Influencia directa en la estrategia de la empresa", "Protecciones fiduciarias como administrador"]
+          },
+          "consPartyB": {
+            "en": ["Fiduciary duties to all shareholders", "Time commitment for board service", "Potential liability exposure"],
+            "es": ["Deberes fiduciarios con todos los socios", "Compromiso de tiempo para servicio en el consejo", "Posible exposición a responsabilidad"]
+          },
+          "legalText": {
+            "en": "The Board of Directors shall consist of [number] directors. The holders of Preferred Stock, voting as a separate class, shall be entitled to elect one (1) director (the \"Investor Director\"). The remaining directors shall be elected by the holders of Common Stock. The Investor Director shall have the same rights, powers, and duties as all other directors.",
+            "es": "El Órgano de Administración estará compuesto por [número] administradores. Los titulares de Participaciones Preferentes, votando como clase separada, tendrán derecho a elegir un (1) administrador (el \"Administrador del Inversor\"). Los restantes administradores serán elegidos por los titulares de Participaciones Ordinarias. El Administrador del Inversor tendrá los mismos derechos, poderes y deberes que todos los demás administradores."
+          },
+          "biasPartyA": -0.4,
+          "biasPartyB": 0.4,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        }
+      ]
+    },
+    {
+      "id": "protective-provisions",
+      "title": {
+        "en": "Protective Provisions",
+        "es": "Cláusulas de Protección del Inversor"
+      },
+      "category": "Governance",
+      "order": 7,
+      "plainDescription": {
+        "en": "What actions require the investor's consent before the company can proceed? These are veto rights over major corporate decisions.",
+        "es": "¿Qué acciones requieren el consentimiento del inversor antes de que la sociedad pueda proceder? Son derechos de veto sobre decisiones corporativas importantes."
+      },
+      "legalContext": {
+        "en": "Protective provisions are established in the Certificate of Incorporation (US) or shareholders' agreement (UK/Spain). They create negative covenants requiring investor consent. Under Spanish LSC, certain matters already require supermajority approval by the junta general.",
+        "es": "Las cláusulas de protección se establecen en el Certificate of Incorporation (EE.UU.) o en el pacto de socios (Reino Unido/España). Crean obligaciones negativas que requieren consentimiento del inversor. Conforme a la LSC española, ciertas materias ya requieren mayoría reforzada de la junta general."
+      },
+      "isRequired": true,
+      "options": [
+        {
+          "id": "protective-minimal",
+          "code": "minimal",
+          "label": {
+            "en": "Minimal — Core Protections Only",
+            "es": "Mínimas — Solo Protecciones Esenciales"
+          },
+          "order": 1,
+          "plainDescription": {
+            "en": "Investor consent required only for the most fundamental changes: altering preferred share rights, issuing senior or pari passu stock, and company dissolution.",
+            "es": "Consentimiento del inversor requerido solo para los cambios más fundamentales: alterar los derechos de las participaciones preferentes, emitir acciones senior o pari passu, y la disolución de la sociedad."
+          },
+          "prosPartyA": {
+            "en": ["Maximum operational freedom", "Faster execution on business decisions", "Limited investor interference"],
+            "es": ["Máxima libertad operativa", "Ejecución más rápida de decisiones de negocio", "Interferencia limitada del inversor"]
+          },
+          "consPartyA": {
+            "en": ["Investor may seek other protective mechanisms"],
+            "es": ["El inversor puede buscar otros mecanismos de protección"]
+          },
+          "prosPartyB": {
+            "en": ["Protection against share class dilution", "Veto on dissolution"],
+            "es": ["Protección contra dilución de clase de participaciones", "Veto sobre disolución"]
+          },
+          "consPartyB": {
+            "en": ["No veto over debt, M&A, or budget changes", "Limited oversight of operational decisions"],
+            "es": ["Sin veto sobre deuda, M&A o cambios presupuestarios", "Supervisión limitada de decisiones operativas"]
+          },
+          "legalText": {
+            "en": "The Company shall not, without the prior written consent of holders of a majority of the outstanding Preferred Stock: (a) alter or change the rights, preferences, or privileges of the Preferred Stock; (b) create or authorize any new class or series of shares having rights senior to or on parity with the Preferred Stock; or (c) effect a voluntary dissolution, liquidation, or winding up of the Company.",
+            "es": "La Sociedad no podrá, sin el consentimiento previo por escrito de los titulares de la mayoría de las Participaciones Preferentes en circulación: (a) alterar o modificar los derechos, preferencias o privilegios de las Participaciones Preferentes; (b) crear o autorizar cualquier nueva clase o serie de participaciones con derechos preferentes o equivalentes a las Participaciones Preferentes; ni (c) efectuar una disolución, liquidación o extinción voluntaria de la Sociedad."
+          },
+          "biasPartyA": 0.4,
+          "biasPartyB": -0.4,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        },
+        {
+          "id": "protective-standard",
+          "code": "standard",
+          "label": {
+            "en": "Standard — Typical Seed Protections",
+            "es": "Estándar — Protecciones Típicas de Semilla"
+          },
+          "order": 2,
+          "plainDescription": {
+            "en": "Investor consent required for core protections plus: material debt issuance, change of control, and material changes to the business.",
+            "es": "Consentimiento del inversor requerido para protecciones esenciales más: emisión de deuda material, cambio de control y cambios materiales en el negocio."
+          },
+          "prosPartyA": {
+            "en": ["Balanced protection that most investors expect", "Preserves day-to-day operational freedom"],
+            "es": ["Protección equilibrada que la mayoría de inversores esperan", "Preserva la libertad operativa del día a día"]
+          },
+          "consPartyA": {
+            "en": ["Investor consent needed for significant transactions", "May slow down M&A or debt decisions"],
+            "es": ["Consentimiento del inversor necesario para transacciones significativas", "Puede ralentizar decisiones de M&A o deuda"]
+          },
+          "prosPartyB": {
+            "en": ["Oversight of major corporate changes", "Protection against unauthorized debt or sale"],
+            "es": ["Supervisión de cambios corporativos importantes", "Protección contra deuda o venta no autorizada"]
+          },
+          "consPartyB": {
+            "en": ["No veto on hiring, compensation, or budgets"],
+            "es": ["Sin veto sobre contratación, compensación o presupuestos"]
+          },
+          "legalText": {
+            "en": "The Company shall not, without the prior written consent of holders of a majority of the outstanding Preferred Stock: (a) alter or change the rights, preferences, or privileges of the Preferred Stock; (b) create or authorize any new class or series of shares having rights senior to or on parity with the Preferred Stock; (c) effect a voluntary dissolution, liquidation, or winding up of the Company; (d) incur indebtedness in excess of [amount] individually or in the aggregate; (e) effect any merger, acquisition, or sale of all or substantially all of the Company's assets; or (f) materially change the nature of the Company's business.",
+            "es": "La Sociedad no podrá, sin el consentimiento previo por escrito de los titulares de la mayoría de las Participaciones Preferentes en circulación: (a) alterar o modificar los derechos, preferencias o privilegios de las Participaciones Preferentes; (b) crear o autorizar cualquier nueva clase o serie de participaciones con derechos preferentes o equivalentes; (c) efectuar una disolución, liquidación o extinción voluntaria; (d) incurrir en deudas por encima de [importe] individual o acumuladamente; (e) efectuar cualquier fusión, adquisición o venta de la totalidad o sustancialmente la totalidad de los activos; ni (f) cambiar materialmente la naturaleza del negocio de la Sociedad."
+          },
+          "biasPartyA": 0.0,
+          "biasPartyB": 0.0,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        },
+        {
+          "id": "protective-extensive",
+          "code": "extensive",
+          "label": {
+            "en": "Extensive — Broad Investor Veto",
+            "es": "Extensas — Veto Amplio del Inversor"
+          },
+          "order": 3,
+          "plainDescription": {
+            "en": "Investor consent required for a wide range of actions including budgets, key hires, related-party transactions, and IP licensing.",
+            "es": "Consentimiento del inversor requerido para una amplia gama de acciones incluyendo presupuestos, contrataciones clave, transacciones con partes vinculadas y licencias de PI."
+          },
+          "prosPartyA": {
+            "en": ["Investor deeply engaged in company governance"],
+            "es": ["Inversor profundamente involucrado en la gobernanza de la empresa"]
+          },
+          "consPartyA": {
+            "en": ["Significant operational constraints", "Slower decision-making on many fronts", "Quasi-co-management by investor"],
+            "es": ["Restricciones operativas significativas", "Toma de decisiones más lenta en muchos frentes", "Cuasi-cogestión por el inversor"]
+          },
+          "prosPartyB": {
+            "en": ["Comprehensive oversight of company operations", "Veto over compensation, IP, and related-party matters", "Maximum protection of invested capital"],
+            "es": ["Supervisión integral de las operaciones de la empresa", "Veto sobre compensación, PI y operaciones vinculadas", "Máxima protección del capital invertido"]
+          },
+          "consPartyB": {
+            "en": ["Heavy time commitment to review actions", "May strain founder relationship", "Uncommon at seed — may deter co-investors"],
+            "es": ["Gran compromiso de tiempo para revisar acciones", "Puede tensar la relación con fundadores", "Infrecuente en semilla — puede disuadir co-inversores"]
+          },
+          "legalText": {
+            "en": "The Company shall not, without the prior written consent of holders of a majority of the outstanding Preferred Stock: (a) alter or change the rights, preferences, or privileges of the Preferred Stock; (b) create or authorize any new class or series of shares; (c) effect a voluntary dissolution, liquidation, or winding up; (d) incur indebtedness in excess of [amount]; (e) effect any merger, acquisition, or sale of all or substantially all assets; (f) materially change the nature of the business; (g) approve or materially amend the annual budget or business plan; (h) hire, terminate, or materially change compensation of any executive officer; (i) enter into any related-party transaction; (j) license, transfer, or encumber material intellectual property; or (k) declare or pay any dividend or make any distribution to shareholders.",
+            "es": "La Sociedad no podrá, sin el consentimiento previo por escrito de los titulares de la mayoría de las Participaciones Preferentes en circulación: (a) alterar o modificar los derechos de las Participaciones Preferentes; (b) crear o autorizar cualquier nueva clase o serie de participaciones; (c) efectuar una disolución, liquidación o extinción voluntaria; (d) incurrir en deudas superiores a [importe]; (e) efectuar fusiones, adquisiciones o ventas de activos sustanciales; (f) cambiar materialmente la naturaleza del negocio; (g) aprobar o modificar materialmente el presupuesto anual o plan de negocio; (h) contratar, cesar o modificar materialmente la compensación de cualquier directivo; (i) celebrar transacciones con partes vinculadas; (j) licenciar, transferir o gravar propiedad intelectual material; ni (k) declarar o pagar dividendos o realizar distribuciones a los socios."
+          },
+          "biasPartyA": -0.4,
+          "biasPartyB": 0.4,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        }
+      ]
+    },
+    {
+      "id": "information-rights",
+      "title": {
+        "en": "Information Rights",
+        "es": "Derechos de Información"
+      },
+      "category": "Governance",
+      "order": 8,
+      "plainDescription": {
+        "en": "How frequently must the company provide financial and operational reports to the investor?",
+        "es": "¿Con qué frecuencia debe la sociedad proporcionar informes financieros y operativos al inversor?"
+      },
+      "legalContext": {
+        "en": "Information rights are contractual obligations in the investment agreement. Under the UK Companies Act 2006 s.431, members have a right to inspect certain records. Under Spanish LSC art.196, socios have a statutory right to information before the junta general. These contractual rights supplement statutory minimums.",
+        "es": "Los derechos de información son obligaciones contractuales del pacto de inversión. Conforme a la Companies Act 2006 del Reino Unido, s.431, los socios tienen derecho a inspeccionar ciertos registros. Conforme al art.196 de la LSC española, los socios tienen un derecho legal de información antes de la junta general. Estos derechos contractuales complementan los mínimos legales."
+      },
+      "isRequired": true,
+      "options": [
+        {
+          "id": "info-annual",
+          "code": "annual",
+          "label": {
+            "en": "Annual — Yearly Reports",
+            "es": "Anual — Informes Anuales"
+          },
+          "order": 1,
+          "plainDescription": {
+            "en": "Company provides audited annual financial statements only. Minimal reporting burden.",
+            "es": "La sociedad proporciona solo estados financieros anuales auditados. Carga mínima de reporting."
+          },
+          "prosPartyA": {
+            "en": ["Minimal reporting burden", "Maximum time for operations", "Standard statutory obligation in most jurisdictions"],
+            "es": ["Carga mínima de reporting", "Máximo tiempo para operaciones", "Obligación legal estándar en la mayoría de jurisdicciones"]
+          },
+          "consPartyA": {
+            "en": ["Investor may feel uninformed and distrustful"],
+            "es": ["El inversor puede sentirse desinformado y desconfiado"]
+          },
+          "prosPartyB": {
+            "en": ["At least receives audited financials"],
+            "es": ["Al menos recibe estados financieros auditados"]
+          },
+          "consPartyB": {
+            "en": ["Very limited visibility", "Cannot track performance between reports", "Problems may go undetected for months"],
+            "es": ["Visibilidad muy limitada", "No puede seguir el rendimiento entre informes", "Los problemas pueden pasar desapercibidos durante meses"]
+          },
+          "legalText": {
+            "en": "The Company shall deliver to the Investor: (a) audited annual financial statements within one hundred twenty (120) days after the end of each fiscal year, prepared in accordance with generally accepted accounting principles; and (b) an annual report summarizing the Company's operations, key developments, and strategic outlook.",
+            "es": "La Sociedad entregará al Inversor: (a) estados financieros anuales auditados dentro de los ciento veinte (120) días siguientes al cierre de cada ejercicio fiscal, preparados conforme a los principios de contabilidad generalmente aceptados; y (b) un informe anual que resuma las operaciones de la Sociedad, desarrollos clave y perspectivas estratégicas."
+          },
+          "biasPartyA": 0.4,
+          "biasPartyB": -0.4,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        },
+        {
+          "id": "info-quarterly",
+          "code": "quarterly",
+          "label": {
+            "en": "Quarterly — Standard Reporting",
+            "es": "Trimestral — Reporting Estándar"
+          },
+          "order": 2,
+          "plainDescription": {
+            "en": "Company provides quarterly financial statements and operational updates, plus annual audited statements.",
+            "es": "La sociedad proporciona estados financieros trimestrales y actualizaciones operativas, además de estados auditados anuales."
+          },
+          "prosPartyA": {
+            "en": ["Manageable reporting cadence", "Demonstrates professional governance", "Industry standard for seed-funded companies"],
+            "es": ["Cadencia de reporting manejable", "Demuestra gobernanza profesional", "Estándar de la industria para empresas financiadas en semilla"]
+          },
+          "consPartyA": {
+            "en": ["Requires quarterly financial close process", "Time commitment for report preparation"],
+            "es": ["Requiere proceso de cierre financiero trimestral", "Compromiso de tiempo para preparación de informes"]
+          },
+          "prosPartyB": {
+            "en": ["Regular visibility into performance", "Can identify trends and issues quarterly", "Standard level of investor transparency"],
+            "es": ["Visibilidad regular del rendimiento", "Puede identificar tendencias y problemas trimestralmente", "Nivel estándar de transparencia para el inversor"]
+          },
+          "consPartyB": {
+            "en": ["Less granular than monthly reporting"],
+            "es": ["Menos granular que el reporting mensual"]
+          },
+          "legalText": {
+            "en": "The Company shall deliver to the Investor: (a) unaudited quarterly financial statements within forty-five (45) days after the end of each fiscal quarter, including balance sheet, income statement, and cash flow statement; (b) a quarterly management report including key performance indicators, material developments, and cash runway projections; and (c) audited annual financial statements within one hundred twenty (120) days after the end of each fiscal year.",
+            "es": "La Sociedad entregará al Inversor: (a) estados financieros trimestrales no auditados dentro de los cuarenta y cinco (45) días siguientes al cierre de cada trimestre fiscal, incluyendo balance, cuenta de resultados y estado de flujos de efectivo; (b) un informe trimestral de gestión que incluya indicadores clave de rendimiento, desarrollos materiales y proyecciones de pista de caja; y (c) estados financieros anuales auditados dentro de los ciento veinte (120) días siguientes al cierre de cada ejercicio fiscal."
+          },
+          "biasPartyA": 0.0,
+          "biasPartyB": 0.0,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        },
+        {
+          "id": "info-monthly",
+          "code": "monthly",
+          "label": {
+            "en": "Monthly — Detailed Reporting",
+            "es": "Mensual — Reporting Detallado"
+          },
+          "order": 3,
+          "plainDescription": {
+            "en": "Company provides monthly financial and operational reports with KPIs, plus quarterly and annual statements.",
+            "es": "La sociedad proporciona informes financieros y operativos mensuales con KPIs, además de estados trimestrales y anuales."
+          },
+          "prosPartyA": {
+            "en": ["Builds strong investor confidence", "Forces disciplined internal financial tracking"],
+            "es": ["Genera confianza sólida del inversor", "Obliga a un seguimiento financiero interno disciplinado"]
+          },
+          "consPartyA": {
+            "en": ["Significant administrative burden", "Diverts time from core operations", "Early-stage numbers may not be meaningful monthly"],
+            "es": ["Carga administrativa significativa", "Desvía tiempo de las operaciones principales", "Los números de fase inicial pueden no ser significativos mensualmente"]
+          },
+          "prosPartyB": {
+            "en": ["Maximum visibility into company performance", "Early warning of problems", "Detailed KPI tracking"],
+            "es": ["Máxima visibilidad del rendimiento de la empresa", "Alerta temprana de problemas", "Seguimiento detallado de KPIs"]
+          },
+          "consPartyB": {
+            "en": ["High volume of reports to review", "May create noise from early-stage variance"],
+            "es": ["Alto volumen de informes a revisar", "Puede crear ruido por la varianza de fase inicial"]
+          },
+          "legalText": {
+            "en": "The Company shall deliver to the Investor: (a) unaudited monthly financial statements within thirty (30) days after the end of each calendar month, including balance sheet, income statement, cash flow statement, and comparison to budget; (b) a monthly dashboard of key performance indicators as mutually agreed; (c) unaudited quarterly financial statements within forty-five (45) days after each fiscal quarter; and (d) audited annual financial statements within one hundred twenty (120) days after each fiscal year. The Investor shall have the right to request reasonable additional information upon written notice.",
+            "es": "La Sociedad entregará al Inversor: (a) estados financieros mensuales no auditados dentro de los treinta (30) días siguientes al cierre de cada mes natural, incluyendo balance, cuenta de resultados, estado de flujos de efectivo y comparación con presupuesto; (b) un cuadro de mando mensual de indicadores clave de rendimiento según acuerdo mutuo; (c) estados financieros trimestrales no auditados dentro de los cuarenta y cinco (45) días siguientes a cada trimestre fiscal; y (d) estados financieros anuales auditados dentro de los ciento veinte (120) días siguientes a cada ejercicio fiscal. El Inversor tendrá derecho a solicitar información adicional razonable mediante notificación por escrito."
+          },
+          "biasPartyA": -0.4,
+          "biasPartyB": 0.4,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        }
+      ]
+    },
+    {
+      "id": "pro-rata-rights",
+      "title": {
+        "en": "Pro-Rata Rights",
+        "es": "Derechos de Suscripción Preferente"
+      },
+      "category": "Governance",
+      "order": 9,
+      "plainDescription": {
+        "en": "Can the investor participate in future financing rounds to maintain their ownership percentage?",
+        "es": "¿Puede el inversor participar en futuras rondas de financiación para mantener su porcentaje de propiedad?"
+      },
+      "legalContext": {
+        "en": "Pro-rata rights are contractual in US law. Under the UK Companies Act 2006 s.561, existing shareholders have statutory pre-emption rights unless disapplied. Under Spanish LSC art.304, socios have a statutory derecho de suscripción preferente that can only be excluded with junta general approval.",
+        "es": "Los derechos de suscripción preferente son contractuales en derecho estadounidense. Conforme a la Companies Act 2006 del Reino Unido, s.561, los accionistas existentes tienen derechos estatutarios de preferencia salvo exclusión. Conforme al art.304 de la LSC española, los socios tienen un derecho legal de suscripción preferente que solo puede excluirse con aprobación de la junta general."
+      },
+      "isRequired": true,
+      "options": [
+        {
+          "id": "prorata-none",
+          "code": "none",
+          "label": {
+            "en": "None — No Contractual Pro-Rata",
+            "es": "Ninguno — Sin Suscripción Preferente Contractual"
+          },
+          "order": 1,
+          "plainDescription": {
+            "en": "The investor has no contractual right to participate in future rounds. They rely solely on any statutory pre-emption rights.",
+            "es": "El inversor no tiene derecho contractual a participar en futuras rondas. Se apoya únicamente en los derechos legales de preferencia, si los hubiera."
+          },
+          "prosPartyA": {
+            "en": ["Full flexibility in structuring future rounds", "Can bring in new investors without constraints", "Simplifies future fundraising"],
+            "es": ["Flexibilidad total para estructurar futuras rondas", "Puede incorporar nuevos inversores sin restricciones", "Simplifica futuras captaciones"]
+          },
+          "consPartyA": {
+            "en": ["Investor may seek other compensating rights"],
+            "es": ["El inversor puede buscar otros derechos compensatorios"]
+          },
+          "prosPartyB": {
+            "en": ["No obligation to invest more capital"],
+            "es": ["Sin obligación de invertir más capital"]
+          },
+          "consPartyB": {
+            "en": ["Risk of dilution in future rounds", "No guaranteed access to follow-on investment", "May lose ownership percentage"],
+            "es": ["Riesgo de dilución en futuras rondas", "Sin acceso garantizado a inversión de seguimiento", "Puede perder porcentaje de propiedad"]
+          },
+          "legalText": {
+            "en": "The Investor shall have no contractual pro-rata participation rights in future financing rounds of the Company. For the avoidance of doubt, any statutory pre-emption rights applicable under governing law shall not be affected by this provision.",
+            "es": "El Inversor no tendrá derechos contractuales de suscripción preferente en futuras rondas de financiación de la Sociedad. Para evitar dudas, los derechos legales de suscripción preferente aplicables conforme a la ley aplicable no se verán afectados por esta disposición."
+          },
+          "biasPartyA": 0.4,
+          "biasPartyB": -0.4,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": {
+              "available": true,
+              "note": {
+                "en": "Statutory pre-emption rights under s.561 Companies Act 2006 may still apply unless disapplied",
+                "es": "Los derechos legales de preferencia conforme a la s.561 de la Companies Act 2006 pueden seguir aplicándose salvo exclusión"
+              }
+            },
+            "SPAIN": {
+              "available": true,
+              "note": {
+                "en": "Statutory derecho de suscripción preferente under LSC art.304 applies unless excluded by junta general",
+                "es": "El derecho legal de suscripción preferente conforme al art.304 LSC se aplica salvo exclusión por la junta general"
+              }
+            }
+          }
+        },
+        {
+          "id": "prorata-major-rounds",
+          "code": "major-rounds",
+          "label": {
+            "en": "Major Rounds Only",
+            "es": "Solo en Rondas Principales"
+          },
+          "order": 2,
+          "plainDescription": {
+            "en": "The investor has pro-rata rights only in qualified financing rounds above a minimum threshold.",
+            "es": "El inversor tiene derechos de suscripción preferente solo en rondas de financiación cualificadas por encima de un umbral mínimo."
+          },
+          "prosPartyA": {
+            "en": ["Flexibility for small bridge rounds or notes", "Pro-rata only triggered by significant rounds"],
+            "es": ["Flexibilidad para rondas puente pequeñas o notas", "Suscripción preferente solo activada por rondas significativas"]
+          },
+          "consPartyA": {
+            "en": ["Must offer pro-rata in major rounds"],
+            "es": ["Debe ofrecer suscripción preferente en rondas principales"]
+          },
+          "prosPartyB": {
+            "en": ["Can maintain ownership in significant financings", "Right to follow on in meaningful rounds"],
+            "es": ["Puede mantener la propiedad en financiaciones significativas", "Derecho a seguir en rondas significativas"]
+          },
+          "consPartyB": {
+            "en": ["No rights in smaller rounds or convertibles", "Must invest to maintain pro-rata"],
+            "es": ["Sin derechos en rondas menores o convertibles", "Debe invertir para mantener la suscripción preferente"]
+          },
+          "legalText": {
+            "en": "The Investor shall have the right to purchase its pro-rata share of any new securities issued by the Company in a Qualified Financing (defined as a financing round raising aggregate proceeds of at least [amount]), in order to maintain the Investor's percentage ownership on a fully diluted basis. The Investor must exercise this right within fifteen (15) business days of receiving notice of the Qualified Financing.",
+            "es": "El Inversor tendrá el derecho a suscribir su parte proporcional de cualesquiera nuevos valores emitidos por la Sociedad en una Financiación Cualificada (definida como una ronda de financiación que capte un importe total de al menos [importe]), con el fin de mantener el porcentaje de propiedad del Inversor sobre base totalmente diluida. El Inversor deberá ejercer este derecho dentro de los quince (15) días hábiles siguientes a la recepción de la notificación de la Financiación Cualificada."
+          },
+          "biasPartyA": 0.0,
+          "biasPartyB": 0.0,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        },
+        {
+          "id": "prorata-full",
+          "code": "full",
+          "label": {
+            "en": "Full — All Future Issuances",
+            "es": "Pleno — Todas las Emisiones Futuras"
+          },
+          "order": 3,
+          "plainDescription": {
+            "en": "The investor has pro-rata participation rights in all future equity issuances, regardless of size or type.",
+            "es": "El inversor tiene derechos de suscripción preferente en todas las emisiones futuras de capital, independientemente del tamaño o tipo."
+          },
+          "prosPartyA": {
+            "en": ["Demonstrates commitment to investor relationship"],
+            "es": ["Demuestra compromiso con la relación con el inversor"]
+          },
+          "consPartyA": {
+            "en": ["Constrains all future equity issuances", "Must notify and offer to investor even for small rounds", "May slow down fundraising process"],
+            "es": ["Restringe todas las futuras emisiones de capital", "Debe notificar y ofrecer al inversor incluso en rondas pequeñas", "Puede ralentizar el proceso de captación"]
+          },
+          "prosPartyB": {
+            "en": ["Maximum protection against dilution", "Can maintain ownership through all financing events", "Right to participate in bridge rounds and notes"],
+            "es": ["Máxima protección contra la dilución", "Puede mantener la propiedad en todos los eventos de financiación", "Derecho a participar en rondas puente y notas"]
+          },
+          "consPartyB": {
+            "en": ["Obligation to invest more capital to maintain pro-rata", "May be called on frequently"],
+            "es": ["Obligación de invertir más capital para mantener la preferencia", "Puede ser requerido con frecuencia"]
+          },
+          "legalText": {
+            "en": "The Investor shall have the right to purchase its pro-rata share of any new equity securities issued by the Company (other than shares reserved for employee incentive plans, strategic partnerships approved by the Board, or shares issued in connection with acquisitions), in order to maintain the Investor's percentage ownership on a fully diluted basis. The Company shall provide at least twenty (20) business days' written notice prior to any such issuance, and the Investor must exercise this right within fifteen (15) business days of such notice.",
+            "es": "El Inversor tendrá el derecho a suscribir su parte proporcional de cualesquiera nuevos valores de capital emitidos por la Sociedad (salvo participaciones reservadas para planes de incentivos a empleados, colaboraciones estratégicas aprobadas por el Consejo, o participaciones emitidas en relación con adquisiciones), con el fin de mantener el porcentaje de propiedad del Inversor sobre base totalmente diluida. La Sociedad proporcionará al menos veinte (20) días hábiles de notificación escrita previa a dicha emisión, y el Inversor deberá ejercer este derecho dentro de los quince (15) días hábiles siguientes a dicha notificación."
+          },
+          "biasPartyA": -0.4,
+          "biasPartyB": 0.4,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        }
+      ]
+    },
+    {
+      "id": "founder-vesting",
+      "title": {
+        "en": "Founder Vesting",
+        "es": "Consolidación de los Fundadores"
+      },
+      "category": "Legal & Transfer",
+      "order": 10,
+      "plainDescription": {
+        "en": "Must founders vest (earn back) their shares over time after the investment? This protects against a founder leaving early with a full equity stake.",
+        "es": "¿Deben los fundadores consolidar (recuperar) sus participaciones a lo largo del tiempo después de la inversión? Protege contra un fundador que se marche pronto con toda su participación."
+      },
+      "legalContext": {
+        "en": "Founder vesting is typically implemented through restricted stock agreements (US), share restriction agreements (UK), or contractual buyback rights in the pacto de socios (Spain). Under California Labor Code, vesting acceleration on termination without cause may be required. Under Spanish law, vesting arrangements are contractual and enforced via the pacto de socios.",
+        "es": "La consolidación del fundador se implementa típicamente mediante acuerdos de acciones restringidas (EE.UU.), acuerdos de restricción de acciones (Reino Unido), o derechos contractuales de recompra en el pacto de socios (España). Conforme al Código Laboral de California, puede requerirse aceleración de consolidación en caso de cese sin causa. En derecho español, los acuerdos de consolidación son contractuales y se ejecutan a través del pacto de socios."
+      },
+      "isRequired": true,
+      "options": [
+        {
+          "id": "vesting-none",
+          "code": "no-additional",
+          "label": {
+            "en": "No Additional Vesting",
+            "es": "Sin Consolidación Adicional"
+          },
+          "order": 1,
+          "plainDescription": {
+            "en": "Founders retain full ownership of their existing shares with no vesting schedule imposed by the investment.",
+            "es": "Los fundadores retienen la propiedad total de sus participaciones existentes sin calendario de consolidación impuesto por la inversión."
+          },
+          "prosPartyA": {
+            "en": ["Full equity ownership from day one", "No risk of losing shares", "Simpler equity structure"],
+            "es": ["Propiedad total del capital desde el primer día", "Sin riesgo de perder participaciones", "Estructura de capital más simple"]
+          },
+          "consPartyA": {
+            "en": ["Investor may demand other protections", "May be harder to negotiate"],
+            "es": ["El inversor puede exigir otras protecciones", "Puede ser más difícil de negociar"]
+          },
+          "prosPartyB": {
+            "en": ["Simpler administration"],
+            "es": ["Administración más simple"]
+          },
+          "consPartyB": {
+            "en": ["Founder can leave with full equity stake", "No incentive alignment mechanism", "Risk of dead equity on the cap table"],
+            "es": ["El fundador puede irse con toda su participación", "Sin mecanismo de alineación de incentivos", "Riesgo de equity muerto en la tabla de capitalización"]
+          },
+          "legalText": {
+            "en": "The existing shares held by the Founders shall not be subject to any additional vesting schedule, repurchase rights, or forfeiture provisions as a result of this investment. The Founders' shares shall be fully vested and freely held as of the Closing Date.",
+            "es": "Las participaciones existentes de los Fundadores no estarán sujetas a ningún calendario de consolidación adicional, derecho de recompra o cláusula de pérdida como resultado de esta inversión. Las participaciones de los Fundadores estarán completamente consolidadas y libremente tituladas a la Fecha de Cierre."
+          },
+          "biasPartyA": 0.4,
+          "biasPartyB": -0.4,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        },
+        {
+          "id": "vesting-standard",
+          "code": "standard-4yr",
+          "label": {
+            "en": "Standard 4-Year Vesting",
+            "es": "Consolidación Estándar a 4 Años"
+          },
+          "order": 2,
+          "plainDescription": {
+            "en": "Founders vest their shares over 4 years with a 1-year cliff. Unvested shares are subject to company repurchase at cost if a founder departs.",
+            "es": "Los fundadores consolidan sus participaciones en 4 años con un cliff de 1 año. Las participaciones no consolidadas están sujetas a recompra por la sociedad a coste si un fundador se marcha."
+          },
+          "prosPartyA": {
+            "en": ["Industry standard — widely understood", "Credit for time already served is negotiable"],
+            "es": ["Estándar de la industria — ampliamente entendido", "El crédito por tiempo ya servido es negociable"]
+          },
+          "consPartyA": {
+            "en": ["Risk of losing unvested shares if departing", "1-year cliff creates a binary risk point"],
+            "es": ["Riesgo de perder participaciones no consolidadas al marcharse", "El cliff de 1 año crea un punto de riesgo binario"]
+          },
+          "prosPartyB": {
+            "en": ["Ensures founders have ongoing skin in the game", "Protects against early departures", "Industry standard alignment mechanism"],
+            "es": ["Asegura que los fundadores mantengan compromiso continuo", "Protege contra abandonos tempranos", "Mecanismo estándar de alineación de la industria"]
+          },
+          "consPartyB": {
+            "en": ["May not cover situations where founder stays but underperforms"],
+            "es": ["Puede no cubrir situaciones donde el fundador se queda pero rinde por debajo"]
+          },
+          "legalText": {
+            "en": "Each Founder's shares shall be subject to vesting over a period of four (4) years from the Closing Date, with twenty-five percent (25%) of such shares vesting on the first anniversary of the Closing Date (the \"Cliff\") and the remainder vesting in equal monthly installments over the following thirty-six (36) months. Unvested shares shall be subject to repurchase by the Company at the lower of cost or fair market value upon a Founder's cessation of full-time service to the Company.",
+            "es": "Las participaciones de cada Fundador estarán sujetas a consolidación durante un período de cuatro (4) años desde la Fecha de Cierre, consolidándose el veinticinco por ciento (25%) de dichas participaciones en el primer aniversario de la Fecha de Cierre (el \"Cliff\") y el resto consolidándose en cuotas mensuales iguales durante los treinta y seis (36) meses siguientes. Las participaciones no consolidadas estarán sujetas a recompra por la Sociedad al menor entre el coste o el valor justo de mercado en caso de cese del Fundador de su servicio a tiempo completo a la Sociedad."
+          },
+          "biasPartyA": 0.0,
+          "biasPartyB": 0.0,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        },
+        {
+          "id": "vesting-accelerated",
+          "code": "accelerated",
+          "label": {
+            "en": "Accelerated — Shorter Schedule with Acceleration",
+            "es": "Acelerada — Calendario Reducido con Aceleración"
+          },
+          "order": 3,
+          "plainDescription": {
+            "en": "Founders vest over 3 years with no cliff, plus single-trigger acceleration on change of control. More founder-protective.",
+            "es": "Los fundadores consolidan en 3 años sin cliff, más aceleración de gatillo único en cambio de control. Más protector del fundador."
+          },
+          "prosPartyA": {
+            "en": ["Shorter vesting period", "No cliff — vesting begins immediately", "Full acceleration on acquisition protects founders"],
+            "es": ["Período de consolidación más corto", "Sin cliff — la consolidación empieza inmediatamente", "Aceleración total en adquisición protege a los fundadores"]
+          },
+          "consPartyA": {
+            "en": ["May be harder to negotiate with investor"],
+            "es": ["Puede ser más difícil de negociar con el inversor"]
+          },
+          "prosPartyB": {
+            "en": ["Still provides vesting incentive alignment"],
+            "es": ["Aún proporciona alineación de incentivos por consolidación"]
+          },
+          "consPartyB": {
+            "en": ["Shorter commitment period", "No cliff means founder can leave after one month with some shares", "Acceleration can complicate M&A transactions"],
+            "es": ["Período de compromiso más corto", "Sin cliff significa que el fundador puede irse tras un mes con algunas participaciones", "La aceleración puede complicar transacciones de M&A"]
+          },
+          "legalText": {
+            "en": "Each Founder's shares shall be subject to vesting over a period of three (3) years from the Closing Date, vesting in equal monthly installments of 1/36th per month, with no cliff period. Upon a Change of Control (as defined herein), one hundred percent (100%) of each Founder's unvested shares shall immediately vest and become free of repurchase rights (\"Single-Trigger Acceleration\").",
+            "es": "Las participaciones de cada Fundador estarán sujetas a consolidación durante un período de tres (3) años desde la Fecha de Cierre, consolidándose en cuotas mensuales iguales de 1/36 por mes, sin período de cliff. En caso de Cambio de Control (según se define en el presente), el cien por cien (100%) de las participaciones no consolidadas de cada Fundador se consolidarán inmediatamente y quedarán libres de derechos de recompra (\"Aceleración de Gatillo Único\")."
+          },
+          "biasPartyA": 0.4,
+          "biasPartyB": -0.4,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        }
+      ]
+    },
+    {
+      "id": "transfer-restrictions",
+      "title": {
+        "en": "Transfer Restrictions",
+        "es": "Restricciones de Transmisión"
+      },
+      "category": "Legal & Transfer",
+      "order": 11,
+      "plainDescription": {
+        "en": "What restrictions apply when a shareholder wants to sell or transfer their shares? This controls who can become a shareholder.",
+        "es": "¿Qué restricciones se aplican cuando un socio quiere vender o transmitir sus participaciones? Controla quién puede convertirse en socio."
+      },
+      "legalContext": {
+        "en": "Transfer restrictions are in the bylaws or shareholders' agreement (US), Articles of Association (UK), or estatutos sociales (Spain). Under Spanish LSC art.107, SL shares are subject to statutory transfer restrictions unless the estatutos provide otherwise. Under the UK Companies Act, private companies can restrict transfers via their Articles.",
+        "es": "Las restricciones de transmisión están en los bylaws o acuerdo de accionistas (EE.UU.), Articles of Association (Reino Unido), o estatutos sociales (España). Conforme al art.107 de la LSC española, las participaciones de una SL están sujetas a restricciones legales de transmisión salvo disposición estatutaria distinta. Conforme a la Companies Act del Reino Unido, las sociedades privadas pueden restringir transmisiones a través de sus Articles."
+      },
+      "isRequired": true,
+      "options": [
+        {
+          "id": "transfer-rofr-consent",
+          "code": "rofr-consent",
+          "label": {
+            "en": "ROFR + Board Consent",
+            "es": "ROFR + Consentimiento del Consejo"
+          },
+          "order": 1,
+          "plainDescription": {
+            "en": "Company and existing shareholders have right of first refusal, and transfers also require board approval. Maximum control.",
+            "es": "La sociedad y los socios existentes tienen derecho de adquisición preferente, y las transmisiones también requieren aprobación del consejo. Máximo control."
+          },
+          "prosPartyA": {
+            "en": ["Maximum control over share register", "Can block unwanted shareholders", "ROFR preserves existing ownership balance"],
+            "es": ["Máximo control sobre el registro de socios", "Puede bloquear socios no deseados", "ROFR preserva el equilibrio de propiedad existente"]
+          },
+          "consPartyA": {
+            "en": ["Same restrictions apply to founder transfers"],
+            "es": ["Las mismas restricciones se aplican a transmisiones del fundador"]
+          },
+          "prosPartyB": {
+            "en": ["ROFR gives opportunity to increase stake", "Board consent prevents unwanted co-investors"],
+            "es": ["ROFR da oportunidad de aumentar participación", "Consentimiento del consejo previene co-inversores no deseados"]
+          },
+          "consPartyB": {
+            "en": ["Cannot freely sell shares", "Two-layer restriction may delay legitimate transfers"],
+            "es": ["No puede vender participaciones libremente", "Restricción de dos capas puede retrasar transmisiones legítimas"]
+          },
+          "legalText": {
+            "en": "No shareholder may transfer, sell, assign, pledge, or otherwise dispose of any shares except in compliance with this Section. Any proposed transfer shall be subject to: (a) a right of first refusal (\"ROFR\") in favor of the Company and then the other shareholders, exercisable within thirty (30) days of written notice of the proposed transfer, including the price, terms, and identity of the proposed transferee; and (b) prior written consent of the Board of Directors, which may be withheld in the Board's reasonable discretion.",
+            "es": "Ningún socio podrá transmitir, vender, ceder, pignorar o disponer de otro modo de participaciones salvo conforme a esta Sección. Cualquier transmisión propuesta estará sujeta a: (a) un derecho de adquisición preferente (\"ROFR\") a favor de la Sociedad y después de los demás socios, ejercitable dentro de los treinta (30) días siguientes a la notificación escrita de la transmisión propuesta, incluyendo el precio, condiciones e identidad del propuesto adquirente; y (b) consentimiento previo por escrito del Órgano de Administración, que podrá denegarse a discreción razonable del Consejo."
+          },
+          "biasPartyA": 0.4,
+          "biasPartyB": -0.4,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": {
+              "available": true,
+              "note": {
+                "en": "Aligns with LSC art.107 default transfer restrictions for participaciones sociales",
+                "es": "Conforme con las restricciones de transmisión por defecto del art.107 LSC para participaciones sociales"
+              }
+            }
+          }
+        },
+        {
+          "id": "transfer-rofr-only",
+          "code": "rofr-only",
+          "label": {
+            "en": "ROFR Only",
+            "es": "Solo ROFR"
+          },
+          "order": 2,
+          "plainDescription": {
+            "en": "Company and existing shareholders have right of first refusal, but if they decline, the transfer may proceed without further consent.",
+            "es": "La sociedad y los socios existentes tienen derecho de adquisición preferente, pero si declinan, la transmisión puede realizarse sin más consentimiento."
+          },
+          "prosPartyA": {
+            "en": ["Opportunity to buy shares before outsiders", "Balanced restriction — not overly burdensome"],
+            "es": ["Oportunidad de comprar participaciones antes que terceros", "Restricción equilibrada — no excesivamente gravosa"]
+          },
+          "consPartyA": {
+            "en": ["Cannot block transfer if ROFR not exercised", "Potential new shareholders not subject to approval"],
+            "es": ["No puede bloquear la transmisión si no se ejerce el ROFR", "Posibles nuevos socios no sujetos a aprobación"]
+          },
+          "prosPartyB": {
+            "en": ["Can sell if ROFR not exercised", "More liquidity than ROFR + consent", "ROFR also protects investor's chance to buy"],
+            "es": ["Puede vender si no se ejerce el ROFR", "Más liquidez que ROFR + consentimiento", "ROFR también protege la oportunidad del inversor de comprar"]
+          },
+          "consPartyB": {
+            "en": ["Must wait for ROFR period before completing transfer"],
+            "es": ["Debe esperar al período del ROFR antes de completar la transmisión"]
+          },
+          "legalText": {
+            "en": "No shareholder may transfer, sell, assign, pledge, or otherwise dispose of any shares except in compliance with this Section. Any proposed transfer shall be subject to a right of first refusal (\"ROFR\") in favor of the Company and then the other shareholders, exercisable within thirty (30) days of written notice of the proposed transfer. If the ROFR is not exercised in full within such period, the transferring shareholder may complete the transfer to the proposed transferee on terms no more favorable than those set forth in the notice.",
+            "es": "Ningún socio podrá transmitir, vender, ceder, pignorar o disponer de otro modo de participaciones salvo conforme a esta Sección. Cualquier transmisión propuesta estará sujeta a un derecho de adquisición preferente (\"ROFR\") a favor de la Sociedad y después de los demás socios, ejercitable dentro de los treinta (30) días siguientes a la notificación escrita de la transmisión propuesta. Si el ROFR no se ejerce en su totalidad dentro de dicho plazo, el socio transmitente podrá completar la transmisión al adquirente propuesto en condiciones no más favorables que las establecidas en la notificación."
+          },
+          "biasPartyA": 0.0,
+          "biasPartyB": 0.0,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        },
+        {
+          "id": "transfer-free-lockup",
+          "code": "free-lockup",
+          "label": {
+            "en": "Free Transfer After Lock-Up",
+            "es": "Libre Transmisión Tras Período de Bloqueo"
+          },
+          "order": 3,
+          "plainDescription": {
+            "en": "Shares are locked for an initial period (typically 12–24 months), after which shareholders can transfer freely.",
+            "es": "Las participaciones están bloqueadas durante un período inicial (típicamente 12–24 meses), tras el cual los socios pueden transmitir libremente."
+          },
+          "prosPartyA": {
+            "en": ["Guaranteed stability during critical early period"],
+            "es": ["Estabilidad garantizada durante el período inicial crítico"]
+          },
+          "consPartyA": {
+            "en": ["No control after lock-up expires", "Unknown shareholders could enter cap table", "May lead to fragmented ownership"],
+            "es": ["Sin control tras la expiración del bloqueo", "Socios desconocidos podrían entrar en la tabla de capitalización", "Puede llevar a una propiedad fragmentada"]
+          },
+          "prosPartyB": {
+            "en": ["Full liquidity after lock-up", "No need for consent or ROFR process", "Freedom to sell stake on own terms"],
+            "es": ["Liquidez total tras el bloqueo", "Sin necesidad de consentimiento o proceso de ROFR", "Libertad para vender participación en sus propios términos"]
+          },
+          "consPartyB": {
+            "en": ["Cannot transfer during lock-up period", "Other shareholders also free to sell after lock-up"],
+            "es": ["No puede transmitir durante el período de bloqueo", "Los demás socios también son libres de vender tras el bloqueo"]
+          },
+          "legalText": {
+            "en": "Each shareholder agrees not to transfer, sell, assign, pledge, or otherwise dispose of any shares for a period of [months] months from the Closing Date (the \"Lock-Up Period\"). Following expiration of the Lock-Up Period, shareholders may freely transfer their shares, subject only to applicable securities law restrictions and the Company's right to require execution of a joinder agreement by any new shareholder.",
+            "es": "Cada socio se compromete a no transmitir, vender, ceder, pignorar o disponer de otro modo de participaciones durante un período de [meses] meses desde la Fecha de Cierre (el \"Período de Bloqueo\"). Tras la expiración del Período de Bloqueo, los socios podrán transmitir libremente sus participaciones, sujeto únicamente a las restricciones aplicables de la legislación del mercado de valores y al derecho de la Sociedad a exigir la ejecución de un acuerdo de adhesión por cualquier nuevo socio."
+          },
+          "biasPartyA": -0.4,
+          "biasPartyB": 0.4,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": {
+              "available": true,
+              "warning": {
+                "en": "Free transfer after lock-up may conflict with LSC art.107 default restrictions — estatutos should expressly permit this",
+                "es": "La libre transmisión tras bloqueo puede entrar en conflicto con las restricciones por defecto del art.107 LSC — los estatutos deben permitirlo expresamente"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "governing-law",
+      "title": {
+        "en": "Governing Law & Disputes",
+        "es": "Ley Aplicable y Resolución de Controversias"
+      },
+      "category": "Legal & Transfer",
+      "order": 12,
+      "plainDescription": {
+        "en": "Which jurisdiction's laws govern the agreement, and how are disputes resolved?",
+        "es": "¿Qué legislación rige el acuerdo y cómo se resuelven las controversias?"
+      },
+      "legalContext": {
+        "en": "Choice of law is generally respected in commercial contracts. California courts apply their own public policy limitations. English law is widely used in international transactions. Spanish courts will apply mandatory local rules regardless of choice of law for Spanish companies.",
+        "es": "La elección de ley es generalmente respetada en contratos comerciales. Los tribunales de California aplican sus propias limitaciones de orden público. El derecho inglés es ampliamente utilizado en transacciones internacionales. Los tribunales españoles aplicarán normas locales imperativas independientemente de la elección de ley para sociedades españolas."
+      },
+      "isRequired": true,
+      "options": [
+        {
+          "id": "govlaw-california",
+          "code": "california",
+          "label": {
+            "en": "California Law — State Courts",
+            "es": "Derecho de California — Tribunales Estatales"
+          },
+          "order": 1,
+          "plainDescription": {
+            "en": "Governed by the laws of the State of California with disputes resolved in California state or federal courts.",
+            "es": "Regido por las leyes del Estado de California con controversias resueltas en tribunales estatales o federales de California."
+          },
+          "prosPartyA": {
+            "en": ["Well-developed startup case law", "Familiar to US-based companies and counsel", "Strong founder protection precedents"],
+            "es": ["Jurisprudencia de startups bien desarrollada", "Familiar para empresas y asesores de EE.UU.", "Fuertes precedentes de protección al fundador"]
+          },
+          "consPartyA": {
+            "en": ["International investors may be less comfortable"],
+            "es": ["Los inversores internacionales pueden sentirse menos cómodos"]
+          },
+          "prosPartyB": {
+            "en": ["Predictable legal framework", "Extensive venture capital precedent"],
+            "es": ["Marco legal predecible", "Amplio precedente de capital riesgo"]
+          },
+          "consPartyB": {
+            "en": ["Non-US investors bear travel and foreign counsel costs", "Jury trials possible"],
+            "es": ["Inversores no estadounidenses asumen costes de viaje y abogados extranjeros", "Posibles juicios con jurado"]
+          },
+          "legalText": {
+            "en": "This Agreement shall be governed by and construed in accordance with the laws of the State of California, without regard to its conflict of laws principles. Each party irrevocably submits to the exclusive jurisdiction of the state and federal courts located in [county], California for the resolution of any dispute arising out of or relating to this Agreement. The prevailing party in any action shall be entitled to recover its reasonable attorneys' fees and costs.",
+            "es": "Este Acuerdo se regirá e interpretará de conformidad con las leyes del Estado de California, sin tener en cuenta sus principios de conflicto de leyes. Cada parte se somete irrevocablemente a la jurisdicción exclusiva de los tribunales estatales y federales situados en [condado], California para la resolución de cualquier controversia derivada de o relacionada con este Acuerdo. La parte vencedora en cualquier acción tendrá derecho a recuperar sus honorarios de abogados y costas razonables."
+          },
+          "biasPartyA": 0.2,
+          "biasPartyB": -0.2,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        },
+        {
+          "id": "govlaw-england",
+          "code": "england-wales",
+          "label": {
+            "en": "English Law — Courts of England & Wales",
+            "es": "Derecho Inglés — Tribunales de Inglaterra y Gales"
+          },
+          "order": 2,
+          "plainDescription": {
+            "en": "Governed by the laws of England and Wales with disputes resolved in the courts of England and Wales.",
+            "es": "Regido por las leyes de Inglaterra y Gales con controversias resueltas en los tribunales de Inglaterra y Gales."
+          },
+          "prosPartyA": {
+            "en": ["Respected internationally", "Well-established commercial law tradition", "No jury trials in commercial disputes"],
+            "es": ["Respetado internacionalmente", "Tradición de derecho comercial bien establecida", "Sin juicios con jurado en controversias comerciales"]
+          },
+          "consPartyA": {
+            "en": ["Non-UK companies may need local counsel"],
+            "es": ["Empresas no británicas pueden necesitar abogados locales"]
+          },
+          "prosPartyB": {
+            "en": ["Predictable and well-documented precedent", "Strong investor protection case law"],
+            "es": ["Precedente predecible y bien documentado", "Jurisprudencia sólida de protección al inversor"]
+          },
+          "consPartyB": {
+            "en": ["Non-UK investors bear foreign court costs"],
+            "es": ["Inversores no británicos asumen costes de tribunales extranjeros"]
+          },
+          "legalText": {
+            "en": "This Agreement shall be governed by and construed in accordance with the laws of England and Wales. Each party irrevocably submits to the exclusive jurisdiction of the courts of England and Wales for the resolution of any dispute arising out of or relating to this Agreement.",
+            "es": "Este Acuerdo se regirá e interpretará de conformidad con las leyes de Inglaterra y Gales. Cada parte se somete irrevocablemente a la jurisdicción exclusiva de los tribunales de Inglaterra y Gales para la resolución de cualquier controversia derivada de o relacionada con este Acuerdo."
+          },
+          "biasPartyA": 0.0,
+          "biasPartyB": 0.0,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        },
+        {
+          "id": "govlaw-spain",
+          "code": "spain",
+          "label": {
+            "en": "Spanish Law — Courts of Spain",
+            "es": "Derecho Español — Tribunales de España"
+          },
+          "order": 3,
+          "plainDescription": {
+            "en": "Governed by Spanish law with disputes resolved in the courts of Spain. Appropriate when the company is a Spanish entity.",
+            "es": "Regido por el derecho español con controversias resueltas en los tribunales de España. Apropiado cuando la sociedad es una entidad española."
+          },
+          "prosPartyA": {
+            "en": ["Consistent with Spanish corporate form (SL/SA)", "Mandatory LSC provisions apply naturally"],
+            "es": ["Consistente con la forma societaria española (SL/SA)", "Las disposiciones imperativas de la LSC se aplican naturalmente"]
+          },
+          "consPartyA": {
+            "en": ["Less developed startup-specific case law", "Proceedings may be slower than other jurisdictions"],
+            "es": ["Jurisprudencia específica de startups menos desarrollada", "Los procedimientos pueden ser más lentos que en otras jurisdicciones"]
+          },
+          "prosPartyB": {
+            "en": ["Familiar framework for Spanish entities", "Mandatory shareholder protections under LSC"],
+            "es": ["Marco familiar para entidades españolas", "Protecciones obligatorias del socio conforme a la LSC"]
+          },
+          "consPartyB": {
+            "en": ["International investors may prefer arbitration", "Court proceedings conducted in Spanish"],
+            "es": ["Inversores internacionales pueden preferir arbitraje", "Procedimientos judiciales en castellano"]
+          },
+          "legalText": {
+            "en": "This Agreement shall be governed by and construed in accordance with the laws of the Kingdom of Spain. Each party irrevocably submits to the exclusive jurisdiction of the courts of [city], Spain for the resolution of any dispute arising out of or relating to this Agreement.",
+            "es": "Este Acuerdo se regirá e interpretará de conformidad con las leyes del Reino de España. Cada parte se somete irrevocablemente a la jurisdicción exclusiva de los tribunales de [ciudad], España para la resolución de cualquier controversia derivada de o relacionada con este Acuerdo."
+          },
+          "biasPartyA": 0.0,
+          "biasPartyB": 0.0,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        },
+        {
+          "id": "govlaw-arbitration",
+          "code": "arbitration",
+          "label": {
+            "en": "Arbitration — Neutral Forum",
+            "es": "Arbitraje — Foro Neutral"
+          },
+          "order": 4,
+          "plainDescription": {
+            "en": "Disputes resolved through binding arbitration under international rules. Provides a neutral forum and confidential proceedings.",
+            "es": "Controversias resueltas mediante arbitraje vinculante conforme a reglas internacionales. Proporciona un foro neutral y procedimientos confidenciales."
+          },
+          "prosPartyA": {
+            "en": ["Neutral forum for cross-border disputes", "Confidential proceedings", "Internationally enforceable awards"],
+            "es": ["Foro neutral para controversias transfronterizas", "Procedimientos confidenciales", "Laudos ejecutables internacionalmente"]
+          },
+          "consPartyA": {
+            "en": ["Higher cost than court proceedings", "Limited appeal rights", "Arbitrator selection process"],
+            "es": ["Mayor coste que los procedimientos judiciales", "Derechos de apelación limitados", "Proceso de selección de árbitros"]
+          },
+          "prosPartyB": {
+            "en": ["Neutral — no home court advantage", "Enforceable under New York Convention", "Faster than many court systems"],
+            "es": ["Neutral — sin ventaja de jurisdicción local", "Ejecutable conforme al Convenio de Nueva York", "Más rápido que muchos sistemas judiciales"]
+          },
+          "consPartyB": {
+            "en": ["Higher upfront costs", "Limited discovery compared to US courts", "No appeal on merits"],
+            "es": ["Mayores costes iniciales", "Discovery limitado comparado con tribunales de EE.UU.", "Sin apelación sobre el fondo"]
+          },
+          "legalText": {
+            "en": "Any dispute arising out of or in connection with this Agreement, including any question regarding its existence, validity, or termination, shall be referred to and finally resolved by arbitration administered by [arbitration institution] in accordance with its rules. The seat of arbitration shall be [city]. The tribunal shall consist of one (1) arbitrator. The language of the arbitration shall be [arbitration language]. The award shall be final and binding on the parties and may be enforced in any court of competent jurisdiction.",
+            "es": "Cualquier controversia derivada de o en relación con este Acuerdo, incluyendo cualquier cuestión relativa a su existencia, validez o terminación, será remitida y resuelta definitivamente mediante arbitraje administrado por [institución arbitral] de conformidad con su reglamento. La sede del arbitraje será [ciudad]. El tribunal estará compuesto por un (1) árbitro. El idioma del arbitraje será [idioma del arbitraje]. El laudo será definitivo y vinculante para las partes y podrá ejecutarse ante cualquier tribunal competente."
+          },
+          "biasPartyA": -0.2,
+          "biasPartyB": 0.2,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        }
+      ]
+    }
+  ]
+}
