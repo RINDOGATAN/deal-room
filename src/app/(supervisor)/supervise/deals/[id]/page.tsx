@@ -105,14 +105,18 @@ export default function SupervisorDealDetailPage() {
   const agreedClauses = deal.clauses.filter((c) => c.status === "AGREED").length;
   const totalClauses = deal.clauses.length;
 
-  // Find if this supervisor is reviewing for a party
+  // Find if this supervisor is reviewing for a party (Stage A — Party Counsel)
   const reviewParty = deal.parties.find(
     (p) => p.attorneyReviewRequested && p.attorneySupervisorId
   );
-  // We show the review banner if the party requested review (supervisor is linked via assignment)
-  // The supervisor's own ID isn't in the deal data, but we can check via the assignment existence
   const hasReviewAssignment = reviewParty && !reviewParty.attorneyReviewApprovedAt;
   const reviewApproved = reviewParty?.attorneyReviewApprovedAt;
+
+  // Stage B — Joint Closing Counsel
+  const jointCounsel = (deal as any).jointCounselSupervisor;
+  const isJointCounsel = !!jointCounsel;
+  const jointCounselAcknowledged = !!(deal as any).jointCounselAcknowledgedAt;
+  const jointCounselPending = !!(deal as any).jointCounselRequestedAt && !jointCounselAcknowledged && !(deal as any).jointCounselDeclinedAt;
 
   return (
     <div className="space-y-6">
@@ -139,7 +143,7 @@ export default function SupervisorDealDetailPage() {
         </div>
       </div>
 
-      {/* Attorney Review Banner */}
+      {/* Stage A — Attorney Review Banner */}
       {hasReviewAssignment && reviewParty && (
         <div className="card-brutal border-purple-500/50 bg-purple-500/5">
           <div className="flex items-start justify-between">
@@ -148,7 +152,7 @@ export default function SupervisorDealDetailPage() {
                 <Shield className="w-6 h-6 text-purple-500" />
               </div>
               <div>
-                <h2 className="text-lg font-semibold mb-1">Attorney Review Requested</h2>
+                <h2 className="text-lg font-semibold mb-1">Party Counsel Review Requested</h2>
                 <p className="text-sm text-muted-foreground">
                   You are reviewing this contract for{" "}
                   <span className="font-medium text-foreground">
@@ -194,7 +198,7 @@ export default function SupervisorDealDetailPage() {
         </div>
       )}
 
-      {/* Review Approved Banner */}
+      {/* Stage A — Review Approved Banner */}
       {reviewApproved && reviewParty && (
         <div className="card-brutal border-primary bg-primary/5">
           <div className="flex items-start gap-4">
@@ -202,13 +206,48 @@ export default function SupervisorDealDetailPage() {
               <UserCheck className="w-6 h-6 text-primary" />
             </div>
             <div>
-              <h2 className="text-lg font-semibold mb-1">Review Approved</h2>
+              <h2 className="text-lg font-semibold mb-1">Party Counsel Review Approved</h2>
               <p className="text-sm text-muted-foreground">
                 You approved the contract review for{" "}
                 <span className="font-medium text-foreground">
                   {reviewParty.name || reviewParty.email}
                 </span>
                 {" "}on {format(new Date(reviewApproved), "MMM d, yyyy")}.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Stage B — Joint Closing Counsel Banner */}
+      {isJointCounsel && jointCounselPending && (
+        <div className="card-brutal border-blue-500/50 bg-blue-500/5">
+          <div className="flex items-start gap-4">
+            <div className="w-12 h-12 bg-blue-500/20 flex items-center justify-center flex-shrink-0">
+              <Scale className="w-6 h-6 text-blue-500" />
+            </div>
+            <div>
+              <h2 className="text-lg font-semibold mb-1">Joint Closing Counsel</h2>
+              <p className="text-sm text-muted-foreground">
+                You have been requested as joint closing counsel for this deal.
+                Both parties&apos; details are shown below. Waiting for the other party to acknowledge.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {isJointCounsel && jointCounselAcknowledged && (
+        <div className="card-brutal border-primary bg-primary/5">
+          <div className="flex items-start gap-4">
+            <div className="w-12 h-12 bg-primary/20 flex items-center justify-center flex-shrink-0">
+              <Scale className="w-6 h-6 text-primary" />
+            </div>
+            <div>
+              <h2 className="text-lg font-semibold mb-1">Joint Closing Counsel — Active</h2>
+              <p className="text-sm text-muted-foreground">
+                Both parties have acknowledged your role as joint closing counsel.
+                Review both parties&apos; positions below to help finalize the agreement.
               </p>
             </div>
           </div>

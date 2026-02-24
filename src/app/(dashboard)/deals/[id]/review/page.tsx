@@ -25,6 +25,7 @@ import {
   UserCheck,
   XCircle,
   Info,
+  Briefcase,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
@@ -48,6 +49,7 @@ export default function ReviewPage() {
 
   const t = useTranslations("review");
   const tCommon = useTranslations("common");
+  const tJointCounsel = useTranslations("jointCounsel");
 
   const [counterProposalForm, setCounterProposalForm] = useState<CounterProposalForm | null>(null);
   const [selectedOptionId, setSelectedOptionId] = useState<string>("");
@@ -131,6 +133,48 @@ export default function ReviewPage() {
     },
     onError: (error) => {
       toast.error(t("toastMessages.cancelFailed", { error: error.message }));
+    },
+  });
+
+  // Joint counsel
+  const [showJointCounselModal, setShowJointCounselModal] = useState(false);
+  const [selectedJointCounselId, setSelectedJointCounselId] = useState("");
+
+  const { data: jointCounselStatus, refetch: refetchJointCounsel } = trpc.jointCounsel.getStatus.useQuery({ dealRoomId: dealId });
+  const { data: availableJointCounsel, isLoading: jointCounselLoading } = trpc.jointCounsel.listAvailable.useQuery(
+    { dealRoomId: dealId },
+    { enabled: showJointCounselModal }
+  );
+
+  const requestJointCounsel = trpc.jointCounsel.request.useMutation({
+    onSuccess: () => {
+      toast.success(tJointCounsel("toastMessages.requested"));
+      setShowJointCounselModal(false);
+      setSelectedJointCounselId("");
+      refetchJointCounsel();
+    },
+    onError: (error) => {
+      toast.error(tJointCounsel("toastMessages.requestFailed", { error: error.message }));
+    },
+  });
+
+  const acknowledgeJointCounsel = trpc.jointCounsel.acknowledge.useMutation({
+    onSuccess: () => {
+      toast.success(tJointCounsel("toastMessages.acknowledged"));
+      refetchJointCounsel();
+    },
+    onError: (error) => {
+      toast.error(tJointCounsel("toastMessages.acknowledgeFailed", { error: error.message }));
+    },
+  });
+
+  const declineJointCounsel = trpc.jointCounsel.decline.useMutation({
+    onSuccess: () => {
+      toast.success(tJointCounsel("toastMessages.declined"));
+      refetchJointCounsel();
+    },
+    onError: (error) => {
+      toast.error(tJointCounsel("toastMessages.declineFailed", { error: error.message }));
     },
   });
 
@@ -241,7 +285,7 @@ export default function ReviewPage() {
               <span className="hidden sm:inline">{regenerateCompromise.isPending ? t("generating") : t("newRound")}</span>
             </button>
           )}
-          {allAgreed && reviewStatus?.canProceedToSigning && (
+          {allAgreed && reviewStatus?.canProceedToSigning && !(jointCounselStatus?.requested && !jointCounselStatus?.acknowledgedAt && !jointCounselStatus?.declinedAt) && (
             <button
               onClick={() => router.push(`/deals/${dealId}/sign`)}
               className="btn-brutal flex items-center gap-2"
@@ -688,7 +732,10 @@ export default function ReviewPage() {
                       <span className="text-xs text-muted-foreground ml-2">{t("selectedByOtherParty")}</span>
                     )}
                   </p>
-                  <p className="text-sm text-muted-foreground">{attorney.email}</p>
+                  <p className="text-sm text-muted-foreground">
+                    {attorney.email}
+                    {attorney.barNumber && <span className="ml-2 text-xs text-primary">Bar #{attorney.barNumber}</span>}
+                  </p>
                 </button>
               ))}
               {!attorneysLoading && !attorneysError && availableAttorneys?.length === 0 && (
@@ -912,6 +959,218 @@ export default function ReviewPage() {
                     {t("requestAttorneyReview")}
                   </button>
                 )}
+              </div>
+            </div>
+          )}
+        </>
+      )}
+
+      {/* Stage B — Joint Closing Counsel */}
+      {allAgreed && (
+        <>
+          {/* Joint Counsel Selection Modal */}
+          {showJointCounselModal && (
+            <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
+              <div className="card-brutal max-w-lg w-full">
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="text-lg font-bold">{tJointCounsel("selectCounsel")}</h2>
+                  <button
+                    onClick={() => {
+                      setShowJointCounselModal(false);
+                      setSelectedJointCounselId("");
+                    }}
+                    className="p-1 text-muted-foreground hover:text-foreground"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
+                <p className="text-sm text-muted-foreground mb-4">
+                  {tJointCounsel("selectCounselDescription")}
+                </p>
+                <div className="space-y-2 mb-6 max-h-64 overflow-y-auto">
+                  {jointCounselLoading && (
+                    <div className="flex items-center justify-center py-6">
+                      <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" />
+                    </div>
+                  )}
+                  {availableJointCounsel?.map((counsel) => (
+                    <button
+                      key={counsel.id}
+                      onClick={() => setSelectedJointCounselId(counsel.id)}
+                      className={`
+                        w-full text-left p-4 border transition-colors
+                        ${selectedJointCounselId === counsel.id
+                          ? "border-primary bg-primary/10"
+                          : "border-border hover:border-muted-foreground"
+                        }
+                      `}
+                    >
+                      <p className="font-semibold">{counsel.name || counsel.email}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {counsel.email}
+                        {counsel.barNumber && <span className="ml-2 text-xs text-primary">Bar #{counsel.barNumber}</span>}
+                      </p>
+                    </button>
+                  ))}
+                  {!jointCounselLoading && availableJointCounsel?.length === 0 && (
+                    <p className="text-sm text-muted-foreground text-center py-4">
+                      {tJointCounsel("noCounselAvailable")}
+                    </p>
+                  )}
+                </div>
+                <div className="flex items-center justify-end gap-3">
+                  <button
+                    onClick={() => {
+                      setShowJointCounselModal(false);
+                      setSelectedJointCounselId("");
+                    }}
+                    className="px-4 py-2 text-muted-foreground hover:text-foreground"
+                  >
+                    {tCommon("cancel")}
+                  </button>
+                  <button
+                    onClick={() => {
+                      if (selectedJointCounselId) {
+                        requestJointCounsel.mutate({
+                          dealRoomId: dealId,
+                          supervisorId: selectedJointCounselId,
+                        });
+                      }
+                    }}
+                    disabled={!selectedJointCounselId || requestJointCounsel.isPending}
+                    className="btn-brutal disabled:opacity-50"
+                  >
+                    {requestJointCounsel.isPending ? tJointCounsel("requesting") : tJointCounsel("assignCounsel")}
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* No request yet — Initiator sees request button */}
+          {!jointCounselStatus?.requested && isInitiator && (
+            <div className="card-brutal border-purple-500/30">
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 bg-purple-500/20 flex items-center justify-center flex-shrink-0 rounded-2xl">
+                  <Briefcase className="w-6 h-6 text-purple-500" />
+                </div>
+                <div className="flex-1">
+                  <h2 className="text-lg font-semibold mb-1">{tJointCounsel("title")}</h2>
+                  <p className="text-sm text-muted-foreground mb-3">
+                    {tJointCounsel("selectCounselDescription")}
+                  </p>
+                  <button
+                    onClick={() => setShowJointCounselModal(true)}
+                    className="btn-brutal-outline flex items-center gap-2 text-sm"
+                  >
+                    <Briefcase className="w-4 h-4" />
+                    {tJointCounsel("requestJointCounsel")}
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Requested, pending — Initiator sees status */}
+          {jointCounselStatus?.requested && !jointCounselStatus.acknowledgedAt && !jointCounselStatus.declinedAt && jointCounselStatus.isInitiator && (
+            <div className="card-brutal border-purple-500/50">
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 bg-purple-500/20 flex items-center justify-center flex-shrink-0 rounded-2xl">
+                  <Briefcase className="w-6 h-6 text-purple-500" />
+                </div>
+                <div>
+                  <h2 className="text-lg font-semibold mb-1">{tJointCounsel("pendingAcknowledgment")}</h2>
+                  <p className="text-sm text-muted-foreground">
+                    {jointCounselStatus.supervisorName} — {tJointCounsel("pendingAcknowledgmentDescription")}
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Requested, pending — Other party sees acknowledge/decline */}
+          {jointCounselStatus?.requested && !jointCounselStatus.acknowledgedAt && !jointCounselStatus.declinedAt && !jointCounselStatus.isInitiator && (
+            <div className="card-brutal border-purple-500/50">
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 bg-purple-500/20 flex items-center justify-center flex-shrink-0 rounded-2xl">
+                  <Briefcase className="w-6 h-6 text-purple-500" />
+                </div>
+                <div className="flex-1">
+                  <h2 className="text-lg font-semibold mb-1">{tJointCounsel("title")}</h2>
+                  <p className="text-sm text-muted-foreground mb-2">
+                    {jointCounselStatus.supervisorName} — {tJointCounsel("pendingAcknowledgmentDescription")}
+                  </p>
+                  {jointCounselStatus.waiverText && (
+                    <p className="text-xs text-muted-foreground italic mb-3">
+                      {tJointCounsel("waiverTitle")}: {jointCounselStatus.waiverText}
+                    </p>
+                  )}
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <button
+                      onClick={() => declineJointCounsel.mutate({ dealRoomId: dealId })}
+                      disabled={declineJointCounsel.isPending}
+                      className="flex items-center gap-2 px-3 py-2 text-sm border border-yellow-500 text-yellow-600 hover:bg-yellow-500 hover:text-white transition-colors rounded-full"
+                    >
+                      <X className="w-4 h-4" />
+                      {declineJointCounsel.isPending ? tJointCounsel("declining") : tJointCounsel("declineRequest")}
+                    </button>
+                    <button
+                      onClick={() => acknowledgeJointCounsel.mutate({ dealRoomId: dealId })}
+                      disabled={acknowledgeJointCounsel.isPending}
+                      className="btn-brutal flex items-center gap-2 text-sm"
+                    >
+                      <Check className="w-4 h-4" />
+                      {acknowledgeJointCounsel.isPending ? tJointCounsel("acknowledging") : tJointCounsel("acknowledgeRequest")}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Acknowledged */}
+          {jointCounselStatus?.acknowledgedAt && (
+            <div className="card-brutal border-primary">
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 bg-primary/20 flex items-center justify-center flex-shrink-0 rounded-2xl">
+                  <Briefcase className="w-6 h-6 text-primary" />
+                </div>
+                <div>
+                  <h2 className="text-lg font-semibold mb-1">{tJointCounsel("jointCounselActive")}</h2>
+                  <p className="text-sm text-muted-foreground">
+                    {jointCounselStatus.supervisorName}
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Declined — Initiator */}
+          {jointCounselStatus?.declinedAt && jointCounselStatus.isInitiator && (
+            <div className="card-brutal border-yellow-500/30">
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 bg-yellow-500/20 flex items-center justify-center flex-shrink-0 rounded-2xl">
+                  <Briefcase className="w-6 h-6 text-yellow-500" />
+                </div>
+                <div>
+                  <h2 className="text-lg font-semibold mb-1">{tJointCounsel("title")}</h2>
+                  <p className="text-sm text-muted-foreground">{tJointCounsel("declinedByOtherParty")}</p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Declined — Other party */}
+          {jointCounselStatus?.declinedAt && !jointCounselStatus.isInitiator && (
+            <div className="card-brutal border-yellow-500/30">
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 bg-yellow-500/20 flex items-center justify-center flex-shrink-0 rounded-2xl">
+                  <Briefcase className="w-6 h-6 text-yellow-500" />
+                </div>
+                <div>
+                  <h2 className="text-lg font-semibold mb-1">{tJointCounsel("title")}</h2>
+                  <p className="text-sm text-muted-foreground">{tJointCounsel("youDeclinedJointCounsel")}</p>
+                </div>
               </div>
             </div>
           )}

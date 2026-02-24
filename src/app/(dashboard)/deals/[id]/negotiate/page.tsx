@@ -28,6 +28,7 @@ import { Progress } from "@/components/ui/progress";
 import { Slider } from "@/components/ui/slider";
 import { AlertTriangle } from "lucide-react";
 import { interpolateParameters, type ParameterSchema } from "@/lib/parameters";
+import { LawyerWarningModal } from "@/components/LawyerWarningModal";
 
 type GoverningLaw = "CALIFORNIA" | "ENGLAND_WALES" | "SPAIN";
 
@@ -78,7 +79,7 @@ export default function NegotiatePage() {
   const [showProsConsFor, setShowProsConsFor] = useState<string | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  const { data: deal, isLoading, error } = trpc.deal.getById.useQuery({ id: dealId });
+  const { data: deal, isLoading, error, refetch: refetchDeal } = trpc.deal.getById.useQuery({ id: dealId });
   const { data: existingSelections } = trpc.selections.getMySelections.useQuery({ dealRoomId: dealId });
   const { data: lawyerData } = trpc.lawyer.getRecommendations.useQuery({ dealRoomId: dealId });
 
@@ -189,6 +190,12 @@ export default function NegotiatePage() {
   const isComplete = selections.size === clauses.length;
   const governingLaw = deal.governingLaw as GoverningLaw;
   const contractLang = (deal as { contractLanguage?: string }).contractLanguage || "en";
+
+  // Lawyer warning modal
+  const myNegotiateParty = deal.parties.find((p) => p.id === deal.currentPartyId);
+  const showLawyerWarning = !deal.lawyerVettingId &&
+    !(myNegotiateParty as any)?.lawyerWarningDismissedAt &&
+    ["DRAFT", "AWAITING_RESPONSE", "NEGOTIATING"].includes(deal.status);
 
   // Detect already-submitted state
   const currentParty = deal.parties.find((p) => p.id === deal.currentPartyId);
@@ -881,6 +888,15 @@ export default function NegotiatePage() {
           </div>
         </div>
       </div>
+
+      {/* Lawyer Warning Modal */}
+      {showLawyerWarning && (
+        <LawyerWarningModal
+          dealRoomId={dealId}
+          open={showLawyerWarning}
+          onDismiss={() => refetchDeal()}
+        />
+      )}
     </div>
   );
 }

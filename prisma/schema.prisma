@@ -65,9 +65,11 @@ model Supervisor {
   isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
 
-  twoFactorSecret SupervisorTwoFactor?
-  assignments     SupervisorAssignment[]
-  partyReviews    DealRoomParty[]
+  twoFactorSecret   SupervisorTwoFactor?
+  assignments       SupervisorAssignment[]
+  partyReviews      DealRoomParty[]
+  barAdmissions     SupervisorBarAdmission[]
+  jointCounselDeals DealRoom[] @relation("JointCounsel")
 
   @@map("supervisors")
 }
@@ -82,6 +84,17 @@ model SupervisorTwoFactor {
   supervisor Supervisor @relation(fields: [supervisorId], references: [id], onDelete: Cascade)
 
   @@map("supervisor_two_factor")
+}
+
+model SupervisorBarAdmission {
+  id             String       @id @default(cuid())
+  supervisorId   String
+  jurisdiction   GoverningLaw
+  barNumber      String
+  supervisor     Supervisor   @relation(fields: [supervisorId], references: [id], onDelete: Cascade)
+
+  @@unique([supervisorId, jurisdiction])
+  @@map("supervisor_bar_admissions")
 }
 
 model SupervisorAssignment {
@@ -404,11 +417,18 @@ model DealRoom {
   status             DealRoomStatus @default(DRAFT)
   currentRound       Int            @default(0)
   lawyerVettingId    String?
+  // Stage B — Joint Closing Counsel
+  jointCounselSupervisorId    String?
+  jointCounselRequestedAt     DateTime?
+  jointCounselRequestedBy     String?       // partyId of INITIATOR
+  jointCounselAcknowledgedAt  DateTime?     // other party acknowledged
+  jointCounselDeclinedAt      DateTime?     // other party declined
   createdAt          DateTime       @default(now())
   updatedAt          DateTime       @updatedAt
 
   contractTemplate        ContractTemplate       @relation(fields: [contractTemplateId], references: [id])
   lawyerVetting           LawyerVetting?         @relation(fields: [lawyerVettingId], references: [id])
+  jointCounselSupervisor  Supervisor?            @relation("JointCounsel", fields: [jointCounselSupervisorId], references: [id])
   parties                 DealRoomParty[]
   clauses                 DealRoomClause[]
   invitations             Invitation[]
@@ -442,6 +462,7 @@ model DealRoomParty {
   attorneyReviewRequestedAt DateTime?
   attorneySupervisorId      String?
   attorneyReviewApprovedAt  DateTime?  // Set by the supervisor
+  lawyerWarningDismissedAt  DateTime?
 
   dealRoom   DealRoom         @relation(fields: [dealRoomId], references: [id], onDelete: Cascade)
   user       User?            @relation(fields: [userId], references: [id])

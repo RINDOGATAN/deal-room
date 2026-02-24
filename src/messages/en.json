@@ -287,7 +287,8 @@
       "requestFailed": "Failed to request review: {error}",
       "attorneyReviewCancelled": "Attorney review cancelled",
       "cancelFailed": "Failed to cancel review: {error}"
-    }
+    },
+    "barNumber": "Bar #{number}"
   },
   "signing": {
     "eSignature": "E-Signature",
@@ -462,6 +463,50 @@
     "skillRequired": "An active subscription for this contract skill is required.",
     "visitBilling": "Visit the Billing page to subscribe.",
     "download": "Download"
+  },
+  "lawyerWarning": {
+    "title": "Proceeding Without a Lawyer",
+    "description": "This deal was created without a pre-vetting attorney.",
+    "riskWarning": "Negotiating without legal counsel may expose you to unfavorable terms. While the platform guides you through options and their implications, it does not replace professional legal advice.",
+    "lawyerStages": "Lawyer Involvement Stages",
+    "stage0Title": "Pre-Vetting",
+    "stage0Skipped": "Skipped for this deal",
+    "stageATitle": "Party Counsel",
+    "stageADescription": "After you submit your selections, you can request an attorney to review your position before the deal closes.",
+    "stageBTitle": "Joint Closing Counsel",
+    "stageBDescription": "Once all clauses are agreed, the initiator can request a shared closing attorney to help both parties finalize.",
+    "dismiss": "I Understand",
+    "dismissing": "Saving..."
+  },
+  "jointCounsel": {
+    "title": "Joint Closing Counsel",
+    "requestJointCounsel": "Request Joint Closing Counsel",
+    "selectCounsel": "Select Closing Counsel",
+    "selectCounselDescription": "Choose a supervising attorney to help both parties finalize the agreement. Attorneys who served as party counsel are excluded.",
+    "noCounselAvailable": "No eligible attorneys available for this jurisdiction.",
+    "requesting": "Requesting...",
+    "assignCounsel": "Request Counsel",
+    "pendingAcknowledgment": "Pending Acknowledgment",
+    "pendingAcknowledgmentDescription": "Waiting for the other party to acknowledge or decline the joint counsel request.",
+    "acknowledgeRequest": "Acknowledge",
+    "declineRequest": "Decline",
+    "acknowledging": "Acknowledging...",
+    "declining": "Declining...",
+    "jointCounselActive": "Joint Counsel Active",
+    "declinedByOtherParty": "The other party declined joint counsel.",
+    "youDeclinedJointCounsel": "You declined joint counsel.",
+    "waiverTitle": "Waiver",
+    "toastMessages": {
+      "requested": "Joint counsel requested",
+      "requestFailed": "Failed to request joint counsel: {error}",
+      "acknowledged": "Joint counsel acknowledged",
+      "acknowledgeFailed": "Failed to acknowledge: {error}",
+      "declined": "Joint counsel declined",
+      "declineFailed": "Failed to decline: {error}"
+    }
+  },
+  "attorneyReview": {
+    "barNumber": "Bar #{number}"
   },
   "marketplace": {
     "title": "Skill Marketplace",

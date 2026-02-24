@@ -33,10 +33,11 @@ export const attorneyReviewRouter = createTRPCRouter({
         });
       }
 
-      if (party.dealRoom.status !== "AGREED") {
+      const partyStatus = party.status;
+      if (!["SUBMITTED", "REVIEWING", "ACCEPTED"].includes(partyStatus) && party.dealRoom.status !== "AGREED") {
         throw new TRPCError({
           code: "BAD_REQUEST",
-          message: "Deal must be in AGREED status to request attorney review",
+          message: "You must submit your selections before requesting attorney review",
         });
       }
 
@@ -46,20 +47,30 @@ export const attorneyReviewRouter = createTRPCRouter({
       );
       const otherAttorneyId = otherParty?.attorneySupervisorId || null;
 
-      // Fetch all active supervisors
+      // Fetch all active supervisors with bar admissions
       const supervisors = await ctx.prisma.supervisor.findMany({
         where: { isActive: true },
         select: {
           id: true,
           name: true,
           email: true,
+          barAdmissions: true,
         },
       });
 
-      return supervisors.map((s) => ({
-        ...s,
-        unavailable: s.id === otherAttorneyId,
-      }));
+      const dealGoverningLaw = party.dealRoom.governingLaw;
+      return supervisors
+        .filter((s) => s.barAdmissions.some((ba) => ba.jurisdiction === dealGoverningLaw))
+        .map((s) => {
+          const admission = s.barAdmissions.find((ba) => ba.jurisdiction === dealGoverningLaw);
+          return {
+            id: s.id,
+            name: s.name,
+            email: s.email,
+            barNumber: admission?.barNumber || null,
+            unavailable: s.id === otherAttorneyId,
+          };
+        });
     }),
 
   /**
@@ -94,10 +105,11 @@ export const attorneyReviewRouter = createTRPCRouter({
         });
       }
 
-      if (party.dealRoom.status !== "AGREED") {
+      const partyStatus = party.status;
+      if (!["SUBMITTED", "REVIEWING", "ACCEPTED"].includes(partyStatus) && party.dealRoom.status !== "AGREED") {
         throw new TRPCError({
           code: "BAD_REQUEST",
-          message: "Deal must be in AGREED status",
+          message: "You must submit your selections before requesting attorney review",
         });
       }
 
@@ -117,6 +129,20 @@ export const attorneyReviewRouter = createTRPCRouter({
         throw new TRPCError({
           code: "BAD_REQUEST",
           message: "Selected attorney is not available",
+        });
+      }
+
+      // Verify supervisor is admitted in this deal's jurisdiction
+      const barAdmission = await ctx.prisma.supervisorBarAdmission.findFirst({
+        where: {
+          supervisorId: input.supervisorId,
+          jurisdiction: party.dealRoom.governingLaw,
+        },
+      });
+      if (!barAdmission) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Selected attorney is not admitted in this deal's jurisdiction",
         });
       }
 

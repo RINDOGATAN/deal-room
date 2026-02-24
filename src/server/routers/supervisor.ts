@@ -204,6 +204,9 @@ export const supervisorRouter = createTRPCRouter({
             },
           },
           signingRequest: true,
+          jointCounselSupervisor: {
+            select: { id: true, name: true, email: true },
+          },
         },
       });
 

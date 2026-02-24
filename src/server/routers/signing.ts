@@ -182,6 +182,19 @@ export const signingRouter = createTRPCRouter({
         });
       }
 
+      // Check joint counsel status — block if requested but neither acknowledged nor declined
+      const deal = party.dealRoom;
+      if (
+        deal.jointCounselRequestedAt &&
+        !deal.jointCounselAcknowledgedAt &&
+        !deal.jointCounselDeclinedAt
+      ) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Cannot initiate signing while joint counsel request is pending",
+        });
+      }
+
       // Check if there's already an active signing request
       const existingRequest = await ctx.prisma.signingRequest.findFirst({
         where: {
