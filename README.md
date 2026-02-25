@@ -6,11 +6,21 @@ Two-party async contract negotiation platform with weighted compromise algorithm
 
 ## Features
 
-- **Contract Negotiation** - Structured clause-by-clause negotiation workflow
-- **Weighted Compromise** - Algorithm suggests fair compromises based on party priorities
-- **Skills Marketplace** - Licensed contract templates (NDA, DPA, MSA, etc.)
-- **Multilingual Support** - Cross-language negotiation (Party A in English, Party B in Spanish)
-- **Two-Level Admin** - Platform admins manage marketplace; supervisors monitor deals
+- **Contract Negotiation** — Structured clause-by-clause negotiation workflow
+- **Weighted Compromise** — Algorithm suggests fair compromises based on party priorities
+- **Skills Marketplace** — Licensed contract templates (NDA, DPA, MSA, etc.)
+- **Multilingual Support** — Cross-language negotiation (Party A in English, Party B in Spanish)
+- **Two-Level Admin** — Platform admins manage marketplace; supervisors monitor deals
+- **Multi-Brand Deployment** — Single codebase, multiple brands via environment variables
+
+## Brands
+
+| Brand | Domain | Auth | UI |
+|-------|--------|------|----|
+| **TODO.LAW** (default) | `dealroom.todo.law` | Magic-link + Google | Rounded blue |
+| **North End Law** | `dealroom.northend.law` | Invite-code + Google | Brutalist teal |
+
+Set `NEXT_PUBLIC_BRAND=todo` or `NEXT_PUBLIC_BRAND=northend` to select brand. See [docs/deployment.md](docs/deployment.md) for full multi-brand architecture.
 
 ## Tech Stack
 
@@ -18,7 +28,7 @@ Two-party async contract negotiation platform with weighted compromise algorithm
 - **Language:** TypeScript
 - **API:** tRPC
 - **Database:** PostgreSQL + Prisma
-- **Auth:** NextAuth (magic link + 2FA for admins)
+- **Auth:** NextAuth (magic link, invite code, Google OAuth)
 
 ## Getting Started
 
@@ -49,15 +59,25 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) to access the app.
 
+To run as a different brand:
+
+```bash
+NEXT_PUBLIC_BRAND=northend npm run dev
+```
+
 ### Environment Variables
 
 ```
 DATABASE_URL=postgresql://...
 NEXTAUTH_SECRET=...
 NEXTAUTH_URL=http://localhost:3000
+NEXT_PUBLIC_BRAND=todo              # todo | northend
 RESEND_API_KEY=...
 EMAIL_FROM=noreply@yourdomain.com
-SKILLS_DIR=/path/to/skills
+GOOGLE_CLIENT_ID=...
+GOOGLE_CLIENT_SECRET=...
+SKILLS_DIR=/path/to/skills          # Optional: premium skills directory
+STRIPE_SECRET_KEY=...               # Optional: enables billing
 ```
 
 ## Administration
@@ -82,9 +102,14 @@ Supervisors access their portal at `/supervise` and can only view deals assigned
 
 ## Documentation
 
-- `CLAUDE.md` - Quick reference for development
-- `docs/skills-and-licensing.md` - Skill packages and licensing system
-- `docs/administration.md` - Admin and supervisor portal documentation
+| Document | Description |
+|----------|-------------|
+| [deployment.md](docs/deployment.md) | Multi-brand architecture, Vercel setup, environment variables |
+| [administration.md](docs/administration.md) | Two-level admin system, deal lifecycle, signing |
+| [lawyer-involvement.md](docs/lawyer-involvement.md) | Three stages of lawyer involvement (EN) |
+| [intervencion-abogado.md](docs/intervencion-abogado.md) | Tres fases de intervención de abogado/a (ES) |
+| [agent-api.md](docs/agent-api.md) | Agent Negotiation REST API reference |
+| [skills-and-licensing.md](docs/skills-and-licensing.md) | Skill packages, licensing, activation, i18n |
 
 ## Project Structure
 
@@ -96,6 +121,10 @@ src/
 │   ├── (dashboard)/       # User dashboard
 │   └── api/               # API routes
 ├── components/            # React components
+├── config/
+│   ├── brand.ts           # Brand router
+│   ├── brands/            # Per-brand config (todo.ts, northend.ts)
+│   └── features.ts        # Feature flags
 ├── lib/                   # Shared utilities
 └── server/
     ├── routers/           # tRPC routers
@@ -103,21 +132,20 @@ src/
 prisma/
 ├── schema.prisma          # Database schema
 └── seed.ts               # Seed data
-cli/
-└── commands/             # CLI tools
-docs/                     # Documentation
+skills/                    # Built-in contract templates
+docs/                      # Documentation
 ```
 
 ## Key Concepts
 
 ### Deal Flow
 
-1. **Create** - Initiator creates deal, selects skill and jurisdiction
-2. **Invite** - Respondent receives invitation link
-3. **Submit** - Both parties submit clause preferences
-4. **Negotiate** - Algorithm suggests compromises
-5. **Agree** - Parties accept final terms
-6. **Sign** - Contract generated for signing
+1. **Create** — Initiator creates deal, selects skill and jurisdiction
+2. **Invite** — Respondent receives invitation link
+3. **Submit** — Both parties submit clause preferences
+4. **Negotiate** — Algorithm suggests compromises
+5. **Agree** — Parties accept final terms
+6. **Sign** — Contract generated for signing
 
 ### Compromise Algorithm
 
