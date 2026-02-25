@@ -17,6 +17,8 @@ import {
   AlertTriangle,
   Languages,
   Lock,
+  Megaphone,
+  Link2,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -41,6 +43,8 @@ const contractIcons: Record<string, typeof FileText> = {
   FOUNDERS: Briefcase,
   PACTO_SOCIOS: Briefcase,
   SAFE: FileText,
+  ADVERTISING_IO: Megaphone,
+  AFFILIATE_PROGRAM: Link2,
 };
 
 type GoverningLaw = "CALIFORNIA" | "ENGLAND_WALES" | "SPAIN";
