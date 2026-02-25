@@ -138,6 +138,21 @@ const DEMO_PARAMETERS: Record<string, Record<string, string>> = {
     "royalty-years": "5",
     "royalty-pct": "5",
   },
+  ADVERTISING_IO: {
+    "campaign-name": "Q2 Brand Awareness Campaign",
+    "total-budget": "$100,000",
+    "start-date": "April 1, 2026",
+    "end-date": "June 30, 2026",
+    "impressions-target": "5,000,000",
+    "base-cpm": "$12.50",
+  },
+  AFFILIATE_PROGRAM: {
+    "program-name": "Partner Referral Program",
+    "base-commission": "20",
+    "cookie-window": "30",
+    "disclosure-text": "This content contains affiliate links. The author may earn a commission on qualifying purchases.",
+    "product-category": "legal technology software",
+  },
 };
 
 interface DealVariant {
@@ -155,6 +170,10 @@ const DEAL_VARIANTS: DealVariant[] = [
   { contractType: "SAAS", jurisdiction: GoverningLaw.CALIFORNIA, language: "en", hasBoilerplate: true },
   { contractType: "SEED_INVESTMENT", jurisdiction: GoverningLaw.CALIFORNIA, language: "en", hasBoilerplate: true },
   { contractType: "SEED_INVESTMENT", jurisdiction: GoverningLaw.SPAIN, language: "es", hasBoilerplate: true },
+  { contractType: "ADVERTISING_IO", jurisdiction: GoverningLaw.CALIFORNIA, language: "en", hasBoilerplate: true },
+  { contractType: "ADVERTISING_IO", jurisdiction: GoverningLaw.SPAIN, language: "es", hasBoilerplate: true },
+  { contractType: "AFFILIATE_PROGRAM", jurisdiction: GoverningLaw.CALIFORNIA, language: "en", hasBoilerplate: true },
+  { contractType: "AFFILIATE_PROGRAM", jurisdiction: GoverningLaw.SPAIN, language: "es", hasBoilerplate: true },
 ];
 
 // ── Types ─────────────────────────────────────────────────────
