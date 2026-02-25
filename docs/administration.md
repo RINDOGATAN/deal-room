@@ -507,8 +507,11 @@ At render time (negotiate UI, PDF, DOCX), `[bracket]` tokens in clause legal tex
 | Employment Agreement | 12 |
 | Shareholders Agreement | 12 |
 | Consulting Agreement | 10 |
+| Advertising Insertion Order | 6 |
 | IP Assignment | 6 |
+| Affiliate / Referral Program | 5 |
 | Convertible Note | 3 |
+| SAFE | 2 |
 | MSA | 1 |
 
 Skills without `parameters.json` (NDA, DPA, SaaS, Founders, etc.) skip Step 5 entirely.
@@ -629,8 +632,28 @@ Contract skills are maintained in a separate private repository (`legalskills`) 
 | `com.nel.skills.contrato-laboral` | Contrato Laboral | — | Spanish employment contract (native jurisdiction) |
 | `com.nel.skills.contrato-servicios` | Contrato de Servicios | — | Spanish service agreement (native jurisdiction) |
 | `com.nel.skills.cesion-pi` | Cesión de PI | — | Spanish IP assignment (native jurisdiction) |
+| `com.nel.skills.white-label-reseller` | White-Label / Reseller Agreement | — | Distribution, branding, SLA, customisation rights |
+| `com.nel.skills.influencer-marketing` | Influencer Marketing Agreement | — | Content deliverables, usage rights, FTC/ASA compliance |
+| `com.nel.skills.data-licensing` | Data Licensing Agreement | — | Data sets, usage scope, re-identification prohibitions |
+| `com.nel.skills.advertising-io` | Advertising Insertion Order | 6 | Pricing, delivery, viewability, brand safety, fraud protection |
+| `com.nel.skills.affiliate-program` | Affiliate / Referral Program Agreement | 5 | Commissions, attribution, clawback, disclosure, exclusivity |
 
 All premium skills are priced at €9/mo. Licensed skills require Platform Admin to assign entitlements to customers before use.
+
+### Skill Categories
+
+| Category | Skills |
+|----------|--------|
+| **Ad Tech** | Advertising Insertion Order, Affiliate / Referral Program |
+| **Marketing** | Influencer Marketing |
+| **Investment** | Convertible Note, SAFE, Term Sheet |
+| **Corporate** | Founders Agreement, Shareholders Agreement |
+| **Team** | Employment Agreement, Consulting Agreement, Contrato Laboral, Contrato de Servicios |
+| **IP** | IP Assignment, Cesión de PI |
+| **Data** | Data Licensing |
+| **Distribution** | White-Label / Reseller |
+
+Categories are defined in each skill's `metadata.json` and displayed as filter pills in the deal creation UI.
 
 ### Repository Structure
 
@@ -683,6 +706,85 @@ export SKILLS_DIR=/path/to/legalskills
 
 # Seed local database
 npx prisma db seed
+
+# Build downloadable packages
+npm run skill:build
+```
+
+### Skill Packaging & Distribution
+
+Premium skills are distributed to self-hosted customers as `.skill` packages (ZIP archives). The packaging pipeline has two steps: **build** and **upload**.
+
+#### Building packages
+
+```bash
+# Build all premium skills from the legalskills repo
+SKILLS_DIR=/path/to/legalskills npm run skill:build
+
+# Build specific skills only
+SKILLS_DIR=/path/to/legalskills npm run skill:build advertising-io affiliate-program
+
+# Custom output directory (default: ./dist)
+SKILLS_DIR=/path/to/legalskills npm run skill:build -- --out ./packages
+```
+
+This creates `.skill` files in the output directory — one per premium skill.
+
+#### Package contents
+
+Each `.skill` file is a ZIP archive containing:
+
+| File | Required | Description |
+|------|----------|-------------|
+| `manifest.json` | Yes | Skill ID, version, jurisdictions, languages, file hashes, creation timestamp |
+| `content/clauses.json` | Yes | Clause definitions with all options (bilingual) |
+| `content/boilerplate.json` | No | Preamble, definitions, standard clauses, jurisdiction provisions |
+| `parameters.json` | No | Deal-specific parameter definitions with `boilerplateVariable` mappings |
+| `signature.sig` | Yes | Ed25519 signature (empty if `SKILL_SIGNING_PRIVATE_KEY` not set) |
+
+#### Signing packages
+
+To produce signed packages (required for production distribution), set the `SKILL_SIGNING_PRIVATE_KEY` env var:
+
+```bash
+SKILL_SIGNING_PRIVATE_KEY="$(cat private-key.pem)" \
+  SKILLS_DIR=/path/to/legalskills npm run skill:build
+```
+
+Generate a new key pair with:
+```bash
+npm run keygen
+```
+
+The corresponding public key must be set in `SKILL_SIGNING_PUBLIC_KEY` on the target instance for signature verification.
+
+#### Uploading to Vercel Blob
+
+```bash
+# Upload all .skill packages from ./dist to Vercel Blob
+npm run skill:upload
+
+# Upload from a custom directory
+tsx scripts/upload-skill-packages.ts ./packages
+```
+
+Required env vars: `BLOB_READ_WRITE_TOKEN`, `DATABASE_URL`.
+
+This uploads each `.skill` file and updates the `SkillPackage.packageUrl` and `packageSize` fields in the database. Customers can then download packages via the `/api/skills/[skillId]/download` endpoint (session auth or time-limited download token).
+
+#### Full deployment workflow
+
+```bash
+# 1. Build packages
+SKILLS_DIR=/path/to/legalskills npm run skill:build
+
+# 2. Upload to blob storage + update DB
+npm run skill:upload
+
+# 3. Customers with active entitlements can now download via:
+#    - Billing page (/billing) — "Download" button
+#    - Email download links (generated on purchase, 7-day expiry)
+#    - Direct API: GET /api/skills/{skillId}/download
 ```
 
 ### GitHub Secrets Required
@@ -974,11 +1076,15 @@ For each deal variant the script runs the full 10-step lifecycle:
 |----------|-------------|------|-------------|
 | DPA | CALIFORNIA | en | Yes |
 | DPA | SPAIN | es | Yes |
-| NDA | CALIFORNIA | en | No |
-| MSA | CALIFORNIA | en | No |
-| SAAS | CALIFORNIA | en | No |
+| NDA | CALIFORNIA | en | Yes |
+| MSA | CALIFORNIA | en | Yes |
+| SAAS | CALIFORNIA | en | Yes |
 | SEED_INVESTMENT | CALIFORNIA | en | Yes |
 | SEED_INVESTMENT | SPAIN | es | Yes |
+| ADVERTISING_IO | CALIFORNIA | en | Yes |
+| ADVERTISING_IO | SPAIN | es | Yes |
+| AFFILIATE_PROGRAM | CALIFORNIA | en | Yes |
+| AFFILIATE_PROGRAM | SPAIN | es | Yes |
 
 Templates that support Spanish + SPAIN jurisdiction get an additional Spanish-language variant.
 
@@ -1012,7 +1118,7 @@ After each deal completes, the script runs 14 inline checks:
 6. All clauses have legal text >20 chars
 7. All clauses have non-empty titles
 8. Clause count matches template
-9. Boilerplate present (DPA, SEED_INVESTMENT only)
+9. Boilerplate present (templates with boilerplate)
 10. Preamble non-empty (when boilerplate exists)
 11. No unresolved `{variable}` placeholders
 12. Governing law display string non-empty
