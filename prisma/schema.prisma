@@ -39,6 +39,9 @@ model User {
   lawyerVettings    LawyerVetting[]
   clientInvitations ClientInvitation[]
 
+  // Invite code relation (northend.law auth)
+  usedInviteCode InviteCode?
+
   @@map("users")
 }
 
@@ -243,6 +246,7 @@ model Customer {
   activations  SkillActivation[]
   apiKeys      ApiKey[]
   playbooks    Playbook[]
+  inviteCodes  InviteCode[]
 
   @@map("customers")
 }
@@ -876,4 +880,21 @@ model AgentDealRoom {
   respondentPlaybook Playbook? @relation("respondentPlaybook", fields: [respondentPlaybookId], references: [id])
 
   @@map("agent_deal_rooms")
+}
+
+// ============================================================
+// INVITE CODES (northend.law auth)
+// ============================================================
+
+model InviteCode {
+  id           String   @id @default(cuid())
+  code         String   @unique
+  customerId   String
+  usedByUserId String?  @unique
+  createdAt    DateTime @default(now())
+
+  customer Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  usedBy   User?    @relation(fields: [usedByUserId], references: [id])
+
+  @@map("invite_codes")
 }

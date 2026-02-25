@@ -14,9 +14,14 @@ import {
   ApiScopeError,
 } from "@/server/middleware/apiKeyAuth";
 import { checkEntitlement } from "@/server/services/licensing/entitlement";
+import { features } from "@/config/features";
 
 export async function GET(req: NextRequest) {
   try {
+    if (!features.agentApi) {
+      return NextResponse.json({ error: "Not available" }, { status: 404 });
+    }
+
     const auth = await authenticateApiKey(req);
     if (!auth) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

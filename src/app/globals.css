@@ -56,7 +56,9 @@
   --shadow-hover: 0 8px 32px rgba(0, 0, 0, 0.4);
 }
 
-/* Dark Theme - Always dark */
+/* ============================================================
+   TODO.LAW theme (default) — rounded blue UI
+   ============================================================ */
 :root {
   --radius: 16px;
   /* Dark background */
@@ -113,6 +115,76 @@
   /* Same as root - always dark */
 }
 
+/* ============================================================
+   NORTHEND.LAW theme — brutalist teal UI
+   ============================================================ */
+[data-brand="northend"] {
+  /* Dark blue background */
+  --background: #1c1f37;
+  --foreground: #fefeff;
+  /* Cards */
+  --card: #232742;
+  --card-foreground: #fefeff;
+  /* Popovers */
+  --popover: #232742;
+  --popover-foreground: #fefeff;
+  /* Primary = Teal */
+  --primary: #13e9d1;
+  --primary-foreground: #1c1f37;
+  /* Secondary */
+  --secondary: #2a2e4a;
+  --secondary-foreground: #e0e0e0;
+  /* Muted */
+  --muted: #2e3354;
+  --muted-foreground: #a0a0a0;
+  /* Accent = Teal */
+  --accent: #13e9d1;
+  --accent-foreground: #1c1f37;
+  /* Destructive = Amber (northend uses amber for destructive) */
+  --destructive: #f59e0b;
+  /* Warning — same as destructive for northend */
+  --warning: #f59e0b;
+  /* Borders */
+  --border: #2e3354;
+  --input: #2a2e4a;
+  --ring: #13e9d1;
+  /* Lime (legacy) */
+  --lime: #13e9d1;
+  --lime-foreground: #1c1f37;
+  /* Charts */
+  --chart-1: #13e9d1;
+  --chart-2: #3aeede;
+  --chart-3: #61f3eb;
+  --chart-4: #0fc4b0;
+  --chart-5: #0b9f8f;
+  /* Sidebar */
+  --sidebar: #232742;
+  --sidebar-foreground: #fefeff;
+  --sidebar-primary: #13e9d1;
+  --sidebar-primary-foreground: #1c1f37;
+  --sidebar-accent: #232742;
+  --sidebar-accent-foreground: #fefeff;
+  --sidebar-border: #2e3354;
+  --sidebar-ring: #13e9d1;
+
+  /* Brutalist radii — all zero */
+  --radius: 0;
+}
+
+/* Northend: override @theme radii and shadows */
+[data-brand="northend"] {
+  --radius-sm: 0;
+  --radius-md: 0;
+  --radius-lg: 0;
+  --radius-xl: 0;
+  --radius-2xl: 0;
+  --radius-3xl: 0;
+  --radius-4xl: 0;
+  --shadow-soft: none;
+  --shadow-card: none;
+  --shadow-hover: none;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -133,6 +205,10 @@
     background-repeat: repeat;
     background-size: 256px 256px;
   }
+  /* Northend: no noise texture */
+  [data-brand="northend"] body::before {
+    display: none;
+  }
   body > * {
     position: relative;
     z-index: 1;
@@ -143,38 +219,71 @@
     font-weight: 400;
     letter-spacing: -0.01em;
   }
+  /* Northend: headings use body font (no Archivo Black) */
+  [data-brand="northend"] h1,
+  [data-brand="northend"] h2,
+  [data-brand="northend"] h3,
+  [data-brand="northend"] h4,
+  [data-brand="northend"] h5,
+  [data-brand="northend"] h6 {
+    font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
+    font-weight: 700;
+  }
   /* Focus states */
   *:focus-visible {
-    @apply outline-2 outline-offset-2 outline-[#53aecc];
+    @apply outline-2 outline-offset-2 outline-ring;
   }
 }
 
 @layer components {
-  /* Button variants */
+  /* Button variants — use CSS variables */
   .btn-brutal {
-    @apply bg-[#53aecc] text-[#1a1a1a] font-semibold px-6 py-3 rounded-full;
+    @apply bg-primary text-primary-foreground font-semibold px-6 py-3 rounded-full;
     box-shadow: var(--shadow-soft);
     @apply hover:-translate-y-0.5 transition-all duration-200;
   }
   .btn-brutal:hover {
     box-shadow: var(--shadow-hover);
   }
+  /* Northend: brutalist buttons — border instead of shadow, hover inverts */
+  [data-brand="northend"] .btn-brutal {
+    @apply rounded-none border-2 border-primary;
+    box-shadow: none;
+  }
+  [data-brand="northend"] .btn-brutal:hover {
+    @apply bg-transparent text-primary;
+    box-shadow: none;
+  }
+
   .btn-brutal-outline {
-    @apply bg-transparent text-[#53aecc] font-semibold px-6 py-3 border-2 border-[#53aecc] rounded-full;
+    @apply bg-transparent text-primary font-semibold px-6 py-3 border-2 border-primary rounded-full;
     @apply hover:bg-secondary transition-all duration-200;
   }
+  [data-brand="northend"] .btn-brutal-outline {
+    @apply rounded-none;
+  }
+
   /* Card */
   .card-brutal {
-    @apply bg-[#242424] border border-[#383838] p-6 rounded-2xl;
+    @apply bg-card border border-border p-6 rounded-2xl;
     box-shadow: var(--shadow-card);
     @apply transition-all duration-200;
   }
   .card-brutal:hover {
     box-shadow: var(--shadow-hover);
   }
+  /* Northend: brutalist cards */
+  [data-brand="northend"] .card-brutal {
+    @apply rounded-none;
+    box-shadow: none;
+  }
+  [data-brand="northend"] .card-brutal:hover {
+    box-shadow: none;
+  }
+
   /* Paper card alias */
   .paper-card {
-    @apply bg-[#242424] border border-[#383838] p-6 rounded-2xl;
+    @apply bg-card border border-border p-6 rounded-2xl;
     box-shadow: var(--shadow-card);
     @apply transition-all duration-200;
   }
@@ -182,6 +291,14 @@
     box-shadow: var(--shadow-hover);
     transform: translateY(-2px);
   }
+  [data-brand="northend"] .paper-card {
+    @apply rounded-none;
+    box-shadow: none;
+  }
+  [data-brand="northend"] .paper-card:hover {
+    box-shadow: none;
+  }
+
   /* Landing page buttons */
   .btn-primary {
     @apply inline-flex items-center justify-center px-6 py-3 bg-primary text-primary-foreground rounded-full font-medium transition-all duration-200;
@@ -191,6 +308,14 @@
     box-shadow: var(--shadow-hover);
     transform: translateY(-1px);
   }
+  [data-brand="northend"] .btn-primary {
+    @apply rounded-none border-2 border-primary;
+    box-shadow: none;
+  }
+  [data-brand="northend"] .btn-primary:hover {
+    box-shadow: none;
+  }
+
   .btn-secondary {
     @apply inline-flex items-center justify-center px-6 py-3 bg-card text-foreground rounded-full font-medium border border-border transition-all duration-200;
     box-shadow: var(--shadow-soft);
@@ -200,6 +325,14 @@
     box-shadow: var(--shadow-hover);
     transform: translateY(-1px);
   }
+  [data-brand="northend"] .btn-secondary {
+    @apply rounded-none;
+    box-shadow: none;
+  }
+  [data-brand="northend"] .btn-secondary:hover {
+    box-shadow: none;
+  }
+
   /* Navigation header glassmorphism */
   .nav-header {
     @apply bg-card/80 backdrop-blur-md rounded-xl border border-border;
@@ -210,34 +343,47 @@
       @apply rounded-full;
     }
   }
-  /* Input */
-  .input-brutal {
-    @apply bg-[#2e2e2e] border border-[#383838] text-[#fefeff] px-4 py-3 rounded-xl;
-    @apply focus:border-[#53aecc] focus:ring-2 focus:ring-[#53aecc]/20 focus:outline-none;
+  [data-brand="northend"] .nav-header {
+    @apply rounded-none;
+    box-shadow: none;
   }
+
+  /* Input — use CSS variables */
+  .input-brutal {
+    @apply bg-input border border-border text-foreground px-4 py-3 rounded-xl;
+    @apply focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none;
+  }
+  [data-brand="northend"] .input-brutal {
+    @apply rounded-none;
+  }
+
   /* Tabs */
   .tab-brutal {
-    @apply px-4 py-2 text-sm font-medium text-[#a0a0a0] rounded-full;
-    @apply hover:bg-secondary hover:text-[#fefeff] transition-colors;
+    @apply px-4 py-2 text-sm font-medium text-muted-foreground rounded-full;
+    @apply hover:bg-secondary hover:text-foreground transition-colors;
   }
   .tab-brutal-active {
-    @apply text-[#53aecc] bg-[#53aecc]/10;
+    @apply text-primary bg-primary/10;
   }
+  [data-brand="northend"] .tab-brutal {
+    @apply rounded-none;
+  }
+
   /* Selection highlight */
   ::selection {
-    @apply bg-[#53aecc] text-[#1a1a1a];
+    @apply bg-primary text-primary-foreground;
   }
 }
 
 @layer utilities {
   .text-lime {
-    color: #53aecc;
+    color: var(--primary);
   }
   .bg-lime {
-    background-color: #53aecc;
+    background-color: var(--primary);
   }
   .border-lime {
-    border-color: #53aecc;
+    border-color: var(--primary);
   }
   /* Body font utility */
   .font-body {
@@ -294,27 +440,36 @@
 }
 
 @layer components {
-  /* Stat card with accent line */
+  /* Stat card with accent line — use CSS variables */
   .stat-card {
-    @apply bg-[#242424] p-6 relative rounded-2xl;
-    border-left: 3px solid #53aecc;
+    @apply bg-card p-6 relative rounded-2xl;
+    border-left: 3px solid var(--primary);
     box-shadow: var(--shadow-card);
   }
   .stat-card-neutral {
-    @apply bg-[#242424] p-6 relative rounded-2xl;
+    @apply bg-card p-6 relative rounded-2xl;
     border-left: 3px solid #404040;
     box-shadow: var(--shadow-card);
   }
+  [data-brand="northend"] .stat-card,
+  [data-brand="northend"] .stat-card-neutral {
+    @apply rounded-none;
+    box-shadow: none;
+  }
+
   /* Progress stat row */
   .stat-row {
-    @apply flex items-center justify-between py-4 border-b border-[#383838] last:border-0;
+    @apply flex items-center justify-between py-4 border-b border-border last:border-0;
   }
   .stat-row:hover {
-    @apply bg-[#333333]/50 rounded-xl;
+    @apply bg-muted/50 rounded-xl;
     margin-left: -1rem;
     margin-right: -1rem;
     padding-left: 1rem;
     padding-right: 1rem;
+  }
+  [data-brand="northend"] .stat-row:hover {
+    @apply rounded-none;
   }
 }
 

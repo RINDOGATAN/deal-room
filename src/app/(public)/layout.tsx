@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { BookOpen } from "lucide-react";
 import { brand } from "@/config/brand";
+import { features } from "@/config/features";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 
 export default function PublicLayout({
@@ -24,26 +25,28 @@ export default function PublicLayout({
               href="/"
               className="text-lg font-bold tracking-tight text-foreground"
             >
-              TODO.LAW<sup className="text-xs align-super">™</sup>{" "}
+              {brand.company}<sup className="text-xs align-super">™</sup>{" "}
               <span className="text-muted-foreground">DEALROOM</span>
             </Link>
 
             <nav className="flex items-center gap-1">
-              <Link
-                href="/docs"
-                className={`
-                  flex items-center gap-2 px-4 py-2 text-sm font-medium
-                  rounded-full transition-colors
-                  ${
-                    isDocsActive
-                      ? "bg-primary/10 text-primary"
-                      : "text-muted-foreground hover:text-foreground hover:bg-secondary"
-                  }
-                `}
-              >
-                <BookOpen className="w-4 h-4" />
-                <span className="hidden sm:inline">User Guide</span>
-              </Link>
+              {features.publicDocs && (
+                <Link
+                  href="/docs"
+                  className={`
+                    flex items-center gap-2 px-4 py-2 text-sm font-medium
+                    rounded-full transition-colors
+                    ${
+                      isDocsActive
+                        ? "bg-primary/10 text-primary"
+                        : "text-muted-foreground hover:text-foreground hover:bg-secondary"
+                    }
+                  `}
+                >
+                  <BookOpen className="w-4 h-4" />
+                  <span className="hidden sm:inline">User Guide</span>
+                </Link>
+              )}
               <Link
                 href="/sign-in"
                 className="px-4 py-1.5 text-sm font-medium text-primary border border-primary rounded-full hover:bg-secondary transition-colors"
@@ -58,18 +61,44 @@ export default function PublicLayout({
       {/* Main Content */}
       <main className="flex-1">{children}</main>
 
-      {/* Footer — matches dashboard */}
+      {/* Footer */}
       <footer className="py-4 px-6 border-t border-border">
         <div className="max-w-7xl mx-auto flex flex-col items-center gap-2 text-sm text-muted-foreground">
+          {/* Brand footer text (northend.law) */}
+          {brand.footer && (
+            <p className="text-xs">
+              {brand.footer.text}{" "}
+              &middot;{" "}
+              {Object.values(brand.footer.links).map((link, i) => (
+                <span key={link.url}>
+                  {i > 0 && <span className="mx-1">&middot;</span>}
+                  <a
+                    href={link.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-primary hover:underline"
+                  >
+                    {link.label}
+                  </a>
+                </span>
+              ))}
+            </p>
+          )}
+
+          {/* Standard footer links */}
           <div className="flex items-center gap-3">
-            <Link
-              href="/docs"
-              className="flex items-center gap-1.5 hover:text-foreground transition-colors"
-            >
-              <BookOpen className="w-3.5 h-3.5" />
-              User Guide
-            </Link>
-            <span className="text-border">&middot;</span>
+            {features.publicDocs && (
+              <>
+                <Link
+                  href="/docs"
+                  className="flex items-center gap-1.5 hover:text-foreground transition-colors"
+                >
+                  <BookOpen className="w-3.5 h-3.5" />
+                  User Guide
+                </Link>
+                <span className="text-border">&middot;</span>
+              </>
+            )}
             <a
               href={brand.links.terms}
               target="_blank"

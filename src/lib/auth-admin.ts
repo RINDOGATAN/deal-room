@@ -50,7 +50,7 @@ export const adminAuthOptions: NextAuthOptions = {
                   <p style="color: ${brand.colors.muted}; font-size: 13px; line-height: 1.5; margin: 24px 0 0;">If you didn't request this email, you can safely ignore it.</p>
                 </div>
                 <div style="padding: 16px 24px; border-top: 1px solid ${brand.colors.border};">
-                  <p style="color: #666666; font-size: 11px; margin: 0;">TODO.LAW\u2122 \u00b7 DEALROOM \u00b7 <a href="https://dealroom.todo.law" style="color: ${brand.colors.primary}; text-decoration: none;">dealroom.todo.law</a></p>
+                  <p style="color: #666666; font-size: 11px; margin: 0;">${brand.company}&#8482; &middot; DEALROOM &middot; <a href="https://${brand.appDomain}" style="color: ${brand.colors.primary}; text-decoration: none;">${brand.appDomain}</a></p>
                 </div>
               </div>
             `,
