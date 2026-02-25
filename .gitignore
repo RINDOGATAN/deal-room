@@ -28,6 +28,7 @@
 # misc
 .DS_Store
 *.pem
+/sample-pdfs
 
 # debug
 npm-debug.log*
