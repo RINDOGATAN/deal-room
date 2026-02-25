@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { notFound } from "next/navigation";
 import { Menu } from "lucide-react";
 import { DocsNav } from "./components/DocsNav";
+import { features } from "@/config/features";
 import {
   Sheet,
   SheetContent,
@@ -15,6 +17,7 @@ export default function DocsLayout({
 }: {
   children: React.ReactNode;
 }) {
+  if (!features.publicDocs) notFound();
   const [sheetOpen, setSheetOpen] = useState(false);
 
   return (

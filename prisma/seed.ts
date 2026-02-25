@@ -600,6 +600,34 @@ async function main() {
   });
   console.log("  Created/updated bar admissions: CALIFORNIA (#367079), SPAIN (ICAM-12345)");
 
+  // ── Seed sample invite codes for northend.law brand ──
+  if (process.env.NEXT_PUBLIC_BRAND === "northend") {
+    // Create a demo customer if none exists
+    const demoCustomer = await prisma.customer.upsert({
+      where: { email: "demo@northend.law" },
+      create: {
+        name: "North End Law Demo",
+        email: "demo@northend.law",
+        type: "SAAS",
+      },
+      update: {},
+    });
+
+    // Create sample invite codes
+    const sampleCodes = ["DEMO-0001", "DEMO-0002", "DEMO-0003"];
+    for (const code of sampleCodes) {
+      await prisma.inviteCode.upsert({
+        where: { code },
+        create: {
+          code,
+          customerId: demoCustomer.id,
+        },
+        update: {},
+      });
+    }
+    console.log(`  Created sample invite codes for northend.law: ${sampleCodes.join(", ")}`);
+  }
+
   console.log("\nSeed completed successfully!");
 }
 

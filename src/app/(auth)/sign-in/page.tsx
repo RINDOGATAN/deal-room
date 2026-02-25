@@ -3,13 +3,16 @@
 import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useTranslations } from "next-intl";
-import { Loader2, Mail } from "lucide-react";
+import { Loader2, Mail, KeyRound } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { brand } from "@/config/brand";
+import { features } from "@/config/features";
 
 export default function SignInPage() {
   const t = useTranslations("auth");
   const [email, setEmail] = useState("");
+  const [code, setCode] = useState("");
   const [isEmailLoading, setIsEmailLoading] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const [emailSent, setEmailSent] = useState(false);
@@ -41,6 +44,33 @@ export default function SignInPage() {
     }
   };
 
+  const handleInviteCodeSignIn = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email.trim() || !code.trim()) return;
+
+    setIsEmailLoading(true);
+    setError(null);
+
+    try {
+      const result = await signIn("invite-code", {
+        email: email.trim(),
+        code: code.trim(),
+        redirect: false,
+        callbackUrl: "/deals",
+      });
+
+      if (result?.error) {
+        setError(t("invalidInviteCode"));
+        setIsEmailLoading(false);
+      } else if (result?.ok) {
+        window.location.href = "/deals";
+      }
+    } catch (err) {
+      setError(t("unexpectedError"));
+      setIsEmailLoading(false);
+    }
+  };
+
   const handleGoogleSignIn = async () => {
     setIsGoogleLoading(true);
     setError(null);
@@ -55,7 +85,7 @@ export default function SignInPage() {
     }
   };
 
-  // Show email sent confirmation
+  // Show email sent confirmation (magic-link only)
   if (emailSent) {
     return (
       <div className="w-full max-w-md">
@@ -102,42 +132,93 @@ export default function SignInPage() {
         )}
 
         {/* Magic Link Email Form */}
-        <form onSubmit={handleEmailSignIn} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="email">{t("emailAddress")}</Label>
-            <Input
-              id="email"
-              type="email"
-              placeholder="you@company.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              className="bg-background"
-            />
-          </div>
+        {features.magicLinkAuth && (
+          <form onSubmit={handleEmailSignIn} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="email">{t("emailAddress")}</Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="you@company.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="bg-background"
+              />
+            </div>
 
-          <button
-            type="submit"
-            disabled={isEmailLoading || !email.trim()}
-            className="btn-brutal w-full flex items-center justify-center gap-3 py-3 disabled:opacity-50"
-          >
-            {isEmailLoading ? (
-              <>
-                <Loader2 className="w-5 h-5 animate-spin" />
-                {t("sending")}
-              </>
-            ) : (
-              <>
-                <Mail className="w-5 h-5" />
-                {t("continueWithEmail")}
-              </>
-            )}
-          </button>
+            <button
+              type="submit"
+              disabled={isEmailLoading || !email.trim()}
+              className="btn-brutal w-full flex items-center justify-center gap-3 py-3 disabled:opacity-50"
+            >
+              {isEmailLoading ? (
+                <>
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  {t("sending")}
+                </>
+              ) : (
+                <>
+                  <Mail className="w-5 h-5" />
+                  {t("continueWithEmail")}
+                </>
+              )}
+            </button>
 
-          <p className="text-center text-xs text-muted-foreground">
-            {t("noPasswordNeeded")}
-          </p>
-        </form>
+            <p className="text-center text-xs text-muted-foreground">
+              {t("noPasswordNeeded")}
+            </p>
+          </form>
+        )}
+
+        {/* Invite Code Form */}
+        {features.inviteCodeAuth && (
+          <form onSubmit={handleInviteCodeSignIn} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="email">{t("emailAddress")}</Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="you@company.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="bg-background"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="code">{t("inviteCode")}</Label>
+              <Input
+                id="code"
+                type="text"
+                placeholder="XXXX-XXXX"
+                value={code}
+                onChange={(e) => setCode(e.target.value)}
+                required
+                className="bg-background font-mono tracking-wider"
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={isEmailLoading || !email.trim() || !code.trim()}
+              className="btn-brutal w-full flex items-center justify-center gap-3 py-3 disabled:opacity-50"
+            >
+              {isEmailLoading ? (
+                <>
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  {t("signingIn")}
+                </>
+              ) : (
+                <>
+                  <KeyRound className="w-5 h-5" />
+                  {t("signInWithCode")}
+                </>
+              )}
+            </button>
+          </form>
+        )}
 
         {/* Google Sign In */}
         <div className="mt-8 pt-6 border-t border-border">
@@ -184,7 +265,7 @@ export default function SignInPage() {
             {t.rich("bySigningIn", {
               termsLink: (chunks) => (
                 <a
-                  href="https://northend.law/terms-of-use"
+                  href={brand.links.terms}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-primary hover:underline"
@@ -194,7 +275,7 @@ export default function SignInPage() {
               ),
               privacyLink: (chunks) => (
                 <a
-                  href="https://northend.law/privacy-policy"
+                  href={brand.links.privacy}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-primary hover:underline"

@@ -14,12 +14,17 @@ import {
 } from "@/server/middleware/apiKeyAuth";
 import { generateContractData } from "@/server/services/document/generator";
 import { generateContractDocx } from "@/server/services/document/contractDocx";
+import { features } from "@/config/features";
 
 export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    if (!features.agentApi) {
+      return NextResponse.json({ error: "Not available" }, { status: 404 });
+    }
+
     const auth = await authenticateApiKey(req);
     if (!auth) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

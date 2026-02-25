@@ -1,66 +1,85 @@
 /**
  * Brand Configuration
  *
- * Centralized branding configuration for white-label deployment.
- * Fork this file to customize branding for your deployment.
+ * Environment-driven brand switching for multi-brand deployment.
+ * Set NEXT_PUBLIC_BRAND=todo|northend to select brand.
  *
- * To white-label:
- * 1. Fork the repository
- * 2. Modify this file with your brand colors, name, and links
- * 3. Replace public/logo.png and public/favicon.ico
- * 4. Deploy to your own infrastructure
+ * Deployment model: Two Vercel projects → same repo, different env vars.
  */
 
-export const brand = {
+import { todo } from "./brands/todo";
+import { northend } from "./brands/northend";
+
+// Brand config interface
+export interface BrandConfig {
+  id: "todo" | "northend";
+
   // Product identity
-  name: "Deal Room",
-  shortName: "Dealroom",
-  tagline: "Contract Negotiation Platform",
-  description: "Two-party asynchronous contract negotiation platform with intelligent compromise suggestions",
+  name: string;
+  shortName: string;
+  tagline: string;
+  description: string;
 
   // Company information
-  company: "TODO.LAW",
-  companyShort: "TODO",
-  domain: "todo.law",
-  contactEmail: "info@rindogatan.com",
+  company: string;
+  companyShort: string;
+  domain: string;
+  appDomain: string;
+  contactEmail: string;
 
   // Brand colors (used in CSS variables and email templates)
   colors: {
-    primary: "#53aecc",        // Blue accent
-    background: "#1a1a1a",     // Dark background
-    card: "#242424",           // Card/surface background
-    foreground: "#fefeff",     // Primary text
-    muted: "#a0a0a0",          // Muted text
-    border: "#333333",         // Border color
-  },
+    primary: string;
+    background: string;
+    card: string;
+    foreground: string;
+    muted: string;
+    border: string;
+  };
 
   // Portal-specific accent colors
   portalColors: {
-    admin: "#ffffff",          // White for admin portal header
-    supervisor: "#9333ea",     // Purple for supervisor portal
-  },
+    admin: string;
+    supervisor: string;
+  };
+
+  // Theme overrides
+  theme: {
+    radii: Record<string, string>;
+    shadows: Record<string, string> | null; // null = no shadows (brutalist)
+  };
+
+  // Auth mode
+  auth: {
+    mode: "magic-link" | "invite-code";
+  };
 
   // Asset paths (relative to public directory)
   assets: {
-    logo: "/DEALROOM_TodoLaw.png",
-    favicon: "/favicon.ico",
-  },
+    logo: string;
+    favicon: string;
+  };
 
   // External links
   links: {
-    website: "https://todo.law",
-    userGuide: "/docs",
-    terms: "https://todo.law/terms",
-    privacy: "https://todo.law/privacy",
-  },
+    website: string;
+    userGuide: string;
+    terms: string;
+    privacy: string;
+  };
 
   // Cookie domain (for production cross-subdomain auth)
-  // Set to undefined for single-domain deployments
-  cookieDomain: ".todo.law",
-} as const;
+  cookieDomain: string;
 
-// Type for the brand configuration
-export type BrandConfig = typeof brand;
+  // Footer config (null = no footer)
+  footer: {
+    text: string;
+    links: Record<string, { label: string; url: string }>;
+  } | null;
+}
+
+const brandId = (process.env.NEXT_PUBLIC_BRAND || "todo") as BrandConfig["id"];
+export const brand: BrandConfig = brandId === "northend" ? northend : todo;
 
 // Helper to get full contact mailto link
 export function getContactMailto(subject?: string): string {

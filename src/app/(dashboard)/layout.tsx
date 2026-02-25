@@ -20,6 +20,7 @@ import {
   Store,
 } from "lucide-react";
 import { brand } from "@/config/brand";
+import { features } from "@/config/features";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { trpc } from "@/lib/trpc";
 import {
@@ -74,7 +75,7 @@ export default function DashboardLayout({
   const navItems = [
     { href: "/deals", label: t("myDeals"), icon: FileText },
     { href: "/deals/new", label: t("newDeal"), icon: Plus },
-    ...(lawyerProfile?.isLawyer
+    ...(features.lawyerInvolvement && lawyerProfile?.isLawyer
       ? [{ href: "/lawyer/vettings", label: tLawyer("myVettings"), icon: ClipboardCheck }]
       : []),
   ];
@@ -86,7 +87,7 @@ export default function DashboardLayout({
         <div className="max-w-7xl mx-auto bg-card/80 backdrop-blur-sm border border-border rounded-xl md:rounded-full px-4 md:px-6 py-3">
           <div className="flex items-center justify-between">
             <Link href="/deals" className="text-lg font-bold tracking-tight text-foreground">
-              TODO.LAW<sup className="text-xs align-super">™</sup>{" "}
+              {brand.company}<sup className="text-xs align-super">™</sup>{" "}
               <span className="text-muted-foreground">DEALROOM</span>
             </Link>
 
@@ -118,7 +119,7 @@ export default function DashboardLayout({
             </nav>
 
             <div className="hidden md:flex items-center gap-4">
-              {lawyerProfile && !lawyerProfile.isLawyer && (
+              {features.lawyerInvolvement && lawyerProfile && !lawyerProfile.isLawyer && (
                 <button
                   onClick={() => setShowLawyerDialog(true)}
                   className="flex items-center gap-1.5 px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground rounded-full hover:bg-secondary transition-colors border border-border"
@@ -196,7 +197,7 @@ export default function DashboardLayout({
             </nav>
 
             <div className="border-t border-border pt-6 space-y-4">
-              {lawyerProfile && !lawyerProfile.isLawyer && (
+              {features.lawyerInvolvement && lawyerProfile && !lawyerProfile.isLawyer && (
                 <button
                   onClick={() => { setMobileMenuOpen(false); setShowLawyerDialog(true); }}
                   className="flex items-center gap-2 px-4 py-3 text-sm text-muted-foreground hover:text-foreground rounded-xl hover:bg-secondary transition-colors w-full"
@@ -245,28 +246,34 @@ export default function DashboardLayout({
           </p>
           {/* Mobile: 2-column grid */}
           <div className="grid grid-cols-2 gap-x-6 gap-y-2 text-center sm:hidden">
-            <Link
-              href={brand.links.userGuide}
-              target="_blank"
-              className="flex items-center justify-center gap-1.5 hover:text-foreground transition-colors"
-            >
-              <BookOpen className="w-3.5 h-3.5" />
-              {tFooter("userGuide")}
-            </Link>
-            <Link
-              href="/marketplace"
-              className="flex items-center justify-center gap-1.5 hover:text-foreground transition-colors"
-            >
-              <Store className="w-3.5 h-3.5" />
-              {tFooter("marketplace")}
-            </Link>
-            <Link
-              href="/billing"
-              className="flex items-center justify-center gap-1.5 hover:text-foreground transition-colors"
-            >
-              <CreditCard className="w-3.5 h-3.5" />
-              {tFooter("billing")}
-            </Link>
+            {features.publicDocs && (
+              <Link
+                href={brand.links.userGuide}
+                target="_blank"
+                className="flex items-center justify-center gap-1.5 hover:text-foreground transition-colors"
+              >
+                <BookOpen className="w-3.5 h-3.5" />
+                {tFooter("userGuide")}
+              </Link>
+            )}
+            {features.marketplace && (
+              <Link
+                href="/marketplace"
+                className="flex items-center justify-center gap-1.5 hover:text-foreground transition-colors"
+              >
+                <Store className="w-3.5 h-3.5" />
+                {tFooter("marketplace")}
+              </Link>
+            )}
+            {features.billing && (
+              <Link
+                href="/billing"
+                className="flex items-center justify-center gap-1.5 hover:text-foreground transition-colors"
+              >
+                <CreditCard className="w-3.5 h-3.5" />
+                {tFooter("billing")}
+              </Link>
+            )}
             <a
               href={brand.links.terms}
               target="_blank"
@@ -289,31 +296,43 @@ export default function DashboardLayout({
           </div>
           {/* Desktop: inline row */}
           <div className="hidden sm:flex items-center gap-3">
-            <Link
-              href={brand.links.userGuide}
-              target="_blank"
-              className="flex items-center gap-1.5 hover:text-foreground transition-colors"
-            >
-              <BookOpen className="w-3.5 h-3.5" />
-              {tFooter("userGuide")}
-            </Link>
-            <span className="text-border">&middot;</span>
-            <Link
-              href="/marketplace"
-              className="flex items-center gap-1.5 hover:text-foreground transition-colors"
-            >
-              <Store className="w-3.5 h-3.5" />
-              {tFooter("marketplace")}
-            </Link>
-            <span className="text-border">&middot;</span>
-            <Link
-              href="/billing"
-              className="flex items-center gap-1.5 hover:text-foreground transition-colors"
-            >
-              <CreditCard className="w-3.5 h-3.5" />
-              {tFooter("billing")}
-            </Link>
-            <span className="text-border">&middot;</span>
+            {features.publicDocs && (
+              <>
+                <Link
+                  href={brand.links.userGuide}
+                  target="_blank"
+                  className="flex items-center gap-1.5 hover:text-foreground transition-colors"
+                >
+                  <BookOpen className="w-3.5 h-3.5" />
+                  {tFooter("userGuide")}
+                </Link>
+                <span className="text-border">&middot;</span>
+              </>
+            )}
+            {features.marketplace && (
+              <>
+                <Link
+                  href="/marketplace"
+                  className="flex items-center gap-1.5 hover:text-foreground transition-colors"
+                >
+                  <Store className="w-3.5 h-3.5" />
+                  {tFooter("marketplace")}
+                </Link>
+                <span className="text-border">&middot;</span>
+              </>
+            )}
+            {features.billing && (
+              <>
+                <Link
+                  href="/billing"
+                  className="flex items-center gap-1.5 hover:text-foreground transition-colors"
+                >
+                  <CreditCard className="w-3.5 h-3.5" />
+                  {tFooter("billing")}
+                </Link>
+                <span className="text-border">&middot;</span>
+              </>
+            )}
             <a
               href={brand.links.terms}
               target="_blank"

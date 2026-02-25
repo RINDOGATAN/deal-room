@@ -12,9 +12,14 @@ import {
   requireScope,
   ApiScopeError,
 } from "@/server/middleware/apiKeyAuth";
+import { features } from "@/config/features";
 
 export async function GET(req: NextRequest) {
   try {
+    if (!features.agentApi) {
+      return NextResponse.json({ error: "Not available" }, { status: 404 });
+    }
+
     const auth = await authenticateApiKey(req);
     if (!auth) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -61,6 +66,10 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
+    if (!features.agentApi) {
+      return NextResponse.json({ error: "Not available" }, { status: 404 });
+    }
+
     const auth = await authenticateApiKey(req);
     if (!auth) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

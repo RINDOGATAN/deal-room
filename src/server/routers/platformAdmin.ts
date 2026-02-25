@@ -9,6 +9,7 @@ import {
   reactivateEntitlement,
   updateEntitlementJurisdictions,
 } from "../services/licensing/entitlement";
+import { features } from "@/config/features";
 
 // Helper to check 2FA and get admin record
 const requireVerified2FA = async (
@@ -704,5 +705,70 @@ export const platformAdminRouter = createTRPCRouter({
       });
 
       return { success: true };
+    }),
+
+  // ────────────────────────────────────────────────────────────
+  // Invite Code Management (northend.law auth)
+  // ────────────────────────────────────────────────────────────
+
+  listInviteCodes: adminProcedure
+    .input(z.object({ customerId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      await requireVerified2FA(ctx.adminSession.email, ctx.getCookie, ctx.prisma);
+
+      if (!features.inviteCodeAuth) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Invite codes are not enabled for this brand",
+        });
+      }
+
+      return ctx.prisma.inviteCode.findMany({
+        where: { customerId: input.customerId },
+        orderBy: { createdAt: "desc" },
+        include: {
+          usedBy: {
+            select: { id: true, email: true, name: true },
+          },
+        },
+      });
+    }),
+
+  createInviteCode: adminProcedure
+    .input(z.object({
+      customerId: z.string(),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      await requireVerified2FA(ctx.adminSession.email, ctx.getCookie, ctx.prisma);
+
+      if (!features.inviteCodeAuth) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Invite codes are not enabled for this brand",
+        });
+      }
+
+      const customer = await ctx.prisma.customer.findUnique({
+        where: { id: input.customerId },
+      });
+
+      if (!customer) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Customer not found",
+        });
+      }
+
+      // Generate a human-readable invite code: XXXX-XXXX
+      const part1 = randomBytes(2).toString("hex").toUpperCase();
+      const part2 = randomBytes(2).toString("hex").toUpperCase();
+      const code = `${part1}-${part2}`;
+
+      return ctx.prisma.inviteCode.create({
+        data: {
+          code,
+          customerId: input.customerId,
+        },
+      });
     }),
 });
