@@ -20,9 +20,13 @@ import {
   Edit2,
   Check,
   X,
+  Ticket,
+  Copy,
+  User,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { AssignSkillModal } from "@/components/admin/AssignSkillModal";
+import { features } from "@/config/features";
 import Link from "next/link";
 
 export default function CustomerDetailPage() {
@@ -34,10 +38,29 @@ export default function CustomerDetailPage() {
   const [editingJurisdictionsId, setEditingJurisdictionsId] = useState<string | null>(null);
   const [editedJurisdictions, setEditedJurisdictions] = useState<string[]>([]);
 
+  const [copiedCode, setCopiedCode] = useState<string | null>(null);
+
   const utils = trpc.useUtils();
   const { data: customer, isLoading, error } = trpc.platformAdmin.getCustomer.useQuery({
     customerId,
   });
+
+  const { data: inviteCodes, isLoading: inviteCodesLoading } = trpc.platformAdmin.listInviteCodes.useQuery(
+    { customerId },
+    { enabled: features.inviteCodeAuth },
+  );
+
+  const createCodeMutation = trpc.platformAdmin.createInviteCode.useMutation({
+    onSuccess: () => {
+      utils.platformAdmin.listInviteCodes.invalidate({ customerId });
+    },
+  });
+
+  const copyCode = (code: string) => {
+    navigator.clipboard.writeText(code);
+    setCopiedCode(code);
+    setTimeout(() => setCopiedCode(null), 2000);
+  };
 
   const suspendMutation = trpc.platformAdmin.suspendEntitlement.useMutation({
     onSuccess: () => {
@@ -354,6 +377,90 @@ export default function CustomerDetailPage() {
           </div>
         )}
       </div>
+
+      {/* Invite Codes (northend.law only) */}
+      {features.inviteCodeAuth && (
+        <div>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-semibold">Invite Codes</h2>
+            <button
+              onClick={() => createCodeMutation.mutate({ customerId })}
+              disabled={createCodeMutation.isPending}
+              className="btn-brutal flex items-center gap-2 text-sm"
+            >
+              {createCodeMutation.isPending ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <Ticket className="w-4 h-4" />
+              )}
+              Generate Code
+            </button>
+          </div>
+          {inviteCodesLoading ? (
+            <div className="flex items-center justify-center py-8">
+              <Loader2 className="w-6 h-6 animate-spin text-primary" />
+            </div>
+          ) : !inviteCodes || inviteCodes.length === 0 ? (
+            <div className="card-brutal text-center py-8">
+              <Ticket className="w-10 h-10 text-muted-foreground mx-auto mb-3" />
+              <h3 className="text-base font-semibold mb-1">No invite codes</h3>
+              <p className="text-sm text-muted-foreground">
+                Generate a code to allow users to sign in under this customer
+              </p>
+            </div>
+          ) : (
+            <div className="border border-border">
+              <div className="grid grid-cols-4 gap-4 p-3 bg-muted/30 text-xs font-medium text-muted-foreground uppercase">
+                <div>Code</div>
+                <div>Status</div>
+                <div>Used By</div>
+                <div>Created</div>
+              </div>
+              {inviteCodes.map((ic) => (
+                <div
+                  key={ic.id}
+                  className="grid grid-cols-4 gap-4 p-3 border-t border-border items-center text-sm"
+                >
+                  <div className="flex items-center gap-2">
+                    <code className="font-mono text-sm">{ic.code}</code>
+                    <button
+                      onClick={() => copyCode(ic.code)}
+                      className="p-1 text-muted-foreground hover:text-foreground hover:bg-muted rounded"
+                      title="Copy code"
+                    >
+                      {copiedCode === ic.code ? (
+                        <Check className="w-3.5 h-3.5 text-green-500" />
+                      ) : (
+                        <Copy className="w-3.5 h-3.5" />
+                      )}
+                    </button>
+                  </div>
+                  <div>
+                    {ic.usedBy ? (
+                      <Badge className="bg-muted text-muted-foreground">Used</Badge>
+                    ) : (
+                      <Badge className="bg-green-500/20 text-green-500">Available</Badge>
+                    )}
+                  </div>
+                  <div>
+                    {ic.usedBy ? (
+                      <span className="flex items-center gap-1.5 text-sm">
+                        <User className="w-3.5 h-3.5 text-muted-foreground" />
+                        {ic.usedBy.email}
+                      </span>
+                    ) : (
+                      <span className="text-muted-foreground text-xs">—</span>
+                    )}
+                  </div>
+                  <div className="text-muted-foreground text-xs">
+                    {format(new Date(ic.createdAt), "MMM d, yyyy")}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Assign Skill Modal */}
       <AssignSkillModal
