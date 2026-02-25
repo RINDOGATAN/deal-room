@@ -193,6 +193,7 @@ async function main() {
   // 2. External/proprietary skills (SKILLS_DIR env var)
   if (SKILLS_DIR && fs.existsSync(SKILLS_DIR)) {
     const externalDirs = fs.readdirSync(SKILLS_DIR).filter((dir) => {
+      if (dir.startsWith(".") || dir.startsWith("_")) return false;
       const fullPath = path.join(SKILLS_DIR, dir);
       return fs.statSync(fullPath).isDirectory();
     });
