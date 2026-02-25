@@ -58,6 +58,9 @@ SKILLS_DIR=/path/to/legalskills npx prisma db seed  # Seed built-in + licensed
 npm run admin:create                              # Create platform admin
 npm run deal:simulate                             # Create demo deals (idempotent)
 npm run deal:simulate -- --clean                  # Recreate all demo deals from scratch
+SKILLS_DIR=/path/to/legalskills npm run skill:build             # Build .skill packages → dist/
+SKILLS_DIR=/path/to/legalskills npm run skill:build skill-name  # Build specific skill(s)
+npm run skill:upload                              # Upload dist/*.skill to Vercel Blob
 ```
 
 ## Quick Reference
@@ -72,4 +75,6 @@ npm run deal:simulate -- --clean                  # Recreate all demo deals from
 
 **Parameters:** Skills define parameters in `parameters.json`. Two interpolation modes: `[bracket]` tokens in clause legal text, `{curly}` variables in boilerplate. Token names are localized (e.g. `amount` → `importe` in Spanish). Values stored on `DealRoom.parameters` JSON field.
 
-**Simulate:** `npm run deal:simulate` runs full lifecycle for all contract types (DPA, NDA, MSA, SAAS, SEED_INVESTMENT) with 14 validation checks per deal including unresolved placeholder detection.
+**Simulate:** `npm run deal:simulate` runs full lifecycle for all contract types (DPA, NDA, MSA, SAAS, SEED_INVESTMENT, ADVERTISING_IO, AFFILIATE_PROGRAM) with 14 validation checks per deal including unresolved placeholder detection.
+
+**Skill Packages:** Premium skills are distributed as `.skill` ZIP files (manifest.json + content/clauses.json + content/boilerplate.json + parameters.json + signature.sig). Build with `npm run skill:build`, upload with `npm run skill:upload`.
