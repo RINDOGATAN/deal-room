@@ -63,6 +63,11 @@ const TOKEN_TRANSLATIONS: Record<string, Record<string, string>> = {
   "appointing body": { es: "órgano designante" },
   "arbitration institution": { es: "institución arbitral" },
   "arbitration language": { es: "idioma del arbitraje" },
+  "campaign name": { es: "nombre de campaña" },
+  rate: { es: "tarifa" },
+  "program name": { es: "nombre del programa" },
+  "prescribed disclosure text": { es: "texto de divulgación prescrito" },
+  "product category": { es: "categoría de producto" },
 };
 
 // ── Helpers ────────────────────────────────────────────
