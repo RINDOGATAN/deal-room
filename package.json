@@ -26,6 +26,8 @@
     "admin:create": "tsx cli/commands/admin-create.ts",
     "supervisor:create": "tsx cli/commands/supervisor-create.ts",
     "deal:simulate": "tsx --env-file=.env.local scripts/simulate-deals.ts",
+    "skill:build": "tsx scripts/build-skill-packages.ts",
+    "skill:upload": "tsx --env-file=.env.local scripts/upload-skill-packages.ts",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui"
   },
