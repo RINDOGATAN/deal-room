@@ -644,8 +644,7 @@ All premium skills are priced at €9/mo. Licensed skills require Platform Admin
 
 | Category | Skills |
 |----------|--------|
-| **Ad Tech** | Advertising Insertion Order, Affiliate / Referral Program |
-| **Marketing** | Influencer Marketing |
+| **Marketing** | Advertising Insertion Order, Affiliate / Referral Program, Influencer Marketing |
 | **Investment** | Convertible Note, SAFE, Term Sheet |
 | **Corporate** | Founders Agreement, Shareholders Agreement |
 | **Team** | Employment Agreement, Consulting Agreement, Contrato Laboral, Contrato de Servicios |
