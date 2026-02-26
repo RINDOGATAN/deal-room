@@ -344,7 +344,7 @@ async function handlePaymentFailed(invoice: Stripe.Invoice) {
 
   if (customer.email) {
     try {
-      await resend.emails.send({
+      await getResend().emails.send({
         from: process.env.EMAIL_FROM || `noreply@${brand.domain}`,
         to: customer.email,
         subject: "DEALROOM — Payment Failed",
