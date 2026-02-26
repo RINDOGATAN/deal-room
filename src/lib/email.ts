@@ -1,7 +1,12 @@
 import { Resend } from "resend";
 import { brand } from "@/config/brand";
 
-export const resend = new Resend(process.env.RESEND_API_KEY);
+export function getResend() {
+  if (!process.env.RESEND_API_KEY) {
+    throw new Error("RESEND_API_KEY is not configured");
+  }
+  return new Resend(process.env.RESEND_API_KEY);
+}
 
 // Shared email wrapper using brand config
 function emailWrapper(subtitle: string, body: string): string {
@@ -55,7 +60,7 @@ export async function sendInvitationEmail({
   const inviteUrl = `${process.env.NEXTAUTH_URL}/invite/${token}`;
 
   try {
-    await resend.emails.send({
+    await getResend().emails.send({
       from: emailFrom(),
       to,
       subject: `You're invited to negotiate: ${dealName}`,
@@ -88,7 +93,7 @@ export async function sendAttorneyReviewRequestEmail({
   const portalUrl = `${process.env.NEXTAUTH_URL}/supervise`;
 
   try {
-    await resend.emails.send({
+    await getResend().emails.send({
       from: emailFrom(),
       to,
       subject: `Attorney review requested: ${dealName}`,
@@ -120,7 +125,7 @@ export async function sendClientInvitationEmail({
   const inviteUrl = `${process.env.NEXTAUTH_URL}/client-invite/${token}`;
 
   try {
-    await resend.emails.send({
+    await getResend().emails.send({
       from: emailFrom(),
       to,
       subject: `Your lawyer has prepared a contract for you: ${templateName}`,
@@ -158,7 +163,7 @@ export async function sendJointCounselNotificationEmail({
   const dealUrl = `${process.env.NEXTAUTH_URL}/deals/${dealRoomId}/review`;
 
   try {
-    await resend.emails.send({
+    await getResend().emails.send({
       from: emailFrom(),
       to,
       subject: `Joint closing counsel requested: ${dealName}`,
@@ -191,7 +196,7 @@ export async function sendJointCounselAssignmentEmail({
   const portalUrl = `${process.env.NEXTAUTH_URL}/supervise`;
 
   try {
-    await resend.emails.send({
+    await getResend().emails.send({
       from: emailFrom(),
       to,
       subject: `Joint closing counsel assignment: ${dealName}`,
