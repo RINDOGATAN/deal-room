@@ -5,7 +5,7 @@ import prisma from "@/lib/prisma";
 import { verifyWebhookSignature, getSubscription } from "@/lib/stripe";
 import { features } from "@/config/features";
 import { brand } from "@/config/brand";
-import { resend } from "@/lib/email";
+import { getResend } from "@/lib/email";
 import { generateDownloadToken } from "@/lib/crypto";
 
 function parseSkillPackageIds(metadata: Record<string, string> | null): string[] {
@@ -175,7 +175,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
       });
 
       try {
-        await resend.emails.send({
+        await getResend().emails.send({
           from: process.env.EMAIL_FROM || `noreply@${brand.domain}`,
           to: customer.email,
           subject: "DEALROOM — Your Skill Packages Are Ready",

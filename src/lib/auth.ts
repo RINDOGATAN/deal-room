@@ -4,7 +4,7 @@ import EmailProvider from "next-auth/providers/email";
 import GoogleProvider from "next-auth/providers/google";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import prisma from "@/lib/prisma";
-import { resend } from "@/lib/email";
+import { getResend } from "@/lib/email";
 import { brand } from "@/config/brand";
 import { features } from "@/config/features";
 
@@ -25,7 +25,7 @@ if (features.magicLinkAuth) {
       from: process.env.EMAIL_FROM,
       sendVerificationRequest: async ({ identifier: email, url }) => {
         try {
-          await resend.emails.send({
+          await getResend().emails.send({
             from: process.env.EMAIL_FROM || "onboarding@resend.dev",
             to: email,
             subject: `Sign in to DEALROOM`,

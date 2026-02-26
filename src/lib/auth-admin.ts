@@ -7,7 +7,7 @@ import { brand, getEmailStyles } from "@/config/brand";
 
 // Create a dedicated prisma instance to avoid module resolution issues
 const prisma = new PrismaClient();
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 
 // Platform Admin authentication uses email-only (magic link)
 // This is a separate NextAuth instance for the admin portal
@@ -34,7 +34,7 @@ export const adminAuthOptions: NextAuthOptions = {
 
         const emailStyles = getEmailStyles();
         try {
-          await resend.emails.send({
+          await resend!.emails.send({
             from: process.env.EMAIL_FROM || "onboarding@resend.dev",
             to: email,
             subject: `Sign in to DEALROOM - Platform Admin`,
