@@ -16,6 +16,7 @@ import { platformAdminTwoFactorRouter } from "./platformAdminTwoFactor";
 import { lawyerRouter } from "./lawyer";
 import { billingRouter } from "./billing";
 import { jointCounselRouter } from "./jointCounsel";
+import { feedbackRouter } from "./feedback";
 
 export const appRouter = createTRPCRouter({
   deal: dealRouter,
@@ -36,6 +37,7 @@ export const appRouter = createTRPCRouter({
   lawyer: lawyerRouter,
   billing: billingRouter,
   jointCounsel: jointCounselRouter,
+  feedback: feedbackRouter,
 });
 
 export type AppRouter = typeof appRouter;
