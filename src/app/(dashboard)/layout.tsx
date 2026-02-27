@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useSession, signOut } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { useTranslations } from "next-intl";
 import {
@@ -133,7 +133,10 @@ export default function DashboardLayout({
                 <span>{session?.user?.email}</span>
               </div>
               <button
-                onClick={() => signOut({ callbackUrl: "/sign-in" })}
+                onClick={async () => {
+                  await fetch("/api/auth/cross-logout", { method: "POST" });
+                  window.location.href = "/sign-in";
+                }}
                 className="flex items-center gap-2 px-3 py-2 text-sm text-muted-foreground hover:text-foreground rounded-full hover:bg-secondary transition-colors"
               >
                 <LogOut className="w-4 h-4" />
@@ -211,7 +214,10 @@ export default function DashboardLayout({
                 <span>{session?.user?.email}</span>
               </div>
               <button
-                onClick={() => signOut({ callbackUrl: "/sign-in" })}
+                onClick={async () => {
+                  await fetch("/api/auth/cross-logout", { method: "POST" });
+                  window.location.href = "/sign-in";
+                }}
                 className="flex items-center gap-2 px-4 py-3 text-sm text-muted-foreground hover:text-foreground rounded-xl hover:bg-secondary transition-colors w-full"
               >
                 <LogOut className="w-4 h-4" />
