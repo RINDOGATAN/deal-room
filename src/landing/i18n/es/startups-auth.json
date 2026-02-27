@@ -1,0 +1,11 @@
+{
+  "sent.heading": "Revisa tu bandeja",
+  "sent.desc": "Enviamos un enlace de inicio de sesión a",
+  "sent.action": "Haz clic en el enlace del email para continuar.",
+  "sent.resend": "¿No lo recibiste? Reenviar",
+  "login.heading": "Bienvenido de nuevo",
+  "login.subtitle": "Inicia sesión para continuar.",
+  "login.magicLink": "Enviar enlace mágico",
+  "login.newHere": "¿Primera vez? Regístrate",
+  "or": "o"
+}

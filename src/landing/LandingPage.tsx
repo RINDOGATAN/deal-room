@@ -1,0 +1,92 @@
+"use client";
+
+import { Lock, Brain, Globe, FileSignature } from "lucide-react";
+import { useRouter } from "next/navigation";
+import StartupProductPage from "./components/StartupProductPage";
+import StartupsHeader from "./components/StartupsHeader";
+import StartupsFooter from "./components/StartupsFooter";
+import en from "./i18n/en/dealroom-startups.json";
+import es from "./i18n/es/dealroom-startups.json";
+import authEn from "./i18n/en/startups-auth.json";
+import authEs from "./i18n/es/startups-auth.json";
+
+// Simple t() — uses JSON dictionaries from the landing kit
+// TODO: detect locale from cookie/header to match next-intl
+const locale: string = "en";
+const dict = locale === "es" ? es : en;
+const authDict = locale === "es" ? authEs : authEn;
+const t = (key: string) => (dict as Record<string, string>)[key] ?? key;
+const tAuth = (key: string) => (authDict as Record<string, string>)[key] ?? key;
+
+export default function LandingPage() {
+  const router = useRouter();
+
+  const features = [
+    {
+      id: "enc",
+      icon: Lock,
+      title: t("feat.enc.title"),
+      headline: t("feat.enc.headline"),
+      description: t("feat.enc.desc"),
+      highlights: [t("feat.enc.h1"), t("feat.enc.h2"), t("feat.enc.h3"), t("feat.enc.h4")],
+    },
+    {
+      id: "ai",
+      icon: Brain,
+      title: t("feat.ai.title"),
+      headline: t("feat.ai.headline"),
+      description: t("feat.ai.desc"),
+      highlights: [t("feat.ai.h1"), t("feat.ai.h2"), t("feat.ai.h3"), t("feat.ai.h4")],
+    },
+    {
+      id: "cross",
+      icon: Globe,
+      title: t("feat.cross.title"),
+      headline: t("feat.cross.headline"),
+      description: t("feat.cross.desc"),
+      highlights: [t("feat.cross.h1"), t("feat.cross.h2"), t("feat.cross.h3"), t("feat.cross.h4")],
+    },
+    {
+      id: "export",
+      icon: FileSignature,
+      title: t("feat.export.title"),
+      headline: t("feat.export.headline"),
+      description: t("feat.export.desc"),
+      highlights: [t("feat.export.h1"), t("feat.export.h2"), t("feat.export.h3"), t("feat.export.h4")],
+    },
+  ];
+
+  const workflowSteps = [1, 2, 3, 4, 5].map((n) => ({
+    title: t(`workflow.s${n}.title`),
+    desc: t(`workflow.s${n}.desc`),
+  }));
+
+  const valueProps = [1, 2, 3, 4].map((n) => ({
+    title: t(`value.v${n}.title`),
+    desc: t(`value.v${n}.desc`),
+  }));
+
+  const socialProofs = [t("social.s1"), t("social.s2"), t("social.s3")];
+
+  return (
+    <>
+      <StartupsHeader
+        t={t}
+        locale="en"
+        onLocaleToggle={() => {}}
+        onSignup={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+      />
+      <StartupProductPage
+        t={t}
+        tAuth={tAuth}
+        features={features}
+        workflowSteps={workflowSteps}
+        valueProps={valueProps}
+        socialProofs={socialProofs}
+        heroVideo="/hero-dealroom-bg.mp4"
+        onAuthenticated={() => router.push("/sign-in")}
+      />
+      <StartupsFooter t={t} />
+    </>
+  );
+}

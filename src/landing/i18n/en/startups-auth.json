@@ -1,0 +1,11 @@
+{
+  "sent.heading": "Check your inbox",
+  "sent.desc": "We sent a sign-in link to",
+  "sent.action": "Click the link in the email to continue.",
+  "sent.resend": "Didn't receive it? Resend",
+  "login.heading": "Welcome back",
+  "login.subtitle": "Sign in to continue.",
+  "login.magicLink": "Send magic link",
+  "login.newHere": "New here? Sign up",
+  "or": "or"
+}
