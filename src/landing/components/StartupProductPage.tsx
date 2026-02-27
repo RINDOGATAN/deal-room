@@ -1,11 +1,8 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
+import { signIn } from "next-auth/react";
 import { motion } from "framer-motion";
 import { ArrowRight, Check, Loader2 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-import { GoogleOAuthProvider } from "@react-oauth/google";
-import { useAuth, GoogleSignInButton } from "../auth/AuthContext";
-
-const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || "";
 
 export interface Feature {
   id: string;
@@ -35,7 +32,7 @@ interface StartupProductPageProps {
   socialProofs: string[];
   heroVideo: string;
   accentGradient?: string;
-  onAuthenticated?: () => void;
+  callbackUrl: string;
 }
 
 const fadeUp = {
@@ -47,6 +44,15 @@ const fadeUp = {
   }),
 };
 
+const GoogleIcon = () => (
+  <svg className="w-5 h-5" viewBox="0 0 24 24">
+    <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4" />
+    <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
+    <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18A10.96 10.96 0 0 0 1 12c0 1.77.42 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05" />
+    <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
+  </svg>
+);
+
 const StartupProductPage = ({
   t,
   tAuth,
@@ -56,13 +62,13 @@ const StartupProductPage = ({
   socialProofs,
   heroVideo,
   accentGradient = "from-accent/20 to-accent/5",
-  onAuthenticated,
+  callbackUrl,
 }: StartupProductPageProps) => {
-  const platformUrl = t("hero.platform_url");
   const videoRef = useRef<HTMLVideoElement>(null);
-  const { isAuthenticated, requestMagicLink, magicLinkSent, sending, error, login, clearError } = useAuth();
   const [cardMode, setCardMode] = useState<"signup" | "login" | "sent">("signup");
   const [emailInput, setEmailInput] = useState("");
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState("");
 
   // Robust autoplay with interaction fallback
   useEffect(() => {
@@ -83,26 +89,60 @@ const StartupProductPage = ({
     else vid.addEventListener("canplay", tryPlay, { once: true });
   }, []);
 
-  // Redirect to platform on authentication
-  useEffect(() => {
-    if (isAuthenticated) {
-      if (onAuthenticated) {
-        onAuthenticated();
-      } else {
-        window.location.href = platformUrl;
-      }
-    }
-  }, [isAuthenticated, platformUrl, onAuthenticated]);
-
-  // Switch to "sent" card state when magic link is sent
-  useEffect(() => {
-    if (magicLinkSent) setCardMode("sent");
-  }, [magicLinkSent]);
-
-  const handleMagicLink = (e: React.FormEvent) => {
+  const handleMagicLink = async (e: React.FormEvent) => {
     e.preventDefault();
-    requestMagicLink(emailInput);
+    setError("");
+    setSending(true);
+    try {
+      const result = await signIn("email", { email: emailInput, redirect: false, callbackUrl });
+      if (result?.error) {
+        setError("Failed to send sign-in link. Please try again.");
+      } else {
+        setCardMode("sent");
+      }
+    } catch {
+      setError("Failed to send sign-in link. Please try again.");
+    } finally {
+      setSending(false);
+    }
   };
+
+  const handleResendMagicLink = async () => {
+    setError("");
+    setSending(true);
+    try {
+      const result = await signIn("email", { email: emailInput, redirect: false, callbackUrl });
+      if (result?.error) {
+        setError("Failed to resend link. Please try again.");
+      }
+    } catch {
+      setError("Failed to resend link. Please try again.");
+    } finally {
+      setSending(false);
+    }
+  };
+
+  const handleGoogleSignIn = () => {
+    signIn("google", { callbackUrl });
+  };
+
+  const googleDivider = (
+    <>
+      <div className="flex items-center gap-4 my-5">
+        <div className="flex-1 h-px bg-border" />
+        <span className="text-xs text-muted-foreground font-body">{tAuth("or")}</span>
+        <div className="flex-1 h-px bg-border" />
+      </div>
+      <button
+        type="button"
+        onClick={handleGoogleSignIn}
+        className="w-full flex items-center justify-center gap-3 px-4 py-3 bg-white border border-border rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-50 transition-all"
+      >
+        <GoogleIcon />
+        Continue with Google
+      </button>
+    </>
+  );
 
   return (
     <main>
@@ -169,13 +209,14 @@ const StartupProductPage = ({
                       </p>
                       <p className="text-sm text-muted-foreground font-body mb-6">{tAuth("sent.action")}</p>
                       <button
-                        onClick={() => requestMagicLink(emailInput)}
+                        onClick={handleResendMagicLink}
                         disabled={sending}
                         className="text-sm text-accent hover:text-accent/80 transition-colors font-body flex items-center gap-1"
                       >
                         {sending && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
                         {tAuth("sent.resend")}
                       </button>
+                      {error && <p className="text-sm text-red-400 mt-3">{error}</p>}
                     </div>
                   ) : cardMode === "login" ? (
                     <div className="relative animate-fade-in">
@@ -198,24 +239,10 @@ const StartupProductPage = ({
                           {tAuth("login.magicLink")}
                         </button>
                       </form>
-                      {GOOGLE_CLIENT_ID && (
-                        <>
-                          <div className="flex items-center gap-4 my-5">
-                            <div className="flex-1 h-px bg-border" />
-                            <span className="text-xs text-muted-foreground font-body">{tAuth("or")}</span>
-                            <div className="flex-1 h-px bg-border" />
-                          </div>
-                          <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
-                            <GoogleSignInButton
-                              onSuccess={(email, token, name) => login(email, token, "google", name)}
-                              onError={() => {}}
-                            />
-                          </GoogleOAuthProvider>
-                        </>
-                      )}
+                      {googleDivider}
                       {error && <p className="text-sm text-red-400 mt-3">{error}</p>}
                       <button
-                        onClick={() => { setCardMode("signup"); clearError(); }}
+                        onClick={() => { setCardMode("signup"); setError(""); }}
                         className="block w-full text-center text-sm text-muted-foreground hover:text-accent transition-colors mt-4 font-body"
                       >
                         {tAuth("login.newHere")}
@@ -245,9 +272,10 @@ const StartupProductPage = ({
                           <ArrowRight className="w-4 h-4" />
                         </button>
                       </form>
+                      {googleDivider}
                       {error && <p className="text-sm text-red-400 mt-3">{error}</p>}
                       <button
-                        onClick={() => { setCardMode("login"); clearError(); }}
+                        onClick={() => { setCardMode("login"); setError(""); }}
                         className="block w-full text-center text-sm text-muted-foreground hover:text-accent transition-colors mt-4 font-body"
                       >
                         {t("hero.login")}
