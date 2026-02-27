@@ -18,6 +18,7 @@ import {
   BookOpen,
   CreditCard,
   Store,
+  MessageSquareWarning,
 } from "lucide-react";
 import { brand } from "@/config/brand";
 import { features } from "@/config/features";
@@ -32,6 +33,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
+import { FeedbackDialog } from "@/components/FeedbackDialog";
 
 export default function DashboardLayout({
   children,
@@ -46,6 +48,7 @@ export default function DashboardLayout({
   const tFooter = useTranslations("footer");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [showLawyerDialog, setShowLawyerDialog] = useState(false);
+  const [feedbackOpen, setFeedbackOpen] = useState(false);
 
   const { data: lawyerProfile } = trpc.lawyer.getProfile.useQuery(
     undefined,
@@ -128,6 +131,13 @@ export default function DashboardLayout({
                   {tLawyer("iAmALawyer")}
                 </button>
               )}
+              <button
+                onClick={() => setFeedbackOpen(true)}
+                className="p-2 text-muted-foreground hover:text-foreground rounded-full hover:bg-secondary transition-colors"
+                title="Feedback"
+              >
+                <MessageSquareWarning className="w-4 h-4" />
+              </button>
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <User className="w-4 h-4" />
                 <span>{session?.user?.email}</span>
@@ -209,6 +219,13 @@ export default function DashboardLayout({
                   {tLawyer("iAmALawyer")}
                 </button>
               )}
+              <button
+                onClick={() => { setMobileMenuOpen(false); setFeedbackOpen(true); }}
+                className="flex items-center gap-2 px-4 py-3 text-sm text-muted-foreground hover:text-foreground rounded-xl hover:bg-secondary transition-colors w-full"
+              >
+                <MessageSquareWarning className="w-4 h-4" />
+                Feedback
+              </button>
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <User className="w-4 h-4" />
                 <span>{session?.user?.email}</span>
@@ -395,6 +412,8 @@ export default function DashboardLayout({
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <FeedbackDialog open={feedbackOpen} onOpenChange={setFeedbackOpen} />
     </div>
   );
 }

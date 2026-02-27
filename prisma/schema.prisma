@@ -48,7 +48,7 @@ model User {
 model TwoFactorSecret {
   id        String   @id @default(cuid())
   userId    String   @unique
-  secret    String   // Encrypted TOTP secret
+  secret    String // Encrypted TOTP secret
   verified  Boolean  @default(false)
   createdAt DateTime @default(now())
 
@@ -72,7 +72,7 @@ model Supervisor {
   assignments       SupervisorAssignment[]
   partyReviews      DealRoomParty[]
   barAdmissions     SupervisorBarAdmission[]
-  jointCounselDeals DealRoom[] @relation("JointCounsel")
+  jointCounselDeals DealRoom[]               @relation("JointCounsel")
 
   @@map("supervisors")
 }
@@ -90,11 +90,11 @@ model SupervisorTwoFactor {
 }
 
 model SupervisorBarAdmission {
-  id             String       @id @default(cuid())
-  supervisorId   String
-  jurisdiction   GoverningLaw
-  barNumber      String
-  supervisor     Supervisor   @relation(fields: [supervisorId], references: [id], onDelete: Cascade)
+  id           String       @id @default(cuid())
+  supervisorId String
+  jurisdiction GoverningLaw
+  barNumber    String
+  supervisor   Supervisor   @relation(fields: [supervisorId], references: [id], onDelete: Cascade)
 
   @@unique([supervisorId, jurisdiction])
   @@map("supervisor_bar_admissions")
@@ -105,7 +105,7 @@ model SupervisorAssignment {
   supervisorId String
   dealRoomId   String
   assignedAt   DateTime @default(now())
-  assignedBy   String?  // Platform admin who assigned
+  assignedBy   String? // Platform admin who assigned
 
   supervisor Supervisor @relation(fields: [supervisorId], references: [id], onDelete: Cascade)
   dealRoom   DealRoom   @relation(fields: [dealRoomId], references: [id], onDelete: Cascade)
@@ -204,28 +204,28 @@ enum EntitlementStatus {
 }
 
 model SkillPackage {
-  id              String   @id @default(cuid())
-  skillId         String   @unique  // "com.nel.skills.nda"
-  name            String             // "NDA"
-  displayName     String             // "Non-Disclosure Agreement"
-  version         String             // "1.2.3"
-  packageHash     String             // SHA-256 of package contents
-  jurisdictions   String[]           // Available jurisdictions in this package
-  languages       String[]           // Available languages (e.g., ["en", "es"])
-  isActive        Boolean  @default(true)
-  installedAt     DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  id            String   @id @default(cuid())
+  skillId       String   @unique // "com.nel.skills.nda"
+  name          String // "NDA"
+  displayName   String // "Non-Disclosure Agreement"
+  version       String // "1.2.3"
+  packageHash   String // SHA-256 of package contents
+  jurisdictions String[] // Available jurisdictions in this package
+  languages     String[] // Available languages (e.g., ["en", "es"])
+  isActive      Boolean  @default(true)
+  installedAt   DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
   // Billing
-  stripePriceId   String?            // Stripe Price ID (shared "TODO.LAW Add-on")
-  priceAmount     Int?               // Price in cents (900 = €9.00)
-  priceCurrency   String?  @default("eur")
-  isPremium       Boolean  @default(false)
-  description     String?  @db.Text
+  stripePriceId String? // Stripe Price ID (shared "TODO.LAW Add-on")
+  priceAmount   Int? // Price in cents (900 = €9.00)
+  priceCurrency String? @default("eur")
+  isPremium     Boolean @default(false)
+  description   String? @db.Text
 
   // Marketplace / distribution
-  packageUrl      String?            // Vercel Blob URL to .skill file
-  packageSize     Int?               // File size in bytes
+  packageUrl  String? // Vercel Blob URL to .skill file
+  packageSize Int? // File size in bytes
 
   contractTemplate ContractTemplate?
   entitlements     SkillEntitlement[]
@@ -252,21 +252,21 @@ model Customer {
 }
 
 model SkillEntitlement {
-  id              String            @id @default(cuid())
-  customerId      String
-  skillPackageId  String
-  licenseKey      String            @unique @default(cuid())
-  licenseType     LicenseType       // TRIAL | SUBSCRIPTION | PERPETUAL
-  status          EntitlementStatus @default(ACTIVE)
-  maxActivations  Int               @default(1)
-  jurisdictions   String[]          // Subset of jurisdictions customer paid for
-  stripeSubscriptionId String?      // Stripe subscription ID for self-service
-  expiresAt       DateTime?
-  createdAt       DateTime          @default(now())
-  updatedAt       DateTime          @updatedAt
+  id                   String            @id @default(cuid())
+  customerId           String
+  skillPackageId       String
+  licenseKey           String            @unique @default(cuid())
+  licenseType          LicenseType // TRIAL | SUBSCRIPTION | PERPETUAL
+  status               EntitlementStatus @default(ACTIVE)
+  maxActivations       Int               @default(1)
+  jurisdictions        String[] // Subset of jurisdictions customer paid for
+  stripeSubscriptionId String? // Stripe subscription ID for self-service
+  expiresAt            DateTime?
+  createdAt            DateTime          @default(now())
+  updatedAt            DateTime          @updatedAt
 
-  customer     Customer       @relation(fields: [customerId], references: [id], onDelete: Cascade)
-  skillPackage SkillPackage   @relation(fields: [skillPackageId], references: [id], onDelete: Cascade)
+  customer     Customer          @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  skillPackage SkillPackage      @relation(fields: [skillPackageId], references: [id], onDelete: Cascade)
   activations  SkillActivation[]
 
   @@unique([customerId, skillPackageId])
@@ -277,8 +277,8 @@ model SkillActivation {
   id            String   @id @default(cuid())
   entitlementId String
   customerId    String
-  instanceId    String   @unique  // Unique installation identifier
-  machineHash   String            // SHA-256(hostname + MAC)
+  instanceId    String   @unique // Unique installation identifier
+  machineHash   String // SHA-256(hostname + MAC)
   activatedAt   DateTime @default(now())
   lastSeenAt    DateTime @default(now())
 
@@ -293,56 +293,56 @@ model SkillActivation {
 // ============================================================
 
 model ContractTemplate {
-  id              String   @id @default(cuid())
-  contractType    String   @unique // e.g., "NDA", "DPA", "SAAS", "MSA"
-  displayName     String
-  description     String?
-  version         String   @default("1.0")
-  skillPath       String   // Path to skill folder
-  boilerplate     Json?    // Standard contract sections (preamble, definitions, etc.)
-  templateFamily     String?       // e.g., "FOUNDERS", "SAFE" — groups jurisdiction variants
-  nativeJurisdiction GoverningLaw? // Which jurisdiction this template is native to (null = universal)
-  jurisdictions          String[]  // Supported jurisdictions (e.g., ["CALIFORNIA","ENGLAND_WALES","SPAIN"])
-  languages              String[]  // Supported languages (e.g., ["en","es"])
-  displayNameLocalized   Json?     // {"en":"...","es":"..."}
-  descriptionLocalized   Json?     // {"en":"...","es":"..."}
-  category               String?   // e.g., "corporate", "investment", "privacy"
-  categoryLocalized      Json?     // {"en":"Corporate","es":"Societario"}
-  parameterSchema        Json?     // Parameter definitions from parameters.json
-  isActive        Boolean  @default(true)
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  id                   String        @id @default(cuid())
+  contractType         String        @unique // e.g., "NDA", "DPA", "SAAS", "MSA"
+  displayName          String
+  description          String?
+  version              String        @default("1.0")
+  skillPath            String // Path to skill folder
+  boilerplate          Json? // Standard contract sections (preamble, definitions, etc.)
+  templateFamily       String? // e.g., "FOUNDERS", "SAFE" — groups jurisdiction variants
+  nativeJurisdiction   GoverningLaw? // Which jurisdiction this template is native to (null = universal)
+  jurisdictions        String[] // Supported jurisdictions (e.g., ["CALIFORNIA","ENGLAND_WALES","SPAIN"])
+  languages            String[] // Supported languages (e.g., ["en","es"])
+  displayNameLocalized Json? // {"en":"...","es":"..."}
+  descriptionLocalized Json? // {"en":"...","es":"..."}
+  category             String? // e.g., "corporate", "investment", "privacy"
+  categoryLocalized    Json? // {"en":"Corporate","es":"Societario"}
+  parameterSchema      Json? // Parameter definitions from parameters.json
+  isActive             Boolean       @default(true)
+  createdAt            DateTime      @default(now())
+  updatedAt            DateTime      @updatedAt
 
   // Link to skill package (for licensed skills)
-  skillPackageId  String?  @unique
-  skillPackage    SkillPackage? @relation(fields: [skillPackageId], references: [id])
+  skillPackageId String?       @unique
+  skillPackage   SkillPackage? @relation(fields: [skillPackageId], references: [id])
 
-  clauses   ClauseTemplate[]
-  dealRooms DealRoom[]
-  sourceMappings ClauseMapping[] @relation("sourceMappings")
-  targetMappings ClauseMapping[] @relation("targetMappings")
+  clauses        ClauseTemplate[]
+  dealRooms      DealRoom[]
+  sourceMappings ClauseMapping[]  @relation("sourceMappings")
+  targetMappings ClauseMapping[]  @relation("targetMappings")
   lawyerVettings LawyerVetting[]
 
   @@map("contract_templates")
 }
 
 model ClauseTemplate {
-  id               String   @id @default(cuid())
+  id                 String   @id @default(cuid())
   contractTemplateId String
-  clauseId         String   // e.g., "data-retention"
-  title            String
-  category         String   // e.g., "Privacy", "Liability", "Term"
-  order            Int
-  plainDescription String   @db.Text
-  legalContext     String?  @db.Text
-  isRequired       Boolean  @default(true)
-  localizedContent Json?    // {"title":{"en":"...","es":"..."},"plainDescription":{...},"legalContext":{...}}
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
+  clauseId           String // e.g., "data-retention"
+  title              String
+  category           String // e.g., "Privacy", "Liability", "Term"
+  order              Int
+  plainDescription   String   @db.Text
+  legalContext       String?  @db.Text
+  isRequired         Boolean  @default(true)
+  localizedContent   Json? // {"title":{"en":"...","es":"..."},"plainDescription":{...},"legalContext":{...}}
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
 
-  contractTemplate ContractTemplate @relation(fields: [contractTemplateId], references: [id], onDelete: Cascade)
-  options          ClauseOption[]
-  dealRoomClauses  DealRoomClause[]
+  contractTemplate      ContractTemplate       @relation(fields: [contractTemplateId], references: [id], onDelete: Cascade)
+  options               ClauseOption[]
+  dealRoomClauses       DealRoomClause[]
   lawyerRecommendations LawyerRecommendation[]
 
   @@unique([contractTemplateId, clauseId])
@@ -350,29 +350,29 @@ model ClauseTemplate {
 }
 
 model ClauseOption {
-  id               String   @id @default(cuid())
-  clauseTemplateId String
-  optionId         String   // e.g., "opt-30d"
-  code             String   // e.g., "30-days"
-  label            String   // e.g., "30 Days"
-  order            Int
-  plainDescription String   @db.Text
-  prosPartyA       String[] // Array of pros for Party A
-  consPartyA       String[] // Array of cons for Party A
-  prosPartyB       String[] // Array of pros for Party B
-  consPartyB       String[] // Array of cons for Party B
-  legalText        String   @db.Text
-  biasPartyA       Float    // -1 to 1, how much this option favors Party A
-  biasPartyB       Float    // -1 to 1, how much this option favors Party B
-  jurisdictionConfig Json?  // Jurisdiction-specific availability and warnings
-  localizedContent Json?    // {"label":{...},"plainDescription":{...},"prosPartyA":{...},...,"legalText":{...}}
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
+  id                 String   @id @default(cuid())
+  clauseTemplateId   String
+  optionId           String // e.g., "opt-30d"
+  code               String // e.g., "30-days"
+  label              String // e.g., "30 Days"
+  order              Int
+  plainDescription   String   @db.Text
+  prosPartyA         String[] // Array of pros for Party A
+  consPartyA         String[] // Array of cons for Party A
+  prosPartyB         String[] // Array of pros for Party B
+  consPartyB         String[] // Array of cons for Party B
+  legalText          String   @db.Text
+  biasPartyA         Float // -1 to 1, how much this option favors Party A
+  biasPartyB         Float // -1 to 1, how much this option favors Party B
+  jurisdictionConfig Json? // Jurisdiction-specific availability and warnings
+  localizedContent   Json? // {"label":{...},"plainDescription":{...},"prosPartyA":{...},...,"legalText":{...}}
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
 
-  clauseTemplate    ClauseTemplate    @relation(fields: [clauseTemplateId], references: [id], onDelete: Cascade)
-  partySelections   PartySelection[]
+  clauseTemplate        ClauseTemplate         @relation(fields: [clauseTemplateId], references: [id], onDelete: Cascade)
+  partySelections       PartySelection[]
   compromiseSuggestions CompromiseSuggestion[]
-  counterProposals  CounterProposal[]
+  counterProposals      CounterProposal[]
   lawyerRecommendations LawyerRecommendation[]
 
   @@unique([clauseTemplateId, optionId])
@@ -384,19 +384,19 @@ model ClauseOption {
 // ============================================================
 
 enum DealRoomStatus {
-  DRAFT              // Initiator still making selections
-  AWAITING_RESPONSE  // Invitation sent, waiting for respondent
-  NEGOTIATING        // Both parties have submitted, reviewing compromises
-  AGREED             // All clauses agreed upon
-  SIGNING            // Sent for e-signature
-  COMPLETED          // Fully signed
-  CANCELLED          // Deal cancelled
+  DRAFT // Initiator still making selections
+  AWAITING_RESPONSE // Invitation sent, waiting for respondent
+  NEGOTIATING // Both parties have submitted, reviewing compromises
+  AGREED // All clauses agreed upon
+  SIGNING // Sent for e-signature
+  COMPLETED // Fully signed
+  CANCELLED // Deal cancelled
 }
 
 enum GoverningLaw {
-  CALIFORNIA      // California, USA
-  ENGLAND_WALES   // England & Wales, UK
-  SPAIN           // Spain, EU
+  CALIFORNIA // California, USA
+  ENGLAND_WALES // England & Wales, UK
+  SPAIN // Spain, EU
 }
 
 enum PartyRole {
@@ -405,42 +405,42 @@ enum PartyRole {
 }
 
 enum PartyStatus {
-  PENDING     // Not yet submitted selections
-  SUBMITTED   // Selections submitted
-  REVIEWING   // Reviewing compromise suggestions
-  ACCEPTED    // Accepted all suggestions/counter-proposals
+  PENDING // Not yet submitted selections
+  SUBMITTED // Selections submitted
+  REVIEWING // Reviewing compromise suggestions
+  ACCEPTED // Accepted all suggestions/counter-proposals
 }
 
 model DealRoom {
-  id                 String         @id @default(cuid())
-  name               String
-  contractTemplateId String
-  governingLaw       GoverningLaw   // Determines applicable law framework
-  contractLanguage   String         @default("en") // "en" or "es" for contract output language
-  parameters         Json?          // Deal-specific parameter values {"param-id": "value", ...}
-  status             DealRoomStatus @default(DRAFT)
-  currentRound       Int            @default(0)
-  lawyerVettingId    String?
+  id                         String         @id @default(cuid())
+  name                       String
+  contractTemplateId         String
+  governingLaw               GoverningLaw // Determines applicable law framework
+  contractLanguage           String         @default("en") // "en" or "es" for contract output language
+  parameters                 Json? // Deal-specific parameter values {"param-id": "value", ...}
+  status                     DealRoomStatus @default(DRAFT)
+  currentRound               Int            @default(0)
+  lawyerVettingId            String?
   // Stage B — Joint Closing Counsel
-  jointCounselSupervisorId    String?
-  jointCounselRequestedAt     DateTime?
-  jointCounselRequestedBy     String?       // partyId of INITIATOR
-  jointCounselAcknowledgedAt  DateTime?     // other party acknowledged
-  jointCounselDeclinedAt      DateTime?     // other party declined
-  createdAt          DateTime       @default(now())
-  updatedAt          DateTime       @updatedAt
+  jointCounselSupervisorId   String?
+  jointCounselRequestedAt    DateTime?
+  jointCounselRequestedBy    String? // partyId of INITIATOR
+  jointCounselAcknowledgedAt DateTime? // other party acknowledged
+  jointCounselDeclinedAt     DateTime? // other party declined
+  createdAt                  DateTime       @default(now())
+  updatedAt                  DateTime       @updatedAt
 
-  contractTemplate        ContractTemplate       @relation(fields: [contractTemplateId], references: [id])
-  lawyerVetting           LawyerVetting?         @relation(fields: [lawyerVettingId], references: [id])
-  jointCounselSupervisor  Supervisor?            @relation("JointCounsel", fields: [jointCounselSupervisorId], references: [id])
-  parties                 DealRoomParty[]
-  clauses                 DealRoomClause[]
-  invitations             Invitation[]
-  rounds                  NegotiationRound[]
-  auditLogs               AuditLog[]
-  signingRequest          SigningRequest?
-  supervisorAssignments   SupervisorAssignment[]
-  agentDealRoom           AgentDealRoom?
+  contractTemplate       ContractTemplate       @relation(fields: [contractTemplateId], references: [id])
+  lawyerVetting          LawyerVetting?         @relation(fields: [lawyerVettingId], references: [id])
+  jointCounselSupervisor Supervisor?            @relation("JointCounsel", fields: [jointCounselSupervisorId], references: [id])
+  parties                DealRoomParty[]
+  clauses                DealRoomClause[]
+  invitations            Invitation[]
+  rounds                 NegotiationRound[]
+  auditLogs              AuditLog[]
+  signingRequest         SigningRequest?
+  supervisorAssignments  SupervisorAssignment[]
+  agentDealRoom          AgentDealRoom?
 
   @@map("deal_rooms")
 }
@@ -448,31 +448,31 @@ model DealRoom {
 model DealRoomParty {
   id          String      @id @default(cuid())
   dealRoomId  String
-  userId      String?     // Null until user accepts invitation
+  userId      String? // Null until user accepts invitation
   role        PartyRole
   status      PartyStatus @default(PENDING)
-  email       String      // Email used for invitation
-  name        String?     // Contact name
-  company     String?     // Company name
-  submittedAt DateTime?   // When selections were submitted
+  email       String // Email used for invitation
+  name        String? // Contact name
+  company     String? // Company name
+  submittedAt DateTime? // When selections were submitted
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
 
   // Signing / Execution Details
-  signingDetails  Json?   // { legalName, address, taxId?, signatoryName, signatoryTitle }
+  signingDetails Json? // { legalName, address, taxId?, signatoryName, signatoryTitle }
 
   // Attorney Review
-  attorneyReviewRequested   Boolean    @default(false)
+  attorneyReviewRequested   Boolean   @default(false)
   attorneyReviewRequestedAt DateTime?
   attorneySupervisorId      String?
-  attorneyReviewApprovedAt  DateTime?  // Set by the supervisor
+  attorneyReviewApprovedAt  DateTime? // Set by the supervisor
   lawyerWarningDismissedAt  DateTime?
 
-  dealRoom   DealRoom         @relation(fields: [dealRoomId], references: [id], onDelete: Cascade)
-  user       User?            @relation(fields: [userId], references: [id])
-  attorneySupervisor Supervisor? @relation(fields: [attorneySupervisorId], references: [id])
-  selections PartySelection[]
-  counterProposals CounterProposal[]
+  dealRoom           DealRoom          @relation(fields: [dealRoomId], references: [id], onDelete: Cascade)
+  user               User?             @relation(fields: [userId], references: [id])
+  attorneySupervisor Supervisor?       @relation(fields: [attorneySupervisorId], references: [id])
+  selections         PartySelection[]
+  counterProposals   CounterProposal[]
 
   @@unique([dealRoomId, role])
   @@map("deal_room_parties")
@@ -480,30 +480,30 @@ model DealRoomParty {
 
 // Clause instance for a specific deal room
 model DealRoomClause {
-  id               String   @id @default(cuid())
+  id               String       @id @default(cuid())
   dealRoomId       String
   clauseTemplateId String
   status           ClauseStatus @default(PENDING)
-  agreedOptionId   String?  // Set when both parties agree
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
+  agreedOptionId   String? // Set when both parties agree
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
 
   dealRoom       DealRoom       @relation(fields: [dealRoomId], references: [id], onDelete: Cascade)
   clauseTemplate ClauseTemplate @relation(fields: [clauseTemplateId], references: [id])
 
-  selections              PartySelection[]
-  compromiseSuggestions   CompromiseSuggestion[]
-  counterProposals        CounterProposal[]
+  selections            PartySelection[]
+  compromiseSuggestions CompromiseSuggestion[]
+  counterProposals      CounterProposal[]
 
   @@unique([dealRoomId, clauseTemplateId])
   @@map("deal_room_clauses")
 }
 
 enum ClauseStatus {
-  PENDING     // Awaiting selections
-  DIVERGENT   // Parties selected different options
-  SUGGESTED   // Compromise suggested
-  AGREED      // Both parties accepted
+  PENDING // Awaiting selections
+  DIVERGENT // Parties selected different options
+  SUGGESTED // Compromise suggested
+  AGREED // Both parties accepted
 }
 
 // ============================================================
@@ -511,15 +511,15 @@ enum ClauseStatus {
 // ============================================================
 
 model PartySelection {
-  id              String   @id @default(cuid())
+  id               String   @id @default(cuid())
   dealRoomClauseId String
-  partyId         String
-  optionId        String
-  priority        Int      @default(3) // 1-5, how important this clause is
-  flexibility     Int      @default(3) // 1-5, how flexible party is on this clause
-  notes           String?  @db.Text    // Private notes (never shown to other party)
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  partyId          String
+  optionId         String
+  priority         Int      @default(3) // 1-5, how important this clause is
+  flexibility      Int      @default(3) // 1-5, how flexible party is on this clause
+  notes            String?  @db.Text // Private notes (never shown to other party)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
 
   dealRoomClause DealRoomClause @relation(fields: [dealRoomClauseId], references: [id], onDelete: Cascade)
   party          DealRoomParty  @relation(fields: [partyId], references: [id], onDelete: Cascade)
@@ -534,19 +534,19 @@ model PartySelection {
 // ============================================================
 
 model CompromiseSuggestion {
-  id                    String   @id @default(cuid())
-  dealRoomClauseId      String
-  roundNumber           Int
-  suggestedOptionId     String
-  satisfactionPartyA    Float    // 0-100
-  satisfactionPartyB    Float    // 0-100
-  reasoning             String   @db.Text
-  partyAAccepted        Boolean?
-  partyBAccepted        Boolean?
-  createdAt             DateTime @default(now())
+  id                 String   @id @default(cuid())
+  dealRoomClauseId   String
+  roundNumber        Int
+  suggestedOptionId  String
+  satisfactionPartyA Float // 0-100
+  satisfactionPartyB Float // 0-100
+  reasoning          String   @db.Text
+  partyAAccepted     Boolean?
+  partyBAccepted     Boolean?
+  createdAt          DateTime @default(now())
 
-  dealRoomClause  DealRoomClause   @relation(fields: [dealRoomClauseId], references: [id], onDelete: Cascade)
-  suggestedOption ClauseOption     @relation(fields: [suggestedOptionId], references: [id])
+  dealRoomClause  DealRoomClause @relation(fields: [dealRoomClauseId], references: [id], onDelete: Cascade)
+  suggestedOption ClauseOption   @relation(fields: [suggestedOptionId], references: [id])
 
   @@unique([dealRoomClauseId, roundNumber])
   @@map("compromise_suggestions")
@@ -556,7 +556,7 @@ model NegotiationRound {
   id          String      @id @default(cuid())
   dealRoomId  String
   roundNumber Int
-  initiatedBy PartyRole   // Who started this round
+  initiatedBy PartyRole // Who started this round
   status      RoundStatus @default(PENDING_RESPONSE)
   createdAt   DateTime    @default(now())
 
@@ -568,36 +568,36 @@ model NegotiationRound {
 }
 
 enum RoundStatus {
-  PENDING_RESPONSE  // Waiting for other party
-  BOTH_RESPONDED    // Both parties have responded
-  COMPLETED         // Round completed (all accepted or next round started)
+  PENDING_RESPONSE // Waiting for other party
+  BOTH_RESPONDED // Both parties have responded
+  COMPLETED // Round completed (all accepted or next round started)
 }
 
 model CounterProposal {
-  id              String         @id @default(cuid())
-  roundId         String
+  id               String         @id @default(cuid())
+  roundId          String
   dealRoomClauseId String
-  partyId         String
+  partyId          String
   proposedOptionId String
-  newPriority     Int?           // If party wants to update priority
-  rationale       String?        @db.Text
-  status          ProposalStatus @default(PENDING)
-  createdAt       DateTime       @default(now())
+  newPriority      Int? // If party wants to update priority
+  rationale        String?        @db.Text
+  status           ProposalStatus @default(PENDING)
+  createdAt        DateTime       @default(now())
 
-  round           NegotiationRound @relation(fields: [roundId], references: [id], onDelete: Cascade)
-  dealRoomClause  DealRoomClause   @relation(fields: [dealRoomClauseId], references: [id], onDelete: Cascade)
-  party           DealRoomParty    @relation(fields: [partyId], references: [id], onDelete: Cascade)
-  proposedOption  ClauseOption     @relation(fields: [proposedOptionId], references: [id])
+  round          NegotiationRound @relation(fields: [roundId], references: [id], onDelete: Cascade)
+  dealRoomClause DealRoomClause   @relation(fields: [dealRoomClauseId], references: [id], onDelete: Cascade)
+  party          DealRoomParty    @relation(fields: [partyId], references: [id], onDelete: Cascade)
+  proposedOption ClauseOption     @relation(fields: [proposedOptionId], references: [id])
 
   @@unique([roundId, dealRoomClauseId, partyId])
   @@map("counter_proposals")
 }
 
 enum ProposalStatus {
-  PENDING     // Awaiting response
-  ACCEPTED    // Other party accepted
-  REJECTED    // Other party rejected
-  SUPERSEDED  // New round started
+  PENDING // Awaiting response
+  ACCEPTED // Other party accepted
+  REJECTED // Other party rejected
+  SUPERSEDED // New round started
 }
 
 // ============================================================
@@ -605,15 +605,15 @@ enum ProposalStatus {
 // ============================================================
 
 model Invitation {
-  id          String           @id @default(cuid())
-  dealRoomId  String
-  email       String
-  token       String           @unique @default(cuid())
-  status      InvitationStatus @default(PENDING)
-  sentAt      DateTime         @default(now())
-  expiresAt   DateTime
-  acceptedAt  DateTime?
-  sentById    String
+  id         String           @id @default(cuid())
+  dealRoomId String
+  email      String
+  token      String           @unique @default(cuid())
+  status     InvitationStatus @default(PENDING)
+  sentAt     DateTime         @default(now())
+  expiresAt  DateTime
+  acceptedAt DateTime?
+  sentById   String
 
   dealRoom DealRoom @relation(fields: [dealRoomId], references: [id], onDelete: Cascade)
   sentBy   User     @relation(fields: [sentById], references: [id])
@@ -635,31 +635,31 @@ enum InvitationStatus {
 model SigningRequest {
   id                  String        @id @default(cuid())
   dealRoomId          String        @unique
-  provider            String        // "docusign", "hellosign", or "type-to-sign"
-  externalId          String?       // ID from e-signature provider
-  documentUrl         String?       // Generated document URL
+  provider            String // "docusign", "hellosign", or "type-to-sign"
+  externalId          String? // ID from e-signature provider
+  documentUrl         String? // Generated document URL
   status              SigningStatus @default(PENDING)
   initiatorSignedAt   DateTime?
   respondentSignedAt  DateTime?
-  initiatorSignature  String?       // Typed signature for initiator
-  respondentSignature String?       // Typed signature for respondent
+  initiatorSignature  String? // Typed signature for initiator
+  respondentSignature String? // Typed signature for respondent
   completedAt         DateTime?
-  signedDocumentUrl   String?       // URL to signed document
+  signedDocumentUrl   String? // URL to signed document
   createdAt           DateTime      @default(now())
   updatedAt           DateTime      @updatedAt
 
-  dealRoom            DealRoom      @relation(fields: [dealRoomId], references: [id], onDelete: Cascade)
+  dealRoom DealRoom @relation(fields: [dealRoomId], references: [id], onDelete: Cascade)
 
   @@map("signing_requests")
 }
 
 enum SigningStatus {
-  PENDING           // Not yet sent
-  SENT              // Sent for signature
-  PARTIALLY_SIGNED  // One party signed
-  COMPLETED         // Both signed
-  DECLINED          // One party declined
-  EXPIRED           // Signature request expired
+  PENDING // Not yet sent
+  SENT // Sent for signature
+  PARTIALLY_SIGNED // One party signed
+  COMPLETED // Both signed
+  DECLINED // One party declined
+  EXPIRED // Signature request expired
 }
 
 // ============================================================
@@ -667,14 +667,14 @@ enum SigningStatus {
 // ============================================================
 
 model AuditLog {
-  id          String   @id @default(cuid())
-  dealRoomId  String?
-  userId      String?
-  action      String   // e.g., "SELECTION_SUBMITTED", "COMPROMISE_ACCEPTED"
-  details     Json?    // Additional data
-  ipAddress   String?
-  userAgent   String?
-  createdAt   DateTime @default(now())
+  id         String   @id @default(cuid())
+  dealRoomId String?
+  userId     String?
+  action     String // e.g., "SELECTION_SUBMITTED", "COMPROMISE_ACCEPTED"
+  details    Json? // Additional data
+  ipAddress  String?
+  userAgent  String?
+  createdAt  DateTime @default(now())
 
   dealRoom DealRoom? @relation(fields: [dealRoomId], references: [id], onDelete: SetNull)
   user     User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
@@ -690,21 +690,21 @@ model AuditLog {
 // ============================================================
 
 model LawyerVetting {
-  id                   String              @id @default(cuid())
-  lawyerId             String
-  contractTemplateId   String
-  governingLaw         GoverningLaw
-  contractLanguage     String              @default("en")
-  status               LawyerVettingStatus @default(DRAFT)
-  approvedAt           DateTime?
-  createdAt            DateTime            @default(now())
-  updatedAt            DateTime            @updatedAt
+  id                 String              @id @default(cuid())
+  lawyerId           String
+  contractTemplateId String
+  governingLaw       GoverningLaw
+  contractLanguage   String              @default("en")
+  status             LawyerVettingStatus @default(DRAFT)
+  approvedAt         DateTime?
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
 
-  lawyer             User                 @relation(fields: [lawyerId], references: [id])
-  contractTemplate   ContractTemplate     @relation(fields: [contractTemplateId], references: [id])
-  recommendations    LawyerRecommendation[]
-  clientInvitations  ClientInvitation[]
-  dealRooms          DealRoom[]
+  lawyer            User                   @relation(fields: [lawyerId], references: [id])
+  contractTemplate  ContractTemplate       @relation(fields: [contractTemplateId], references: [id])
+  recommendations   LawyerRecommendation[]
+  clientInvitations ClientInvitation[]
+  dealRooms         DealRoom[]
 
   @@map("lawyer_vettings")
 }
@@ -715,11 +715,11 @@ enum LawyerVettingStatus {
 }
 
 model LawyerRecommendation {
-  id               String   @id @default(cuid())
+  id               String  @id @default(cuid())
   vettingId        String
   clauseTemplateId String
   clauseOptionId   String
-  note             String?  @db.Text
+  note             String? @db.Text
 
   vetting        LawyerVetting  @relation(fields: [vettingId], references: [id], onDelete: Cascade)
   clauseTemplate ClauseTemplate @relation(fields: [clauseTemplateId], references: [id])
@@ -762,12 +762,12 @@ enum ClientInvitationStatus {
 
 model ClauseMapping {
   id               String   @id @default(cuid())
-  familyKey        String   // e.g., "FOUNDERS"
-  sourceClauseId   String   // clauseId from source template (e.g., "equity-split")
-  targetClauseId   String   // clauseId from target template (e.g., "distribucion-participaciones")
+  familyKey        String // e.g., "FOUNDERS"
+  sourceClauseId   String // clauseId from source template (e.g., "equity-split")
+  targetClauseId   String // clauseId from target template (e.g., "distribucion-participaciones")
   sourceTemplateId String
   targetTemplateId String
-  mappingType      String   // "equivalent", "split", "merged", "new"
+  mappingType      String // "equivalent", "split", "merged", "new"
   notes            String?  @db.Text
   createdAt        DateTime @default(now())
 
@@ -783,16 +783,16 @@ model ClauseMapping {
 // ============================================================
 
 model ApiKey {
-  id          String    @id @default(cuid())
-  customerId  String
-  name        String
-  keyHash     String    @unique
-  keyPrefix   String
-  scopes      String[]
-  isActive    Boolean   @default(true)
-  lastUsedAt  DateTime?
-  expiresAt   DateTime?
-  createdAt   DateTime  @default(now())
+  id         String    @id @default(cuid())
+  customerId String
+  name       String
+  keyHash    String    @unique
+  keyPrefix  String
+  scopes     String[]
+  isActive   Boolean   @default(true)
+  lastUsedAt DateTime?
+  expiresAt  DateTime?
+  createdAt  DateTime  @default(now())
 
   customer Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
 
@@ -804,22 +804,22 @@ model ApiKey {
 // ============================================================
 
 model Playbook {
-  id               String          @id @default(cuid())
+  id               String       @id @default(cuid())
   customerId       String
   name             String
   contractType     String
   governingLaw     GoverningLaw
-  contractLanguage String          @default("en")
-  isDefault        Boolean         @default(false)
-  isActive         Boolean         @default(true)
+  contractLanguage String       @default("en")
+  isDefault        Boolean      @default(false)
+  isActive         Boolean      @default(true)
   metadata         Json?
-  createdAt        DateTime        @default(now())
-  updatedAt        DateTime        @updatedAt
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
 
-  customer Customer        @relation(fields: [customerId], references: [id], onDelete: Cascade)
-  entries  PlaybookEntry[]
-  initiatedAgentDeals  AgentDealRoom[] @relation("initiatorPlaybook")
-  respondedAgentDeals  AgentDealRoom[] @relation("respondentPlaybook")
+  customer            Customer        @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  entries             PlaybookEntry[]
+  initiatedAgentDeals AgentDealRoom[] @relation("initiatorPlaybook")
+  respondedAgentDeals AgentDealRoom[] @relation("respondentPlaybook")
 
   @@unique([customerId, name])
   @@map("playbooks")
@@ -854,26 +854,26 @@ enum AgentDealStatus {
 }
 
 model AgentDealRoom {
-  id                    String          @id @default(cuid())
-  dealRoomId            String?         @unique
-  negotiationToken      String          @unique
-  initiatorCustomerId   String
-  respondentCustomerId  String?
-  initiatorPlaybookId   String
-  respondentPlaybookId  String?
-  status                AgentDealStatus @default(PENDING_RESPONDENT)
-  contractType          String
-  governingLaw          GoverningLaw
-  contractLanguage      String          @default("en")
-  dealName              String
-  initiatorCompany      String
-  initiatorEmail        String
-  respondentCompany     String?
-  respondentEmail       String?
-  negotiationLog        Json?
-  failureReason         String?
-  resolvedAt            DateTime?
-  createdAt             DateTime        @default(now())
+  id                   String          @id @default(cuid())
+  dealRoomId           String?         @unique
+  negotiationToken     String          @unique
+  initiatorCustomerId  String
+  respondentCustomerId String?
+  initiatorPlaybookId  String
+  respondentPlaybookId String?
+  status               AgentDealStatus @default(PENDING_RESPONDENT)
+  contractType         String
+  governingLaw         GoverningLaw
+  contractLanguage     String          @default("en")
+  dealName             String
+  initiatorCompany     String
+  initiatorEmail       String
+  respondentCompany    String?
+  respondentEmail      String?
+  negotiationLog       Json?
+  failureReason        String?
+  resolvedAt           DateTime?
+  createdAt            DateTime        @default(now())
 
   dealRoom           DealRoom? @relation(fields: [dealRoomId], references: [id])
   initiatorPlaybook  Playbook  @relation("initiatorPlaybook", fields: [initiatorPlaybookId], references: [id])
@@ -897,4 +897,17 @@ model InviteCode {
   usedBy   User?    @relation(fields: [usedByUserId], references: [id])
 
   @@map("invite_codes")
+}
+
+// ============================================================
+// ANONYMOUS FEEDBACK
+// ============================================================
+
+model Feedback {
+  id        String   @id @default(cuid())
+  message   String   @db.Text
+  page      String?
+  createdAt DateTime @default(now())
+
+  @@map("feedback")
 }
