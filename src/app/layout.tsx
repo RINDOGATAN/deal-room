@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Dancing_Script, Jost, Archivo_Black } from "next/font/google";
+import { Inter, Dancing_Script, Jost, Archivo_Black, Space_Mono } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/components/providers";
 import { Toaster } from "@/components/ui/sonner";
@@ -31,6 +31,12 @@ const archivoBlack = Archivo_Black({
   weight: "400",
 });
 
+const spaceMono = Space_Mono({
+  subsets: ["latin"],
+  variable: "--font-space-mono",
+  weight: ["400", "700"],
+});
+
 export const metadata: Metadata = {
   title: `DEALROOM - ${brand.tagline}`,
   description: brand.description,
@@ -46,7 +52,7 @@ export default async function RootLayout({
 
   return (
     <html lang={locale} data-brand={brand.id}>
-      <body className={`${inter.variable} ${dancingScript.variable} ${jost.variable} ${archivoBlack.variable} font-sans antialiased min-h-screen flex flex-col`}>
+      <body className={`${inter.variable} ${dancingScript.variable} ${jost.variable} ${archivoBlack.variable} ${spaceMono.variable} font-sans antialiased min-h-screen flex flex-col`}>
         <NextIntlClientProvider messages={messages}>
           <Providers>
           {children}
