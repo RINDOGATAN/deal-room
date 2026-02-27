@@ -1,7 +1,7 @@
 "use client";
 
 import { Lock, Brain, Globe, FileSignature } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 import { AuthProvider } from "./auth/AuthContext";
 import StartupProductPage from "./components/StartupProductPage";
 import StartupsHeader from "./components/StartupsHeader";
@@ -20,8 +20,6 @@ const t = (key: string) => (dict as Record<string, string>)[key] ?? key;
 const tAuth = (key: string) => (authDict as Record<string, string>)[key] ?? key;
 
 export default function LandingPage() {
-  const router = useRouter();
-
   const features = [
     {
       id: "enc",
@@ -85,7 +83,7 @@ export default function LandingPage() {
         valueProps={valueProps}
         socialProofs={socialProofs}
         heroVideo="/hero-dealroom-bg.mp4"
-        onAuthenticated={() => router.push("/sign-in")}
+        onAuthenticated={() => signIn("google", { callbackUrl: "/deals" })}
       />
       <StartupsFooter t={t} />
     </AuthProvider>
