@@ -73,7 +73,7 @@ export default function LandingPage() {
         t={t}
         locale="en"
         onLocaleToggle={() => {}}
-        onSignup={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+        onSignup={() => window.location.href = "/sign-in"}
       />
       <StartupProductPage
         t={t}
