@@ -8,6 +8,7 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-display);
+  --font-body: var(--font-display), ui-sans-serif, system-ui, sans-serif;
   --font-signature: var(--font-signature);
   --font-display: var(--font-display);
   --font-heading: var(--font-heading);
@@ -262,6 +263,12 @@
 }
 
 @layer components {
+  /* Centered container — matches startups.todo.law (1400px max) */
+  .container {
+    @apply mx-auto w-full;
+    max-width: 1400px;
+  }
+
   /* Button variants — use CSS variables */
   .btn-brutal {
     @apply bg-primary text-primary-foreground font-semibold px-6 py-3 rounded-full;
