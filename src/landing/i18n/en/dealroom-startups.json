@@ -1,4 +1,7 @@
 {
+  "header.badge": "Dealroom",
+  "header.cta": "Get Started",
+
   "hero.badge": "Contract Negotiation",
   "hero.title.prefix": "Close better deals. ",
   "hero.title.accent": "Without delay.",
@@ -80,5 +83,10 @@
   "cta.heading.accent": "deal",
   "cta.heading.suffix": "?",
   "cta.text": "Start negotiating smarter today. Free for startups.",
-  "cta.button": "Launch Dealroom"
+  "cta.button": "Launch Dealroom",
+
+  "footer.tagline": "Contract negotiation platform",
+  "footer.privacy": "Privacy",
+  "footer.terms": "Terms",
+  "footer.forLawFirms": "For Law Firms"
 }
