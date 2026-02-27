@@ -89,16 +89,29 @@ const StartupProductPage = ({
     else vid.addEventListener("canplay", tryPlay, { once: true });
   }, []);
 
+  const sendMagicLink = async (email: string): Promise<boolean> => {
+    const csrfRes = await fetch("/api/auth/csrf");
+    const { csrfToken } = await csrfRes.json();
+    const res = await fetch("/api/auth/signin/email", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({ csrfToken, email, callbackUrl, json: "true" }),
+    });
+    const data = await res.json();
+    const url = new URL(data.url, window.location.origin);
+    return res.ok && !url.searchParams.get("error");
+  };
+
   const handleMagicLink = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setSending(true);
     try {
-      const result = await signIn("email", { email: emailInput, redirect: false, callbackUrl });
-      if (result?.error) {
-        setError("Failed to send sign-in link. Please try again.");
-      } else {
+      const ok = await sendMagicLink(emailInput);
+      if (ok) {
         setCardMode("sent");
+      } else {
+        setError("Email sign-in is not available. Please use Google.");
       }
     } catch {
       setError("Failed to send sign-in link. Please try again.");
@@ -111,8 +124,8 @@ const StartupProductPage = ({
     setError("");
     setSending(true);
     try {
-      const result = await signIn("email", { email: emailInput, redirect: false, callbackUrl });
-      if (result?.error) {
+      const ok = await sendMagicLink(emailInput);
+      if (!ok) {
         setError("Failed to resend link. Please try again.");
       }
     } catch {
