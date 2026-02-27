@@ -1,4 +1,7 @@
 {
+  "header.badge": "Dealroom",
+  "header.cta": "Empezar",
+
   "hero.badge": "Negociación de Contratos",
   "hero.title.prefix": "Contratos sólidos. ",
   "hero.title.accent": "Sin paseos.",
@@ -80,5 +83,10 @@
   "cta.heading.accent": "acuerdo",
   "cta.heading.suffix": "?",
   "cta.text": "Empieza a negociar de forma más inteligente. Gratis para startups.",
-  "cta.button": "Lanzar Dealroom"
+  "cta.button": "Lanzar Dealroom",
+
+  "footer.tagline": "Plataforma de negociación de contratos",
+  "footer.privacy": "Privacidad",
+  "footer.terms": "Condiciones",
+  "footer.forLawFirms": "Para Despachos"
 }
