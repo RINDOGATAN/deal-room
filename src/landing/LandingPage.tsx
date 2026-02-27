@@ -2,6 +2,7 @@
 
 import { Lock, Brain, Globe, FileSignature } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { AuthProvider } from "./auth/AuthContext";
 import StartupProductPage from "./components/StartupProductPage";
 import StartupsHeader from "./components/StartupsHeader";
 import StartupsFooter from "./components/StartupsFooter";
@@ -69,7 +70,7 @@ export default function LandingPage() {
   const socialProofs = [t("social.s1"), t("social.s2"), t("social.s3")];
 
   return (
-    <>
+    <AuthProvider>
       <StartupsHeader
         t={t}
         locale="en"
@@ -87,6 +88,6 @@ export default function LandingPage() {
         onAuthenticated={() => router.push("/sign-in")}
       />
       <StartupsFooter t={t} />
-    </>
+    </AuthProvider>
   );
 }
