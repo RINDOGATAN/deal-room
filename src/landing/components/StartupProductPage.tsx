@@ -69,6 +69,18 @@ const StartupProductPage = ({
   const [emailInput, setEmailInput] = useState("");
   const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
+  const emailProviderRef = useRef<string | null>(null);
+
+  // Detect which email-type provider is registered (v4 "email" vs v5 "resend")
+  useEffect(() => {
+    fetch("/api/auth/providers")
+      .then((r) => r.json())
+      .then((providers) => {
+        const ep = providers.email || providers.resend;
+        emailProviderRef.current = ep?.id ?? null;
+      })
+      .catch(() => {});
+  }, []);
 
   // Robust autoplay with interaction fallback
   useEffect(() => {
@@ -90,16 +102,22 @@ const StartupProductPage = ({
   }, []);
 
   const sendMagicLink = async (email: string): Promise<boolean> => {
+    const providerId = emailProviderRef.current;
+    if (!providerId) return false;
     const csrfRes = await fetch("/api/auth/csrf");
     const { csrfToken } = await csrfRes.json();
-    const res = await fetch("/api/auth/signin/email", {
+    const res = await fetch(`/api/auth/signin/${providerId}`, {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: new URLSearchParams({ csrfToken, email, callbackUrl, json: "true" }),
     });
-    const data = await res.json();
-    const url = new URL(data.url, window.location.origin);
-    return res.ok && !url.searchParams.get("error");
+    const ct = res.headers.get("content-type") || "";
+    if (ct.includes("application/json")) {
+      const data = await res.json();
+      const url = new URL(data.url, window.location.origin);
+      return res.ok && !url.searchParams.get("error");
+    }
+    return res.ok;
   };
 
   const handleMagicLink = async (e: React.FormEvent) => {
