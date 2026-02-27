@@ -3,6 +3,7 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* Colors and fonts: inline (reference CSS custom props defined in :root) */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -42,7 +43,14 @@
   --color-card: var(--card);
   --color-lime: var(--lime);
   --color-lime-foreground: var(--lime-foreground);
-  /* Rounded corners */
+}
+
+/* Radii and shadows: NON-inline so they emit CSS custom properties
+   that [data-brand="northend"] can override at runtime.
+   With @theme inline these were baked in as literals — rounded-xl
+   compiled to "border-radius: 20px" instead of "var(--radius-xl)",
+   making the northend overrides completely ineffective. */
+@theme {
   --radius-sm: 8px;
   --radius-md: 12px;
   --radius-lg: 16px;
@@ -50,7 +58,7 @@
   --radius-2xl: 24px;
   --radius-3xl: 32px;
   --radius-4xl: 9999px;
-  /* Shadows */
+  /* Custom shadows */
   --shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.25);
   --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.3);
   --shadow-hover: 0 8px 32px rgba(0, 0, 0, 0.4);
@@ -171,8 +179,9 @@
   --radius: 0;
 }
 
-/* Northend: override @theme radii and shadows */
+/* Northend: override radii, shadows, and add glow tokens */
 [data-brand="northend"] {
+  /* Brutalist radii — all zero (now effective because @theme emits CSS vars) */
   --radius-sm: 0;
   --radius-md: 0;
   --radius-lg: 0;
@@ -180,9 +189,21 @@
   --radius-2xl: 0;
   --radius-3xl: 0;
   --radius-4xl: 0;
+  /* Kill Tailwind default shadows (used by shadcn/ui components) */
+  --shadow-2xs: none;
+  --shadow-xs: none;
+  --shadow-sm: none;
+  --shadow-md: none;
+  --shadow-lg: none;
+  --shadow-xl: none;
+  --shadow-2xl: none;
+  /* Kill custom shadows */
   --shadow-soft: none;
   --shadow-card: none;
   --shadow-hover: none;
+  /* Glow effects — brutalist accent lighting */
+  --glow-primary: 0 0 40px rgba(19, 233, 209, 0.3);
+  --glow-strong: 0 0 80px rgba(19, 233, 209, 0.5);
 }
 
 @layer base {
@@ -219,15 +240,20 @@
     font-weight: 400;
     letter-spacing: -0.01em;
   }
-  /* Northend: headings use body font (no Archivo Black) */
+  /* Northend: body uses Space Mono (monospace, brutalist) */
+  [data-brand="northend"] body {
+    font-family: var(--font-space-mono), ui-monospace, monospace;
+  }
+  /* Northend: headings keep Archivo Black (bold, tight tracking) */
   [data-brand="northend"] h1,
   [data-brand="northend"] h2,
   [data-brand="northend"] h3,
   [data-brand="northend"] h4,
   [data-brand="northend"] h5,
   [data-brand="northend"] h6 {
-    font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
+    font-family: var(--font-heading), ui-sans-serif, system-ui, sans-serif;
     font-weight: 700;
+    letter-spacing: -0.025em;
   }
   /* Focus states */
   *:focus-visible {
@@ -367,6 +393,22 @@
   }
   [data-brand="northend"] .tab-brutal {
     @apply rounded-none;
+  }
+
+  /* Brutalist borders (northend accent) */
+  .brutalist-border {
+    @apply border-2 border-foreground;
+  }
+  .brutalist-border-accent {
+    @apply border-2 border-primary;
+  }
+
+  /* Glow effects */
+  .glow-accent {
+    box-shadow: var(--glow-primary, none);
+  }
+  .glow-accent-strong {
+    box-shadow: var(--glow-strong, none);
   }
 
   /* Selection highlight */
