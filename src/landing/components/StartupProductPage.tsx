@@ -167,7 +167,7 @@ const StartupProductPage = ({
       <button
         type="button"
         onClick={handleGoogleSignIn}
-        className="w-full flex items-center justify-center gap-3 px-4 py-3 bg-white border border-border rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-50 transition-all"
+        className="w-full flex items-center justify-center gap-3 px-4 py-3 bg-secondary/50 border border-border rounded-xl text-sm font-medium text-muted-foreground hover:bg-secondary hover:text-foreground transition-all"
       >
         <GoogleIcon />
         Continue with Google
