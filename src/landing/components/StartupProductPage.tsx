@@ -29,7 +29,6 @@ interface StartupProductPageProps {
   features: Feature[];
   workflowSteps: WorkflowStep[];
   valueProps: ValueProp[];
-  socialProofs: string[];
   heroVideo: string;
   accentGradient?: string;
   callbackUrl: string;
@@ -59,7 +58,6 @@ const StartupProductPage = ({
   features,
   workflowSteps,
   valueProps,
-  socialProofs,
   heroVideo,
   accentGradient = "from-accent/20 to-accent/5",
   callbackUrl,
@@ -320,22 +318,6 @@ const StartupProductPage = ({
         </div>
       </section>
 
-      {/* SOCIAL PROOF BAR */}
-      <section className="py-6 border-y border-border bg-secondary/20">
-        <div className="container px-6">
-          <div className="flex flex-wrap items-center justify-center gap-6 md:gap-12">
-            <span className="text-xs text-muted-foreground font-body uppercase tracking-wider">
-              {t("social.title")}
-            </span>
-            {socialProofs.map((proof) => (
-              <div key={proof} className="flex items-center gap-2">
-                <Check className="w-3.5 h-3.5 text-accent" />
-                <span className="text-sm font-body text-foreground/80">{proof}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* VALUE PROPS */}
       <section className="py-20 md:py-28">
