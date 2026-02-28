@@ -16,7 +16,7 @@ const StartupsHeader = ({ t, locale, onLocaleToggle, onSignup }: StartupsHeaderP
     <header className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-2rem)] max-w-5xl">
       <div className="nav-header px-6">
         <div className="flex items-center justify-between h-14">
-          <a href="/" className="flex items-center gap-3">
+          <a href="https://todo.law" className="flex items-center gap-3">
             <span className="text-lg font-bold tracking-tight text-foreground">
               TODO.LAW<sup className="text-xs align-super">&trade;</sup>
             </span>
