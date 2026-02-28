@@ -91,8 +91,6 @@ export default function LandingPage() {
     desc: t(`value.v${n}.desc`),
   }));
 
-  const socialProofs = [t("social.s1"), t("social.s2"), t("social.s3")];
-
   return (
     <>
       <StartupsHeader
@@ -107,7 +105,6 @@ export default function LandingPage() {
         features={features}
         workflowSteps={workflowSteps}
         valueProps={valueProps}
-        socialProofs={socialProofs}
         heroVideo="/hero-dealroom-bg.mp4"
         callbackUrl="/deals"
       />
