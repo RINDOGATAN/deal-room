@@ -52,6 +52,10 @@ export default async function RootLayout({
 
   return (
     <html lang={locale} data-brand={brand.id}>
+      <head>
+        <link rel="dns-prefetch" href="https://t.sealmetrics.com" />
+        <script async src="https://t.sealmetrics.com/t.js?id=todolaw" />
+      </head>
       <body className={`${inter.variable} ${dancingScript.variable} ${jost.variable} ${archivoBlack.variable} ${spaceMono.variable} font-sans antialiased min-h-screen flex flex-col`}>
         <NextIntlClientProvider messages={messages}>
           <Providers>
