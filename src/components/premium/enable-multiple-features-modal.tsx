@@ -93,7 +93,7 @@ export function EnableMultipleFeaturesModal({
                 Redirecting...
               </span>
             ) : (
-              `Subscribe — €${total}/month`
+              `Subscribe — ${formatPrice(total)}/month`
             )}
           </button>
         </DialogFooter>

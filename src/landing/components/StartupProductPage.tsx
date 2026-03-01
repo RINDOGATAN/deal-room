@@ -168,7 +168,7 @@ const StartupProductPage = ({
         className="w-full flex items-center justify-center gap-3 px-4 py-3 bg-secondary/50 border border-border rounded-xl text-sm font-medium text-muted-foreground hover:bg-secondary hover:text-foreground transition-all"
       >
         <GoogleIcon />
-        Continue with Google
+        {tAuth("continueWithGoogle")}
       </button>
     </>
   );
