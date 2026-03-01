@@ -281,7 +281,7 @@ const StartupProductPage = ({
                     <div className="relative animate-fade-in">
                       <h2 className="text-xl md:text-2xl font-display mb-2">{t("hero.cta")}</h2>
                       <p className="text-sm text-muted-foreground font-body mb-6">
-                        {t("hero.subtitle").split(".")[0]}.
+                        {t("hero.cta.subtitle")}
                       </p>
                       <form onSubmit={handleMagicLink} className="space-y-4">
                         <input
