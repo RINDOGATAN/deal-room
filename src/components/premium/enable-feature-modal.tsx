@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
+import { formatPrice } from "@/lib/currency";
 import {
   Dialog,
   DialogContent,
@@ -55,7 +56,7 @@ export function EnableFeatureModal({
         <DialogHeader>
           <DialogTitle>Enable {skillName}</DialogTitle>
           <DialogDescription>
-            Add this feature to your account for €9/month. You can cancel
+            Add this feature to your account for {formatPrice(9)}/month. You can cancel
             anytime from the billing portal.
           </DialogDescription>
         </DialogHeader>
@@ -80,7 +81,7 @@ export function EnableFeatureModal({
                 Redirecting...
               </span>
             ) : (
-              "Subscribe — €9/month"
+              `Subscribe — ${formatPrice(9)}/month`
             )}
           </button>
         </DialogFooter>

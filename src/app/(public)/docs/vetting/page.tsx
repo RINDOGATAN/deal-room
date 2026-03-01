@@ -12,6 +12,7 @@ import {
   CreditCard,
   ArrowRight,
 } from "lucide-react";
+import { formatPrice } from "@/lib/currency";
 
 export default function VettingPage() {
   const t = useTranslations("vetting");
@@ -213,7 +214,7 @@ export default function VettingPage() {
             <div className="flex items-center gap-2 mb-3">
               <CreditCard className="w-4 h-4 text-primary" />
               <span className="text-xs px-2 py-1 bg-primary/10 text-primary border border-primary/20 rounded-full font-medium">
-                €9/month
+                {formatPrice(9)}/month
               </span>
             </div>
             <p className="text-sm text-muted-foreground mb-3">
