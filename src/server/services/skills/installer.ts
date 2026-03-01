@@ -290,6 +290,7 @@ export class SkillPackageInstaller {
             jurisdictions: manifest.jurisdictions,
             languages: manifest.languages,
             isActive: true,
+            isPremium: true,
           },
           update: {
             name: manifest.name,
