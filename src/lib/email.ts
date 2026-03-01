@@ -210,3 +210,69 @@ export async function sendJointCounselAssignmentEmail({
     console.error("Failed to send joint counsel assignment email:", error);
   }
 }
+
+interface SendSigningInitiatedEmailParams {
+  to: string;
+  partyName: string;
+  dealName: string;
+  initiatedByName: string;
+  dealRoomId: string;
+}
+
+export async function sendSigningInitiatedEmail({
+  to,
+  partyName,
+  dealName,
+  initiatedByName,
+  dealRoomId,
+}: SendSigningInitiatedEmailParams) {
+  const dealUrl = `${process.env.NEXTAUTH_URL}/deals/${dealRoomId}/review`;
+
+  try {
+    await getResend().emails.send({
+      from: emailFrom(),
+      to,
+      subject: `Ready to sign: ${dealName}`,
+      html: emailWrapper("Contract Signing", `
+        <p style="color: #e5e5e5; font-size: 15px; line-height: 1.6; margin: 0 0 16px;">Dear <strong style="color: ${brand.colors.foreground};">${partyName}</strong>,</p>
+        ${emailParagraph(`<strong style="color: ${brand.colors.foreground};">${initiatedByName}</strong> has initiated signing for <strong style="color: ${brand.colors.foreground};">${dealName}</strong>. Please review your execution details and sign.`)}
+        ${emailButton(dealUrl, "Go to Deal")}
+      `),
+    });
+  } catch (error) {
+    console.error("Failed to send signing initiated email:", error);
+  }
+}
+
+interface SendCounterpartySignedEmailParams {
+  to: string;
+  partyName: string;
+  dealName: string;
+  signerName: string;
+  dealRoomId: string;
+}
+
+export async function sendCounterpartySignedEmail({
+  to,
+  partyName,
+  dealName,
+  signerName,
+  dealRoomId,
+}: SendCounterpartySignedEmailParams) {
+  const dealUrl = `${process.env.NEXTAUTH_URL}/deals/${dealRoomId}/review`;
+
+  try {
+    await getResend().emails.send({
+      from: emailFrom(),
+      to,
+      subject: `${signerName} has signed: ${dealName}`,
+      html: emailWrapper("Contract Signing", `
+        <p style="color: #e5e5e5; font-size: 15px; line-height: 1.6; margin: 0 0 16px;">Dear <strong style="color: ${brand.colors.foreground};">${partyName}</strong>,</p>
+        ${emailParagraph(`<strong style="color: ${brand.colors.foreground};">${signerName}</strong> has signed <strong style="color: ${brand.colors.foreground};">${dealName}</strong>. It's now your turn to review and sign.`)}
+        ${emailButton(dealUrl, "Sign Now")}
+      `),
+    });
+  } catch (error) {
+    console.error("Failed to send counterparty signed email:", error);
+  }
+}

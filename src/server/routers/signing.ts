@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
+import { sendSigningInitiatedEmail, sendCounterpartySignedEmail } from "@/lib/email";
 
 const signingDetailsSchema = z.object({
   legalName: z.string().min(1),
@@ -248,8 +249,25 @@ export const signingRouter = createTRPCRouter({
         },
       });
 
-      // TODO: Send emails to both parties with signing links
-      // This would integrate with Resend email service
+      // Notify both parties that signing has been initiated
+      const dealName = party.dealRoom.contractTemplate?.displayName || "Deal";
+      const initiatedByName = party.name || ctx.session.user.email || "A party";
+
+      for (const p of party.dealRoom.parties) {
+        if (p.user?.email) {
+          try {
+            await sendSigningInitiatedEmail({
+              to: p.user.email,
+              partyName: p.name || p.user.email,
+              dealName,
+              initiatedByName,
+              dealRoomId: input.dealRoomId,
+            });
+          } catch (error) {
+            console.error("Failed to send signing initiated email:", error);
+          }
+        }
+      }
 
       return signingRequest;
     }),
@@ -268,7 +286,10 @@ export const signingRouter = createTRPCRouter({
         include: {
           dealRoom: {
             include: {
-              parties: true,
+              parties: {
+                include: { user: true },
+              },
+              contractTemplate: true,
             },
           },
         },
@@ -373,6 +394,28 @@ export const signingRouter = createTRPCRouter({
           },
         },
       });
+
+      // Notify the other party when one side signs (partially signed)
+      if (updated.status === "PARTIALLY_SIGNED") {
+        const otherParty = signingRequest.dealRoom.parties.find(
+          (p) => p.role !== input.partyRole
+        );
+        if (otherParty?.user?.email) {
+          const dealName = signingRequest.dealRoom.contractTemplate?.displayName || "Deal";
+          const signerName = party.name || ctx.session.user.email || "The other party";
+          try {
+            await sendCounterpartySignedEmail({
+              to: otherParty.user.email,
+              partyName: otherParty.name || otherParty.user.email,
+              dealName,
+              signerName,
+              dealRoomId: signingRequest.dealRoomId,
+            });
+          } catch (error) {
+            console.error("Failed to send counterparty signed email:", error);
+          }
+        }
+      }
 
       return updated;
     }),
