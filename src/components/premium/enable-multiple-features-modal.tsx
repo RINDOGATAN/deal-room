@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
+import { formatPrice } from "@/lib/currency";
 import {
   Dialog,
   DialogContent,
@@ -63,13 +64,13 @@ export function EnableMultipleFeaturesModal({
           {skills.map((s) => (
             <li key={s.id} className="flex items-center justify-between">
               <span>{s.name}</span>
-              <span className="text-muted-foreground">€9/mo</span>
+              <span className="text-muted-foreground">{formatPrice(9)}/mo</span>
             </li>
           ))}
         </ul>
         <div className="border-t border-border pt-3 text-sm font-medium flex items-center justify-between">
           <span>Monthly total</span>
-          <span>€{total}/month</span>
+          <span>{formatPrice(total)}/month</span>
         </div>
         {error && (
           <p className="text-sm text-destructive bg-destructive/10 px-3 py-2 rounded-xl">{error}</p>

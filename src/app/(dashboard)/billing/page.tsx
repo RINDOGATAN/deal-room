@@ -6,6 +6,7 @@ import { Loader2, CheckCircle2, Circle, XCircle, Download } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { EnableFeatureModal } from "@/components/premium/enable-feature-modal";
 import { EnableMultipleFeaturesModal } from "@/components/premium/enable-multiple-features-modal";
+import { formatPrice } from "@/lib/currency";
 import {
   Dialog,
   DialogContent,
@@ -222,8 +223,7 @@ export default function BillingPage() {
         {selectedIds.size > 0 && (
           <div className="mt-4 flex items-center justify-between rounded-xl border border-border p-3">
             <p className="text-sm text-muted-foreground">
-              {selectedIds.size} {t("featuresSelected")} — €
-              {selectedIds.size * 9}/{t("month")}
+              {selectedIds.size} {t("featuresSelected")} — {formatPrice(selectedIds.size * 9)}/{t("month")}
             </p>
             <button
               className="btn-brutal text-xs px-3 py-1.5"
@@ -240,7 +240,7 @@ export default function BillingPage() {
         <div className="text-sm text-muted-foreground">
           <p>
             {t("monthlyTotal")}:{" "}
-            <span className="font-semibold text-foreground">€{monthlyTotal}</span>
+            <span className="font-semibold text-foreground">{formatPrice(monthlyTotal)}</span>
           </p>
           <p>
             {t("monthlyTotalDescription", { count: activeCount })}

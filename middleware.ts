@@ -4,6 +4,20 @@ import type { NextRequest } from "next/server";
 export function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
 
+  // Set currency cookie based on geo-IP (US → USD, else EUR)
+  const hasCurrency = request.cookies.has("currency");
+  if (!hasCurrency) {
+    const country = request.headers.get("x-vercel-ip-country") || "";
+    const currency = country === "US" ? "USD" : "EUR";
+    const response = NextResponse.next();
+    response.cookies.set("currency", currency, {
+      path: "/",
+      maxAge: 60 * 60 * 24 * 30, // 30 days
+      sameSite: "lax",
+    });
+    return response;
+  }
+
   // Supervisor portal protection
   if (path.startsWith("/supervise")) {
     // Allow auth pages
@@ -59,7 +73,6 @@ export function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/supervise/:path*",
-    "/admin/:path*",
+    "/((?!api|_next/static|_next/image|favicon).*)",
   ],
 };

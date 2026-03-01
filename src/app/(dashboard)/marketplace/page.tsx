@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { EnableFeatureModal } from "@/components/premium/enable-feature-modal";
+import { formatPrice } from "@/lib/currency";
 import { useTranslations } from "next-intl";
 
 const JURISDICTION_LABELS: Record<string, string> = {
@@ -170,7 +171,7 @@ export default function MarketplacePage() {
                   ) : (
                     <span className="inline-block px-2.5 py-1 text-xs font-semibold text-foreground">
                       {skill.priceAmount
-                        ? `€${(skill.priceAmount / 100).toFixed(0)}/${t("month")}`
+                        ? `${formatPrice(skill.priceAmount / 100)}/${t("month")}`
                         : t("contactUs")}
                     </span>
                   )}
