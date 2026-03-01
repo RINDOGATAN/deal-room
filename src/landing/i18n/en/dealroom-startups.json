@@ -3,11 +3,12 @@
   "header.cta": "Sign In",
 
   "hero.badge": "Contract Negotiation",
-  "hero.title.prefix": "Close better deals. ",
-  "hero.title.accent": "Without delay.",
+  "hero.title.prefix": "Close better deals.",
+  "hero.title.accent": "",
   "hero.title.suffix": "",
-  "hero.subtitle": "Stop emailing Word files back and forth. Negotiate contracts on a secure platform that finds the optimal compromise for both parties — powered by AI.",
+  "hero.subtitle": "Stop emailing Word files back and forth and move on from risky templates. Negotiate contracts on a secure platform that finds the optimal compromise for both parties — powered by AI.",
   "hero.cta": "Get Started Free",
+  "hero.cta.subtitle": "Stop emailing Word files back and forth - and move on from risky templates.",
   "hero.login": "Already have an account? Log in",
   "hero.platform_url": "https://dealroom.todo.law",
 
