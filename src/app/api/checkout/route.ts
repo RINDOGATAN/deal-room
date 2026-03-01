@@ -62,8 +62,12 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Resolve Stripe price for each package
-    const fallbackPriceId = process.env.STRIPE_PRICE_ID;
+    // Resolve Stripe price for each package (USD for US visitors, EUR otherwise)
+    const country = request.headers.get("x-vercel-ip-country") || "";
+    const isUSD = country === "US";
+    const fallbackPriceId = isUSD
+      ? (process.env.STRIPE_PRICE_ID_USD || process.env.STRIPE_PRICE_ID)
+      : process.env.STRIPE_PRICE_ID;
     const lineItems: { priceId: string; packageId: string }[] = [];
     for (const pkg of skillPackages) {
       const priceId = pkg.stripePriceId || fallbackPriceId;
