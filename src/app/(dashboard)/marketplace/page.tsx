@@ -244,6 +244,7 @@ export default function MarketplacePage() {
           onClose={() => setEnableSkill(null)}
           skillPackageId={enableSkill.id}
           skillName={enableSkill.name}
+          returnUrl="/marketplace"
         />
       )}
     </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { Loader2, CheckCircle2, Circle, XCircle, Download } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { EnableFeatureModal } from "@/components/premium/enable-feature-modal";
@@ -20,6 +20,7 @@ import { useTranslations } from "next-intl";
 
 export default function BillingPage() {
   const t = useTranslations("billing");
+  const router = useRouter();
   const searchParams = useSearchParams();
   const [enableSkill, setEnableSkill] = useState<{
     id: string;
@@ -54,14 +55,20 @@ export default function BillingPage() {
     },
   });
 
-  // Show toast on checkout redirect
+  // Show toast on checkout redirect and auto-redirect back if returnUrl present
   useEffect(() => {
     if (searchParams.get("success") === "true") {
+      const returnUrl = searchParams.get("returnUrl");
+      if (returnUrl) {
+        toast.success(t("checkoutSuccess"));
+        const timer = setTimeout(() => router.push(returnUrl), 1500);
+        return () => clearTimeout(timer);
+      }
       toast.success(t("checkoutSuccess"));
     } else if (searchParams.get("cancelled") === "true") {
       toast(t("checkoutCancelled"));
     }
-  }, [searchParams, t]);
+  }, [searchParams, t, router]);
 
   if (statusLoading || plansLoading) {
     return (

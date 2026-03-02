@@ -407,6 +407,7 @@ export default function VettingDetailPage() {
                   onClose={() => setShowEnableModal(false)}
                   skillPackageId={vettedStatus.skillPackageId}
                   skillName="Vetted Contracts"
+                  returnUrl={`/lawyer/vettings/${vettingId}`}
                 />
               )}
             </>

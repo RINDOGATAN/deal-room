@@ -17,6 +17,7 @@ interface EnableFeatureModalProps {
   onClose: () => void;
   skillPackageId: string;
   skillName: string;
+  returnUrl?: string;
 }
 
 export function EnableFeatureModal({
@@ -24,6 +25,7 @@ export function EnableFeatureModal({
   onClose,
   skillPackageId,
   skillName,
+  returnUrl,
 }: EnableFeatureModalProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -35,7 +37,7 @@ export function EnableFeatureModal({
       const res = await fetch("/api/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ skillPackageIds: [skillPackageId] }),
+        body: JSON.stringify({ skillPackageIds: [skillPackageId], returnUrl }),
       });
       const data = await res.json();
       if (data.url) {

@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { skillPackageIds } = body as { skillPackageIds?: string[] };
+    const { skillPackageIds, returnUrl } = body as { skillPackageIds?: string[]; returnUrl?: string };
 
     if (!skillPackageIds?.length) {
       return NextResponse.json(
@@ -100,8 +100,12 @@ export async function POST(request: NextRequest) {
       customerId,
       skillPackageIds: lineItems.map((l) => l.packageId),
       lineItems: [...priceQuantities.entries()].map(([price, quantity]) => ({ price, quantity })),
-      successUrl: `${origin}/billing?success=true`,
-      cancelUrl: `${origin}/billing?cancelled=true`,
+      successUrl: returnUrl
+        ? `${origin}/billing?success=true&returnUrl=${encodeURIComponent(returnUrl)}`
+        : `${origin}/billing?success=true`,
+      cancelUrl: returnUrl
+        ? `${origin}${returnUrl}`
+        : `${origin}/billing?cancelled=true`,
     });
 
     return NextResponse.json({ url: checkoutSession.url });
