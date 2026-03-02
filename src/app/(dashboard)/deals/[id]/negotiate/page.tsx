@@ -99,10 +99,15 @@ export default function NegotiatePage() {
                                 initiatorParty?.status === "ACCEPTED";
   const canPrePopulate = isRespondent && hasInitiatorSubmitted;
 
+  const isSoloMode = (deal as any)?.dealMode === "SOLO";
+
   const saveSelections = trpc.selections.bulkSave.useMutation();
   const submitSelections = trpc.deal.submitSelections.useMutation({
     onSuccess: (result) => {
-      if (result.bothSubmitted) {
+      if ((result as any).soloCompleted) {
+        toast.success(contractLang === "es" ? "Documento generado" : "Document generated");
+        router.push(`/deals/${dealId}`);
+      } else if (result.bothSubmitted) {
         toast.success(t("toastMessages.bothPartiesSubmitted"));
         router.push(`/deals/${dealId}/review`);
       } else {
@@ -705,9 +710,13 @@ export default function NegotiatePage() {
                         {/* Pros/Cons */}
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                           <div>
-                            <p className="text-xs font-medium text-primary uppercase tracking-wider mb-2">{t("prosForYou")}</p>
+                            <p className="text-xs font-medium text-primary uppercase tracking-wider mb-2">
+                              {isSoloMode
+                                ? (contractLang === "es" ? "Ventajas" : "Advantages")
+                                : t("prosForYou")}
+                            </p>
                             <ul className="space-y-1">
-                              {(deal.currentUserRole === "INITIATOR" ? option.prosPartyA : option.prosPartyB).map((pro, i) => (
+                              {(isSoloMode ? option.prosPartyA : (deal.currentUserRole === "INITIATOR" ? option.prosPartyA : option.prosPartyB)).map((pro, i) => (
                                 <li key={i} className="text-sm text-muted-foreground flex items-start gap-2">
                                   <span className="text-primary">+</span>
                                   {pro}
@@ -716,9 +725,13 @@ export default function NegotiatePage() {
                             </ul>
                           </div>
                           <div>
-                            <p className="text-xs font-medium text-warning uppercase tracking-wider mb-2">{t("consForYou")}</p>
+                            <p className="text-xs font-medium text-warning uppercase tracking-wider mb-2">
+                              {isSoloMode
+                                ? (contractLang === "es" ? "Consideraciones" : "Considerations")
+                                : t("consForYou")}
+                            </p>
                             <ul className="space-y-1">
-                              {(deal.currentUserRole === "INITIATOR" ? option.consPartyA : option.consPartyB).map((con, i) => (
+                              {(isSoloMode ? option.consPartyA : (deal.currentUserRole === "INITIATOR" ? option.consPartyA : option.consPartyB)).map((con, i) => (
                                 <li key={i} className="text-sm text-muted-foreground flex items-start gap-2">
                                   <span className="text-warning">-</span>
                                   {con}
@@ -743,8 +756,8 @@ export default function NegotiatePage() {
             })}
           </div>
 
-          {/* Priority & Flexibility */}
-          {currentSelection && (
+          {/* Priority & Flexibility (hidden in solo mode) */}
+          {currentSelection && !isSoloMode && (
             <div className="card-brutal space-y-6">
               <div className="flex items-center gap-2">
                 <Sliders className="w-4 h-4 text-muted-foreground" />
@@ -869,7 +882,9 @@ export default function NegotiatePage() {
                     </>
                   ) : (
                     <>
-                      {t("submitAllSelections")}
+                      {isSoloMode
+                        ? (contractLang === "es" ? "Confirmar y generar documento" : "Confirm & Generate")
+                        : t("submitAllSelections")}
                       <Check className="w-4 h-4" />
                     </>
                   )}

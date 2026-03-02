@@ -19,6 +19,9 @@ import {
   Lock,
   Megaphone,
   Link2,
+  UserRound,
+  Users,
+  Download,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -64,10 +67,14 @@ interface TemplateInfo {
   languages: string[];
   requiresLicense: boolean;
   skillPackageId: string | null;
+  soloModeSupported: boolean;
+  soloModeDefault: boolean;
   hasAccess: boolean;
   entitledJurisdictions: string[];
   expiresAt: Date | null;
 }
+
+type DealMode = "NEGOTIATION" | "SOLO";
 
 // Group templates by family for display
 interface TemplateFamily {
@@ -160,6 +167,7 @@ export default function NewDealPage() {
   const [resolvedNativeTemplate, setResolvedNativeTemplate] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [parameterValues, setParameterValues] = useState<Record<string, string>>({});
+  const [dealMode, setDealMode] = useState<DealMode>("NEGOTIATION");
 
   // Lawyer vetting flow
   const vettingId = searchParams.get("vetting");
@@ -322,6 +330,7 @@ export default function NewDealPage() {
       contractType: selectedType,
       governingLaw: selectedJurisdiction,
       contractLanguage: selectedLanguage,
+      dealMode,
       initiatorCompany: company.trim() || undefined,
       lawyerVettingId: vettingId || undefined,
       parameters: hasParameters ? parameterValues : undefined,
@@ -552,6 +561,12 @@ export default function NewDealPage() {
                   setSelectedFamily(family.family);
                   setSelectedType(family.primaryTemplate.contractType);
                   setResolvedNativeTemplate(null);
+                  // Auto-set deal mode based on template config
+                  if (family.primaryTemplate.soloModeDefault) {
+                    setDealMode("SOLO");
+                  } else {
+                    setDealMode("NEGOTIATION");
+                  }
                   // Reset jurisdiction when changing contract type
                   if (family.family !== selectedFamily) {
                     setSelectedJurisdiction(null);
@@ -804,13 +819,93 @@ export default function NewDealPage() {
         </div>
       )}
 
-      {/* Step 4: Deal Details */}
+      {/* Step 4: Deal Mode (only for templates that support both modes) */}
+      {selectedFamily && selectedJurisdiction && (() => {
+        const currentTemplate = templates?.find((tmpl) => tmpl.contractType === selectedType);
+        const showModeSelector = currentTemplate?.soloModeSupported && !currentTemplate?.soloModeDefault;
+        if (!showModeSelector) return null;
+        return (
+          <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-300">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold rounded-full">
+                4
+              </div>
+              <Label className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
+                {locale === "es" ? "Modo" : "Mode"}
+              </Label>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <button
+                onClick={() => setDealMode("SOLO")}
+                className={`card-brutal text-left relative transition-colors p-4 ${
+                  dealMode === "SOLO" ? "border-primary" : "hover:border-muted-foreground"
+                }`}
+              >
+                {dealMode === "SOLO" && (
+                  <div className="absolute top-4 right-4 w-6 h-6 bg-primary flex items-center justify-center rounded-full">
+                    <Check className="w-4 h-4 text-primary-foreground" />
+                  </div>
+                )}
+                <div className="flex items-start gap-3">
+                  <div className={`w-10 h-10 flex items-center justify-center rounded-xl ${
+                    dealMode === "SOLO" ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
+                  }`}>
+                    <Download className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold">{locale === "es" ? "Configurar y descargar" : "Configure & download"}</h3>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      {locale === "es"
+                        ? "Selecciona las opciones y descarga el documento para firma manual"
+                        : "Select options and download the document for offline signing"}
+                    </p>
+                  </div>
+                </div>
+              </button>
+
+              <button
+                onClick={() => setDealMode("NEGOTIATION")}
+                className={`card-brutal text-left relative transition-colors p-4 ${
+                  dealMode === "NEGOTIATION" ? "border-primary" : "hover:border-muted-foreground"
+                }`}
+              >
+                {dealMode === "NEGOTIATION" && (
+                  <div className="absolute top-4 right-4 w-6 h-6 bg-primary flex items-center justify-center rounded-full">
+                    <Check className="w-4 h-4 text-primary-foreground" />
+                  </div>
+                )}
+                <div className="flex items-start gap-3">
+                  <div className={`w-10 h-10 flex items-center justify-center rounded-xl ${
+                    dealMode === "NEGOTIATION" ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
+                  }`}>
+                    <Users className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold">{locale === "es" ? "Negociar con contraparte" : "Negotiate with counterparty"}</h3>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      {locale === "es"
+                        ? "Invita a la otra parte para negociar las cláusulas"
+                        : "Invite the other party to negotiate clause options"}
+                    </p>
+                  </div>
+                </div>
+              </button>
+            </div>
+          </div>
+        );
+      })()}
+
+      {/* Step 5 (or 4): Deal Details */}
       {selectedFamily && selectedJurisdiction && (
         <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-300">
           <div className="space-y-4">
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold rounded-full">
-                4
+                {(() => {
+                  const currentTemplate = templates?.find((tmpl) => tmpl.contractType === selectedType);
+                  return currentTemplate?.soloModeSupported && !currentTemplate?.soloModeDefault ? 5 : 4;
+                })()}
               </div>
               <Label className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
                 {t("dealDetails")}
@@ -873,12 +968,15 @@ export default function NewDealPage() {
             </div>
           </div>
 
-          {/* Step 5: Deal Parameters (conditional) */}
+          {/* Deal Parameters (conditional) */}
           {hasParameters && (
             <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-300">
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold rounded-full">
-                  5
+                  {(() => {
+                    const currentTemplate = templates?.find((tmpl) => tmpl.contractType === selectedType);
+                    return (currentTemplate?.soloModeSupported && !currentTemplate?.soloModeDefault ? 6 : 5);
+                  })()}
                 </div>
                 <Label className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
                   {t("dealParameters")}

@@ -1,0 +1,13 @@
+{
+  "contractType": "PHANTOM_SHARES_GRANT",
+  "displayName": { "es": "Asignación Individual de Phantom Shares" },
+  "description": { "es": "Contrato individual de asignación de participaciones fantasma conforme al plan marco" },
+  "category": { "es": "Retribución" },
+  "version": "1.0",
+  "clauseCount": 5,
+  "templateFamily": "PHANTOM_SHARES",
+  "jurisdictions": ["SPAIN"],
+  "languages": ["es"],
+  "soloModeSupported": true,
+  "soloModeDefault": false
+}

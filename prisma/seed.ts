@@ -17,6 +17,9 @@ interface SkillMetadata {
   clauseCount: number;
   jurisdictions?: string[];
   languages?: string[];
+  soloModeSupported?: boolean;
+  soloModeDefault?: boolean;
+  templateFamily?: string;
 }
 
 interface SkillManifest {
@@ -321,7 +324,7 @@ async function main() {
         version: clausesData.version || metadata?.version || "1.0",
         skillPath: skillPath,
         skillPackageId: skillPackage?.id,
-        templateFamily: manifest?.templateFamily || null,
+        templateFamily: manifest?.templateFamily || metadata?.templateFamily || null,
         nativeJurisdiction: manifest?.nativeJurisdiction as any || null,
         boilerplate: boilerplate as Prisma.InputJsonValue ?? Prisma.DbNull,
         jurisdictions,
@@ -331,6 +334,8 @@ async function main() {
         category: resolvedCategory,
         categoryLocalized: categoryLocalized as Prisma.InputJsonValue ?? Prisma.DbNull,
         parameterSchema: parameterSchema as Prisma.InputJsonValue ?? Prisma.DbNull,
+        soloModeSupported: metadata?.soloModeSupported ?? false,
+        soloModeDefault: metadata?.soloModeDefault ?? false,
         isActive: true,
       },
       update: {
@@ -339,7 +344,7 @@ async function main() {
         version: clausesData.version || metadata?.version,
         skillPath: skillPath,
         skillPackageId: skillPackage?.id,
-        templateFamily: manifest?.templateFamily || null,
+        templateFamily: manifest?.templateFamily || metadata?.templateFamily || null,
         nativeJurisdiction: manifest?.nativeJurisdiction as any || null,
         boilerplate: boilerplate as Prisma.InputJsonValue ?? Prisma.DbNull,
         jurisdictions,
@@ -349,6 +354,8 @@ async function main() {
         category: resolvedCategory,
         categoryLocalized: categoryLocalized as Prisma.InputJsonValue ?? Prisma.DbNull,
         parameterSchema: parameterSchema as Prisma.InputJsonValue ?? Prisma.DbNull,
+        soloModeSupported: metadata?.soloModeSupported ?? false,
+        soloModeDefault: metadata?.soloModeDefault ?? false,
       },
     });
 

@@ -59,7 +59,7 @@ export interface ContractData {
   governingLawKey: string;
   createdAt: Date;
   partyA: PartyData;
-  partyB: PartyData;
+  partyB: PartyData | null;
   clauses: ClauseData[];
   boilerplate: BoilerplateData | null;
   language: string;
@@ -192,8 +192,13 @@ export async function generateContractData(
 
   const initiator = deal.parties.find((p) => p.role === "INITIATOR");
   const respondent = deal.parties.find((p) => p.role === "RESPONDENT");
+  const isSolo = deal.dealMode === "SOLO";
 
-  if (!initiator || !respondent) {
+  if (!initiator) {
+    return null;
+  }
+  // respondent is null in solo mode — that's OK
+  if (!respondent && !isSolo) {
     return null;
   }
 
@@ -286,18 +291,20 @@ export async function generateContractData(
 
   // Extract signing details
   const sdA = initiator.signingDetails as { legalName?: string; address?: string; taxId?: string; signatoryName?: string; signatoryTitle?: string } | null;
-  const sdB = respondent.signingDetails as { legalName?: string; address?: string; taxId?: string; signatoryName?: string; signatoryTitle?: string } | null;
+  const sdB = respondent?.signingDetails as { legalName?: string; address?: string; taxId?: string; signatoryName?: string; signatoryTitle?: string } | null;
 
   // Build party names with signing details → company → name fallback
   const partyAName = sdA?.legalName || initiator.company || initiator.name || initiator.email;
-  const partyBName = sdB?.legalName || respondent.company || respondent.name || respondent.email;
+  const partyBName = respondent
+    ? (sdB?.legalName || respondent.company || respondent.name || respondent.email)
+    : "[_________________]";
 
   const partyAAddress = sdA?.address || "[Address]";
-  const partyBAddress = sdB?.address || "[Address]";
+  const partyBAddress = respondent ? (sdB?.address || "[Address]") : "[_________________]";
   const partyASignatoryName = sdA?.signatoryName || initiator.name || "[Name]";
-  const partyBSignatoryName = sdB?.signatoryName || respondent.name || "[Name]";
+  const partyBSignatoryName = respondent ? (sdB?.signatoryName || respondent.name || "[Name]") : "[_________________]";
   const partyASignatoryTitle = sdA?.signatoryTitle || "[Title]";
-  const partyBSignatoryTitle = sdB?.signatoryTitle || "[Title]";
+  const partyBSignatoryTitle = respondent ? (sdB?.signatoryTitle || "[Title]") : "[_________________]";
 
   // Variables for boilerplate interpolation
   const variables: Record<string, string> = {
@@ -345,16 +352,18 @@ export async function generateContractData(
       signatoryName: sdA?.signatoryName,
       signatoryTitle: sdA?.signatoryTitle,
     },
-    partyB: {
-      name: respondent.name || respondent.email,
-      email: respondent.email,
-      company: respondent.company || undefined,
-      legalName: sdB?.legalName,
-      address: sdB?.address,
-      taxId: sdB?.taxId,
-      signatoryName: sdB?.signatoryName,
-      signatoryTitle: sdB?.signatoryTitle,
-    },
+    partyB: respondent
+      ? {
+          name: respondent.name || respondent.email,
+          email: respondent.email,
+          company: respondent.company || undefined,
+          legalName: sdB?.legalName,
+          address: sdB?.address,
+          taxId: sdB?.taxId,
+          signatoryName: sdB?.signatoryName,
+          signatoryTitle: sdB?.signatoryTitle,
+        }
+      : null,
     clauses,
     boilerplate,
     language,

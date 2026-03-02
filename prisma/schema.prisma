@@ -309,6 +309,8 @@ model ContractTemplate {
   category             String? // e.g., "corporate", "investment", "privacy"
   categoryLocalized    Json? // {"en":"Corporate","es":"Societario"}
   parameterSchema      Json? // Parameter definitions from parameters.json
+  soloModeSupported    Boolean       @default(false)
+  soloModeDefault      Boolean       @default(false)
   isActive             Boolean       @default(true)
   createdAt            DateTime      @default(now())
   updatedAt            DateTime      @updatedAt
@@ -383,6 +385,11 @@ model ClauseOption {
 // DEAL ROOMS
 // ============================================================
 
+enum DealMode {
+  NEGOTIATION // Two-party (default, current behavior)
+  SOLO // Single-party — no counterparty
+}
+
 enum DealRoomStatus {
   DRAFT // Initiator still making selections
   AWAITING_RESPONSE // Invitation sent, waiting for respondent
@@ -415,6 +422,7 @@ model DealRoom {
   id                         String         @id @default(cuid())
   name                       String
   contractTemplateId         String
+  dealMode                   DealMode       @default(NEGOTIATION)
   governingLaw               GoverningLaw // Determines applicable law framework
   contractLanguage           String         @default("en") // "en" or "es" for contract output language
   parameters                 Json? // Deal-specific parameter values {"param-id": "value", ...}

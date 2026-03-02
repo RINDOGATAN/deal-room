@@ -487,12 +487,12 @@ export function ContractPDF({ data }: ContractPDFProps) {
                   </Text>
                   <View style={styles.signatureLine} />
                   <Text style={styles.signaturePartyName}>
-                    {data.partyB.legalName || data.partyB.company || data.partyB.name}
+                    {data.partyB ? (data.partyB.legalName || data.partyB.company || data.partyB.name) : "[_________________]"}
                   </Text>
                   <Text style={{ fontSize: 9, color: "#666" }}>
-                    {data.partyB.signatoryName || data.partyB.name}
+                    {data.partyB ? (data.partyB.signatoryName || data.partyB.name) : "[_________________]"}
                   </Text>
-                  {data.partyB.signatoryTitle && (
+                  {data.partyB?.signatoryTitle && (
                     <Text style={{ fontSize: 9, color: "#666" }}>
                       {data.partyB.signatoryTitle}
                     </Text>
@@ -520,6 +520,7 @@ export function ContractPDF({ data }: ContractPDFProps) {
                   )}
                   <Text style={styles.partyEmail}>{data.partyA.email}</Text>
                 </View>
+                {data.partyB && (
                 <View style={styles.partyBox}>
                   <Text style={styles.partyLabel}>{labels.partyB}</Text>
                   <Text style={styles.partyName}>{data.partyB.name}</Text>
@@ -530,6 +531,7 @@ export function ContractPDF({ data }: ContractPDFProps) {
                   )}
                   <Text style={styles.partyEmail}>{data.partyB.email}</Text>
                 </View>
+                )}
               </View>
             </View>
 
@@ -585,12 +587,12 @@ export function ContractPDF({ data }: ContractPDFProps) {
                   <Text style={styles.signatureLabel}>{labels.partyB}</Text>
                   <View style={styles.signatureLine} />
                   <Text style={styles.signaturePartyName}>
-                    {data.partyB.legalName || data.partyB.company || data.partyB.name}
+                    {data.partyB ? (data.partyB.legalName || data.partyB.company || data.partyB.name) : "[_________________]"}
                   </Text>
                   <Text style={{ fontSize: 9, color: "#666" }}>
-                    {data.partyB.signatoryName || data.partyB.name}
+                    {data.partyB ? (data.partyB.signatoryName || data.partyB.name) : "[_________________]"}
                   </Text>
-                  {data.partyB.signatoryTitle && (
+                  {data.partyB?.signatoryTitle && (
                     <Text style={{ fontSize: 9, color: "#666" }}>
                       {data.partyB.signatoryTitle}
                     </Text>

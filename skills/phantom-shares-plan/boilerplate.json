@@ -1,0 +1,86 @@
+{
+  "contractTitle": "PLAN MARCO DE PARTICIPACIONES FANTASMA (PHANTOM SHARES)",
+  "preamble": "El presente Plan Marco de Participaciones Fantasma (en adelante, el \"Plan\") es establecido por {partyAName}, sociedad mercantil con CIF [CIF] y domicilio social en {partyAAddress} (en adelante, la \"Sociedad\"), con efectos desde [FECHA EFECTIVA DEL PLAN].",
+  "background": "EXPONE:\n\nI. Que la Sociedad desea establecer un plan de incentivos a largo plazo basado en participaciones fantasma (phantom shares) con el fin de alinear los intereses del equipo directivo y empleados clave con los de los socios, incentivar la permanencia y recompensar la creación de valor.\n\nII. Que las phantom shares son derechos económicos que otorgan a sus titulares el derecho a percibir un importe equivalente a la revalorización de las participaciones sociales de la Sociedad, sin que en ningún caso confieran derechos políticos ni la condición de socio.\n\nIII. Que el presente Plan ha sido aprobado por [EL CONSEJO DE ADMINISTRACIÓN / LA JUNTA GENERAL] en su sesión de fecha [FECHA DE APROBACIÓN].\n\nPor lo expuesto, la Sociedad establece el presente Plan conforme a las siguientes cláusulas:",
+  "definitions": [
+    {
+      "term": "Phantom Share",
+      "definition": "derecho económico virtual que otorga a su titular el derecho a percibir un importe equivalente al valor de una participación social de la Sociedad en el momento del Evento de Liquidez, sin conferir derechos políticos, de voto, de asistencia a juntas ni la condición de socio."
+    },
+    {
+      "term": "Beneficiario",
+      "definition": "toda persona física que reciba una asignación de Phantom Shares al amparo del presente Plan mediante la suscripción de un Contrato de Asignación Individual."
+    },
+    {
+      "term": "Vesting",
+      "definition": "proceso de consolidación gradual de las Phantom Shares a favor del Beneficiario conforme al calendario establecido en el Plan y, en su caso, en el Contrato de Asignación Individual."
+    },
+    {
+      "term": "Cliff",
+      "definition": "período inicial durante el cual no se consolida ninguna Phantom Share, transcurrido el cual se consolida retroactivamente la parte proporcional acumulada."
+    },
+    {
+      "term": "Evento de Liquidez",
+      "definition": "cualquiera de los supuestos definidos en el presente Plan que activan el derecho del Beneficiario a percibir el valor económico de sus Phantom Shares consolidadas."
+    },
+    {
+      "term": "Good Leaver",
+      "definition": "Beneficiario cuya relación con la Sociedad finaliza por una causa involuntaria o no imputable al Beneficiario, conforme a los supuestos definidos en el presente Plan."
+    },
+    {
+      "term": "Bad Leaver",
+      "definition": "Beneficiario cuya relación con la Sociedad finaliza por una causa imputable al Beneficiario o por decisión voluntaria de este, conforme a los supuestos definidos en el presente Plan."
+    },
+    {
+      "term": "Contrato de Asignación Individual",
+      "definition": "el documento mediante el cual la Sociedad formaliza la asignación de un número determinado de Phantom Shares a un Beneficiario concreto, al amparo y conforme a los términos del presente Plan."
+    }
+  ],
+  "standardClauses": [
+    {
+      "title": "Naturaleza jurídica",
+      "text": "Las Phantom Shares constituyen derechos económicos de naturaleza contractual. En ningún caso confieren a sus titulares:\n\n(a) La condición de socio de la Sociedad.\n(b) Derechos políticos, de voto o de asistencia a juntas generales.\n(c) Derechos de suscripción o asunción preferente.\n(d) Derecho a la entrega de participaciones sociales reales.\n\nLas Phantom Shares son intransferibles, no podrán ser cedidas, pignoradas ni gravadas por el Beneficiario, y se extinguirán en los supuestos previstos en el presente Plan."
+    },
+    {
+      "title": "Elegibilidad",
+      "text": "Podrán ser Beneficiarios del Plan los empleados, directivos y colaboradores clave de la Sociedad y sus sociedades participadas que sean designados por el órgano de administración. La condición de Beneficiario se formalizará mediante la suscripción del correspondiente Contrato de Asignación Individual."
+    },
+    {
+      "title": "Administración del Plan",
+      "text": "El órgano de administración de la Sociedad será el responsable de la administración, interpretación y aplicación del presente Plan. En particular, le corresponderá:\n\n(a) Determinar los Beneficiarios y el número de Phantom Shares asignadas a cada uno.\n(b) Aprobar los Contratos de Asignación Individual.\n(c) Interpretar las disposiciones del Plan y resolver las cuestiones que se planteen.\n(d) Supervisar el cumplimiento del calendario de vesting.\n(e) Determinar la valoración de las Phantom Shares conforme al método establecido."
+    },
+    {
+      "title": "Comunicaciones",
+      "text": "Todas las comunicaciones relativas al Plan se realizarán por escrito (incluyendo correo electrónico) a las direcciones que las partes designen. Las comunicaciones de la Sociedad al Beneficiario se dirigirán a la dirección de correo electrónico que conste en su Contrato de Asignación Individual. Las comunicaciones del Beneficiario a la Sociedad se dirigirán a {partyAAddress}, a la atención de [DEPARTAMENTO / PERSONA DE CONTACTO]."
+    }
+  ],
+  "generalProvisions": [
+    {
+      "title": "Ley aplicable y jurisdicción",
+      "text": "El presente Plan se regirá e interpretará conforme a la legislación española. Para la resolución de cualquier controversia derivada del Plan, las partes se someten a los juzgados y tribunales de [CIUDAD], con renuncia expresa a cualquier otro fuero que pudiera corresponderles."
+    },
+    {
+      "title": "Protección de datos",
+      "text": "La Sociedad tratará los datos personales de los Beneficiarios conforme al Reglamento (UE) 2016/679 (RGPD) y la Ley Orgánica 3/2018 (LOPDGDD). La base jurídica del tratamiento es la ejecución del contrato (art. 6.1.b RGPD). Los datos serán conservados durante la vigencia del Plan y los plazos legales de prescripción."
+    },
+    {
+      "title": "Integridad del acuerdo",
+      "text": "El presente Plan, junto con los Contratos de Asignación Individual, constituye el acuerdo íntegro entre la Sociedad y los Beneficiarios en relación con las Phantom Shares y sustituye a cualquier acuerdo, pacto o compromiso previo sobre la misma materia."
+    },
+    {
+      "title": "Separabilidad",
+      "text": "La nulidad o invalidez de cualquier cláusula del presente Plan no afectará a la validez de las restantes, que mantendrán su plena eficacia. Las partes se comprometen a sustituir la cláusula nula por otra válida que produzca, en la medida de lo posible, los mismos efectos económicos."
+    }
+  ],
+  "jurisdictionProvisions": {
+    "SPAIN": {
+      "title": "Disposiciones específicas para España",
+      "text": "(a) Normativa laboral: en la medida en que el Beneficiario mantenga una relación laboral con la Sociedad, las Phantom Shares no constituyen salario a los efectos del artículo 26 del Estatuto de los Trabajadores, sino un incentivo a largo plazo de naturaleza contractual.\n\n(b) Normativa fiscal: los rendimientos derivados de las Phantom Shares tributarán conforme a la Ley 35/2006 del IRPF. En caso de relación laboral, se calificarán como rendimientos del trabajo. En caso de relación mercantil, como rendimientos de actividades económicas.\n\n(c) Seguridad Social: la Sociedad y el Beneficiario cumplirán con las obligaciones de cotización que resulten aplicables conforme a la normativa de Seguridad Social vigente en el momento del pago.\n\n(d) Prevención del blanqueo de capitales: la Sociedad verificará la identidad de los Beneficiarios conforme a la Ley 10/2010, de 28 de abril, de prevención del blanqueo de capitales y de la financiación del terrorismo, cuando resulte aplicable."
+    }
+  },
+  "signatureBlock": "En prueba de conformidad, el presente Plan es aprobado y firmado:\n\nPor la Sociedad:\n\n{partyASignatureBlock}\n\n\nEl/La Beneficiario/a (en su caso):\n\n{partyBSignatureBlock}",
+  "partyLabels": {
+    "partyA": "Sociedad",
+    "partyB": "Beneficiario"
+  }
+}
