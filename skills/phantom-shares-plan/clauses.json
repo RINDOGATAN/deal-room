@@ -1,563 +1,1311 @@
 {
   "contractType": "PHANTOM_SHARES_PLAN",
-  "displayName": { "es": "Marco de Phantom Shares" },
-  "description": { "es": "Plan marco de participaciones fantasma (phantom shares) para la empresa" },
+  "displayName": {
+    "es": "Marco de Phantom Shares"
+  },
+  "description": {
+    "es": "Plan marco de participaciones fantasma (phantom shares) para la empresa"
+  },
   "version": "1.0",
   "clauses": [
     {
       "id": "porcentaje-pool",
-      "title": { "es": "Porcentaje del pool" },
-      "category": { "es": "Pool" },
+      "title": {
+        "es": "Porcentaje del pool"
+      },
+      "category": {
+        "es": "Pool"
+      },
       "order": 1,
-      "plainDescription": { "es": "Porcentaje del capital social que la sociedad destina al pool de phantom shares disponible para asignaciones individuales." },
-      "legalContext": { "es": "El porcentaje del pool determina la dilución económica máxima (no societaria, al no tratarse de participaciones reales). Es habitual en startups españolas destinar entre un 5% y un 15% del valor de la empresa. Al tratarse de derechos económicos y no de participaciones sociales, no requiere modificación estatutaria ni escritura pública, aunque sí aprobación del órgano de administración o la junta general según los estatutos." },
+      "plainDescription": {
+        "es": "Porcentaje del capital social que la sociedad destina al pool de phantom shares disponible para asignaciones individuales."
+      },
+      "legalContext": {
+        "es": "El porcentaje del pool determina la dilución económica máxima (no societaria, al no tratarse de participaciones reales). Es habitual en startups españolas destinar entre un 5% y un 15% del valor de la empresa. Al tratarse de derechos económicos y no de participaciones sociales, no requiere modificación estatutaria ni escritura pública, aunque sí aprobación del órgano de administración o la junta general según los estatutos."
+      },
       "isRequired": true,
       "options": [
         {
           "id": "pool-5",
           "code": "pool-5-porciento",
-          "label": { "es": "5% del capital social" },
+          "label": {
+            "es": "5% del capital social"
+          },
           "order": 1,
-          "plainDescription": { "es": "Se reserva un 5% del valor económico de la sociedad para el plan de phantom shares." },
-          "prosPartyA": [{ "es": "Dilución económica reducida para los socios" }, { "es": "Conservador y fácil de aprobar" }],
-          "consPartyA": [{ "es": "Pool limitado para atraer talento clave" }],
-          "prosPartyB": [{ "es": "La empresa ha formalizado un compromiso económico" }],
-          "consPartyB": [{ "es": "Importe individual potencialmente bajo" }],
-          "legalText": { "es": "La Sociedad destina al Plan de Phantom Shares un pool equivalente al cinco por ciento (5%) del valor económico de la Sociedad (el \"Pool\"), calculado conforme al método de valoración establecido en este Plan.\n\nEl Pool representa el importe máximo agregado de todas las asignaciones individuales que se realicen al amparo del presente Plan. La Sociedad podrá, mediante acuerdo del órgano de administración, ampliar el Pool hasta un máximo del [PORCENTAJE MÁXIMO]%, previa comunicación a los socios." },
+          "plainDescription": {
+            "es": "Se reserva un 5% del valor económico de la sociedad para el plan de phantom shares."
+          },
+          "prosPartyA": {
+            "es": [
+              "Dilución económica reducida para los socios",
+              "Conservador y fácil de aprobar"
+            ]
+          },
+          "consPartyA": {
+            "es": [
+              "Pool limitado para atraer talento clave"
+            ]
+          },
+          "prosPartyB": {
+            "es": [
+              "La empresa ha formalizado un compromiso económico"
+            ]
+          },
+          "consPartyB": {
+            "es": [
+              "Importe individual potencialmente bajo"
+            ]
+          },
+          "legalText": {
+            "es": "La Sociedad destina al Plan de Phantom Shares un pool equivalente al cinco por ciento (5%) del valor económico de la Sociedad (el \"Pool\"), calculado conforme al método de valoración establecido en este Plan.\n\nEl Pool representa el importe máximo agregado de todas las asignaciones individuales que se realicen al amparo del presente Plan. La Sociedad podrá, mediante acuerdo del órgano de administración, ampliar el Pool hasta un máximo del [PORCENTAJE MÁXIMO]%, previa comunicación a los socios."
+          },
           "biasPartyA": 0.3,
           "biasPartyB": -0.3,
           "jurisdictionConfig": {
-            "SPAIN": { "available": true }
+            "SPAIN": {
+              "available": true
+            }
           }
         },
         {
           "id": "pool-10",
           "code": "pool-10-porciento",
-          "label": { "es": "10% del capital social" },
+          "label": {
+            "es": "10% del capital social"
+          },
           "order": 2,
-          "plainDescription": { "es": "Se reserva un 10% del valor económico de la sociedad para el plan de phantom shares." },
-          "prosPartyA": [{ "es": "Equilibrio entre retención de talento y dilución" }, { "es": "Estándar de mercado en startups" }],
-          "consPartyA": [{ "es": "Dilución económica significativa" }],
-          "prosPartyB": [{ "es": "Pool suficiente para asignaciones atractivas" }],
-          "consPartyB": [{ "es": "Puede resultar insuficiente si hay muchos beneficiarios" }],
-          "legalText": { "es": "La Sociedad destina al Plan de Phantom Shares un pool equivalente al diez por ciento (10%) del valor económico de la Sociedad (el \"Pool\"), calculado conforme al método de valoración establecido en este Plan.\n\nEl Pool representa el importe máximo agregado de todas las asignaciones individuales que se realicen al amparo del presente Plan. La Sociedad podrá, mediante acuerdo del órgano de administración, ampliar el Pool hasta un máximo del [PORCENTAJE MÁXIMO]%, previa comunicación a los socios." },
-          "biasPartyA": 0.0,
-          "biasPartyB": 0.0,
+          "plainDescription": {
+            "es": "Se reserva un 10% del valor económico de la sociedad para el plan de phantom shares."
+          },
+          "prosPartyA": {
+            "es": [
+              "Equilibrio entre retención de talento y dilución",
+              "Estándar de mercado en startups"
+            ]
+          },
+          "consPartyA": {
+            "es": [
+              "Dilución económica significativa"
+            ]
+          },
+          "prosPartyB": {
+            "es": [
+              "Pool suficiente para asignaciones atractivas"
+            ]
+          },
+          "consPartyB": {
+            "es": [
+              "Puede resultar insuficiente si hay muchos beneficiarios"
+            ]
+          },
+          "legalText": {
+            "es": "La Sociedad destina al Plan de Phantom Shares un pool equivalente al diez por ciento (10%) del valor económico de la Sociedad (el \"Pool\"), calculado conforme al método de valoración establecido en este Plan.\n\nEl Pool representa el importe máximo agregado de todas las asignaciones individuales que se realicen al amparo del presente Plan. La Sociedad podrá, mediante acuerdo del órgano de administración, ampliar el Pool hasta un máximo del [PORCENTAJE MÁXIMO]%, previa comunicación a los socios."
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "jurisdictionConfig": {
-            "SPAIN": { "available": true }
+            "SPAIN": {
+              "available": true
+            }
           }
         },
         {
           "id": "pool-15",
           "code": "pool-15-porciento",
-          "label": { "es": "15% del capital social" },
+          "label": {
+            "es": "15% del capital social"
+          },
           "order": 3,
-          "plainDescription": { "es": "Se reserva un 15% del valor económico de la sociedad para el plan de phantom shares." },
-          "prosPartyA": [{ "es": "Pool amplio para atraer y retener talento clave" }],
-          "consPartyA": [{ "es": "Dilución económica elevada para los socios" }],
-          "prosPartyB": [{ "es": "Asignaciones individuales potencialmente más generosas" }],
-          "consPartyB": [{ "es": "Mayor exposición al riesgo de la empresa" }],
-          "legalText": { "es": "La Sociedad destina al Plan de Phantom Shares un pool equivalente al quince por ciento (15%) del valor económico de la Sociedad (el \"Pool\"), calculado conforme al método de valoración establecido en este Plan.\n\nEl Pool representa el importe máximo agregado de todas las asignaciones individuales que se realicen al amparo del presente Plan. La Sociedad podrá, mediante acuerdo del órgano de administración, ampliar el Pool hasta un máximo del [PORCENTAJE MÁXIMO]%, previa comunicación a los socios." },
+          "plainDescription": {
+            "es": "Se reserva un 15% del valor económico de la sociedad para el plan de phantom shares."
+          },
+          "prosPartyA": {
+            "es": [
+              "Pool amplio para atraer y retener talento clave"
+            ]
+          },
+          "consPartyA": {
+            "es": [
+              "Dilución económica elevada para los socios"
+            ]
+          },
+          "prosPartyB": {
+            "es": [
+              "Asignaciones individuales potencialmente más generosas"
+            ]
+          },
+          "consPartyB": {
+            "es": [
+              "Mayor exposición al riesgo de la empresa"
+            ]
+          },
+          "legalText": {
+            "es": "La Sociedad destina al Plan de Phantom Shares un pool equivalente al quince por ciento (15%) del valor económico de la Sociedad (el \"Pool\"), calculado conforme al método de valoración establecido en este Plan.\n\nEl Pool representa el importe máximo agregado de todas las asignaciones individuales que se realicen al amparo del presente Plan. La Sociedad podrá, mediante acuerdo del órgano de administración, ampliar el Pool hasta un máximo del [PORCENTAJE MÁXIMO]%, previa comunicación a los socios."
+          },
           "biasPartyA": -0.3,
           "biasPartyB": 0.3,
           "jurisdictionConfig": {
-            "SPAIN": { "available": true }
+            "SPAIN": {
+              "available": true
+            }
           }
         }
       ]
     },
     {
       "id": "calendario-vesting",
-      "title": { "es": "Calendario de vesting" },
-      "category": { "es": "Vesting" },
+      "title": {
+        "es": "Calendario de vesting"
+      },
+      "category": {
+        "es": "Vesting"
+      },
       "order": 2,
-      "plainDescription": { "es": "Esquema temporal conforme al cual las phantom shares se consolidan progresivamente a favor del beneficiario." },
-      "legalContext": { "es": "El vesting es el mecanismo de consolidación gradual de los derechos económicos. No está regulado específicamente en la legislación española, pero se configura como una condición contractual lícita al amparo de la libertad de pactos (art. 1255 CC). El calendario de vesting incentiva la permanencia del beneficiario y protege los intereses de la sociedad." },
+      "plainDescription": {
+        "es": "Esquema temporal conforme al cual las phantom shares se consolidan progresivamente a favor del beneficiario."
+      },
+      "legalContext": {
+        "es": "El vesting es el mecanismo de consolidación gradual de los derechos económicos. No está regulado específicamente en la legislación española, pero se configura como una condición contractual lícita al amparo de la libertad de pactos (art. 1255 CC). El calendario de vesting incentiva la permanencia del beneficiario y protege los intereses de la sociedad."
+      },
       "isRequired": true,
       "options": [
         {
           "id": "vesting-mensual",
           "code": "mensual-lineal",
-          "label": { "es": "Mensual lineal" },
+          "label": {
+            "es": "Mensual lineal"
+          },
           "order": 1,
-          "plainDescription": { "es": "Las phantom shares se consolidan de forma proporcional cada mes durante el período de vesting." },
-          "prosPartyA": [{ "es": "Consolidación gradual y predecible" }, { "es": "Incentivo continuo de permanencia" }],
-          "consPartyA": [{ "es": "El beneficiario consolida derechos desde el primer mes (salvo cliff)" }],
-          "prosPartyB": [{ "es": "Consolidación progresiva sin grandes períodos de espera" }],
-          "consPartyB": [{ "es": "Importes mensuales individuales reducidos" }],
-          "legalText": { "es": "Las Phantom Shares asignadas al Beneficiario se consolidarán de forma lineal mensual durante un período de [MESES DE VESTING] meses contados desde la Fecha de Asignación (el \"Período de Vesting\").\n\nCada mes, se consolidará una fracción igual a 1/[MESES DE VESTING] del total de Phantom Shares asignadas. La consolidación se producirá el último día laborable de cada mes natural.\n\nLas Phantom Shares no consolidadas al momento de la terminación de la relación con la Sociedad se extinguirán automáticamente, salvo lo previsto en las cláusulas de Good Leaver y Bad Leaver." },
-          "biasPartyA": 0.0,
-          "biasPartyB": 0.0,
+          "plainDescription": {
+            "es": "Las phantom shares se consolidan de forma proporcional cada mes durante el período de vesting."
+          },
+          "prosPartyA": {
+            "es": [
+              "Consolidación gradual y predecible",
+              "Incentivo continuo de permanencia"
+            ]
+          },
+          "consPartyA": {
+            "es": [
+              "El beneficiario consolida derechos desde el primer mes (salvo cliff)"
+            ]
+          },
+          "prosPartyB": {
+            "es": [
+              "Consolidación progresiva sin grandes períodos de espera"
+            ]
+          },
+          "consPartyB": {
+            "es": [
+              "Importes mensuales individuales reducidos"
+            ]
+          },
+          "legalText": {
+            "es": "Las Phantom Shares asignadas al Beneficiario se consolidarán de forma lineal mensual durante un período de [MESES DE VESTING] meses contados desde la Fecha de Asignación (el \"Período de Vesting\").\n\nCada mes, se consolidará una fracción igual a 1/[MESES DE VESTING] del total de Phantom Shares asignadas. La consolidación se producirá el último día laborable de cada mes natural.\n\nLas Phantom Shares no consolidadas al momento de la terminación de la relación con la Sociedad se extinguirán automáticamente, salvo lo previsto en las cláusulas de Good Leaver y Bad Leaver."
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "jurisdictionConfig": {
-            "SPAIN": { "available": true }
+            "SPAIN": {
+              "available": true
+            }
           }
         },
         {
           "id": "vesting-trimestral",
           "code": "trimestral",
-          "label": { "es": "Trimestral" },
+          "label": {
+            "es": "Trimestral"
+          },
           "order": 2,
-          "plainDescription": { "es": "Las phantom shares se consolidan cada trimestre en tramos iguales." },
-          "prosPartyA": [{ "es": "Menor carga administrativa" }, { "es": "Alineación con reporting trimestral" }],
-          "consPartyA": [{ "es": "Consolidación menos granular" }],
-          "prosPartyB": [{ "es": "Tramos de consolidación más significativos" }],
-          "consPartyB": [{ "es": "Períodos de espera más largos entre consolidaciones" }],
-          "legalText": { "es": "Las Phantom Shares asignadas al Beneficiario se consolidarán de forma trimestral durante un período de [MESES DE VESTING] meses contados desde la Fecha de Asignación (el \"Período de Vesting\").\n\nCada trimestre natural, se consolidará una fracción igual a 3/[MESES DE VESTING] del total de Phantom Shares asignadas. La consolidación se producirá el último día laborable de cada trimestre natural.\n\nLas Phantom Shares no consolidadas al momento de la terminación de la relación con la Sociedad se extinguirán automáticamente, salvo lo previsto en las cláusulas de Good Leaver y Bad Leaver." },
-          "biasPartyA": 0.0,
-          "biasPartyB": 0.0,
+          "plainDescription": {
+            "es": "Las phantom shares se consolidan cada trimestre en tramos iguales."
+          },
+          "prosPartyA": {
+            "es": [
+              "Menor carga administrativa",
+              "Alineación con reporting trimestral"
+            ]
+          },
+          "consPartyA": {
+            "es": [
+              "Consolidación menos granular"
+            ]
+          },
+          "prosPartyB": {
+            "es": [
+              "Tramos de consolidación más significativos"
+            ]
+          },
+          "consPartyB": {
+            "es": [
+              "Períodos de espera más largos entre consolidaciones"
+            ]
+          },
+          "legalText": {
+            "es": "Las Phantom Shares asignadas al Beneficiario se consolidarán de forma trimestral durante un período de [MESES DE VESTING] meses contados desde la Fecha de Asignación (el \"Período de Vesting\").\n\nCada trimestre natural, se consolidará una fracción igual a 3/[MESES DE VESTING] del total de Phantom Shares asignadas. La consolidación se producirá el último día laborable de cada trimestre natural.\n\nLas Phantom Shares no consolidadas al momento de la terminación de la relación con la Sociedad se extinguirán automáticamente, salvo lo previsto en las cláusulas de Good Leaver y Bad Leaver."
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "jurisdictionConfig": {
-            "SPAIN": { "available": true }
+            "SPAIN": {
+              "available": true
+            }
           }
         },
         {
           "id": "vesting-anual-hitos",
           "code": "anual-hitos",
-          "label": { "es": "Anual por hitos" },
+          "label": {
+            "es": "Anual por hitos"
+          },
           "order": 3,
-          "plainDescription": { "es": "Las phantom shares se consolidan anualmente, vinculadas al cumplimiento de objetivos o hitos específicos." },
-          "prosPartyA": [{ "es": "Consolidación vinculada a rendimiento" }, { "es": "Mayor protección si no se alcanzan objetivos" }],
-          "consPartyA": [{ "es": "Mayor complejidad en la definición y evaluación de hitos" }],
-          "prosPartyB": [{ "es": "Tramos anuales significativos" }],
-          "consPartyB": [{ "es": "Riesgo de no consolidación si no se alcanzan los hitos" }],
-          "legalText": { "es": "Las Phantom Shares asignadas al Beneficiario se consolidarán de forma anual, sujeta al cumplimiento de los hitos que se establezcan en cada Contrato de Asignación Individual, durante un período máximo de [MESES DE VESTING] meses (el \"Período de Vesting\").\n\nLos hitos de consolidación serán definidos por el órgano de administración y comunicados al Beneficiario al inicio de cada período anual. La evaluación del cumplimiento corresponderá a [EVALUADOR].\n\nEn caso de cumplimiento parcial de los hitos, se consolidará la proporción correspondiente al grado de cumplimiento alcanzado. Las Phantom Shares no consolidadas se acumularán para el siguiente período o se extinguirán, según se determine en el Contrato de Asignación Individual." },
+          "plainDescription": {
+            "es": "Las phantom shares se consolidan anualmente, vinculadas al cumplimiento de objetivos o hitos específicos."
+          },
+          "prosPartyA": {
+            "es": [
+              "Consolidación vinculada a rendimiento",
+              "Mayor protección si no se alcanzan objetivos"
+            ]
+          },
+          "consPartyA": {
+            "es": [
+              "Mayor complejidad en la definición y evaluación de hitos"
+            ]
+          },
+          "prosPartyB": {
+            "es": [
+              "Tramos anuales significativos"
+            ]
+          },
+          "consPartyB": {
+            "es": [
+              "Riesgo de no consolidación si no se alcanzan los hitos"
+            ]
+          },
+          "legalText": {
+            "es": "Las Phantom Shares asignadas al Beneficiario se consolidarán de forma anual, sujeta al cumplimiento de los hitos que se establezcan en cada Contrato de Asignación Individual, durante un período máximo de [MESES DE VESTING] meses (el \"Período de Vesting\").\n\nLos hitos de consolidación serán definidos por el órgano de administración y comunicados al Beneficiario al inicio de cada período anual. La evaluación del cumplimiento corresponderá a [EVALUADOR].\n\nEn caso de cumplimiento parcial de los hitos, se consolidará la proporción correspondiente al grado de cumplimiento alcanzado. Las Phantom Shares no consolidadas se acumularán para el siguiente período o se extinguirán, según se determine en el Contrato de Asignación Individual."
+          },
           "biasPartyA": 0.3,
           "biasPartyB": -0.3,
           "jurisdictionConfig": {
-            "SPAIN": { "available": true }
+            "SPAIN": {
+              "available": true
+            }
           }
         }
       ]
     },
     {
       "id": "periodo-cliff",
-      "title": { "es": "Período de cliff" },
-      "category": { "es": "Vesting" },
+      "title": {
+        "es": "Período de cliff"
+      },
+      "category": {
+        "es": "Vesting"
+      },
       "order": 3,
-      "plainDescription": { "es": "Período inicial durante el cual no se consolida ninguna phantom share, tras el cual se consolida retroactivamente la parte proporcional acumulada." },
-      "legalContext": { "es": "El cliff es una práctica de mercado que protege a la sociedad durante los primeros meses de la relación laboral o mercantil. No está regulado legalmente pero es una condición contractual válida. Es habitual un cliff de 12 meses en planes de startups, alineado con la práctica anglosajona." },
+      "plainDescription": {
+        "es": "Período inicial durante el cual no se consolida ninguna phantom share, tras el cual se consolida retroactivamente la parte proporcional acumulada."
+      },
+      "legalContext": {
+        "es": "El cliff es una práctica de mercado que protege a la sociedad durante los primeros meses de la relación laboral o mercantil. No está regulado legalmente pero es una condición contractual válida. Es habitual un cliff de 12 meses en planes de startups, alineado con la práctica anglosajona."
+      },
       "isRequired": true,
       "options": [
         {
           "id": "cliff-6",
           "code": "cliff-6-meses",
-          "label": { "es": "6 meses" },
+          "label": {
+            "es": "6 meses"
+          },
           "order": 1,
-          "plainDescription": { "es": "No se consolida ninguna phantom share durante los primeros 6 meses." },
-          "prosPartyA": [{ "es": "Protección básica durante el período inicial" }],
-          "consPartyA": [{ "es": "Período corto para evaluar la contribución del beneficiario" }],
-          "prosPartyB": [{ "es": "Acceso más rápido a la consolidación" }],
-          "consPartyB": [{ "es": "6 meses sin consolidación" }],
-          "legalText": { "es": "Se establece un período de cliff de seis (6) meses contados desde la Fecha de Asignación (el \"Período de Cliff\"). Durante el Período de Cliff no se consolidará ninguna Phantom Share.\n\nTranscurrido el Período de Cliff, se consolidarán automáticamente las Phantom Shares correspondientes al período acumulado, y a partir de ese momento la consolidación continuará conforme al calendario de vesting establecido.\n\nSi la relación del Beneficiario con la Sociedad finaliza durante el Período de Cliff, la totalidad de las Phantom Shares asignadas se extinguirá sin derecho a compensación alguna." },
+          "plainDescription": {
+            "es": "No se consolida ninguna phantom share durante los primeros 6 meses."
+          },
+          "prosPartyA": {
+            "es": [
+              "Protección básica durante el período inicial"
+            ]
+          },
+          "consPartyA": {
+            "es": [
+              "Período corto para evaluar la contribución del beneficiario"
+            ]
+          },
+          "prosPartyB": {
+            "es": [
+              "Acceso más rápido a la consolidación"
+            ]
+          },
+          "consPartyB": {
+            "es": [
+              "6 meses sin consolidación"
+            ]
+          },
+          "legalText": {
+            "es": "Se establece un período de cliff de seis (6) meses contados desde la Fecha de Asignación (el \"Período de Cliff\"). Durante el Período de Cliff no se consolidará ninguna Phantom Share.\n\nTranscurrido el Período de Cliff, se consolidarán automáticamente las Phantom Shares correspondientes al período acumulado, y a partir de ese momento la consolidación continuará conforme al calendario de vesting establecido.\n\nSi la relación del Beneficiario con la Sociedad finaliza durante el Período de Cliff, la totalidad de las Phantom Shares asignadas se extinguirá sin derecho a compensación alguna."
+          },
           "biasPartyA": -0.2,
           "biasPartyB": 0.2,
           "jurisdictionConfig": {
-            "SPAIN": { "available": true }
+            "SPAIN": {
+              "available": true
+            }
           }
         },
         {
           "id": "cliff-12",
           "code": "cliff-12-meses",
-          "label": { "es": "12 meses" },
+          "label": {
+            "es": "12 meses"
+          },
           "order": 2,
-          "plainDescription": { "es": "No se consolida ninguna phantom share durante los primeros 12 meses. Estándar de mercado." },
-          "prosPartyA": [{ "es": "Período suficiente para evaluar al beneficiario" }, { "es": "Estándar de mercado" }],
-          "consPartyA": [{ "es": "Puede desincentivar a candidatos con alternativas inmediatas" }],
-          "prosPartyB": [{ "es": "Práctica habitual y previsible" }],
-          "consPartyB": [{ "es": "Un año completo sin consolidación" }],
-          "legalText": { "es": "Se establece un período de cliff de doce (12) meses contados desde la Fecha de Asignación (el \"Período de Cliff\"). Durante el Período de Cliff no se consolidará ninguna Phantom Share.\n\nTranscurrido el Período de Cliff, se consolidarán automáticamente las Phantom Shares correspondientes a los primeros doce meses, y a partir de ese momento la consolidación continuará conforme al calendario de vesting establecido.\n\nSi la relación del Beneficiario con la Sociedad finaliza durante el Período de Cliff, la totalidad de las Phantom Shares asignadas se extinguirá sin derecho a compensación alguna." },
-          "biasPartyA": 0.0,
-          "biasPartyB": 0.0,
+          "plainDescription": {
+            "es": "No se consolida ninguna phantom share durante los primeros 12 meses. Estándar de mercado."
+          },
+          "prosPartyA": {
+            "es": [
+              "Período suficiente para evaluar al beneficiario",
+              "Estándar de mercado"
+            ]
+          },
+          "consPartyA": {
+            "es": [
+              "Puede desincentivar a candidatos con alternativas inmediatas"
+            ]
+          },
+          "prosPartyB": {
+            "es": [
+              "Práctica habitual y previsible"
+            ]
+          },
+          "consPartyB": {
+            "es": [
+              "Un año completo sin consolidación"
+            ]
+          },
+          "legalText": {
+            "es": "Se establece un período de cliff de doce (12) meses contados desde la Fecha de Asignación (el \"Período de Cliff\"). Durante el Período de Cliff no se consolidará ninguna Phantom Share.\n\nTranscurrido el Período de Cliff, se consolidarán automáticamente las Phantom Shares correspondientes a los primeros doce meses, y a partir de ese momento la consolidación continuará conforme al calendario de vesting establecido.\n\nSi la relación del Beneficiario con la Sociedad finaliza durante el Período de Cliff, la totalidad de las Phantom Shares asignadas se extinguirá sin derecho a compensación alguna."
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "jurisdictionConfig": {
-            "SPAIN": { "available": true }
+            "SPAIN": {
+              "available": true
+            }
           }
         },
         {
           "id": "cliff-ninguno",
           "code": "sin-cliff",
-          "label": { "es": "Sin cliff" },
+          "label": {
+            "es": "Sin cliff"
+          },
           "order": 3,
-          "plainDescription": { "es": "La consolidación comienza desde el primer mes sin período de espera." },
-          "prosPartyA": [{ "es": "Máximo incentivo desde el primer día" }],
-          "consPartyA": [{ "es": "Sin protección durante el período inicial" }],
-          "prosPartyB": [{ "es": "Consolidación inmediata" }, { "es": "Mayor seguridad económica" }],
-          "consPartyB": [],
-          "legalText": { "es": "No se establece período de cliff. La consolidación de las Phantom Shares comenzará desde la Fecha de Asignación conforme al calendario de vesting previsto en este Plan.\n\nNo obstante, las Phantom Shares no consolidadas al momento de la terminación de la relación con la Sociedad se extinguirán automáticamente, salvo lo previsto en las cláusulas de Good Leaver y Bad Leaver." },
+          "plainDescription": {
+            "es": "La consolidación comienza desde el primer mes sin período de espera."
+          },
+          "prosPartyA": {
+            "es": [
+              "Máximo incentivo desde el primer día"
+            ]
+          },
+          "consPartyA": {
+            "es": [
+              "Sin protección durante el período inicial"
+            ]
+          },
+          "prosPartyB": {
+            "es": [
+              "Consolidación inmediata",
+              "Mayor seguridad económica"
+            ]
+          },
+          "consPartyB": {
+            "es": []
+          },
+          "legalText": {
+            "es": "No se establece período de cliff. La consolidación de las Phantom Shares comenzará desde la Fecha de Asignación conforme al calendario de vesting previsto en este Plan.\n\nNo obstante, las Phantom Shares no consolidadas al momento de la terminación de la relación con la Sociedad se extinguirán automáticamente, salvo lo previsto en las cláusulas de Good Leaver y Bad Leaver."
+          },
           "biasPartyA": -0.3,
           "biasPartyB": 0.3,
           "jurisdictionConfig": {
-            "SPAIN": { "available": true }
+            "SPAIN": {
+              "available": true
+            }
           }
         }
       ]
     },
     {
       "id": "eventos-liquidez",
-      "title": { "es": "Eventos de liquidez (trigger)" },
-      "category": { "es": "Liquidación" },
+      "title": {
+        "es": "Eventos de liquidez (trigger)"
+      },
+      "category": {
+        "es": "Liquidación"
+      },
       "order": 4,
-      "plainDescription": { "es": "Eventos que activan el derecho del beneficiario a percibir el valor económico de sus phantom shares consolidadas." },
-      "legalContext": { "es": "Los eventos de liquidez (o trigger events) determinan cuándo el derecho económico se convierte en un derecho de cobro exigible. Al no tratarse de participaciones reales, los phantom shares solo generan liquidez cuando se produce un evento previamente definido. La definición precisa de estos eventos es fundamental para la seguridad jurídica del plan." },
+      "plainDescription": {
+        "es": "Eventos que activan el derecho del beneficiario a percibir el valor económico de sus phantom shares consolidadas."
+      },
+      "legalContext": {
+        "es": "Los eventos de liquidez (o trigger events) determinan cuándo el derecho económico se convierte en un derecho de cobro exigible. Al no tratarse de participaciones reales, los phantom shares solo generan liquidez cuando se produce un evento previamente definido. La definición precisa de estos eventos es fundamental para la seguridad jurídica del plan."
+      },
       "isRequired": true,
       "options": [
         {
           "id": "trigger-exit-solo",
           "code": "exit-venta",
-          "label": { "es": "Solo en caso de exit o venta" },
+          "label": {
+            "es": "Solo en caso de exit o venta"
+          },
           "order": 1,
-          "plainDescription": { "es": "El derecho de cobro solo se activa cuando se produce una venta o cambio de control de la sociedad." },
-          "prosPartyA": [{ "es": "Sin compromiso de liquidez hasta el evento de salida" }, { "es": "Máxima protección del cash flow" }],
-          "consPartyA": [{ "es": "Puede desincentivar si el exit se percibe lejano" }],
-          "prosPartyB": [{ "es": "Potencial de mayor valor en un exit" }],
-          "consPartyB": [{ "es": "Sin liquidez hasta que se produzca la venta" }],
-          "legalText": { "es": "Las Phantom Shares consolidadas otorgarán al Beneficiario el derecho a percibir su valor económico exclusivamente cuando se produzca un Evento de Liquidez, definido como:\n\n(a) La venta, transmisión o cesión de más del cincuenta por ciento (50%) del capital social de la Sociedad a un tercero o terceros no vinculados (\"Venta\").\n\n(b) La fusión, escisión o cualquier otra operación de reestructuración societaria que suponga un cambio efectivo de control de la Sociedad (\"Cambio de Control\").\n\n(c) La venta de la totalidad o sustancialmente la totalidad de los activos de la Sociedad.\n\nNo constituirán Evento de Liquidez las operaciones internas de reestructuración que no supongan un cambio efectivo de control." },
+          "plainDescription": {
+            "es": "El derecho de cobro solo se activa cuando se produce una venta o cambio de control de la sociedad."
+          },
+          "prosPartyA": {
+            "es": [
+              "Sin compromiso de liquidez hasta el evento de salida",
+              "Máxima protección del cash flow"
+            ]
+          },
+          "consPartyA": {
+            "es": [
+              "Puede desincentivar si el exit se percibe lejano"
+            ]
+          },
+          "prosPartyB": {
+            "es": [
+              "Potencial de mayor valor en un exit"
+            ]
+          },
+          "consPartyB": {
+            "es": [
+              "Sin liquidez hasta que se produzca la venta"
+            ]
+          },
+          "legalText": {
+            "es": "Las Phantom Shares consolidadas otorgarán al Beneficiario el derecho a percibir su valor económico exclusivamente cuando se produzca un Evento de Liquidez, definido como:\n\n(a) La venta, transmisión o cesión de más del cincuenta por ciento (50%) del capital social de la Sociedad a un tercero o terceros no vinculados (\"Venta\").\n\n(b) La fusión, escisión o cualquier otra operación de reestructuración societaria que suponga un cambio efectivo de control de la Sociedad (\"Cambio de Control\").\n\n(c) La venta de la totalidad o sustancialmente la totalidad de los activos de la Sociedad.\n\nNo constituirán Evento de Liquidez las operaciones internas de reestructuración que no supongan un cambio efectivo de control."
+          },
           "biasPartyA": 0.3,
           "biasPartyB": -0.3,
           "jurisdictionConfig": {
-            "SPAIN": { "available": true }
+            "SPAIN": {
+              "available": true
+            }
           }
         },
         {
           "id": "trigger-exit-ipo",
           "code": "exit-ipo",
-          "label": { "es": "Exit + salida a bolsa (IPO)" },
+          "label": {
+            "es": "Exit + salida a bolsa (IPO)"
+          },
           "order": 2,
-          "plainDescription": { "es": "El derecho de cobro se activa por venta, cambio de control o salida a bolsa de la sociedad." },
-          "prosPartyA": [{ "es": "Cubre los escenarios de liquidez más habituales" }],
-          "consPartyA": [{ "es": "En caso de IPO, el beneficiario puede ejercer en momento inoportuno" }],
-          "prosPartyB": [{ "es": "Doble vía de liquidez" }, { "es": "Más probable que se produzca algún evento" }],
-          "consPartyB": [{ "es": "Sigue sin cubrir escenarios de liquidez parcial" }],
-          "legalText": { "es": "Las Phantom Shares consolidadas otorgarán al Beneficiario el derecho a percibir su valor económico cuando se produzca cualquiera de los siguientes Eventos de Liquidez:\n\n(a) Venta o Cambio de Control: la venta, transmisión o cesión de más del 50% del capital social, o cualquier operación que suponga un cambio efectivo de control.\n\n(b) Oferta Pública (IPO): la admisión a negociación de las acciones o participaciones de la Sociedad en un mercado regulado o sistema multilateral de negociación.\n\n(c) Venta de activos: la venta de la totalidad o sustancialmente la totalidad de los activos.\n\nEn caso de IPO, el Beneficiario podrá ejercer su derecho conforme al procedimiento y plazos que establezca la Sociedad, sujeto a los períodos de lock-up que resulten aplicables." },
-          "biasPartyA": 0.0,
-          "biasPartyB": 0.0,
+          "plainDescription": {
+            "es": "El derecho de cobro se activa por venta, cambio de control o salida a bolsa de la sociedad."
+          },
+          "prosPartyA": {
+            "es": [
+              "Cubre los escenarios de liquidez más habituales"
+            ]
+          },
+          "consPartyA": {
+            "es": [
+              "En caso de IPO, el beneficiario puede ejercer en momento inoportuno"
+            ]
+          },
+          "prosPartyB": {
+            "es": [
+              "Doble vía de liquidez",
+              "Más probable que se produzca algún evento"
+            ]
+          },
+          "consPartyB": {
+            "es": [
+              "Sigue sin cubrir escenarios de liquidez parcial"
+            ]
+          },
+          "legalText": {
+            "es": "Las Phantom Shares consolidadas otorgarán al Beneficiario el derecho a percibir su valor económico cuando se produzca cualquiera de los siguientes Eventos de Liquidez:\n\n(a) Venta o Cambio de Control: la venta, transmisión o cesión de más del 50% del capital social, o cualquier operación que suponga un cambio efectivo de control.\n\n(b) Oferta Pública (IPO): la admisión a negociación de las acciones o participaciones de la Sociedad en un mercado regulado o sistema multilateral de negociación.\n\n(c) Venta de activos: la venta de la totalidad o sustancialmente la totalidad de los activos.\n\nEn caso de IPO, el Beneficiario podrá ejercer su derecho conforme al procedimiento y plazos que establezca la Sociedad, sujeto a los períodos de lock-up que resulten aplicables."
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "jurisdictionConfig": {
-            "SPAIN": { "available": true }
+            "SPAIN": {
+              "available": true
+            }
           }
         },
         {
           "id": "trigger-exit-ipo-secundario",
           "code": "exit-ipo-secundario",
-          "label": { "es": "Exit + IPO + mercado secundario" },
+          "label": {
+            "es": "Exit + IPO + mercado secundario"
+          },
           "order": 3,
-          "plainDescription": { "es": "El derecho de cobro se activa también por operaciones en mercado secundario autorizadas por la sociedad." },
-          "prosPartyA": [{ "es": "Máxima flexibilidad para el beneficiario" }, { "es": "Herramienta potente de atracción de talento" }],
-          "consPartyA": [{ "es": "Posible impacto en la tesorería de la sociedad" }, { "es": "Mayor complejidad administrativa" }],
-          "prosPartyB": [{ "es": "Múltiples vías de liquidez" }, { "es": "No dependencia de un único evento" }],
-          "consPartyB": [{ "es": "Operaciones de secundario sujetas a aprobación de la sociedad" }],
-          "legalText": { "es": "Las Phantom Shares consolidadas otorgarán al Beneficiario el derecho a percibir su valor económico cuando se produzca cualquiera de los siguientes Eventos de Liquidez:\n\n(a) Venta o Cambio de Control: según se define en el Plan.\n\n(b) Oferta Pública (IPO): la admisión a negociación en un mercado regulado o sistema multilateral de negociación.\n\n(c) Operación de Secundario: cualquier programa de liquidez organizado por la Sociedad que permita a los Beneficiarios liquidar, total o parcialmente, sus Phantom Shares consolidadas. La Sociedad podrá, a su entera discreción, organizar dichos programas, establecer las condiciones de participación y limitar los importes.\n\n(d) Venta de activos: la venta de la totalidad o sustancialmente la totalidad de los activos.\n\nEl Beneficiario reconoce que la Sociedad no tiene obligación de organizar operaciones de secundario y que estas se realizarán exclusivamente a criterio de la Sociedad." },
+          "plainDescription": {
+            "es": "El derecho de cobro se activa también por operaciones en mercado secundario autorizadas por la sociedad."
+          },
+          "prosPartyA": {
+            "es": [
+              "Máxima flexibilidad para el beneficiario",
+              "Herramienta potente de atracción de talento"
+            ]
+          },
+          "consPartyA": {
+            "es": [
+              "Posible impacto en la tesorería de la sociedad",
+              "Mayor complejidad administrativa"
+            ]
+          },
+          "prosPartyB": {
+            "es": [
+              "Múltiples vías de liquidez",
+              "No dependencia de un único evento"
+            ]
+          },
+          "consPartyB": {
+            "es": [
+              "Operaciones de secundario sujetas a aprobación de la sociedad"
+            ]
+          },
+          "legalText": {
+            "es": "Las Phantom Shares consolidadas otorgarán al Beneficiario el derecho a percibir su valor económico cuando se produzca cualquiera de los siguientes Eventos de Liquidez:\n\n(a) Venta o Cambio de Control: según se define en el Plan.\n\n(b) Oferta Pública (IPO): la admisión a negociación en un mercado regulado o sistema multilateral de negociación.\n\n(c) Operación de Secundario: cualquier programa de liquidez organizado por la Sociedad que permita a los Beneficiarios liquidar, total o parcialmente, sus Phantom Shares consolidadas. La Sociedad podrá, a su entera discreción, organizar dichos programas, establecer las condiciones de participación y limitar los importes.\n\n(d) Venta de activos: la venta de la totalidad o sustancialmente la totalidad de los activos.\n\nEl Beneficiario reconoce que la Sociedad no tiene obligación de organizar operaciones de secundario y que estas se realizarán exclusivamente a criterio de la Sociedad."
+          },
           "biasPartyA": -0.3,
           "biasPartyB": 0.3,
           "jurisdictionConfig": {
-            "SPAIN": { "available": true }
+            "SPAIN": {
+              "available": true
+            }
           }
         }
       ]
     },
     {
       "id": "metodo-valoracion",
-      "title": { "es": "Método de valoración" },
-      "category": { "es": "Valoración" },
+      "title": {
+        "es": "Método de valoración"
+      },
+      "category": {
+        "es": "Valoración"
+      },
       "order": 5,
-      "plainDescription": { "es": "Método para determinar el valor económico de cada phantom share en el momento del Evento de Liquidez." },
-      "legalContext": { "es": "La valoración es el elemento más sensible del plan. Debe ser objetiva, verificable y acordada por ambas partes. En caso de litigio, los tribunales españoles suelen aceptar valoraciones realizadas por expertos independientes o basadas en transacciones de mercado recientes. La fórmula debe ser suficientemente clara para evitar disputas interpretativas." },
+      "plainDescription": {
+        "es": "Método para determinar el valor económico de cada phantom share en el momento del Evento de Liquidez."
+      },
+      "legalContext": {
+        "es": "La valoración es el elemento más sensible del plan. Debe ser objetiva, verificable y acordada por ambas partes. En caso de litigio, los tribunales españoles suelen aceptar valoraciones realizadas por expertos independientes o basadas en transacciones de mercado recientes. La fórmula debe ser suficientemente clara para evitar disputas interpretativas."
+      },
       "isRequired": true,
       "options": [
         {
           "id": "valoracion-ultima-ronda",
           "code": "ultima-ronda",
-          "label": { "es": "Valoración de la última ronda" },
+          "label": {
+            "es": "Valoración de la última ronda"
+          },
           "order": 1,
-          "plainDescription": { "es": "El valor se determina por la valoración de la última ronda de financiación o transacción comparable." },
-          "prosPartyA": [{ "es": "Referencia objetiva y verificable" }, { "es": "Simplicidad de cálculo" }],
-          "consPartyA": [{ "es": "Puede no reflejar el valor actual si ha pasado tiempo" }],
-          "prosPartyB": [{ "es": "Valor transparente y conocido" }],
-          "consPartyB": [{ "es": "La valoración de la ronda puede incluir primas o descuentos no representativos" }],
-          "legalText": { "es": "El valor de cada Phantom Share se determinará con base en la valoración pre-money de la Sociedad resultante de la última ronda de financiación cerrada o, en su defecto, de la última transacción sobre participaciones sociales realizada con terceros no vinculados (la \"Valoración de Referencia\").\n\nEl valor unitario de cada Phantom Share será igual a la Valoración de Referencia dividida entre el número total de participaciones sociales de la Sociedad en el momento de la determinación.\n\nEn caso de que no se haya producido ninguna ronda de financiación ni transacción comparable en los últimos veinticuatro (24) meses, se aplicará el método de valoración subsidiario previsto en este Plan." },
-          "biasPartyA": 0.0,
-          "biasPartyB": 0.0,
+          "plainDescription": {
+            "es": "El valor se determina por la valoración de la última ronda de financiación o transacción comparable."
+          },
+          "prosPartyA": {
+            "es": [
+              "Referencia objetiva y verificable",
+              "Simplicidad de cálculo"
+            ]
+          },
+          "consPartyA": {
+            "es": [
+              "Puede no reflejar el valor actual si ha pasado tiempo"
+            ]
+          },
+          "prosPartyB": {
+            "es": [
+              "Valor transparente y conocido"
+            ]
+          },
+          "consPartyB": {
+            "es": [
+              "La valoración de la ronda puede incluir primas o descuentos no representativos"
+            ]
+          },
+          "legalText": {
+            "es": "El valor de cada Phantom Share se determinará con base en la valoración pre-money de la Sociedad resultante de la última ronda de financiación cerrada o, en su defecto, de la última transacción sobre participaciones sociales realizada con terceros no vinculados (la \"Valoración de Referencia\").\n\nEl valor unitario de cada Phantom Share será igual a la Valoración de Referencia dividida entre el número total de participaciones sociales de la Sociedad en el momento de la determinación.\n\nEn caso de que no se haya producido ninguna ronda de financiación ni transacción comparable en los últimos veinticuatro (24) meses, se aplicará el método de valoración subsidiario previsto en este Plan."
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "jurisdictionConfig": {
-            "SPAIN": { "available": true }
+            "SPAIN": {
+              "available": true
+            }
           }
         },
         {
           "id": "valoracion-independiente",
           "code": "valoracion-independiente",
-          "label": { "es": "Valoración por experto independiente" },
+          "label": {
+            "es": "Valoración por experto independiente"
+          },
           "order": 2,
-          "plainDescription": { "es": "Un experto independiente determina el valor de la sociedad y, por tanto, de cada phantom share." },
-          "prosPartyA": [{ "es": "Máxima objetividad" }, { "es": "Aceptada por tribunales y Hacienda" }],
-          "consPartyA": [{ "es": "Coste del informe de valoración" }, { "es": "Posible retraso en la determinación" }],
-          "prosPartyB": [{ "es": "Garantía de independencia" }],
-          "consPartyB": [{ "es": "El beneficiario no participa en la selección del experto" }],
-          "legalText": { "es": "El valor de cada Phantom Share se determinará mediante un informe de valoración emitido por un experto independiente de reconocido prestigio (el \"Valorador\"), designado de común acuerdo entre la Sociedad y el Beneficiario o, en su defecto, por [INSTITUCIÓN DESIGNADORA].\n\nEl Valorador determinará el valor de mercado de la Sociedad utilizando los métodos de valoración generalmente aceptados (DCF, múltiplos de mercado, transacciones comparables, u otros que considere apropiados).\n\nLos costes del informe de valoración serán asumidos por la Sociedad. El informe del Valorador será vinculante para ambas partes, salvo error manifiesto." },
-          "biasPartyA": 0.0,
-          "biasPartyB": 0.0,
+          "plainDescription": {
+            "es": "Un experto independiente determina el valor de la sociedad y, por tanto, de cada phantom share."
+          },
+          "prosPartyA": {
+            "es": [
+              "Máxima objetividad",
+              "Aceptada por tribunales y Hacienda"
+            ]
+          },
+          "consPartyA": {
+            "es": [
+              "Coste del informe de valoración",
+              "Posible retraso en la determinación"
+            ]
+          },
+          "prosPartyB": {
+            "es": [
+              "Garantía de independencia"
+            ]
+          },
+          "consPartyB": {
+            "es": [
+              "El beneficiario no participa en la selección del experto"
+            ]
+          },
+          "legalText": {
+            "es": "El valor de cada Phantom Share se determinará mediante un informe de valoración emitido por un experto independiente de reconocido prestigio (el \"Valorador\"), designado de común acuerdo entre la Sociedad y el Beneficiario o, en su defecto, por [INSTITUCIÓN DESIGNADORA].\n\nEl Valorador determinará el valor de mercado de la Sociedad utilizando los métodos de valoración generalmente aceptados (DCF, múltiplos de mercado, transacciones comparables, u otros que considere apropiados).\n\nLos costes del informe de valoración serán asumidos por la Sociedad. El informe del Valorador será vinculante para ambas partes, salvo error manifiesto."
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "jurisdictionConfig": {
-            "SPAIN": { "available": true }
+            "SPAIN": {
+              "available": true
+            }
           }
         },
         {
           "id": "valoracion-formula",
           "code": "formula",
-          "label": { "es": "Fórmula predeterminada" },
+          "label": {
+            "es": "Fórmula predeterminada"
+          },
           "order": 3,
-          "plainDescription": { "es": "El valor se calcula mediante una fórmula objetiva basada en métricas financieras de la sociedad." },
-          "prosPartyA": [{ "es": "Previsibilidad y rapidez de cálculo" }, { "es": "Sin costes de valoración externa" }],
-          "consPartyA": [{ "es": "La fórmula puede no reflejar el valor real en todas las circunstancias" }],
-          "prosPartyB": [{ "es": "Transparencia total de la fórmula" }, { "es": "Posibilidad de calcular el valor en cualquier momento" }],
-          "consPartyB": [{ "es": "Puede infraponderar el potencial de crecimiento" }],
-          "legalText": { "es": "El valor de cada Phantom Share se determinará mediante la aplicación de la siguiente fórmula:\n\nValor unitario = (EBITDA del último ejercicio cerrado × [MÚLTIPLO]) / Número total de participaciones sociales\n\nDonde:\n- EBITDA: resultado de explotación antes de amortizaciones, depreciaciones, intereses e impuestos, conforme a las cuentas anuales auditadas.\n- Múltiplo: [MÚLTIPLO]x, revisable cada [PERÍODO] por acuerdo del órgano de administración.\n\nEn caso de que el EBITDA sea negativo, se aplicará subsidiariamente una valoración basada en [MÉTRICA ALTERNATIVA: ingresos, activos netos, etc.]." },
+          "plainDescription": {
+            "es": "El valor se calcula mediante una fórmula objetiva basada en métricas financieras de la sociedad."
+          },
+          "prosPartyA": {
+            "es": [
+              "Previsibilidad y rapidez de cálculo",
+              "Sin costes de valoración externa"
+            ]
+          },
+          "consPartyA": {
+            "es": [
+              "La fórmula puede no reflejar el valor real en todas las circunstancias"
+            ]
+          },
+          "prosPartyB": {
+            "es": [
+              "Transparencia total de la fórmula",
+              "Posibilidad de calcular el valor en cualquier momento"
+            ]
+          },
+          "consPartyB": {
+            "es": [
+              "Puede infraponderar el potencial de crecimiento"
+            ]
+          },
+          "legalText": {
+            "es": "El valor de cada Phantom Share se determinará mediante la aplicación de la siguiente fórmula:\n\nValor unitario = (EBITDA del último ejercicio cerrado × [MÚLTIPLO]) / Número total de participaciones sociales\n\nDonde:\n- EBITDA: resultado de explotación antes de amortizaciones, depreciaciones, intereses e impuestos, conforme a las cuentas anuales auditadas.\n- Múltiplo: [MÚLTIPLO]x, revisable cada [PERÍODO] por acuerdo del órgano de administración.\n\nEn caso de que el EBITDA sea negativo, se aplicará subsidiariamente una valoración basada en [MÉTRICA ALTERNATIVA: ingresos, activos netos, etc.]."
+          },
           "biasPartyA": 0.2,
           "biasPartyB": -0.2,
           "jurisdictionConfig": {
-            "SPAIN": { "available": true }
+            "SPAIN": {
+              "available": true
+            }
           }
         }
       ]
     },
     {
       "id": "ventana-ejercicio",
-      "title": { "es": "Ventana de ejercicio" },
-      "category": { "es": "Liquidación" },
+      "title": {
+        "es": "Ventana de ejercicio"
+      },
+      "category": {
+        "es": "Liquidación"
+      },
       "order": 6,
-      "plainDescription": { "es": "Plazo del que dispone el beneficiario para ejercitar su derecho de cobro tras producirse un Evento de Liquidez." },
-      "legalContext": { "es": "La ventana de ejercicio establece un plazo de caducidad contractual para el derecho de cobro. Los plazos de caducidad contractual son válidos en derecho español al amparo del principio de autonomía de la voluntad (art. 1255 CC), siempre que sean razonables y no abusivos." },
+      "plainDescription": {
+        "es": "Plazo del que dispone el beneficiario para ejercitar su derecho de cobro tras producirse un Evento de Liquidez."
+      },
+      "legalContext": {
+        "es": "La ventana de ejercicio establece un plazo de caducidad contractual para el derecho de cobro. Los plazos de caducidad contractual son válidos en derecho español al amparo del principio de autonomía de la voluntad (art. 1255 CC), siempre que sean razonables y no abusivos."
+      },
       "isRequired": true,
       "options": [
         {
           "id": "ventana-30",
           "code": "30-dias",
-          "label": { "es": "30 días" },
+          "label": {
+            "es": "30 días"
+          },
           "order": 1,
-          "plainDescription": { "es": "El beneficiario dispone de 30 días tras el Evento de Liquidez para ejercitar su derecho." },
-          "prosPartyA": [{ "es": "Resolución rápida de las obligaciones del plan" }],
-          "consPartyA": [{ "es": "Plazo muy corto que podría cuestionarse como abusivo" }],
-          "prosPartyB": [{ "es": "Incentivo a actuar con rapidez" }],
-          "consPartyB": [{ "es": "Poco margen para asesorarse o negociar" }],
-          "legalText": { "es": "Producido un Evento de Liquidez, el Beneficiario dispondrá de un plazo de treinta (30) días naturales contados desde la notificación fehaciente por parte de la Sociedad (la \"Ventana de Ejercicio\") para comunicar a la Sociedad su voluntad de ejercitar el derecho de cobro sobre sus Phantom Shares consolidadas.\n\nTranscurrida la Ventana de Ejercicio sin que el Beneficiario haya ejercitado su derecho, las Phantom Shares afectadas se extinguirán sin derecho a compensación.\n\nLa Sociedad abonará el importe correspondiente en el plazo máximo de [PLAZO PAGO] días desde el ejercicio del derecho." },
+          "plainDescription": {
+            "es": "El beneficiario dispone de 30 días tras el Evento de Liquidez para ejercitar su derecho."
+          },
+          "prosPartyA": {
+            "es": [
+              "Resolución rápida de las obligaciones del plan"
+            ]
+          },
+          "consPartyA": {
+            "es": [
+              "Plazo muy corto que podría cuestionarse como abusivo"
+            ]
+          },
+          "prosPartyB": {
+            "es": [
+              "Incentivo a actuar con rapidez"
+            ]
+          },
+          "consPartyB": {
+            "es": [
+              "Poco margen para asesorarse o negociar"
+            ]
+          },
+          "legalText": {
+            "es": "Producido un Evento de Liquidez, el Beneficiario dispondrá de un plazo de treinta (30) días naturales contados desde la notificación fehaciente por parte de la Sociedad (la \"Ventana de Ejercicio\") para comunicar a la Sociedad su voluntad de ejercitar el derecho de cobro sobre sus Phantom Shares consolidadas.\n\nTranscurrida la Ventana de Ejercicio sin que el Beneficiario haya ejercitado su derecho, las Phantom Shares afectadas se extinguirán sin derecho a compensación.\n\nLa Sociedad abonará el importe correspondiente en el plazo máximo de [PLAZO PAGO] días desde el ejercicio del derecho."
+          },
           "biasPartyA": 0.3,
           "biasPartyB": -0.3,
           "jurisdictionConfig": {
-            "SPAIN": { "available": true }
+            "SPAIN": {
+              "available": true
+            }
           }
         },
         {
           "id": "ventana-90",
           "code": "90-dias",
-          "label": { "es": "90 días" },
+          "label": {
+            "es": "90 días"
+          },
           "order": 2,
-          "plainDescription": { "es": "El beneficiario dispone de 90 días tras el Evento de Liquidez para ejercitar su derecho." },
-          "prosPartyA": [{ "es": "Plazo razonable y estándar de mercado" }],
-          "consPartyA": [{ "es": "Incertidumbre durante 3 meses" }],
-          "prosPartyB": [{ "es": "Tiempo suficiente para asesorarse" }, { "es": "Estándar de mercado" }],
-          "consPartyB": [{ "es": "Retraso en la obtención de liquidez" }],
-          "legalText": { "es": "Producido un Evento de Liquidez, el Beneficiario dispondrá de un plazo de noventa (90) días naturales contados desde la notificación fehaciente por parte de la Sociedad (la \"Ventana de Ejercicio\") para comunicar a la Sociedad su voluntad de ejercitar el derecho de cobro sobre sus Phantom Shares consolidadas.\n\nTranscurrida la Ventana de Ejercicio sin que el Beneficiario haya ejercitado su derecho, las Phantom Shares afectadas se extinguirán sin derecho a compensación.\n\nLa Sociedad abonará el importe correspondiente en el plazo máximo de [PLAZO PAGO] días desde el ejercicio del derecho." },
-          "biasPartyA": 0.0,
-          "biasPartyB": 0.0,
+          "plainDescription": {
+            "es": "El beneficiario dispone de 90 días tras el Evento de Liquidez para ejercitar su derecho."
+          },
+          "prosPartyA": {
+            "es": [
+              "Plazo razonable y estándar de mercado"
+            ]
+          },
+          "consPartyA": {
+            "es": [
+              "Incertidumbre durante 3 meses"
+            ]
+          },
+          "prosPartyB": {
+            "es": [
+              "Tiempo suficiente para asesorarse",
+              "Estándar de mercado"
+            ]
+          },
+          "consPartyB": {
+            "es": [
+              "Retraso en la obtención de liquidez"
+            ]
+          },
+          "legalText": {
+            "es": "Producido un Evento de Liquidez, el Beneficiario dispondrá de un plazo de noventa (90) días naturales contados desde la notificación fehaciente por parte de la Sociedad (la \"Ventana de Ejercicio\") para comunicar a la Sociedad su voluntad de ejercitar el derecho de cobro sobre sus Phantom Shares consolidadas.\n\nTranscurrida la Ventana de Ejercicio sin que el Beneficiario haya ejercitado su derecho, las Phantom Shares afectadas se extinguirán sin derecho a compensación.\n\nLa Sociedad abonará el importe correspondiente en el plazo máximo de [PLAZO PAGO] días desde el ejercicio del derecho."
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "jurisdictionConfig": {
-            "SPAIN": { "available": true }
+            "SPAIN": {
+              "available": true
+            }
           }
         },
         {
           "id": "ventana-180",
           "code": "180-dias",
-          "label": { "es": "180 días" },
+          "label": {
+            "es": "180 días"
+          },
           "order": 3,
-          "plainDescription": { "es": "El beneficiario dispone de 180 días tras el Evento de Liquidez para ejercitar su derecho." },
-          "prosPartyA": [{ "es": "Máxima seguridad jurídica sobre la razonabilidad del plazo" }],
-          "consPartyA": [{ "es": "Incertidumbre prolongada" }],
-          "prosPartyB": [{ "es": "Amplio margen para tomar decisiones" }],
-          "consPartyB": [],
-          "legalText": { "es": "Producido un Evento de Liquidez, el Beneficiario dispondrá de un plazo de ciento ochenta (180) días naturales contados desde la notificación fehaciente por parte de la Sociedad (la \"Ventana de Ejercicio\") para comunicar a la Sociedad su voluntad de ejercitar el derecho de cobro sobre sus Phantom Shares consolidadas.\n\nTranscurrida la Ventana de Ejercicio sin que el Beneficiario haya ejercitado su derecho, las Phantom Shares afectadas se extinguirán sin derecho a compensación.\n\nLa Sociedad abonará el importe correspondiente en el plazo máximo de [PLAZO PAGO] días desde el ejercicio del derecho." },
+          "plainDescription": {
+            "es": "El beneficiario dispone de 180 días tras el Evento de Liquidez para ejercitar su derecho."
+          },
+          "prosPartyA": {
+            "es": [
+              "Máxima seguridad jurídica sobre la razonabilidad del plazo"
+            ]
+          },
+          "consPartyA": {
+            "es": [
+              "Incertidumbre prolongada"
+            ]
+          },
+          "prosPartyB": {
+            "es": [
+              "Amplio margen para tomar decisiones"
+            ]
+          },
+          "consPartyB": {
+            "es": []
+          },
+          "legalText": {
+            "es": "Producido un Evento de Liquidez, el Beneficiario dispondrá de un plazo de ciento ochenta (180) días naturales contados desde la notificación fehaciente por parte de la Sociedad (la \"Ventana de Ejercicio\") para comunicar a la Sociedad su voluntad de ejercitar el derecho de cobro sobre sus Phantom Shares consolidadas.\n\nTranscurrida la Ventana de Ejercicio sin que el Beneficiario haya ejercitado su derecho, las Phantom Shares afectadas se extinguirán sin derecho a compensación.\n\nLa Sociedad abonará el importe correspondiente en el plazo máximo de [PLAZO PAGO] días desde el ejercicio del derecho."
+          },
           "biasPartyA": -0.3,
           "biasPartyB": 0.3,
           "jurisdictionConfig": {
-            "SPAIN": { "available": true }
+            "SPAIN": {
+              "available": true
+            }
           }
         }
       ]
     },
     {
       "id": "condiciones-perdida",
-      "title": { "es": "Condiciones de pérdida (forfeiture)" },
-      "category": { "es": "Terminación" },
+      "title": {
+        "es": "Condiciones de pérdida (forfeiture)"
+      },
+      "category": {
+        "es": "Terminación"
+      },
       "order": 7,
-      "plainDescription": { "es": "Tratamiento de las phantom shares (consolidadas y no consolidadas) cuando el beneficiario abandona la sociedad, distinguiendo entre good leaver y bad leaver." },
-      "legalContext": { "es": "Las cláusulas de good/bad leaver son habituales en planes de incentivos y han sido aceptadas por los tribunales españoles como cláusulas válidas al amparo de la libertad contractual. Es importante definir con precisión los supuestos de cada categoría para evitar la calificación de cláusula penal desproporcionada (art. 1154 CC) en caso de litigio." },
+      "plainDescription": {
+        "es": "Tratamiento de las phantom shares (consolidadas y no consolidadas) cuando el beneficiario abandona la sociedad, distinguiendo entre good leaver y bad leaver."
+      },
+      "legalContext": {
+        "es": "Las cláusulas de good/bad leaver son habituales en planes de incentivos y han sido aceptadas por los tribunales españoles como cláusulas válidas al amparo de la libertad contractual. Es importante definir con precisión los supuestos de cada categoría para evitar la calificación de cláusula penal desproporcionada (art. 1154 CC) en caso de litigio."
+      },
       "isRequired": true,
       "options": [
         {
           "id": "leaver-pierde-todo",
           "code": "bad-leaver-pierde-todo",
-          "label": { "es": "Bad leaver pierde todo" },
+          "label": {
+            "es": "Bad leaver pierde todo"
+          },
           "order": 1,
-          "plainDescription": { "es": "En caso de bad leaver, se pierden tanto las phantom shares consolidadas como las no consolidadas." },
-          "prosPartyA": [{ "es": "Máxima protección para la sociedad" }, { "es": "Fuerte desincentivo para malas prácticas" }],
-          "consPartyA": [{ "es": "Riesgo de calificación como cláusula penal desproporcionada" }],
-          "prosPartyB": [],
-          "consPartyB": [{ "es": "Pérdida total incluso de derechos consolidados" }],
-          "legalText": { "es": "A los efectos de este Plan, se distinguen los siguientes supuestos de terminación:\n\n(a) Good Leaver: fallecimiento, incapacidad permanente, despido improcedente, extinción por voluntad del trabajador por causa del artículo 50 ET, o jubilación. El Good Leaver conserva la totalidad de sus Phantom Shares consolidadas.\n\n(b) Bad Leaver: dimisión voluntaria, despido procedente (disciplinario), incumplimiento grave de las obligaciones del Plan, o comisión de actos de competencia desleal. El Bad Leaver perderá la totalidad de sus Phantom Shares, tanto consolidadas como no consolidadas, sin derecho a compensación alguna.\n\nEn ambos casos, las Phantom Shares no consolidadas se extinguirán automáticamente." },
+          "plainDescription": {
+            "es": "En caso de bad leaver, se pierden tanto las phantom shares consolidadas como las no consolidadas."
+          },
+          "prosPartyA": {
+            "es": [
+              "Máxima protección para la sociedad",
+              "Fuerte desincentivo para malas prácticas"
+            ]
+          },
+          "consPartyA": {
+            "es": [
+              "Riesgo de calificación como cláusula penal desproporcionada"
+            ]
+          },
+          "prosPartyB": {
+            "es": []
+          },
+          "consPartyB": {
+            "es": [
+              "Pérdida total incluso de derechos consolidados"
+            ]
+          },
+          "legalText": {
+            "es": "A los efectos de este Plan, se distinguen los siguientes supuestos de terminación:\n\n(a) Good Leaver: fallecimiento, incapacidad permanente, despido improcedente, extinción por voluntad del trabajador por causa del artículo 50 ET, o jubilación. El Good Leaver conserva la totalidad de sus Phantom Shares consolidadas.\n\n(b) Bad Leaver: dimisión voluntaria, despido procedente (disciplinario), incumplimiento grave de las obligaciones del Plan, o comisión de actos de competencia desleal. El Bad Leaver perderá la totalidad de sus Phantom Shares, tanto consolidadas como no consolidadas, sin derecho a compensación alguna.\n\nEn ambos casos, las Phantom Shares no consolidadas se extinguirán automáticamente."
+          },
           "biasPartyA": 0.5,
           "biasPartyB": -0.5,
           "jurisdictionConfig": {
-            "SPAIN": { "available": true }
+            "SPAIN": {
+              "available": true
+            }
           }
         },
         {
           "id": "leaver-pierde-no-consolidadas",
           "code": "bad-leaver-pierde-no-consolidadas",
-          "label": { "es": "Bad leaver pierde solo las no consolidadas" },
+          "label": {
+            "es": "Bad leaver pierde solo las no consolidadas"
+          },
           "order": 2,
-          "plainDescription": { "es": "En caso de bad leaver, se pierden las phantom shares no consolidadas pero se conservan las consolidadas." },
-          "prosPartyA": [{ "es": "Protección razonable" }, { "es": "Menor riesgo de impugnación" }],
-          "consPartyA": [{ "es": "El bad leaver conserva valor económico consolidado" }],
-          "prosPartyB": [{ "es": "Se respetan los derechos ya consolidados" }],
-          "consPartyB": [{ "es": "Pérdida de las no consolidadas sin posibilidad de recuperación" }],
-          "legalText": { "es": "A los efectos de este Plan, se distinguen los siguientes supuestos de terminación:\n\n(a) Good Leaver: fallecimiento, incapacidad permanente, despido improcedente, extinción por causa del artículo 50 ET, o jubilación. El Good Leaver conserva la totalidad de sus Phantom Shares consolidadas.\n\n(b) Bad Leaver: dimisión voluntaria, despido procedente (disciplinario), incumplimiento grave de las obligaciones del Plan, o comisión de actos de competencia desleal. El Bad Leaver conservará sus Phantom Shares consolidadas pero perderá la totalidad de las Phantom Shares no consolidadas.\n\nEn ambos casos, las Phantom Shares no consolidadas se extinguirán automáticamente a la fecha de terminación." },
-          "biasPartyA": 0.0,
-          "biasPartyB": 0.0,
+          "plainDescription": {
+            "es": "En caso de bad leaver, se pierden las phantom shares no consolidadas pero se conservan las consolidadas."
+          },
+          "prosPartyA": {
+            "es": [
+              "Protección razonable",
+              "Menor riesgo de impugnación"
+            ]
+          },
+          "consPartyA": {
+            "es": [
+              "El bad leaver conserva valor económico consolidado"
+            ]
+          },
+          "prosPartyB": {
+            "es": [
+              "Se respetan los derechos ya consolidados"
+            ]
+          },
+          "consPartyB": {
+            "es": [
+              "Pérdida de las no consolidadas sin posibilidad de recuperación"
+            ]
+          },
+          "legalText": {
+            "es": "A los efectos de este Plan, se distinguen los siguientes supuestos de terminación:\n\n(a) Good Leaver: fallecimiento, incapacidad permanente, despido improcedente, extinción por causa del artículo 50 ET, o jubilación. El Good Leaver conserva la totalidad de sus Phantom Shares consolidadas.\n\n(b) Bad Leaver: dimisión voluntaria, despido procedente (disciplinario), incumplimiento grave de las obligaciones del Plan, o comisión de actos de competencia desleal. El Bad Leaver conservará sus Phantom Shares consolidadas pero perderá la totalidad de las Phantom Shares no consolidadas.\n\nEn ambos casos, las Phantom Shares no consolidadas se extinguirán automáticamente a la fecha de terminación."
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "jurisdictionConfig": {
-            "SPAIN": { "available": true }
+            "SPAIN": {
+              "available": true
+            }
           }
         },
         {
           "id": "leaver-escala",
           "code": "escala-good-bad",
-          "label": { "es": "Escala good/bad leaver diferenciada" },
+          "label": {
+            "es": "Escala good/bad leaver diferenciada"
+          },
           "order": 3,
-          "plainDescription": { "es": "Se aplica un tratamiento diferenciado con categorías intermedias (regular leaver) además de good y bad leaver." },
-          "prosPartyA": [{ "es": "Mayor flexibilidad y justicia en el tratamiento" }, { "es": "Menor riesgo de impugnación" }],
-          "consPartyA": [{ "es": "Mayor complejidad administrativa" }],
-          "prosPartyB": [{ "es": "Tratamiento más equitativo según las circunstancias" }],
-          "consPartyB": [{ "es": "Incertidumbre sobre la calificación en casos fronterizos" }],
-          "legalText": { "es": "A los efectos de este Plan, se establecen las siguientes categorías de terminación:\n\n(a) Good Leaver: fallecimiento, incapacidad permanente, despido improcedente, extinción por causa del artículo 50 ET, o jubilación. Conserva el 100% de las Phantom Shares consolidadas.\n\n(b) Regular Leaver: dimisión voluntaria con preaviso conforme al contrato, no renovación de contrato temporal, o mutuo acuerdo. Conserva el [PORCENTAJE REGULAR]% de las Phantom Shares consolidadas.\n\n(c) Bad Leaver: despido procedente (disciplinario), incumplimiento grave del Plan, competencia desleal, o violación de confidencialidad. Conserva el [PORCENTAJE BAD]% de las Phantom Shares consolidadas (o pierde la totalidad).\n\nEn todas las categorías, las Phantom Shares no consolidadas se extinguirán a la fecha de terminación." },
+          "plainDescription": {
+            "es": "Se aplica un tratamiento diferenciado con categorías intermedias (regular leaver) además de good y bad leaver."
+          },
+          "prosPartyA": {
+            "es": [
+              "Mayor flexibilidad y justicia en el tratamiento",
+              "Menor riesgo de impugnación"
+            ]
+          },
+          "consPartyA": {
+            "es": [
+              "Mayor complejidad administrativa"
+            ]
+          },
+          "prosPartyB": {
+            "es": [
+              "Tratamiento más equitativo según las circunstancias"
+            ]
+          },
+          "consPartyB": {
+            "es": [
+              "Incertidumbre sobre la calificación en casos fronterizos"
+            ]
+          },
+          "legalText": {
+            "es": "A los efectos de este Plan, se establecen las siguientes categorías de terminación:\n\n(a) Good Leaver: fallecimiento, incapacidad permanente, despido improcedente, extinción por causa del artículo 50 ET, o jubilación. Conserva el 100% de las Phantom Shares consolidadas.\n\n(b) Regular Leaver: dimisión voluntaria con preaviso conforme al contrato, no renovación de contrato temporal, o mutuo acuerdo. Conserva el [PORCENTAJE REGULAR]% de las Phantom Shares consolidadas.\n\n(c) Bad Leaver: despido procedente (disciplinario), incumplimiento grave del Plan, competencia desleal, o violación de confidencialidad. Conserva el [PORCENTAJE BAD]% de las Phantom Shares consolidadas (o pierde la totalidad).\n\nEn todas las categorías, las Phantom Shares no consolidadas se extinguirán a la fecha de terminación."
+          },
           "biasPartyA": -0.2,
           "biasPartyB": 0.2,
           "jurisdictionConfig": {
-            "SPAIN": { "available": true }
+            "SPAIN": {
+              "available": true
+            }
           }
         }
       ]
     },
     {
       "id": "tratamiento-fiscal",
-      "title": { "es": "Tratamiento fiscal" },
-      "category": { "es": "Fiscalidad" },
+      "title": {
+        "es": "Tratamiento fiscal"
+      },
+      "category": {
+        "es": "Fiscalidad"
+      },
       "order": 8,
-      "plainDescription": { "es": "Determinación de quién asume las obligaciones de retención y liquidación de impuestos derivados de las phantom shares." },
-      "legalContext": { "es": "En España, las phantom shares tributan como rendimiento del trabajo (si existe relación laboral) o como rendimiento de actividades económicas (si la relación es mercantil). La sociedad tiene obligación de retención conforme a los artículos 99 y siguientes de la Ley 35/2006 del IRPF. La base imponible se genera en el momento del cobro, no de la consolidación. Es fundamental establecer claramente las responsabilidades fiscales." },
+      "plainDescription": {
+        "es": "Determinación de quién asume las obligaciones de retención y liquidación de impuestos derivados de las phantom shares."
+      },
+      "legalContext": {
+        "es": "En España, las phantom shares tributan como rendimiento del trabajo (si existe relación laboral) o como rendimiento de actividades económicas (si la relación es mercantil). La sociedad tiene obligación de retención conforme a los artículos 99 y siguientes de la Ley 35/2006 del IRPF. La base imponible se genera en el momento del cobro, no de la consolidación. Es fundamental establecer claramente las responsabilidades fiscales."
+      },
       "isRequired": true,
       "options": [
         {
           "id": "fiscal-empresa-retiene",
           "code": "empresa-retiene",
-          "label": { "es": "La empresa gestiona la retención" },
+          "label": {
+            "es": "La empresa gestiona la retención"
+          },
           "order": 1,
-          "plainDescription": { "es": "La sociedad practica la retención fiscal correspondiente y la ingresa en Hacienda." },
-          "prosPartyA": [{ "es": "Cumplimiento de la obligación de retención" }, { "es": "Seguridad jurídica fiscal" }],
-          "consPartyA": [{ "es": "Carga administrativa para la sociedad" }],
-          "prosPartyB": [{ "es": "Sin carga de gestión fiscal" }, { "es": "Cumplimiento automático" }],
-          "consPartyB": [{ "es": "Menor control sobre la planificación fiscal personal" }],
-          "legalText": { "es": "La Sociedad practicará las retenciones e ingresos a cuenta que correspondan conforme a la normativa fiscal aplicable (Ley 35/2006 del IRPF y su Reglamento de desarrollo) sobre los importes abonados al Beneficiario en virtud del presente Plan.\n\nLa Sociedad facilitará al Beneficiario la información fiscal necesaria para la correcta declaración de los rendimientos percibidos, incluyendo el certificado de retenciones correspondiente.\n\nEl Beneficiario reconoce que la tributación de las Phantom Shares se produce en el momento del cobro efectivo, no en el momento de la consolidación ni de la asignación." },
-          "biasPartyA": 0.0,
-          "biasPartyB": 0.0,
+          "plainDescription": {
+            "es": "La sociedad practica la retención fiscal correspondiente y la ingresa en Hacienda."
+          },
+          "prosPartyA": {
+            "es": [
+              "Cumplimiento de la obligación de retención",
+              "Seguridad jurídica fiscal"
+            ]
+          },
+          "consPartyA": {
+            "es": [
+              "Carga administrativa para la sociedad"
+            ]
+          },
+          "prosPartyB": {
+            "es": [
+              "Sin carga de gestión fiscal",
+              "Cumplimiento automático"
+            ]
+          },
+          "consPartyB": {
+            "es": [
+              "Menor control sobre la planificación fiscal personal"
+            ]
+          },
+          "legalText": {
+            "es": "La Sociedad practicará las retenciones e ingresos a cuenta que correspondan conforme a la normativa fiscal aplicable (Ley 35/2006 del IRPF y su Reglamento de desarrollo) sobre los importes abonados al Beneficiario en virtud del presente Plan.\n\nLa Sociedad facilitará al Beneficiario la información fiscal necesaria para la correcta declaración de los rendimientos percibidos, incluyendo el certificado de retenciones correspondiente.\n\nEl Beneficiario reconoce que la tributación de las Phantom Shares se produce en el momento del cobro efectivo, no en el momento de la consolidación ni de la asignación."
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "jurisdictionConfig": {
-            "SPAIN": { "available": true }
+            "SPAIN": {
+              "available": true
+            }
           }
         },
         {
           "id": "fiscal-beneficiario",
           "code": "beneficiario-responsable",
-          "label": { "es": "El beneficiario gestiona sus impuestos" },
+          "label": {
+            "es": "El beneficiario gestiona sus impuestos"
+          },
           "order": 2,
-          "plainDescription": { "es": "El beneficiario es responsable de declarar y liquidar los impuestos derivados de las phantom shares." },
-          "prosPartyA": [{ "es": "Sin carga administrativa adicional" }],
-          "consPartyA": [{ "es": "Riesgo de incumplimiento de la obligación de retención de la sociedad" }],
-          "prosPartyB": [{ "es": "Control total sobre la planificación fiscal" }],
-          "consPartyB": [{ "es": "Responsabilidad directa ante Hacienda" }],
-          "legalText": { "es": "El Beneficiario será responsable de la correcta declaración y liquidación de los impuestos que se deriven de las cantidades percibidas en virtud del presente Plan, incluyendo el Impuesto sobre la Renta de las Personas Físicas y, en su caso, el Impuesto sobre el Patrimonio.\n\nNo obstante, la Sociedad cumplirá con su obligación de retención conforme a la normativa aplicable cuando esta sea legalmente exigible. En los supuestos en que no proceda retención (relación mercantil), el Beneficiario asumirá íntegramente la gestión de sus obligaciones tributarias.\n\nLa Sociedad facilitará al Beneficiario la información fiscal necesaria para el cumplimiento de sus obligaciones." },
+          "plainDescription": {
+            "es": "El beneficiario es responsable de declarar y liquidar los impuestos derivados de las phantom shares."
+          },
+          "prosPartyA": {
+            "es": [
+              "Sin carga administrativa adicional"
+            ]
+          },
+          "consPartyA": {
+            "es": [
+              "Riesgo de incumplimiento de la obligación de retención de la sociedad"
+            ]
+          },
+          "prosPartyB": {
+            "es": [
+              "Control total sobre la planificación fiscal"
+            ]
+          },
+          "consPartyB": {
+            "es": [
+              "Responsabilidad directa ante Hacienda"
+            ]
+          },
+          "legalText": {
+            "es": "El Beneficiario será responsable de la correcta declaración y liquidación de los impuestos que se deriven de las cantidades percibidas en virtud del presente Plan, incluyendo el Impuesto sobre la Renta de las Personas Físicas y, en su caso, el Impuesto sobre el Patrimonio.\n\nNo obstante, la Sociedad cumplirá con su obligación de retención conforme a la normativa aplicable cuando esta sea legalmente exigible. En los supuestos en que no proceda retención (relación mercantil), el Beneficiario asumirá íntegramente la gestión de sus obligaciones tributarias.\n\nLa Sociedad facilitará al Beneficiario la información fiscal necesaria para el cumplimiento de sus obligaciones."
+          },
           "biasPartyA": 0.2,
           "biasPartyB": -0.2,
           "jurisdictionConfig": {
-            "SPAIN": { "available": true }
+            "SPAIN": {
+              "available": true
+            }
           }
         },
         {
           "id": "fiscal-compartido",
           "code": "responsabilidad-compartida",
-          "label": { "es": "Responsabilidad compartida" },
+          "label": {
+            "es": "Responsabilidad compartida"
+          },
           "order": 3,
-          "plainDescription": { "es": "La sociedad gestiona la retención obligatoria y el beneficiario se encarga de los aspectos adicionales de su declaración." },
-          "prosPartyA": [{ "es": "Equilibrio de responsabilidades" }, { "es": "Cumplimiento legal garantizado" }],
-          "consPartyA": [{ "es": "Necesidad de coordinación" }],
-          "prosPartyB": [{ "es": "Retención gestionada por la empresa" }, { "es": "Flexibilidad para optimización fiscal personal" }],
-          "consPartyB": [{ "es": "Necesidad de coordinación con la empresa" }],
-          "legalText": { "es": "Las obligaciones fiscales derivadas del presente Plan se distribuirán de la siguiente forma:\n\n(a) Obligaciones de la Sociedad: practicar las retenciones e ingresos a cuenta legalmente exigibles, emitir los certificados de retenciones, y comunicar los pagos realizados conforme al modelo informativo correspondiente.\n\n(b) Obligaciones del Beneficiario: incluir los rendimientos percibidos en su declaración del IRPF, liquidar los impuestos no cubiertos por la retención, y cumplir con las obligaciones de información que le correspondan.\n\nAmbas partes se comprometen a cooperar de buena fe en el cumplimiento de sus respectivas obligaciones fiscales y a informarse mutuamente de cualquier requerimiento de la Administración Tributaria." },
-          "biasPartyA": 0.0,
-          "biasPartyB": 0.0,
+          "plainDescription": {
+            "es": "La sociedad gestiona la retención obligatoria y el beneficiario se encarga de los aspectos adicionales de su declaración."
+          },
+          "prosPartyA": {
+            "es": [
+              "Equilibrio de responsabilidades",
+              "Cumplimiento legal garantizado"
+            ]
+          },
+          "consPartyA": {
+            "es": [
+              "Necesidad de coordinación"
+            ]
+          },
+          "prosPartyB": {
+            "es": [
+              "Retención gestionada por la empresa",
+              "Flexibilidad para optimización fiscal personal"
+            ]
+          },
+          "consPartyB": {
+            "es": [
+              "Necesidad de coordinación con la empresa"
+            ]
+          },
+          "legalText": {
+            "es": "Las obligaciones fiscales derivadas del presente Plan se distribuirán de la siguiente forma:\n\n(a) Obligaciones de la Sociedad: practicar las retenciones e ingresos a cuenta legalmente exigibles, emitir los certificados de retenciones, y comunicar los pagos realizados conforme al modelo informativo correspondiente.\n\n(b) Obligaciones del Beneficiario: incluir los rendimientos percibidos en su declaración del IRPF, liquidar los impuestos no cubiertos por la retención, y cumplir con las obligaciones de información que le correspondan.\n\nAmbas partes se comprometen a cooperar de buena fe en el cumplimiento de sus respectivas obligaciones fiscales y a informarse mutuamente de cualquier requerimiento de la Administración Tributaria."
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "jurisdictionConfig": {
-            "SPAIN": { "available": true }
+            "SPAIN": {
+              "available": true
+            }
           }
         }
       ]
     },
     {
       "id": "gobernanza-modificacion",
-      "title": { "es": "Gobernanza y modificación del plan" },
-      "category": { "es": "Gobernanza" },
+      "title": {
+        "es": "Gobernanza y modificación del plan"
+      },
+      "category": {
+        "es": "Gobernanza"
+      },
       "order": 9,
-      "plainDescription": { "es": "Régimen de administración del plan y procedimiento para su modificación o terminación." },
-      "legalContext": { "es": "La modificación de condiciones contractuales requiere, como regla general, el consentimiento de ambas partes (art. 1256 CC: la validez y el cumplimiento de los contratos no pueden dejarse al arbitrio de uno de los contratantes). Sin embargo, el plan marco puede reservar ciertas facultades de modificación al órgano de administración cuando no afecten a derechos ya consolidados." },
+      "plainDescription": {
+        "es": "Régimen de administración del plan y procedimiento para su modificación o terminación."
+      },
+      "legalContext": {
+        "es": "La modificación de condiciones contractuales requiere, como regla general, el consentimiento de ambas partes (art. 1256 CC: la validez y el cumplimiento de los contratos no pueden dejarse al arbitrio de uno de los contratantes). Sin embargo, el plan marco puede reservar ciertas facultades de modificación al órgano de administración cuando no afecten a derechos ya consolidados."
+      },
       "isRequired": true,
       "options": [
         {
           "id": "gobernanza-consejo",
           "code": "consejo-unilateral",
-          "label": { "es": "Consejo de administración unilateral" },
+          "label": {
+            "es": "Consejo de administración unilateral"
+          },
           "order": 1,
-          "plainDescription": { "es": "El consejo puede modificar el plan unilateralmente, siempre que no afecte a derechos ya consolidados." },
-          "prosPartyA": [{ "es": "Máxima flexibilidad para la sociedad" }, { "es": "Agilidad en la adaptación del plan" }],
-          "consPartyA": [{ "es": "Posible impugnación si se afectan derechos consolidados" }],
-          "prosPartyB": [{ "es": "Protección de derechos consolidados" }],
-          "consPartyB": [{ "es": "Sin participación en las modificaciones futuras" }],
-          "legalText": { "es": "La administración e interpretación del Plan corresponderá al órgano de administración de la Sociedad, quien podrá:\n\n(a) Modificar los términos del Plan sin necesidad de consentimiento de los Beneficiarios, siempre que la modificación no afecte negativamente a los derechos ya consolidados ni altere de forma sustancial las condiciones económicas de las asignaciones vigentes.\n\n(b) Interpretar las disposiciones del Plan y resolver cualquier cuestión o controversia que surja en relación con su aplicación.\n\n(c) Suspender o terminar el Plan en cualquier momento, respetando los derechos consolidados.\n\nLas modificaciones que afecten a derechos consolidados requerirán el consentimiento individual del Beneficiario afectado." },
+          "plainDescription": {
+            "es": "El consejo puede modificar el plan unilateralmente, siempre que no afecte a derechos ya consolidados."
+          },
+          "prosPartyA": {
+            "es": [
+              "Máxima flexibilidad para la sociedad",
+              "Agilidad en la adaptación del plan"
+            ]
+          },
+          "consPartyA": {
+            "es": [
+              "Posible impugnación si se afectan derechos consolidados"
+            ]
+          },
+          "prosPartyB": {
+            "es": [
+              "Protección de derechos consolidados"
+            ]
+          },
+          "consPartyB": {
+            "es": [
+              "Sin participación en las modificaciones futuras"
+            ]
+          },
+          "legalText": {
+            "es": "La administración e interpretación del Plan corresponderá al órgano de administración de la Sociedad, quien podrá:\n\n(a) Modificar los términos del Plan sin necesidad de consentimiento de los Beneficiarios, siempre que la modificación no afecte negativamente a los derechos ya consolidados ni altere de forma sustancial las condiciones económicas de las asignaciones vigentes.\n\n(b) Interpretar las disposiciones del Plan y resolver cualquier cuestión o controversia que surja en relación con su aplicación.\n\n(c) Suspender o terminar el Plan en cualquier momento, respetando los derechos consolidados.\n\nLas modificaciones que afecten a derechos consolidados requerirán el consentimiento individual del Beneficiario afectado."
+          },
           "biasPartyA": 0.3,
           "biasPartyB": -0.3,
           "jurisdictionConfig": {
-            "SPAIN": { "available": true }
+            "SPAIN": {
+              "available": true
+            }
           }
         },
         {
           "id": "gobernanza-consejo-beneficiarios",
           "code": "consejo-beneficiarios",
-          "label": { "es": "Consejo + consulta a beneficiarios" },
+          "label": {
+            "es": "Consejo + consulta a beneficiarios"
+          },
           "order": 2,
-          "plainDescription": { "es": "Las modificaciones sustanciales requieren consulta previa a los beneficiarios afectados." },
-          "prosPartyA": [{ "es": "Mayor legitimidad de las modificaciones" }, { "es": "Menor riesgo de impugnación" }],
-          "consPartyA": [{ "es": "Proceso más lento" }, { "es": "Posibles objeciones de beneficiarios" }],
-          "prosPartyB": [{ "es": "Derecho a ser consultado" }, { "es": "Mayor protección" }],
-          "consPartyB": [{ "es": "La consulta no es vinculante" }],
-          "legalText": { "es": "La administración e interpretación del Plan corresponderá al órgano de administración de la Sociedad.\n\nLas modificaciones del Plan se sujetarán al siguiente régimen:\n\n(a) Modificaciones menores (administrativas, aclaratorias o que no afecten a condiciones económicas): podrán ser adoptadas por el órgano de administración sin necesidad de consulta.\n\n(b) Modificaciones sustanciales (que afecten a calendario de vesting, eventos de liquidez, métodos de valoración o condiciones de pérdida): requerirán consulta previa a los Beneficiarios afectados, quienes dispondrán de un plazo de [PLAZO] días para formular observaciones. El órgano de administración valorará las observaciones recibidas, aunque su decisión final será vinculante.\n\n(c) Modificaciones que afecten a derechos consolidados: requerirán el consentimiento individual del Beneficiario afectado." },
-          "biasPartyA": 0.0,
-          "biasPartyB": 0.0,
+          "plainDescription": {
+            "es": "Las modificaciones sustanciales requieren consulta previa a los beneficiarios afectados."
+          },
+          "prosPartyA": {
+            "es": [
+              "Mayor legitimidad de las modificaciones",
+              "Menor riesgo de impugnación"
+            ]
+          },
+          "consPartyA": {
+            "es": [
+              "Proceso más lento",
+              "Posibles objeciones de beneficiarios"
+            ]
+          },
+          "prosPartyB": {
+            "es": [
+              "Derecho a ser consultado",
+              "Mayor protección"
+            ]
+          },
+          "consPartyB": {
+            "es": [
+              "La consulta no es vinculante"
+            ]
+          },
+          "legalText": {
+            "es": "La administración e interpretación del Plan corresponderá al órgano de administración de la Sociedad.\n\nLas modificaciones del Plan se sujetarán al siguiente régimen:\n\n(a) Modificaciones menores (administrativas, aclaratorias o que no afecten a condiciones económicas): podrán ser adoptadas por el órgano de administración sin necesidad de consulta.\n\n(b) Modificaciones sustanciales (que afecten a calendario de vesting, eventos de liquidez, métodos de valoración o condiciones de pérdida): requerirán consulta previa a los Beneficiarios afectados, quienes dispondrán de un plazo de [PLAZO] días para formular observaciones. El órgano de administración valorará las observaciones recibidas, aunque su decisión final será vinculante.\n\n(c) Modificaciones que afecten a derechos consolidados: requerirán el consentimiento individual del Beneficiario afectado."
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "jurisdictionConfig": {
-            "SPAIN": { "available": true }
+            "SPAIN": {
+              "available": true
+            }
           }
         },
         {
           "id": "gobernanza-supermayoria",
           "code": "supermayoria",
-          "label": { "es": "Requiere supermayoría" },
+          "label": {
+            "es": "Requiere supermayoría"
+          },
           "order": 3,
-          "plainDescription": { "es": "Las modificaciones sustanciales requieren el consentimiento de una supermayoría de beneficiarios afectados." },
-          "prosPartyA": [{ "es": "Máxima legitimidad y estabilidad del plan" }],
-          "consPartyA": [{ "es": "Rigidez — puede bloquear modificaciones necesarias" }],
-          "prosPartyB": [{ "es": "Protección colectiva fuerte" }, { "es": "Mayor peso en las decisiones" }],
-          "consPartyB": [{ "es": "Minorías pueden bloquear cambios beneficiosos" }],
-          "legalText": { "es": "La administración e interpretación del Plan corresponderá al órgano de administración de la Sociedad.\n\nLas modificaciones del Plan se sujetarán al siguiente régimen:\n\n(a) Modificaciones menores: podrán ser adoptadas por el órgano de administración.\n\n(b) Modificaciones sustanciales: requerirán, además de la aprobación del órgano de administración, el consentimiento de Beneficiarios que representen al menos dos tercios (2/3) de las Phantom Shares asignadas y en vigor en el momento de la modificación.\n\n(c) Modificaciones que afecten a derechos consolidados: requerirán el consentimiento individual del Beneficiario afectado.\n\nA efectos de la votación prevista en el apartado (b), cada Beneficiario tendrá un voto proporcional al número de Phantom Shares que le hayan sido asignadas." },
+          "plainDescription": {
+            "es": "Las modificaciones sustanciales requieren el consentimiento de una supermayoría de beneficiarios afectados."
+          },
+          "prosPartyA": {
+            "es": [
+              "Máxima legitimidad y estabilidad del plan"
+            ]
+          },
+          "consPartyA": {
+            "es": [
+              "Rigidez — puede bloquear modificaciones necesarias"
+            ]
+          },
+          "prosPartyB": {
+            "es": [
+              "Protección colectiva fuerte",
+              "Mayor peso en las decisiones"
+            ]
+          },
+          "consPartyB": {
+            "es": [
+              "Minorías pueden bloquear cambios beneficiosos"
+            ]
+          },
+          "legalText": {
+            "es": "La administración e interpretación del Plan corresponderá al órgano de administración de la Sociedad.\n\nLas modificaciones del Plan se sujetarán al siguiente régimen:\n\n(a) Modificaciones menores: podrán ser adoptadas por el órgano de administración.\n\n(b) Modificaciones sustanciales: requerirán, además de la aprobación del órgano de administración, el consentimiento de Beneficiarios que representen al menos dos tercios (2/3) de las Phantom Shares asignadas y en vigor en el momento de la modificación.\n\n(c) Modificaciones que afecten a derechos consolidados: requerirán el consentimiento individual del Beneficiario afectado.\n\nA efectos de la votación prevista en el apartado (b), cada Beneficiario tendrá un voto proporcional al número de Phantom Shares que le hayan sido asignadas."
+          },
           "biasPartyA": -0.3,
           "biasPartyB": 0.3,
           "jurisdictionConfig": {
-            "SPAIN": { "available": true }
+            "SPAIN": {
+              "available": true
+            }
           }
         }
       ]

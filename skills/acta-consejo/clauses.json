@@ -1,439 +1,921 @@
 {
   "contractType": "ACTA_CONSEJO_ADMINISTRACION",
-  "displayName": { "es": "Acta de Consejo de Administración" },
-  "description": { "es": "Acta de la reunión del consejo de administración conforme a la Ley de Sociedades de Capital (arts. 245-249)" },
+  "displayName": {
+    "es": "Acta de Consejo de Administración"
+  },
+  "description": {
+    "es": "Acta de la reunión del consejo de administración conforme a la Ley de Sociedades de Capital (arts. 245-249)"
+  },
   "version": "1.0",
   "clauses": [
     {
       "id": "delegacion-facultades",
-      "title": { "es": "Delegación de facultades" },
-      "category": { "es": "Facultades" },
+      "title": {
+        "es": "Delegación de facultades"
+      },
+      "category": {
+        "es": "Facultades"
+      },
       "order": 1,
-      "plainDescription": { "es": "Resolución sobre la delegación permanente de facultades del consejo en uno o varios consejeros o en comisiones ejecutivas." },
-      "legalContext": { "es": "Conforme al artículo 249 de la LSC, el consejo de administración puede designar de entre sus miembros a uno o varios consejeros delegados o constituir una comisión ejecutiva. La delegación permanente requiere el voto favorable de las dos terceras partes de los miembros del consejo. No podrán delegarse las facultades indelegables previstas en el artículo 249 bis LSC." },
+      "plainDescription": {
+        "es": "Resolución sobre la delegación permanente de facultades del consejo en uno o varios consejeros o en comisiones ejecutivas."
+      },
+      "legalContext": {
+        "es": "Conforme al artículo 249 de la LSC, el consejo de administración puede designar de entre sus miembros a uno o varios consejeros delegados o constituir una comisión ejecutiva. La delegación permanente requiere el voto favorable de las dos terceras partes de los miembros del consejo. No podrán delegarse las facultades indelegables previstas en el artículo 249 bis LSC."
+      },
       "isRequired": false,
       "options": [
         {
           "id": "delegacion-plena",
           "code": "delegacion-plena",
-          "label": { "es": "Delegación plena de facultades" },
+          "label": {
+            "es": "Delegación plena de facultades"
+          },
           "order": 1,
-          "plainDescription": { "es": "Se delegan todas las facultades legalmente delegables en el consejero/a delegado/a." },
-          "prosPartyA": [{ "es": "Máxima agilidad operativa" }, { "es": "Gestión ejecutiva centralizada" }],
-          "consPartyA": [{ "es": "Reducción del control directo del consejo" }],
-          "prosPartyB": [],
-          "consPartyB": [],
-          "legalText": { "es": "El Consejo de Administración, con el voto favorable de las dos terceras partes de sus miembros conforme al artículo 249 de la Ley de Sociedades de Capital, acuerda delegar de forma permanente todas las facultades legalmente delegables en [NOMBRE CONSEJERO DELEGADO], en calidad de Consejero/a Delegado/a.\n\nQuedan expresamente excluidas de la delegación las facultades indelegables previstas en el artículo 249 bis de la Ley de Sociedades de Capital, incluyendo, entre otras, la supervisión del efectivo funcionamiento de las comisiones, la formulación de cuentas anuales, la convocatoria de junta general, y la política de retribuciones.\n\nEl/La Consejero/a Delegado/a acepta la designación en este acto." },
-          "biasPartyA": 0.0,
-          "biasPartyB": 0.0,
+          "plainDescription": {
+            "es": "Se delegan todas las facultades legalmente delegables en el consejero/a delegado/a."
+          },
+          "prosPartyA": {
+            "es": [
+              "Máxima agilidad operativa",
+              "Gestión ejecutiva centralizada"
+            ]
+          },
+          "consPartyA": {
+            "es": [
+              "Reducción del control directo del consejo"
+            ]
+          },
+          "prosPartyB": {
+            "es": []
+          },
+          "consPartyB": {
+            "es": []
+          },
+          "legalText": {
+            "es": "El Consejo de Administración, con el voto favorable de las dos terceras partes de sus miembros conforme al artículo 249 de la Ley de Sociedades de Capital, acuerda delegar de forma permanente todas las facultades legalmente delegables en [NOMBRE CONSEJERO DELEGADO], en calidad de Consejero/a Delegado/a.\n\nQuedan expresamente excluidas de la delegación las facultades indelegables previstas en el artículo 249 bis de la Ley de Sociedades de Capital, incluyendo, entre otras, la supervisión del efectivo funcionamiento de las comisiones, la formulación de cuentas anuales, la convocatoria de junta general, y la política de retribuciones.\n\nEl/La Consejero/a Delegado/a acepta la designación en este acto."
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "jurisdictionConfig": {
-            "SPAIN": { "available": true }
+            "SPAIN": {
+              "available": true
+            }
           }
         },
         {
           "id": "delegacion-limitada",
           "code": "delegacion-limitada",
-          "label": { "es": "Delegación limitada de facultades" },
+          "label": {
+            "es": "Delegación limitada de facultades"
+          },
           "order": 2,
-          "plainDescription": { "es": "Se delegan facultades específicas y tasadas en el consejero/a delegado/a." },
-          "prosPartyA": [{ "es": "Control del consejo sobre materias clave" }, { "es": "Mayor supervisión de la gestión ejecutiva" }],
-          "consPartyA": [{ "es": "Menor agilidad operativa" }, { "es": "Necesidad de convocatorias más frecuentes del consejo" }],
-          "prosPartyB": [],
-          "consPartyB": [],
-          "legalText": { "es": "El Consejo de Administración, con el voto favorable de las dos terceras partes de sus miembros conforme al artículo 249 de la Ley de Sociedades de Capital, acuerda delegar de forma permanente en [NOMBRE CONSEJERO DELEGADO], en calidad de Consejero/a Delegado/a, las siguientes facultades:\n\n[LISTA DE FACULTADES DELEGADAS]\n\nTodas las demás facultades permanecen reservadas al pleno del Consejo de Administración. Quedan en todo caso excluidas las facultades indelegables previstas en el artículo 249 bis de la LSC.\n\nEl/La Consejero/a Delegado/a acepta la designación en este acto." },
-          "biasPartyA": 0.0,
-          "biasPartyB": 0.0,
+          "plainDescription": {
+            "es": "Se delegan facultades específicas y tasadas en el consejero/a delegado/a."
+          },
+          "prosPartyA": {
+            "es": [
+              "Control del consejo sobre materias clave",
+              "Mayor supervisión de la gestión ejecutiva"
+            ]
+          },
+          "consPartyA": {
+            "es": [
+              "Menor agilidad operativa",
+              "Necesidad de convocatorias más frecuentes del consejo"
+            ]
+          },
+          "prosPartyB": {
+            "es": []
+          },
+          "consPartyB": {
+            "es": []
+          },
+          "legalText": {
+            "es": "El Consejo de Administración, con el voto favorable de las dos terceras partes de sus miembros conforme al artículo 249 de la Ley de Sociedades de Capital, acuerda delegar de forma permanente en [NOMBRE CONSEJERO DELEGADO], en calidad de Consejero/a Delegado/a, las siguientes facultades:\n\n[LISTA DE FACULTADES DELEGADAS]\n\nTodas las demás facultades permanecen reservadas al pleno del Consejo de Administración. Quedan en todo caso excluidas las facultades indelegables previstas en el artículo 249 bis de la LSC.\n\nEl/La Consejero/a Delegado/a acepta la designación en este acto."
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "jurisdictionConfig": {
-            "SPAIN": { "available": true }
+            "SPAIN": {
+              "available": true
+            }
           }
         },
         {
           "id": "delegacion-no-incluir",
           "code": "no-incluir",
-          "label": { "es": "No incluir este punto" },
+          "label": {
+            "es": "No incluir este punto"
+          },
           "order": 3,
-          "plainDescription": { "es": "No se incluye la delegación de facultades en el orden del día." },
-          "prosPartyA": [{ "es": "Simplifica el acta" }],
-          "consPartyA": [],
-          "prosPartyB": [],
-          "consPartyB": [],
-          "legalText": { "es": "" },
-          "biasPartyA": 0.0,
-          "biasPartyB": 0.0,
+          "plainDescription": {
+            "es": "No se incluye la delegación de facultades en el orden del día."
+          },
+          "prosPartyA": {
+            "es": [
+              "Simplifica el acta"
+            ]
+          },
+          "consPartyA": {
+            "es": []
+          },
+          "prosPartyB": {
+            "es": []
+          },
+          "consPartyB": {
+            "es": []
+          },
+          "legalText": {
+            "es": ""
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "jurisdictionConfig": {
-            "SPAIN": { "available": true }
+            "SPAIN": {
+              "available": true
+            }
           }
         }
       ]
     },
     {
       "id": "nombramiento-consejero-delegado",
-      "title": { "es": "Nombramiento de consejero/a delegado/a" },
-      "category": { "es": "Cargos" },
+      "title": {
+        "es": "Nombramiento de consejero/a delegado/a"
+      },
+      "category": {
+        "es": "Cargos"
+      },
       "order": 2,
-      "plainDescription": { "es": "Resolución sobre el nombramiento de un consejero/a delegado/a o de varios consejeros delegados." },
-      "legalContext": { "es": "El artículo 249 de la LSC permite que el consejo designe un consejero delegado o una comisión ejecutiva. El nombramiento requiere mayoría de dos tercios del consejo. El contrato entre la sociedad y el consejero delegado debe ser aprobado por dos tercios del consejo (art. 249.4 LSC)." },
+      "plainDescription": {
+        "es": "Resolución sobre el nombramiento de un consejero/a delegado/a o de varios consejeros delegados."
+      },
+      "legalContext": {
+        "es": "El artículo 249 de la LSC permite que el consejo designe un consejero delegado o una comisión ejecutiva. El nombramiento requiere mayoría de dos tercios del consejo. El contrato entre la sociedad y el consejero delegado debe ser aprobado por dos tercios del consejo (art. 249.4 LSC)."
+      },
       "isRequired": false,
       "options": [
         {
           "id": "nombrar-cd-unico",
           "code": "consejero-delegado-unico",
-          "label": { "es": "Nombrar un/a consejero/a delegado/a" },
+          "label": {
+            "es": "Nombrar un/a consejero/a delegado/a"
+          },
           "order": 1,
-          "plainDescription": { "es": "Se nombra a un único consejero/a delegado/a con las facultades que se determinen." },
-          "prosPartyA": [{ "es": "Liderazgo ejecutivo unitario" }, { "es": "Claridad en la cadena de mando" }],
-          "consPartyA": [{ "es": "Concentración de poder ejecutivo" }],
-          "prosPartyB": [],
-          "consPartyB": [],
-          "legalText": { "es": "El Consejo de Administración, con el voto favorable de las dos terceras partes de sus miembros conforme al artículo 249 de la Ley de Sociedades de Capital, acuerda nombrar Consejero/a Delegado/a a [NOMBRE], miembro del Consejo.\n\nEl contrato entre la sociedad y el/la Consejero/a Delegado/a, aprobado con el voto favorable de dos tercios del consejo de conformidad con el artículo 249.4 LSC, establece las siguientes condiciones: [CONDICIONES PRINCIPALES DEL CONTRATO].\n\nEl/La Consejero/a Delegado/a acepta el nombramiento en este acto." },
-          "biasPartyA": 0.0,
-          "biasPartyB": 0.0,
+          "plainDescription": {
+            "es": "Se nombra a un único consejero/a delegado/a con las facultades que se determinen."
+          },
+          "prosPartyA": {
+            "es": [
+              "Liderazgo ejecutivo unitario",
+              "Claridad en la cadena de mando"
+            ]
+          },
+          "consPartyA": {
+            "es": [
+              "Concentración de poder ejecutivo"
+            ]
+          },
+          "prosPartyB": {
+            "es": []
+          },
+          "consPartyB": {
+            "es": []
+          },
+          "legalText": {
+            "es": "El Consejo de Administración, con el voto favorable de las dos terceras partes de sus miembros conforme al artículo 249 de la Ley de Sociedades de Capital, acuerda nombrar Consejero/a Delegado/a a [NOMBRE], miembro del Consejo.\n\nEl contrato entre la sociedad y el/la Consejero/a Delegado/a, aprobado con el voto favorable de dos tercios del consejo de conformidad con el artículo 249.4 LSC, establece las siguientes condiciones: [CONDICIONES PRINCIPALES DEL CONTRATO].\n\nEl/La Consejero/a Delegado/a acepta el nombramiento en este acto."
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "jurisdictionConfig": {
-            "SPAIN": { "available": true }
+            "SPAIN": {
+              "available": true
+            }
           }
         },
         {
           "id": "nombrar-cd-multiples",
           "code": "consejeros-delegados-multiples",
-          "label": { "es": "Nombrar varios/as consejeros/as delegados/as" },
+          "label": {
+            "es": "Nombrar varios/as consejeros/as delegados/as"
+          },
           "order": 2,
-          "plainDescription": { "es": "Se nombran varios consejeros/as delegados/as con distribución de áreas de responsabilidad." },
-          "prosPartyA": [{ "es": "Distribución de la carga ejecutiva" }, { "es": "Especialización por áreas" }],
-          "consPartyA": [{ "es": "Posibles solapamientos de competencias" }, { "es": "Mayor complejidad de coordinación" }],
-          "prosPartyB": [],
-          "consPartyB": [],
-          "legalText": { "es": "El Consejo de Administración, con el voto favorable de las dos terceras partes de sus miembros conforme al artículo 249 de la Ley de Sociedades de Capital, acuerda nombrar Consejeros/as Delegados/as a las siguientes personas:\n\n(a) [NOMBRE 1] — Área de responsabilidad: [ÁREA 1]\n(b) [NOMBRE 2] — Área de responsabilidad: [ÁREA 2]\n\nCada Consejero/a Delegado/a ejercerá las facultades delegadas en su respectiva área de forma [MANCOMUNADA / SOLIDARIA].\n\nLos respectivos contratos han sido aprobados por el consejo de conformidad con el artículo 249.4 LSC." },
-          "biasPartyA": 0.0,
-          "biasPartyB": 0.0,
+          "plainDescription": {
+            "es": "Se nombran varios consejeros/as delegados/as con distribución de áreas de responsabilidad."
+          },
+          "prosPartyA": {
+            "es": [
+              "Distribución de la carga ejecutiva",
+              "Especialización por áreas"
+            ]
+          },
+          "consPartyA": {
+            "es": [
+              "Posibles solapamientos de competencias",
+              "Mayor complejidad de coordinación"
+            ]
+          },
+          "prosPartyB": {
+            "es": []
+          },
+          "consPartyB": {
+            "es": []
+          },
+          "legalText": {
+            "es": "El Consejo de Administración, con el voto favorable de las dos terceras partes de sus miembros conforme al artículo 249 de la Ley de Sociedades de Capital, acuerda nombrar Consejeros/as Delegados/as a las siguientes personas:\n\n(a) [NOMBRE 1] — Área de responsabilidad: [ÁREA 1]\n(b) [NOMBRE 2] — Área de responsabilidad: [ÁREA 2]\n\nCada Consejero/a Delegado/a ejercerá las facultades delegadas en su respectiva área de forma [MANCOMUNADA / SOLIDARIA].\n\nLos respectivos contratos han sido aprobados por el consejo de conformidad con el artículo 249.4 LSC."
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "jurisdictionConfig": {
-            "SPAIN": { "available": true }
+            "SPAIN": {
+              "available": true
+            }
           }
         },
         {
           "id": "nombramiento-cd-no-incluir",
           "code": "no-incluir",
-          "label": { "es": "No incluir este punto" },
+          "label": {
+            "es": "No incluir este punto"
+          },
           "order": 3,
-          "plainDescription": { "es": "No se incluye el nombramiento de consejero/a delegado/a en el orden del día." },
-          "prosPartyA": [{ "es": "Simplifica el acta" }],
-          "consPartyA": [],
-          "prosPartyB": [],
-          "consPartyB": [],
-          "legalText": { "es": "" },
-          "biasPartyA": 0.0,
-          "biasPartyB": 0.0,
+          "plainDescription": {
+            "es": "No se incluye el nombramiento de consejero/a delegado/a en el orden del día."
+          },
+          "prosPartyA": {
+            "es": [
+              "Simplifica el acta"
+            ]
+          },
+          "consPartyA": {
+            "es": []
+          },
+          "prosPartyB": {
+            "es": []
+          },
+          "consPartyB": {
+            "es": []
+          },
+          "legalText": {
+            "es": ""
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "jurisdictionConfig": {
-            "SPAIN": { "available": true }
+            "SPAIN": {
+              "available": true
+            }
           }
         }
       ]
     },
     {
       "id": "ratificacion-decisiones",
-      "title": { "es": "Ratificación de decisiones urgentes" },
-      "category": { "es": "Ratificación" },
+      "title": {
+        "es": "Ratificación de decisiones urgentes"
+      },
+      "category": {
+        "es": "Ratificación"
+      },
       "order": 3,
-      "plainDescription": { "es": "Resolución sobre la ratificación de decisiones adoptadas con carácter de urgencia por el consejero/a delegado/a o la comisión ejecutiva." },
-      "legalContext": { "es": "Cuando el consejero delegado adopta decisiones que exceden sus facultades delegadas por razones de urgencia, estas deben ser ratificadas por el pleno del consejo en la primera sesión que se celebre. La ratificación convalida la actuación y protege a la sociedad frente a terceros de buena fe." },
+      "plainDescription": {
+        "es": "Resolución sobre la ratificación de decisiones adoptadas con carácter de urgencia por el consejero/a delegado/a o la comisión ejecutiva."
+      },
+      "legalContext": {
+        "es": "Cuando el consejero delegado adopta decisiones que exceden sus facultades delegadas por razones de urgencia, estas deben ser ratificadas por el pleno del consejo en la primera sesión que se celebre. La ratificación convalida la actuación y protege a la sociedad frente a terceros de buena fe."
+      },
       "isRequired": false,
       "options": [
         {
           "id": "ratificar-decision",
           "code": "ratificar",
-          "label": { "es": "Ratificar la decisión" },
+          "label": {
+            "es": "Ratificar la decisión"
+          },
           "order": 1,
-          "plainDescription": { "es": "El consejo ratifica íntegramente la decisión urgente adoptada." },
-          "prosPartyA": [{ "es": "Convalida la actuación y elimina riesgo jurídico" }, { "es": "Protege a los terceros de buena fe" }],
-          "consPartyA": [{ "es": "Implica conformidad con una actuación no previamente autorizada" }],
-          "prosPartyB": [],
-          "consPartyB": [],
-          "legalText": { "es": "El Consejo de Administración toma conocimiento de la decisión adoptada con carácter de urgencia por [NOMBRE DEL CONSEJERO DELEGADO / COMISIÓN EJECUTIVA] con fecha [FECHA DECISIÓN], consistente en:\n\n[DESCRIPCIÓN DE LA DECISIÓN]\n\nTras las oportunas deliberaciones, el Consejo acuerda ratificar íntegramente la referida decisión, aprobando todas las actuaciones derivadas de la misma y otorgando plena cobertura jurídica a los actos realizados en su ejecución." },
-          "biasPartyA": 0.0,
-          "biasPartyB": 0.0,
+          "plainDescription": {
+            "es": "El consejo ratifica íntegramente la decisión urgente adoptada."
+          },
+          "prosPartyA": {
+            "es": [
+              "Convalida la actuación y elimina riesgo jurídico",
+              "Protege a los terceros de buena fe"
+            ]
+          },
+          "consPartyA": {
+            "es": [
+              "Implica conformidad con una actuación no previamente autorizada"
+            ]
+          },
+          "prosPartyB": {
+            "es": []
+          },
+          "consPartyB": {
+            "es": []
+          },
+          "legalText": {
+            "es": "El Consejo de Administración toma conocimiento de la decisión adoptada con carácter de urgencia por [NOMBRE DEL CONSEJERO DELEGADO / COMISIÓN EJECUTIVA] con fecha [FECHA DECISIÓN], consistente en:\n\n[DESCRIPCIÓN DE LA DECISIÓN]\n\nTras las oportunas deliberaciones, el Consejo acuerda ratificar íntegramente la referida decisión, aprobando todas las actuaciones derivadas de la misma y otorgando plena cobertura jurídica a los actos realizados en su ejecución."
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "jurisdictionConfig": {
-            "SPAIN": { "available": true }
+            "SPAIN": {
+              "available": true
+            }
           }
         },
         {
           "id": "ratificar-con-condiciones",
           "code": "ratificar-con-condiciones",
-          "label": { "es": "Ratificar con condiciones" },
+          "label": {
+            "es": "Ratificar con condiciones"
+          },
           "order": 2,
-          "plainDescription": { "es": "El consejo ratifica la decisión sujeta a determinadas condiciones o modificaciones." },
-          "prosPartyA": [{ "es": "Permite corregir aspectos de la decisión" }, { "es": "Mantiene el control del consejo" }],
-          "consPartyA": [{ "es": "Complejidad en la ejecución de las condiciones" }],
-          "prosPartyB": [],
-          "consPartyB": [],
-          "legalText": { "es": "El Consejo de Administración toma conocimiento de la decisión adoptada con carácter de urgencia por [NOMBRE DEL CONSEJERO DELEGADO / COMISIÓN EJECUTIVA] con fecha [FECHA DECISIÓN], consistente en:\n\n[DESCRIPCIÓN DE LA DECISIÓN]\n\nTras las oportunas deliberaciones, el Consejo acuerda ratificar la referida decisión con las siguientes condiciones:\n\n[CONDICIONES O MODIFICACIONES]\n\nSe encomienda a [RESPONSABLE] la adopción de las medidas necesarias para dar cumplimiento a las condiciones establecidas en el plazo de [PLAZO]." },
-          "biasPartyA": 0.0,
-          "biasPartyB": 0.0,
+          "plainDescription": {
+            "es": "El consejo ratifica la decisión sujeta a determinadas condiciones o modificaciones."
+          },
+          "prosPartyA": {
+            "es": [
+              "Permite corregir aspectos de la decisión",
+              "Mantiene el control del consejo"
+            ]
+          },
+          "consPartyA": {
+            "es": [
+              "Complejidad en la ejecución de las condiciones"
+            ]
+          },
+          "prosPartyB": {
+            "es": []
+          },
+          "consPartyB": {
+            "es": []
+          },
+          "legalText": {
+            "es": "El Consejo de Administración toma conocimiento de la decisión adoptada con carácter de urgencia por [NOMBRE DEL CONSEJERO DELEGADO / COMISIÓN EJECUTIVA] con fecha [FECHA DECISIÓN], consistente en:\n\n[DESCRIPCIÓN DE LA DECISIÓN]\n\nTras las oportunas deliberaciones, el Consejo acuerda ratificar la referida decisión con las siguientes condiciones:\n\n[CONDICIONES O MODIFICACIONES]\n\nSe encomienda a [RESPONSABLE] la adopción de las medidas necesarias para dar cumplimiento a las condiciones establecidas en el plazo de [PLAZO]."
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "jurisdictionConfig": {
-            "SPAIN": { "available": true }
+            "SPAIN": {
+              "available": true
+            }
           }
         },
         {
           "id": "ratificacion-no-incluir",
           "code": "no-incluir",
-          "label": { "es": "No incluir este punto" },
+          "label": {
+            "es": "No incluir este punto"
+          },
           "order": 3,
-          "plainDescription": { "es": "No se incluye la ratificación de decisiones urgentes en el orden del día." },
-          "prosPartyA": [{ "es": "Simplifica el acta" }],
-          "consPartyA": [],
-          "prosPartyB": [],
-          "consPartyB": [],
-          "legalText": { "es": "" },
-          "biasPartyA": 0.0,
-          "biasPartyB": 0.0,
+          "plainDescription": {
+            "es": "No se incluye la ratificación de decisiones urgentes en el orden del día."
+          },
+          "prosPartyA": {
+            "es": [
+              "Simplifica el acta"
+            ]
+          },
+          "consPartyA": {
+            "es": []
+          },
+          "prosPartyB": {
+            "es": []
+          },
+          "consPartyB": {
+            "es": []
+          },
+          "legalText": {
+            "es": ""
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "jurisdictionConfig": {
-            "SPAIN": { "available": true }
+            "SPAIN": {
+              "available": true
+            }
           }
         }
       ]
     },
     {
       "id": "operaciones-significativas",
-      "title": { "es": "Aprobación de operaciones significativas" },
-      "category": { "es": "Operaciones" },
+      "title": {
+        "es": "Aprobación de operaciones significativas"
+      },
+      "category": {
+        "es": "Operaciones"
+      },
       "order": 4,
-      "plainDescription": { "es": "Resolución sobre la aprobación de contratos, inversiones u operaciones de importe o relevancia significativa para la sociedad." },
-      "legalContext": { "es": "El artículo 249 bis d) de la LSC establece como facultad indelegable del consejo la aprobación de operaciones que la sociedad realice con consejeros o accionistas significativos, o con personas a ellos vinculadas. Adicionalmente, los estatutos o el reglamento del consejo suelen reservar al pleno la aprobación de operaciones que superen determinados umbrales." },
+      "plainDescription": {
+        "es": "Resolución sobre la aprobación de contratos, inversiones u operaciones de importe o relevancia significativa para la sociedad."
+      },
+      "legalContext": {
+        "es": "El artículo 249 bis d) de la LSC establece como facultad indelegable del consejo la aprobación de operaciones que la sociedad realice con consejeros o accionistas significativos, o con personas a ellos vinculadas. Adicionalmente, los estatutos o el reglamento del consejo suelen reservar al pleno la aprobación de operaciones que superen determinados umbrales."
+      },
       "isRequired": false,
       "options": [
         {
           "id": "aprobar-operacion",
           "code": "aprobar-operacion",
-          "label": { "es": "Aprobar operación concreta" },
+          "label": {
+            "es": "Aprobar operación concreta"
+          },
           "order": 1,
-          "plainDescription": { "es": "Se aprueba una operación específica identificando su objeto, importe y condiciones principales." },
-          "prosPartyA": [{ "es": "Cobertura jurídica completa" }, { "es": "Decisión colegiada sobre operación material" }],
-          "consPartyA": [{ "es": "Requiere convocatoria del consejo para cada operación" }],
-          "prosPartyB": [],
-          "consPartyB": [],
-          "legalText": { "es": "El Consejo de Administración acuerda aprobar la siguiente operación:\n\n(a) Objeto: [DESCRIPCIÓN DE LA OPERACIÓN].\n\n(b) Contraparte: [NOMBRE DE LA CONTRAPARTE].\n\n(c) Importe: [IMPORTE] euros.\n\n(d) Condiciones principales: [CONDICIONES].\n\n(e) Justificación: [JUSTIFICACIÓN DE LA CONVENIENCIA PARA LA SOCIEDAD].\n\nSe autoriza a [NOMBRE] para la firma de los documentos necesarios para la formalización de la operación." },
-          "biasPartyA": 0.0,
-          "biasPartyB": 0.0,
+          "plainDescription": {
+            "es": "Se aprueba una operación específica identificando su objeto, importe y condiciones principales."
+          },
+          "prosPartyA": {
+            "es": [
+              "Cobertura jurídica completa",
+              "Decisión colegiada sobre operación material"
+            ]
+          },
+          "consPartyA": {
+            "es": [
+              "Requiere convocatoria del consejo para cada operación"
+            ]
+          },
+          "prosPartyB": {
+            "es": []
+          },
+          "consPartyB": {
+            "es": []
+          },
+          "legalText": {
+            "es": "El Consejo de Administración acuerda aprobar la siguiente operación:\n\n(a) Objeto: [DESCRIPCIÓN DE LA OPERACIÓN].\n\n(b) Contraparte: [NOMBRE DE LA CONTRAPARTE].\n\n(c) Importe: [IMPORTE] euros.\n\n(d) Condiciones principales: [CONDICIONES].\n\n(e) Justificación: [JUSTIFICACIÓN DE LA CONVENIENCIA PARA LA SOCIEDAD].\n\nSe autoriza a [NOMBRE] para la firma de los documentos necesarios para la formalización de la operación."
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "jurisdictionConfig": {
-            "SPAIN": { "available": true }
+            "SPAIN": {
+              "available": true
+            }
           }
         },
         {
           "id": "autorizar-hasta-limite",
           "code": "autorizar-hasta-limite",
-          "label": { "es": "Autorizar operaciones hasta un límite" },
+          "label": {
+            "es": "Autorizar operaciones hasta un límite"
+          },
           "order": 2,
-          "plainDescription": { "es": "Se autoriza al consejero/a delegado/a a realizar operaciones de un tipo determinado hasta un importe máximo." },
-          "prosPartyA": [{ "es": "Agilidad operativa para operaciones recurrentes" }, { "es": "Control mediante límite cuantitativo" }],
-          "consPartyA": [{ "es": "Menor supervisión caso a caso" }],
-          "prosPartyB": [],
-          "consPartyB": [],
-          "legalText": { "es": "El Consejo de Administración acuerda autorizar a [NOMBRE DEL CONSEJERO DELEGADO] para realizar operaciones de [TIPO DE OPERACIÓN] hasta un importe individual máximo de [IMPORTE MÁXIMO] euros y un importe acumulado anual máximo de [IMPORTE ACUMULADO MÁXIMO] euros.\n\nLas operaciones que superen dichos límites requerirán la previa aprobación del pleno del Consejo.\n\nEl/La Consejero/a Delegado/a informará al Consejo trimestralmente sobre las operaciones realizadas al amparo de esta autorización." },
-          "biasPartyA": 0.0,
-          "biasPartyB": 0.0,
+          "plainDescription": {
+            "es": "Se autoriza al consejero/a delegado/a a realizar operaciones de un tipo determinado hasta un importe máximo."
+          },
+          "prosPartyA": {
+            "es": [
+              "Agilidad operativa para operaciones recurrentes",
+              "Control mediante límite cuantitativo"
+            ]
+          },
+          "consPartyA": {
+            "es": [
+              "Menor supervisión caso a caso"
+            ]
+          },
+          "prosPartyB": {
+            "es": []
+          },
+          "consPartyB": {
+            "es": []
+          },
+          "legalText": {
+            "es": "El Consejo de Administración acuerda autorizar a [NOMBRE DEL CONSEJERO DELEGADO] para realizar operaciones de [TIPO DE OPERACIÓN] hasta un importe individual máximo de [IMPORTE MÁXIMO] euros y un importe acumulado anual máximo de [IMPORTE ACUMULADO MÁXIMO] euros.\n\nLas operaciones que superen dichos límites requerirán la previa aprobación del pleno del Consejo.\n\nEl/La Consejero/a Delegado/a informará al Consejo trimestralmente sobre las operaciones realizadas al amparo de esta autorización."
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "jurisdictionConfig": {
-            "SPAIN": { "available": true }
+            "SPAIN": {
+              "available": true
+            }
           }
         },
         {
           "id": "operaciones-significativas-no-incluir",
           "code": "no-incluir",
-          "label": { "es": "No incluir este punto" },
+          "label": {
+            "es": "No incluir este punto"
+          },
           "order": 3,
-          "plainDescription": { "es": "No se incluyen operaciones significativas en el orden del día." },
-          "prosPartyA": [{ "es": "Simplifica el acta" }],
-          "consPartyA": [],
-          "prosPartyB": [],
-          "consPartyB": [],
-          "legalText": { "es": "" },
-          "biasPartyA": 0.0,
-          "biasPartyB": 0.0,
+          "plainDescription": {
+            "es": "No se incluyen operaciones significativas en el orden del día."
+          },
+          "prosPartyA": {
+            "es": [
+              "Simplifica el acta"
+            ]
+          },
+          "consPartyA": {
+            "es": []
+          },
+          "prosPartyB": {
+            "es": []
+          },
+          "consPartyB": {
+            "es": []
+          },
+          "legalText": {
+            "es": ""
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "jurisdictionConfig": {
-            "SPAIN": { "available": true }
+            "SPAIN": {
+              "available": true
+            }
           }
         }
       ]
     },
     {
       "id": "operaciones-vinculadas-consejo",
-      "title": { "es": "Operaciones vinculadas" },
-      "category": { "es": "Operaciones" },
+      "title": {
+        "es": "Operaciones vinculadas"
+      },
+      "category": {
+        "es": "Operaciones"
+      },
       "order": 5,
-      "plainDescription": { "es": "Resolución sobre la aprobación de operaciones con partes vinculadas que, por su naturaleza, corresponde aprobar al consejo de administración." },
-      "legalContext": { "es": "El artículo 249 bis d) de la LSC atribuye al consejo, como facultad indelegable, la aprobación de operaciones con consejeros, accionistas significativos o personas vinculadas. El consejero afectado deberá abstenerse de participar en la deliberación y votación (art. 228 LSC)." },
+      "plainDescription": {
+        "es": "Resolución sobre la aprobación de operaciones con partes vinculadas que, por su naturaleza, corresponde aprobar al consejo de administración."
+      },
+      "legalContext": {
+        "es": "El artículo 249 bis d) de la LSC atribuye al consejo, como facultad indelegable, la aprobación de operaciones con consejeros, accionistas significativos o personas vinculadas. El consejero afectado deberá abstenerse de participar en la deliberación y votación (art. 228 LSC)."
+      },
       "isRequired": false,
       "options": [
         {
           "id": "vinculadas-consejo-aprobar",
           "code": "aprobar",
-          "label": { "es": "Aprobar operación vinculada" },
+          "label": {
+            "es": "Aprobar operación vinculada"
+          },
           "order": 1,
-          "plainDescription": { "es": "Se aprueba la operación vinculada con el voto de los consejeros no afectados." },
-          "prosPartyA": [{ "es": "Cumplimiento del deber de transparencia" }, { "es": "Protección jurídica de la decisión" }],
-          "consPartyA": [{ "es": "Requiere justificación de condiciones de mercado" }],
-          "prosPartyB": [],
-          "consPartyB": [],
-          "legalText": { "es": "El Consejo de Administración, en cumplimiento de lo dispuesto en el artículo 249 bis d) de la Ley de Sociedades de Capital, examina la siguiente operación vinculada:\n\n(a) Parte vinculada: [NOMBRE], en su condición de [RELACIÓN: consejero/a, accionista significativo/a, persona vinculada].\n\n(b) Objeto: [DESCRIPCIÓN DE LA OPERACIÓN].\n\n(c) Importe: [IMPORTE] euros.\n\n(d) Condiciones: [CONDICIONES PRINCIPALES].\n\nSe hace constar que [NOMBRE DEL CONSEJERO AFECTADO] se ha abstenido de participar en la deliberación y votación de este punto, de conformidad con el artículo 228 de la LSC.\n\nTras examinar la documentación justificativa de que la operación se realiza en condiciones de mercado, el Consejo acuerda aprobar la operación por [UNANIMIDAD / MAYORÍA] de los consejeros no afectados." },
-          "biasPartyA": 0.0,
-          "biasPartyB": 0.0,
+          "plainDescription": {
+            "es": "Se aprueba la operación vinculada con el voto de los consejeros no afectados."
+          },
+          "prosPartyA": {
+            "es": [
+              "Cumplimiento del deber de transparencia",
+              "Protección jurídica de la decisión"
+            ]
+          },
+          "consPartyA": {
+            "es": [
+              "Requiere justificación de condiciones de mercado"
+            ]
+          },
+          "prosPartyB": {
+            "es": []
+          },
+          "consPartyB": {
+            "es": []
+          },
+          "legalText": {
+            "es": "El Consejo de Administración, en cumplimiento de lo dispuesto en el artículo 249 bis d) de la Ley de Sociedades de Capital, examina la siguiente operación vinculada:\n\n(a) Parte vinculada: [NOMBRE], en su condición de [RELACIÓN: consejero/a, accionista significativo/a, persona vinculada].\n\n(b) Objeto: [DESCRIPCIÓN DE LA OPERACIÓN].\n\n(c) Importe: [IMPORTE] euros.\n\n(d) Condiciones: [CONDICIONES PRINCIPALES].\n\nSe hace constar que [NOMBRE DEL CONSEJERO AFECTADO] se ha abstenido de participar en la deliberación y votación de este punto, de conformidad con el artículo 228 de la LSC.\n\nTras examinar la documentación justificativa de que la operación se realiza en condiciones de mercado, el Consejo acuerda aprobar la operación por [UNANIMIDAD / MAYORÍA] de los consejeros no afectados."
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "jurisdictionConfig": {
-            "SPAIN": { "available": true }
+            "SPAIN": {
+              "available": true
+            }
           }
         },
         {
           "id": "vinculadas-consejo-abstenciones",
           "code": "aprobar-con-abstenciones",
-          "label": { "es": "Aprobar con constancia de abstenciones" },
+          "label": {
+            "es": "Aprobar con constancia de abstenciones"
+          },
           "order": 2,
-          "plainDescription": { "es": "Se aprueba la operación dejando constancia detallada de las abstenciones y el sentido de los votos." },
-          "prosPartyA": [{ "es": "Máxima transparencia en la decisión" }, { "es": "Protección adicional para consejeros disidentes" }],
-          "consPartyA": [{ "es": "Mayor formalismo documental" }],
-          "prosPartyB": [],
-          "consPartyB": [],
-          "legalText": { "es": "El Consejo de Administración, en cumplimiento de lo dispuesto en el artículo 249 bis d) de la Ley de Sociedades de Capital, examina la siguiente operación vinculada:\n\n(a) Parte vinculada: [NOMBRE], en su condición de [RELACIÓN].\n\n(b) Objeto: [DESCRIPCIÓN DE LA OPERACIÓN].\n\n(c) Importe: [IMPORTE] euros.\n\nSe hace constar:\n— Abstención obligatoria (art. 228 LSC): [NOMBRE/S DEL/DE LOS CONSEJERO/S AFECTADO/S].\n— Votos a favor: [NOMBRES].\n— Votos en contra: [NOMBRES], por los siguientes motivos: [MOTIVOS].\n\nResultando mayoría favorable entre los consejeros no afectados, el Consejo acuerda aprobar la operación vinculada." },
-          "biasPartyA": 0.0,
-          "biasPartyB": 0.0,
+          "plainDescription": {
+            "es": "Se aprueba la operación dejando constancia detallada de las abstenciones y el sentido de los votos."
+          },
+          "prosPartyA": {
+            "es": [
+              "Máxima transparencia en la decisión",
+              "Protección adicional para consejeros disidentes"
+            ]
+          },
+          "consPartyA": {
+            "es": [
+              "Mayor formalismo documental"
+            ]
+          },
+          "prosPartyB": {
+            "es": []
+          },
+          "consPartyB": {
+            "es": []
+          },
+          "legalText": {
+            "es": "El Consejo de Administración, en cumplimiento de lo dispuesto en el artículo 249 bis d) de la Ley de Sociedades de Capital, examina la siguiente operación vinculada:\n\n(a) Parte vinculada: [NOMBRE], en su condición de [RELACIÓN].\n\n(b) Objeto: [DESCRIPCIÓN DE LA OPERACIÓN].\n\n(c) Importe: [IMPORTE] euros.\n\nSe hace constar:\n— Abstención obligatoria (art. 228 LSC): [NOMBRE/S DEL/DE LOS CONSEJERO/S AFECTADO/S].\n— Votos a favor: [NOMBRES].\n— Votos en contra: [NOMBRES], por los siguientes motivos: [MOTIVOS].\n\nResultando mayoría favorable entre los consejeros no afectados, el Consejo acuerda aprobar la operación vinculada."
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "jurisdictionConfig": {
-            "SPAIN": { "available": true }
+            "SPAIN": {
+              "available": true
+            }
           }
         },
         {
           "id": "vinculadas-consejo-no-incluir",
           "code": "no-incluir",
-          "label": { "es": "No incluir este punto" },
+          "label": {
+            "es": "No incluir este punto"
+          },
           "order": 3,
-          "plainDescription": { "es": "No se incluyen operaciones vinculadas en el orden del día." },
-          "prosPartyA": [{ "es": "Simplifica el acta" }],
-          "consPartyA": [],
-          "prosPartyB": [],
-          "consPartyB": [],
-          "legalText": { "es": "" },
-          "biasPartyA": 0.0,
-          "biasPartyB": 0.0,
+          "plainDescription": {
+            "es": "No se incluyen operaciones vinculadas en el orden del día."
+          },
+          "prosPartyA": {
+            "es": [
+              "Simplifica el acta"
+            ]
+          },
+          "consPartyA": {
+            "es": []
+          },
+          "prosPartyB": {
+            "es": []
+          },
+          "consPartyB": {
+            "es": []
+          },
+          "legalText": {
+            "es": ""
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "jurisdictionConfig": {
-            "SPAIN": { "available": true }
+            "SPAIN": {
+              "available": true
+            }
           }
         }
       ]
     },
     {
       "id": "convocatoria-junta",
-      "title": { "es": "Convocatoria de junta general" },
-      "category": { "es": "Junta general" },
+      "title": {
+        "es": "Convocatoria de junta general"
+      },
+      "category": {
+        "es": "Junta general"
+      },
       "order": 6,
-      "plainDescription": { "es": "Resolución sobre la convocatoria de una junta general de socios, ordinaria o extraordinaria." },
-      "legalContext": { "es": "La convocatoria de junta general es facultad indelegable del consejo de administración (art. 249 bis c) LSC). La convocatoria debe cumplir los requisitos de los artículos 173 y siguientes de la LSC, incluyendo la publicación en la web de la sociedad o, en su defecto, en el BORME y en un periódico, con al menos un mes de antelación (salvo previsión estatutaria diferente para SRL, que puede ser de 15 días)." },
+      "plainDescription": {
+        "es": "Resolución sobre la convocatoria de una junta general de socios, ordinaria o extraordinaria."
+      },
+      "legalContext": {
+        "es": "La convocatoria de junta general es facultad indelegable del consejo de administración (art. 249 bis c) LSC). La convocatoria debe cumplir los requisitos de los artículos 173 y siguientes de la LSC, incluyendo la publicación en la web de la sociedad o, en su defecto, en el BORME y en un periódico, con al menos un mes de antelación (salvo previsión estatutaria diferente para SRL, que puede ser de 15 días)."
+      },
       "isRequired": false,
       "options": [
         {
           "id": "convocar-ordinaria",
           "code": "junta-ordinaria",
-          "label": { "es": "Convocar junta general ordinaria" },
+          "label": {
+            "es": "Convocar junta general ordinaria"
+          },
           "order": 1,
-          "plainDescription": { "es": "Se acuerda convocar la junta general ordinaria dentro del plazo legal." },
-          "prosPartyA": [{ "es": "Cumplimiento de la obligación legal de convocatoria" }, { "es": "Permite aprobar cuentas y gestión" }],
-          "consPartyA": [{ "es": "Requiere preparación de toda la documentación preceptiva" }],
-          "prosPartyB": [],
-          "consPartyB": [],
-          "legalText": { "es": "El Consejo de Administración, en ejercicio de la facultad indelegable prevista en el artículo 249 bis c) de la Ley de Sociedades de Capital, acuerda convocar Junta General Ordinaria de la sociedad para el día [FECHA], a las [HORA] horas, en [LUGAR], con el siguiente orden del día:\n\n[ORDEN DEL DÍA]\n\nLa convocatoria se realizará de conformidad con los artículos 173 y siguientes de la LSC y las previsiones estatutarias, mediante [MEDIO DE PUBLICACIÓN].\n\nSe encomienda al secretario/a del consejo la preparación y envío de la convocatoria." },
-          "biasPartyA": 0.0,
-          "biasPartyB": 0.0,
+          "plainDescription": {
+            "es": "Se acuerda convocar la junta general ordinaria dentro del plazo legal."
+          },
+          "prosPartyA": {
+            "es": [
+              "Cumplimiento de la obligación legal de convocatoria",
+              "Permite aprobar cuentas y gestión"
+            ]
+          },
+          "consPartyA": {
+            "es": [
+              "Requiere preparación de toda la documentación preceptiva"
+            ]
+          },
+          "prosPartyB": {
+            "es": []
+          },
+          "consPartyB": {
+            "es": []
+          },
+          "legalText": {
+            "es": "El Consejo de Administración, en ejercicio de la facultad indelegable prevista en el artículo 249 bis c) de la Ley de Sociedades de Capital, acuerda convocar Junta General Ordinaria de la sociedad para el día [FECHA], a las [HORA] horas, en [LUGAR], con el siguiente orden del día:\n\n[ORDEN DEL DÍA]\n\nLa convocatoria se realizará de conformidad con los artículos 173 y siguientes de la LSC y las previsiones estatutarias, mediante [MEDIO DE PUBLICACIÓN].\n\nSe encomienda al secretario/a del consejo la preparación y envío de la convocatoria."
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "jurisdictionConfig": {
-            "SPAIN": { "available": true }
+            "SPAIN": {
+              "available": true
+            }
           }
         },
         {
           "id": "convocar-extraordinaria",
           "code": "junta-extraordinaria",
-          "label": { "es": "Convocar junta general extraordinaria" },
+          "label": {
+            "es": "Convocar junta general extraordinaria"
+          },
           "order": 2,
-          "plainDescription": { "es": "Se acuerda convocar una junta general extraordinaria para tratar asuntos urgentes o especiales." },
-          "prosPartyA": [{ "es": "Permite tratar asuntos que no pueden esperar a la ordinaria" }, { "es": "Flexibilidad temporal" }],
-          "consPartyA": [{ "es": "Coste y carga administrativa adicional" }],
-          "prosPartyB": [],
-          "consPartyB": [],
-          "legalText": { "es": "El Consejo de Administración, en ejercicio de la facultad indelegable prevista en el artículo 249 bis c) de la Ley de Sociedades de Capital, acuerda convocar Junta General Extraordinaria de la sociedad para el día [FECHA], a las [HORA] horas, en [LUGAR], con el siguiente orden del día:\n\n[ORDEN DEL DÍA]\n\nLa convocatoria se justifica por la necesidad de someter a la junta los siguientes asuntos de carácter urgente o extraordinario: [JUSTIFICACIÓN].\n\nSe encomienda al secretario/a del consejo la preparación y envío de la convocatoria conforme a las previsiones legales y estatutarias." },
-          "biasPartyA": 0.0,
-          "biasPartyB": 0.0,
+          "plainDescription": {
+            "es": "Se acuerda convocar una junta general extraordinaria para tratar asuntos urgentes o especiales."
+          },
+          "prosPartyA": {
+            "es": [
+              "Permite tratar asuntos que no pueden esperar a la ordinaria",
+              "Flexibilidad temporal"
+            ]
+          },
+          "consPartyA": {
+            "es": [
+              "Coste y carga administrativa adicional"
+            ]
+          },
+          "prosPartyB": {
+            "es": []
+          },
+          "consPartyB": {
+            "es": []
+          },
+          "legalText": {
+            "es": "El Consejo de Administración, en ejercicio de la facultad indelegable prevista en el artículo 249 bis c) de la Ley de Sociedades de Capital, acuerda convocar Junta General Extraordinaria de la sociedad para el día [FECHA], a las [HORA] horas, en [LUGAR], con el siguiente orden del día:\n\n[ORDEN DEL DÍA]\n\nLa convocatoria se justifica por la necesidad de someter a la junta los siguientes asuntos de carácter urgente o extraordinario: [JUSTIFICACIÓN].\n\nSe encomienda al secretario/a del consejo la preparación y envío de la convocatoria conforme a las previsiones legales y estatutarias."
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "jurisdictionConfig": {
-            "SPAIN": { "available": true }
+            "SPAIN": {
+              "available": true
+            }
           }
         },
         {
           "id": "convocatoria-no-incluir",
           "code": "no-incluir",
-          "label": { "es": "No incluir este punto" },
+          "label": {
+            "es": "No incluir este punto"
+          },
           "order": 3,
-          "plainDescription": { "es": "No se incluye la convocatoria de junta general en el orden del día." },
-          "prosPartyA": [{ "es": "Simplifica el acta" }],
-          "consPartyA": [],
-          "prosPartyB": [],
-          "consPartyB": [],
-          "legalText": { "es": "" },
-          "biasPartyA": 0.0,
-          "biasPartyB": 0.0,
+          "plainDescription": {
+            "es": "No se incluye la convocatoria de junta general en el orden del día."
+          },
+          "prosPartyA": {
+            "es": [
+              "Simplifica el acta"
+            ]
+          },
+          "consPartyA": {
+            "es": []
+          },
+          "prosPartyB": {
+            "es": []
+          },
+          "consPartyB": {
+            "es": []
+          },
+          "legalText": {
+            "es": ""
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "jurisdictionConfig": {
-            "SPAIN": { "available": true }
+            "SPAIN": {
+              "available": true
+            }
           }
         }
       ]
     },
     {
       "id": "plan-estrategico",
-      "title": { "es": "Aprobación de plan estratégico" },
-      "category": { "es": "Estrategia" },
+      "title": {
+        "es": "Aprobación de plan estratégico"
+      },
+      "category": {
+        "es": "Estrategia"
+      },
       "order": 7,
-      "plainDescription": { "es": "Resolución sobre la aprobación o revisión del plan estratégico de la sociedad." },
-      "legalContext": { "es": "La determinación de la estrategia de la sociedad es una de las facultades que el artículo 249 bis a) de la LSC reserva como indelegables del consejo de administración. El plan estratégico define las líneas generales de actuación, los objetivos a medio y largo plazo, y los recursos necesarios para alcanzarlos." },
+      "plainDescription": {
+        "es": "Resolución sobre la aprobación o revisión del plan estratégico de la sociedad."
+      },
+      "legalContext": {
+        "es": "La determinación de la estrategia de la sociedad es una de las facultades que el artículo 249 bis a) de la LSC reserva como indelegables del consejo de administración. El plan estratégico define las líneas generales de actuación, los objetivos a medio y largo plazo, y los recursos necesarios para alcanzarlos."
+      },
       "isRequired": false,
       "options": [
         {
           "id": "plan-aprobar",
           "code": "aprobar-plan",
-          "label": { "es": "Aprobar tal como se presenta" },
+          "label": {
+            "es": "Aprobar tal como se presenta"
+          },
           "order": 1,
-          "plainDescription": { "es": "Se aprueba el plan estratégico en los términos presentados por la dirección." },
-          "prosPartyA": [{ "es": "Agilidad en la implementación" }, { "es": "Confianza en el equipo directivo" }],
-          "consPartyA": [{ "es": "Menor aportación del consejo a la estrategia" }],
-          "prosPartyB": [],
-          "consPartyB": [],
-          "legalText": { "es": "El Consejo de Administración, en ejercicio de la facultad indelegable prevista en el artículo 249 bis a) de la Ley de Sociedades de Capital, examina el Plan Estratégico para el período [PERÍODO] presentado por [NOMBRE / CARGO].\n\nTras las oportunas deliberaciones, el Consejo acuerda aprobar el Plan Estratégico en los términos presentados, que contempla:\n\n(a) Objetivos principales: [OBJETIVOS]\n(b) Inversiones previstas: [IMPORTE TOTAL] euros\n(c) Horizonte temporal: [PERÍODO]\n\nSe encomienda al Consejero/a Delegado/a la implementación del Plan y la presentación de informes trimestrales de seguimiento al Consejo." },
-          "biasPartyA": 0.0,
-          "biasPartyB": 0.0,
+          "plainDescription": {
+            "es": "Se aprueba el plan estratégico en los términos presentados por la dirección."
+          },
+          "prosPartyA": {
+            "es": [
+              "Agilidad en la implementación",
+              "Confianza en el equipo directivo"
+            ]
+          },
+          "consPartyA": {
+            "es": [
+              "Menor aportación del consejo a la estrategia"
+            ]
+          },
+          "prosPartyB": {
+            "es": []
+          },
+          "consPartyB": {
+            "es": []
+          },
+          "legalText": {
+            "es": "El Consejo de Administración, en ejercicio de la facultad indelegable prevista en el artículo 249 bis a) de la Ley de Sociedades de Capital, examina el Plan Estratégico para el período [PERÍODO] presentado por [NOMBRE / CARGO].\n\nTras las oportunas deliberaciones, el Consejo acuerda aprobar el Plan Estratégico en los términos presentados, que contempla:\n\n(a) Objetivos principales: [OBJETIVOS]\n(b) Inversiones previstas: [IMPORTE TOTAL] euros\n(c) Horizonte temporal: [PERÍODO]\n\nSe encomienda al Consejero/a Delegado/a la implementación del Plan y la presentación de informes trimestrales de seguimiento al Consejo."
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "jurisdictionConfig": {
-            "SPAIN": { "available": true }
+            "SPAIN": {
+              "available": true
+            }
           }
         },
         {
           "id": "plan-aprobar-modificaciones",
           "code": "aprobar-con-modificaciones",
-          "label": { "es": "Aprobar con modificaciones" },
+          "label": {
+            "es": "Aprobar con modificaciones"
+          },
           "order": 2,
-          "plainDescription": { "es": "Se aprueba el plan estratégico introduciendo las modificaciones acordadas por el consejo." },
-          "prosPartyA": [{ "es": "El consejo aporta su visión a la estrategia" }, { "es": "Mayor alineación con los intereses de los socios" }],
-          "consPartyA": [{ "es": "Posible retraso en la implementación" }],
-          "prosPartyB": [],
-          "consPartyB": [],
-          "legalText": { "es": "El Consejo de Administración, en ejercicio de la facultad indelegable prevista en el artículo 249 bis a) de la Ley de Sociedades de Capital, examina el Plan Estratégico para el período [PERÍODO] presentado por [NOMBRE / CARGO].\n\nTras las oportunas deliberaciones, el Consejo acuerda aprobar el Plan Estratégico con las siguientes modificaciones:\n\n[MODIFICACIONES ACORDADAS]\n\nSe encomienda a [RESPONSABLE] la incorporación de las modificaciones al documento definitivo del Plan y la presentación del texto revisado al Consejo en el plazo de [PLAZO]." },
-          "biasPartyA": 0.0,
-          "biasPartyB": 0.0,
+          "plainDescription": {
+            "es": "Se aprueba el plan estratégico introduciendo las modificaciones acordadas por el consejo."
+          },
+          "prosPartyA": {
+            "es": [
+              "El consejo aporta su visión a la estrategia",
+              "Mayor alineación con los intereses de los socios"
+            ]
+          },
+          "consPartyA": {
+            "es": [
+              "Posible retraso en la implementación"
+            ]
+          },
+          "prosPartyB": {
+            "es": []
+          },
+          "consPartyB": {
+            "es": []
+          },
+          "legalText": {
+            "es": "El Consejo de Administración, en ejercicio de la facultad indelegable prevista en el artículo 249 bis a) de la Ley de Sociedades de Capital, examina el Plan Estratégico para el período [PERÍODO] presentado por [NOMBRE / CARGO].\n\nTras las oportunas deliberaciones, el Consejo acuerda aprobar el Plan Estratégico con las siguientes modificaciones:\n\n[MODIFICACIONES ACORDADAS]\n\nSe encomienda a [RESPONSABLE] la incorporación de las modificaciones al documento definitivo del Plan y la presentación del texto revisado al Consejo en el plazo de [PLAZO]."
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "jurisdictionConfig": {
-            "SPAIN": { "available": true }
+            "SPAIN": {
+              "available": true
+            }
           }
         },
         {
           "id": "plan-no-incluir",
           "code": "no-incluir",
-          "label": { "es": "No incluir este punto" },
+          "label": {
+            "es": "No incluir este punto"
+          },
           "order": 3,
-          "plainDescription": { "es": "No se incluye el plan estratégico en el orden del día." },
-          "prosPartyA": [{ "es": "Simplifica el acta" }],
-          "consPartyA": [],
-          "prosPartyB": [],
-          "consPartyB": [],
-          "legalText": { "es": "" },
-          "biasPartyA": 0.0,
-          "biasPartyB": 0.0,
+          "plainDescription": {
+            "es": "No se incluye el plan estratégico en el orden del día."
+          },
+          "prosPartyA": {
+            "es": [
+              "Simplifica el acta"
+            ]
+          },
+          "consPartyA": {
+            "es": []
+          },
+          "prosPartyB": {
+            "es": []
+          },
+          "consPartyB": {
+            "es": []
+          },
+          "legalText": {
+            "es": ""
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "jurisdictionConfig": {
-            "SPAIN": { "available": true }
+            "SPAIN": {
+              "available": true
+            }
           }
         }
       ]
