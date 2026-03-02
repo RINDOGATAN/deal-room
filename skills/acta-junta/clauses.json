@@ -1,552 +1,1167 @@
 {
   "contractType": "ACTA_JUNTA_GENERAL",
-  "displayName": { "es": "Acta de Junta General" },
-  "description": { "es": "Acta de la junta general ordinaria o extraordinaria de socios conforme a la Ley de Sociedades de Capital" },
+  "displayName": {
+    "es": "Acta de Junta General"
+  },
+  "description": {
+    "es": "Acta de la junta general ordinaria o extraordinaria de socios conforme a la Ley de Sociedades de Capital"
+  },
   "version": "1.0",
   "clauses": [
     {
       "id": "aprobacion-cuentas",
-      "title": { "es": "Aprobación de cuentas anuales" },
-      "category": { "es": "Cuentas" },
+      "title": {
+        "es": "Aprobación de cuentas anuales"
+      },
+      "category": {
+        "es": "Cuentas"
+      },
       "order": 1,
-      "plainDescription": { "es": "Resolución sobre la aprobación de las cuentas anuales del ejercicio, incluyendo balance, cuenta de pérdidas y ganancias, y memoria." },
-      "legalContext": { "es": "Conforme al artículo 253 de la Ley de Sociedades de Capital, los administradores están obligados a formular las cuentas anuales dentro de los tres meses siguientes al cierre del ejercicio. La junta general ordinaria debe aprobarlas dentro de los seis primeros meses de cada ejercicio (art. 164 LSC)." },
+      "plainDescription": {
+        "es": "Resolución sobre la aprobación de las cuentas anuales del ejercicio, incluyendo balance, cuenta de pérdidas y ganancias, y memoria."
+      },
+      "legalContext": {
+        "es": "Conforme al artículo 253 de la Ley de Sociedades de Capital, los administradores están obligados a formular las cuentas anuales dentro de los tres meses siguientes al cierre del ejercicio. La junta general ordinaria debe aprobarlas dentro de los seis primeros meses de cada ejercicio (art. 164 LSC)."
+      },
       "isRequired": false,
       "options": [
         {
           "id": "cuentas-aprobar",
           "code": "aprobar",
-          "label": { "es": "Aprobar las cuentas anuales" },
+          "label": {
+            "es": "Aprobar las cuentas anuales"
+          },
           "order": 1,
-          "plainDescription": { "es": "Se aprueban íntegramente las cuentas anuales formuladas por el órgano de administración." },
-          "prosPartyA": [{ "es": "Cumple la obligación legal del art. 164 LSC" }, { "es": "Permite proceder a la aplicación del resultado" }],
-          "consPartyA": [{ "es": "Implica conformidad plena con la gestión del administrador" }],
-          "prosPartyB": [],
-          "consPartyB": [],
-          "legalText": { "es": "Se somete a la aprobación de la Junta General las cuentas anuales del ejercicio cerrado a [FECHA CIERRE EJERCICIO], comprensivas del balance de situación, la cuenta de pérdidas y ganancias, el estado de cambios en el patrimonio neto, y la memoria, formuladas por el órgano de administración de conformidad con los artículos 253 y siguientes de la Ley de Sociedades de Capital.\n\nTras las oportunas deliberaciones, la Junta General acuerda aprobar las cuentas anuales del ejercicio en los términos en que han sido formuladas." },
-          "biasPartyA": 0.0,
-          "biasPartyB": 0.0,
+          "plainDescription": {
+            "es": "Se aprueban íntegramente las cuentas anuales formuladas por el órgano de administración."
+          },
+          "prosPartyA": {
+            "es": [
+              "Cumple la obligación legal del art. 164 LSC",
+              "Permite proceder a la aplicación del resultado"
+            ]
+          },
+          "consPartyA": {
+            "es": [
+              "Implica conformidad plena con la gestión del administrador"
+            ]
+          },
+          "prosPartyB": {
+            "es": []
+          },
+          "consPartyB": {
+            "es": []
+          },
+          "legalText": {
+            "es": "Se somete a la aprobación de la Junta General las cuentas anuales del ejercicio cerrado a [FECHA CIERRE EJERCICIO], comprensivas del balance de situación, la cuenta de pérdidas y ganancias, el estado de cambios en el patrimonio neto, y la memoria, formuladas por el órgano de administración de conformidad con los artículos 253 y siguientes de la Ley de Sociedades de Capital.\n\nTras las oportunas deliberaciones, la Junta General acuerda aprobar las cuentas anuales del ejercicio en los términos en que han sido formuladas."
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "jurisdictionConfig": {
-            "SPAIN": { "available": true }
+            "SPAIN": {
+              "available": true
+            }
           }
         },
         {
           "id": "cuentas-aprobar-reservas",
           "code": "aprobar-con-reservas",
-          "label": { "es": "Aprobar con reservas" },
+          "label": {
+            "es": "Aprobar con reservas"
+          },
           "order": 2,
-          "plainDescription": { "es": "Se aprueban las cuentas anuales con observaciones o salvedades específicas." },
-          "prosPartyA": [{ "es": "Permite reflejar disconformidad parcial" }, { "es": "Deja constancia de aspectos a revisar" }],
-          "consPartyA": [{ "es": "Puede generar incertidumbre sobre la gestión" }],
-          "prosPartyB": [],
-          "consPartyB": [],
-          "legalText": { "es": "Se somete a la aprobación de la Junta General las cuentas anuales del ejercicio cerrado a [FECHA CIERRE EJERCICIO], comprensivas del balance de situación, la cuenta de pérdidas y ganancias, el estado de cambios en el patrimonio neto, y la memoria.\n\nTras las oportunas deliberaciones, la Junta General acuerda aprobar las cuentas anuales del ejercicio con las siguientes observaciones:\n\n[OBSERVACIONES]\n\nEl órgano de administración queda encargado de adoptar las medidas correctoras necesarias para subsanar las cuestiones señaladas." },
-          "biasPartyA": 0.0,
-          "biasPartyB": 0.0,
+          "plainDescription": {
+            "es": "Se aprueban las cuentas anuales con observaciones o salvedades específicas."
+          },
+          "prosPartyA": {
+            "es": [
+              "Permite reflejar disconformidad parcial",
+              "Deja constancia de aspectos a revisar"
+            ]
+          },
+          "consPartyA": {
+            "es": [
+              "Puede generar incertidumbre sobre la gestión"
+            ]
+          },
+          "prosPartyB": {
+            "es": []
+          },
+          "consPartyB": {
+            "es": []
+          },
+          "legalText": {
+            "es": "Se somete a la aprobación de la Junta General las cuentas anuales del ejercicio cerrado a [FECHA CIERRE EJERCICIO], comprensivas del balance de situación, la cuenta de pérdidas y ganancias, el estado de cambios en el patrimonio neto, y la memoria.\n\nTras las oportunas deliberaciones, la Junta General acuerda aprobar las cuentas anuales del ejercicio con las siguientes observaciones:\n\n[OBSERVACIONES]\n\nEl órgano de administración queda encargado de adoptar las medidas correctoras necesarias para subsanar las cuestiones señaladas."
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "jurisdictionConfig": {
-            "SPAIN": { "available": true }
+            "SPAIN": {
+              "available": true
+            }
           }
         },
         {
           "id": "cuentas-no-incluir",
           "code": "no-incluir",
-          "label": { "es": "No incluir este punto" },
+          "label": {
+            "es": "No incluir este punto"
+          },
           "order": 3,
-          "plainDescription": { "es": "No se incluye la aprobación de cuentas anuales en el orden del día." },
-          "prosPartyA": [{ "es": "Simplifica el acta cuando no procede" }],
-          "consPartyA": [{ "es": "Debe justificarse la omisión en junta ordinaria" }],
-          "prosPartyB": [],
-          "consPartyB": [],
-          "legalText": { "es": "" },
-          "biasPartyA": 0.0,
-          "biasPartyB": 0.0,
+          "plainDescription": {
+            "es": "No se incluye la aprobación de cuentas anuales en el orden del día."
+          },
+          "prosPartyA": {
+            "es": [
+              "Simplifica el acta cuando no procede"
+            ]
+          },
+          "consPartyA": {
+            "es": [
+              "Debe justificarse la omisión en junta ordinaria"
+            ]
+          },
+          "prosPartyB": {
+            "es": []
+          },
+          "consPartyB": {
+            "es": []
+          },
+          "legalText": {
+            "es": ""
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "jurisdictionConfig": {
-            "SPAIN": { "available": true }
+            "SPAIN": {
+              "available": true
+            }
           }
         }
       ]
     },
     {
       "id": "aplicacion-resultado",
-      "title": { "es": "Aplicación del resultado" },
-      "category": { "es": "Cuentas" },
+      "title": {
+        "es": "Aplicación del resultado"
+      },
+      "category": {
+        "es": "Cuentas"
+      },
       "order": 2,
-      "plainDescription": { "es": "Resolución sobre el destino del resultado del ejercicio: distribución de dividendos, dotación a reservas o aplicación mixta." },
-      "legalContext": { "es": "El artículo 273 LSC establece que la junta general resolverá sobre la aplicación del resultado del ejercicio. Solo podrán repartirse dividendos con cargo al beneficio si las reservas legales alcanzan al menos el 20% del capital social (art. 274 LSC). Debe dotarse la reserva legal con un 10% del beneficio hasta alcanzar dicho límite." },
+      "plainDescription": {
+        "es": "Resolución sobre el destino del resultado del ejercicio: distribución de dividendos, dotación a reservas o aplicación mixta."
+      },
+      "legalContext": {
+        "es": "El artículo 273 LSC establece que la junta general resolverá sobre la aplicación del resultado del ejercicio. Solo podrán repartirse dividendos con cargo al beneficio si las reservas legales alcanzan al menos el 20% del capital social (art. 274 LSC). Debe dotarse la reserva legal con un 10% del beneficio hasta alcanzar dicho límite."
+      },
       "isRequired": false,
       "options": [
         {
           "id": "resultado-dividendos",
           "code": "dividendos",
-          "label": { "es": "Distribuir dividendos" },
+          "label": {
+            "es": "Distribuir dividendos"
+          },
           "order": 1,
-          "plainDescription": { "es": "Se acuerda distribuir el beneficio del ejercicio como dividendos entre los socios." },
-          "prosPartyA": [{ "es": "Retribución directa a los socios" }, { "es": "Incentiva la inversión" }],
-          "consPartyA": [{ "es": "Reduce la capacidad de autofinanciación" }],
-          "prosPartyB": [],
-          "consPartyB": [],
-          "legalText": { "es": "La Junta General, a la vista del resultado del ejercicio cerrado a [FECHA CIERRE EJERCICIO], que arroja un beneficio neto de [IMPORTE BENEFICIO] euros, acuerda la siguiente aplicación:\n\n(a) Dotación a la reserva legal: [IMPORTE RESERVA LEGAL] euros, de conformidad con el artículo 274 de la Ley de Sociedades de Capital.\n\n(b) Distribución de dividendos: [IMPORTE DIVIDENDOS] euros, a razón de [IMPORTE POR PARTICIPACIÓN] euros por participación social, que se abonarán a los socios en proporción a su participación en el capital social.\n\nEl pago de los dividendos se hará efectivo en el plazo máximo de doce meses desde la fecha de este acuerdo." },
-          "biasPartyA": 0.0,
-          "biasPartyB": 0.0,
+          "plainDescription": {
+            "es": "Se acuerda distribuir el beneficio del ejercicio como dividendos entre los socios."
+          },
+          "prosPartyA": {
+            "es": [
+              "Retribución directa a los socios",
+              "Incentiva la inversión"
+            ]
+          },
+          "consPartyA": {
+            "es": [
+              "Reduce la capacidad de autofinanciación"
+            ]
+          },
+          "prosPartyB": {
+            "es": []
+          },
+          "consPartyB": {
+            "es": []
+          },
+          "legalText": {
+            "es": "La Junta General, a la vista del resultado del ejercicio cerrado a [FECHA CIERRE EJERCICIO], que arroja un beneficio neto de [IMPORTE BENEFICIO] euros, acuerda la siguiente aplicación:\n\n(a) Dotación a la reserva legal: [IMPORTE RESERVA LEGAL] euros, de conformidad con el artículo 274 de la Ley de Sociedades de Capital.\n\n(b) Distribución de dividendos: [IMPORTE DIVIDENDOS] euros, a razón de [IMPORTE POR PARTICIPACIÓN] euros por participación social, que se abonarán a los socios en proporción a su participación en el capital social.\n\nEl pago de los dividendos se hará efectivo en el plazo máximo de doce meses desde la fecha de este acuerdo."
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "jurisdictionConfig": {
-            "SPAIN": { "available": true }
+            "SPAIN": {
+              "available": true
+            }
           }
         },
         {
           "id": "resultado-reservas",
           "code": "reservas",
-          "label": { "es": "Destinar a reservas" },
+          "label": {
+            "es": "Destinar a reservas"
+          },
           "order": 2,
-          "plainDescription": { "es": "Se acuerda destinar íntegramente el resultado del ejercicio a reservas voluntarias." },
-          "prosPartyA": [{ "es": "Fortalece la situación patrimonial" }, { "es": "Mayor capacidad de autofinanciación" }],
-          "consPartyA": [{ "es": "Los socios no reciben retorno inmediato" }],
-          "prosPartyB": [],
-          "consPartyB": [],
-          "legalText": { "es": "La Junta General, a la vista del resultado del ejercicio cerrado a [FECHA CIERRE EJERCICIO], que arroja un beneficio neto de [IMPORTE BENEFICIO] euros, acuerda la siguiente aplicación:\n\n(a) Dotación a la reserva legal: [IMPORTE RESERVA LEGAL] euros, de conformidad con el artículo 274 de la Ley de Sociedades de Capital.\n\n(b) Dotación a reservas voluntarias: el remanente de [IMPORTE RESERVAS VOLUNTARIAS] euros.\n\nLa Junta General considera que la retención del beneficio resulta conveniente para fortalecer la situación financiera de la sociedad." },
-          "biasPartyA": 0.0,
-          "biasPartyB": 0.0,
+          "plainDescription": {
+            "es": "Se acuerda destinar íntegramente el resultado del ejercicio a reservas voluntarias."
+          },
+          "prosPartyA": {
+            "es": [
+              "Fortalece la situación patrimonial",
+              "Mayor capacidad de autofinanciación"
+            ]
+          },
+          "consPartyA": {
+            "es": [
+              "Los socios no reciben retorno inmediato"
+            ]
+          },
+          "prosPartyB": {
+            "es": []
+          },
+          "consPartyB": {
+            "es": []
+          },
+          "legalText": {
+            "es": "La Junta General, a la vista del resultado del ejercicio cerrado a [FECHA CIERRE EJERCICIO], que arroja un beneficio neto de [IMPORTE BENEFICIO] euros, acuerda la siguiente aplicación:\n\n(a) Dotación a la reserva legal: [IMPORTE RESERVA LEGAL] euros, de conformidad con el artículo 274 de la Ley de Sociedades de Capital.\n\n(b) Dotación a reservas voluntarias: el remanente de [IMPORTE RESERVAS VOLUNTARIAS] euros.\n\nLa Junta General considera que la retención del beneficio resulta conveniente para fortalecer la situación financiera de la sociedad."
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "jurisdictionConfig": {
-            "SPAIN": { "available": true }
+            "SPAIN": {
+              "available": true
+            }
           }
         },
         {
           "id": "resultado-mixto",
           "code": "distribucion-parcial",
-          "label": { "es": "Distribución parcial" },
+          "label": {
+            "es": "Distribución parcial"
+          },
           "order": 3,
-          "plainDescription": { "es": "Se acuerda una distribución parcial de dividendos y el resto a reservas voluntarias." },
-          "prosPartyA": [{ "es": "Equilibra retribución a socios y autofinanciación" }],
-          "consPartyA": [{ "es": "Puede no satisfacer plenamente a ninguna de las partes" }],
-          "prosPartyB": [],
-          "consPartyB": [],
-          "legalText": { "es": "La Junta General, a la vista del resultado del ejercicio cerrado a [FECHA CIERRE EJERCICIO], que arroja un beneficio neto de [IMPORTE BENEFICIO] euros, acuerda la siguiente aplicación:\n\n(a) Dotación a la reserva legal: [IMPORTE RESERVA LEGAL] euros, de conformidad con el artículo 274 de la Ley de Sociedades de Capital.\n\n(b) Distribución de dividendos: [IMPORTE DIVIDENDOS] euros.\n\n(c) Dotación a reservas voluntarias: [IMPORTE RESERVAS VOLUNTARIAS] euros.\n\nEl pago de los dividendos se hará efectivo en el plazo máximo de doce meses desde la fecha de este acuerdo." },
-          "biasPartyA": 0.0,
-          "biasPartyB": 0.0,
+          "plainDescription": {
+            "es": "Se acuerda una distribución parcial de dividendos y el resto a reservas voluntarias."
+          },
+          "prosPartyA": {
+            "es": [
+              "Equilibra retribución a socios y autofinanciación"
+            ]
+          },
+          "consPartyA": {
+            "es": [
+              "Puede no satisfacer plenamente a ninguna de las partes"
+            ]
+          },
+          "prosPartyB": {
+            "es": []
+          },
+          "consPartyB": {
+            "es": []
+          },
+          "legalText": {
+            "es": "La Junta General, a la vista del resultado del ejercicio cerrado a [FECHA CIERRE EJERCICIO], que arroja un beneficio neto de [IMPORTE BENEFICIO] euros, acuerda la siguiente aplicación:\n\n(a) Dotación a la reserva legal: [IMPORTE RESERVA LEGAL] euros, de conformidad con el artículo 274 de la Ley de Sociedades de Capital.\n\n(b) Distribución de dividendos: [IMPORTE DIVIDENDOS] euros.\n\n(c) Dotación a reservas voluntarias: [IMPORTE RESERVAS VOLUNTARIAS] euros.\n\nEl pago de los dividendos se hará efectivo en el plazo máximo de doce meses desde la fecha de este acuerdo."
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "jurisdictionConfig": {
-            "SPAIN": { "available": true }
+            "SPAIN": {
+              "available": true
+            }
           }
         },
         {
           "id": "resultado-no-incluir",
           "code": "no-incluir",
-          "label": { "es": "No incluir este punto" },
+          "label": {
+            "es": "No incluir este punto"
+          },
           "order": 4,
-          "plainDescription": { "es": "No se incluye la aplicación del resultado en el orden del día." },
-          "prosPartyA": [{ "es": "Simplifica el acta cuando no procede" }],
-          "consPartyA": [],
-          "prosPartyB": [],
-          "consPartyB": [],
-          "legalText": { "es": "" },
-          "biasPartyA": 0.0,
-          "biasPartyB": 0.0,
+          "plainDescription": {
+            "es": "No se incluye la aplicación del resultado en el orden del día."
+          },
+          "prosPartyA": {
+            "es": [
+              "Simplifica el acta cuando no procede"
+            ]
+          },
+          "consPartyA": {
+            "es": []
+          },
+          "prosPartyB": {
+            "es": []
+          },
+          "consPartyB": {
+            "es": []
+          },
+          "legalText": {
+            "es": ""
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "jurisdictionConfig": {
-            "SPAIN": { "available": true }
+            "SPAIN": {
+              "available": true
+            }
           }
         }
       ]
     },
     {
       "id": "nombramiento-administradores",
-      "title": { "es": "Nombramiento de administradores" },
-      "category": { "es": "Órgano de administración" },
+      "title": {
+        "es": "Nombramiento de administradores"
+      },
+      "category": {
+        "es": "Órgano de administración"
+      },
       "order": 3,
-      "plainDescription": { "es": "Resolución sobre el nombramiento o renovación de los administradores de la sociedad." },
-      "legalContext": { "es": "Conforme a los artículos 214 y siguientes de la LSC, el nombramiento de administradores corresponde a la junta general. El cargo es por tiempo indefinido salvo disposición estatutaria en contrario (art. 221 LSC para SL). El administrador debe aceptar el cargo y puede inscribirse en el Registro Mercantil." },
+      "plainDescription": {
+        "es": "Resolución sobre el nombramiento o renovación de los administradores de la sociedad."
+      },
+      "legalContext": {
+        "es": "Conforme a los artículos 214 y siguientes de la LSC, el nombramiento de administradores corresponde a la junta general. El cargo es por tiempo indefinido salvo disposición estatutaria en contrario (art. 221 LSC para SL). El administrador debe aceptar el cargo y puede inscribirse en el Registro Mercantil."
+      },
       "isRequired": false,
       "options": [
         {
           "id": "nombrar-administrador-unico",
           "code": "administrador-unico",
-          "label": { "es": "Nombrar administrador/a único/a" },
+          "label": {
+            "es": "Nombrar administrador/a único/a"
+          },
           "order": 1,
-          "plainDescription": { "es": "Se nombra a una persona como administrador/a único/a de la sociedad." },
-          "prosPartyA": [{ "es": "Agilidad en la toma de decisiones" }, { "es": "Estructura de gobierno sencilla" }],
-          "consPartyA": [{ "es": "Concentración del poder en una sola persona" }],
-          "prosPartyB": [],
-          "consPartyB": [],
-          "legalText": { "es": "La Junta General acuerda nombrar como administrador/a único/a de la sociedad a [NOMBRE ADMINISTRADOR], mayor de edad, con domicilio en [DOMICILIO ADMINISTRADOR] y provisto/a de [TIPO DOCUMENTO] número [NÚMERO DOCUMENTO], quien acepta el cargo en este acto y manifiesta no estar incurso/a en ninguna de las causas de prohibición o incompatibilidad previstas en la legislación vigente.\n\nEl cargo se ejercerá por tiempo indefinido, salvo disposición estatutaria en contrario, de conformidad con el artículo 221 de la Ley de Sociedades de Capital." },
-          "biasPartyA": 0.0,
-          "biasPartyB": 0.0,
+          "plainDescription": {
+            "es": "Se nombra a una persona como administrador/a único/a de la sociedad."
+          },
+          "prosPartyA": {
+            "es": [
+              "Agilidad en la toma de decisiones",
+              "Estructura de gobierno sencilla"
+            ]
+          },
+          "consPartyA": {
+            "es": [
+              "Concentración del poder en una sola persona"
+            ]
+          },
+          "prosPartyB": {
+            "es": []
+          },
+          "consPartyB": {
+            "es": []
+          },
+          "legalText": {
+            "es": "La Junta General acuerda nombrar como administrador/a único/a de la sociedad a [NOMBRE ADMINISTRADOR], mayor de edad, con domicilio en [DOMICILIO ADMINISTRADOR] y provisto/a de [TIPO DOCUMENTO] número [NÚMERO DOCUMENTO], quien acepta el cargo en este acto y manifiesta no estar incurso/a en ninguna de las causas de prohibición o incompatibilidad previstas en la legislación vigente.\n\nEl cargo se ejercerá por tiempo indefinido, salvo disposición estatutaria en contrario, de conformidad con el artículo 221 de la Ley de Sociedades de Capital."
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "jurisdictionConfig": {
-            "SPAIN": { "available": true }
+            "SPAIN": {
+              "available": true
+            }
           }
         },
         {
           "id": "nombrar-administradores-mancomunados",
           "code": "administradores-mancomunados",
-          "label": { "es": "Nombrar administradores/as mancomunados/as" },
+          "label": {
+            "es": "Nombrar administradores/as mancomunados/as"
+          },
           "order": 2,
-          "plainDescription": { "es": "Se nombran dos o más administradores/as que actuarán de forma mancomunada." },
-          "prosPartyA": [{ "es": "Control compartido sobre la gestión" }, { "es": "Mayor supervisión mutua" }],
-          "consPartyA": [{ "es": "Menor agilidad en la toma de decisiones" }],
-          "prosPartyB": [],
-          "consPartyB": [],
-          "legalText": { "es": "La Junta General acuerda nombrar como administradores/as mancomunados/as de la sociedad a las siguientes personas, quienes aceptan el cargo en este acto y manifiestan no estar incursos/as en ninguna de las causas de prohibición o incompatibilidad previstas en la legislación vigente:\n\n(a) [NOMBRE ADMINISTRADOR 1], mayor de edad, con domicilio en [DOMICILIO 1] y [TIPO DOCUMENTO] número [NÚMERO DOCUMENTO 1].\n\n(b) [NOMBRE ADMINISTRADOR 2], mayor de edad, con domicilio en [DOMICILIO 2] y [TIPO DOCUMENTO] número [NÚMERO DOCUMENTO 2].\n\nLos administradores/as ejercerán sus funciones de forma mancomunada, requiriéndose la actuación conjunta de al menos dos de ellos para la validez de sus actos, de conformidad con los artículos 210 y siguientes de la Ley de Sociedades de Capital." },
-          "biasPartyA": 0.0,
-          "biasPartyB": 0.0,
+          "plainDescription": {
+            "es": "Se nombran dos o más administradores/as que actuarán de forma mancomunada."
+          },
+          "prosPartyA": {
+            "es": [
+              "Control compartido sobre la gestión",
+              "Mayor supervisión mutua"
+            ]
+          },
+          "consPartyA": {
+            "es": [
+              "Menor agilidad en la toma de decisiones"
+            ]
+          },
+          "prosPartyB": {
+            "es": []
+          },
+          "consPartyB": {
+            "es": []
+          },
+          "legalText": {
+            "es": "La Junta General acuerda nombrar como administradores/as mancomunados/as de la sociedad a las siguientes personas, quienes aceptan el cargo en este acto y manifiestan no estar incursos/as en ninguna de las causas de prohibición o incompatibilidad previstas en la legislación vigente:\n\n(a) [NOMBRE ADMINISTRADOR 1], mayor de edad, con domicilio en [DOMICILIO 1] y [TIPO DOCUMENTO] número [NÚMERO DOCUMENTO 1].\n\n(b) [NOMBRE ADMINISTRADOR 2], mayor de edad, con domicilio en [DOMICILIO 2] y [TIPO DOCUMENTO] número [NÚMERO DOCUMENTO 2].\n\nLos administradores/as ejercerán sus funciones de forma mancomunada, requiriéndose la actuación conjunta de al menos dos de ellos para la validez de sus actos, de conformidad con los artículos 210 y siguientes de la Ley de Sociedades de Capital."
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "jurisdictionConfig": {
-            "SPAIN": { "available": true }
+            "SPAIN": {
+              "available": true
+            }
           }
         },
         {
           "id": "nombrar-consejo",
           "code": "consejo-administracion",
-          "label": { "es": "Nombrar consejo de administración" },
+          "label": {
+            "es": "Nombrar consejo de administración"
+          },
           "order": 3,
-          "plainDescription": { "es": "Se constituye un consejo de administración con los miembros designados." },
-          "prosPartyA": [{ "es": "Gobierno corporativo más robusto" }, { "es": "Representación de distintos socios" }],
-          "consPartyA": [{ "es": "Mayor complejidad administrativa" }, { "es": "Coste adicional de funcionamiento" }],
-          "prosPartyB": [],
-          "consPartyB": [],
-          "legalText": { "es": "La Junta General acuerda organizar la administración de la sociedad mediante un consejo de administración compuesto por [NÚMERO CONSEJEROS] miembros, de conformidad con el artículo 210 de la Ley de Sociedades de Capital, y nombrar como consejeros/as a las siguientes personas, quienes aceptan el cargo en este acto:\n\n[LISTA DE CONSEJEROS]\n\nAsimismo, se designa como presidente/a del consejo a [NOMBRE PRESIDENTE] y como secretario/a a [NOMBRE SECRETARIO].\n\nEl consejo de administración se regirá por las disposiciones estatutarias y, en lo no previsto, por la Ley de Sociedades de Capital." },
-          "biasPartyA": 0.0,
-          "biasPartyB": 0.0,
+          "plainDescription": {
+            "es": "Se constituye un consejo de administración con los miembros designados."
+          },
+          "prosPartyA": {
+            "es": [
+              "Gobierno corporativo más robusto",
+              "Representación de distintos socios"
+            ]
+          },
+          "consPartyA": {
+            "es": [
+              "Mayor complejidad administrativa",
+              "Coste adicional de funcionamiento"
+            ]
+          },
+          "prosPartyB": {
+            "es": []
+          },
+          "consPartyB": {
+            "es": []
+          },
+          "legalText": {
+            "es": "La Junta General acuerda organizar la administración de la sociedad mediante un consejo de administración compuesto por [NÚMERO CONSEJEROS] miembros, de conformidad con el artículo 210 de la Ley de Sociedades de Capital, y nombrar como consejeros/as a las siguientes personas, quienes aceptan el cargo en este acto:\n\n[LISTA DE CONSEJEROS]\n\nAsimismo, se designa como presidente/a del consejo a [NOMBRE PRESIDENTE] y como secretario/a a [NOMBRE SECRETARIO].\n\nEl consejo de administración se regirá por las disposiciones estatutarias y, en lo no previsto, por la Ley de Sociedades de Capital."
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "jurisdictionConfig": {
-            "SPAIN": { "available": true }
+            "SPAIN": {
+              "available": true
+            }
           }
         },
         {
           "id": "nombramiento-no-incluir",
           "code": "no-incluir",
-          "label": { "es": "No incluir este punto" },
+          "label": {
+            "es": "No incluir este punto"
+          },
           "order": 4,
-          "plainDescription": { "es": "No se incluye el nombramiento de administradores en el orden del día." },
-          "prosPartyA": [{ "es": "Simplifica el acta" }],
-          "consPartyA": [],
-          "prosPartyB": [],
-          "consPartyB": [],
-          "legalText": { "es": "" },
-          "biasPartyA": 0.0,
-          "biasPartyB": 0.0,
+          "plainDescription": {
+            "es": "No se incluye el nombramiento de administradores en el orden del día."
+          },
+          "prosPartyA": {
+            "es": [
+              "Simplifica el acta"
+            ]
+          },
+          "consPartyA": {
+            "es": []
+          },
+          "prosPartyB": {
+            "es": []
+          },
+          "consPartyB": {
+            "es": []
+          },
+          "legalText": {
+            "es": ""
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "jurisdictionConfig": {
-            "SPAIN": { "available": true }
+            "SPAIN": {
+              "available": true
+            }
           }
         }
       ]
     },
     {
       "id": "cese-administradores",
-      "title": { "es": "Cese de administradores" },
-      "category": { "es": "Órgano de administración" },
+      "title": {
+        "es": "Cese de administradores"
+      },
+      "category": {
+        "es": "Órgano de administración"
+      },
       "order": 4,
-      "plainDescription": { "es": "Resolución sobre el cese o destitución de los administradores de la sociedad." },
-      "legalContext": { "es": "Conforme al artículo 223 de la LSC, los administradores podrán ser separados de su cargo en cualquier momento por la junta general, aunque la separación no conste en el orden del día. El cese surte efectos desde el momento de la adopción del acuerdo, sin perjuicio de su inscripción en el Registro Mercantil." },
+      "plainDescription": {
+        "es": "Resolución sobre el cese o destitución de los administradores de la sociedad."
+      },
+      "legalContext": {
+        "es": "Conforme al artículo 223 de la LSC, los administradores podrán ser separados de su cargo en cualquier momento por la junta general, aunque la separación no conste en el orden del día. El cese surte efectos desde el momento de la adopción del acuerdo, sin perjuicio de su inscripción en el Registro Mercantil."
+      },
       "isRequired": false,
       "options": [
         {
           "id": "cese-con-causa",
           "code": "con-causa",
-          "label": { "es": "Cesar con causa justificada" },
+          "label": {
+            "es": "Cesar con causa justificada"
+          },
           "order": 1,
-          "plainDescription": { "es": "Se acuerda el cese del administrador/a por causa legalmente prevista o por incumplimiento de sus obligaciones." },
-          "prosPartyA": [{ "es": "Mayor seguridad jurídica" }, { "es": "Fundamenta posible reclamación de daños" }],
-          "consPartyA": [{ "es": "Requiere acreditación de la causa" }],
-          "prosPartyB": [],
-          "consPartyB": [],
-          "legalText": { "es": "La Junta General, de conformidad con el artículo 223 de la Ley de Sociedades de Capital, acuerda el cese de [NOMBRE ADMINISTRADOR CESANTE] como [CARGO] de la sociedad, con efectos desde este momento.\n\nEl cese se fundamenta en las siguientes causas: [DESCRIPCIÓN DE LAS CAUSAS].\n\nSe faculta al órgano de administración resultante para la inscripción del cese en el Registro Mercantil y la realización de cuantos trámites sean necesarios." },
-          "biasPartyA": 0.0,
-          "biasPartyB": 0.0,
+          "plainDescription": {
+            "es": "Se acuerda el cese del administrador/a por causa legalmente prevista o por incumplimiento de sus obligaciones."
+          },
+          "prosPartyA": {
+            "es": [
+              "Mayor seguridad jurídica",
+              "Fundamenta posible reclamación de daños"
+            ]
+          },
+          "consPartyA": {
+            "es": [
+              "Requiere acreditación de la causa"
+            ]
+          },
+          "prosPartyB": {
+            "es": []
+          },
+          "consPartyB": {
+            "es": []
+          },
+          "legalText": {
+            "es": "La Junta General, de conformidad con el artículo 223 de la Ley de Sociedades de Capital, acuerda el cese de [NOMBRE ADMINISTRADOR CESANTE] como [CARGO] de la sociedad, con efectos desde este momento.\n\nEl cese se fundamenta en las siguientes causas: [DESCRIPCIÓN DE LAS CAUSAS].\n\nSe faculta al órgano de administración resultante para la inscripción del cese en el Registro Mercantil y la realización de cuantos trámites sean necesarios."
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "jurisdictionConfig": {
-            "SPAIN": { "available": true }
+            "SPAIN": {
+              "available": true
+            }
           }
         },
         {
           "id": "cese-sin-causa",
           "code": "sin-causa",
-          "label": { "es": "Cesar sin expresión de causa" },
+          "label": {
+            "es": "Cesar sin expresión de causa"
+          },
           "order": 2,
-          "plainDescription": { "es": "Se acuerda la libre separación del administrador/a sin necesidad de justificar causa." },
-          "prosPartyA": [{ "es": "Ejerce la facultad libre de separación del art. 223 LSC" }, { "es": "No requiere justificación" }],
-          "consPartyA": [{ "es": "El administrador cesado podría reclamar si tuviera contrato de alta dirección" }],
-          "prosPartyB": [],
-          "consPartyB": [],
-          "legalText": { "es": "La Junta General, en ejercicio de la facultad prevista en el artículo 223 de la Ley de Sociedades de Capital, acuerda el cese libre de [NOMBRE ADMINISTRADOR CESANTE] como [CARGO] de la sociedad, con efectos desde este momento.\n\nSe hace constar que la separación se acuerda sin expresión de causa, en uso del derecho que asiste a la junta general para separar libremente a los administradores en cualquier momento.\n\nSe faculta al órgano de administración resultante para la inscripción del cese en el Registro Mercantil." },
-          "biasPartyA": 0.0,
-          "biasPartyB": 0.0,
+          "plainDescription": {
+            "es": "Se acuerda la libre separación del administrador/a sin necesidad de justificar causa."
+          },
+          "prosPartyA": {
+            "es": [
+              "Ejerce la facultad libre de separación del art. 223 LSC",
+              "No requiere justificación"
+            ]
+          },
+          "consPartyA": {
+            "es": [
+              "El administrador cesado podría reclamar si tuviera contrato de alta dirección"
+            ]
+          },
+          "prosPartyB": {
+            "es": []
+          },
+          "consPartyB": {
+            "es": []
+          },
+          "legalText": {
+            "es": "La Junta General, en ejercicio de la facultad prevista en el artículo 223 de la Ley de Sociedades de Capital, acuerda el cese libre de [NOMBRE ADMINISTRADOR CESANTE] como [CARGO] de la sociedad, con efectos desde este momento.\n\nSe hace constar que la separación se acuerda sin expresión de causa, en uso del derecho que asiste a la junta general para separar libremente a los administradores en cualquier momento.\n\nSe faculta al órgano de administración resultante para la inscripción del cese en el Registro Mercantil."
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "jurisdictionConfig": {
-            "SPAIN": { "available": true }
+            "SPAIN": {
+              "available": true
+            }
           }
         },
         {
           "id": "cese-no-incluir",
           "code": "no-incluir",
-          "label": { "es": "No incluir este punto" },
+          "label": {
+            "es": "No incluir este punto"
+          },
           "order": 3,
-          "plainDescription": { "es": "No se incluye el cese de administradores en el orden del día." },
-          "prosPartyA": [{ "es": "Simplifica el acta" }],
-          "consPartyA": [],
-          "prosPartyB": [],
-          "consPartyB": [],
-          "legalText": { "es": "" },
-          "biasPartyA": 0.0,
-          "biasPartyB": 0.0,
+          "plainDescription": {
+            "es": "No se incluye el cese de administradores en el orden del día."
+          },
+          "prosPartyA": {
+            "es": [
+              "Simplifica el acta"
+            ]
+          },
+          "consPartyA": {
+            "es": []
+          },
+          "prosPartyB": {
+            "es": []
+          },
+          "consPartyB": {
+            "es": []
+          },
+          "legalText": {
+            "es": ""
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "jurisdictionConfig": {
-            "SPAIN": { "available": true }
+            "SPAIN": {
+              "available": true
+            }
           }
         }
       ]
     },
     {
       "id": "modificacion-estatutos",
-      "title": { "es": "Modificación de estatutos" },
-      "category": { "es": "Estatutos" },
+      "title": {
+        "es": "Modificación de estatutos"
+      },
+      "category": {
+        "es": "Estatutos"
+      },
       "order": 5,
-      "plainDescription": { "es": "Resolución sobre la modificación de los estatutos sociales de la sociedad." },
-      "legalContext": { "es": "La modificación de estatutos requiere los requisitos del artículo 285 y siguientes de la LSC: informe de los administradores, expresión en la convocatoria del derecho de los socios a examinar el texto íntegro de la modificación, y mayoría reforzada (art. 199 LSC para SL). En SRL, se requiere más de la mitad de los votos correspondientes a las participaciones en que se divida el capital social." },
+      "plainDescription": {
+        "es": "Resolución sobre la modificación de los estatutos sociales de la sociedad."
+      },
+      "legalContext": {
+        "es": "La modificación de estatutos requiere los requisitos del artículo 285 y siguientes de la LSC: informe de los administradores, expresión en la convocatoria del derecho de los socios a examinar el texto íntegro de la modificación, y mayoría reforzada (art. 199 LSC para SL). En SRL, se requiere más de la mitad de los votos correspondientes a las participaciones en que se divida el capital social."
+      },
       "isRequired": false,
       "options": [
         {
           "id": "estatutos-redaccion-completa",
           "code": "redaccion-completa",
-          "label": { "es": "Redacción completa del artículo" },
+          "label": {
+            "es": "Redacción completa del artículo"
+          },
           "order": 1,
-          "plainDescription": { "es": "Se aprueba una nueva redacción completa del artículo o artículos estatutarios modificados." },
-          "prosPartyA": [{ "es": "Claridad total sobre el contenido modificado" }, { "es": "Facilita la inscripción registral" }],
-          "consPartyA": [{ "es": "Requiere redacción íntegra del nuevo texto" }],
-          "prosPartyB": [],
-          "consPartyB": [],
-          "legalText": { "es": "La Junta General, de conformidad con los artículos 285 y siguientes de la Ley de Sociedades de Capital, y habiendo sido informados los socios del texto íntegro de la modificación propuesta conforme al artículo 287 LSC, acuerda modificar los estatutos sociales en los siguientes términos:\n\nArtículo [NÚMERO ARTÍCULO] — [TÍTULO ARTÍCULO]\n\nAntigua redacción:\n\"[REDACCIÓN ANTERIOR]\"\n\nNueva redacción:\n\"[NUEVA REDACCIÓN]\"\n\nSe faculta al órgano de administración para elevar a público el presente acuerdo y solicitar su inscripción en el Registro Mercantil." },
-          "biasPartyA": 0.0,
-          "biasPartyB": 0.0,
+          "plainDescription": {
+            "es": "Se aprueba una nueva redacción completa del artículo o artículos estatutarios modificados."
+          },
+          "prosPartyA": {
+            "es": [
+              "Claridad total sobre el contenido modificado",
+              "Facilita la inscripción registral"
+            ]
+          },
+          "consPartyA": {
+            "es": [
+              "Requiere redacción íntegra del nuevo texto"
+            ]
+          },
+          "prosPartyB": {
+            "es": []
+          },
+          "consPartyB": {
+            "es": []
+          },
+          "legalText": {
+            "es": "La Junta General, de conformidad con los artículos 285 y siguientes de la Ley de Sociedades de Capital, y habiendo sido informados los socios del texto íntegro de la modificación propuesta conforme al artículo 287 LSC, acuerda modificar los estatutos sociales en los siguientes términos:\n\nArtículo [NÚMERO ARTÍCULO] — [TÍTULO ARTÍCULO]\n\nAntigua redacción:\n\"[REDACCIÓN ANTERIOR]\"\n\nNueva redacción:\n\"[NUEVA REDACCIÓN]\"\n\nSe faculta al órgano de administración para elevar a público el presente acuerdo y solicitar su inscripción en el Registro Mercantil."
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "jurisdictionConfig": {
-            "SPAIN": { "available": true }
+            "SPAIN": {
+              "available": true
+            }
           }
         },
         {
           "id": "estatutos-enmienda-especifica",
           "code": "enmienda-especifica",
-          "label": { "es": "Enmienda específica" },
+          "label": {
+            "es": "Enmienda específica"
+          },
           "order": 2,
-          "plainDescription": { "es": "Se aprueba una modificación puntual de un aspecto concreto de los estatutos." },
-          "prosPartyA": [{ "es": "Intervención mínima en el texto estatutario" }, { "es": "Proceso más ágil" }],
-          "consPartyA": [{ "es": "Puede generar incoherencias si no se revisa el contexto" }],
-          "prosPartyB": [],
-          "consPartyB": [],
-          "legalText": { "es": "La Junta General, de conformidad con los artículos 285 y siguientes de la Ley de Sociedades de Capital, acuerda modificar el artículo [NÚMERO ARTÍCULO] de los estatutos sociales, concretamente en lo relativo a [ASPECTO MODIFICADO], sustituyendo la expresión \"[TEXTO ANTERIOR]\" por \"[TEXTO NUEVO]\".\n\nEl resto del artículo permanece inalterado.\n\nSe faculta al órgano de administración para elevar a público el presente acuerdo y solicitar su inscripción en el Registro Mercantil." },
-          "biasPartyA": 0.0,
-          "biasPartyB": 0.0,
+          "plainDescription": {
+            "es": "Se aprueba una modificación puntual de un aspecto concreto de los estatutos."
+          },
+          "prosPartyA": {
+            "es": [
+              "Intervención mínima en el texto estatutario",
+              "Proceso más ágil"
+            ]
+          },
+          "consPartyA": {
+            "es": [
+              "Puede generar incoherencias si no se revisa el contexto"
+            ]
+          },
+          "prosPartyB": {
+            "es": []
+          },
+          "consPartyB": {
+            "es": []
+          },
+          "legalText": {
+            "es": "La Junta General, de conformidad con los artículos 285 y siguientes de la Ley de Sociedades de Capital, acuerda modificar el artículo [NÚMERO ARTÍCULO] de los estatutos sociales, concretamente en lo relativo a [ASPECTO MODIFICADO], sustituyendo la expresión \"[TEXTO ANTERIOR]\" por \"[TEXTO NUEVO]\".\n\nEl resto del artículo permanece inalterado.\n\nSe faculta al órgano de administración para elevar a público el presente acuerdo y solicitar su inscripción en el Registro Mercantil."
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "jurisdictionConfig": {
-            "SPAIN": { "available": true }
+            "SPAIN": {
+              "available": true
+            }
           }
         },
         {
           "id": "estatutos-no-incluir",
           "code": "no-incluir",
-          "label": { "es": "No incluir este punto" },
+          "label": {
+            "es": "No incluir este punto"
+          },
           "order": 3,
-          "plainDescription": { "es": "No se incluye la modificación de estatutos en el orden del día." },
-          "prosPartyA": [{ "es": "Simplifica el acta" }],
-          "consPartyA": [],
-          "prosPartyB": [],
-          "consPartyB": [],
-          "legalText": { "es": "" },
-          "biasPartyA": 0.0,
-          "biasPartyB": 0.0,
+          "plainDescription": {
+            "es": "No se incluye la modificación de estatutos en el orden del día."
+          },
+          "prosPartyA": {
+            "es": [
+              "Simplifica el acta"
+            ]
+          },
+          "consPartyA": {
+            "es": []
+          },
+          "prosPartyB": {
+            "es": []
+          },
+          "consPartyB": {
+            "es": []
+          },
+          "legalText": {
+            "es": ""
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "jurisdictionConfig": {
-            "SPAIN": { "available": true }
+            "SPAIN": {
+              "available": true
+            }
           }
         }
       ]
     },
     {
       "id": "ampliacion-reduccion-capital",
-      "title": { "es": "Ampliación o reducción de capital" },
-      "category": { "es": "Capital social" },
+      "title": {
+        "es": "Ampliación o reducción de capital"
+      },
+      "category": {
+        "es": "Capital social"
+      },
       "order": 6,
-      "plainDescription": { "es": "Resolución sobre la ampliación o reducción del capital social de la sociedad." },
-      "legalContext": { "es": "La ampliación de capital se regula en los artículos 295 y siguientes de la LSC. Puede realizarse mediante creación de nuevas participaciones o aumento del valor nominal. La reducción de capital (arts. 317 y ss.) puede tener por finalidad la devolución de aportaciones, la condonación de dividendos pasivos, la constitución de reservas o el restablecimiento del equilibrio patrimonial." },
+      "plainDescription": {
+        "es": "Resolución sobre la ampliación o reducción del capital social de la sociedad."
+      },
+      "legalContext": {
+        "es": "La ampliación de capital se regula en los artículos 295 y siguientes de la LSC. Puede realizarse mediante creación de nuevas participaciones o aumento del valor nominal. La reducción de capital (arts. 317 y ss.) puede tener por finalidad la devolución de aportaciones, la condonación de dividendos pasivos, la constitución de reservas o el restablecimiento del equilibrio patrimonial."
+      },
       "isRequired": false,
       "options": [
         {
           "id": "capital-ampliacion-nuevas",
           "code": "ampliacion-nuevas-participaciones",
-          "label": { "es": "Ampliación por nuevas participaciones" },
+          "label": {
+            "es": "Ampliación por nuevas participaciones"
+          },
           "order": 1,
-          "plainDescription": { "es": "Se aumenta el capital social mediante la creación de nuevas participaciones sociales." },
-          "prosPartyA": [{ "es": "Permite la entrada de nuevos socios" }, { "es": "Incrementa los recursos propios" }],
-          "consPartyA": [{ "es": "Dilución de los socios existentes" }],
-          "prosPartyB": [],
-          "consPartyB": [],
-          "legalText": { "es": "La Junta General, de conformidad con los artículos 295 y siguientes de la Ley de Sociedades de Capital, acuerda ampliar el capital social en la cuantía de [IMPORTE AMPLIACIÓN] euros, mediante la creación de [NÚMERO PARTICIPACIONES NUEVAS] nuevas participaciones sociales de [VALOR NOMINAL] euros de valor nominal cada una, numeradas correlativamente del [NÚMERO INICIO] al [NÚMERO FIN], ambos inclusive.\n\nLas nuevas participaciones se emiten a la par / con una prima de asunción de [IMPORTE PRIMA] euros por participación.\n\nLos socios actuales tendrán derecho de asunción preferente de conformidad con el artículo 304 de la Ley de Sociedades de Capital, que podrán ejercitar en el plazo de [PLAZO] desde la publicación del acuerdo.\n\nSe faculta al órgano de administración para ejecutar el acuerdo de ampliación y otorgar la correspondiente escritura pública de aumento de capital." },
-          "biasPartyA": 0.0,
-          "biasPartyB": 0.0,
+          "plainDescription": {
+            "es": "Se aumenta el capital social mediante la creación de nuevas participaciones sociales."
+          },
+          "prosPartyA": {
+            "es": [
+              "Permite la entrada de nuevos socios",
+              "Incrementa los recursos propios"
+            ]
+          },
+          "consPartyA": {
+            "es": [
+              "Dilución de los socios existentes"
+            ]
+          },
+          "prosPartyB": {
+            "es": []
+          },
+          "consPartyB": {
+            "es": []
+          },
+          "legalText": {
+            "es": "La Junta General, de conformidad con los artículos 295 y siguientes de la Ley de Sociedades de Capital, acuerda ampliar el capital social en la cuantía de [IMPORTE AMPLIACIÓN] euros, mediante la creación de [NÚMERO PARTICIPACIONES NUEVAS] nuevas participaciones sociales de [VALOR NOMINAL] euros de valor nominal cada una, numeradas correlativamente del [NÚMERO INICIO] al [NÚMERO FIN], ambos inclusive.\n\nLas nuevas participaciones se emiten a la par / con una prima de asunción de [IMPORTE PRIMA] euros por participación.\n\nLos socios actuales tendrán derecho de asunción preferente de conformidad con el artículo 304 de la Ley de Sociedades de Capital, que podrán ejercitar en el plazo de [PLAZO] desde la publicación del acuerdo.\n\nSe faculta al órgano de administración para ejecutar el acuerdo de ampliación y otorgar la correspondiente escritura pública de aumento de capital."
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "jurisdictionConfig": {
-            "SPAIN": { "available": true }
+            "SPAIN": {
+              "available": true
+            }
           }
         },
         {
           "id": "capital-ampliacion-nominal",
           "code": "ampliacion-valor-nominal",
-          "label": { "es": "Ampliación por aumento del nominal" },
+          "label": {
+            "es": "Ampliación por aumento del nominal"
+          },
           "order": 2,
-          "plainDescription": { "es": "Se aumenta el capital social incrementando el valor nominal de las participaciones existentes." },
-          "prosPartyA": [{ "es": "No altera la estructura societaria" }, { "es": "Sin dilución" }],
-          "consPartyA": [{ "es": "Requiere aportación de todos los socios o cargo a reservas" }],
-          "prosPartyB": [],
-          "consPartyB": [],
-          "legalText": { "es": "La Junta General, de conformidad con los artículos 295 y siguientes de la Ley de Sociedades de Capital, acuerda ampliar el capital social en la cuantía de [IMPORTE AMPLIACIÓN] euros, mediante el incremento del valor nominal de las [NÚMERO PARTICIPACIONES] participaciones sociales existentes, que pasan de [VALOR NOMINAL ANTERIOR] euros a [VALOR NOMINAL NUEVO] euros de valor nominal cada una.\n\nLa ampliación se realiza con cargo a [RESERVAS VOLUNTARIAS / NUEVAS APORTACIONES].\n\nSe faculta al órgano de administración para otorgar la correspondiente escritura pública." },
-          "biasPartyA": 0.0,
-          "biasPartyB": 0.0,
+          "plainDescription": {
+            "es": "Se aumenta el capital social incrementando el valor nominal de las participaciones existentes."
+          },
+          "prosPartyA": {
+            "es": [
+              "No altera la estructura societaria",
+              "Sin dilución"
+            ]
+          },
+          "consPartyA": {
+            "es": [
+              "Requiere aportación de todos los socios o cargo a reservas"
+            ]
+          },
+          "prosPartyB": {
+            "es": []
+          },
+          "consPartyB": {
+            "es": []
+          },
+          "legalText": {
+            "es": "La Junta General, de conformidad con los artículos 295 y siguientes de la Ley de Sociedades de Capital, acuerda ampliar el capital social en la cuantía de [IMPORTE AMPLIACIÓN] euros, mediante el incremento del valor nominal de las [NÚMERO PARTICIPACIONES] participaciones sociales existentes, que pasan de [VALOR NOMINAL ANTERIOR] euros a [VALOR NOMINAL NUEVO] euros de valor nominal cada una.\n\nLa ampliación se realiza con cargo a [RESERVAS VOLUNTARIAS / NUEVAS APORTACIONES].\n\nSe faculta al órgano de administración para otorgar la correspondiente escritura pública."
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "jurisdictionConfig": {
-            "SPAIN": { "available": true }
+            "SPAIN": {
+              "available": true
+            }
           }
         },
         {
           "id": "capital-reduccion",
           "code": "reduccion",
-          "label": { "es": "Reducción de capital" },
+          "label": {
+            "es": "Reducción de capital"
+          },
           "order": 3,
-          "plainDescription": { "es": "Se reduce el capital social por la finalidad que corresponda." },
-          "prosPartyA": [{ "es": "Permite ajustar el capital a la realidad patrimonial" }, { "es": "Puede facilitar la devolución de aportaciones" }],
-          "consPartyA": [{ "es": "Reducción de la garantía frente a terceros" }, { "es": "Posible derecho de oposición de acreedores" }],
-          "prosPartyB": [],
-          "consPartyB": [],
-          "legalText": { "es": "La Junta General, de conformidad con los artículos 317 y siguientes de la Ley de Sociedades de Capital, acuerda la reducción del capital social en la cuantía de [IMPORTE REDUCCIÓN] euros, con la finalidad de [DEVOLUCIÓN DE APORTACIONES / RESTABLECIMIENTO DEL EQUILIBRIO PATRIMONIAL / CONSTITUCIÓN DE RESERVAS].\n\nLa reducción se llevará a cabo mediante [DISMINUCIÓN DEL VALOR NOMINAL / AMORTIZACIÓN DE PARTICIPACIONES], afectando a [DESCRIPCIÓN DE PARTICIPACIONES AFECTADAS].\n\nTras la reducción, el capital social queda fijado en [NUEVO CAPITAL SOCIAL] euros, dividido en [NÚMERO PARTICIPACIONES] participaciones sociales de [VALOR NOMINAL] euros cada una.\n\nSe faculta al órgano de administración para ejecutar el acuerdo y otorgar la correspondiente escritura pública, dando cumplimiento a los requisitos de publicidad y tutela de acreedores previstos en la ley." },
-          "biasPartyA": 0.0,
-          "biasPartyB": 0.0,
+          "plainDescription": {
+            "es": "Se reduce el capital social por la finalidad que corresponda."
+          },
+          "prosPartyA": {
+            "es": [
+              "Permite ajustar el capital a la realidad patrimonial",
+              "Puede facilitar la devolución de aportaciones"
+            ]
+          },
+          "consPartyA": {
+            "es": [
+              "Reducción de la garantía frente a terceros",
+              "Posible derecho de oposición de acreedores"
+            ]
+          },
+          "prosPartyB": {
+            "es": []
+          },
+          "consPartyB": {
+            "es": []
+          },
+          "legalText": {
+            "es": "La Junta General, de conformidad con los artículos 317 y siguientes de la Ley de Sociedades de Capital, acuerda la reducción del capital social en la cuantía de [IMPORTE REDUCCIÓN] euros, con la finalidad de [DEVOLUCIÓN DE APORTACIONES / RESTABLECIMIENTO DEL EQUILIBRIO PATRIMONIAL / CONSTITUCIÓN DE RESERVAS].\n\nLa reducción se llevará a cabo mediante [DISMINUCIÓN DEL VALOR NOMINAL / AMORTIZACIÓN DE PARTICIPACIONES], afectando a [DESCRIPCIÓN DE PARTICIPACIONES AFECTADAS].\n\nTras la reducción, el capital social queda fijado en [NUEVO CAPITAL SOCIAL] euros, dividido en [NÚMERO PARTICIPACIONES] participaciones sociales de [VALOR NOMINAL] euros cada una.\n\nSe faculta al órgano de administración para ejecutar el acuerdo y otorgar la correspondiente escritura pública, dando cumplimiento a los requisitos de publicidad y tutela de acreedores previstos en la ley."
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "jurisdictionConfig": {
-            "SPAIN": { "available": true }
+            "SPAIN": {
+              "available": true
+            }
           }
         },
         {
           "id": "capital-no-incluir",
           "code": "no-incluir",
-          "label": { "es": "No incluir este punto" },
+          "label": {
+            "es": "No incluir este punto"
+          },
           "order": 4,
-          "plainDescription": { "es": "No se incluye la ampliación o reducción de capital en el orden del día." },
-          "prosPartyA": [{ "es": "Simplifica el acta" }],
-          "consPartyA": [],
-          "prosPartyB": [],
-          "consPartyB": [],
-          "legalText": { "es": "" },
-          "biasPartyA": 0.0,
-          "biasPartyB": 0.0,
+          "plainDescription": {
+            "es": "No se incluye la ampliación o reducción de capital en el orden del día."
+          },
+          "prosPartyA": {
+            "es": [
+              "Simplifica el acta"
+            ]
+          },
+          "consPartyA": {
+            "es": []
+          },
+          "prosPartyB": {
+            "es": []
+          },
+          "consPartyB": {
+            "es": []
+          },
+          "legalText": {
+            "es": ""
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "jurisdictionConfig": {
-            "SPAIN": { "available": true }
+            "SPAIN": {
+              "available": true
+            }
           }
         }
       ]
     },
     {
       "id": "politica-remuneraciones",
-      "title": { "es": "Aprobación de política de remuneraciones" },
-      "category": { "es": "Retribución" },
+      "title": {
+        "es": "Aprobación de política de remuneraciones"
+      },
+      "category": {
+        "es": "Retribución"
+      },
       "order": 7,
-      "plainDescription": { "es": "Resolución sobre la aprobación de la política de remuneración de los administradores de la sociedad." },
-      "legalContext": { "es": "Conforme al artículo 217 de la LSC, el cargo de administrador es gratuito salvo que los estatutos establezcan lo contrario. Si los estatutos prevén retribución, la junta general debe aprobar el importe máximo de la remuneración anual. Para cotizadas, se requiere una política de remuneraciones específica (art. 529 novodecies LSC), pero es buena práctica también en no cotizadas." },
+      "plainDescription": {
+        "es": "Resolución sobre la aprobación de la política de remuneración de los administradores de la sociedad."
+      },
+      "legalContext": {
+        "es": "Conforme al artículo 217 de la LSC, el cargo de administrador es gratuito salvo que los estatutos establezcan lo contrario. Si los estatutos prevén retribución, la junta general debe aprobar el importe máximo de la remuneración anual. Para cotizadas, se requiere una política de remuneraciones específica (art. 529 novodecies LSC), pero es buena práctica también en no cotizadas."
+      },
       "isRequired": false,
       "options": [
         {
           "id": "remuneracion-fija",
           "code": "fija",
-          "label": { "es": "Retribución fija exclusivamente" },
+          "label": {
+            "es": "Retribución fija exclusivamente"
+          },
           "order": 1,
-          "plainDescription": { "es": "Se aprueba una retribución fija anual para los administradores." },
-          "prosPartyA": [{ "es": "Previsibilidad presupuestaria" }, { "es": "Simplicidad administrativa" }],
-          "consPartyA": [{ "es": "Menor incentivo al rendimiento" }],
-          "prosPartyB": [],
-          "consPartyB": [],
-          "legalText": { "es": "La Junta General, de conformidad con el artículo 217 de la Ley de Sociedades de Capital y los estatutos sociales, acuerda fijar la retribución del órgano de administración para el ejercicio [AÑO] en los siguientes términos:\n\n(a) Retribución fija anual: [IMPORTE] euros brutos anuales.\n\n(b) La retribución se abonará en [DOCE / CATORCE] mensualidades iguales.\n\nEl importe máximo de la remuneración anual del conjunto de los administradores, de conformidad con el artículo 217.3 LSC, queda fijado en [IMPORTE MÁXIMO] euros.\n\nDicha retribución permanecerá vigente hasta que la junta general acuerde su modificación." },
-          "biasPartyA": 0.0,
-          "biasPartyB": 0.0,
+          "plainDescription": {
+            "es": "Se aprueba una retribución fija anual para los administradores."
+          },
+          "prosPartyA": {
+            "es": [
+              "Previsibilidad presupuestaria",
+              "Simplicidad administrativa"
+            ]
+          },
+          "consPartyA": {
+            "es": [
+              "Menor incentivo al rendimiento"
+            ]
+          },
+          "prosPartyB": {
+            "es": []
+          },
+          "consPartyB": {
+            "es": []
+          },
+          "legalText": {
+            "es": "La Junta General, de conformidad con el artículo 217 de la Ley de Sociedades de Capital y los estatutos sociales, acuerda fijar la retribución del órgano de administración para el ejercicio [AÑO] en los siguientes términos:\n\n(a) Retribución fija anual: [IMPORTE] euros brutos anuales.\n\n(b) La retribución se abonará en [DOCE / CATORCE] mensualidades iguales.\n\nEl importe máximo de la remuneración anual del conjunto de los administradores, de conformidad con el artículo 217.3 LSC, queda fijado en [IMPORTE MÁXIMO] euros.\n\nDicha retribución permanecerá vigente hasta que la junta general acuerde su modificación."
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "jurisdictionConfig": {
-            "SPAIN": { "available": true }
+            "SPAIN": {
+              "available": true
+            }
           }
         },
         {
           "id": "remuneracion-fija-variable",
           "code": "fija-variable",
-          "label": { "es": "Retribución fija más variable" },
+          "label": {
+            "es": "Retribución fija más variable"
+          },
           "order": 2,
-          "plainDescription": { "es": "Se aprueba una retribución con componente fijo y variable vinculado a objetivos." },
-          "prosPartyA": [{ "es": "Incentiva el cumplimiento de objetivos" }, { "es": "Alinea intereses de administradores y socios" }],
-          "consPartyA": [{ "es": "Mayor complejidad en la determinación" }, { "es": "Coste potencialmente superior" }],
-          "prosPartyB": [],
-          "consPartyB": [],
-          "legalText": { "es": "La Junta General, de conformidad con el artículo 217 de la Ley de Sociedades de Capital y los estatutos sociales, acuerda fijar la retribución del órgano de administración para el ejercicio [AÑO] en los siguientes términos:\n\n(a) Componente fijo: [IMPORTE FIJO] euros brutos anuales.\n\n(b) Componente variable: hasta [IMPORTE VARIABLE MÁXIMO] euros brutos anuales, vinculado al cumplimiento de los siguientes objetivos:\n    — [OBJETIVO 1]: peso [PORCENTAJE]%\n    — [OBJETIVO 2]: peso [PORCENTAJE]%\n\n(c) El importe máximo de la remuneración anual del conjunto de los administradores queda fijado en [IMPORTE MÁXIMO] euros.\n\nLa evaluación del cumplimiento de objetivos será realizada por [ÓRGANO EVALUADOR] durante el primer trimestre del ejercicio siguiente." },
-          "biasPartyA": 0.0,
-          "biasPartyB": 0.0,
+          "plainDescription": {
+            "es": "Se aprueba una retribución con componente fijo y variable vinculado a objetivos."
+          },
+          "prosPartyA": {
+            "es": [
+              "Incentiva el cumplimiento de objetivos",
+              "Alinea intereses de administradores y socios"
+            ]
+          },
+          "consPartyA": {
+            "es": [
+              "Mayor complejidad en la determinación",
+              "Coste potencialmente superior"
+            ]
+          },
+          "prosPartyB": {
+            "es": []
+          },
+          "consPartyB": {
+            "es": []
+          },
+          "legalText": {
+            "es": "La Junta General, de conformidad con el artículo 217 de la Ley de Sociedades de Capital y los estatutos sociales, acuerda fijar la retribución del órgano de administración para el ejercicio [AÑO] en los siguientes términos:\n\n(a) Componente fijo: [IMPORTE FIJO] euros brutos anuales.\n\n(b) Componente variable: hasta [IMPORTE VARIABLE MÁXIMO] euros brutos anuales, vinculado al cumplimiento de los siguientes objetivos:\n    — [OBJETIVO 1]: peso [PORCENTAJE]%\n    — [OBJETIVO 2]: peso [PORCENTAJE]%\n\n(c) El importe máximo de la remuneración anual del conjunto de los administradores queda fijado en [IMPORTE MÁXIMO] euros.\n\nLa evaluación del cumplimiento de objetivos será realizada por [ÓRGANO EVALUADOR] durante el primer trimestre del ejercicio siguiente."
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "jurisdictionConfig": {
-            "SPAIN": { "available": true }
+            "SPAIN": {
+              "available": true
+            }
           }
         },
         {
           "id": "remuneracion-no-incluir",
           "code": "no-incluir",
-          "label": { "es": "No incluir este punto" },
+          "label": {
+            "es": "No incluir este punto"
+          },
           "order": 3,
-          "plainDescription": { "es": "No se incluye la aprobación de política de remuneraciones en el orden del día." },
-          "prosPartyA": [{ "es": "Simplifica el acta" }],
-          "consPartyA": [],
-          "prosPartyB": [],
-          "consPartyB": [],
-          "legalText": { "es": "" },
-          "biasPartyA": 0.0,
-          "biasPartyB": 0.0,
+          "plainDescription": {
+            "es": "No se incluye la aprobación de política de remuneraciones en el orden del día."
+          },
+          "prosPartyA": {
+            "es": [
+              "Simplifica el acta"
+            ]
+          },
+          "consPartyA": {
+            "es": []
+          },
+          "prosPartyB": {
+            "es": []
+          },
+          "consPartyB": {
+            "es": []
+          },
+          "legalText": {
+            "es": ""
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "jurisdictionConfig": {
-            "SPAIN": { "available": true }
+            "SPAIN": {
+              "available": true
+            }
           }
         }
       ]
     },
     {
       "id": "operaciones-vinculadas",
-      "title": { "es": "Operaciones vinculadas" },
-      "category": { "es": "Operaciones" },
+      "title": {
+        "es": "Operaciones vinculadas"
+      },
+      "category": {
+        "es": "Operaciones"
+      },
       "order": 8,
-      "plainDescription": { "es": "Resolución sobre la aprobación de operaciones con partes vinculadas a la sociedad." },
-      "legalContext": { "es": "Las operaciones vinculadas están reguladas en los artículos 228 y 229 de la LSC (deberes de lealtad y conflicto de intereses) y, para grandes sociedades, en los artículos 529 vicies y siguientes. Las operaciones intragrupo y con administradores o socios significativos deben ser aprobadas por el órgano competente para garantizar que se realizan en condiciones de mercado." },
+      "plainDescription": {
+        "es": "Resolución sobre la aprobación de operaciones con partes vinculadas a la sociedad."
+      },
+      "legalContext": {
+        "es": "Las operaciones vinculadas están reguladas en los artículos 228 y 229 de la LSC (deberes de lealtad y conflicto de intereses) y, para grandes sociedades, en los artículos 529 vicies y siguientes. Las operaciones intragrupo y con administradores o socios significativos deben ser aprobadas por el órgano competente para garantizar que se realizan en condiciones de mercado."
+      },
       "isRequired": false,
       "options": [
         {
           "id": "vinculadas-aprobar-especifica",
           "code": "aprobar-operacion",
-          "label": { "es": "Aprobar operación concreta" },
+          "label": {
+            "es": "Aprobar operación concreta"
+          },
           "order": 1,
-          "plainDescription": { "es": "Se aprueba una operación vinculada específica, identificando las partes, el objeto y las condiciones." },
-          "prosPartyA": [{ "es": "Cobertura jurídica completa para la operación" }, { "es": "Transparencia frente a los socios" }],
-          "consPartyA": [{ "es": "Requiere justificación detallada de condiciones de mercado" }],
-          "prosPartyB": [],
-          "consPartyB": [],
-          "legalText": { "es": "La Junta General, de conformidad con los artículos 228 y 229 de la Ley de Sociedades de Capital, acuerda aprobar la siguiente operación vinculada:\n\n(a) Partes intervinientes: la sociedad y [PARTE VINCULADA], quien ostenta la condición de [RELACIÓN DE VINCULACIÓN].\n\n(b) Objeto de la operación: [DESCRIPCIÓN DE LA OPERACIÓN].\n\n(c) Importe y condiciones: [IMPORTE] euros, en las siguientes condiciones: [CONDICIONES PRINCIPALES].\n\n(d) Justificación: se hace constar que la operación se realiza en condiciones de mercado, según resulta de [INFORME DE VALORACIÓN / COMPARABLES DE MERCADO].\n\nLos socios afectados por el conflicto de interés se han abstenido en la votación de este punto del orden del día, de conformidad con el artículo 190 de la Ley de Sociedades de Capital." },
-          "biasPartyA": 0.0,
-          "biasPartyB": 0.0,
+          "plainDescription": {
+            "es": "Se aprueba una operación vinculada específica, identificando las partes, el objeto y las condiciones."
+          },
+          "prosPartyA": {
+            "es": [
+              "Cobertura jurídica completa para la operación",
+              "Transparencia frente a los socios"
+            ]
+          },
+          "consPartyA": {
+            "es": [
+              "Requiere justificación detallada de condiciones de mercado"
+            ]
+          },
+          "prosPartyB": {
+            "es": []
+          },
+          "consPartyB": {
+            "es": []
+          },
+          "legalText": {
+            "es": "La Junta General, de conformidad con los artículos 228 y 229 de la Ley de Sociedades de Capital, acuerda aprobar la siguiente operación vinculada:\n\n(a) Partes intervinientes: la sociedad y [PARTE VINCULADA], quien ostenta la condición de [RELACIÓN DE VINCULACIÓN].\n\n(b) Objeto de la operación: [DESCRIPCIÓN DE LA OPERACIÓN].\n\n(c) Importe y condiciones: [IMPORTE] euros, en las siguientes condiciones: [CONDICIONES PRINCIPALES].\n\n(d) Justificación: se hace constar que la operación se realiza en condiciones de mercado, según resulta de [INFORME DE VALORACIÓN / COMPARABLES DE MERCADO].\n\nLos socios afectados por el conflicto de interés se han abstenido en la votación de este punto del orden del día, de conformidad con el artículo 190 de la Ley de Sociedades de Capital."
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "jurisdictionConfig": {
-            "SPAIN": { "available": true }
+            "SPAIN": {
+              "available": true
+            }
           }
         },
         {
           "id": "vinculadas-autorizar-categoria",
           "code": "autorizar-categoria",
-          "label": { "es": "Autorizar categoría de operaciones" },
+          "label": {
+            "es": "Autorizar categoría de operaciones"
+          },
           "order": 2,
-          "plainDescription": { "es": "Se autoriza de forma genérica una categoría de operaciones vinculadas bajo determinadas condiciones." },
-          "prosPartyA": [{ "es": "Evita convocar junta para cada operación individual" }, { "es": "Agiliza las operaciones recurrentes" }],
-          "consPartyA": [{ "es": "Menor control sobre cada operación individual" }],
-          "prosPartyB": [],
-          "consPartyB": [],
-          "legalText": { "es": "La Junta General, de conformidad con los artículos 228 y 229 de la Ley de Sociedades de Capital, acuerda autorizar la siguiente categoría de operaciones vinculadas:\n\n(a) Tipo de operaciones: [DESCRIPCIÓN DE LA CATEGORÍA].\n\n(b) Parte vinculada: [PARTE VINCULADA] en su condición de [RELACIÓN DE VINCULACIÓN].\n\n(c) Importe máximo autorizado: [IMPORTE MÁXIMO] euros anuales.\n\n(d) Condiciones: las operaciones deberán realizarse en condiciones de mercado y conforme a los siguientes parámetros: [CONDICIONES].\n\n(e) Vigencia de la autorización: hasta [FECHA FIN] o hasta la próxima junta general ordinaria, lo que ocurra primero.\n\nEl órgano de administración informará a la junta general sobre las operaciones realizadas al amparo de esta autorización." },
-          "biasPartyA": 0.0,
-          "biasPartyB": 0.0,
+          "plainDescription": {
+            "es": "Se autoriza de forma genérica una categoría de operaciones vinculadas bajo determinadas condiciones."
+          },
+          "prosPartyA": {
+            "es": [
+              "Evita convocar junta para cada operación individual",
+              "Agiliza las operaciones recurrentes"
+            ]
+          },
+          "consPartyA": {
+            "es": [
+              "Menor control sobre cada operación individual"
+            ]
+          },
+          "prosPartyB": {
+            "es": []
+          },
+          "consPartyB": {
+            "es": []
+          },
+          "legalText": {
+            "es": "La Junta General, de conformidad con los artículos 228 y 229 de la Ley de Sociedades de Capital, acuerda autorizar la siguiente categoría de operaciones vinculadas:\n\n(a) Tipo de operaciones: [DESCRIPCIÓN DE LA CATEGORÍA].\n\n(b) Parte vinculada: [PARTE VINCULADA] en su condición de [RELACIÓN DE VINCULACIÓN].\n\n(c) Importe máximo autorizado: [IMPORTE MÁXIMO] euros anuales.\n\n(d) Condiciones: las operaciones deberán realizarse en condiciones de mercado y conforme a los siguientes parámetros: [CONDICIONES].\n\n(e) Vigencia de la autorización: hasta [FECHA FIN] o hasta la próxima junta general ordinaria, lo que ocurra primero.\n\nEl órgano de administración informará a la junta general sobre las operaciones realizadas al amparo de esta autorización."
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "jurisdictionConfig": {
-            "SPAIN": { "available": true }
+            "SPAIN": {
+              "available": true
+            }
           }
         },
         {
           "id": "vinculadas-no-incluir",
           "code": "no-incluir",
-          "label": { "es": "No incluir este punto" },
+          "label": {
+            "es": "No incluir este punto"
+          },
           "order": 3,
-          "plainDescription": { "es": "No se incluyen operaciones vinculadas en el orden del día." },
-          "prosPartyA": [{ "es": "Simplifica el acta" }],
-          "consPartyA": [],
-          "prosPartyB": [],
-          "consPartyB": [],
-          "legalText": { "es": "" },
-          "biasPartyA": 0.0,
-          "biasPartyB": 0.0,
+          "plainDescription": {
+            "es": "No se incluyen operaciones vinculadas en el orden del día."
+          },
+          "prosPartyA": {
+            "es": [
+              "Simplifica el acta"
+            ]
+          },
+          "consPartyA": {
+            "es": []
+          },
+          "prosPartyB": {
+            "es": []
+          },
+          "consPartyB": {
+            "es": []
+          },
+          "legalText": {
+            "es": ""
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "jurisdictionConfig": {
-            "SPAIN": { "available": true }
+            "SPAIN": {
+              "available": true
+            }
           }
         }
       ]
