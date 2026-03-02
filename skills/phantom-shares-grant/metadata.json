@@ -5,7 +5,6 @@
   "category": { "es": "Societario" },
   "version": "1.0",
   "clauseCount": 5,
-  "templateFamily": "PHANTOM_SHARES",
   "jurisdictions": ["SPAIN"],
   "languages": ["es"],
   "soloModeSupported": true,
