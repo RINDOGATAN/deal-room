@@ -228,6 +228,7 @@ export default function NewVettingPage() {
           onClose={() => setEnableModalSkill(null)}
           skillPackageId={enableModalSkill.id}
           skillName={enableModalSkill.name}
+          returnUrl="/lawyer/vettings/new"
         />
       )}
 

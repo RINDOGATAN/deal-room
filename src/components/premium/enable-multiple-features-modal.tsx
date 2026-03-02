@@ -16,12 +16,14 @@ interface EnableMultipleFeaturesModalProps {
   open: boolean;
   onClose: () => void;
   skills: { id: string; name: string }[];
+  returnUrl?: string;
 }
 
 export function EnableMultipleFeaturesModal({
   open,
   onClose,
   skills,
+  returnUrl,
 }: EnableMultipleFeaturesModalProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -36,6 +38,7 @@ export function EnableMultipleFeaturesModal({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           skillPackageIds: skills.map((s) => s.id),
+          returnUrl,
         }),
       });
       const data = await res.json();

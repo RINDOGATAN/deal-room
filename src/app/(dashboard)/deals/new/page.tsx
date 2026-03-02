@@ -497,6 +497,7 @@ export default function NewDealPage() {
           onClose={() => setEnableModalSkill(null)}
           skillPackageId={enableModalSkill.id}
           skillName={enableModalSkill.name}
+          returnUrl="/deals/new"
         />
       )}
 
