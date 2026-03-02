@@ -168,6 +168,7 @@ export default function NewDealPage() {
   const [resolvedNativeTemplate, setResolvedNativeTemplate] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [parameterValues, setParameterValues] = useState<Record<string, string>>({});
+  const [missingParams, setMissingParams] = useState<Set<string>>(new Set());
   const [dealMode, setDealMode] = useState<DealMode>("NEGOTIATION");
 
   // Lawyer vetting flow
@@ -321,10 +322,13 @@ export default function NewDealPage() {
         (p) => p.required && !parameterValues[p.id]?.trim()
       );
       if (missing.length > 0) {
-        toast.error(t("parameterRequired"));
+        setMissingParams(new Set(missing.map((p) => p.id)));
+        const missingLabels = missing.map((p) => resolveParamString(p.label, locale)).join(", ");
+        toast.error(`${t("parameterRequired")}: ${missingLabels}`);
         return;
       }
     }
+    setMissingParams(new Set());
 
     createDeal.mutate({
       name: dealName.trim(),
@@ -994,11 +998,13 @@ export default function NewDealPage() {
                     key={param.id}
                     param={param}
                     value={parameterValues[param.id] || ""}
-                    onChange={(val) =>
-                      setParameterValues((prev) => ({ ...prev, [param.id]: val }))
-                    }
+                    onChange={(val) => {
+                      setParameterValues((prev) => ({ ...prev, [param.id]: val }));
+                      setMissingParams((prev) => { const next = new Set(prev); next.delete(param.id); return next; });
+                    }}
                     jurisdiction={selectedJurisdiction!}
                     lang={locale}
+                    error={missingParams.has(param.id)}
                   />
                 ))}
               </div>
@@ -1038,12 +1044,14 @@ function ParameterField({
   onChange,
   jurisdiction,
   lang,
+  error,
 }: {
   param: ParameterDefinition;
   value: string;
   onChange: (val: string) => void;
   jurisdiction: GoverningLaw;
   lang: string;
+  error?: boolean;
 }) {
   const t = useTranslations("newDeal");
   const label = resolveParamString(param.label, lang);
@@ -1089,7 +1097,7 @@ function ParameterField({
             placeholder={placeholder}
             className={`input-brutal ${param.type === "currency" ? "pl-7" : ""} ${
               param.type === "percentage" ? "pr-8" : ""
-            }`}
+            } ${error ? "border-destructive" : ""}`}
           />
           {param.type === "percentage" && (
             <span className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm pointer-events-none">
