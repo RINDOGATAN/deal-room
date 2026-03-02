@@ -1,0 +1,12 @@
+{
+  "skillId": "com.nel.skills.phantom-shares-grant",
+  "name": "PHANTOM_SHARES_GRANT",
+  "displayName": "Asignación Individual de Phantom Shares",
+  "version": "1.0.0",
+  "jurisdictions": ["SPAIN"],
+  "languages": ["es"],
+  "author": "NEL Law",
+  "license": "proprietary",
+  "templateFamily": "PHANTOM_SHARES",
+  "nativeJurisdiction": "SPAIN"
+}

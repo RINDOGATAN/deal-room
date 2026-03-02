@@ -13,6 +13,7 @@
 import {
   PrismaClient,
   DealRoomStatus,
+  DealMode,
   PartyRole,
   PartyStatus,
   ClauseStatus,
@@ -153,6 +154,38 @@ const DEMO_PARAMETERS: Record<string, Record<string, string>> = {
     "disclosure-text": "This content contains affiliate links. The author may earn a commission on qualifying purchases.",
     "product-category": "legal technology software",
   },
+  ACTA_JUNTA_GENERAL: {
+    "company-name": "Acme Technologies, S.L.",
+    "cif": "B12345678",
+    "registered-address": "Calle Gran Vía 1, 28013 Madrid",
+    "meeting-date": "15 de marzo de 2026",
+    "meeting-type": "Ordinaria",
+    "quorum-percentage": "75%",
+    "secretary-name": "María García López",
+  },
+  ACTA_CONSEJO_ADMINISTRACION: {
+    "company-name": "Acme Technologies, S.L.",
+    "cif": "B12345678",
+    "registered-address": "Calle Gran Vía 1, 28013 Madrid",
+    "meeting-date": "15 de marzo de 2026",
+    "president-name": "Juan Martínez Ruiz",
+    "secretary-name": "María García López",
+  },
+  PHANTOM_SHARES_PLAN: {
+    "company-name": "Acme Technologies, S.L.",
+    "cif": "B12345678",
+    "total-pool-percentage": "10%",
+    "cliff-months": "12",
+    "vesting-months": "48",
+    "plan-effective-date": "1 de enero de 2026",
+  },
+  PHANTOM_SHARES_GRANT: {
+    "employee-name": "Ana López García",
+    "phantom-count": "1.000",
+    "grant-date": "15 de marzo de 2026",
+    "plan-date": "1 de enero de 2026",
+    "individual-vesting-months": "48",
+  },
 };
 
 interface DealVariant {
@@ -160,6 +193,7 @@ interface DealVariant {
   jurisdiction: GoverningLaw;
   language: string;
   hasBoilerplate: boolean;
+  dealMode?: "SOLO" | "NEGOTIATION";
 }
 
 const DEAL_VARIANTS: DealVariant[] = [
@@ -174,6 +208,10 @@ const DEAL_VARIANTS: DealVariant[] = [
   { contractType: "ADVERTISING_IO", jurisdiction: GoverningLaw.SPAIN, language: "es", hasBoilerplate: true },
   { contractType: "AFFILIATE_PROGRAM", jurisdiction: GoverningLaw.CALIFORNIA, language: "en", hasBoilerplate: true },
   { contractType: "AFFILIATE_PROGRAM", jurisdiction: GoverningLaw.SPAIN, language: "es", hasBoilerplate: true },
+  { contractType: "ACTA_JUNTA_GENERAL", jurisdiction: GoverningLaw.SPAIN, language: "es", hasBoilerplate: true, dealMode: "SOLO" },
+  { contractType: "ACTA_CONSEJO_ADMINISTRACION", jurisdiction: GoverningLaw.SPAIN, language: "es", hasBoilerplate: true, dealMode: "SOLO" },
+  { contractType: "PHANTOM_SHARES_PLAN", jurisdiction: GoverningLaw.SPAIN, language: "es", hasBoilerplate: true, dealMode: "SOLO" },
+  { contractType: "PHANTOM_SHARES_GRANT", jurisdiction: GoverningLaw.SPAIN, language: "es", hasBoilerplate: true, dealMode: "SOLO" },
 ];
 
 // ── Types ─────────────────────────────────────────────────────
@@ -663,6 +701,198 @@ async function simulateDeal(
   };
 }
 
+// ── Simulate Solo Deal ────────────────────────────────────────
+
+async function simulateSoloDeal(
+  variant: DealVariant,
+  userA: { id: string; email: string; name: string | null; company: string | null },
+): Promise<SimulationResult> {
+  const dealName = `${DEMO_DEAL_PREFIX} ${variant.contractType} (${variant.jurisdiction}/${variant.language})`;
+
+  // Idempotency: skip if deal already exists
+  const existing = await prisma.dealRoom.findFirst({
+    where: { name: dealName },
+  });
+  if (existing) {
+    console.log(`  skip  "${dealName}" — already exists`);
+    const clauseCount = await prisma.dealRoomClause.count({
+      where: { dealRoomId: existing.id },
+    });
+    return {
+      variant,
+      dealRoomId: existing.id,
+      clauseCount,
+      expectedClauseCount: clauseCount,
+      satisfactionA: 100,
+      satisfactionB: 0,
+      status: existing.status,
+      skipped: true,
+    };
+  }
+
+  // Find template with clauses + options
+  const template = await prisma.contractTemplate.findUnique({
+    where: { contractType: variant.contractType },
+    include: {
+      clauses: {
+        include: { options: { orderBy: { order: "asc" } } },
+        orderBy: { order: "asc" },
+      },
+    },
+  });
+
+  if (!template) {
+    throw new Error(`Template not found: ${variant.contractType}`);
+  }
+
+  console.log(`  create "${dealName}" (${template.clauses.length} clauses, solo)...`);
+
+  // ── Step 1: Create DealRoom (DRAFT) with initiator party + clauses ──
+
+  const demoParams = DEMO_PARAMETERS[variant.contractType] || null;
+
+  const dealRoom = await prisma.dealRoom.create({
+    data: {
+      name: dealName,
+      contractTemplateId: template.id,
+      governingLaw: variant.jurisdiction,
+      contractLanguage: variant.language,
+      dealMode: DealMode.SOLO,
+      parameters: demoParams || undefined,
+      status: DealRoomStatus.DRAFT,
+      parties: {
+        create: {
+          role: PartyRole.INITIATOR,
+          status: PartyStatus.PENDING,
+          email: userA.email,
+          name: userA.name,
+          company: userA.company,
+          userId: userA.id,
+        },
+      },
+      clauses: {
+        create: template.clauses.map((clause) => ({
+          clauseTemplateId: clause.id,
+          status: ClauseStatus.PENDING,
+        })),
+      },
+    },
+    include: {
+      parties: true,
+      clauses: {
+        include: {
+          clauseTemplate: {
+            include: { options: { orderBy: { order: "asc" } } },
+          },
+        },
+        orderBy: { clauseTemplate: { order: "asc" } },
+      },
+    },
+  });
+
+  const initiatorParty = dealRoom.parties.find(
+    (p) => p.role === PartyRole.INITIATOR,
+  )!;
+
+  // ── Step 2: Party A selections ──
+
+  const selectionDataA: Array<{
+    dealRoomClauseId: string;
+    partyId: string;
+    optionId: string;
+    priority: number;
+    flexibility: number;
+  }> = [];
+
+  for (const clause of dealRoom.clauses) {
+    const sel = selectOptionForParty(
+      clause.clauseTemplate.options,
+      "A",
+      clause.clauseTemplate.order,
+    );
+    selectionDataA.push({
+      dealRoomClauseId: clause.id,
+      partyId: initiatorParty.id,
+      ...sel,
+    });
+  }
+
+  await prisma.partySelection.createMany({ data: selectionDataA });
+
+  // ── Step 3: Submit Party A ──
+
+  await prisma.dealRoomParty.update({
+    where: { id: initiatorParty.id },
+    data: { status: PartyStatus.SUBMITTED, submittedAt: new Date() },
+  });
+
+  // ── Step 4: Auto-agree all clauses with initiator's selections ──
+
+  for (const sel of selectionDataA) {
+    await prisma.dealRoomClause.update({
+      where: { id: sel.dealRoomClauseId },
+      data: {
+        status: ClauseStatus.AGREED,
+        agreedOptionId: sel.optionId,
+      },
+    });
+  }
+
+  // ── Step 5: Set deal status to AGREED ──
+
+  await prisma.dealRoom.update({
+    where: { id: dealRoom.id },
+    data: { status: DealRoomStatus.AGREED },
+  });
+
+  // ── Step 6: Add signing details (initiator only) ──
+
+  await prisma.dealRoomParty.update({
+    where: { id: initiatorParty.id },
+    data: {
+      signingDetails: {
+        legalName: userA.company || "Acme Corp",
+        address: "Calle Gran Vía 1, 28013 Madrid",
+        taxId: "B12345678",
+        signatoryName: userA.name || "Alice Johnson",
+        signatoryTitle: "Administrador Único",
+      },
+    },
+  });
+
+  // ── Step 7: Create SigningRequest (initiator signs only) ──
+
+  await prisma.signingRequest.create({
+    data: {
+      dealRoomId: dealRoom.id,
+      provider: "type-to-sign",
+      status: "COMPLETED",
+      initiatorSignedAt: new Date(),
+      initiatorSignature: userA.name || "Alice Johnson",
+      completedAt: new Date(),
+    },
+  });
+
+  // ── Step 8: Set COMPLETED ──
+
+  await prisma.dealRoom.update({
+    where: { id: dealRoom.id },
+    data: { status: DealRoomStatus.COMPLETED },
+  });
+
+  console.log(`     done  A:100% (solo)`);
+
+  return {
+    variant,
+    dealRoomId: dealRoom.id,
+    clauseCount: template.clauses.length,
+    expectedClauseCount: template.clauses.length,
+    satisfactionA: 100,
+    satisfactionB: 0,
+    status: "COMPLETED",
+  };
+}
+
 // ── Contract Validation (inlined from generator.ts) ───────────
 
 const GOVERNING_LAW_DISPLAY: Record<string, Record<string, string>> = {
@@ -685,6 +915,7 @@ async function validateContract(
   expectedClauseCount: number,
   hasBoilerplate: boolean,
   language: string,
+  isSolo?: boolean,
 ): Promise<ValidationCheck[]> {
   const checks: ValidationCheck[] = [];
 
@@ -723,12 +954,14 @@ async function validateContract(
     detail: partyAName,
   });
 
-  // 3. Party B name present and not a placeholder
-  checks.push({
-    name: "Party B name present",
-    passed: partyBName.length > 0 && !partyBName.includes("["),
-    detail: partyBName,
-  });
+  // 3. Party B name present and not a placeholder (skip for solo deals)
+  if (!isSolo) {
+    checks.push({
+      name: "Party B name present",
+      passed: partyBName.length > 0 && !partyBName.includes("["),
+      detail: partyBName,
+    });
+  }
 
   // 4. Party A company present
   checks.push({
@@ -736,11 +969,13 @@ async function validateContract(
     passed: !!initiator?.company && initiator.company.length > 0,
   });
 
-  // 5. Party B company present
-  checks.push({
-    name: "Party B company present",
-    passed: !!respondent?.company && respondent.company.length > 0,
-  });
+  // 5. Party B company present (skip for solo deals)
+  if (!isSolo) {
+    checks.push({
+      name: "Party B company present",
+      passed: !!respondent?.company && respondent.company.length > 0,
+    });
+  }
 
   // Compile agreed clauses (mirrors generator.ts logic)
   const lang = deal.contractLanguage || "en";
@@ -842,7 +1077,7 @@ async function validateContract(
       const resolved = resolveLocalizedString(val, lang);
       return resolved.replace(
         /\{(\w+)\}/g,
-        (match, key) => vars[key as string] || match,
+        (match, key) => vars[key as string] !== undefined ? vars[key as string] : match,
       );
     };
     preambleText = interpolate(rawBp.preamble);
@@ -947,9 +1182,12 @@ function printReport(
     const juris = r.variant.jurisdiction.padEnd(14);
     const lang = r.variant.language.padEnd(4);
     const clauses = `${r.clauseCount}/${r.expectedClauseCount}`.padEnd(7);
+    const isSolo = r.variant.dealMode === "SOLO";
     const sat = r.skipped
       ? "-".padEnd(13)
-      : `A:${r.satisfactionA}% B:${r.satisfactionB}%`.padEnd(13);
+      : isSolo
+        ? `A:100% (solo)`.padEnd(13)
+        : `A:${r.satisfactionA}% B:${r.satisfactionB}%`.padEnd(13);
     const status = r.skipped ? `${r.status} (skipped)` : r.status;
     console.log(
       `   ${num} | ${contract} | ${juris} | ${lang} | ${clauses} | ${sat} | ${status}`,
@@ -1032,7 +1270,9 @@ async function main(): Promise<boolean> {
 
   for (const variant of DEAL_VARIANTS) {
     try {
-      const result = await simulateDeal(variant, userA, userB);
+      const result = variant.dealMode === "SOLO"
+        ? await simulateSoloDeal(variant, userA)
+        : await simulateDeal(variant, userA, userB);
       results.push(result);
     } catch (err) {
       console.error(
@@ -1070,6 +1310,7 @@ async function main(): Promise<boolean> {
       result.expectedClauseCount,
       result.variant.hasBoilerplate,
       result.variant.language,
+      result.variant.dealMode === "SOLO",
     );
 
     validations.push({

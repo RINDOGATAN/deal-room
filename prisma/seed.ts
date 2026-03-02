@@ -511,6 +511,10 @@ async function main() {
     "com.nel.skills.contrato-laboral",
     "com.nel.skills.contrato-servicios",
     "com.nel.skills.cesion-pi",
+    "com.nel.skills.acta-junta",
+    "com.nel.skills.acta-consejo",
+    "com.nel.skills.phantom-shares-plan",
+    "com.nel.skills.phantom-shares-grant",
   ];
 
   for (const skillId of premiumSkillIds) {
