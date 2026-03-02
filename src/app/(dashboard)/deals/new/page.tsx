@@ -23,6 +23,7 @@ import {
   UserRound,
   Users,
   Download,
+  ChevronDown,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -515,125 +516,155 @@ export default function NewDealPage() {
             {t("contractType")}
           </Label>
         </div>
-        {categories.length > 1 && (
-          <div className="flex gap-2 overflow-x-auto pb-1 -mx-1 px-1 scrollbar-hide">
-            <button
-              onClick={() => setSelectedCategory(null)}
-              className={`
-                shrink-0 px-4 py-1.5 rounded-full text-sm font-medium border transition-colors
-                ${selectedCategory === null
-                  ? "bg-primary text-primary-foreground border-primary"
-                  : "bg-muted/50 text-muted-foreground border-border hover:border-muted-foreground"}
-              `}
-            >
-              {t("allCategories")}
-            </button>
-            {categories.map(cat => (
-              <button
-                key={cat}
-                onClick={() => setSelectedCategory(selectedCategory === cat ? null : cat)}
-                className={`
-                  shrink-0 px-4 py-1.5 rounded-full text-sm font-medium border transition-colors
-                  ${selectedCategory === cat
-                    ? "bg-primary text-primary-foreground border-primary"
-                    : "bg-muted/50 text-muted-foreground border-border hover:border-muted-foreground"}
-                `}
-              >
-                {cat}
-              </button>
-            ))}
-          </div>
-        )}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {filteredFamilies.map((family) => {
-            const Icon = contractIcons[family.primaryTemplate.contractType] || FileText;
-            const isSelected = selectedFamily === family.family;
-            // A family is locked if ALL its templates require license and user has no access
-            const isLocked = family.templates.every((t) => t.requiresLicense && !t.hasAccess);
-            const variantCount = family.templates.length;
 
-            return (
-              <button
-                key={family.family}
-                onClick={() => {
-                  if (isLocked) {
-                    if (family.primaryTemplate.skillPackageId) {
-                      setEnableModalSkill({ id: family.primaryTemplate.skillPackageId, name: family.displayName });
-                    } else {
-                      setEntitlementError(t("toUseContract"));
-                    }
-                    return;
-                  }
-                  setSelectedFamily(family.family);
-                  setSelectedType(family.primaryTemplate.contractType);
-                  setResolvedNativeTemplate(null);
-                  // Auto-set deal mode based on template config
-                  if (family.primaryTemplate.soloModeDefault) {
-                    setDealMode("SOLO");
-                  } else {
-                    setDealMode("NEGOTIATION");
-                  }
-                  // Reset jurisdiction when changing contract type
-                  if (family.family !== selectedFamily) {
-                    setSelectedJurisdiction(null);
-                  }
-                }}
-                className={`
-                  card-brutal text-left relative transition-colors
-                  ${isLocked
-                    ? "border-warning/50 opacity-75"
-                    : isSelected
-                    ? "border-primary"
-                    : "hover:border-muted-foreground"
-                  }
-                `}
-              >
-                {isSelected && !isLocked && (
-                  <div className="absolute top-4 right-4 w-6 h-6 bg-primary flex items-center justify-center rounded-full">
-                    <Check className="w-4 h-4 text-primary-foreground" />
-                  </div>
-                )}
-                {isLocked && (
-                  <span className="absolute top-4 right-4 bg-warning/20 text-warning text-xs font-semibold px-2.5 py-0.5 rounded-full">
-                    {t("premiumSkill", { price: formatPrice(9) })}
-                  </span>
-                )}
-                <div className="flex items-start gap-4">
-                  <div className={`
-                    hidden sm:flex w-10 h-10 items-center justify-center rounded-xl
-                    ${isLocked
-                      ? "bg-warning/20 text-warning"
-                      : isSelected
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-muted text-muted-foreground"
-                    }
-                  `}>
-                    <Icon className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold">{family.displayName}</h3>
-                    <p className={`text-sm mt-1 ${isLocked ? "text-warning font-medium" : "text-muted-foreground"}`}>
-                      {isLocked
-                        ? t("clickToEnable")
-                        : t("negotiableClauses", { count: family.primaryTemplate.clauseCount })
+        {/* Collapsed summary when a contract type is selected */}
+        {selectedFamily && (() => {
+          const family = templateFamilies.find((f) => f.family === selectedFamily);
+          if (!family) return null;
+          const Icon = contractIcons[family.primaryTemplate.contractType] || FileText;
+          return (
+            <button
+              onClick={() => {
+                setSelectedFamily(null);
+                setSelectedType(null);
+                setSelectedJurisdiction(null);
+                setResolvedNativeTemplate(null);
+                setParameterValues({});
+                setMissingParams(new Set());
+              }}
+              className="card-brutal text-left w-full border-primary relative group"
+            >
+              <div className="absolute top-4 right-4 flex items-center gap-1.5 text-xs text-muted-foreground group-hover:text-foreground transition-colors">
+                <ChevronDown className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">{tCommon("change")}</span>
+              </div>
+              <div className="flex items-start gap-4">
+                <div className="hidden sm:flex w-10 h-10 items-center justify-center rounded-xl bg-primary text-primary-foreground">
+                  <Icon className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="font-semibold">{family.displayName}</h3>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    {t("negotiableClauses", { count: family.primaryTemplate.clauseCount })}
+                  </p>
+                </div>
+              </div>
+            </button>
+          );
+        })()}
+
+        {/* Full grid when no contract type is selected */}
+        {!selectedFamily && (
+          <>
+            {categories.length > 1 && (
+              <div className="flex gap-2 overflow-x-auto pb-1 -mx-1 px-1 scrollbar-hide">
+                <button
+                  onClick={() => setSelectedCategory(null)}
+                  className={`
+                    shrink-0 px-4 py-1.5 rounded-full text-sm font-medium border transition-colors
+                    ${selectedCategory === null
+                      ? "bg-primary text-primary-foreground border-primary"
+                      : "bg-muted/50 text-muted-foreground border-border hover:border-muted-foreground"}
+                  `}
+                >
+                  {t("allCategories")}
+                </button>
+                {categories.map(cat => (
+                  <button
+                    key={cat}
+                    onClick={() => setSelectedCategory(selectedCategory === cat ? null : cat)}
+                    className={`
+                      shrink-0 px-4 py-1.5 rounded-full text-sm font-medium border transition-colors
+                      ${selectedCategory === cat
+                        ? "bg-primary text-primary-foreground border-primary"
+                        : "bg-muted/50 text-muted-foreground border-border hover:border-muted-foreground"}
+                    `}
+                  >
+                    {cat}
+                  </button>
+                ))}
+              </div>
+            )}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {filteredFamilies.map((family) => {
+                const Icon = contractIcons[family.primaryTemplate.contractType] || FileText;
+                // A family is locked if ALL its templates require license and user has no access
+                const isLocked = family.templates.every((t) => t.requiresLicense && !t.hasAccess);
+                const variantCount = family.templates.length;
+
+                return (
+                  <button
+                    key={family.family}
+                    onClick={() => {
+                      if (isLocked) {
+                        if (family.primaryTemplate.skillPackageId) {
+                          setEnableModalSkill({ id: family.primaryTemplate.skillPackageId, name: family.displayName });
+                        } else {
+                          setEntitlementError(t("toUseContract"));
+                        }
+                        return;
                       }
-                    </p>
-                    {variantCount > 1 && !isLocked && (
-                      <p className="text-xs text-primary mt-1">
-                        {t("jurisdictionVariants", { count: variantCount })}
+                      setSelectedFamily(family.family);
+                      setSelectedType(family.primaryTemplate.contractType);
+                      setResolvedNativeTemplate(null);
+                      // Auto-set deal mode based on template config
+                      if (family.primaryTemplate.soloModeDefault) {
+                        setDealMode("SOLO");
+                      } else {
+                        setDealMode("NEGOTIATION");
+                      }
+                      // Reset jurisdiction when changing contract type
+                      setSelectedJurisdiction(null);
+                    }}
+                    className={`
+                      card-brutal text-left relative transition-colors
+                      ${isLocked
+                        ? "border-warning/50 opacity-75"
+                        : "hover:border-muted-foreground"
+                      }
+                    `}
+                  >
+                    {isLocked && (
+                      <span className="absolute top-4 right-4 bg-warning/20 text-warning text-xs font-semibold px-2.5 py-0.5 rounded-full">
+                        {t("premiumSkill", { price: formatPrice(9) })}
+                      </span>
+                    )}
+                    <div className="flex items-start gap-4">
+                      <div className={`
+                        hidden sm:flex w-10 h-10 items-center justify-center rounded-xl
+                        ${isLocked
+                          ? "bg-warning/20 text-warning"
+                          : "bg-muted text-muted-foreground"
+                        }
+                      `}>
+                        <Icon className="w-5 h-5" />
+                      </div>
+                      <div>
+                        <h3 className="font-semibold">{family.displayName}</h3>
+                        <p className={`text-sm mt-1 ${isLocked ? "text-warning font-medium" : "text-muted-foreground"}`}>
+                          {isLocked
+                            ? t("clickToEnable")
+                            : t("negotiableClauses", { count: family.primaryTemplate.clauseCount })
+                          }
+                        </p>
+                        {variantCount > 1 && !isLocked && (
+                          <p className="text-xs text-primary mt-1">
+                            {t("jurisdictionVariants", { count: variantCount })}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                    {family.description && (
+                      <p className="text-sm text-muted-foreground mt-4 line-clamp-2">
+                        {family.description}
                       </p>
                     )}
-                  </div>
-                </div>
-                {family.description && (
-                  <p className="text-sm text-muted-foreground mt-4 line-clamp-2">
-                    {family.description}
-                  </p>
-                )}
-              </button>
-            );
-          })}
-        </div>
+                  </button>
+                );
+              })}
+            </div>
+          </>
+        )}
       </div>
 
       {/* Step 2: Governing Law Selection */}
