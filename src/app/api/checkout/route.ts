@@ -101,8 +101,8 @@ export async function POST(request: NextRequest) {
       skillPackageIds: lineItems.map((l) => l.packageId),
       lineItems: [...priceQuantities.entries()].map(([price, quantity]) => ({ price, quantity })),
       successUrl: returnUrl
-        ? `${origin}/billing?success=true&returnUrl=${encodeURIComponent(returnUrl)}`
-        : `${origin}/billing?success=true`,
+        ? `${origin}/billing?success=true&session_id={CHECKOUT_SESSION_ID}&returnUrl=${encodeURIComponent(returnUrl)}`
+        : `${origin}/billing?success=true&session_id={CHECKOUT_SESSION_ID}`,
       cancelUrl: returnUrl
         ? `${origin}${returnUrl}`
         : `${origin}/billing?cancelled=true`,
