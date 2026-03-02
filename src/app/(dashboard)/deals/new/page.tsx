@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 import { useTranslations, useLocale } from "next-intl";
+import { formatPrice } from "@/lib/currency";
 import {
   FileText,
   Shield,
@@ -589,7 +590,7 @@ export default function NewDealPage() {
                 )}
                 {isLocked && (
                   <span className="absolute top-4 right-4 bg-warning/20 text-warning text-xs font-semibold px-2.5 py-0.5 rounded-full">
-                    {t("premiumSkill")}
+                    {t("premiumSkill", { price: formatPrice(9) })}
                   </span>
                 )}
                 <div className="flex items-start gap-4">

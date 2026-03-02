@@ -202,7 +202,7 @@ export default function BillingPage() {
                 ) : (
                   <div className="flex items-center gap-2">
                     <span className="text-sm text-muted-foreground">
-                      {t("pricePerMonth")}
+                      {t("pricePerMonth", { price: formatPrice(9) })}
                     </span>
                     <button
                       onClick={() =>
@@ -243,7 +243,7 @@ export default function BillingPage() {
             <span className="font-semibold text-foreground">{formatPrice(monthlyTotal)}</span>
           </p>
           <p>
-            {t("monthlyTotalDescription", { count: activeCount })}
+            {t("monthlyTotalDescription", { count: activeCount, price: formatPrice(9) })}
           </p>
         </div>
       )}
