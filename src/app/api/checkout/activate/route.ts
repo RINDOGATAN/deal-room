@@ -36,9 +36,9 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Missing metadata" }, { status: 400 });
     }
 
-    // Verify this checkout belongs to the requesting user
+    // Verify this checkout belongs to the requesting user (case-insensitive)
     const customer = await prisma.customer.findUnique({ where: { id: customerId } });
-    if (!customer || customer.email !== session.user.email) {
+    if (!customer || customer.email?.toLowerCase() !== session.user.email?.toLowerCase()) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
     }
 

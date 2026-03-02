@@ -93,10 +93,10 @@ export const skillsRouter = createTRPCRouter({
       orderBy: { displayName: "asc" },
     });
 
-    // Find customer by email to check entitlements
+    // Find customer by email to check entitlements (case-insensitive)
     const customer = userEmail
       ? await ctx.prisma.customer.findFirst({
-          where: { email: userEmail },
+          where: { email: { equals: userEmail, mode: "insensitive" } },
           include: {
             entitlements: {
               where: { status: "ACTIVE" },

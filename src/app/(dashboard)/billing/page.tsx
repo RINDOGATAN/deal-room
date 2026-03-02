@@ -68,21 +68,25 @@ export default function BillingPage() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ sessionId }),
         })
-          .then(() => {
+          .then(async (res) => {
+            if (!res.ok) {
+              const data = await res.json().catch(() => ({}));
+              console.error("Activate failed:", res.status, data);
+            }
             toast.success(t("checkoutSuccess"));
+            // Invalidate queries so the UI reflects the new entitlement
+            await utils.billing.getSubscriptionStatus.invalidate();
+            await utils.billing.getAvailablePlans.invalidate();
             if (returnUrl) {
               router.push(returnUrl);
-            } else {
-              utils.billing.getSubscriptionStatus.invalidate();
-              utils.billing.getAvailablePlans.invalidate();
             }
           })
-          .catch(() => {
-            // Fallback: webhook will handle it, just show success
+          .catch((err) => {
+            console.error("Activate network error:", err);
+            // Fallback: webhook will handle it eventually
             toast.success(t("checkoutSuccess"));
             if (returnUrl) {
-              const timer = setTimeout(() => router.push(returnUrl), 2000);
-              return () => clearTimeout(timer);
+              setTimeout(() => router.push(returnUrl), 3000);
             }
           });
       } else {
