@@ -123,8 +123,8 @@ export async function getOrCreateStripeCustomer(
   email: string,
   name?: string
 ): Promise<{ customerId: string; stripeCustomerId: string }> {
-  let customer = await prisma.customer.findUnique({
-    where: { email },
+  let customer = await prisma.customer.findFirst({
+    where: { email: { equals: email, mode: "insensitive" } },
   });
 
   if (customer?.stripeCustomerId) {
