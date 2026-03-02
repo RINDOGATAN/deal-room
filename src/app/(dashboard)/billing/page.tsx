@@ -55,20 +55,44 @@ export default function BillingPage() {
     },
   });
 
-  // Show toast on checkout redirect and auto-redirect back if returnUrl present
+  // After Stripe checkout, activate entitlements synchronously then redirect
   useEffect(() => {
     if (searchParams.get("success") === "true") {
+      const sessionId = searchParams.get("session_id");
       const returnUrl = searchParams.get("returnUrl");
-      if (returnUrl) {
+
+      if (sessionId) {
+        // Activate entitlements before redirect (don't rely on async webhook)
+        fetch("/api/checkout/activate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ sessionId }),
+        })
+          .then(() => {
+            toast.success(t("checkoutSuccess"));
+            if (returnUrl) {
+              router.push(returnUrl);
+            } else {
+              utils.billing.getSubscriptionStatus.invalidate();
+              utils.billing.getAvailablePlans.invalidate();
+            }
+          })
+          .catch(() => {
+            // Fallback: webhook will handle it, just show success
+            toast.success(t("checkoutSuccess"));
+            if (returnUrl) {
+              const timer = setTimeout(() => router.push(returnUrl), 2000);
+              return () => clearTimeout(timer);
+            }
+          });
+      } else {
         toast.success(t("checkoutSuccess"));
-        const timer = setTimeout(() => router.push(returnUrl), 1500);
-        return () => clearTimeout(timer);
       }
-      toast.success(t("checkoutSuccess"));
     } else if (searchParams.get("cancelled") === "true") {
       toast(t("checkoutCancelled"));
     }
-  }, [searchParams, t, router]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   if (statusLoading || plansLoading) {
     return (
