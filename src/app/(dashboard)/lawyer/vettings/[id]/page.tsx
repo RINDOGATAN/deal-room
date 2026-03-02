@@ -5,6 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 import { useTranslations, useLocale } from "next-intl";
+import { formatPrice } from "@/lib/currency";
 import {
   Check,
   CheckCircle2,
@@ -372,7 +373,7 @@ export default function VettingDetailPage() {
                         <p className="font-semibold">{t("sendRequiresSubscription")}</p>
                       </div>
                       <span className="bg-warning/20 text-warning text-xs font-semibold px-2.5 py-0.5 rounded-full whitespace-nowrap flex-shrink-0">
-                        {tBilling("pricePerMonth")}
+                        {tBilling("pricePerMonth", { price: formatPrice(9) })}
                       </span>
                     </div>
                     <ul className="space-y-1.5">
@@ -394,7 +395,7 @@ export default function VettingDetailPage() {
                         onClick={() => setShowEnableModal(true)}
                         className="btn-brutal bg-warning text-white hover:bg-warning/90 text-sm w-full sm:w-auto"
                       >
-                        {t("enableSubscription")}
+                        {t("enableSubscription", { price: formatPrice(9) })}
                       </button>
                     )}
                   </div>
