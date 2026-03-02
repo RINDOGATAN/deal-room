@@ -653,62 +653,64 @@ function addPartiesInfo(
     })
   );
 
-  // Party B
-  children.push(
-    new Paragraph({
-      spacing: { after: 40 },
-      children: [
-        new TextRun({
-          text: labels.partyB,
-          size: 18,
-          color: "666666",
-          allCaps: true,
-          font: "Times New Roman",
-        }),
-      ],
-    })
-  );
-  children.push(
-    new Paragraph({
-      spacing: { after: 20 },
-      children: [
-        new TextRun({
-          text: data.partyB.name,
-          bold: true,
-          size: 24,
-          font: "Times New Roman",
-        }),
-      ],
-    })
-  );
-  if (data.partyB.company) {
+  // Party B (skip if solo mode / null)
+  if (data.partyB) {
+    children.push(
+      new Paragraph({
+        spacing: { after: 40 },
+        children: [
+          new TextRun({
+            text: labels.partyB,
+            size: 18,
+            color: "666666",
+            allCaps: true,
+            font: "Times New Roman",
+          }),
+        ],
+      })
+    );
     children.push(
       new Paragraph({
         spacing: { after: 20 },
         children: [
           new TextRun({
-            text: data.partyB.company,
-            size: 20,
-            color: "333333",
+            text: data.partyB.name,
+            bold: true,
+            size: 24,
+            font: "Times New Roman",
+          }),
+        ],
+      })
+    );
+    if (data.partyB.company) {
+      children.push(
+        new Paragraph({
+          spacing: { after: 20 },
+          children: [
+            new TextRun({
+              text: data.partyB.company,
+              size: 20,
+              color: "333333",
+              font: "Times New Roman",
+            }),
+          ],
+        })
+      );
+    }
+    children.push(
+      new Paragraph({
+        spacing: { after: 300 },
+        children: [
+          new TextRun({
+            text: data.partyB.email,
+            size: 18,
+            color: "666666",
             font: "Times New Roman",
           }),
         ],
       })
     );
   }
-  children.push(
-    new Paragraph({
-      spacing: { after: 300 },
-      children: [
-        new TextRun({
-          text: data.partyB.email,
-          size: 18,
-          color: "666666",
-          font: "Times New Roman",
-        }),
-      ],
-    })
-  );
 }
 
 function addSignatureBlocks(
@@ -819,10 +821,9 @@ function addSignatureBlocks(
     })
   );
 
-  // Spacing between parties
+  // Party B signature (blank lines for manual signing when solo mode / null partyB)
   children.push(new Paragraph({ spacing: { after: 400 }, children: [] }));
 
-  // Party B signature
   children.push(
     new Paragraph({
       spacing: { before: 200, after: 40 },
@@ -853,36 +854,65 @@ function addSignatureBlocks(
     })
   );
   children.push(new Paragraph({ spacing: { after: 200 }, children: [] }));
-  children.push(
-    new Paragraph({
-      children: [
-        new TextRun({
-          text: data.partyB.legalName || data.partyB.company || data.partyB.name,
-          bold: true,
-          size: 20,
-          font: "Times New Roman",
-        }),
-      ],
-    })
-  );
-  children.push(
-    new Paragraph({
-      children: [
-        new TextRun({
-          text: data.partyB.signatoryName || data.partyB.name,
-          size: 18,
-          color: "666666",
-          font: "Times New Roman",
-        }),
-      ],
-    })
-  );
-  if (data.partyB.signatoryTitle) {
+
+  if (data.partyB) {
+    // Named party B
     children.push(
       new Paragraph({
         children: [
           new TextRun({
-            text: data.partyB.signatoryTitle,
+            text: data.partyB.legalName || data.partyB.company || data.partyB.name,
+            bold: true,
+            size: 20,
+            font: "Times New Roman",
+          }),
+        ],
+      })
+    );
+    children.push(
+      new Paragraph({
+        children: [
+          new TextRun({
+            text: data.partyB.signatoryName || data.partyB.name,
+            size: 18,
+            color: "666666",
+            font: "Times New Roman",
+          }),
+        ],
+      })
+    );
+    if (data.partyB.signatoryTitle) {
+      children.push(
+        new Paragraph({
+          children: [
+            new TextRun({
+              text: data.partyB.signatoryTitle,
+              size: 18,
+              color: "666666",
+              font: "Times New Roman",
+            }),
+          ],
+        })
+      );
+    }
+  } else {
+    // Solo mode: blank lines for manual signing
+    children.push(
+      new Paragraph({
+        children: [
+          new TextRun({
+            text: "[_________________]",
+            size: 20,
+            font: "Times New Roman",
+          }),
+        ],
+      })
+    );
+    children.push(
+      new Paragraph({
+        children: [
+          new TextRun({
+            text: "[_________________]",
             size: 18,
             color: "666666",
             font: "Times New Roman",

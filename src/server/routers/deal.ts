@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
-import { Prisma, DealRoomStatus, PartyRole, PartyStatus, ClauseStatus, InvitationStatus, GoverningLaw } from "@prisma/client";
+import { Prisma, DealRoomStatus, DealMode, PartyRole, PartyStatus, ClauseStatus, InvitationStatus, GoverningLaw } from "@prisma/client";
 import { checkDealCreationEntitlement } from "../services/licensing/entitlement";
 import { resolveLocalizedString, resolveLocalizedArray } from "../services/skills/i18n";
 import { validateRequiredParameters, type ParameterSchema } from "@/lib/parameters";
@@ -265,6 +265,7 @@ export const dealRouter = createTRPCRouter({
         contractType: z.string(),
         governingLaw: z.enum(["CALIFORNIA", "ENGLAND_WALES", "SPAIN"]),
         contractLanguage: z.enum(["en", "es"]).default("en"),
+        dealMode: z.enum(["NEGOTIATION", "SOLO"]).default("NEGOTIATION"),
         initiatorCompany: z.string().optional(),
         lawyerVettingId: z.string().optional(),
         parameters: z.record(z.string(), z.string()).optional(),
@@ -377,6 +378,7 @@ export const dealRouter = createTRPCRouter({
         data: {
           name: input.name,
           contractTemplateId: template.id,
+          dealMode: input.dealMode as DealMode,
           governingLaw: input.governingLaw as GoverningLaw,
           contractLanguage: input.contractLanguage,
           parameters: Object.keys(dealParameters).length > 0
@@ -616,6 +618,41 @@ export const dealRouter = createTRPCRouter({
         },
       });
 
+      // Solo mode: auto-agree all clauses using initiator's selections
+      if (dealRoom.dealMode === DealMode.SOLO) {
+        for (const clause of dealRoom.clauses) {
+          const selection = clause.selections.find((s) => s.partyId === party.id);
+          if (selection) {
+            await ctx.prisma.dealRoomClause.update({
+              where: { id: clause.id },
+              data: {
+                status: ClauseStatus.AGREED,
+                agreedOptionId: selection.optionId,
+              },
+            });
+          }
+        }
+
+        await ctx.prisma.dealRoom.update({
+          where: { id: input.dealRoomId },
+          data: { status: DealRoomStatus.AGREED },
+        });
+
+        await ctx.prisma.auditLog.create({
+          data: {
+            dealRoomId: input.dealRoomId,
+            userId,
+            action: "SELECTIONS_SUBMITTED",
+            details: {
+              role: party.role,
+              dealMode: "SOLO",
+            },
+          },
+        });
+
+        return { success: true, bothSubmitted: false, soloCompleted: true };
+      }
+
       // Check if both parties have submitted
       const otherParty = dealRoom.parties.find((p) => p.id !== party.id);
       const bothSubmitted = otherParty?.status === PartyStatus.SUBMITTED;
@@ -646,7 +683,7 @@ export const dealRouter = createTRPCRouter({
         },
       });
 
-      return { success: true, bothSubmitted };
+      return { success: true, bothSubmitted, soloCompleted: false };
     }),
 
   // Dismiss the lawyer warning modal for this party

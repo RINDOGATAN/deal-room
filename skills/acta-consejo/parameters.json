@@ -1,0 +1,58 @@
+{
+  "version": "1.0",
+  "parameters": [
+    {
+      "id": "company-name",
+      "token": "DENOMINACIÓN SOCIAL",
+      "type": "text",
+      "required": true,
+      "label": { "es": "Denominación social" },
+      "hint": { "es": "Razón social completa de la empresa" },
+      "placeholder": { "es": "p. ej. Acme Technologies, S.L." }
+    },
+    {
+      "id": "cif",
+      "token": "CIF",
+      "type": "text",
+      "required": true,
+      "label": { "es": "CIF" },
+      "hint": { "es": "Código de identificación fiscal de la sociedad" },
+      "placeholder": { "es": "p. ej. B12345678" }
+    },
+    {
+      "id": "registered-address",
+      "token": "DOMICILIO SOCIAL",
+      "type": "text",
+      "required": true,
+      "label": { "es": "Domicilio social" },
+      "hint": { "es": "Dirección completa del domicilio social" },
+      "placeholder": { "es": "p. ej. Calle Gran Vía 1, 28013 Madrid" }
+    },
+    {
+      "id": "meeting-date",
+      "token": "FECHA REUNIÓN",
+      "type": "date",
+      "required": true,
+      "label": { "es": "Fecha de la reunión" },
+      "hint": { "es": "Fecha en que se celebra la reunión del consejo" }
+    },
+    {
+      "id": "president-name",
+      "token": "NOMBRE PRESIDENTE",
+      "type": "text",
+      "required": true,
+      "label": { "es": "Nombre del presidente/a" },
+      "hint": { "es": "Presidente/a del consejo de administración" },
+      "placeholder": { "es": "p. ej. Juan Martínez Ruiz" }
+    },
+    {
+      "id": "secretary-name",
+      "token": "NOMBRE SECRETARIO",
+      "type": "text",
+      "required": true,
+      "label": { "es": "Nombre del secretario/a" },
+      "hint": { "es": "Secretario/a del consejo de administración" },
+      "placeholder": { "es": "p. ej. María García López" }
+    }
+  ]
+}

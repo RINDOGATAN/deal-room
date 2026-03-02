@@ -89,7 +89,7 @@ const LegacyClauseSchema = z.object({
   plainDescription: z.string(),
   legalContext: z.string().optional(),
   isRequired: z.boolean().optional().default(true),
-  options: z.array(LegacyClauseOptionSchema).min(3),
+  options: z.array(LegacyClauseOptionSchema).min(2),
 });
 
 // I18n clause schema
@@ -101,7 +101,7 @@ const I18nClauseSchema = z.object({
   plainDescription: LocalizedStringSchema,
   legalContext: LocalizedStringSchema.optional(),
   isRequired: z.boolean().optional().default(true),
-  options: z.array(I18nClauseOptionSchema).min(3),
+  options: z.array(I18nClauseOptionSchema).min(2),
 });
 
 const ClauseSchema = z.union([LegacyClauseSchema, I18nClauseSchema]);
@@ -135,6 +135,10 @@ const MetadataSchema = z.object({
   clauseCount: z.number().optional(),
   jurisdictions: z.array(z.string()).optional(),
   languages: z.array(z.string()).optional(),
+  soloModeSupported: z.boolean().optional(),
+  soloModeDefault: z.boolean().optional(),
+  templateFamily: z.string().optional(),
+  category: z.union([z.string(), z.record(z.string(), z.string())]).optional(),
 });
 
 // Boilerplate schema for standard contract sections
@@ -506,8 +510,8 @@ export function validateClausesFile(data: unknown): ValidationResult {
       const options = clause.options as Array<Record<string, unknown>>;
 
       // Check option count
-      if (options.length < 3) {
-        errors.push(`Clause "${clauseTitle}" has fewer than 3 options`);
+      if (options.length < 2) {
+        errors.push(`Clause "${clauseTitle}" has fewer than 2 options`);
       }
 
       // Check for unique option IDs
@@ -915,24 +919,28 @@ export async function syncSkillsToDatabase(
           version: skill.version || "1.0",
           skillPath: path.join(SKILLS_DIR, contractType.toLowerCase()),
           boilerplate: boilerplate || undefined,
-          templateFamily: manifest?.templateFamily || null,
+          templateFamily: manifest?.templateFamily || metadata?.templateFamily || null,
           nativeJurisdiction: (manifest?.nativeJurisdiction as any) || null,
           jurisdictions,
           languages,
           displayNameLocalized: (displayNameLocalized as any) || undefined,
           descriptionLocalized: (descriptionLocalized as any) || undefined,
+          soloModeSupported: metadata?.soloModeSupported ?? false,
+          soloModeDefault: metadata?.soloModeDefault ?? false,
         },
         update: {
           displayName: skill.displayName,
           description: skill.description,
           version: skill.version || "1.0",
           boilerplate: boilerplate || undefined,
-          templateFamily: manifest?.templateFamily || null,
+          templateFamily: manifest?.templateFamily || metadata?.templateFamily || null,
           nativeJurisdiction: (manifest?.nativeJurisdiction as any) || null,
           jurisdictions,
           languages,
           displayNameLocalized: (displayNameLocalized as any) || undefined,
           descriptionLocalized: (descriptionLocalized as any) || undefined,
+          soloModeSupported: metadata?.soloModeSupported ?? false,
+          soloModeDefault: metadata?.soloModeDefault ?? false,
         },
       });
 

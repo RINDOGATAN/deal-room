@@ -19,6 +19,7 @@ import {
   X,
   Send,
   ExternalLink,
+  Download,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
@@ -124,8 +125,9 @@ export default function DealDetailPage() {
   const statusLabel = statusLabels[deal.status];
   const initiator = deal.parties.find((p) => p.role === "INITIATOR");
   const respondent = deal.parties.find((p) => p.role === "RESPONDENT");
+  const isSoloMode = (deal as any).dealMode === "SOLO";
   const isInitiator = deal.currentUserRole === "INITIATOR";
-  const canInvite = isInitiator && !respondent && deal.status === "DRAFT";
+  const canInvite = !isSoloMode && isInitiator && !respondent && deal.status === "DRAFT";
   const canNegotiate = deal.status === "DRAFT" || deal.status === "AWAITING_RESPONSE" || deal.status === "NEGOTIATING";
 
   // Lawyer warning modal
@@ -163,10 +165,14 @@ export default function DealDetailPage() {
               className="btn-brutal flex items-center gap-2"
             >
               <Edit className="w-4 h-4" />
-              <span className="hidden sm:inline">{isInitiator && initiator?.status === "PENDING" ? t("makeSelections") : t("continueNegotiation")}</span>
+              <span className="hidden sm:inline">
+                {isSoloMode
+                  ? (isInitiator && initiator?.status === "PENDING" ? t("makeSelections") : t("continueNegotiation"))
+                  : (isInitiator && initiator?.status === "PENDING" ? t("makeSelections") : t("continueNegotiation"))}
+              </span>
             </Link>
           )}
-          {deal.status === "NEGOTIATING" && (
+          {!isSoloMode && deal.status === "NEGOTIATING" && (
             <Link
               href={`/deals/${deal.id}/review`}
               className="btn-brutal-outline flex items-center gap-2"
@@ -175,12 +181,21 @@ export default function DealDetailPage() {
               <ArrowRight className="w-4 h-4" />
             </Link>
           )}
+          {isSoloMode && deal.status === "AGREED" && (
+            <a
+              href={`/api/document/docx?dealRoomId=${deal.id}`}
+              className="btn-brutal flex items-center gap-2"
+            >
+              <Download className="w-4 h-4" />
+              <span className="hidden sm:inline">{(deal as any).contractLanguage === "es" ? "Descargar DOCX" : "Download DOCX"}</span>
+            </a>
+          )}
         </div>
       </div>
 
       {/* Progress */}
       {progress && (
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className={`grid grid-cols-1 ${isSoloMode ? "sm:grid-cols-2" : "sm:grid-cols-3"} gap-4`}>
           <div className="stat-card-neutral">
             <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-3">{t("yourSelections")}</p>
             <div className="flex items-baseline gap-2 mb-3">
@@ -189,16 +204,18 @@ export default function DealDetailPage() {
             </div>
             <Progress value={progress.initiatorProgress.percentage} className="h-1.5" />
           </div>
-          <div className="stat-card-neutral">
-            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-3">{t("counterparty")}</p>
-            <div className="flex items-baseline gap-2 mb-3">
-              <span className="metric-lg text-foreground">{progress.respondentProgress.completed}</span>
-              <span className="text-muted-foreground font-display">/ {progress.totalClauses}</span>
+          {!isSoloMode && (
+            <div className="stat-card-neutral">
+              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-3">{t("counterparty")}</p>
+              <div className="flex items-baseline gap-2 mb-3">
+                <span className="metric-lg text-foreground">{progress.respondentProgress.completed}</span>
+                <span className="text-muted-foreground font-display">/ {progress.totalClauses}</span>
+              </div>
+              <Progress value={progress.respondentProgress.percentage} className="h-1.5" />
             </div>
-            <Progress value={progress.respondentProgress.percentage} className="h-1.5" />
-          </div>
+          )}
           <div className="stat-card">
-            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-3">{t("agreedClauses")}</p>
+            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-3">{isSoloMode ? (deal as any).contractLanguage === "es" ? "Cláusulas confirmadas" : "Confirmed clauses" : t("agreedClauses")}</p>
             <div className="flex items-baseline gap-2 mb-3">
               <span className="metric-lg text-primary">{progress.agreedClauses.completed}</span>
               <span className="text-muted-foreground font-display">/ {progress.totalClauses}</span>
@@ -209,7 +226,7 @@ export default function DealDetailPage() {
       )}
 
       {/* Parties */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className={`grid grid-cols-1 ${isSoloMode ? "" : "md:grid-cols-2"} gap-6`}>
         {/* Initiator */}
         <div className="card-brutal">
           <div className="flex items-center gap-2 mb-4">
@@ -238,8 +255,8 @@ export default function DealDetailPage() {
           </div>
         </div>
 
-        {/* Respondent */}
-        <div className="card-brutal">
+        {/* Respondent (hidden in solo mode) */}
+        {!isSoloMode && <div className="card-brutal">
           <div className="flex items-center gap-2 mb-4">
             <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">{t("counterparty")}</span>
             {!isInitiator && deal.currentUserRole === "RESPONDENT" && <Badge variant="outline" className="text-xs">{tCommon("you")}</Badge>}
@@ -290,7 +307,7 @@ export default function DealDetailPage() {
               {t("completeSelectionsFirst")}
             </p>
           )}
-        </div>
+        </div>}
       </div>
 
       {/* Clauses Summary */}

@@ -1,0 +1,12 @@
+{
+  "contractType": "ACTA_CONSEJO_ADMINISTRACION",
+  "displayName": { "es": "Acta de Consejo de Administración" },
+  "description": { "es": "Acta de la reunión del consejo de administración conforme a la Ley de Sociedades de Capital (arts. 245-249)" },
+  "category": { "es": "Societario" },
+  "version": "1.0",
+  "clauseCount": 7,
+  "jurisdictions": ["SPAIN"],
+  "languages": ["es"],
+  "soloModeSupported": true,
+  "soloModeDefault": true
+}

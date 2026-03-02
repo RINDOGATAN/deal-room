@@ -1,0 +1,62 @@
+{
+  "contractTitle": "CONTRATO DE ASIGNACIÓN INDIVIDUAL DE PARTICIPACIONES FANTASMA (PHANTOM SHARES)",
+  "preamble": "De conformidad con el Plan Marco de Phantom Shares aprobado por {partyAName} con fecha [FECHA DEL PLAN MARCO] (el \"Plan Marco\"), la sociedad {partyAName}, con CIF [CIF] y domicilio social en {partyAAddress} (en adelante, la \"Sociedad\"), y {partyBName}, con domicilio en {partyBAddress} (en adelante, el/la \"Beneficiario/a\"), suscriben el presente Contrato de Asignación Individual con efectos desde [FECHA DE ASIGNACIÓN].",
+  "background": "EXPONEN:\n\nI. Que la Sociedad aprobó un Plan Marco de Participaciones Fantasma (Phantom Shares) con fecha [FECHA DEL PLAN MARCO], que establece las condiciones generales para la asignación de derechos económicos virtuales a empleados y colaboradores clave.\n\nII. Que el/la Beneficiario/a ha sido seleccionado/a por el órgano de administración como receptor/a de una asignación individual de Phantom Shares al amparo del Plan Marco.\n\nIII. Que ambas partes desean formalizar la asignación conforme a los términos del Plan Marco y a las condiciones particulares recogidas en el presente Contrato.\n\nPor lo expuesto, las partes acuerdan las siguientes cláusulas:",
+  "definitions": [
+    {
+      "term": "Plan Marco",
+      "definition": "el Plan Marco de Participaciones Fantasma (Phantom Shares) aprobado por la Sociedad con fecha [FECHA DEL PLAN MARCO], incluyendo sus posibles modificaciones posteriores."
+    },
+    {
+      "term": "Asignación",
+      "definition": "el número de Phantom Shares que la Sociedad asigna al Beneficiario en virtud del presente Contrato."
+    },
+    {
+      "term": "Fecha de Asignación",
+      "definition": "el [FECHA DE ASIGNACIÓN], fecha a partir de la cual comienza a computarse el Período de Vesting."
+    }
+  ],
+  "standardClauses": [
+    {
+      "title": "Remisión al Plan Marco",
+      "text": "El presente Contrato se regirá por lo dispuesto en el Plan Marco, cuyas condiciones generales se incorporan por referencia. El/La Beneficiario/a declara conocer y aceptar íntegramente los términos del Plan Marco.\n\nEn caso de discrepancia entre el presente Contrato y el Plan Marco, prevalecerán las condiciones particulares recogidas en este Contrato, siempre que hayan sido expresamente pactadas por ambas partes."
+    },
+    {
+      "title": "Datos de la asignación",
+      "text": "Resumen de la asignación:\n\n— Beneficiario/a: [NOMBRE DEL BENEFICIARIO]\n— Número de Phantom Shares: [NÚMERO DE PHANTOM SHARES]\n— Fecha de Asignación: [FECHA DE ASIGNACIÓN]\n— Período de Vesting: [MESES DE VESTING INDIVIDUAL] meses\n— Referencia del Plan Marco: [FECHA DEL PLAN MARCO]"
+    },
+    {
+      "title": "Declaraciones del Beneficiario",
+      "text": "El/La Beneficiario/a declara:\n\n(a) Haber recibido y leído íntegramente el Plan Marco.\n(b) Comprender que las Phantom Shares no confieren la condición de socio ni derechos políticos.\n(c) Comprender que el derecho de cobro está sujeto a la producción de un Evento de Liquidez.\n(d) Haber tenido la oportunidad de consultar con un asesor profesional independiente antes de la firma."
+    }
+  ],
+  "generalProvisions": [
+    {
+      "title": "Ley aplicable y jurisdicción",
+      "text": "El presente Contrato se regirá e interpretará conforme a la legislación española. Para la resolución de cualquier controversia, las partes se someten a los juzgados y tribunales de [CIUDAD], con renuncia expresa a cualquier otro fuero."
+    },
+    {
+      "title": "Comunicaciones",
+      "text": "Las comunicaciones entre las partes se realizarán conforme a lo establecido en el Plan Marco. El/La Beneficiario/a designa como dirección de contacto: [DIRECCIÓN / CORREO ELECTRÓNICO DEL BENEFICIARIO]."
+    },
+    {
+      "title": "Protección de datos",
+      "text": "El tratamiento de los datos personales del Beneficiario se realizará conforme a lo previsto en el Plan Marco y en la normativa aplicable (RGPD y LOPDGDD)."
+    },
+    {
+      "title": "Integridad y modificación",
+      "text": "El presente Contrato, junto con el Plan Marco, constituye el acuerdo completo entre las partes en relación con la Asignación. Cualquier modificación deberá constar por escrito y ser firmada por ambas partes."
+    }
+  ],
+  "jurisdictionProvisions": {
+    "SPAIN": {
+      "title": "Disposiciones específicas para España",
+      "text": "(a) Relación laboral: en caso de que el/la Beneficiario/a mantenga una relación laboral con la Sociedad, la presente Asignación no modifica las condiciones de su contrato de trabajo y no constituye salario a los efectos del artículo 26 del Estatuto de los Trabajadores.\n\n(b) Tributación: los rendimientos derivados de la presente Asignación tributarán conforme a la normativa fiscal aplicable, según lo establecido en el Plan Marco.\n\n(c) Pacto de no competencia: en caso de incluirse, el pacto de no competencia se ajustará a lo previsto en el artículo 21.2 del Estatuto de los Trabajadores cuando la relación sea laboral."
+    }
+  },
+  "signatureBlock": "En prueba de conformidad, las partes firman el presente Contrato por duplicado, en el lugar y fecha indicados en el encabezamiento.\n\nPor la Sociedad:\n\n{partyASignatureBlock}\n\n\nEl/La Beneficiario/a:\n\n{partyBSignatureBlock}",
+  "partyLabels": {
+    "partyA": "Sociedad",
+    "partyB": "Beneficiario"
+  }
+}

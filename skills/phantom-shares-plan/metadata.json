@@ -1,0 +1,13 @@
+{
+  "contractType": "PHANTOM_SHARES_PLAN",
+  "displayName": { "es": "Marco de Phantom Shares" },
+  "description": { "es": "Plan marco de participaciones fantasma (phantom shares) para la empresa" },
+  "category": { "es": "Retribución" },
+  "version": "1.0",
+  "clauseCount": 9,
+  "templateFamily": "PHANTOM_SHARES",
+  "jurisdictions": ["SPAIN"],
+  "languages": ["es"],
+  "soloModeSupported": true,
+  "soloModeDefault": false
+}
