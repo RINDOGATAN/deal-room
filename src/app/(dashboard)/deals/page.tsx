@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import { trpc } from "@/lib/trpc";
-import { format } from "date-fns";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
+import { formatDate } from "@/lib/date";
 import {
   FileText,
   Plus,
@@ -38,6 +38,7 @@ const statusColors = {
 export default function DealsPage() {
   const t = useTranslations("deals");
   const tCommon = useTranslations("common");
+  const locale = useLocale();
   const { data: deals, isLoading, error } = trpc.deal.list.useQuery();
 
   // Map status keys to translation keys
@@ -142,7 +143,7 @@ export default function DealsPage() {
                       <span>•</span>
                       <span><span className="metric text-foreground">{deal._count.clauses}</span> {t("clauses")}</span>
                       <span>•</span>
-                      <span>{t("updated", { date: format(new Date(deal.updatedAt), "MMM d, yyyy") })}</span>
+                      <span>{t("updated", { date: formatDate(new Date(deal.updatedAt), { locale, governingLaw: deal.governingLaw }) })}</span>
                     </div>
 
                     <div className="flex items-center gap-4 text-sm">
