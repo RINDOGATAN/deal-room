@@ -6,9 +6,9 @@ import { sendClientInvitationEmail } from "@/lib/email";
 import { checkDealCreationEntitlement } from "../services/licensing/entitlement";
 
 const GOVERNING_LAW_TO_JURISDICTION: Record<string, string> = {
-  CALIFORNIA: "US-CA",
-  ENGLAND_WALES: "GB",
-  SPAIN: "ES",
+  CALIFORNIA: "CALIFORNIA",
+  ENGLAND_WALES: "ENGLAND_WALES",
+  SPAIN: "SPAIN",
 };
 
 export const lawyerRouter = createTRPCRouter({

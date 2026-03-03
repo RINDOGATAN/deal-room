@@ -8,9 +8,9 @@ import { validateRequiredParameters, type ParameterSchema } from "@/lib/paramete
 
 // Map GoverningLaw enum to jurisdiction strings for entitlement checking
 const GOVERNING_LAW_TO_JURISDICTION: Record<string, string> = {
-  CALIFORNIA: "US-CA",
-  ENGLAND_WALES: "GB",
-  SPAIN: "ES",
+  CALIFORNIA: "CALIFORNIA",
+  ENGLAND_WALES: "ENGLAND_WALES",
+  SPAIN: "SPAIN",
 };
 
 export const dealRouter = createTRPCRouter({
