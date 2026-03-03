@@ -40,8 +40,8 @@ export async function POST(request: NextRequest) {
     }
 
     // Check for existing active entitlements
-    const customer = await prisma.customer.findUnique({
-      where: { email: session.user.email },
+    const customer = await prisma.customer.findFirst({
+      where: { email: { equals: session.user.email, mode: "insensitive" } },
       include: {
         entitlements: {
           where: {

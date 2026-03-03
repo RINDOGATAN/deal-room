@@ -76,8 +76,8 @@ export const skillManagerRouter = createTRPCRouter({
     >();
 
     if (ctx.session?.user?.email) {
-      const customer = await ctx.prisma.customer.findUnique({
-        where: { email: ctx.session.user.email },
+      const customer = await ctx.prisma.customer.findFirst({
+        where: { email: { equals: ctx.session.user.email, mode: "insensitive" } },
         include: {
           entitlements: {
             where: { skillPackageId: { in: packages.map((p) => p.id) } },
@@ -178,7 +178,7 @@ export const skillManagerRouter = createTRPCRouter({
     // Find customer by email (in a real app, User would have customerId)
     const customer = await ctx.prisma.customer.findFirst({
       where: {
-        email: ctx.session.user.email || undefined,
+        email: { equals: ctx.session.user.email || undefined, mode: "insensitive" },
       },
     });
 
@@ -289,7 +289,7 @@ export const skillManagerRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       // Find customer by email
       const customer = await ctx.prisma.customer.findFirst({
-        where: { email: ctx.session.user.email || undefined },
+        where: { email: { equals: ctx.session.user.email || undefined, mode: "insensitive" } },
       });
 
       if (!customer) {
@@ -326,7 +326,7 @@ export const skillManagerRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       // Find customer by email
       const customer = await ctx.prisma.customer.findFirst({
-        where: { email: ctx.session.user.email || undefined },
+        where: { email: { equals: ctx.session.user.email || undefined, mode: "insensitive" } },
       });
 
       if (!customer) {
@@ -365,7 +365,7 @@ export const skillManagerRouter = createTRPCRouter({
     .input(z.object({ licenseKey: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const customer = await ctx.prisma.customer.findFirst({
-        where: { email: ctx.session.user.email || undefined },
+        where: { email: { equals: ctx.session.user.email || undefined, mode: "insensitive" } },
       });
 
       if (!customer) {
@@ -394,7 +394,7 @@ export const skillManagerRouter = createTRPCRouter({
     .input(z.object({ activationId: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const customer = await ctx.prisma.customer.findFirst({
-        where: { email: ctx.session.user.email || undefined },
+        where: { email: { equals: ctx.session.user.email || undefined, mode: "insensitive" } },
       });
 
       if (!customer) {
@@ -428,7 +428,7 @@ export const skillManagerRouter = createTRPCRouter({
     )
     .query(async ({ ctx, input }) => {
       const customer = await ctx.prisma.customer.findFirst({
-        where: { email: ctx.session.user.email || undefined },
+        where: { email: { equals: ctx.session.user.email || undefined, mode: "insensitive" } },
       });
 
       if (!customer) {
@@ -446,7 +446,7 @@ export const skillManagerRouter = createTRPCRouter({
    */
   listActivations: protectedProcedure.query(async ({ ctx }) => {
     const customer = await ctx.prisma.customer.findFirst({
-      where: { email: ctx.session.user.email || undefined },
+      where: { email: { equals: ctx.session.user.email || undefined, mode: "insensitive" } },
     });
 
     if (!customer) {
@@ -470,7 +470,7 @@ export const skillManagerRouter = createTRPCRouter({
     .input(z.object({ skillId: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const customer = await ctx.prisma.customer.findFirst({
-        where: { email: ctx.session.user.email || undefined },
+        where: { email: { equals: ctx.session.user.email || undefined, mode: "insensitive" } },
       });
 
       if (!customer) {

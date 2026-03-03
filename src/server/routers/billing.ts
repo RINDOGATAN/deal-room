@@ -16,8 +16,8 @@ export const billingRouter = createTRPCRouter({
     const email = ctx.session.user.email;
     if (!email) return { entitlements: [], stripeCustomerId: null };
 
-    const customer = await ctx.prisma.customer.findUnique({
-      where: { email },
+    const customer = await ctx.prisma.customer.findFirst({
+      where: { email: { equals: email, mode: "insensitive" } },
       include: {
         entitlements: {
           include: {
@@ -60,8 +60,8 @@ export const billingRouter = createTRPCRouter({
 
     if (!vettedPkg) return { active: false, selfServiceUpgrade: features.selfServiceUpgrade, skillPackageId: null };
 
-    const customer = await ctx.prisma.customer.findUnique({
-      where: { email },
+    const customer = await ctx.prisma.customer.findFirst({
+      where: { email: { equals: email, mode: "insensitive" } },
       include: {
         entitlements: {
           where: { skillPackageId: vettedPkg.id, status: "ACTIVE" },
@@ -88,8 +88,8 @@ export const billingRouter = createTRPCRouter({
     // Check which ones the user already has entitlements for
     let entitledSkillPackageIds: Set<string> = new Set();
     if (email) {
-      const customer = await ctx.prisma.customer.findUnique({
-        where: { email },
+      const customer = await ctx.prisma.customer.findFirst({
+        where: { email: { equals: email, mode: "insensitive" } },
         include: {
           entitlements: {
             where: { status: "ACTIVE" },
@@ -128,7 +128,7 @@ export const billingRouter = createTRPCRouter({
         include: { customer: { select: { email: true } } },
       });
 
-      if (!entitlement || entitlement.customer.email !== email) {
+      if (!entitlement || entitlement.customer.email?.toLowerCase() !== email.toLowerCase()) {
         throw new TRPCError({ code: "NOT_FOUND", message: "Entitlement not found" });
       }
 

@@ -334,7 +334,7 @@ export const dealRouter = createTRPCRouter({
       if (template.skillPackageId) {
         // Find customer by email
         const customer = await ctx.prisma.customer.findFirst({
-          where: { email: userEmail },
+          where: { email: { equals: userEmail, mode: "insensitive" } },
         });
 
         if (!customer) {

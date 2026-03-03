@@ -52,7 +52,7 @@ export const lawyerRouter = createTRPCRouter({
       if (template.skillPackageId) {
         const userEmail = ctx.session.user.email!;
         const customer = await ctx.prisma.customer.findFirst({
-          where: { email: userEmail },
+          where: { email: { equals: userEmail, mode: "insensitive" } },
         });
 
         if (!customer) {
@@ -246,8 +246,8 @@ export const lawyerRouter = createTRPCRouter({
       // Check "Vetted Contracts" entitlement
       const lawyerEmail = ctx.session.user.email;
       if (lawyerEmail) {
-        const customer = await ctx.prisma.customer.findUnique({
-          where: { email: lawyerEmail },
+        const customer = await ctx.prisma.customer.findFirst({
+          where: { email: { equals: lawyerEmail, mode: "insensitive" } },
         });
         const vettedPkg = await ctx.prisma.skillPackage.findUnique({
           where: { skillId: "com.nel.features.vetted-contracts" },
