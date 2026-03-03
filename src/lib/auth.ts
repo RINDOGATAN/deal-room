@@ -174,12 +174,27 @@ export const authOptions: NextAuthOptions = {
     async session({ session, token }) {
       if (session.user && token.sub) {
         session.user.id = token.sub;
+        session.user.role = token.role ?? null;
       }
       return session;
     },
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger }) {
       if (user) {
         token.id = user.id;
+        // Fetch role from DB on first sign-in
+        const dbUser = await prisma.user.findUnique({
+          where: { id: user.id },
+          select: { role: true },
+        });
+        token.role = dbUser?.role ?? null;
+      }
+      // Refresh role when client calls update() after setRole mutation
+      if (trigger === "update") {
+        const dbUser = await prisma.user.findUnique({
+          where: { id: token.sub! },
+          select: { role: true },
+        });
+        token.role = dbUser?.role ?? null;
       }
       return token;
     },

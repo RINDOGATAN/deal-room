@@ -22,6 +22,8 @@
   "nav": {
     "myDeals": "Mis Acuerdos",
     "newDeal": "Nuevo Acuerdo",
+    "findLawyer": "Buscar Abogado/a",
+    "requests": "Solicitudes",
     "signOut": "Cerrar Sesión"
   },
   "auth": {
@@ -445,6 +447,65 @@
     "enableBenefitBranded": "Los clientes reciben tus recomendaciones",
     "enableBenefitCancel": "Cancela cuando quieras, sin compromiso",
     "clickToEnable": "Haz clic para activar"
+  },
+  "directory": {
+    "title": "Directorio de Abogados",
+    "subtitle": "Consulta perfiles de abogados publicados y solicita recomendaciones",
+    "noLawyers": "Aún no hay abogados disponibles",
+    "noLawyersFiltered": "Ningún abogado/a coincide con tus filtros",
+    "filterJurisdiction": "Jurisdicción",
+    "filterLanguage": "Idioma",
+    "allJurisdictions": "Todas las jurisdicciones",
+    "allLanguages": "Todos los idiomas",
+    "approvedVettings": "{count} revisiones aprobadas",
+    "requestRecommendation": "Solicitar Recomendación",
+    "lawyerHint": "¿Te gustaría que un abogado/a lo revisase primero?",
+    "lawyerHintLink": "Buscar Abogado/a"
+  },
+  "lawyerProfile": {
+    "title": "Perfil del Directorio",
+    "subtitle": "Gestiona tu perfil público en el directorio de abogados",
+    "bio": "Biografía",
+    "bioPlaceholder": "Describe tu experiencia, áreas de práctica y especialización...",
+    "jurisdictions": "Jurisdicciones",
+    "languages": "Idiomas",
+    "publish": "Publicado",
+    "publishDescription": "Tu perfil es visible en el directorio",
+    "unpublishDescription": "Tu perfil está oculto del directorio",
+    "saved": "Perfil guardado",
+    "publishRequirements": "Añade una biografía y selecciona al menos una jurisdicción y un idioma para publicar",
+    "editProfile": "Editar Perfil"
+  },
+  "requests": {
+    "title": "Solicitudes de Recomendación",
+    "incoming": "Solicitudes Recibidas",
+    "sent": "Solicitudes Enviadas",
+    "noIncoming": "No hay solicitudes recibidas",
+    "noSent": "No hay solicitudes enviadas",
+    "pendingBanner": "Tienes {count} solicitudes de recomendación pendientes",
+    "viewRequests": "Ver Solicitudes",
+    "contractType": "Tipo de Contrato",
+    "jurisdiction": "Jurisdicción",
+    "from": "De",
+    "to": "Para",
+    "status": "Estado",
+    "message": "Mensaje",
+    "accept": "Aceptar",
+    "decline": "Rechazar",
+    "accepted": "Aceptada",
+    "declined": "Rechazada",
+    "completed": "Completada",
+    "pending": "Pendiente",
+    "accepting": "Aceptando...",
+    "declining": "Rechazando...",
+    "createVetting": "Crear Revisión",
+    "requestSent": "Solicitud enviada",
+    "requestFailed": "Error al enviar la solicitud: {error}",
+    "selectContractType": "Seleccionar Tipo de Contrato",
+    "selectJurisdiction": "Seleccionar Jurisdicción",
+    "messagePlaceholder": "Opcional: describe tus necesidades o haz una pregunta...",
+    "submitRequest": "Enviar Solicitud",
+    "submitting": "Enviando..."
   },
   "billing": {
     "title": "Facturación",
@@ -1088,5 +1149,22 @@
     "billing": "Facturación",
     "termsOfUse": "Términos de Uso",
     "privacyNotice": "Aviso de Privacidad"
+  },
+  "onboarding": {
+    "chooseRole": "¿Cómo vas a usar Dealroom?",
+    "businessOwnerTitle": "Empresario/a / Fundador/a",
+    "businessOwnerDescription": "Negocia contratos con orientación clara y en lenguaje sencillo.",
+    "businessOwnerFeature1": "Explicaciones de cláusulas en lenguaje sencillo con pros y contras",
+    "businessOwnerFeature2": "Asistente de negociación paso a paso",
+    "businessOwnerFeature3": "Invita a un abogado/a cuando lo necesites",
+    "lawyerTitle": "Abogado/a",
+    "lawyerDescription": "Revisa contratos y guía a tus clientes en sus acuerdos.",
+    "lawyerFeature1": "Texto legal completo y detalle jurisdiccional",
+    "lawyerFeature2": "Revisa contratos y envía recomendaciones a tus clientes",
+    "lawyerFeature3": "Flujo de invitación a clientes",
+    "continueAs": "Continuar como {role}",
+    "switchRole": "Cambiar rol",
+    "roleBusiness": "Empresario/a",
+    "roleLawyer": "Abogado/a"
   }
 }

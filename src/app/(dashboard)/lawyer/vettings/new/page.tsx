@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 import { useTranslations, useLocale } from "next-intl";
@@ -80,6 +80,7 @@ interface TemplateInfo {
 
 export default function NewVettingPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const t = useTranslations("lawyer");
   const tNew = useTranslations("newDeal");
   const tCommon = useTranslations("common");
@@ -91,6 +92,7 @@ export default function NewVettingPage() {
   const [entitlementError, setEntitlementError] = useState<string | null>(null);
   const [enableModalSkill, setEnableModalSkill] = useState<{ id: string; name: string } | null>(null);
   const [infoModalDismissed, setInfoModalDismissed] = useState(false);
+  const [prefilled, setPrefilled] = useState(false);
 
   const { data: rawTemplates, isLoading } = trpc.skills.listTemplatesWithAccess.useQuery({ language: locale });
   // Sort: free templates first, locked (premium) at the bottom
@@ -106,6 +108,21 @@ export default function NewVettingPage() {
   const { data: vettedStatus } = trpc.billing.hasVettedContracts.useQuery();
 
   const showInfoModal = vettedStatus && !vettedStatus.active && !infoModalDismissed;
+
+  // Pre-fill from query params (recommendation request flow)
+  useEffect(() => {
+    if (prefilled || !templates?.length) return;
+    const qContractType = searchParams.get("contractType");
+    const qGoverningLaw = searchParams.get("governingLaw") as GoverningLaw | null;
+    if (qContractType) {
+      const tmpl = templates.find((t) => t.contractType === qContractType);
+      if (tmpl) setSelectedTemplateId(tmpl.id);
+    }
+    if (qGoverningLaw && ["CALIFORNIA", "ENGLAND_WALES", "SPAIN"].includes(qGoverningLaw)) {
+      setSelectedJurisdiction(qGoverningLaw);
+    }
+    setPrefilled(true);
+  }, [templates, prefilled, searchParams]);
 
   const createVetting = trpc.lawyer.createVetting.useMutation({
     onSuccess: (vetting) => {

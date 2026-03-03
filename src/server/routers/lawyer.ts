@@ -2,7 +2,7 @@ import { z } from "zod";
 import { createTRPCRouter, protectedProcedure, lawyerProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
 import { GoverningLaw } from "@prisma/client";
-import { sendClientInvitationEmail } from "@/lib/email";
+import { sendClientInvitationEmail, sendRecommendationRequestEmail } from "@/lib/email";
 import { checkDealCreationEntitlement } from "../services/licensing/entitlement";
 
 const GOVERNING_LAW_TO_JURISDICTION: Record<string, string> = {
@@ -21,13 +21,28 @@ export const lawyerRouter = createTRPCRouter({
     return { success: true };
   }),
 
+  /** Set user role (onboarding) */
+  setRole: protectedProcedure
+    .input(z.object({ role: z.enum(["BUSINESS_OWNER", "LAWYER"]) }))
+    .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.user.update({
+        where: { id: ctx.session.user.id },
+        data: {
+          role: input.role,
+          isLawyer: input.role === "LAWYER",
+          onboardedAt: new Date(),
+        },
+      });
+      return { success: true };
+    }),
+
   /** Get lawyer profile status */
   getProfile: protectedProcedure.query(async ({ ctx }) => {
     const user = await ctx.prisma.user.findUnique({
       where: { id: ctx.session.user.id },
-      select: { isLawyer: true },
+      select: { isLawyer: true, role: true },
     });
-    return { isLawyer: user?.isLawyer ?? false };
+    return { isLawyer: user?.isLawyer ?? false, role: user?.role ?? null };
   }),
 
   /** Create a new vetting for a template + jurisdiction + language */
@@ -429,6 +444,269 @@ export const lawyerRouter = createTRPCRouter({
         throw new TRPCError({ code: "NOT_FOUND", message: "Vetting not found" });
       }
       return vetting;
+    }),
+
+  // ================================================================
+  // LAWYER DIRECTORY
+  // ================================================================
+
+  /** Lawyer fetches own directory profile for editing */
+  getMyDirectoryProfile: lawyerProcedure.query(async ({ ctx }) => {
+    const profile = await ctx.prisma.lawyerProfile.findUnique({
+      where: { userId: ctx.session.user.id },
+    });
+    return profile;
+  }),
+
+  /** Upsert lawyer directory profile */
+  updateDirectoryProfile: lawyerProcedure
+    .input(
+      z.object({
+        bio: z.string().max(2000).optional(),
+        jurisdictions: z.array(z.enum(["CALIFORNIA", "ENGLAND_WALES", "SPAIN"])),
+        languages: z.array(z.string()).min(1),
+        isPublished: z.boolean(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      // Cannot publish without bio + jurisdictions + languages
+      if (input.isPublished) {
+        if (!input.bio || input.bio.trim().length === 0) {
+          throw new TRPCError({ code: "BAD_REQUEST", message: "Bio is required to publish" });
+        }
+        if (input.jurisdictions.length === 0) {
+          throw new TRPCError({ code: "BAD_REQUEST", message: "At least one jurisdiction is required to publish" });
+        }
+      }
+
+      const profile = await ctx.prisma.lawyerProfile.upsert({
+        where: { userId: ctx.session.user.id },
+        update: {
+          bio: input.bio ?? null,
+          jurisdictions: input.jurisdictions as GoverningLaw[],
+          languages: input.languages,
+          isPublished: input.isPublished,
+        },
+        create: {
+          userId: ctx.session.user.id,
+          bio: input.bio ?? null,
+          jurisdictions: input.jurisdictions as GoverningLaw[],
+          languages: input.languages,
+          isPublished: input.isPublished,
+        },
+      });
+      return profile;
+    }),
+
+  /** Browse published lawyer directory */
+  directory: protectedProcedure
+    .input(
+      z.object({
+        jurisdiction: z.enum(["CALIFORNIA", "ENGLAND_WALES", "SPAIN"]).optional(),
+        language: z.string().optional(),
+      }).optional()
+    )
+    .query(async ({ ctx, input }) => {
+      const where: Record<string, unknown> = { isPublished: true };
+      if (input?.jurisdiction) {
+        where.jurisdictions = { has: input.jurisdiction };
+      }
+      if (input?.language) {
+        where.languages = { has: input.language };
+      }
+
+      const profiles = await ctx.prisma.lawyerProfile.findMany({
+        where,
+        include: {
+          user: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+              company: true,
+              image: true,
+            },
+          },
+        },
+        orderBy: { createdAt: "asc" },
+      });
+
+      // Get approved vetting count per lawyer
+      const lawyerIds = profiles.map((p) => p.userId);
+      const vettingCounts = await ctx.prisma.lawyerVetting.groupBy({
+        by: ["lawyerId"],
+        where: { lawyerId: { in: lawyerIds }, status: "APPROVED" },
+        _count: true,
+      });
+      const countMap = new Map(vettingCounts.map((v) => [v.lawyerId, v._count]));
+
+      return profiles.map((p) => ({
+        ...p,
+        approvedVettingCount: countMap.get(p.userId) ?? 0,
+      }));
+    }),
+
+  /** Business owner sends recommendation request to a published lawyer */
+  requestRecommendation: protectedProcedure
+    .input(
+      z.object({
+        lawyerId: z.string(),
+        contractType: z.string(),
+        governingLaw: z.enum(["CALIFORNIA", "ENGLAND_WALES", "SPAIN"]),
+        message: z.string().max(1000).optional(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      // Cannot request from yourself
+      if (input.lawyerId === ctx.session.user.id) {
+        throw new TRPCError({ code: "BAD_REQUEST", message: "Cannot request recommendation from yourself" });
+      }
+
+      // Verify lawyer has published profile
+      const lawyerProfile = await ctx.prisma.lawyerProfile.findUnique({
+        where: { userId: input.lawyerId },
+        include: { user: { select: { name: true, email: true } } },
+      });
+      if (!lawyerProfile || !lawyerProfile.isPublished) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Lawyer not found in directory" });
+      }
+
+      // Check no duplicate PENDING request
+      const existing = await ctx.prisma.recommendationRequest.findFirst({
+        where: {
+          requesterId: ctx.session.user.id,
+          lawyerId: input.lawyerId,
+          contractType: input.contractType,
+          governingLaw: input.governingLaw as GoverningLaw,
+          status: "PENDING",
+        },
+      });
+      if (existing) {
+        throw new TRPCError({ code: "CONFLICT", message: "You already have a pending request for this contract type and jurisdiction" });
+      }
+
+      const request = await ctx.prisma.recommendationRequest.create({
+        data: {
+          requesterId: ctx.session.user.id,
+          lawyerId: input.lawyerId,
+          contractType: input.contractType,
+          governingLaw: input.governingLaw as GoverningLaw,
+          message: input.message ?? null,
+        },
+      });
+
+      // Send email notification to the lawyer
+      const requester = await ctx.prisma.user.findUnique({
+        where: { id: ctx.session.user.id },
+        select: { name: true, email: true, company: true },
+      });
+      const requesterName = requester?.name || requester?.email || "A business owner";
+      const requesterCompany = requester?.company || undefined;
+      try {
+        await sendRecommendationRequestEmail({
+          to: lawyerProfile.user.email!,
+          requesterName,
+          requesterCompany,
+          contractType: input.contractType,
+          governingLaw: input.governingLaw,
+          message: input.message,
+        });
+      } catch {
+        // Email failure should not block the request
+        console.error("Failed to send recommendation request email");
+      }
+
+      return request;
+    }),
+
+  /** Lawyer views incoming recommendation requests */
+  listIncomingRequests: lawyerProcedure.query(async ({ ctx }) => {
+    return ctx.prisma.recommendationRequest.findMany({
+      where: { lawyerId: ctx.session.user.id },
+      include: {
+        requester: {
+          select: { id: true, name: true, email: true, company: true },
+        },
+        vetting: {
+          select: { id: true, status: true },
+        },
+      },
+      orderBy: { createdAt: "desc" },
+    });
+  }),
+
+  /** Business owner views sent recommendation requests */
+  listSentRequests: protectedProcedure.query(async ({ ctx }) => {
+    return ctx.prisma.recommendationRequest.findMany({
+      where: { requesterId: ctx.session.user.id },
+      include: {
+        lawyer: {
+          select: { id: true, name: true, email: true, company: true },
+        },
+        vetting: {
+          select: { id: true, status: true },
+        },
+      },
+      orderBy: { createdAt: "desc" },
+    });
+  }),
+
+  /** Lawyer accepts or declines a pending request */
+  respondToRequest: lawyerProcedure
+    .input(
+      z.object({
+        requestId: z.string(),
+        action: z.enum(["ACCEPTED", "DECLINED"]),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const request = await ctx.prisma.recommendationRequest.findFirst({
+        where: { id: input.requestId, lawyerId: ctx.session.user.id, status: "PENDING" },
+      });
+      if (!request) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Pending request not found" });
+      }
+
+      return ctx.prisma.recommendationRequest.update({
+        where: { id: input.requestId },
+        data: {
+          status: input.action,
+          respondedAt: new Date(),
+        },
+      });
+    }),
+
+  /** Lawyer links an accepted request to a completed vetting */
+  completeRequest: lawyerProcedure
+    .input(
+      z.object({
+        requestId: z.string(),
+        vettingId: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const request = await ctx.prisma.recommendationRequest.findFirst({
+        where: { id: input.requestId, lawyerId: ctx.session.user.id, status: "ACCEPTED" },
+      });
+      if (!request) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Accepted request not found" });
+      }
+
+      // Verify the vetting exists and belongs to this lawyer
+      const vetting = await ctx.prisma.lawyerVetting.findFirst({
+        where: { id: input.vettingId, lawyerId: ctx.session.user.id },
+      });
+      if (!vetting) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Vetting not found" });
+      }
+
+      return ctx.prisma.recommendationRequest.update({
+        where: { id: input.requestId },
+        data: {
+          status: "COMPLETED",
+          vettingId: input.vettingId,
+        },
+      });
     }),
 
   /** Get recommendations for a deal's vetting (used by negotiate page) */
