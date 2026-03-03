@@ -19,21 +19,16 @@ import {
   CreditCard,
   Store,
   MessageSquareWarning,
+  Briefcase,
+  ArrowRightLeft,
 } from "lucide-react";
 import { brand } from "@/config/brand";
 import { features } from "@/config/features";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { trpc } from "@/lib/trpc";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter,
-} from "@/components/ui/dialog";
-import { toast } from "sonner";
 import { FeedbackDialog } from "@/components/FeedbackDialog";
+import { OnboardingModal } from "@/components/OnboardingModal";
+import { UserRoleProvider } from "@/contexts/UserRoleContext";
 
 export default function DashboardLayout({
   children,
@@ -46,22 +41,19 @@ export default function DashboardLayout({
   const tCommon = useTranslations("common");
   const tLawyer = useTranslations("lawyer");
   const tFooter = useTranslations("footer");
+  const tOnboarding = useTranslations("onboarding");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [showLawyerDialog, setShowLawyerDialog] = useState(false);
+  const [showOnboardingOverride, setShowOnboardingOverride] = useState(false);
   const [feedbackOpen, setFeedbackOpen] = useState(false);
 
   const { data: lawyerProfile } = trpc.lawyer.getProfile.useQuery(
     undefined,
     { enabled: status === "authenticated", retry: false }
   );
-  const utils = trpc.useUtils();
-  const registerLawyer = trpc.lawyer.register.useMutation({
-    onSuccess: () => {
-      toast.success(tLawyer("registered"));
-      setShowLawyerDialog(false);
-      utils.lawyer.getProfile.invalidate();
-    },
-  });
+
+  const userRole = session?.user?.role ?? null;
+  const needsOnboarding = features.lawyerInvolvement && status === "authenticated" && !userRole;
+  const showOnboarding = needsOnboarding || showOnboardingOverride;
 
   if (status === "loading") {
     return (
@@ -81,9 +73,16 @@ export default function DashboardLayout({
     ...(features.lawyerInvolvement && lawyerProfile?.isLawyer
       ? [{ href: "/lawyer/vettings", label: tLawyer("myVettings"), icon: ClipboardCheck }]
       : []),
+    ...(features.lawyerInvolvement && userRole === "BUSINESS_OWNER"
+      ? [{ href: "/lawyers", label: t("findLawyer"), icon: Scale }]
+      : []),
+    ...(features.lawyerInvolvement && userRole === "LAWYER"
+      ? [{ href: "/lawyers/requests", label: t("requests"), icon: Briefcase }]
+      : []),
   ];
 
   return (
+    <UserRoleProvider>
     <div className="min-h-screen bg-background">
       {/* Floating Glassmorphism Header */}
       <header className="sticky top-0 z-20 px-4 pt-3">
@@ -122,14 +121,22 @@ export default function DashboardLayout({
             </nav>
 
             <div className="hidden md:flex items-center gap-4">
-              {features.lawyerInvolvement && lawyerProfile && !lawyerProfile.isLawyer && (
-                <button
-                  onClick={() => setShowLawyerDialog(true)}
-                  className="flex items-center gap-1.5 px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground rounded-full hover:bg-secondary transition-colors border border-border"
-                >
-                  <Scale className="w-3.5 h-3.5" />
-                  {tLawyer("iAmALawyer")}
-                </button>
+              {features.lawyerInvolvement && userRole && (
+                <div className="flex items-center gap-1.5 px-3 py-1.5 text-xs text-muted-foreground rounded-full border border-border">
+                  {userRole === "LAWYER" ? (
+                    <Scale className="w-3.5 h-3.5" />
+                  ) : (
+                    <Briefcase className="w-3.5 h-3.5" />
+                  )}
+                  <span>{userRole === "LAWYER" ? tOnboarding("roleLawyer") : tOnboarding("roleBusiness")}</span>
+                  <button
+                    onClick={() => setShowOnboardingOverride(true)}
+                    className="ml-1 text-primary hover:text-primary/80 transition-colors"
+                    title={tOnboarding("switchRole")}
+                  >
+                    <ArrowRightLeft className="w-3 h-3" />
+                  </button>
+                </div>
               )}
               <button
                 onClick={() => setFeedbackOpen(true)}
@@ -210,13 +217,14 @@ export default function DashboardLayout({
             </nav>
 
             <div className="border-t border-border pt-6 space-y-4">
-              {features.lawyerInvolvement && lawyerProfile && !lawyerProfile.isLawyer && (
+              {features.lawyerInvolvement && userRole && (
                 <button
-                  onClick={() => { setMobileMenuOpen(false); setShowLawyerDialog(true); }}
+                  onClick={() => { setMobileMenuOpen(false); setShowOnboardingOverride(true); }}
                   className="flex items-center gap-2 px-4 py-3 text-sm text-muted-foreground hover:text-foreground rounded-xl hover:bg-secondary transition-colors w-full"
                 >
-                  <Scale className="w-4 h-4" />
-                  {tLawyer("iAmALawyer")}
+                  {userRole === "LAWYER" ? <Scale className="w-4 h-4" /> : <Briefcase className="w-4 h-4" />}
+                  <span>{userRole === "LAWYER" ? tOnboarding("roleLawyer") : tOnboarding("roleBusiness")}</span>
+                  <span className="text-xs text-primary ml-auto">{tOnboarding("switchRole")}</span>
                 </button>
               )}
               <button
@@ -379,41 +387,16 @@ export default function DashboardLayout({
         </div>
       </footer>
 
-      {/* Lawyer Registration Dialog */}
-      <Dialog open={showLawyerDialog} onOpenChange={setShowLawyerDialog}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-primary/20 rounded-2xl flex items-center justify-center">
-                <Scale className="w-6 h-6 text-primary" />
-              </div>
-              <div>
-                <DialogTitle>{tLawyer("registerTitle")}</DialogTitle>
-                <DialogDescription className="mt-1">
-                  {tLawyer("registerDescription")}
-                </DialogDescription>
-              </div>
-            </div>
-          </DialogHeader>
-          <DialogFooter className="gap-2 sm:gap-0 mt-4">
-            <button
-              onClick={() => setShowLawyerDialog(false)}
-              className="px-4 py-2 border border-border text-sm hover:bg-muted/50 rounded-full"
-            >
-              {tCommon("cancel")}
-            </button>
-            <button
-              onClick={() => registerLawyer.mutate()}
-              disabled={registerLawyer.isPending}
-              className="btn-brutal text-sm"
-            >
-              {registerLawyer.isPending ? tLawyer("registering") : tLawyer("registerConfirm")}
-            </button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      {/* Onboarding Modal */}
+      {features.lawyerInvolvement && (
+        <OnboardingModal
+          open={showOnboarding}
+          onComplete={() => setShowOnboardingOverride(false)}
+        />
+      )}
 
       <FeedbackDialog open={feedbackOpen} onOpenChange={setFeedbackOpen} />
     </div>
+    </UserRoleProvider>
   );
 }

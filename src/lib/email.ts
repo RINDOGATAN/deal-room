@@ -145,6 +145,51 @@ export async function sendClientInvitationEmail({
   }
 }
 
+interface SendRecommendationRequestEmailParams {
+  to: string;
+  requesterName: string;
+  requesterCompany?: string;
+  contractType: string;
+  governingLaw: string;
+  message?: string;
+}
+
+export async function sendRecommendationRequestEmail({
+  to,
+  requesterName,
+  requesterCompany,
+  contractType,
+  governingLaw,
+  message,
+}: SendRecommendationRequestEmailParams) {
+  const requestsUrl = `${process.env.NEXTAUTH_URL}/lawyers/requests`;
+  const requesterLabel = requesterCompany
+    ? `${requesterName} (${requesterCompany})`
+    : requesterName;
+
+  const messageBlock = message
+    ? `<div style="background: ${brand.colors.card}; border-left: 3px solid ${brand.colors.primary}; padding: 12px 16px; margin: 0 0 24px; border-radius: 0 8px 8px 0;">
+        <p style="color: ${brand.colors.muted}; font-size: 13px; margin: 0; font-style: italic;">"${message}"</p>
+      </div>`
+    : "";
+
+  try {
+    await getResend().emails.send({
+      from: emailFrom(),
+      to,
+      subject: `New recommendation request: ${contractType}`,
+      html: emailWrapper("Recommendation Request", `
+        ${emailParagraph(`<strong style="color: ${brand.colors.foreground};">${requesterLabel}</strong> has requested your recommendation for a <strong style="color: ${brand.colors.foreground};">${contractType}</strong> contract (${governingLaw.replace("_", " & ")}).`)}
+        ${messageBlock}
+        ${emailButton(requestsUrl, "View Request")}
+        ${emailMuted("You can accept or decline this request from your dashboard.")}
+      `),
+    });
+  } catch (error) {
+    console.error("Failed to send recommendation request email:", error);
+  }
+}
+
 interface SendJointCounselNotificationEmailParams {
   to: string;
   partyName: string;

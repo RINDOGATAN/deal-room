@@ -38,6 +38,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { getContactMailto } from "@/config/brand";
+import { features } from "@/config/features";
 import { EnableFeatureModal } from "@/components/premium/enable-feature-modal";
 
 const contractIcons: Record<string, typeof FileText> = {
@@ -157,6 +158,7 @@ export default function NewDealPage() {
   const t = useTranslations("newDeal");
   const tCommon = useTranslations("common");
   const tLawyer = useTranslations("lawyer");
+  const tDirectory = useTranslations("directory");
   const locale = useLocale();
   const [selectedFamily, setSelectedFamily] = useState<string | null>(null);
   const [selectedType, setSelectedType] = useState<string | null>(null);
@@ -460,6 +462,17 @@ export default function NewDealPage() {
           {t("selectContractType")}
         </p>
       </div>
+
+      {/* Lawyer directory hint for business owners */}
+      {features.lawyerInvolvement && !isVettingFlow && (
+        <div className="flex items-center gap-3 px-4 py-3 bg-secondary/50 border border-border rounded-xl text-sm">
+          <Scale className="w-4 h-4 text-muted-foreground shrink-0" />
+          <span className="text-muted-foreground">{tDirectory("lawyerHint")}</span>
+          <a href="/lawyers" className="text-primary hover:underline font-medium whitespace-nowrap">
+            {tDirectory("lawyerHintLink")} &rarr;
+          </a>
+        </div>
+      )}
 
       {/* Entitlement Error Modal */}
       <Dialog open={!!entitlementError} onOpenChange={(open) => !open && setEntitlementError(null)}>

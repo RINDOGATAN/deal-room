@@ -22,6 +22,8 @@ model User {
   image         String?
   company       String?
   isLawyer      Boolean   @default(false)
+  role          UserRole?
+  onboardedAt   DateTime?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
@@ -38,6 +40,11 @@ model User {
   // Lawyer relations
   lawyerVettings    LawyerVetting[]
   clientInvitations ClientInvitation[]
+  lawyerProfile     LawyerProfile?
+
+  // Lawyer directory relations
+  recommendationsSent     RecommendationRequest[] @relation("RequestsSent")
+  recommendationsReceived RecommendationRequest[] @relation("RequestsReceived")
 
   // Invite code relation (northend.law auth)
   usedInviteCode InviteCode?
@@ -385,6 +392,11 @@ model ClauseOption {
 // DEAL ROOMS
 // ============================================================
 
+enum UserRole {
+  BUSINESS_OWNER
+  LAWYER
+}
+
 enum DealMode {
   NEGOTIATION // Two-party (default, current behavior)
   SOLO // Single-party — no counterparty
@@ -713,6 +725,7 @@ model LawyerVetting {
   recommendations   LawyerRecommendation[]
   clientInvitations ClientInvitation[]
   dealRooms         DealRoom[]
+  recommendationRequests RecommendationRequest[]
 
   @@map("lawyer_vettings")
 }
@@ -905,6 +918,50 @@ model InviteCode {
   usedBy   User?    @relation(fields: [usedByUserId], references: [id])
 
   @@map("invite_codes")
+}
+
+// ============================================================
+// LAWYER DIRECTORY & RECOMMENDATION REQUESTS
+// ============================================================
+
+model LawyerProfile {
+  id            String        @id @default(cuid())
+  userId        String        @unique
+  bio           String?       @db.Text
+  jurisdictions GoverningLaw[]
+  languages     String[]        // ["en", "es"]
+  isPublished   Boolean       @default(false)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@map("lawyer_profiles")
+}
+
+enum RecommendationRequestStatus {
+  PENDING
+  ACCEPTED
+  DECLINED
+  COMPLETED
+}
+
+model RecommendationRequest {
+  id           String                      @id @default(cuid())
+  requesterId  String
+  lawyerId     String
+  contractType String
+  governingLaw GoverningLaw
+  message      String?                     @db.Text
+  status       RecommendationRequestStatus @default(PENDING)
+  vettingId    String?
+  respondedAt  DateTime?
+  createdAt    DateTime                    @default(now())
+  updatedAt    DateTime                    @updatedAt
+
+  requester User           @relation("RequestsSent", fields: [requesterId], references: [id])
+  lawyer    User           @relation("RequestsReceived", fields: [lawyerId], references: [id])
+  vetting   LawyerVetting? @relation(fields: [vettingId], references: [id])
+  @@map("recommendation_requests")
 }
 
 // ============================================================

@@ -22,6 +22,8 @@
   "nav": {
     "myDeals": "My Deals",
     "newDeal": "New Deal",
+    "findLawyer": "Find a Lawyer",
+    "requests": "Requests",
     "signOut": "Sign Out"
   },
   "auth": {
@@ -445,6 +447,65 @@
     "enableBenefitBranded": "Clients get your vetted recommendations",
     "enableBenefitCancel": "Cancel anytime, no commitment",
     "clickToEnable": "Click to enable"
+  },
+  "directory": {
+    "title": "Lawyer Directory",
+    "subtitle": "Browse published lawyer profiles and request recommendations",
+    "noLawyers": "No lawyers available yet",
+    "noLawyersFiltered": "No lawyers match your filters",
+    "filterJurisdiction": "Jurisdiction",
+    "filterLanguage": "Language",
+    "allJurisdictions": "All Jurisdictions",
+    "allLanguages": "All Languages",
+    "approvedVettings": "{count} approved vettings",
+    "requestRecommendation": "Request Recommendation",
+    "lawyerHint": "Would you like a lawyer to review this first?",
+    "lawyerHintLink": "Find a Lawyer"
+  },
+  "lawyerProfile": {
+    "title": "Directory Profile",
+    "subtitle": "Manage your public profile in the lawyer directory",
+    "bio": "Bio",
+    "bioPlaceholder": "Tell business owners about your expertise, experience, and practice areas...",
+    "jurisdictions": "Jurisdictions",
+    "languages": "Languages",
+    "publish": "Published",
+    "publishDescription": "Your profile is visible in the directory",
+    "unpublishDescription": "Your profile is hidden from the directory",
+    "saved": "Profile saved",
+    "publishRequirements": "Add a bio and select at least one jurisdiction and language to publish",
+    "editProfile": "Edit Profile"
+  },
+  "requests": {
+    "title": "Recommendation Requests",
+    "incoming": "Incoming Requests",
+    "sent": "Sent Requests",
+    "noIncoming": "No incoming requests",
+    "noSent": "No sent requests",
+    "pendingBanner": "You have {count} pending recommendation requests",
+    "viewRequests": "View Requests",
+    "contractType": "Contract Type",
+    "jurisdiction": "Jurisdiction",
+    "from": "From",
+    "to": "To",
+    "status": "Status",
+    "message": "Message",
+    "accept": "Accept",
+    "decline": "Decline",
+    "accepted": "Accepted",
+    "declined": "Declined",
+    "completed": "Completed",
+    "pending": "Pending",
+    "accepting": "Accepting...",
+    "declining": "Declining...",
+    "createVetting": "Create Vetting",
+    "requestSent": "Request sent",
+    "requestFailed": "Failed to send request: {error}",
+    "selectContractType": "Select Contract Type",
+    "selectJurisdiction": "Select Jurisdiction",
+    "messagePlaceholder": "Optional: describe your needs or ask a question...",
+    "submitRequest": "Send Request",
+    "submitting": "Sending..."
   },
   "billing": {
     "title": "Billing",
@@ -1088,5 +1149,22 @@
     "billing": "Billing",
     "termsOfUse": "Terms of Use",
     "privacyNotice": "Privacy Notice"
+  },
+  "onboarding": {
+    "chooseRole": "How will you use Dealroom?",
+    "businessOwnerTitle": "Business Owner / Founder",
+    "businessOwnerDescription": "Negotiate contracts with clear, plain-language guidance.",
+    "businessOwnerFeature1": "Plain-language clause explanations with pros & cons",
+    "businessOwnerFeature2": "Step-by-step negotiation wizard",
+    "businessOwnerFeature3": "Invite a lawyer when you need one",
+    "lawyerTitle": "Lawyer",
+    "lawyerDescription": "Vet contracts and guide your clients through deals.",
+    "lawyerFeature1": "Full legal text and jurisdiction detail",
+    "lawyerFeature2": "Vet contracts and send recommendations to clients",
+    "lawyerFeature3": "Client invitation workflow",
+    "continueAs": "Continue as {role}",
+    "switchRole": "Switch role",
+    "roleBusiness": "Business",
+    "roleLawyer": "Lawyer"
   }
 }

@@ -9,6 +9,8 @@ import {
   CheckCircle2,
   FileEdit,
   Send,
+  Inbox,
+  ArrowRight,
 } from "lucide-react";
 function resolveLocalized(
   localized: unknown,
@@ -22,10 +24,14 @@ function resolveLocalized(
 
 export default function VettingsListPage() {
   const t = useTranslations("lawyer");
+  const tRequests = useTranslations("requests");
+  const tProfile = useTranslations("lawyerProfile");
   const tCommon = useTranslations("common");
   const locale = useLocale();
 
   const { data: vettings, isLoading } = trpc.lawyer.listVettings.useQuery();
+  const { data: incomingRequests } = trpc.lawyer.listIncomingRequests.useQuery();
+  const pendingCount = incomingRequests?.filter((r) => r.status === "PENDING").length ?? 0;
 
   if (isLoading) {
     return (
@@ -44,17 +50,39 @@ export default function VettingsListPage() {
 
   return (
     <div className="max-w-4xl mx-auto space-y-8">
+      {/* Pending requests banner */}
+      {pendingCount > 0 && (
+        <Link
+          href="/lawyers/requests"
+          className="flex items-center justify-between gap-3 px-4 py-3 bg-primary/10 border border-primary/20 rounded-xl text-sm hover:bg-primary/15 transition-colors"
+        >
+          <div className="flex items-center gap-2">
+            <Inbox className="w-4 h-4 text-primary" />
+            <span className="font-medium">{tRequests("pendingBanner", { count: pendingCount })}</span>
+          </div>
+          <ArrowRight className="w-4 h-4 text-primary" />
+        </Link>
+      )}
+
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold">{t("myVettings")}</h1>
         </div>
-        <Link
-          href="/lawyer/vettings/new"
-          className="btn-brutal flex items-center gap-2 text-sm"
-        >
-          <Plus className="w-4 h-4" />
-          {t("vetNewTemplate")}
-        </Link>
+        <div className="flex items-center gap-2">
+          <Link
+            href="/lawyers/profile"
+            className="px-3 py-2 text-sm border border-border rounded-full hover:bg-secondary transition-colors"
+          >
+            {tProfile("editProfile")}
+          </Link>
+          <Link
+            href="/lawyer/vettings/new"
+            className="btn-brutal flex items-center gap-2 text-sm"
+          >
+            <Plus className="w-4 h-4" />
+            {t("vetNewTemplate")}
+          </Link>
+        </div>
       </div>
 
       {!vettings?.length ? (
