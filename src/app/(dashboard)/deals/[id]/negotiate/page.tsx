@@ -603,7 +603,7 @@ export default function NegotiatePage() {
                 {t("selectPreferredOption")}
               </p>
               <Badge variant="outline" className="text-xs">
-                {tNewDeal(`jurisdictions.${governingLawTKey[governingLaw]}`)} {t("law")}
+                {tNewDeal(`jurisdictions.${governingLawTKey[governingLaw]}`)}
               </Badge>
             </div>
 

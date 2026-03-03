@@ -23,8 +23,8 @@ import {
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { format } from "date-fns";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
+import { formatDateTime } from "@/lib/date";
 
 export default function SigningPage() {
   const params = useParams();
@@ -32,6 +32,7 @@ export default function SigningPage() {
   const dealId = params.id as string;
   const t = useTranslations("signing");
   const tCommon = useTranslations("common");
+  const locale = useLocale();
   const [typedSignature, setTypedSignature] = useState("");
   const [confirmChecked, setConfirmChecked] = useState(false);
 
@@ -606,7 +607,7 @@ export default function SigningPage() {
               )}
               {signingRequest.initiatorSignedAt && (
                 <p className="text-xs text-muted-foreground mt-1">
-                  {format(new Date(signingRequest.initiatorSignedAt), "MMM d, yyyy 'at' h:mm a")}
+                  {formatDateTime(new Date(signingRequest.initiatorSignedAt), { locale, governingLaw: deal?.governingLaw })}
                 </p>
               )}
             </div>
@@ -635,7 +636,7 @@ export default function SigningPage() {
               )}
               {signingRequest.respondentSignedAt && (
                 <p className="text-xs text-muted-foreground mt-1">
-                  {format(new Date(signingRequest.respondentSignedAt), "MMM d, yyyy 'at' h:mm a")}
+                  {formatDateTime(new Date(signingRequest.respondentSignedAt), { locale, governingLaw: deal?.governingLaw })}
                 </p>
               )}
             </div>
@@ -648,13 +649,27 @@ export default function SigningPage() {
               <p className="text-muted-foreground mb-6">
                 {t("contractSignedDescription")}
               </p>
-              <div className="flex items-center justify-center gap-3">
+              <div className="flex items-center justify-center gap-3 flex-wrap">
                 <a
                   href={`/api/deals/${dealId}/document`}
                   className="btn-brutal inline-flex items-center gap-2"
                 >
                   <Download className="w-4 h-4" />
                   {t("downloadSignedContract")}
+                </a>
+                <a
+                  href={`/api/deals/${dealId}/document/docx`}
+                  className="btn-brutal-outline inline-flex items-center gap-2"
+                >
+                  <Download className="w-4 h-4" />
+                  {t("downloadDocx")}
+                </a>
+                <a
+                  href={`/api/deals/${dealId}/document/txt`}
+                  className="btn-brutal-outline inline-flex items-center gap-2"
+                >
+                  <Download className="w-4 h-4" />
+                  {t("downloadTxt")}
                 </a>
               </div>
             </div>
@@ -697,13 +712,27 @@ export default function SigningPage() {
                           </div>
                         </div>
                       )}
-                      <div className="flex items-center justify-center gap-3 mt-6">
+                      <div className="flex items-center justify-center gap-3 flex-wrap mt-6">
                         <a
                           href={`/api/deals/${dealId}/document`}
                           className="btn-brutal-outline inline-flex items-center gap-2"
                         >
                           <Download className="w-4 h-4" />
                           {t("downloadContractPdf")}
+                        </a>
+                        <a
+                          href={`/api/deals/${dealId}/document/docx`}
+                          className="btn-brutal-outline inline-flex items-center gap-2"
+                        >
+                          <Download className="w-4 h-4" />
+                          {t("downloadContractDocx")}
+                        </a>
+                        <a
+                          href={`/api/deals/${dealId}/document/txt`}
+                          className="btn-brutal-outline inline-flex items-center gap-2"
+                        >
+                          <Download className="w-4 h-4" />
+                          {t("downloadContractTxt")}
                         </a>
                       </div>
                     </div>
@@ -810,13 +839,27 @@ export default function SigningPage() {
                       </div>
                     </div>
 
-                    <div className="flex items-center justify-center gap-3 mt-6">
+                    <div className="flex items-center justify-center gap-3 flex-wrap mt-6">
                       <a
                         href={`/api/deals/${dealId}/document`}
                         className="btn-brutal-outline inline-flex items-center gap-2"
                       >
                         <Download className="w-4 h-4" />
                         {t("downloadContractPdf")}
+                      </a>
+                      <a
+                        href={`/api/deals/${dealId}/document/docx`}
+                        className="btn-brutal-outline inline-flex items-center gap-2"
+                      >
+                        <Download className="w-4 h-4" />
+                        {t("downloadContractDocx")}
+                      </a>
+                      <a
+                        href={`/api/deals/${dealId}/document/txt`}
+                        className="btn-brutal-outline inline-flex items-center gap-2"
+                      >
+                        <Download className="w-4 h-4" />
+                        {t("downloadContractTxt")}
                       </a>
                     </div>
                   </div>
@@ -856,6 +899,20 @@ export default function SigningPage() {
             >
               <Download className="w-4 h-4" />
               {t("downloadContractPdf")}
+            </a>
+            <a
+              href={`/api/deals/${dealId}/document/docx`}
+              className="btn-brutal-outline flex items-center gap-2"
+            >
+              <Download className="w-4 h-4" />
+              {t("downloadContractDocx")}
+            </a>
+            <a
+              href={`/api/deals/${dealId}/document/txt`}
+              className="btn-brutal-outline flex items-center gap-2"
+            >
+              <Download className="w-4 h-4" />
+              {t("downloadContractTxt")}
             </a>
           </div>
           <p className="text-xs text-muted-foreground">

@@ -1,7 +1,7 @@
 "use client";
 
 import { trpc } from "@/lib/trpc";
-import { format } from "date-fns";
+import { formatDate, formatDateTime } from "@/lib/date";
 import Link from "next/link";
 import { useRouter, useParams } from "next/navigation";
 import { useState } from "react";
@@ -163,18 +163,32 @@ export default function SupervisorDealDetailPage() {
                   )}
                   .
                   {reviewParty.attorneyReviewRequestedAt && (
-                    <> Requested on {format(new Date(reviewParty.attorneyReviewRequestedAt), "MMM d, yyyy")}.</>
+                    <> Requested on {formatDate(new Date(reviewParty.attorneyReviewRequestedAt), { governingLaw: deal.governingLaw })}.</>
                   )}
                 </p>
               </div>
             </div>
-            <div className="flex items-center gap-3 flex-shrink-0">
+            <div className="flex items-center gap-3 flex-shrink-0 flex-wrap">
               <a
                 href={`/api/supervise/deals/${dealId}/document/docx`}
                 className="btn-brutal-outline inline-flex items-center gap-2 text-sm"
               >
                 <Download className="w-4 h-4" />
                 Download DOCX
+              </a>
+              <a
+                href={`/api/supervise/deals/${dealId}/document`}
+                className="btn-brutal-outline inline-flex items-center gap-2 text-sm"
+              >
+                <Download className="w-4 h-4" />
+                Download PDF
+              </a>
+              <a
+                href={`/api/supervise/deals/${dealId}/document/txt`}
+                className="btn-brutal-outline inline-flex items-center gap-2 text-sm"
+              >
+                <Download className="w-4 h-4" />
+                Download TXT
               </a>
               <button
                 onClick={() => approveReview.mutate({ dealRoomId: dealId })}
@@ -212,7 +226,7 @@ export default function SupervisorDealDetailPage() {
                 <span className="font-medium text-foreground">
                   {reviewParty.name || reviewParty.email}
                 </span>
-                {" "}on {format(new Date(reviewApproved), "MMM d, yyyy")}.
+                {" "}on {formatDate(new Date(reviewApproved), { governingLaw: deal.governingLaw })}.
               </p>
             </div>
           </div>
@@ -311,7 +325,7 @@ export default function SupervisorDealDetailPage() {
             </div>
             <div className="flex justify-between">
               <span className="text-muted-foreground">Created</span>
-              <span className="font-medium">{format(new Date(deal.createdAt), "MMM d, yyyy")}</span>
+              <span className="font-medium">{formatDate(new Date(deal.createdAt), { governingLaw: deal.governingLaw })}</span>
             </div>
           </div>
         </div>
@@ -324,22 +338,22 @@ export default function SupervisorDealDetailPage() {
           <div className="space-y-3">
             <div className="flex justify-between">
               <span className="text-muted-foreground">Created</span>
-              <span className="text-sm">{format(new Date(deal.createdAt), "MMM d, yyyy 'at' h:mm a")}</span>
+              <span className="text-sm">{formatDateTime(new Date(deal.createdAt), { governingLaw: deal.governingLaw })}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-muted-foreground">Last Updated</span>
-              <span className="text-sm">{format(new Date(deal.updatedAt), "MMM d, yyyy 'at' h:mm a")}</span>
+              <span className="text-sm">{formatDateTime(new Date(deal.updatedAt), { governingLaw: deal.governingLaw })}</span>
             </div>
             {initiator?.submittedAt && (
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Party A Submitted</span>
-                <span className="text-sm">{format(new Date(initiator.submittedAt), "MMM d, yyyy")}</span>
+                <span className="text-sm">{formatDate(new Date(initiator.submittedAt), { governingLaw: deal.governingLaw })}</span>
               </div>
             )}
             {respondent?.submittedAt && (
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Party B Submitted</span>
-                <span className="text-sm">{format(new Date(respondent.submittedAt), "MMM d, yyyy")}</span>
+                <span className="text-sm">{formatDate(new Date(respondent.submittedAt), { governingLaw: deal.governingLaw })}</span>
               </div>
             )}
           </div>
@@ -456,7 +470,7 @@ export default function SupervisorDealDetailPage() {
                     <span className="text-muted-foreground">{log.action.replace(/_/g, " ").toLowerCase()}</span>
                   </p>
                   <p className="text-xs text-muted-foreground">
-                    {format(new Date(log.createdAt), "MMM d, yyyy 'at' h:mm a")}
+                    {formatDateTime(new Date(log.createdAt), { governingLaw: deal.governingLaw })}
                   </p>
                 </div>
               </div>

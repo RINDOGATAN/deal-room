@@ -3,9 +3,9 @@
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { trpc } from "@/lib/trpc";
-import { format } from "date-fns";
 import { toast } from "sonner";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
+import { formatDate } from "@/lib/date";
 import {
   FileText,
   Clock,
@@ -62,6 +62,7 @@ export default function DealDetailPage() {
   const t = useTranslations("dealDetail");
   const tDeals = useTranslations("deals");
   const tCommon = useTranslations("common");
+  const locale = useLocale();
 
   const [inviteOpen, setInviteOpen] = useState(false);
   const [inviteEmail, setInviteEmail] = useState("");
@@ -154,7 +155,7 @@ export default function DealDetailPage() {
               {deal.contractTemplate.displayName}
             </span>
             <span>•</span>
-            <span>Created {format(new Date(deal.createdAt), "MMM d, yyyy")}</span>
+            <span>Created {formatDate(new Date(deal.createdAt), { locale, governingLaw: deal.governingLaw })}</span>
           </div>
         </div>
 
@@ -182,13 +183,29 @@ export default function DealDetailPage() {
             </Link>
           )}
           {isSoloMode && deal.status === "AGREED" && (
-            <a
-              href={`/api/document/docx?dealRoomId=${deal.id}`}
-              className="btn-brutal flex items-center gap-2"
-            >
-              <Download className="w-4 h-4" />
-              <span className="hidden sm:inline">{(deal as any).contractLanguage === "es" ? "Descargar DOCX" : "Download DOCX"}</span>
-            </a>
+            <div className="flex items-center gap-2">
+              <a
+                href={`/api/deals/${deal.id}/document/docx`}
+                className="btn-brutal flex items-center gap-2"
+              >
+                <Download className="w-4 h-4" />
+                <span className="hidden sm:inline">{t("downloadDocx")}</span>
+              </a>
+              <a
+                href={`/api/deals/${deal.id}/document`}
+                className="btn-brutal-outline flex items-center gap-2"
+              >
+                <Download className="w-4 h-4" />
+                <span className="hidden sm:inline">{t("downloadPdf")}</span>
+              </a>
+              <a
+                href={`/api/deals/${deal.id}/document/txt`}
+                className="btn-brutal-outline flex items-center gap-2"
+              >
+                <Download className="w-4 h-4" />
+                <span className="hidden sm:inline">{t("downloadTxt")}</span>
+              </a>
+            </div>
           )}
         </div>
       </div>

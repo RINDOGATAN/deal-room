@@ -808,6 +808,14 @@ export default function ReviewPage() {
                       <span className="hidden sm:inline">{t("downloadPdf")}</span>
                       <span className="sm:hidden">PDF</span>
                     </a>
+                    <a
+                      href={`/api/deals/${dealId}/document/txt`}
+                      className="btn-brutal-outline inline-flex items-center gap-2 text-sm"
+                    >
+                      <Download className="w-4 h-4" />
+                      <span className="hidden sm:inline">{t("downloadTxt")}</span>
+                      <span className="sm:hidden">TXT</span>
+                    </a>
                     <button
                       onClick={() => cancelReview.mutate({ dealRoomId: dealId })}
                       disabled={cancelReview.isPending}
@@ -924,6 +932,20 @@ export default function ReviewPage() {
                 >
                   <Download className="w-4 h-4" />
                   {t("downloadDocx")}
+                </a>
+                <a
+                  href={`/api/deals/${dealId}/document`}
+                  className="btn-brutal-outline flex items-center gap-2 w-full sm:w-auto justify-center"
+                >
+                  <Download className="w-4 h-4" />
+                  {t("downloadPdf")}
+                </a>
+                <a
+                  href={`/api/deals/${dealId}/document/txt`}
+                  className="btn-brutal-outline flex items-center gap-2 w-full sm:w-auto justify-center"
+                >
+                  <Download className="w-4 h-4" />
+                  {t("downloadTxt")}
                 </a>
               </div>
             </div>
