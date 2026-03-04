@@ -73,12 +73,6 @@ export default function DashboardLayout({
     ...(features.lawyerInvolvement && lawyerProfile?.isLawyer
       ? [{ href: "/lawyer/vettings", label: tLawyer("myVettings"), icon: ClipboardCheck }]
       : []),
-    ...(features.lawyerInvolvement && userRole === "BUSINESS_OWNER"
-      ? [{ href: "/lawyers", label: t("findLawyer"), icon: Scale }]
-      : []),
-    ...(features.lawyerInvolvement && userRole === "LAWYER"
-      ? [{ href: "/lawyers/requests", label: t("requests"), icon: Briefcase }]
-      : []),
   ];
 
   return (
@@ -121,23 +115,6 @@ export default function DashboardLayout({
             </nav>
 
             <div className="hidden md:flex items-center gap-4">
-              {features.lawyerInvolvement && userRole && (
-                <div className="flex items-center gap-1.5 px-3 py-1.5 text-xs text-muted-foreground rounded-full border border-border">
-                  {userRole === "LAWYER" ? (
-                    <Scale className="w-3.5 h-3.5" />
-                  ) : (
-                    <Briefcase className="w-3.5 h-3.5" />
-                  )}
-                  <span>{userRole === "LAWYER" ? tOnboarding("roleLawyer") : tOnboarding("roleBusiness")}</span>
-                  <button
-                    onClick={() => setShowOnboardingOverride(true)}
-                    className="ml-1 text-primary hover:text-primary/80 transition-colors"
-                    title={tOnboarding("switchRole")}
-                  >
-                    <ArrowRightLeft className="w-3 h-3" />
-                  </button>
-                </div>
-              )}
               <button
                 onClick={() => setFeedbackOpen(true)}
                 className="p-2 text-muted-foreground hover:text-foreground rounded-full hover:bg-secondary transition-colors"
@@ -218,16 +195,6 @@ export default function DashboardLayout({
             </nav>
 
             <div className="border-t border-border pt-6 space-y-4">
-              {features.lawyerInvolvement && userRole && (
-                <button
-                  onClick={() => { setMobileMenuOpen(false); setShowOnboardingOverride(true); }}
-                  className="flex items-center gap-2 px-4 py-3 text-sm text-muted-foreground hover:text-foreground rounded-xl hover:bg-secondary transition-colors w-full"
-                >
-                  {userRole === "LAWYER" ? <Scale className="w-4 h-4" /> : <Briefcase className="w-4 h-4" />}
-                  <span>{userRole === "LAWYER" ? tOnboarding("roleLawyer") : tOnboarding("roleBusiness")}</span>
-                  <span className="text-xs text-primary ml-auto">{tOnboarding("switchRole")}</span>
-                </button>
-              )}
               <button
                 onClick={() => { setMobileMenuOpen(false); setFeedbackOpen(true); }}
                 className="flex items-center gap-2 px-4 py-3 text-sm text-muted-foreground hover:text-foreground rounded-xl hover:bg-secondary transition-colors w-full"
@@ -262,6 +229,37 @@ export default function DashboardLayout({
       {/* Footer */}
       <footer className="py-4 px-4 md:px-6 border-t border-border">
         <div className="max-w-7xl mx-auto flex flex-col items-center gap-2 text-sm text-muted-foreground">
+          {/* Role badge + directory link */}
+          {features.lawyerInvolvement && userRole && (
+            <div className="flex items-center gap-3 pb-1">
+              <button
+                onClick={() => setShowOnboardingOverride(true)}
+                className="flex items-center gap-1.5 px-3 py-1.5 text-xs text-muted-foreground rounded-full border border-border hover:border-muted-foreground/50 transition-colors"
+              >
+                {userRole === "LAWYER" ? <Scale className="w-3.5 h-3.5" /> : <Briefcase className="w-3.5 h-3.5" />}
+                <span>{userRole === "LAWYER" ? tOnboarding("roleLawyer") : tOnboarding("roleBusiness")}</span>
+                <ArrowRightLeft className="w-3 h-3 ml-0.5 text-primary" />
+              </button>
+              <span className="text-border">&middot;</span>
+              {userRole === "BUSINESS_OWNER" ? (
+                <Link
+                  href="/lawyers"
+                  className="flex items-center gap-1.5 hover:text-foreground transition-colors"
+                >
+                  <Scale className="w-3.5 h-3.5" />
+                  {t("findLawyer")}
+                </Link>
+              ) : (
+                <Link
+                  href="/lawyers/requests"
+                  className="flex items-center gap-1.5 hover:text-foreground transition-colors"
+                >
+                  <Briefcase className="w-3.5 h-3.5" />
+                  {t("requests")}
+                </Link>
+              )}
+            </div>
+          )}
           <p className="hidden sm:block">
             {tFooter.rich("service", {
               link: (chunks) => (
@@ -392,6 +390,7 @@ export default function DashboardLayout({
       {features.lawyerInvolvement && (
         <OnboardingModal
           open={showOnboarding}
+          dismissible={showOnboardingOverride}
           onComplete={() => setShowOnboardingOverride(false)}
         />
       )}
