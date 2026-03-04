@@ -12,7 +12,7 @@ export default function SupervisorVerifyPage() {
   const [code, setCode] = useState("");
   const [error, setError] = useState<string | null>(null);
 
-  const { data: twoFactorStatus, isLoading: statusLoading } =
+  const { data: twoFactorStatus, isLoading: statusLoading, isError } =
     trpc.supervisorTwoFactor.getStatus.useQuery();
 
   const setupMutation = trpc.supervisorTwoFactor.setup.useMutation({
@@ -34,10 +34,10 @@ export default function SupervisorVerifyPage() {
   });
 
   useEffect(() => {
-    if (twoFactorStatus && !twoFactorStatus.isSupervisor) {
+    if (isError || (twoFactorStatus && !twoFactorStatus.isSupervisor)) {
       router.push("/supervise/sign-in");
     }
-  }, [twoFactorStatus, router]);
+  }, [twoFactorStatus, isError, router]);
 
   // Start setup if supervisor hasn't set up 2FA yet
   useEffect(() => {
@@ -153,6 +153,18 @@ export default function SupervisorVerifyPage() {
               </form>
             </div>
           )}
+        </div>
+      </div>
+    );
+  }
+
+  // No valid session — show loading while redirect fires
+  if (!twoFactorStatus?.isSupervisor) {
+    return (
+      <div className="w-full max-w-md">
+        <div className="card-brutal text-center py-12">
+          <Loader2 className="w-8 h-8 animate-spin mx-auto text-purple-500" />
+          <p className="mt-4 text-muted-foreground">Redirecting to sign in...</p>
         </div>
       </div>
     );
