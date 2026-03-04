@@ -78,6 +78,18 @@ export const createTRPCContext = async (opts: { req: Request }) => {
           supervisorId: decoded.supervisorId as string,
         };
       }
+      // Fallback: JWT may only have sub (user ID) without email/supervisorId
+      else if (decoded?.sub && !supervisorSession) {
+        const supervisor = await prisma.supervisor.findUnique({
+          where: { id: decoded.sub as string },
+        });
+        if (supervisor?.isActive) {
+          supervisorSession = {
+            email: supervisor.email,
+            supervisorId: supervisor.id,
+          };
+        }
+      }
     } catch {
       // Invalid token, ignore
     }
