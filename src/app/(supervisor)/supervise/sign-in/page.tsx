@@ -56,8 +56,8 @@ export default function SupervisorSignInPage() {
     return (
       <div className="w-full max-w-md">
         <div className="card-brutal text-center">
-          <div className="w-16 h-16 bg-purple-500/20 flex items-center justify-center mx-auto mb-6">
-            <Mail className="w-8 h-8 text-purple-500" />
+          <div className="w-16 h-16 bg-primary/20 flex items-center justify-center mx-auto mb-6">
+            <Mail className="w-8 h-8 text-primary" />
           </div>
           <h1 className="text-2xl font-bold mb-2">Check Your Email</h1>
           <p className="text-muted-foreground mb-6">
@@ -68,7 +68,7 @@ export default function SupervisorSignInPage() {
             Didn't receive it?{" "}
             <button
               onClick={() => setIsEmailSent(false)}
-              className="text-purple-500 hover:underline"
+              className="text-primary hover:underline"
             >
               Try again
             </button>
@@ -82,8 +82,8 @@ export default function SupervisorSignInPage() {
     <div className="w-full max-w-md">
       <div className="card-brutal">
         <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-purple-500/20 flex items-center justify-center mx-auto mb-6">
-            <Scale className="w-8 h-8 text-purple-500" />
+          <div className="w-16 h-16 bg-primary/20 flex items-center justify-center mx-auto mb-6">
+            <Scale className="w-8 h-8 text-primary" />
           </div>
           <h1 className="text-2xl font-bold mb-2">Supervisor Portal</h1>
           <p className="text-muted-foreground">
@@ -115,7 +115,7 @@ export default function SupervisorSignInPage() {
           <button
             type="submit"
             disabled={isLoading || !email}
-            className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-purple-500 text-white font-semibold border-2 border-purple-600 shadow-[4px_4px_0px_0px_rgba(88,28,135,1)] hover:shadow-[2px_2px_0px_0px_rgba(88,28,135,1)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-primary text-white font-semibold border-2 border-primary/80 shadow-[4px_4px_0px_0px_rgba(0,0,0,0.3)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,0.3)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isLoading ? (
               <>

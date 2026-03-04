@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Loader2, Shield, Key, Scale } from "lucide-react";
+import { Loader2, Shield, Key } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { trpc } from "@/lib/trpc";
@@ -16,7 +16,7 @@ export default function SupervisorVerifyPage() {
     trpc.supervisorTwoFactor.getStatus.useQuery();
 
   const setupMutation = trpc.supervisorTwoFactor.setup.useMutation({
-    onError: (err) => setError(err.message),
+    onError: (err: { message: string }) => setError(err.message),
   });
 
   const verifyMutation = trpc.supervisorTwoFactor.verify.useMutation({
@@ -30,7 +30,7 @@ export default function SupervisorVerifyPage() {
         router.push("/supervise");
       });
     },
-    onError: (err) => setError(err.message),
+    onError: (err: { message: string }) => setError(err.message),
   });
 
   useEffect(() => {
@@ -57,7 +57,7 @@ export default function SupervisorVerifyPage() {
     return (
       <div className="w-full max-w-md">
         <div className="card-brutal text-center py-12">
-          <Loader2 className="w-8 h-8 animate-spin mx-auto text-purple-500" />
+          <Loader2 className="w-8 h-8 animate-spin mx-auto text-primary" />
           <p className="mt-4 text-muted-foreground">Loading...</p>
         </div>
       </div>
@@ -70,12 +70,8 @@ export default function SupervisorVerifyPage() {
       <div className="w-full max-w-md">
         <div className="card-brutal">
           <div className="text-center mb-8">
-            <div className="w-16 h-16 bg-purple-500/20 flex items-center justify-center mx-auto mb-6">
-              <Shield className="w-8 h-8 text-purple-500" />
-            </div>
-            <div className="flex items-center justify-center gap-2 mb-4">
-              <Scale className="w-4 h-4 text-purple-500" />
-              <span className="text-purple-500 text-sm font-medium">Supervisor Portal</span>
+            <div className="w-16 h-16 bg-primary/20 flex items-center justify-center mx-auto mb-6">
+              <Shield className="w-8 h-8 text-primary" />
             </div>
             <h1 className="text-2xl font-bold mb-2">Setup Two-Factor Auth</h1>
             <p className="text-muted-foreground">
@@ -85,7 +81,7 @@ export default function SupervisorVerifyPage() {
 
           {setupMutation.isPending && (
             <div className="flex justify-center py-8">
-              <Loader2 className="w-8 h-8 animate-spin text-purple-500" />
+              <Loader2 className="w-8 h-8 animate-spin text-primary" />
             </div>
           )}
 
@@ -137,7 +133,7 @@ export default function SupervisorVerifyPage() {
                 <button
                   type="submit"
                   disabled={verifyMutation.isPending || code.length !== 6}
-                  className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-purple-500 text-white font-semibold border-2 border-purple-600 shadow-[4px_4px_0px_0px_rgba(88,28,135,1)] hover:shadow-[2px_2px_0px_0px_rgba(88,28,135,1)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all disabled:opacity-50"
+                  className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-primary text-white font-semibold border-2 border-primary/80 shadow-[4px_4px_0px_0px_rgba(0,0,0,0.3)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,0.3)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all disabled:opacity-50"
                 >
                   {verifyMutation.isPending ? (
                     <>
@@ -164,7 +160,7 @@ export default function SupervisorVerifyPage() {
     return (
       <div className="w-full max-w-md">
         <div className="card-brutal text-center py-12">
-          <Loader2 className="w-8 h-8 animate-spin mx-auto text-purple-500" />
+          <Loader2 className="w-8 h-8 animate-spin mx-auto text-primary" />
           <p className="mt-4 text-muted-foreground">Redirecting to sign in...</p>
         </div>
       </div>
@@ -176,12 +172,8 @@ export default function SupervisorVerifyPage() {
     <div className="w-full max-w-md">
       <div className="card-brutal">
         <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-purple-500/20 flex items-center justify-center mx-auto mb-6">
-            <Shield className="w-8 h-8 text-purple-500" />
-          </div>
-          <div className="flex items-center justify-center gap-2 mb-4">
-            <Scale className="w-4 h-4 text-purple-500" />
-            <span className="text-purple-500 text-sm font-medium">Supervisor Portal</span>
+          <div className="w-16 h-16 bg-primary/20 flex items-center justify-center mx-auto mb-6">
+            <Shield className="w-8 h-8 text-primary" />
           </div>
           <h1 className="text-2xl font-bold mb-2">Supervisor Verification</h1>
           <p className="text-muted-foreground">
@@ -217,7 +209,7 @@ export default function SupervisorVerifyPage() {
           <button
             type="submit"
             disabled={verifyMutation.isPending || code.length !== 6}
-            className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-purple-500 text-white font-semibold border-2 border-purple-600 shadow-[4px_4px_0px_0px_rgba(88,28,135,1)] hover:shadow-[2px_2px_0px_0px_rgba(88,28,135,1)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all disabled:opacity-50"
+            className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-primary text-white font-semibold border-2 border-primary/80 shadow-[4px_4px_0px_0px_rgba(0,0,0,0.3)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,0.3)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all disabled:opacity-50"
           >
             {verifyMutation.isPending ? (
               <>

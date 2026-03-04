@@ -34,7 +34,7 @@ export const supervisorAuthOptions: NextAuthOptions = {
         const emailStyles = getEmailStyles();
         try {
           await resend!.emails.send({
-            from: process.env.EMAIL_FROM || "onboarding@resend.dev",
+            from: `DEALROOM <${process.env.EMAIL_FROM || "noreply@todo.law"}>`,
             to: email,
             subject: `Sign in to DEALROOM - Supervisor Portal`,
             html: `

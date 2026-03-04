@@ -29,7 +29,7 @@ export const todo: BrandConfig = {
   // Portal-specific accent colors
   portalColors: {
     admin: "#ffffff",
-    supervisor: "#9333ea",
+    supervisor: "#53aecc",
   },
 
   // Theme overrides

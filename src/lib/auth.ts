@@ -26,7 +26,7 @@ if (features.magicLinkAuth) {
       sendVerificationRequest: async ({ identifier: email, url }) => {
         try {
           await getResend().emails.send({
-            from: process.env.EMAIL_FROM || "onboarding@resend.dev",
+            from: `DEALROOM <${process.env.EMAIL_FROM || "noreply@todo.law"}>`,
             to: email,
             subject: `Sign in to DEALROOM`,
             html: `
