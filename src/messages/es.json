@@ -1152,19 +1152,17 @@
   },
   "onboarding": {
     "chooseRole": "¿Cómo vas a usar Dealroom?",
-    "businessOwnerTitle": "Empresario/a / Fundador/a",
-    "businessOwnerDescription": "Negocia contratos con orientación clara y en lenguaje sencillo.",
+    "businessOwnerTitle": "Modo Startups",
     "businessOwnerFeature1": "Explicaciones de cláusulas en lenguaje sencillo con pros y contras",
     "businessOwnerFeature2": "Asistente de negociación paso a paso",
     "businessOwnerFeature3": "Invita a un abogado/a cuando lo necesites",
-    "lawyerTitle": "Abogado/a",
-    "lawyerDescription": "Revisa contratos y guía a tus clientes en sus acuerdos.",
-    "lawyerFeature1": "Texto legal completo y detalle jurisdiccional",
-    "lawyerFeature2": "Revisa contratos y envía recomendaciones a tus clientes",
+    "lawyerTitle": "Modo Abogado",
+    "lawyerFeature1": "Revisa detalles técnicos",
+    "lawyerFeature2": "Mantén un catálogo propio",
     "lawyerFeature3": "Flujo de invitación a clientes",
     "continueAs": "Continuar como {role}",
     "switchRole": "Cambiar rol",
-    "roleBusiness": "Empresario/a",
+    "roleBusiness": "Startup",
     "roleLawyer": "Abogado/a"
   }
 }
