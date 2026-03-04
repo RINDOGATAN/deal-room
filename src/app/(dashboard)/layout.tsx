@@ -164,6 +164,7 @@ export default function DashboardLayout({
             {/* Mobile hamburger */}
             <button
               onClick={() => setMobileMenuOpen(true)}
+              aria-label="Open menu"
               className="md:hidden p-2 text-muted-foreground hover:text-foreground"
             >
               <Menu className="w-5 h-5" />
@@ -268,7 +269,7 @@ export default function DashboardLayout({
                   href={brand.links.website}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-primary hover:underline"
+                  className="text-primary underline decoration-primary/30 hover:decoration-primary"
                 >
                   {chunks}
                 </a>
