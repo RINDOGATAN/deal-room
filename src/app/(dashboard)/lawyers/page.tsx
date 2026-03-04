@@ -48,6 +48,7 @@ export default function LawyerDirectoryPage() {
         <select
           value={filterJurisdiction}
           onChange={(e) => setFilterJurisdiction(e.target.value as GoverningLaw | "")}
+          aria-label={t("allJurisdictions")}
           className="px-3 py-2 text-sm border border-border rounded-full bg-background text-foreground"
         >
           <option value="">{t("allJurisdictions")}</option>
@@ -58,6 +59,7 @@ export default function LawyerDirectoryPage() {
         <select
           value={filterLanguage}
           onChange={(e) => setFilterLanguage(e.target.value)}
+          aria-label={t("allLanguages")}
           className="px-3 py-2 text-sm border border-border rounded-full bg-background text-foreground"
         >
           <option value="">{t("allLanguages")}</option>
