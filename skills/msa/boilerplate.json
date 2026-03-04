@@ -38,33 +38,33 @@
   ],
   "standardClauses": [
     {
-      "title": "Scope of Services and SOW Framework",
+      "title": "Scope of services and SOW framework",
       "text": "The Provider shall perform the Services as described in one or more Statements of Work executed by both parties. Each SOW shall reference this Agreement and shall include, at a minimum:\n\n(a) a description of the Services to be performed;\n\n(b) the Deliverables, milestones, and acceptance criteria (if applicable);\n\n(c) the timeline or schedule for performance;\n\n(d) the fees and payment terms applicable to the engagement;\n\n(e) any additional terms specific to the engagement.\n\nIn the event of a conflict between this Agreement and any SOW, this Agreement shall prevail unless the SOW expressly states otherwise with specific reference to the provision being modified."
     },
     {
-      "title": "Performance Standards",
+      "title": "Performance standards",
       "text": "The Provider shall perform the Services:\n\n(a) in a professional and workmanlike manner, consistent with generally accepted industry standards and practices;\n\n(b) in accordance with all applicable laws and regulations;\n\n(c) using personnel who are suitably qualified and experienced to perform the Services;\n\n(d) in accordance with the timelines and specifications set forth in the applicable SOW.\n\nIf the Client reasonably determines that any Deliverable does not conform to the specifications in the SOW, the Client shall notify the Provider in writing within fifteen (15) business days of delivery, and the Provider shall re-perform the non-conforming Services or correct the Deliverable at no additional cost."
     },
     {
-      "title": "Client Responsibilities",
+      "title": "Client responsibilities",
       "text": "The Client shall:\n\n(a) provide the Provider with timely access to such information, materials, facilities, and personnel as are reasonably necessary for the Provider to perform the Services;\n\n(b) designate a primary contact person to liaise with the Provider regarding the Services;\n\n(c) review and provide feedback on Deliverables within the timeframes specified in the applicable SOW;\n\n(d) comply with its obligations as set forth in this Agreement and each SOW.\n\nThe Provider shall not be liable for any delay or deficiency in performing the Services to the extent such delay or deficiency is caused by the Client's failure to fulfill its responsibilities under this section."
     },
     {
-      "title": "Representations and Warranties",
+      "title": "Representations and warranties",
       "text": "Each party represents and warrants that:\n\n(a) it has the legal power and authority to enter into this Agreement and to perform its obligations hereunder;\n\n(b) the execution and performance of this Agreement does not conflict with any other agreement to which it is a party;\n\n(c) it shall comply with all applicable laws and regulations in performing its obligations under this Agreement.\n\nThe Provider additionally represents and warrants that:\n\n(d) the Services will be performed in a professional manner consistent with industry standards;\n\n(e) the Deliverables will conform to the specifications set forth in the applicable SOW;\n\n(f) to the Provider's knowledge, the Deliverables will not infringe the intellectual property rights of any third party."
     },
     {
-      "title": "Independent Contractor",
+      "title": "Independent contractor",
       "text": "The Provider is an independent contractor and nothing in this Agreement shall be construed to create a partnership, joint venture, agency, or employment relationship between the parties. The Provider shall be solely responsible for:\n\n(a) determining the manner and means by which the Services are performed, subject to the specifications in each SOW;\n\n(b) employing, compensating, and supervising its personnel;\n\n(c) withholding and remitting all applicable taxes, social security contributions, and other statutory deductions for its personnel;\n\n(d) maintaining adequate workers' compensation and employer's liability insurance for its personnel.\n\nNeither party shall have the authority to bind or commit the other party to any obligation without the other party's prior written consent."
     },
     {
-      "title": "Force Majeure",
+      "title": "Force majeure",
       "text": "Neither party shall be liable for any failure or delay in performing its obligations under this Agreement to the extent that such failure or delay results from circumstances beyond the party's reasonable control, including acts of God, natural disasters, war, terrorism, riots, embargoes, labor disputes, governmental actions, power failures, internet or telecommunications failures, or pandemics (each a \"Force Majeure Event\").\n\nThe affected party shall:\n\n(a) promptly notify the other party in writing of the Force Majeure Event and its expected duration;\n\n(b) use commercially reasonable efforts to mitigate the impact of the Force Majeure Event;\n\n(c) resume performance as soon as reasonably practicable after the Force Majeure Event ceases.\n\nIf a Force Majeure Event continues for more than sixty (60) consecutive days, either party may terminate the affected SOW upon written notice without liability."
     }
   ],
   "generalProvisions": [
     {
-      "title": "Entire Agreement",
+      "title": "Entire agreement",
       "text": "This Agreement, together with all SOWs and exhibits, constitutes the entire agreement between the parties with respect to the subject matter hereof and supersedes all prior negotiations, representations, warranties, commitments, offers, and agreements, whether written or oral."
     },
     {
@@ -98,15 +98,15 @@
   ],
   "jurisdictionProvisions": {
     "CALIFORNIA": {
-      "title": "California-Specific Provisions",
+      "title": "California-specific provisions",
       "text": "(a) Independent Contractor Compliance: The parties acknowledge the requirements of California Assembly Bill 5 (AB 5) and the applicable provisions of the California Labor Code. The Provider represents and warrants that the engagement under this Agreement satisfies the applicable test for independent contractor status under California law.\n\n(b) Jury Waiver: EACH PARTY HEREBY IRREVOCABLY WAIVES, TO THE FULLEST EXTENT PERMITTED BY APPLICABLE LAW, ALL RIGHTS TO TRIAL BY JURY IN ANY ACTION, PROCEEDING, OR COUNTERCLAIM ARISING OUT OF OR RELATING TO THIS AGREEMENT.\n\n(c) CCPA/CPRA: To the extent that either party processes personal information (as defined under Cal. Civ. Code §1798.100 et seq.) in the course of performing or receiving the Services, such party shall comply with all applicable requirements of the California Consumer Privacy Act and the California Privacy Rights Act."
     },
     "ENGLAND_WALES": {
-      "title": "England & Wales-Specific Provisions",
+      "title": "England & Wales-specific provisions",
       "text": "(a) Third Party Rights: No person who is not a party to this Agreement shall have any rights under the Contracts (Rights of Third Parties) Act 1999 to enforce any term of this Agreement.\n\n(b) Non-Excludable Liability: Nothing in this Agreement shall exclude or limit liability for: (i) fraud or fraudulent misrepresentation; (ii) death or personal injury caused by negligence; or (iii) any other liability that cannot be excluded or limited under applicable law.\n\n(c) IR35: Where applicable, the parties shall comply with the off-payroll working rules (IR35) under the Income Tax (Earnings and Pensions) Act 2003, as amended. The Client shall be responsible for making any status determination statement required under Chapter 10 of Part 2 of that Act.\n\n(d) UK GDPR: To the extent that any personal data (as defined under the UK General Data Protection Regulation and the Data Protection Act 2018) is processed in connection with the Services, both parties shall comply with all applicable data protection requirements."
     },
     "SPAIN": {
-      "title": "Spain-Specific Provisions (Disposiciones Específicas para España)",
+      "title": "Spain-specific provisions (Disposiciones específicas para España)",
       "text": "(a) Applicable Law: This Agreement shall be governed by and construed in accordance with Spanish law, including the Código Civil and the Código de Comercio, as applicable.\n\n(b) Good Faith: This Agreement shall be interpreted and performed in accordance with the principle of good faith (buena fe) as set forth in Articles 7 and 1258 of the Código Civil.\n\n(c) Interpretation: In the event of any ambiguity, this Agreement shall be interpreted in accordance with the rules of interpretation set forth in Articles 1281 through 1289 of the Código Civil.\n\n(d) Independent Contractor: The Provider confirms that the engagement under this Agreement is governed by the Estatuto del Trabajo Autónomo (Ley 20/2007) or applicable commercial law, and does not constitute an employment relationship (relación laboral) under the Estatuto de los Trabajadores.\n\n(e) GDPR/LOPDGDD: To the extent that any personal data is processed in connection with the Services, both parties shall comply with the EU General Data Protection Regulation (Regulation (EU) 2016/679) and the Ley Orgánica 3/2018 de Protección de Datos Personales y garantía de los derechos digitales (LOPDGDD)."
     }
   },

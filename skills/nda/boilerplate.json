@@ -26,29 +26,29 @@
   ],
   "standardClauses": [
     {
-      "title": "Excluded Information",
+      "title": "Excluded information",
       "text": "Confidential Information does not include information that:\n\n(a) is or becomes generally available to the public other than as a result of a breach of this Agreement by the Receiving Party or its Representatives;\n\n(b) was already known to the Receiving Party, without restriction on disclosure, at the time of disclosure by the Disclosing Party, as evidenced by the Receiving Party's written records;\n\n(c) is independently developed by the Receiving Party without use of or reference to the Disclosing Party's Confidential Information, as evidenced by the Receiving Party's written records;\n\n(d) becomes available to the Receiving Party on a non-confidential basis from a source other than the Disclosing Party, provided that such source is not bound by a confidentiality obligation to the Disclosing Party.\n\nThe burden of proving that any of the foregoing exceptions applies rests with the Receiving Party."
     },
     {
-      "title": "Mutual Confidentiality Obligations",
+      "title": "Mutual confidentiality obligations",
       "text": "The Receiving Party shall:\n\n(a) hold the Confidential Information in strict confidence and not disclose it to any third party except to its Representatives who have a need to know for the Purpose and who are bound by confidentiality obligations no less restrictive than those contained in this Agreement;\n\n(b) use the Confidential Information solely for the Purpose and not for any other purpose whatsoever;\n\n(c) exercise at least the same degree of care to protect the Confidential Information as it uses to protect its own confidential information of a similar nature, but in no event less than reasonable care;\n\n(d) be responsible for any breach of this Agreement by its Representatives."
     },
     {
-      "title": "No License or Transfer of Rights",
+      "title": "No license or transfer of rights",
       "text": "Nothing in this Agreement grants the Receiving Party any right, title, or interest in or to the Confidential Information, or any license under any intellectual property rights of the Disclosing Party. All Confidential Information remains the sole and exclusive property of the Disclosing Party."
     },
     {
-      "title": "No Warranty on Information",
+      "title": "No warranty on information",
       "text": "ALL CONFIDENTIAL INFORMATION IS PROVIDED \"AS IS.\" THE DISCLOSING PARTY MAKES NO WARRANTIES, EXPRESS OR IMPLIED, REGARDING THE ACCURACY, COMPLETENESS, OR FITNESS FOR A PARTICULAR PURPOSE OF ANY CONFIDENTIAL INFORMATION. The Disclosing Party shall have no liability for any errors or omissions in the Confidential Information, or for any decisions made by the Receiving Party in reliance upon it."
     },
     {
-      "title": "Compelled Disclosure",
+      "title": "Compelled disclosure",
       "text": "If the Receiving Party is required by law, regulation, or legal process (including a subpoena, court order, or regulatory demand) to disclose any Confidential Information, the Receiving Party shall:\n\n(a) to the extent legally permitted, promptly notify the Disclosing Party in writing prior to such disclosure so that the Disclosing Party may seek a protective order or other appropriate remedy;\n\n(b) reasonably cooperate with the Disclosing Party (at the Disclosing Party's expense) in any efforts to prevent or limit such disclosure;\n\n(c) disclose only that portion of the Confidential Information that is legally required to be disclosed."
     }
   ],
   "generalProvisions": [
     {
-      "title": "Entire Agreement",
+      "title": "Entire agreement",
       "text": "This Agreement constitutes the entire agreement between the parties with respect to the subject matter hereof and supersedes all prior negotiations, representations, warranties, commitments, offers, and agreements, whether written or oral."
     },
     {
@@ -74,15 +74,15 @@
   ],
   "jurisdictionProvisions": {
     "CALIFORNIA": {
-      "title": "California-Specific Provisions",
+      "title": "California-specific provisions",
       "text": "(a) Trade Secrets: To the extent Confidential Information constitutes trade secrets under the California Uniform Trade Secrets Act (Cal. Civ. Code §3426 et seq.) (\"CUTSA\"), the protections of CUTSA shall apply in addition to the protections of this Agreement.\n\n(b) Injunctive Relief: Each party acknowledges that a breach of this Agreement may cause irreparable harm for which monetary damages would be an inadequate remedy. Accordingly, the Disclosing Party shall be entitled to seek injunctive or other equitable relief without the requirement of posting a bond, in addition to all other remedies available at law or in equity.\n\n(c) Jury Waiver: EACH PARTY HEREBY IRREVOCABLY WAIVES, TO THE FULLEST EXTENT PERMITTED BY APPLICABLE LAW, ALL RIGHTS TO TRIAL BY JURY IN ANY ACTION, PROCEEDING, OR COUNTERCLAIM ARISING OUT OF OR RELATING TO THIS AGREEMENT.\n\n(d) CCPA/CPRA: To the extent that any Confidential Information includes personal information as defined under the California Consumer Privacy Act (Cal. Civ. Code §1798.100 et seq.) and the California Privacy Rights Act, the Receiving Party shall comply with all applicable requirements thereunder."
     },
     "ENGLAND_WALES": {
-      "title": "England & Wales-Specific Provisions",
+      "title": "England & Wales-specific provisions",
       "text": "(a) Third Party Rights: No person who is not a party to this Agreement shall have any rights under the Contracts (Rights of Third Parties) Act 1999 to enforce any term of this Agreement.\n\n(b) Non-Excludable Liability: Nothing in this Agreement shall exclude or limit liability for: (i) fraud or fraudulent misrepresentation; (ii) death or personal injury caused by negligence; or (iii) any other liability that cannot be excluded or limited under applicable law.\n\n(c) Equitable Relief: Each party acknowledges that damages alone may not be an adequate remedy for breach of this Agreement, and that the Disclosing Party shall be entitled to seek the remedies of injunction, specific performance, and other equitable relief for any threatened or actual breach.\n\n(d) UK GDPR: To the extent that any Confidential Information includes personal data as defined under the UK General Data Protection Regulation and the Data Protection Act 2018, the Receiving Party shall comply with all applicable requirements thereunder."
     },
     "SPAIN": {
-      "title": "Spain-Specific Provisions (Disposiciones Específicas para España)",
+      "title": "Spain-specific provisions (Disposiciones específicas para España)",
       "text": "(a) Ley de Secretos Empresariales: To the extent Confidential Information constitutes trade secrets (secretos empresariales) under Ley 1/2019, de 20 de febrero, de Secretos Empresariales, the protections of that law shall apply in addition to the protections of this Agreement.\n\n(b) Good Faith: This Agreement shall be interpreted and performed in accordance with the principle of good faith (buena fe) as set forth in Articles 7 and 1258 of the Código Civil.\n\n(c) Interpretation: In the event of any ambiguity, this Agreement shall be interpreted in accordance with the rules of interpretation set forth in Articles 1281 through 1289 of the Código Civil.\n\n(d) GDPR/LOPDGDD: To the extent that any Confidential Information includes personal data as defined under the EU General Data Protection Regulation (Regulation (EU) 2016/679) and the Ley Orgánica 3/2018 de Protección de Datos Personales y garantía de los derechos digitales (LOPDGDD), the Receiving Party shall comply with all applicable requirements thereunder."
     }
   },

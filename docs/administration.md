@@ -851,7 +851,7 @@ Contract legal text is jurisdiction-native — Spanish law requires Spanish lega
 ```json
 {
   "contractType": "DPA",
-  "displayName": { "en": "Data Processing Agreement", "es": "Acuerdo de Tratamiento de Datos" },
+  "displayName": { "en": "Data Processing Agreement", "es": "Acuerdo de encargo de tratamiento de datos" },
   "description": { "en": "...", "es": "..." },
   "version": "1.0",
   "clauseCount": 12,

@@ -3,7 +3,7 @@
   "category": { "en": "Privacy", "es": "Privacidad" },
   "displayName": {
     "en": "Data Processing Agreement",
-    "es": "Acuerdo de Tratamiento de Datos"
+    "es": "Acuerdo de encargo de tratamiento de datos"
   },
   "description": {
     "en": "Controller-to-Processor agreement for SaaS companies processing customer personal data, compliant with GDPR, UK GDPR, and CCPA/CPRA",
