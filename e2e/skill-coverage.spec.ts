@@ -84,7 +84,7 @@ test.describe("Skill Coverage — All Free Skills", () => {
         jurisdiction: combo.jurisdiction,
         language: combo.language,
         dealName: `Skill ${combo.tag} ${TIMESTAMP}`,
-        parameters: combo.parameters
+        parameters: "parameters" in combo
           ? { ...combo.parameters }
           : undefined,
       });
