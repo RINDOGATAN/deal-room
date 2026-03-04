@@ -5,6 +5,7 @@ export interface DealOptions {
   jurisdiction: string; // button text, e.g. "California, USA"
   language: string; // h3 nativeLabel, e.g. "English" or "Español"
   dealName: string;
+  parameters?: Record<string, string>; // keyed by param.id → value (e.g. "pre-money-valuation" → "2000000")
 }
 
 /**
@@ -39,6 +40,15 @@ export async function createDealWithOptions(
   await expect(dealNameInput).toBeVisible();
   await dealNameInput.fill(options.dealName);
 
+  // Fill optional parameters (Seed Investment etc.)
+  if (options.parameters) {
+    for (const [paramId, value] of Object.entries(options.parameters)) {
+      const input = page.locator(`#param-${paramId}`);
+      await expect(input).toBeVisible({ timeout: 5_000 });
+      await input.fill(value);
+    }
+  }
+
   // Submit
   const continueButton = page.locator("button", { hasText: /continue|continuar/i });
   await expect(continueButton).toBeEnabled();
@@ -59,10 +69,10 @@ export async function createDealWithOptions(
  */
 export async function getClauseCount(page: Page): Promise<number> {
   const headerText = await page
-    .locator("p", { hasText: /Clause \d+ of \d+/i })
+    .locator("p", { hasText: /(?:Clause|Cl[aá]usula) \d+ (?:of|de) \d+/i })
     .first()
     .textContent();
-  const match = headerText?.match(/of (\d+)/);
+  const match = headerText?.match(/(?:of|de) (\d+)/);
   if (!match) throw new Error(`Could not extract clause count from: ${headerText}`);
   return parseInt(match[1], 10);
 }
