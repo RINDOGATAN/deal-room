@@ -17,7 +17,19 @@
     "pending": "Pending",
     "agreed": "Agreed",
     "total": "Total",
-    "change": "Change"
+    "change": "Change",
+    "feedback": "Feedback",
+    "openMenu": "Open menu",
+    "jurisdictionCalifornia": "California, USA",
+    "jurisdictionEnglandWales": "England & Wales, UK",
+    "jurisdictionSpain": "Spain, EU",
+    "jurisdictionCaliforniaDescription": "U.S. law framework",
+    "jurisdictionEnglandWalesDescription": "English common law",
+    "jurisdictionSpainDescription": "Spanish civil law",
+    "languageEnglish": "English",
+    "languageSpanish": "Español",
+    "contractInEnglish": "Contract in English",
+    "contractInSpanish": "Contract in Spanish"
   },
   "nav": {
     "myDeals": "My Deals",

@@ -14,10 +14,10 @@ import {
 
 type GoverningLaw = "CALIFORNIA" | "ENGLAND_WALES" | "SPAIN";
 
-const jurisdictionLabels: Record<string, string> = {
-  CALIFORNIA: "California, USA",
-  ENGLAND_WALES: "England & Wales, UK",
-  SPAIN: "Spain, EU",
+const jurisdictionKeys: Record<string, string> = {
+  CALIFORNIA: "jurisdictionCalifornia",
+  ENGLAND_WALES: "jurisdictionEnglandWales",
+  SPAIN: "jurisdictionSpain",
 };
 
 interface Props {
@@ -106,7 +106,7 @@ export function RequestRecommendationDialog({
               <option value="">{t("selectJurisdiction")}</option>
               {lawyerJurisdictions.map((j) => (
                 <option key={j} value={j}>
-                  {jurisdictionLabels[j] || j}
+                  {tCommon(jurisdictionKeys[j] || j)}
                 </option>
               ))}
             </select>

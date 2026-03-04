@@ -8,15 +8,15 @@ import { RequestRecommendationDialog } from "@/components/RequestRecommendationD
 
 type GoverningLaw = "CALIFORNIA" | "ENGLAND_WALES" | "SPAIN";
 
-const jurisdictionLabels: Record<string, string> = {
-  CALIFORNIA: "California, USA",
-  ENGLAND_WALES: "England & Wales",
-  SPAIN: "Spain, EU",
+const jurisdictionKeys: Record<string, string> = {
+  CALIFORNIA: "jurisdictionCalifornia",
+  ENGLAND_WALES: "jurisdictionEnglandWales",
+  SPAIN: "jurisdictionSpain",
 };
 
-const languageLabels: Record<string, string> = {
-  en: "English",
-  es: "Español",
+const languageKeys: Record<string, string> = {
+  en: "languageEnglish",
+  es: "languageSpanish",
 };
 
 export default function LawyerDirectoryPage() {
@@ -52,9 +52,9 @@ export default function LawyerDirectoryPage() {
           className="px-3 py-2 text-sm border border-border rounded-full bg-background text-foreground"
         >
           <option value="">{t("allJurisdictions")}</option>
-          <option value="CALIFORNIA">{jurisdictionLabels.CALIFORNIA}</option>
-          <option value="ENGLAND_WALES">{jurisdictionLabels.ENGLAND_WALES}</option>
-          <option value="SPAIN">{jurisdictionLabels.SPAIN}</option>
+          <option value="CALIFORNIA">{tCommon("jurisdictionCalifornia")}</option>
+          <option value="ENGLAND_WALES">{tCommon("jurisdictionEnglandWales")}</option>
+          <option value="SPAIN">{tCommon("jurisdictionSpain")}</option>
         </select>
         <select
           value={filterLanguage}
@@ -63,8 +63,8 @@ export default function LawyerDirectoryPage() {
           className="px-3 py-2 text-sm border border-border rounded-full bg-background text-foreground"
         >
           <option value="">{t("allLanguages")}</option>
-          <option value="en">English</option>
-          <option value="es">Español</option>
+          <option value="en">{tCommon("languageEnglish")}</option>
+          <option value="es">{tCommon("languageSpanish")}</option>
         </select>
       </div>
 
@@ -115,13 +115,13 @@ export default function LawyerDirectoryPage() {
                 {lawyer.jurisdictions.map((j) => (
                   <span key={j} className="inline-flex items-center gap-1 text-xs px-2 py-0.5 bg-secondary rounded-full">
                     <MapPin className="w-3 h-3" />
-                    {jurisdictionLabels[j] || j}
+                    {tCommon(jurisdictionKeys[j] || j)}
                   </span>
                 ))}
                 {lawyer.languages.map((l) => (
                   <span key={l} className="inline-flex items-center gap-1 text-xs px-2 py-0.5 bg-secondary rounded-full">
                     <Languages className="w-3 h-3" />
-                    {languageLabels[l] || l}
+                    {tCommon(languageKeys[l] || l)}
                   </span>
                 ))}
               </div>

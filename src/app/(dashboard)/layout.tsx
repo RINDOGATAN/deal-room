@@ -118,7 +118,7 @@ export default function DashboardLayout({
               <button
                 onClick={() => setFeedbackOpen(true)}
                 className="p-2 text-muted-foreground hover:text-foreground rounded-full hover:bg-secondary transition-colors"
-                title="Feedback"
+                title={tCommon("feedback")}
               >
                 <MessageSquareWarning className="w-4 h-4" />
               </button>
@@ -141,7 +141,7 @@ export default function DashboardLayout({
             {/* Mobile hamburger */}
             <button
               onClick={() => setMobileMenuOpen(true)}
-              aria-label="Open menu"
+              aria-label={tCommon("openMenu")}
               className="md:hidden p-2 text-muted-foreground hover:text-foreground"
             >
               <Menu className="w-5 h-5" />
@@ -200,7 +200,7 @@ export default function DashboardLayout({
                 className="flex items-center gap-2 px-4 py-3 text-sm text-muted-foreground hover:text-foreground rounded-xl hover:bg-secondary transition-colors w-full"
               >
                 <MessageSquareWarning className="w-4 h-4" />
-                Feedback
+                {tCommon("feedback")}
               </button>
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <User className="w-4 h-4" />
