@@ -72,20 +72,17 @@ export function OnboardingModal({ open, onComplete }: OnboardingModalProps) {
             <div className="w-10 h-10 bg-primary/20 rounded-xl flex items-center justify-center">
               <Briefcase className="w-5 h-5 text-primary" />
             </div>
-            <div>
-              <p className="font-medium text-foreground">{t("businessOwnerTitle")}</p>
-              <p className="text-sm text-muted-foreground mt-1">{t("businessOwnerDescription")}</p>
-            </div>
+            <p className="font-medium text-foreground">{t("businessOwnerTitle")}</p>
             <ul className="space-y-1.5 mt-1">
-              <li className="text-xs text-muted-foreground flex items-start gap-1.5">
+              <li className="text-sm text-muted-foreground flex items-start gap-1.5">
                 <span className="text-primary mt-0.5">&#x2022;</span>
                 {t("businessOwnerFeature1")}
               </li>
-              <li className="text-xs text-muted-foreground flex items-start gap-1.5">
+              <li className="text-sm text-muted-foreground flex items-start gap-1.5">
                 <span className="text-primary mt-0.5">&#x2022;</span>
                 {t("businessOwnerFeature2")}
               </li>
-              <li className="text-xs text-muted-foreground flex items-start gap-1.5">
+              <li className="text-sm text-muted-foreground flex items-start gap-1.5">
                 <span className="text-primary mt-0.5">&#x2022;</span>
                 {t("businessOwnerFeature3")}
               </li>
@@ -109,20 +106,17 @@ export function OnboardingModal({ open, onComplete }: OnboardingModalProps) {
             <div className="w-10 h-10 bg-primary/20 rounded-xl flex items-center justify-center">
               <Scale className="w-5 h-5 text-primary" />
             </div>
-            <div>
-              <p className="font-medium text-foreground">{t("lawyerTitle")}</p>
-              <p className="text-sm text-muted-foreground mt-1">{t("lawyerDescription")}</p>
-            </div>
+            <p className="font-medium text-foreground">{t("lawyerTitle")}</p>
             <ul className="space-y-1.5 mt-1">
-              <li className="text-xs text-muted-foreground flex items-start gap-1.5">
+              <li className="text-sm text-muted-foreground flex items-start gap-1.5">
                 <span className="text-primary mt-0.5">&#x2022;</span>
                 {t("lawyerFeature1")}
               </li>
-              <li className="text-xs text-muted-foreground flex items-start gap-1.5">
+              <li className="text-sm text-muted-foreground flex items-start gap-1.5">
                 <span className="text-primary mt-0.5">&#x2022;</span>
                 {t("lawyerFeature2")}
               </li>
-              <li className="text-xs text-muted-foreground flex items-start gap-1.5">
+              <li className="text-sm text-muted-foreground flex items-start gap-1.5">
                 <span className="text-primary mt-0.5">&#x2022;</span>
                 {t("lawyerFeature3")}
               </li>
