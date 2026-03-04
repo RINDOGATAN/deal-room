@@ -41,10 +41,11 @@ export default function SupervisorVerifyPage() {
 
   // Start setup if supervisor hasn't set up 2FA yet
   useEffect(() => {
-    if (twoFactorStatus?.isSupervisor && !twoFactorStatus.isSetup && !setupMutation.data) {
+    if (twoFactorStatus?.isSupervisor && !twoFactorStatus.isSetup && !setupMutation.data && !setupMutation.isPending) {
       setupMutation.mutate();
     }
-  }, [twoFactorStatus, setupMutation]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [twoFactorStatus]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
