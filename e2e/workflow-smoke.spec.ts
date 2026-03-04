@@ -160,13 +160,13 @@ test.describe("Workflow Smoke Tests", () => {
       // DPA should show its Spanish display name
       await expect(
         page
-          .locator("h3", { hasText: "Acuerdo de Tratamiento de Datos" })
+          .locator("h3", { hasText: "Acuerdo de encargo de tratamiento de datos" })
           .first(),
       ).toBeVisible({ timeout: 10_000 });
 
       // Create the deal in Spanish
       const dealId = await createDealWithOptions(page, {
-        contractType: "Acuerdo de Tratamiento de Datos",
+        contractType: "Acuerdo de encargo de tratamiento de datos",
         jurisdiction: "California, USA",
         language: "Español",
         dealName: `Smoke DPA ES-Locale ${TIMESTAMP}`,

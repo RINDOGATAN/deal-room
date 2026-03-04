@@ -42,37 +42,37 @@
   ],
   "standardClauses": [
     {
-      "title": "Grant of Access",
+      "title": "Grant of access",
       "text": "Subject to the terms of this Agreement and payment of all applicable Fees, the Provider grants the Customer a non-exclusive, non-transferable, non-sublicensable right during the Subscription Term to:\n\n(a) access and use the Service solely for the Customer's internal business purposes;\n\n(b) permit its Authorized Users to access and use the Service in accordance with this Agreement and the Documentation;\n\n(c) access and use the Documentation in connection with the Customer's permitted use of the Service.\n\nThe rights granted under this section are limited to the number of Authorized Users, usage volume, and Service tier specified in the applicable Order Form."
     },
     {
-      "title": "Usage Restrictions",
+      "title": "Usage restrictions",
       "text": "The Customer shall not, and shall ensure that its Authorized Users do not:\n\n(a) sublicense, sell, resell, rent, lease, transfer, assign, or distribute the Service or any rights therein to any third party;\n\n(b) modify, adapt, or create derivative works based on the Service;\n\n(c) reverse engineer, decompile, disassemble, or otherwise attempt to discover the source code, object code, or underlying algorithms of the Service;\n\n(d) use the Service to store or transmit material that is infringing, unlawful, defamatory, or otherwise tortious;\n\n(e) use the Service to store or transmit malicious code, viruses, or any harmful software;\n\n(f) interfere with or disrupt the integrity or performance of the Service or any third-party data contained therein;\n\n(g) attempt to gain unauthorized access to the Service or its related systems or networks;\n\n(h) use the Service in violation of any applicable law or regulation;\n\n(i) exceed the usage limits specified in the applicable Order Form."
     },
     {
-      "title": "Customer Responsibilities",
+      "title": "Customer responsibilities",
       "text": "The Customer shall:\n\n(a) be responsible for the accuracy, quality, and legality of all Customer Data and the means by which it was acquired;\n\n(b) use commercially reasonable efforts to prevent unauthorized access to or use of the Service, and notify the Provider promptly of any unauthorized access or use;\n\n(c) ensure that its Authorized Users comply with this Agreement and the Documentation;\n\n(d) be solely responsible for the administration of Authorized User accounts, including the creation, modification, and deactivation of user accounts;\n\n(e) maintain the security of all login credentials and authentication tokens, and not share credentials between multiple individuals."
     },
     {
-      "title": "Provider Intellectual Property",
+      "title": "Provider intellectual property",
       "text": "The Provider retains all right, title, and interest in and to the Service, the Documentation, and all Provider Materials, including all intellectual property rights therein. No rights are granted to the Customer other than as expressly set forth in this Agreement.\n\nTo the extent the Customer or any Authorized User provides suggestions, ideas, enhancement requests, feedback, or recommendations regarding the Service (\"Feedback\"), the Customer hereby grants the Provider a royalty-free, worldwide, irrevocable, perpetual license to use and incorporate such Feedback into the Service and Provider Materials without restriction or obligation."
     },
     {
-      "title": "Service Availability and Maintenance",
+      "title": "Service availability and maintenance",
       "text": "The Provider shall use commercially reasonable efforts to make the Service available in accordance with the uptime commitment specified in this Agreement.\n\n(a) Scheduled Maintenance: The Provider may perform scheduled maintenance during designated maintenance windows. The Provider shall use commercially reasonable efforts to provide at least forty-eight (48) hours' advance notice of scheduled maintenance that may affect Service availability.\n\n(b) Emergency Maintenance: The Provider may perform emergency maintenance at any time to address critical security vulnerabilities, data integrity issues, or other conditions that pose an imminent risk. The Provider shall notify the Customer as soon as reasonably practicable of any emergency maintenance.\n\n(c) Exclusions: Downtime resulting from scheduled maintenance, emergency maintenance, force majeure events, or the Customer's acts or omissions shall not be counted against the uptime commitment."
     },
     {
-      "title": "Data Protection",
+      "title": "Data protection",
       "text": "The Provider shall implement and maintain appropriate technical and organizational measures to protect Customer Data, including:\n\n(a) encryption of Customer Data in transit (TLS 1.2 or higher) and at rest (AES-256 or equivalent);\n\n(b) access controls that limit access to Customer Data to authorized personnel on a need-to-know basis;\n\n(c) regular security assessments and vulnerability testing;\n\n(d) incident response procedures.\n\nIn the event of a security breach affecting Customer Data, the Provider shall:\n\n(e) notify the Customer without undue delay and in any event within seventy-two (72) hours of becoming aware of the breach;\n\n(f) provide the Customer with sufficient information to enable the Customer to meet its obligations under applicable data protection laws;\n\n(g) take commercially reasonable steps to contain, investigate, and remediate the breach.\n\nWhere the Provider processes Personal Data on behalf of the Customer, the parties shall enter into a Data Processing Agreement that complies with applicable data protection laws."
     },
     {
-      "title": "Suspension Rights",
+      "title": "Suspension rights",
       "text": "The Provider may suspend the Customer's access to the Service, in whole or in part, immediately upon written notice if:\n\n(a) the Customer's use of the Service poses a security risk to the Service or any third party;\n\n(b) the Customer's use of the Service may adversely impact the Service or the systems or content of any other customer;\n\n(c) the Customer is in material breach of this Agreement, including non-payment of Fees beyond any applicable cure period;\n\n(d) suspension is required to comply with applicable law or a governmental request.\n\nThe Provider shall use commercially reasonable efforts to limit the scope and duration of any suspension and to notify the Customer in advance where practicable. Suspension shall not relieve the Customer of its obligation to pay Fees during the suspension period, except where the suspension is due to the Provider's breach."
     }
   ],
   "generalProvisions": [
     {
-      "title": "Entire Agreement",
+      "title": "Entire agreement",
       "text": "This Agreement, together with all Order Forms and exhibits, constitutes the entire agreement between the parties with respect to the subject matter hereof and supersedes all prior negotiations, representations, warranties, commitments, offers, and agreements, whether written or oral."
     },
     {
@@ -106,16 +106,16 @@
   ],
   "jurisdictionProvisions": {
     "CALIFORNIA": {
-      "title": "California-Specific Provisions",
+      "title": "California-specific provisions",
       "text": "(a) Auto-Renewal Disclosure: In accordance with the California Automatic Renewal Law (Cal. Bus. & Prof. Code §17601–17606), the Provider shall: (i) present the auto-renewal terms in a clear and conspicuous manner before the Customer completes any purchase; (ii) provide an acknowledgment that includes the auto-renewal terms, cancellation policy, and information regarding how to cancel; (iii) provide a mechanism for the Customer to cancel that is accessible online.\n\n(b) Jury Waiver: EACH PARTY HEREBY IRREVOCABLY WAIVES, TO THE FULLEST EXTENT PERMITTED BY APPLICABLE LAW, ALL RIGHTS TO TRIAL BY JURY IN ANY ACTION, PROCEEDING, OR COUNTERCLAIM ARISING OUT OF OR RELATING TO THIS AGREEMENT.\n\n(c) CCPA/CPRA: To the extent that the Provider processes personal information (as defined under Cal. Civ. Code §1798.100 et seq.) on behalf of the Customer, the Provider shall act as a \"Service Provider\" and shall comply with all applicable requirements of the California Consumer Privacy Act and the California Privacy Rights Act, including the restrictions set forth in Cal. Civ. Code §1798.140(ag)."
     },
     "ENGLAND_WALES": {
-      "title": "England & Wales-Specific Provisions",
+      "title": "England & Wales-specific provisions",
       "text": "(a) Third Party Rights: No person who is not a party to this Agreement shall have any rights under the Contracts (Rights of Third Parties) Act 1999 to enforce any term of this Agreement.\n\n(b) Non-Excludable Liability: Nothing in this Agreement shall exclude or limit liability for: (i) fraud or fraudulent misrepresentation; (ii) death or personal injury caused by negligence; or (iii) any other liability that cannot be excluded or limited under applicable law.\n\n(c) Consumer Rights: To the extent applicable, nothing in this Agreement shall affect the Customer's statutory rights under the Consumer Rights Act 2015.\n\n(d) UK GDPR: To the extent that the Provider processes personal data (as defined under the UK General Data Protection Regulation and the Data Protection Act 2018) on behalf of the Customer, the Provider shall act as a \"processor\" and both parties shall comply with all applicable data protection requirements. The parties agree to enter into a Data Processing Agreement that complies with Article 28 of the UK GDPR."
     },
     "SPAIN": {
-      "title": "Spain-Specific Provisions (Disposiciones Específicas para España)",
-      "text": "(a) LSSI-CE: The Provider shall comply with the Ley 34/2002 de Servicios de la Sociedad de la Información y de Comercio Electrónico (LSSI-CE), including the obligations regarding commercial communications and information duties.\n\n(b) Good Faith: This Agreement shall be interpreted and performed in accordance with the principle of good faith (buena fe) as set forth in Articles 7 and 1258 of the Código Civil.\n\n(c) Interpretation: In the event of any ambiguity, this Agreement shall be interpreted in accordance with the rules of interpretation set forth in Articles 1281 through 1289 of the Código Civil.\n\n(d) GDPR/LOPDGDD: To the extent that the Provider processes personal data on behalf of the Customer, the Provider shall act as an \"encargado del tratamiento\" and both parties shall comply with the EU General Data Protection Regulation (Regulation (EU) 2016/679) and the Ley Orgánica 3/2018 de Protección de Datos Personales y garantía de los derechos digitales (LOPDGDD). The parties agree to enter into a Data Processing Agreement (Acuerdo de Tratamiento de Datos) that complies with Article 28 of the GDPR."
+      "title": "Spain-specific provisions (Disposiciones específicas para España)",
+      "text": "(a) LSSI-CE: The Provider shall comply with the Ley 34/2002 de Servicios de la Sociedad de la Información y de Comercio Electrónico (LSSI-CE), including the obligations regarding commercial communications and information duties.\n\n(b) Good Faith: This Agreement shall be interpreted and performed in accordance with the principle of good faith (buena fe) as set forth in Articles 7 and 1258 of the Código Civil.\n\n(c) Interpretation: In the event of any ambiguity, this Agreement shall be interpreted in accordance with the rules of interpretation set forth in Articles 1281 through 1289 of the Código Civil.\n\n(d) GDPR/LOPDGDD: To the extent that the Provider processes personal data on behalf of the Customer, the Provider shall act as an \"encargado del tratamiento\" and both parties shall comply with the EU General Data Protection Regulation (Regulation (EU) 2016/679) and the Ley Orgánica 3/2018 de Protección de Datos Personales y garantía de los derechos digitales (LOPDGDD). The parties agree to enter into a Data Processing Agreement (Acuerdo de encargo de tratamiento de datos) that complies with Article 28 of the GDPR."
     }
   },
   "signatureBlock": "SIGNED by the parties:\n\n{partyASignatureBlock}\n\n{partyBSignatureBlock}",
