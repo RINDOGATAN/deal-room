@@ -39,7 +39,7 @@ function emailMuted(text: string): string {
 }
 
 function emailFrom(): string {
-  return process.env.EMAIL_FROM || "onboarding@resend.dev";
+  return `DEALROOM <${process.env.EMAIL_FROM || "noreply@todo.law"}>`;
 }
 
 // ────────────────────────────────────────────────────────────

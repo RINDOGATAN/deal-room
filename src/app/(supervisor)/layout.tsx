@@ -22,11 +22,12 @@ export default function SupervisorLayout({
         {/* Header */}
         <header className="border-b border-border">
           <div className="container mx-auto px-6 py-4 flex items-center gap-3">
-            <Link href="/" className="flex items-center gap-3">
-              <img src={brand.assets.logo} alt={brand.companyShort} className="h-8" />
+            <Link href="/" className="text-lg font-bold tracking-tight text-foreground">
+              {brand.company}<sup className="text-xs align-super">™</sup>{" "}
+              <span className="text-muted-foreground">DEALROOM</span>
             </Link>
             <div className="h-6 w-px bg-border" />
-            <span className="text-purple-500 font-medium text-sm uppercase tracking-wide">Supervisor Portal</span>
+            <span className="text-primary font-medium text-sm uppercase tracking-wide">Supervisor Portal</span>
           </div>
         </header>
 
@@ -48,16 +49,17 @@ export default function SupervisorLayout({
   return (
     <div className="min-h-screen bg-background">
       {/* Top Navigation */}
-      <header className="border-b border-border bg-purple-500/5">
+      <header className="border-b border-border bg-primary/5">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <Link href="/supervise" className="flex items-center gap-3">
-              <img src={brand.assets.logo} alt={brand.companyShort} className="h-8" />
+            <Link href="/supervise" className="text-lg font-bold tracking-tight text-foreground">
+              {brand.company}<sup className="text-xs align-super">™</sup>{" "}
+              <span className="text-muted-foreground">DEALROOM</span>
             </Link>
             <div className="h-6 w-px bg-border" />
             <div className="flex items-center gap-2">
-              <Scale className="w-4 h-4 text-purple-500" />
-              <span className="text-purple-500 font-medium text-sm uppercase tracking-wide">Supervisor Portal</span>
+              <Scale className="w-4 h-4 text-primary" />
+              <span className="text-primary font-medium text-sm uppercase tracking-wide">Supervisor Portal</span>
             </div>
           </div>
 
@@ -68,7 +70,7 @@ export default function SupervisorLayout({
                 flex items-center gap-2 px-4 py-2 text-sm font-medium
                 border transition-colors
                 ${pathname === "/supervise"
-                  ? "border-purple-500 text-purple-500"
+                  ? "border-primary text-primary"
                   : "border-transparent text-muted-foreground hover:text-foreground"
                 }
               `}

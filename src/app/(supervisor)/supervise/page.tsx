@@ -26,7 +26,7 @@ const statusConfig = {
   AWAITING_RESPONSE: { label: "Awaiting Response", color: "bg-yellow-500/20 text-yellow-500", icon: Clock },
   NEGOTIATING: { label: "Negotiating", color: "bg-blue-500/20 text-blue-500", icon: Users },
   AGREED: { label: "Agreed", color: "bg-primary/20 text-primary", icon: CheckCircle },
-  SIGNING: { label: "Signing", color: "bg-purple-500/20 text-purple-500", icon: FileText },
+  SIGNING: { label: "Signing", color: "bg-primary/20 text-primary", icon: FileText },
   COMPLETED: { label: "Completed", color: "bg-green-500/20 text-green-500", icon: CheckCircle },
   CANCELLED: { label: "Cancelled", color: "bg-yellow-500/20 text-yellow-600", icon: AlertCircle },
 };
@@ -106,7 +106,7 @@ export default function SupervisorDashboard() {
             Monitor your assigned negotiations
           </p>
         </div>
-        <Badge variant="outline" className="text-purple-500 border-purple-500">
+        <Badge variant="outline" className="text-primary border-primary">
           <Scale className="w-3 h-3 mr-1" />
           Supervisor
         </Badge>
@@ -368,7 +368,7 @@ export default function SupervisorDashboard() {
                     <div className="flex justify-end gap-3">
                       <Link
                         href={`/supervise/deals/${deal.id}`}
-                        className="flex items-center gap-2 px-4 py-2 border border-purple-500 text-purple-500 text-sm hover:bg-purple-500/10 transition-colors"
+                        className="flex items-center gap-2 px-4 py-2 border border-primary text-primary text-sm hover:bg-primary/10 transition-colors"
                       >
                         <Eye className="w-4 h-4" />
                         View Details

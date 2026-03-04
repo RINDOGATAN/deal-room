@@ -27,7 +27,7 @@ const statusConfig = {
   AWAITING_RESPONSE: { label: "Awaiting Response", color: "bg-yellow-500/20 text-yellow-500", icon: Clock },
   NEGOTIATING: { label: "Negotiating", color: "bg-blue-500/20 text-blue-500", icon: Users },
   AGREED: { label: "Agreed", color: "bg-primary/20 text-primary", icon: CheckCircle },
-  SIGNING: { label: "Signing", color: "bg-purple-500/20 text-purple-500", icon: FileText },
+  SIGNING: { label: "Signing", color: "bg-primary/20 text-primary", icon: FileText },
   COMPLETED: { label: "Completed", color: "bg-green-500/20 text-green-500", icon: CheckCircle },
   CANCELLED: { label: "Cancelled", color: "bg-yellow-500/20 text-yellow-600", icon: AlertCircle },
 };
@@ -136,7 +136,7 @@ export default function SupervisorDealDetailPage() {
             <StatusIcon className="w-3 h-3 mr-1" />
             {status.label}
           </Badge>
-          <Badge variant="outline" className="text-purple-500 border-purple-500">
+          <Badge variant="outline" className="text-primary border-primary">
             <Scale className="w-3 h-3 mr-1" />
             Supervisor View
           </Badge>
@@ -145,11 +145,11 @@ export default function SupervisorDealDetailPage() {
 
       {/* Stage A — Attorney Review Banner */}
       {hasReviewAssignment && reviewParty && (
-        <div className="card-brutal border-purple-500/50 bg-purple-500/5">
+        <div className="card-brutal border-primary/50 bg-primary/5">
           <div className="flex items-start justify-between">
             <div className="flex items-start gap-4">
-              <div className="w-12 h-12 bg-purple-500/20 flex items-center justify-center flex-shrink-0">
-                <Shield className="w-6 h-6 text-purple-500" />
+              <div className="w-12 h-12 bg-primary/20 flex items-center justify-center flex-shrink-0">
+                <Shield className="w-6 h-6 text-primary" />
               </div>
               <div>
                 <h2 className="text-lg font-semibold mb-1">Party Counsel Review Requested</h2>
@@ -421,7 +421,7 @@ export default function SupervisorDealDetailPage() {
                 <div>
                   {latestSuggestion ? (
                     <div>
-                      <span className="text-purple-500">{latestSuggestion.suggestedOption.label}</span>
+                      <span className="text-primary">{latestSuggestion.suggestedOption.label}</span>
                       <p className="text-xs text-muted-foreground">
                         A: {latestSuggestion.satisfactionPartyA.toFixed(0)}% |
                         B: {latestSuggestion.satisfactionPartyB.toFixed(0)}%
@@ -451,7 +451,7 @@ export default function SupervisorDealDetailPage() {
       {/* Audit Log */}
       <div className="card-brutal">
         <div className="flex items-center gap-2 mb-4">
-          <Activity className="w-4 h-4 text-purple-500" />
+          <Activity className="w-4 h-4 text-primary" />
           <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
             Activity Log
           </h3>
@@ -462,7 +462,7 @@ export default function SupervisorDealDetailPage() {
           <div className="space-y-3 max-h-80 overflow-y-auto">
             {deal.auditLogs.map((log) => (
               <div key={log.id} className="flex items-start gap-3 text-sm">
-                <div className="w-2 h-2 bg-purple-500 rounded-full mt-1.5 flex-shrink-0" />
+                <div className="w-2 h-2 bg-primary rounded-full mt-1.5 flex-shrink-0" />
                 <div className="flex-1">
                   <p>
                     <span className="font-medium">{log.user?.name || log.user?.email || "System"}</span>
