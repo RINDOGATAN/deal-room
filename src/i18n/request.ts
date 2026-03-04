@@ -1,15 +1,29 @@
 import { getRequestConfig } from "next-intl/server";
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { defaultLocale, locales, type Locale } from "./config";
+
+function isLocale(v: string | undefined): v is Locale {
+  return locales.includes(v as Locale);
+}
 
 export default getRequestConfig(async () => {
   const cookieStore = await cookies();
-  const localeCookie = cookieStore.get("NEXT_LOCALE")?.value;
 
-  // Validate locale from cookie, fallback to default
-  const locale: Locale = locales.includes(localeCookie as Locale)
-    ? (localeCookie as Locale)
-    : defaultLocale;
+  // 1. Dashboard cookie (set by LanguageSwitcher)
+  const nextLocale = cookieStore.get("NEXT_LOCALE")?.value;
+  // 2. Landing page cookie (set by setLocaleCookie on landing pages)
+  const landingLocale = cookieStore.get("locale")?.value;
+  // 3. Browser Accept-Language header
+  const acceptLang = (await headers()).get("accept-language");
+  const browserLocale = acceptLang?.match(/\b(es)\b/) ? "es" : undefined;
+
+  const locale: Locale = isLocale(nextLocale)
+    ? nextLocale
+    : isLocale(landingLocale)
+      ? landingLocale
+      : isLocale(browserLocale)
+        ? browserLocale
+        : defaultLocale;
 
   return {
     locale,
