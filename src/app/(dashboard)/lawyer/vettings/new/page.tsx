@@ -43,21 +43,13 @@ const contractIcons: Record<string, typeof FileText> = {
 type GoverningLaw = "CALIFORNIA" | "ENGLAND_WALES" | "SPAIN";
 type ContractLanguage = "en" | "es";
 
-const jurisdictionOptions: {
-  value: GoverningLaw;
-  label: string;
-  flag: string;
-  description: string;
-}[] = [
-  { value: "CALIFORNIA", label: "California, USA", flag: "\u{1f1fa}\u{1f1f8}", description: "U.S. law framework" },
-  { value: "ENGLAND_WALES", label: "England & Wales, UK", flag: "\u{1f1ec}\u{1f1e7}", description: "English common law" },
-  { value: "SPAIN", label: "Spain, EU", flag: "\u{1f1ea}\u{1f1f8}", description: "Spanish civil law" },
+const jurisdictionOptionValues: { value: GoverningLaw; flag: string }[] = [
+  { value: "CALIFORNIA", flag: "\u{1f1fa}\u{1f1f8}" },
+  { value: "ENGLAND_WALES", flag: "\u{1f1ec}\u{1f1e7}" },
+  { value: "SPAIN", flag: "\u{1f1ea}\u{1f1f8}" },
 ];
 
-const languageOptions: { value: ContractLanguage; label: string; description: string }[] = [
-  { value: "en", label: "English", description: "Contract in English" },
-  { value: "es", label: "Español", description: "Contrato en español" },
-];
+const languageOptionValues: ContractLanguage[] = ["en", "es"];
 
 function resolveLocalized(localized: unknown, locale: string, fallback: string): string {
   if (!localized || typeof localized !== "object") return fallback;
@@ -333,7 +325,7 @@ export default function NewVettingPage() {
             <Label className="text-sm font-medium text-muted-foreground uppercase tracking-wider">{tNew("governingLaw")}</Label>
           </div>
           <div className="grid grid-cols-1 gap-3">
-            {jurisdictionOptions.map((j) => {
+            {jurisdictionOptionValues.map((j) => {
               const isSelected = selectedJurisdiction === j.value;
               const isDisabled = availableJurisdictions.size > 0 && !availableJurisdictions.has(j.value);
               return (
@@ -361,8 +353,8 @@ export default function NewVettingPage() {
                   <div className="flex items-start gap-4">
                     <div className="text-2xl">{j.flag}</div>
                     <div>
-                      <h3 className="font-semibold">{j.label}</h3>
-                      <p className="text-sm text-muted-foreground mt-1">{j.description}</p>
+                      <h3 className="font-semibold">{tCommon(`jurisdiction${j.value === "CALIFORNIA" ? "California" : j.value === "ENGLAND_WALES" ? "EnglandWales" : "Spain"}`)}</h3>
+                      <p className="text-sm text-muted-foreground mt-1">{tCommon(`jurisdiction${j.value === "CALIFORNIA" ? "California" : j.value === "ENGLAND_WALES" ? "EnglandWales" : "Spain"}Description`)}</p>
                     </div>
                   </div>
                 </button>
@@ -380,14 +372,14 @@ export default function NewVettingPage() {
             <Label className="text-sm font-medium text-muted-foreground uppercase tracking-wider">{tNew("contractLanguage")}</Label>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {languageOptions.map((lang) => {
-              const isSelected = selectedLanguage === lang.value;
-              const isDisabled = availableLanguages.size > 0 && !availableLanguages.has(lang.value);
+            {languageOptionValues.map((lang) => {
+              const isSelected = selectedLanguage === lang;
+              const isDisabled = availableLanguages.size > 0 && !availableLanguages.has(lang);
               return (
                 <button
-                  key={lang.value}
+                  key={lang}
                   disabled={isDisabled}
-                  onClick={() => !isDisabled && setSelectedLanguage(lang.value)}
+                  onClick={() => !isDisabled && setSelectedLanguage(lang)}
                   className={`card-brutal text-left relative transition-colors p-4 ${
                     isDisabled ? "opacity-50 cursor-not-allowed border-dashed"
                     : isSelected ? "border-primary" : "hover:border-muted-foreground"
@@ -398,8 +390,8 @@ export default function NewVettingPage() {
                       <Check className="w-4 h-4 text-primary-foreground" />
                     </div>
                   )}
-                  <h3 className="font-semibold">{lang.label}</h3>
-                  <p className="text-sm text-muted-foreground mt-1">{lang.description}</p>
+                  <h3 className="font-semibold">{tCommon(lang === "en" ? "languageEnglish" : "languageSpanish")}</h3>
+                  <p className="text-sm text-muted-foreground mt-1">{tCommon(lang === "en" ? "contractInEnglish" : "contractInSpanish")}</p>
                 </button>
               );
             })}

@@ -29,14 +29,15 @@ const statusColors: Record<string, string> = {
   COMPLETED: "bg-green-500/10 text-green-600",
 };
 
-const jurisdictionLabels: Record<string, string> = {
-  CALIFORNIA: "California, USA",
-  ENGLAND_WALES: "England & Wales",
-  SPAIN: "Spain, EU",
+const jurisdictionKeys: Record<string, string> = {
+  CALIFORNIA: "jurisdictionCalifornia",
+  ENGLAND_WALES: "jurisdictionEnglandWales",
+  SPAIN: "jurisdictionSpain",
 };
 
 export default function RequestsPage() {
   const t = useTranslations("requests");
+  const tCommon = useTranslations("common");
   const { persona, isLoading: roleLoading } = useUserRole();
 
   const isLawyer = persona === "lawyer";
@@ -133,7 +134,7 @@ export default function RequestsPage() {
                     <div className="flex flex-wrap gap-3 text-sm text-muted-foreground">
                       <span>{isLawyer ? t("from") : t("to")}: {person.name || person.email}</span>
                       {person.company && <span>{person.company}</span>}
-                      <span>{jurisdictionLabels[request.governingLaw] || request.governingLaw}</span>
+                      <span>{tCommon(jurisdictionKeys[request.governingLaw] || request.governingLaw)}</span>
                     </div>
                     {request.message && (
                       <p className="text-sm text-muted-foreground mt-2 italic">

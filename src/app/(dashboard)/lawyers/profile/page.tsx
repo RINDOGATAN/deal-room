@@ -10,16 +10,18 @@ import { redirect } from "next/navigation";
 
 type GoverningLaw = "CALIFORNIA" | "ENGLAND_WALES" | "SPAIN";
 
-const jurisdictionOptions: { value: GoverningLaw; label: string }[] = [
-  { value: "CALIFORNIA", label: "California, USA" },
-  { value: "ENGLAND_WALES", label: "England & Wales, UK" },
-  { value: "SPAIN", label: "Spain, EU" },
-];
+const jurisdictionValues: GoverningLaw[] = ["CALIFORNIA", "ENGLAND_WALES", "SPAIN"];
+const jurisdictionKeys: Record<string, string> = {
+  CALIFORNIA: "jurisdictionCalifornia",
+  ENGLAND_WALES: "jurisdictionEnglandWales",
+  SPAIN: "jurisdictionSpain",
+};
 
-const languageOptions: { value: string; label: string }[] = [
-  { value: "en", label: "English" },
-  { value: "es", label: "Español" },
-];
+const languageValues = ["en", "es"] as const;
+const languageKeys: Record<string, string> = {
+  en: "languageEnglish",
+  es: "languageSpanish",
+};
 
 export default function LawyerProfilePage() {
   const t = useTranslations("lawyerProfile");
@@ -120,17 +122,17 @@ export default function LawyerProfilePage() {
         <div className="space-y-2">
           <label className="text-sm font-medium">{t("jurisdictions")}</label>
           <div className="flex flex-wrap gap-2">
-            {jurisdictionOptions.map((j) => (
+            {jurisdictionValues.map((j) => (
               <button
-                key={j.value}
-                onClick={() => toggleJurisdiction(j.value)}
+                key={j}
+                onClick={() => toggleJurisdiction(j)}
                 className={`px-3 py-1.5 text-sm border rounded-full transition-colors ${
-                  jurisdictions.includes(j.value)
+                  jurisdictions.includes(j)
                     ? "bg-primary/10 border-primary text-primary"
                     : "border-border text-muted-foreground hover:border-foreground"
                 }`}
               >
-                {j.label}
+                {tCommon(jurisdictionKeys[j])}
               </button>
             ))}
           </div>
@@ -140,17 +142,17 @@ export default function LawyerProfilePage() {
         <div className="space-y-2">
           <label className="text-sm font-medium">{t("languages")}</label>
           <div className="flex flex-wrap gap-2">
-            {languageOptions.map((l) => (
+            {languageValues.map((l) => (
               <button
-                key={l.value}
-                onClick={() => toggleLanguage(l.value)}
+                key={l}
+                onClick={() => toggleLanguage(l)}
                 className={`px-3 py-1.5 text-sm border rounded-full transition-colors ${
-                  languages.includes(l.value)
+                  languages.includes(l)
                     ? "bg-primary/10 border-primary text-primary"
                     : "border-border text-muted-foreground hover:border-foreground"
                 }`}
               >
-                {l.label}
+                {tCommon(languageKeys[l])}
               </button>
             ))}
           </div>
