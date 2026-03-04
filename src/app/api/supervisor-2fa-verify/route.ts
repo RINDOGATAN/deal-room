@@ -1,18 +1,34 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { supervisorAuthOptions } from "@/lib/auth-supervisor";
+import { cookies } from "next/headers";
+import { decode } from "next-auth/jwt";
 import prisma from "@/lib/prisma";
 
 export async function POST(request: NextRequest) {
-  const session = await getServerSession(supervisorAuthOptions);
+  const cookieStore = await cookies();
+  const supervisorToken = cookieStore.get("supervisor_session")?.value;
 
-  if (!session?.user?.email) {
+  if (!supervisorToken) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  // Get supervisor by email
+  let supervisorId: string | null = null;
+  try {
+    const decoded = await decode({
+      token: supervisorToken,
+      secret: process.env.NEXTAUTH_SECRET!,
+    });
+    supervisorId = (decoded?.supervisorId as string) ?? (decoded?.sub as string) ?? null;
+  } catch {
+    return NextResponse.json({ error: "Invalid session" }, { status: 401 });
+  }
+
+  if (!supervisorId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  // Get supervisor by ID
   const supervisor = await prisma.supervisor.findUnique({
-    where: { email: session.user.email.toLowerCase() },
+    where: { id: supervisorId },
     include: { twoFactorSecret: true },
   });
 
