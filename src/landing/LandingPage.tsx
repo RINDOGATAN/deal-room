@@ -24,6 +24,7 @@ function setLocaleCookie(locale: string) {
   const maxAge = 365 * 24 * 60 * 60;
   const domain = window.location.hostname.endsWith(".todo.law") ? ";domain=.todo.law" : "";
   document.cookie = `locale=${locale};path=/;max-age=${maxAge};SameSite=Lax${domain}`;
+  document.cookie = `NEXT_LOCALE=${locale};path=/;max-age=${maxAge};SameSite=Lax${domain}`;
 }
 
 export default function LandingPage() {
