@@ -15,10 +15,11 @@ import { toast } from "sonner";
 
 interface OnboardingModalProps {
   open: boolean;
+  dismissible?: boolean;
   onComplete?: () => void;
 }
 
-export function OnboardingModal({ open, onComplete }: OnboardingModalProps) {
+export function OnboardingModal({ open, dismissible, onComplete }: OnboardingModalProps) {
   const t = useTranslations("onboarding");
   const { update: updateSession } = useSession();
   const [selected, setSelected] = useState<"BUSINESS_OWNER" | "LAWYER" | null>(null);
@@ -43,10 +44,10 @@ export function OnboardingModal({ open, onComplete }: OnboardingModalProps) {
   const roleLabel = selected === "LAWYER" ? t("roleLawyer") : t("roleBusiness");
 
   return (
-    <Dialog open={open} onOpenChange={() => {}}>
+    <Dialog open={open} onOpenChange={(isOpen) => { if (!isOpen && dismissible) onComplete?.(); }}>
       <DialogContent
         className="bg-card border-border max-w-2xl w-full"
-        showCloseButton={false}
+        showCloseButton={dismissible}
       >
         <DialogHeader>
           <DialogTitle className="font-heading text-xl text-center">
