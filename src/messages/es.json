@@ -551,8 +551,8 @@
   },
   "lawyerWarning": {
     "title": "Procediendo sin Abogado/a",
-    "description": "Este acuerdo se creó sin un abogado/a de revisión previa.",
-    "riskWarning": "Negociar sin asesoramiento legal puede exponerte a condiciones desfavorables. Aunque la plataforma te guía por las opciones y sus implicaciones, no sustituye el asesoramiento jurídico profesional.",
+    "description": "Este contrato no ha estado sujeto a revisión previa por tu abogado.",
+    "riskWarning": "Negociar sin asesoramiento legal puede exponerte a condiciones desfavorables. Aunque la plataforma te guía cláusula a cláusula, no sustituye el asesoramiento jurídico profesional.",
     "lawyerStages": "Fases de Intervención Legal",
     "stage0Title": "Revisión Previa",
     "stage0Skipped": "No aplicable a este acuerdo",
