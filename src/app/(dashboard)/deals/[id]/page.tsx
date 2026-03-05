@@ -4,7 +4,7 @@ import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
-import { useTranslations, useLocale } from "next-intl";
+import { NextIntlClientProvider, useTranslations, useLocale } from "next-intl";
 import { formatDate } from "@/lib/date";
 import {
   FileText,
@@ -20,6 +20,8 @@ import {
   Send,
   ExternalLink,
   Download,
+  ShieldCheck,
+  ShieldAlert,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
@@ -34,6 +36,21 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
+import enMessages from "@/messages/en.json";
+import esMessages from "@/messages/es.json";
+
+function DownloadLinks({ dealId, className }: { dealId: string; className?: string }) {
+  return (
+    <div className={`flex items-center gap-1.5 text-xs text-muted-foreground ${className ?? ""}`}>
+      <Download className="w-3.5 h-3.5 flex-shrink-0" />
+      <a href={`/api/deals/${dealId}/document`} className="hover:text-foreground underline underline-offset-2">PDF</a>
+      <span aria-hidden>·</span>
+      <a href={`/api/deals/${dealId}/document/docx`} className="hover:text-foreground underline underline-offset-2">DOCX</a>
+      <span aria-hidden>·</span>
+      <a href={`/api/deals/${dealId}/document/txt`} className="hover:text-foreground underline underline-offset-2">TXT</a>
+    </div>
+  );
+}
 
 const statusIcons = {
   DRAFT: FileText,
@@ -55,10 +72,24 @@ const statusColors = {
   CANCELLED: "bg-orange-500/20 text-orange-500",
 };
 
+/** Outer wrapper: determines contract language and provides correct locale */
 export default function DealDetailPage() {
   const params = useParams();
-  const router = useRouter();
   const dealId = params.id as string;
+  const { data: deal } = trpc.deal.getById.useQuery({ id: dealId });
+  const contractLang = (deal as any)?.contractLanguage || "en";
+  const messages = contractLang === "es" ? esMessages : enMessages;
+
+  return (
+    <NextIntlClientProvider locale={contractLang} messages={messages}>
+      <DealDetailContent dealId={dealId} />
+    </NextIntlClientProvider>
+  );
+}
+
+/** Inner component: all UI and hooks, picks up contract locale from provider */
+function DealDetailContent({ dealId }: { dealId: string }) {
+  const router = useRouter();
   const t = useTranslations("dealDetail");
   const tDeals = useTranslations("deals");
   const tCommon = useTranslations("common");
@@ -71,6 +102,7 @@ export default function DealDetailPage() {
 
   const { data: deal, isLoading, error, refetch } = trpc.deal.getById.useQuery({ id: dealId });
   const { data: progress } = trpc.deal.getProgress.useQuery({ id: dealId });
+  const { data: signingRequest } = trpc.signing.getRequest.useQuery({ dealRoomId: dealId });
 
   // Map status keys to translation keys
   const statusLabels: Record<string, string> = {
@@ -148,6 +180,19 @@ export default function DealDetailPage() {
               <StatusIcon className="w-3 h-3 mr-1" />
               {statusLabel}
             </Badge>
+            {(deal.status === "SIGNING" || deal.status === "COMPLETED") && signingRequest && (
+              signingRequest.ceremonyId ? (
+                <Badge className="bg-green-500/20 text-green-600">
+                  <ShieldCheck className="w-3 h-3 mr-1" />
+                  {t("certifiedDocument")}
+                </Badge>
+              ) : (
+                <Badge variant="outline" className="text-muted-foreground">
+                  <ShieldAlert className="w-3 h-3 mr-1" />
+                  {t("uncertifiedDocument")}
+                </Badge>
+              )
+            )}
           </div>
           <div className="flex items-center gap-4 text-sm text-muted-foreground">
             <span className="flex items-center gap-1">
@@ -183,29 +228,7 @@ export default function DealDetailPage() {
             </Link>
           )}
           {isSoloMode && deal.status === "AGREED" && (
-            <div className="flex items-center gap-2">
-              <a
-                href={`/api/deals/${deal.id}/document/docx`}
-                className="btn-brutal flex items-center gap-2"
-              >
-                <Download className="w-4 h-4" />
-                <span className="hidden sm:inline">{t("downloadDocx")}</span>
-              </a>
-              <a
-                href={`/api/deals/${deal.id}/document`}
-                className="btn-brutal-outline flex items-center gap-2"
-              >
-                <Download className="w-4 h-4" />
-                <span className="hidden sm:inline">{t("downloadPdf")}</span>
-              </a>
-              <a
-                href={`/api/deals/${deal.id}/document/txt`}
-                className="btn-brutal-outline flex items-center gap-2"
-              >
-                <Download className="w-4 h-4" />
-                <span className="hidden sm:inline">{t("downloadTxt")}</span>
-              </a>
-            </div>
+            <DownloadLinks dealId={deal.id} />
           )}
         </div>
       </div>
@@ -232,7 +255,7 @@ export default function DealDetailPage() {
             </div>
           )}
           <div className="stat-card">
-            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-3">{isSoloMode ? (deal as any).contractLanguage === "es" ? "Cláusulas confirmadas" : "Confirmed clauses" : t("agreedClauses")}</p>
+            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-3">{isSoloMode ? t("soloConfirmedClauses") : t("agreedClauses")}</p>
             <div className="flex items-baseline gap-2 mb-3">
               <span className="metric-lg text-primary">{progress.agreedClauses.completed}</span>
               <span className="text-muted-foreground font-display">/ {progress.totalClauses}</span>

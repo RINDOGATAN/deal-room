@@ -15,7 +15,7 @@ import {
   Packer,
   ShadingType,
 } from "docx";
-import type { ContractData } from "./generator";
+import type { ContractData, CertificationData } from "./generator";
 
 const LABELS: Record<string, Record<string, string>> = {
   en: {
@@ -34,6 +34,14 @@ const LABELS: Record<string, Record<string, string>> = {
     partyB: "Party B",
     parties: "Parties",
     termsAndConditions: "Terms and Conditions",
+    certifiedBy: "Certified by TODO.LAW",
+    uncertified: "UNVERIFIED — This document has not been certified",
+    auditCertificate: "Audit Certificate",
+    documentHash: "Document Hash (SHA-256)",
+    certificationId: "Certification ID",
+    signatureTimestamps: "Signature Timestamps",
+    verification: "Verification",
+    verifyInstructions: "To verify this document, visit the URL above and enter the document hash.",
   },
   es: {
     effectiveDate: "Fecha de Efecto",
@@ -51,6 +59,14 @@ const LABELS: Record<string, Record<string, string>> = {
     partyB: "Parte B",
     parties: "Partes",
     termsAndConditions: "Términos y Condiciones",
+    certifiedBy: "Certificado por TODO.LAW",
+    uncertified: "SIN VERIFICAR — Este documento no ha sido certificado",
+    auditCertificate: "Certificado de Auditoría",
+    documentHash: "Hash del Documento (SHA-256)",
+    certificationId: "ID de Certificación",
+    signatureTimestamps: "Marcas de Tiempo de Firma",
+    verification: "Verificación",
+    verifyInstructions: "Para verificar este documento, visite la URL anterior e introduzca el hash del documento.",
   },
 };
 
@@ -572,24 +588,70 @@ export async function generateContractDocx(
     addSignatureBlocks(children, data, labels);
   }
 
+  // Certification footer
+  children.push(new Paragraph({ spacing: { before: 600 }, children: [] }));
+  children.push(
+    new Paragraph({
+      border: {
+        top: { style: BorderStyle.SINGLE, size: 1, color: "CCCCCC" },
+      },
+      spacing: { before: 100, after: 100 },
+      children: [
+        new TextRun({
+          text: data.certification?.certified
+            ? labels.certifiedBy
+            : labels.uncertified,
+          size: 14,
+          color: data.certification?.certified ? "166534" : "9A3412",
+          font: "Times New Roman",
+        }),
+        ...(data.certification?.documentHash
+          ? [
+              new TextRun({
+                text: `    SHA-256: ${data.certification.documentHash.slice(0, 16)}...`,
+                size: 12,
+                color: "999999",
+                font: "Times New Roman",
+              }),
+            ]
+          : []),
+      ],
+    })
+  );
+
+  // Build sections array
+  const sections = [
+    {
+      properties: {
+        page: {
+          margin: {
+            top: 1440,
+            right: 1440,
+            bottom: 1440,
+            left: 1440,
+          },
+        },
+      },
+      children,
+    },
+  ];
+
+  // Audit Certificate page (only when certified)
+  if (data.certification?.certified) {
+    sections.push({
+      properties: {
+        page: {
+          margin: { top: 1440, right: 1440, bottom: 1440, left: 1440 },
+        },
+      },
+      children: buildAuditCertificateSection(data.certification, labels, data.dealName),
+    });
+  }
+
   const doc = new Document({
     title: `${data.contractType} - ${data.dealName}`,
     description: data.contractType,
-    sections: [
-      {
-        properties: {
-          page: {
-            margin: {
-              top: 1440, // ~1 inch
-              right: 1440,
-              bottom: 1440,
-              left: 1440,
-            },
-          },
-        },
-        children,
-      },
-    ],
+    sections,
   });
 
   const buffer = await Packer.toBuffer(doc);
@@ -954,4 +1016,202 @@ function addSignatureBlocks(
       ],
     })
   );
+}
+
+function buildAuditCertificateSection(
+  certification: CertificationData,
+  labels: Record<string, string>,
+  dealName: string
+): Paragraph[] {
+  const paragraphs: Paragraph[] = [];
+
+  // Title
+  paragraphs.push(
+    new Paragraph({
+      alignment: AlignmentType.CENTER,
+      spacing: { after: 200 },
+      children: [
+        new TextRun({
+          text: labels.auditCertificate.toUpperCase(),
+          bold: true,
+          size: 28,
+          font: "Times New Roman",
+        }),
+      ],
+    })
+  );
+
+  paragraphs.push(
+    new Paragraph({
+      alignment: AlignmentType.CENTER,
+      spacing: { after: 400 },
+      children: [
+        new TextRun({
+          text: dealName,
+          size: 18,
+          color: "666666",
+          font: "Times New Roman",
+        }),
+      ],
+    })
+  );
+
+  // Document Hash
+  paragraphs.push(
+    new Paragraph({
+      spacing: { after: 60 },
+      children: [
+        new TextRun({
+          text: labels.documentHash,
+          size: 18,
+          color: "666666",
+          allCaps: true,
+          font: "Times New Roman",
+        }),
+      ],
+    })
+  );
+  paragraphs.push(
+    new Paragraph({
+      shading: { type: ShadingType.SOLID, color: "F5F5F5" },
+      spacing: { after: 300 },
+      indent: { left: 100, right: 100 },
+      children: [
+        new TextRun({
+          text: certification.documentHash,
+          size: 16,
+          font: "Courier New",
+          color: "333333",
+        }),
+      ],
+    })
+  );
+
+  // Certification ID
+  paragraphs.push(
+    new Paragraph({
+      spacing: { after: 60 },
+      border: {
+        bottom: { style: BorderStyle.SINGLE, size: 1, color: "EEEEEE" },
+      },
+      children: [
+        new TextRun({
+          text: `${labels.certificationId}: `,
+          size: 18,
+          color: "666666",
+          font: "Times New Roman",
+        }),
+        new TextRun({
+          text: certification.ceremonyId,
+          size: 20,
+          font: "Times New Roman",
+        }),
+      ],
+    })
+  );
+
+  // Signature Timestamps
+  paragraphs.push(
+    new Paragraph({
+      spacing: { before: 300, after: 200 },
+      children: [
+        new TextRun({
+          text: labels.signatureTimestamps,
+          bold: true,
+          size: 22,
+          font: "Times New Roman",
+        }),
+      ],
+    })
+  );
+
+  for (const ts of certification.timestamps) {
+    paragraphs.push(
+      new Paragraph({
+        spacing: { after: 40 },
+        indent: { left: 200 },
+        border: {
+          left: { style: BorderStyle.SINGLE, size: 3, color: "166534" },
+        },
+        children: [
+          new TextRun({
+            text: ts.partyRole === "INITIATOR" ? "Party A" : "Party B",
+            bold: true,
+            size: 20,
+            font: "Times New Roman",
+          }),
+        ],
+      })
+    );
+    paragraphs.push(
+      new Paragraph({
+        spacing: { after: 20 },
+        indent: { left: 200 },
+        children: [
+          new TextRun({
+            text: `Signed: ${ts.signedAt}`,
+            size: 18,
+            color: "666666",
+            font: "Times New Roman",
+          }),
+        ],
+      })
+    );
+    paragraphs.push(
+      new Paragraph({
+        spacing: { after: 200 },
+        indent: { left: 200 },
+        children: [
+          new TextRun({
+            text: `RFC 3161: ${ts.rfc3161Timestamp || "N/A"}`,
+            size: 16,
+            color: "999999",
+            font: "Courier New",
+          }),
+        ],
+      })
+    );
+  }
+
+  // Verification URL
+  if (certification.verificationUrl) {
+    paragraphs.push(
+      new Paragraph({
+        shading: { type: ShadingType.SOLID, color: "F0FDF4" },
+        spacing: { before: 200, after: 60 },
+        indent: { left: 200, right: 200 },
+        children: [
+          new TextRun({
+            text: `${labels.verification}: `,
+            size: 18,
+            color: "666666",
+            font: "Times New Roman",
+          }),
+          new TextRun({
+            text: certification.verificationUrl,
+            size: 20,
+            color: "166534",
+            font: "Times New Roman",
+          }),
+        ],
+      })
+    );
+    paragraphs.push(
+      new Paragraph({
+        shading: { type: ShadingType.SOLID, color: "F0FDF4" },
+        spacing: { after: 200 },
+        indent: { left: 200, right: 200 },
+        children: [
+          new TextRun({
+            text: labels.verifyInstructions,
+            size: 16,
+            color: "666666",
+            font: "Times New Roman",
+          }),
+        ],
+      })
+    );
+  }
+
+  return paragraphs;
 }

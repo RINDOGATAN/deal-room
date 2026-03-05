@@ -164,6 +164,10 @@
     "inviteCounterparty": "Invitar Contraparte",
     "completeSelectionsFirst": "Completa tus selecciones antes de invitar a la contraparte.",
     "cancelDeal": "Cancelar Acuerdo",
+    "certifiedDocument": "Documento Certificado",
+    "uncertifiedDocument": "Documento Sin Certificar",
+    "certifiedDescription": "Este contrato está certificado criptográficamente con firmas con sello de tiempo.",
+    "uncertifiedDescription": "Certificación de documentos no disponible. Las firmas no son verificables de forma independiente.",
     "downloadDocx": "Descargar DOCX",
     "downloadPdf": "Descargar PDF",
     "downloadTxt": "Descargar TXT",
@@ -227,6 +231,12 @@
     "reviewCompromises": "Revisar Compromisos",
     "resubmit": "Actualizar y Reenviar",
     "failedToLoad": "Error al cargar el acuerdo: {error}",
+    "unverified": "Sin verificar",
+    "predictedSatisfaction": "Resultado Previsto",
+    "predictedSatisfactionDescription": "Basado en negociaciones similares, esta es la satisfacción estimada para cada parte.",
+    "yourSatisfaction": "Tu satisfacción estimada",
+    "theirSatisfaction": "Satisfacción estimada de la contraparte",
+    "predictionUnavailable": "Predicción no disponible",
     "clauses": "Cláusulas",
     "toastMessages": {
       "bothPartiesSubmitted": "¡Ambas partes han enviado! Generando propuestas de compromiso...",
@@ -269,6 +279,8 @@
     "rejected": "Rechazado",
     "failedToLoad": "Error al cargar los datos de revisión",
     "totalClauses": "Total de Cláusulas",
+    "conflictWarnings": "Conflictos entre Cláusulas Detectados",
+    "validationUnavailable": "Validación entre cláusulas no disponible",
     "counterProposalBadge": "Contrapropuesta",
     "they": "Ellos:",
     "attorneyReviewInProgress": "Revisión del Abogado/a en Curso",
@@ -358,6 +370,10 @@
     "failedToLoad": "Error al cargar el acuerdo",
     "attorneyReviewInProgress": "Revisión del Abogado/a en Curso",
     "signingAfterReview": "La firma estará disponible cuando se completen todas las revisiones legales.",
+    "certifiedDocument": "Documento Certificado",
+    "uncertifiedDocument": "Documento Sin Certificar",
+    "certifiedSigningDescription": "Las firmas se sellarán criptográficamente con marca de tiempo y serán verificables de forma independiente.",
+    "uncertifiedSigningDescription": "Certificación de documentos no disponible. Las firmas no tendrán sello de tiempo independiente.",
     "legalNotice": "Aviso Legal:",
     "legalNoticeText": "Al firmar este documento electrónicamente, aceptas que tu firma electrónica es el equivalente legal de tu firma manuscrita en este acuerdo. Este contrato será legalmente vinculante una vez que ambas partes hayan firmado.",
     "toastMessages": {
@@ -1181,5 +1197,16 @@
     "switchRole": "Cambiar rol",
     "roleBusiness": "Startup",
     "roleLawyer": "Abogado/a"
+  },
+  "analytics": {
+    "title": "Analíticas de Acuerdos",
+    "premium": "Premium",
+    "avgDays": "Días Prom.",
+    "completionRate": "Finalización",
+    "totalDeals": "Total Acuerdos",
+    "activeDeals": "Activos",
+    "upgradeTitle": "Desbloquear Analíticas",
+    "upgradeDescription": "Obtén indicadores de negociación, tendencias de acuerdos e información basada en inteligencia en la nube.",
+    "learnMore": "Más Información"
   }
 }

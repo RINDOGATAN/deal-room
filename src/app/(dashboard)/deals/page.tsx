@@ -14,6 +14,7 @@ import {
   Users,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { AnalyticsPanel } from "@/components/AnalyticsPanel";
 
 const statusIcons = {
   DRAFT: FileText,
@@ -95,6 +96,8 @@ export default function DealsPage() {
           {t("newDeal")}
         </Link>
       </div>
+
+      <AnalyticsPanel />
 
       {deals?.length === 0 ? (
         <div className="card-brutal text-center py-12">

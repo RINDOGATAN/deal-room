@@ -2,7 +2,8 @@ import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
 import { PartyRole, PartyStatus, ClauseStatus, DealRoomStatus, RoundStatus, ProposalStatus } from "@prisma/client";
-import { calculateCompromise, globalFairnessPass, type CompromiseInput, type OptionInput } from "../services/compromise/engine";
+import { calculateCompromise, globalFairnessPass, type CompromiseInput, type OptionInput, type DynamicBiasOverride } from "../services/compromise/engine";
+import { cloudApi, type BiasOverrides, type ValidationResult } from "@/lib/cloud-api";
 
 export const compromiseRouter = createTRPCRouter({
   // Generate compromise suggestions for a deal room
@@ -15,6 +16,7 @@ export const compromiseRouter = createTRPCRouter({
       const dealRoom = await ctx.prisma.dealRoom.findUnique({
         where: { id: input.dealRoomId },
         include: {
+          contractTemplate: true,
           parties: true,
           clauses: {
             include: {
@@ -70,6 +72,17 @@ export const compromiseRouter = createTRPCRouter({
           code: "BAD_REQUEST",
           message: "Both parties must submit their selections first",
         });
+      }
+
+      // Fetch dynamic biases from Cloud Intelligence API (degrades to empty)
+      let allDynamicBiases: BiasOverrides = {};
+      try {
+        allDynamicBiases = await cloudApi.getDynamicBiases(
+          dealRoom.contractTemplate?.contractType || "",
+          dealRoom.governingLaw
+        );
+      } catch (error) {
+        console.error("Failed to fetch dynamic biases (using static):", error);
       }
 
       const roundNumber = dealRoom.currentRound + 1;
@@ -137,6 +150,10 @@ export const compromiseRouter = createTRPCRouter({
           biasPartyB: opt.biasPartyB,
         }));
 
+        // Get dynamic bias overrides for this clause template (if available)
+        const clauseDynamicBiases = allDynamicBiases[clause.clauseTemplate.id] as
+          Record<string, DynamicBiasOverride> | undefined;
+
         const compromiseInput: CompromiseInput = {
           partyASelection: {
             optionId: initiatorSelection.optionId,
@@ -154,6 +171,7 @@ export const compromiseRouter = createTRPCRouter({
           },
           options,
           clauseTitle: clause.clauseTemplate.title,
+          dynamicBiases: clauseDynamicBiases,
         };
 
         const result = calculateCompromise(compromiseInput);
@@ -232,7 +250,28 @@ export const compromiseRouter = createTRPCRouter({
         },
       });
 
-      return { roundNumber, suggestions };
+      // Run cross-clause validation via Cloud Intelligence API (degrades to empty)
+      let validation: ValidationResult = { conflicts: [], validated: false };
+      try {
+        const agreedClauses = suggestions
+          .filter((s) => s.agreed)
+          .map((s) => ({
+            clauseId: s.clauseId,
+            optionId: s.suggestedOptionId,
+            optionLabel: "",
+          }));
+        if (agreedClauses.length > 0) {
+          validation = await cloudApi.validateCompliance({
+            contractType: dealRoom.contractTemplate?.contractType || "",
+            jurisdiction: dealRoom.governingLaw,
+            clauses: agreedClauses,
+          });
+        }
+      } catch (error) {
+        console.error("Cross-clause validation failed:", error);
+      }
+
+      return { roundNumber, suggestions, validation };
     }),
 
   // Get current compromise suggestions for a deal room
@@ -302,6 +341,150 @@ export const compromiseRouter = createTRPCRouter({
         selections: clause.selections,
         suggestion: clause.compromiseSuggestions[0] || null,
       }));
+    }),
+
+  // Get quality scores for clause options (from Cloud Intelligence API)
+  getQualityScores: protectedProcedure
+    .input(
+      z.object({
+        dealRoomId: z.string(),
+        clauseTemplateId: z.string(),
+        optionIds: z.array(z.string()),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const userId = ctx.session.user.id;
+
+      const dealRoom = await ctx.prisma.dealRoom.findUnique({
+        where: { id: input.dealRoomId },
+        include: {
+          contractTemplate: true,
+          parties: true,
+        },
+      });
+
+      if (!dealRoom) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Deal room not found" });
+      }
+
+      const party = dealRoom.parties.find((p) => p.userId === userId);
+      if (!party) {
+        throw new TRPCError({ code: "FORBIDDEN", message: "Access denied" });
+      }
+
+      return cloudApi.scoreClauseQuality(
+        dealRoom.contractTemplate?.contractType || "",
+        dealRoom.governingLaw,
+        input.clauseTemplateId,
+        input.optionIds
+      );
+    }),
+
+  // Cross-clause conflict validation via Cloud Intelligence API
+  getValidation: protectedProcedure
+    .input(z.object({ dealRoomId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const userId = ctx.session.user.id;
+
+      const dealRoom = await ctx.prisma.dealRoom.findUnique({
+        where: { id: input.dealRoomId },
+        include: {
+          contractTemplate: true,
+          parties: true,
+          clauses: {
+            where: { status: "AGREED" },
+            include: {
+              clauseTemplate: true,
+            },
+          },
+        },
+      });
+
+      if (!dealRoom) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Deal room not found" });
+      }
+
+      const party = dealRoom.parties.find((p) => p.userId === userId);
+      if (!party) {
+        throw new TRPCError({ code: "FORBIDDEN", message: "Access denied" });
+      }
+
+      if (dealRoom.clauses.length === 0) {
+        return { conflicts: [], validated: false } as ValidationResult;
+      }
+
+      return cloudApi.validateCompliance({
+        contractType: dealRoom.contractTemplate?.contractType || "",
+        jurisdiction: dealRoom.governingLaw,
+        clauses: dealRoom.clauses.map((c) => ({
+          clauseId: c.clauseTemplate.clauseId,
+          optionId: c.agreedOptionId || "",
+          optionLabel: "",
+        })),
+      });
+    }),
+
+  // Satisfaction prediction via Cloud Intelligence API
+  predictSatisfaction: protectedProcedure
+    .input(z.object({ dealRoomId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const userId = ctx.session.user.id;
+
+      const dealRoom = await ctx.prisma.dealRoom.findUnique({
+        where: { id: input.dealRoomId },
+        include: {
+          contractTemplate: true,
+          parties: true,
+          clauses: {
+            include: {
+              clauseTemplate: {
+                include: { options: true },
+              },
+              selections: true,
+            },
+          },
+        },
+      });
+
+      if (!dealRoom) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Deal room not found" });
+      }
+
+      const party = dealRoom.parties.find((p) => p.userId === userId);
+      if (!party) {
+        throw new TRPCError({ code: "FORBIDDEN", message: "Access denied" });
+      }
+
+      const initiator = dealRoom.parties.find((p) => p.role === "INITIATOR");
+      const respondent = dealRoom.parties.find((p) => p.role === "RESPONDENT");
+      if (!initiator || !respondent) {
+        return { predictedSatisfactionA: 0, predictedSatisfactionB: 0, confidence: 0, predicted: false };
+      }
+
+      const selections = dealRoom.clauses
+        .map((clause) => {
+          const selA = clause.selections.find((s) => s.partyId === initiator.id);
+          const selB = clause.selections.find((s) => s.partyId === respondent.id);
+          if (!selA || !selB) return null;
+          return {
+            clauseId: clause.clauseTemplate.clauseId,
+            partyAOptionId: selA.optionId,
+            partyBOptionId: selB.optionId,
+            partyAPriority: selA.priority,
+            partyBPriority: selB.priority,
+          };
+        })
+        .filter((s): s is NonNullable<typeof s> => s !== null);
+
+      if (selections.length === 0) {
+        return { predictedSatisfactionA: 0, predictedSatisfactionB: 0, confidence: 0, predicted: false };
+      }
+
+      return cloudApi.predictSatisfaction({
+        contractType: dealRoom.contractTemplate?.contractType || "",
+        jurisdiction: dealRoom.governingLaw,
+        selections,
+      });
     }),
 
   // Accept or reject a compromise suggestion

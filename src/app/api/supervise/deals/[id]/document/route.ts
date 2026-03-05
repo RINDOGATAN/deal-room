@@ -13,6 +13,7 @@ import { renderToBuffer } from "@react-pdf/renderer";
 import {
   generateContractData,
   isDealSignable,
+  enrichWithCertification,
 } from "@/server/services/document/generator";
 import { ContractPDF } from "@/server/services/document/ContractPDF";
 
@@ -85,13 +86,15 @@ export async function GET(
       );
     }
 
-    const contractData = await generateContractData(dealRoomId);
+    let contractData = await generateContractData(dealRoomId);
     if (!contractData) {
       return NextResponse.json(
         { error: "Failed to generate contract data" },
         { status: 500 }
       );
     }
+
+    contractData = await enrichWithCertification(dealRoomId, contractData);
 
     const pdfBuffer = await renderToBuffer(
       ContractPDF({ data: contractData })

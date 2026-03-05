@@ -12,7 +12,7 @@ import {
   requireScope,
   ApiScopeError,
 } from "@/server/middleware/apiKeyAuth";
-import { generateContractData } from "@/server/services/document/generator";
+import { generateContractData, enrichWithCertification } from "@/server/services/document/generator";
 import { generateContractDocx } from "@/server/services/document/contractDocx";
 import { features } from "@/config/features";
 
@@ -64,13 +64,15 @@ export async function GET(
       );
     }
 
-    const contractData = await generateContractData(agentDeal.dealRoomId);
+    let contractData = await generateContractData(agentDeal.dealRoomId);
     if (!contractData) {
       return NextResponse.json(
         { error: "Failed to generate contract data" },
         { status: 500 }
       );
     }
+
+    contractData = await enrichWithCertification(agentDeal.dealRoomId, contractData);
 
     const docxBuffer = await generateContractDocx(contractData);
     const uint8Array = new Uint8Array(docxBuffer);

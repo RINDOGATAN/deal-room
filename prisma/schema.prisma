@@ -666,6 +666,8 @@ model SigningRequest {
   respondentSignature String? // Typed signature for respondent
   completedAt         DateTime?
   signedDocumentUrl   String? // URL to signed document
+  ceremonyId          String? // Cloud API certification ceremony ID
+  documentHash        String? // SHA-256 hash of contract data at signing time
   createdAt           DateTime      @default(now())
   updatedAt           DateTime      @updatedAt
 

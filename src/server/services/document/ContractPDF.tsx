@@ -14,7 +14,7 @@ import {
   StyleSheet,
   Font,
 } from "@react-pdf/renderer";
-import type { ContractData } from "./generator";
+import type { ContractData, CertificationData } from "./generator";
 import { brand } from "@/config/brand";
 
 // Register fonts (using built-in fonts for simplicity)
@@ -256,6 +256,76 @@ const styles = StyleSheet.create({
     borderBottomStyle: "solid",
     paddingBottom: 5,
   },
+  certificationFooter: {
+    position: "absolute",
+    bottom: 45,
+    left: 60,
+    right: 60,
+    borderTopWidth: 1,
+    borderTopColor: "#ccc",
+    borderTopStyle: "solid",
+    paddingTop: 6,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  certifiedBadge: {
+    fontSize: 7,
+    color: "#166534",
+    backgroundColor: "#dcfce7",
+    padding: "2 6",
+    borderRadius: 3,
+  },
+  uncertifiedBadge: {
+    fontSize: 7,
+    color: "#9a3412",
+    backgroundColor: "#fff7ed",
+    padding: "2 6",
+    borderRadius: 3,
+  },
+  auditPage: {
+    fontFamily: "Times-Roman",
+    fontSize: 10,
+    paddingTop: 60,
+    paddingBottom: 60,
+    paddingHorizontal: 60,
+    lineHeight: 1.5,
+  },
+  auditTitle: {
+    fontSize: 14,
+    fontWeight: "bold",
+    marginBottom: 20,
+    textAlign: "center",
+    textTransform: "uppercase",
+    letterSpacing: 1,
+  },
+  auditRow: {
+    flexDirection: "row",
+    marginBottom: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: "#eee",
+    borderBottomStyle: "solid",
+    paddingBottom: 6,
+  },
+  auditLabel: {
+    fontSize: 9,
+    color: "#666",
+    width: "30%",
+    textTransform: "uppercase",
+  },
+  auditValue: {
+    fontSize: 10,
+    width: "70%",
+  },
+  auditHash: {
+    fontSize: 8,
+    fontFamily: "Courier",
+    color: "#333",
+    backgroundColor: "#f5f5f5",
+    padding: "4 8",
+    marginTop: 4,
+    marginBottom: 12,
+  },
 });
 
 const PDF_LABELS: Record<string, Record<string, string>> = {
@@ -277,6 +347,14 @@ const PDF_LABELS: Record<string, Record<string, string>> = {
     of: "of",
     partyA: "Party A",
     partyB: "Party B",
+    certifiedBy: "Certified by TODO.LAW",
+    uncertified: "UNVERIFIED — This document has not been certified",
+    auditCertificate: "Audit Certificate",
+    documentHash: "Document Hash (SHA-256)",
+    certificationId: "Certification ID",
+    signatureTimestamps: "Signature Timestamps",
+    verificationUrl: "Verification",
+    verifyInstructions: "To verify this document, visit the URL above and enter the document hash.",
   },
   es: {
     effectiveDate: "Fecha de Efecto",
@@ -296,6 +374,14 @@ const PDF_LABELS: Record<string, Record<string, string>> = {
     of: "de",
     partyA: "Parte A",
     partyB: "Parte B",
+    certifiedBy: "Certificado por TODO.LAW",
+    uncertified: "SIN VERIFICAR — Este documento no ha sido certificado",
+    auditCertificate: "Certificado de Auditoría",
+    documentHash: "Hash del Documento (SHA-256)",
+    certificationId: "ID de Certificación",
+    signatureTimestamps: "Marcas de Tiempo de Firma",
+    verificationUrl: "Verificación",
+    verifyInstructions: "Para verificar este documento, visite la URL anterior e introduzca el hash del documento.",
   },
 };
 
@@ -614,6 +700,20 @@ export function ContractPDF({ data }: ContractPDFProps) {
           </>
         )}
 
+        {/* Certification footer */}
+        <View style={styles.certificationFooter} fixed>
+          <Text
+            style={data.certification?.certified ? styles.certifiedBadge : styles.uncertifiedBadge}
+          >
+            {data.certification?.certified ? labels.certifiedBy : labels.uncertified}
+          </Text>
+          <Text style={{ fontSize: 7, color: "#999" }}>
+            {data.certification?.documentHash
+              ? `SHA-256: ${data.certification.documentHash.slice(0, 16)}...`
+              : ""}
+          </Text>
+        </View>
+
         {/* Footer with page number */}
         <Text
           style={styles.footer}
@@ -623,6 +723,91 @@ export function ContractPDF({ data }: ContractPDFProps) {
           fixed
         />
       </Page>
+
+      {/* Audit Certificate Page (only when certified) */}
+      {data.certification?.certified && (
+        <AuditCertificatePage certification={data.certification} labels={labels} dealName={data.dealName} />
+      )}
     </Document>
+  );
+}
+
+function AuditCertificatePage({
+  certification,
+  labels,
+  dealName,
+}: {
+  certification: CertificationData;
+  labels: Record<string, string>;
+  dealName: string;
+}) {
+  return (
+    <Page size="A4" style={styles.auditPage}>
+      <View style={{ marginBottom: 30, textAlign: "center" }}>
+        <Text style={styles.auditTitle}>{labels.auditCertificate}</Text>
+        <Text style={{ fontSize: 9, color: "#666", textAlign: "center" }}>
+          {dealName}
+        </Text>
+      </View>
+
+      {/* Document Hash */}
+      <View style={{ marginBottom: 20 }}>
+        <View style={styles.auditRow}>
+          <Text style={styles.auditLabel}>{labels.documentHash}</Text>
+          <Text style={styles.auditValue}> </Text>
+        </View>
+        <Text style={styles.auditHash}>{certification.documentHash}</Text>
+      </View>
+
+      {/* Certification ID */}
+      <View style={styles.auditRow}>
+        <Text style={styles.auditLabel}>{labels.certificationId}</Text>
+        <Text style={styles.auditValue}>{certification.ceremonyId}</Text>
+      </View>
+
+      {/* Signature Timestamps */}
+      <View style={{ marginTop: 20, marginBottom: 20 }}>
+        <Text style={{ fontSize: 11, fontWeight: "bold", marginBottom: 10 }}>
+          {labels.signatureTimestamps}
+        </Text>
+        {certification.timestamps.map((ts, i) => (
+          <View key={i} style={{ marginBottom: 12, paddingLeft: 10, borderLeftWidth: 2, borderLeftColor: "#166534", borderLeftStyle: "solid" }}>
+            <Text style={{ fontSize: 10, fontWeight: "bold" }}>
+              {ts.partyRole === "INITIATOR" ? "Party A" : "Party B"}
+            </Text>
+            <Text style={{ fontSize: 9, color: "#666" }}>
+              Signed: {ts.signedAt}
+            </Text>
+            <Text style={{ fontSize: 8, color: "#999", fontFamily: "Courier" }}>
+              RFC 3161: {ts.rfc3161Timestamp || "N/A"}
+            </Text>
+          </View>
+        ))}
+      </View>
+
+      {/* Verification URL */}
+      {certification.verificationUrl && (
+        <View style={{ marginTop: 20, padding: 12, backgroundColor: "#f0fdf4", borderWidth: 1, borderColor: "#bbf7d0", borderStyle: "solid" }}>
+          <View style={styles.auditRow}>
+            <Text style={styles.auditLabel}>{labels.verificationUrl}</Text>
+            <Text style={{ ...styles.auditValue, color: "#166534" }}>
+              {certification.verificationUrl}
+            </Text>
+          </View>
+          <Text style={{ fontSize: 8, color: "#666", marginTop: 4 }}>
+            {labels.verifyInstructions}
+          </Text>
+        </View>
+      )}
+
+      {/* Footer */}
+      <Text
+        style={styles.footer}
+        render={({ pageNumber, totalPages }) =>
+          `${labels.auditCertificate} | ${labels.page} ${pageNumber} ${labels.of} ${totalPages}`
+        }
+        fixed
+      />
+    </Page>
   );
 }
