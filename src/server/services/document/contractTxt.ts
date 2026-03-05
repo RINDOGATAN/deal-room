@@ -158,12 +158,21 @@ export function generateContractTxt(data: ContractData): string {
     }
   }
 
-  // Jurisdiction
-  if (data.boilerplate?.jurisdictionProvision) {
+  // Jurisdiction provision(s) — multi or single
+  const jpList = data.boilerplate?.jurisdictionProvisions?.length
+    ? data.boilerplate.jurisdictionProvisions
+    : data.boilerplate?.jurisdictionProvision
+      ? [data.boilerplate.jurisdictionProvision]
+      : [];
+  if (jpList.length > 0) {
     lines.push(sectionHeader(l.governingLaw));
     lines.push("");
-    lines.push(data.boilerplate.jurisdictionProvision.text);
-    lines.push("");
+    for (const jp of jpList) {
+      lines.push(jp.title);
+      lines.push("");
+      lines.push(jp.text);
+      lines.push("");
+    }
   }
 
   // Signatures

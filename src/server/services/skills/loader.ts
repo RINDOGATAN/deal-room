@@ -137,6 +137,7 @@ const MetadataSchema = z.object({
   languages: z.array(z.string()).optional(),
   soloModeSupported: z.boolean().optional(),
   soloModeDefault: z.boolean().optional(),
+  soloModeOnly: z.boolean().optional(),
   templateFamily: z.string().optional(),
   category: z.union([z.string(), z.record(z.string(), z.string())]).optional(),
 });
@@ -927,6 +928,7 @@ export async function syncSkillsToDatabase(
           descriptionLocalized: (descriptionLocalized as any) || undefined,
           soloModeSupported: metadata?.soloModeSupported ?? false,
           soloModeDefault: metadata?.soloModeDefault ?? false,
+          soloModeOnly: metadata?.soloModeOnly ?? false,
         },
         update: {
           displayName: skill.displayName,
@@ -941,6 +943,7 @@ export async function syncSkillsToDatabase(
           descriptionLocalized: (descriptionLocalized as any) || undefined,
           soloModeSupported: metadata?.soloModeSupported ?? false,
           soloModeDefault: metadata?.soloModeDefault ?? false,
+          soloModeOnly: metadata?.soloModeOnly ?? false,
         },
       });
 

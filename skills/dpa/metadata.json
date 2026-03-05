@@ -12,5 +12,7 @@
   "version": "1.0",
   "clauseCount": 12,
   "jurisdictions": ["CALIFORNIA", "ENGLAND_WALES", "SPAIN"],
-  "languages": ["en", "es"]
+  "languages": ["en", "es"],
+  "soloModeSupported": true,
+  "soloModeDefault": false
 }

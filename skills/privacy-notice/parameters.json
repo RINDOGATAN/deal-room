@@ -1,0 +1,54 @@
+{
+  "version": "1.0",
+  "parameters": [
+    {
+      "id": "jurisdictions",
+      "token": "jurisdictions",
+      "scope": "*",
+      "type": "multiSelect",
+      "required": true,
+      "label": { "en": "Applicable Jurisdictions", "es": "Jurisdicciones aplicables" },
+      "hint": { "en": "Select all jurisdictions where your users are located", "es": "Selecciona todas las jurisdicciones donde se encuentran tus usuarios" },
+      "options": ["CALIFORNIA", "ENGLAND_WALES", "SPAIN"]
+    },
+    {
+      "id": "company-name",
+      "token": "company name",
+      "scope": "*",
+      "type": "text",
+      "required": true,
+      "label": { "en": "Company Name", "es": "Nombre de la empresa" },
+      "placeholder": { "en": "e.g., Acme Corp", "es": "p. ej., Acme S.L." },
+      "boilerplateVariable": "companyName"
+    },
+    {
+      "id": "company-website",
+      "token": "company website",
+      "scope": "*",
+      "type": "text",
+      "required": true,
+      "label": { "en": "Company Website", "es": "Sitio web de la empresa" },
+      "placeholder": { "en": "e.g., https://acme.com", "es": "p. ej., https://acme.es" },
+      "boilerplateVariable": "companyWebsite"
+    },
+    {
+      "id": "dpo-email",
+      "token": "DPO email",
+      "scope": "*",
+      "type": "text",
+      "required": true,
+      "label": { "en": "Privacy Contact Email", "es": "Correo electrónico de contacto de privacidad" },
+      "placeholder": { "en": "e.g., privacy@acme.com", "es": "p. ej., privacidad@acme.es" },
+      "boilerplateVariable": "dpoEmail"
+    },
+    {
+      "id": "effective-date",
+      "token": "effective date",
+      "scope": "*",
+      "type": "date",
+      "required": true,
+      "label": { "en": "Effective Date", "es": "Fecha de entrada en vigor" },
+      "boilerplateVariable": "effectiveDate"
+    }
+  ]
+}

@@ -1,0 +1,709 @@
+{
+  "contractType": "PRIVACY_NOTICE",
+  "displayName": {
+    "en": "Privacy Notice",
+    "es": "Aviso de Privacidad"
+  },
+  "description": {
+    "en": "Comprehensive privacy notice compliant with GDPR, UK GDPR, and CCPA/CPRA",
+    "es": "Aviso de privacidad integral conforme al RGPD, RGPD del Reino Unido y CCPA/CPRA"
+  },
+  "version": "1.0",
+  "clauses": [
+    {
+      "id": "data-collection-scope",
+      "title": { "en": "Data Collection Scope", "es": "Alcance de la recogida de datos" },
+      "category": { "en": "Collection", "es": "Recogida" },
+      "order": 1,
+      "plainDescription": {
+        "en": "Defines what types of personal data are collected from users",
+        "es": "Define qué tipos de datos personales se recogen de los usuarios"
+      },
+      "legalContext": {
+        "en": "Under GDPR Art. 13-14 and CCPA §1798.100, users must be informed of the categories of personal data collected.",
+        "es": "Conforme a los artículos 13-14 del RGPD y la §1798.100 de la CCPA, los usuarios deben ser informados de las categorías de datos personales recogidos."
+      },
+      "isRequired": true,
+      "options": [
+        {
+          "id": "opt-minimal-collection",
+          "code": "minimal-collection",
+          "label": { "en": "Essential Data Only", "es": "Solo datos esenciales" },
+          "order": 1,
+          "plainDescription": {
+            "en": "Collect only data strictly necessary for service operation",
+            "es": "Recoger solo los datos estrictamente necesarios para el funcionamiento del servicio"
+          },
+          "prosPartyA": { "en": ["Minimizes compliance risk", "Reduces storage costs"], "es": ["Minimiza el riesgo de cumplimiento", "Reduce los costes de almacenamiento"] },
+          "consPartyA": { "en": ["Limited analytics capabilities", "Less personalization"], "es": ["Capacidades de análisis limitadas", "Menor personalización"] },
+          "prosPartyB": { "en": [], "es": [] },
+          "consPartyB": { "en": [], "es": [] },
+          "legalText": {
+            "en": "We collect only the minimum Personal Data necessary to provide our services. This includes:\n\n(a) Account information: name, email address, and password;\n(b) Transaction data: records of services used and billing information;\n(c) Technical data: IP address, browser type, and device identifiers collected automatically during service use.\n\nWe do not collect data beyond what is strictly necessary for service delivery.",
+            "es": "Recogemos únicamente los Datos Personales mínimos necesarios para prestar nuestros servicios. Esto incluye:\n\n(a) Información de la cuenta: nombre, dirección de correo electrónico y contraseña;\n(b) Datos de transacciones: registros de los servicios utilizados e información de facturación;\n(c) Datos técnicos: dirección IP, tipo de navegador e identificadores de dispositivo recogidos automáticamente durante el uso del servicio.\n\nNo recogemos datos más allá de lo estrictamente necesario para la prestación del servicio."
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        },
+        {
+          "id": "opt-standard-collection",
+          "code": "standard-collection",
+          "label": { "en": "Standard Collection", "es": "Recogida estándar" },
+          "order": 2,
+          "plainDescription": {
+            "en": "Collect data needed for service operation and improvement",
+            "es": "Recoger datos necesarios para el funcionamiento y la mejora del servicio"
+          },
+          "prosPartyA": { "en": ["Enables service improvement", "Supports basic analytics"], "es": ["Permite la mejora del servicio", "Permite el análisis básico"] },
+          "consPartyA": { "en": ["Greater compliance obligations", "More data to protect"], "es": ["Mayores obligaciones de cumplimiento", "Más datos que proteger"] },
+          "prosPartyB": { "en": [], "es": [] },
+          "consPartyB": { "en": [], "es": [] },
+          "legalText": {
+            "en": "We collect the following categories of Personal Data:\n\n(a) Identity data: name, username, date of birth, and profile information;\n(b) Contact data: email address, telephone number, and mailing address;\n(c) Transaction data: payment details, purchase history, and subscription information;\n(d) Technical data: IP address, browser type and version, device identifiers, operating system, time zone, and location data;\n(e) Usage data: information about how you use our website and services, including pages visited, features used, and interaction patterns;\n(f) Communications data: your preferences for receiving communications from us.\n\nWe collect this data directly from you, automatically through your use of our services, and from third-party sources where permitted by law.",
+            "es": "Recogemos las siguientes categorías de Datos Personales:\n\n(a) Datos de identidad: nombre, nombre de usuario, fecha de nacimiento e información de perfil;\n(b) Datos de contacto: dirección de correo electrónico, número de teléfono y dirección postal;\n(c) Datos de transacciones: información de pago, historial de compras e información de suscripción;\n(d) Datos técnicos: dirección IP, tipo y versión del navegador, identificadores de dispositivo, sistema operativo, zona horaria y datos de ubicación;\n(e) Datos de uso: información sobre cómo utiliza nuestro sitio web y servicios, incluidas las páginas visitadas, las funciones utilizadas y los patrones de interacción;\n(f) Datos de comunicaciones: sus preferencias para recibir comunicaciones de nuestra parte.\n\nRecogemos estos datos directamente de usted, de forma automática mediante el uso de nuestros servicios y de fuentes de terceros cuando la ley lo permite."
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        },
+        {
+          "id": "opt-comprehensive-collection",
+          "code": "comprehensive-collection",
+          "label": { "en": "Comprehensive Collection", "es": "Recogida exhaustiva" },
+          "order": 3,
+          "plainDescription": {
+            "en": "Collect broad data categories for full analytics and personalization",
+            "es": "Recoger amplias categorías de datos para análisis y personalización completos"
+          },
+          "prosPartyA": { "en": ["Full analytics and insights", "Maximum personalization"], "es": ["Análisis e información completos", "Máxima personalización"] },
+          "consPartyA": { "en": ["Highest compliance burden", "Greatest storage and security requirements"], "es": ["Mayor carga de cumplimiento", "Mayores requisitos de almacenamiento y seguridad"] },
+          "prosPartyB": { "en": [], "es": [] },
+          "consPartyB": { "en": [], "es": [] },
+          "legalText": {
+            "en": "We collect the following categories of Personal Data:\n\n(a) Identity data: name, username, date of birth, gender, profile photo, and biographical information;\n(b) Contact data: email address, telephone number, mailing address, and social media handles;\n(c) Financial data: payment card details, bank account information, billing address, and transaction history;\n(d) Technical data: IP address, browser type and version, device identifiers, operating system, time zone, precise geolocation data, and network information;\n(e) Usage data: detailed information about how you use our website and services, including session recordings, click patterns, scroll depth, feature usage, and engagement metrics;\n(f) Profile data: your preferences, interests, feedback, survey responses, and marketing preferences;\n(g) Communications data: records of correspondence with us, customer support interactions, and communication preferences;\n(h) Inferred data: data we derive or infer from other data, such as preferences, characteristics, and behavioral patterns.\n\nWe collect this data directly from you, automatically through your use of our services, from third-party sources, and through inference and analysis.",
+            "es": "Recogemos las siguientes categorías de Datos Personales:\n\n(a) Datos de identidad: nombre, nombre de usuario, fecha de nacimiento, sexo, fotografía de perfil e información biográfica;\n(b) Datos de contacto: dirección de correo electrónico, número de teléfono, dirección postal y perfiles en redes sociales;\n(c) Datos financieros: datos de tarjetas de pago, información de cuentas bancarias, dirección de facturación e historial de transacciones;\n(d) Datos técnicos: dirección IP, tipo y versión del navegador, identificadores de dispositivo, sistema operativo, zona horaria, datos de geolocalización precisa e información de red;\n(e) Datos de uso: información detallada sobre cómo utiliza nuestro sitio web y servicios, incluidas grabaciones de sesiones, patrones de clics, profundidad de desplazamiento, uso de funciones y métricas de interacción;\n(f) Datos de perfil: sus preferencias, intereses, comentarios, respuestas a encuestas y preferencias de marketing;\n(g) Datos de comunicaciones: registros de correspondencia con nosotros, interacciones con el servicio de atención al cliente y preferencias de comunicación;\n(h) Datos inferidos: datos que derivamos o inferimos de otros datos, como preferencias, características y patrones de comportamiento.\n\nRecogemos estos datos directamente de usted, de forma automática mediante el uso de nuestros servicios, de fuentes de terceros y mediante inferencia y análisis."
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true, "warning": { "en": "Comprehensive collection requires detailed disclosure under CCPA §1798.100", "es": "La recogida exhaustiva requiere una divulgación detallada conforme a la §1798.100 de la CCPA" } },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true, "warning": { "en": "Ensure proportionality principle under GDPR Art. 5(1)(c)", "es": "Garantice el principio de proporcionalidad conforme al artículo 5.1.c del RGPD" } }
+          }
+        }
+      ]
+    },
+    {
+      "id": "legal-basis",
+      "title": { "en": "Legal Basis for Processing", "es": "Base jurídica del tratamiento" },
+      "category": { "en": "Legal Basis", "es": "Base jurídica" },
+      "order": 2,
+      "plainDescription": {
+        "en": "Specifies the legal grounds for processing personal data",
+        "es": "Especifica los fundamentos jurídicos para el tratamiento de datos personales"
+      },
+      "legalContext": {
+        "en": "GDPR Art. 6 requires a lawful basis for each processing activity. CCPA/CPRA uses a different framework based on purpose limitation and opt-out rights.",
+        "es": "El artículo 6 del RGPD exige una base jurídica para cada actividad de tratamiento. La CCPA/CPRA utiliza un marco diferente basado en la limitación de finalidad y los derechos de exclusión."
+      },
+      "isRequired": true,
+      "options": [
+        {
+          "id": "opt-consent-primary",
+          "code": "consent-primary",
+          "label": { "en": "Consent-Based", "es": "Basado en el consentimiento" },
+          "order": 1,
+          "plainDescription": {
+            "en": "Processing primarily relies on user consent",
+            "es": "El tratamiento se basa principalmente en el consentimiento del usuario"
+          },
+          "prosPartyA": { "en": ["Strong legal protection", "Clear user expectations"], "es": ["Fuerte protección jurídica", "Expectativas claras del usuario"] },
+          "consPartyA": { "en": ["Consent can be withdrawn at any time", "Requires consent management system"], "es": ["El consentimiento puede retirarse en cualquier momento", "Requiere sistema de gestión de consentimiento"] },
+          "prosPartyB": { "en": [], "es": [] },
+          "consPartyB": { "en": [], "es": [] },
+          "legalText": {
+            "en": "We process your Personal Data based on the following legal grounds:\n\n(a) Consent: Where you have given us explicit consent to process your Personal Data for specific purposes. You may withdraw your consent at any time by contacting us at [DPO email]. Withdrawal of consent does not affect the lawfulness of processing carried out before the withdrawal.\n\n(b) Contractual necessity: Where processing is necessary for the performance of a contract with you or to take pre-contractual steps at your request.\n\n(c) Legal obligation: Where processing is necessary for compliance with a legal obligation to which we are subject.",
+            "es": "Tratamos sus Datos Personales sobre las siguientes bases jurídicas:\n\n(a) Consentimiento: Cuando nos haya otorgado su consentimiento explícito para tratar sus Datos Personales con fines específicos. Puede retirar su consentimiento en cualquier momento poniéndose en contacto con nosotros en [DPO email]. La retirada del consentimiento no afecta a la licitud del tratamiento realizado antes de dicha retirada.\n\n(b) Necesidad contractual: Cuando el tratamiento sea necesario para la ejecución de un contrato con usted o para tomar medidas precontractuales a su solicitud.\n\n(c) Obligación legal: Cuando el tratamiento sea necesario para el cumplimiento de una obligación legal a la que estemos sujetos."
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        },
+        {
+          "id": "opt-legitimate-interest",
+          "code": "legitimate-interest",
+          "label": { "en": "Legitimate Interest Balanced", "es": "Interés legítimo equilibrado" },
+          "order": 2,
+          "plainDescription": {
+            "en": "Processing uses a mix of consent, contract, and legitimate interest",
+            "es": "El tratamiento utiliza una combinación de consentimiento, contrato e interés legítimo"
+          },
+          "prosPartyA": { "en": ["More flexible processing", "No consent management for some activities"], "es": ["Tratamiento más flexible", "Sin gestión de consentimiento para algunas actividades"] },
+          "consPartyA": { "en": ["Must conduct balancing test", "Users may object"], "es": ["Debe realizar una prueba de ponderación", "Los usuarios pueden oponerse"] },
+          "prosPartyB": { "en": [], "es": [] },
+          "consPartyB": { "en": [], "es": [] },
+          "legalText": {
+            "en": "We process your Personal Data based on the following legal grounds:\n\n(a) Consent: For marketing communications and non-essential cookies. You may withdraw consent at any time.\n\n(b) Contractual necessity: Where processing is necessary for service delivery and account management.\n\n(c) Legitimate interests: We process certain data based on our legitimate interests, including:\n  (i) Improving and developing our services;\n  (ii) Preventing fraud and ensuring security;\n  (iii) Internal analytics and reporting;\n  (iv) Personalizing user experience.\n\nWe conduct a balancing test for each legitimate interest to ensure your rights and freedoms are not overridden. You have the right to object to processing based on legitimate interests.\n\n(d) Legal obligation: Where required by law, regulation, or legal process.",
+            "es": "Tratamos sus Datos Personales sobre las siguientes bases jurídicas:\n\n(a) Consentimiento: Para comunicaciones comerciales y cookies no esenciales. Puede retirar su consentimiento en cualquier momento.\n\n(b) Necesidad contractual: Cuando el tratamiento sea necesario para la prestación del servicio y la gestión de la cuenta.\n\n(c) Intereses legítimos: Tratamos determinados datos sobre la base de nuestros intereses legítimos, incluidos:\n  (i) La mejora y el desarrollo de nuestros servicios;\n  (ii) La prevención del fraude y la garantía de la seguridad;\n  (iii) El análisis interno y la elaboración de informes;\n  (iv) La personalización de la experiencia del usuario.\n\nRealizamos una prueba de ponderación para cada interés legítimo a fin de garantizar que sus derechos y libertades no se vean menoscabados. Tiene derecho a oponerse al tratamiento basado en intereses legítimos.\n\n(d) Obligación legal: Cuando lo exija la ley, la normativa o un procedimiento legal."
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true, "note": { "en": "LOPDGDD Art. 19 specifies legitimate interest requirements for Spain", "es": "El artículo 19 de la LOPDGDD especifica los requisitos del interés legítimo para España" } }
+          }
+        }
+      ]
+    },
+    {
+      "id": "cookies-tracking",
+      "title": { "en": "Cookies and Tracking Technologies", "es": "Cookies y tecnologías de seguimiento" },
+      "category": { "en": "Cookies", "es": "Cookies" },
+      "order": 3,
+      "plainDescription": {
+        "en": "Defines the cookie and tracking technology policy",
+        "es": "Define la política de cookies y tecnologías de seguimiento"
+      },
+      "legalContext": {
+        "en": "EU ePrivacy Directive (Cookie Law) requires informed consent for non-essential cookies. CCPA requires disclosure of tracking technologies.",
+        "es": "La Directiva ePrivacy de la UE (Ley de Cookies) requiere consentimiento informado para cookies no esenciales. La CCPA requiere la divulgación de tecnologías de seguimiento."
+      },
+      "isRequired": true,
+      "options": [
+        {
+          "id": "opt-essential-cookies-only",
+          "code": "essential-cookies-only",
+          "label": { "en": "Essential Cookies Only", "es": "Solo cookies esenciales" },
+          "order": 1,
+          "plainDescription": {
+            "en": "Only use strictly necessary cookies",
+            "es": "Utilizar solo cookies estrictamente necesarias"
+          },
+          "prosPartyA": { "en": ["No cookie consent banner needed", "Simplest compliance"], "es": ["No se necesita banner de consentimiento de cookies", "Cumplimiento más sencillo"] },
+          "consPartyA": { "en": ["No analytics or marketing tracking", "Limited user insights"], "es": ["Sin seguimiento analítico o de marketing", "Información limitada sobre los usuarios"] },
+          "prosPartyB": { "en": [], "es": [] },
+          "consPartyB": { "en": [], "es": [] },
+          "legalText": {
+            "en": "We use only strictly necessary cookies that are essential for the operation of our website. These cookies:\n\n(a) Enable core functionality such as page navigation, secure areas, and session management;\n(b) Cannot be disabled without impairing the service;\n(c) Do not track you across websites;\n(d) Do not collect information for advertising purposes.\n\nWe do not use analytics cookies, advertising cookies, or any third-party tracking technologies.",
+            "es": "Utilizamos solo cookies estrictamente necesarias que son esenciales para el funcionamiento de nuestro sitio web. Estas cookies:\n\n(a) Habilitan funciones esenciales como la navegación de páginas, las áreas seguras y la gestión de sesiones;\n(b) No pueden desactivarse sin perjudicar el servicio;\n(c) No le rastrean a través de sitios web;\n(d) No recogen información con fines publicitarios.\n\nNo utilizamos cookies de análisis, cookies publicitarias ni tecnologías de seguimiento de terceros."
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        },
+        {
+          "id": "opt-consent-based-cookies",
+          "code": "consent-based-cookies",
+          "label": { "en": "Consent-Based Cookie Usage", "es": "Uso de cookies basado en consentimiento" },
+          "order": 2,
+          "plainDescription": {
+            "en": "Use analytics and marketing cookies with prior user consent",
+            "es": "Utilizar cookies analíticas y de marketing con consentimiento previo del usuario"
+          },
+          "prosPartyA": { "en": ["Enables analytics and marketing", "Legally compliant tracking"], "es": ["Permite el análisis y el marketing", "Seguimiento legalmente conforme"] },
+          "consPartyA": { "en": ["Requires cookie consent management", "Some users will opt out"], "es": ["Requiere gestión del consentimiento de cookies", "Algunos usuarios se excluirán"] },
+          "prosPartyB": { "en": [], "es": [] },
+          "consPartyB": { "en": [], "es": [] },
+          "legalText": {
+            "en": "We use the following categories of cookies and tracking technologies:\n\n(a) Strictly necessary cookies: Required for the website to function. These are set automatically and cannot be turned off.\n\n(b) Analytics cookies: Help us understand how visitors interact with our website by collecting information anonymously. These are only set with your consent.\n\n(c) Marketing cookies: Used to deliver relevant advertisements and measure campaign effectiveness. These are only set with your consent.\n\nWhen you first visit our website, we present a cookie consent banner allowing you to accept or reject non-essential cookies. You can change your preferences at any time through the cookie settings link in our website footer.\n\nWe do not use cookies for cross-site tracking or sell information collected through cookies.",
+            "es": "Utilizamos las siguientes categorías de cookies y tecnologías de seguimiento:\n\n(a) Cookies estrictamente necesarias: Imprescindibles para el funcionamiento del sitio web. Se establecen automáticamente y no pueden desactivarse.\n\n(b) Cookies analíticas: Nos ayudan a entender cómo los visitantes interactúan con nuestro sitio web recogiendo información de forma anónima. Solo se establecen con su consentimiento.\n\n(c) Cookies de marketing: Se utilizan para ofrecer anuncios relevantes y medir la eficacia de las campañas. Solo se establecen con su consentimiento.\n\nCuando visite nuestro sitio web por primera vez, le presentaremos un banner de consentimiento de cookies que le permitirá aceptar o rechazar las cookies no esenciales. Puede cambiar sus preferencias en cualquier momento a través del enlace de configuración de cookies en el pie de página de nuestro sitio web.\n\nNo utilizamos cookies para el seguimiento entre sitios ni vendemos la información recogida a través de cookies."
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        }
+      ]
+    },
+    {
+      "id": "third-party-sharing",
+      "title": { "en": "Third-Party Data Sharing", "es": "Cesión de datos a terceros" },
+      "category": { "en": "Sharing", "es": "Cesión" },
+      "order": 4,
+      "plainDescription": {
+        "en": "Defines third-party data sharing practices",
+        "es": "Define las prácticas de cesión de datos a terceros"
+      },
+      "legalContext": {
+        "en": "GDPR Art. 13(1)(e) requires disclosure of recipients. CCPA §1798.110 requires disclosure of categories of third parties.",
+        "es": "El artículo 13.1.e del RGPD exige la comunicación de los destinatarios. La §1798.110 de la CCPA exige la divulgación de las categorías de terceros."
+      },
+      "isRequired": true,
+      "options": [
+        {
+          "id": "opt-no-sharing",
+          "code": "no-sharing",
+          "label": { "en": "No Third-Party Sharing", "es": "Sin cesión a terceros" },
+          "order": 1,
+          "plainDescription": {
+            "en": "Do not share data with third parties except as legally required",
+            "es": "No ceder datos a terceros salvo por obligación legal"
+          },
+          "prosPartyA": { "en": ["Maximum privacy protection", "Simplest compliance"], "es": ["Máxima protección de la privacidad", "Cumplimiento más sencillo"] },
+          "consPartyA": { "en": ["May limit service capabilities", "No external integrations"], "es": ["Puede limitar las capacidades del servicio", "Sin integraciones externas"] },
+          "prosPartyB": { "en": [], "es": [] },
+          "consPartyB": { "en": [], "es": [] },
+          "legalText": {
+            "en": "We do not sell, rent, or share your Personal Data with third parties, except:\n\n(a) Where required by law, regulation, or legal process;\n(b) To protect our rights, property, or safety, or that of our users or others;\n(c) With your explicit consent.\n\nAll data processing is performed internally. We do not use third-party service providers for data processing.",
+            "es": "No vendemos, alquilamos ni cedemos sus Datos Personales a terceros, salvo:\n\n(a) Cuando lo exija la ley, la normativa o un procedimiento legal;\n(b) Para proteger nuestros derechos, propiedad o seguridad, o los de nuestros usuarios u otras personas;\n(c) Con su consentimiento explícito.\n\nTodo el tratamiento de datos se realiza internamente. No utilizamos prestadores de servicios externos para el tratamiento de datos."
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        },
+        {
+          "id": "opt-service-providers-only",
+          "code": "service-providers-only",
+          "label": { "en": "Service Providers Only", "es": "Solo prestadores de servicios" },
+          "order": 2,
+          "plainDescription": {
+            "en": "Share data only with vetted service providers under contract",
+            "es": "Ceder datos solo a prestadores de servicios verificados bajo contrato"
+          },
+          "prosPartyA": { "en": ["Enables cloud services and tools", "Controlled data sharing"], "es": ["Permite servicios en la nube y herramientas", "Cesión de datos controlada"] },
+          "consPartyA": { "en": ["Must manage provider contracts", "Increased data exposure surface"], "es": ["Debe gestionar contratos con proveedores", "Mayor superficie de exposición de datos"] },
+          "prosPartyB": { "en": [], "es": [] },
+          "consPartyB": { "en": [], "es": [] },
+          "legalText": {
+            "en": "We may share your Personal Data with the following categories of third parties:\n\n(a) Service providers: Companies that provide services on our behalf, such as hosting, payment processing, email delivery, and customer support. These providers are contractually bound to use your data only for the purposes we specify and to maintain appropriate security measures.\n\n(b) Professional advisors: Legal, accounting, and other professional advisors where necessary.\n\n(c) Legal compliance: Government authorities or law enforcement when required by law.\n\nWe do not sell your Personal Data. All service providers are subject to data processing agreements that comply with applicable data protection laws.\n\nCurrent categories of service providers include: cloud infrastructure, payment processing, email communications, and analytics.",
+            "es": "Podemos compartir sus Datos Personales con las siguientes categorías de terceros:\n\n(a) Prestadores de servicios: Empresas que prestan servicios en nuestro nombre, como alojamiento, procesamiento de pagos, envío de correos electrónicos y atención al cliente. Estos proveedores están contractualmente obligados a utilizar sus datos solo para los fines que les especificamos y a mantener medidas de seguridad adecuadas.\n\n(b) Asesores profesionales: Asesores legales, contables y otros asesores profesionales cuando sea necesario.\n\n(c) Cumplimiento legal: Autoridades gubernamentales o fuerzas de seguridad cuando lo exija la ley.\n\nNo vendemos sus Datos Personales. Todos los prestadores de servicios están sujetos a acuerdos de tratamiento de datos conformes con la legislación de protección de datos aplicable.\n\nLas categorías actuales de prestadores de servicios incluyen: infraestructura en la nube, procesamiento de pagos, comunicaciones por correo electrónico y análisis."
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        }
+      ]
+    },
+    {
+      "id": "international-transfers",
+      "title": { "en": "International Data Transfers", "es": "Transferencias internacionales de datos" },
+      "category": { "en": "Transfers", "es": "Transferencias" },
+      "order": 5,
+      "plainDescription": {
+        "en": "Describes cross-border data transfer practices and safeguards",
+        "es": "Describe las prácticas y salvaguardas para transferencias transfronterizas de datos"
+      },
+      "legalContext": {
+        "en": "GDPR Chapter V and UK GDPR require appropriate safeguards for international data transfers outside the EEA/UK.",
+        "es": "El Capítulo V del RGPD y el RGPD del RU exigen salvaguardas adecuadas para las transferencias internacionales de datos fuera del EEE/RU."
+      },
+      "isRequired": true,
+      "options": [
+        {
+          "id": "opt-no-international-transfers",
+          "code": "no-international-transfers",
+          "label": { "en": "No International Transfers", "es": "Sin transferencias internacionales" },
+          "order": 1,
+          "plainDescription": {
+            "en": "All data is stored and processed within the user's jurisdiction",
+            "es": "Todos los datos se almacenan y tratan dentro de la jurisdicción del usuario"
+          },
+          "prosPartyA": { "en": ["Simplest compliance", "No transfer safeguards needed"], "es": ["Cumplimiento más sencillo", "Sin necesidad de salvaguardas de transferencia"] },
+          "consPartyA": { "en": ["Limits service provider options", "May increase infrastructure costs"], "es": ["Limita las opciones de proveedores de servicios", "Puede aumentar los costes de infraestructura"] },
+          "prosPartyB": { "en": [], "es": [] },
+          "consPartyB": { "en": [], "es": [] },
+          "legalText": {
+            "en": "We store and process all Personal Data within the jurisdiction where it was collected. We do not transfer your Personal Data to any country outside the European Economic Area, the United Kingdom, or the United States (as applicable to your jurisdiction). All our servers and service providers are located within these regions.",
+            "es": "Almacenamos y tratamos todos los Datos Personales dentro de la jurisdicción donde fueron recogidos. No transferimos sus Datos Personales a ningún país fuera del Espacio Económico Europeo, el Reino Unido o los Estados Unidos (según corresponda a su jurisdicción). Todos nuestros servidores y prestadores de servicios se encuentran dentro de estas regiones."
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        },
+        {
+          "id": "opt-safeguarded-transfers",
+          "code": "safeguarded-transfers",
+          "label": { "en": "Safeguarded Transfers", "es": "Transferencias con salvaguardas" },
+          "order": 2,
+          "plainDescription": {
+            "en": "International transfers permitted with appropriate legal safeguards",
+            "es": "Transferencias internacionales permitidas con salvaguardas legales adecuadas"
+          },
+          "prosPartyA": { "en": ["Flexible service provider selection", "Global operations supported"], "es": ["Selección flexible de proveedores de servicios", "Operaciones globales respaldadas"] },
+          "consPartyA": { "en": ["Must implement transfer mechanisms", "Ongoing compliance monitoring"], "es": ["Debe implementar mecanismos de transferencia", "Supervisión continua del cumplimiento"] },
+          "prosPartyB": { "en": [], "es": [] },
+          "consPartyB": { "en": [], "es": [] },
+          "legalText": {
+            "en": "Your Personal Data may be transferred to and processed in countries other than the one in which you reside. Where we transfer Personal Data internationally, we ensure appropriate safeguards are in place:\n\n(a) Adequacy decisions: We transfer data to countries recognized as providing adequate data protection.\n\n(b) Standard Contractual Clauses: Where there is no adequacy decision, we use Standard Contractual Clauses (SCCs) adopted by the European Commission, or the UK International Data Transfer Agreement, as applicable.\n\n(c) Additional safeguards: We implement supplementary measures where necessary, such as encryption and access controls, in accordance with relevant regulatory guidance.\n\nYou may request a copy of the safeguards in place by contacting us at [DPO email].",
+            "es": "Sus Datos Personales pueden ser transferidos y tratados en países distintos al de su residencia. Cuando transfiramos Datos Personales internacionalmente, garantizamos que se adoptan las salvaguardas adecuadas:\n\n(a) Decisiones de adecuación: Transferimos datos a países reconocidos como proveedores de una protección de datos adecuada.\n\n(b) Cláusulas Contractuales Tipo: Cuando no exista una decisión de adecuación, utilizamos las Cláusulas Contractuales Tipo (CCT) adoptadas por la Comisión Europea, o el Acuerdo de Transferencia Internacional de Datos del RU, según corresponda.\n\n(c) Salvaguardas adicionales: Implementamos medidas complementarias cuando sea necesario, como el cifrado y los controles de acceso, de conformidad con las directrices regulatorias pertinentes.\n\nPuede solicitar una copia de las salvaguardas vigentes poniéndose en contacto con nosotros en [DPO email]."
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        }
+      ]
+    },
+    {
+      "id": "data-retention",
+      "title": { "en": "Data Retention", "es": "Conservación de datos" },
+      "category": { "en": "Retention", "es": "Conservación" },
+      "order": 6,
+      "plainDescription": {
+        "en": "Defines how long personal data is retained",
+        "es": "Define durante cuánto tiempo se conservan los datos personales"
+      },
+      "legalContext": {
+        "en": "GDPR Art. 5(1)(e) requires storage limitation. Organizations must define and disclose retention periods.",
+        "es": "El artículo 5.1.e del RGPD exige la limitación del almacenamiento. Las organizaciones deben definir y comunicar los períodos de conservación."
+      },
+      "isRequired": true,
+      "options": [
+        {
+          "id": "opt-short-retention",
+          "code": "short-retention",
+          "label": { "en": "Short Retention (1 year)", "es": "Conservación breve (1 año)" },
+          "order": 1,
+          "plainDescription": {
+            "en": "Delete personal data within 1 year of account closure or last activity",
+            "es": "Suprimir datos personales en el plazo de 1 año desde el cierre de la cuenta o la última actividad"
+          },
+          "prosPartyA": { "en": ["Minimizes data exposure", "Strong privacy stance"], "es": ["Minimiza la exposición de datos", "Postura sólida en materia de privacidad"] },
+          "consPartyA": { "en": ["May conflict with legal retention requirements", "Limited historical data"], "es": ["Puede entrar en conflicto con requisitos legales de conservación", "Datos históricos limitados"] },
+          "prosPartyB": { "en": [], "es": [] },
+          "consPartyB": { "en": [], "es": [] },
+          "legalText": {
+            "en": "We retain your Personal Data only for as long as necessary to fulfill the purposes for which it was collected:\n\n(a) Account data: Deleted within 30 days of account closure.\n(b) Transaction records: Retained for 1 year after the transaction, then deleted.\n(c) Usage data: Retained for a maximum of 12 months, then anonymized or deleted.\n(d) Marketing data: Deleted immediately upon withdrawal of consent.\n\nExceptions: We may retain certain data for longer periods where required by law (e.g., tax records, legal claims). Such retained data is restricted from further processing and securely deleted when the legal retention period expires.",
+            "es": "Conservamos sus Datos Personales solo durante el tiempo necesario para cumplir con los fines para los que fueron recogidos:\n\n(a) Datos de la cuenta: Suprimidos en un plazo de 30 días desde el cierre de la cuenta.\n(b) Registros de transacciones: Conservados durante 1 año después de la transacción y suprimidos a continuación.\n(c) Datos de uso: Conservados durante un máximo de 12 meses y anonimizados o suprimidos a continuación.\n(d) Datos de marketing: Suprimidos inmediatamente tras la retirada del consentimiento.\n\nExcepciones: Podemos conservar determinados datos durante períodos más prolongados cuando lo exija la ley (p. ej., registros fiscales, reclamaciones legales). Dichos datos conservados quedan restringidos a cualquier otro tratamiento y se suprimen de forma segura cuando expire el período de conservación legal."
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        },
+        {
+          "id": "opt-standard-retention",
+          "code": "standard-retention",
+          "label": { "en": "Standard Retention (3 years)", "es": "Conservación estándar (3 años)" },
+          "order": 2,
+          "plainDescription": {
+            "en": "Retain data for up to 3 years with periodic review",
+            "es": "Conservar datos hasta 3 años con revisión periódica"
+          },
+          "prosPartyA": { "en": ["Balanced approach", "Allows service improvement"], "es": ["Enfoque equilibrado", "Permite la mejora del servicio"] },
+          "consPartyA": { "en": ["More data to manage and protect", "Longer exposure window"], "es": ["Más datos que gestionar y proteger", "Mayor período de exposición"] },
+          "prosPartyB": { "en": [], "es": [] },
+          "consPartyB": { "en": [], "es": [] },
+          "legalText": {
+            "en": "We retain your Personal Data in accordance with the following schedule:\n\n(a) Account data: Retained for 3 years after account closure, then deleted.\n(b) Transaction records: Retained for 3 years after the transaction (or longer if required by tax or commercial law).\n(c) Usage data: Retained for up to 24 months for analytics purposes, then anonymized.\n(d) Marketing data: Retained until you withdraw consent or for 3 years from last engagement, whichever is earlier.\n(e) Legal and compliance data: Retained as required by applicable law.\n\nWe conduct an annual review of retained data to ensure we do not hold Personal Data longer than necessary. Data past its retention period is securely deleted or anonymized.",
+            "es": "Conservamos sus Datos Personales conforme al siguiente calendario:\n\n(a) Datos de la cuenta: Conservados durante 3 años después del cierre de la cuenta y suprimidos a continuación.\n(b) Registros de transacciones: Conservados durante 3 años después de la transacción (o más si lo exige la legislación fiscal o mercantil).\n(c) Datos de uso: Conservados hasta 24 meses con fines analíticos y anonimizados a continuación.\n(d) Datos de marketing: Conservados hasta la retirada del consentimiento o durante 3 años desde la última interacción, lo que ocurra primero.\n(e) Datos legales y de cumplimiento: Conservados según lo exija la legislación aplicable.\n\nRealizamos una revisión anual de los datos conservados para garantizar que no retenemos Datos Personales más tiempo del necesario. Los datos que hayan superado su período de conservación se suprimen de forma segura o se anonimizan."
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        }
+      ]
+    },
+    {
+      "id": "data-subject-rights",
+      "title": { "en": "Individual Rights", "es": "Derechos individuales" },
+      "category": { "en": "Rights", "es": "Derechos" },
+      "order": 7,
+      "plainDescription": {
+        "en": "Describes the rights individuals have regarding their personal data",
+        "es": "Describe los derechos que tienen las personas respecto a sus datos personales"
+      },
+      "legalContext": {
+        "en": "GDPR Arts. 15-22 establish data subject rights. CCPA §1798.100-125 establish consumer rights. UK GDPR mirrors EU GDPR rights.",
+        "es": "Los artículos 15-22 del RGPD establecen los derechos de los interesados. Los §§1798.100-125 de la CCPA establecen los derechos del consumidor. El RGPD del RU refleja los derechos del RGPD de la UE."
+      },
+      "isRequired": true,
+      "options": [
+        {
+          "id": "opt-standard-rights",
+          "code": "standard-rights",
+          "label": { "en": "Standard Rights Disclosure", "es": "Divulgación estándar de derechos" },
+          "order": 1,
+          "plainDescription": {
+            "en": "Inform users of their core data protection rights",
+            "es": "Informar a los usuarios de sus derechos fundamentales de protección de datos"
+          },
+          "prosPartyA": { "en": ["Meets legal requirements", "Clear and concise"], "es": ["Cumple los requisitos legales", "Claro y conciso"] },
+          "consPartyA": { "en": ["Basic level of detail", "May need supplementing per jurisdiction"], "es": ["Nivel básico de detalle", "Puede necesitar complementos por jurisdicción"] },
+          "prosPartyB": { "en": [], "es": [] },
+          "consPartyB": { "en": [], "es": [] },
+          "legalText": {
+            "en": "You have the following rights regarding your Personal Data:\n\n(a) Right of access: Request a copy of the Personal Data we hold about you.\n(b) Right to rectification: Request correction of inaccurate or incomplete data.\n(c) Right to erasure: Request deletion of your Personal Data in certain circumstances.\n(d) Right to restrict processing: Request restriction of processing in certain circumstances.\n(e) Right to data portability: Receive your data in a structured, machine-readable format.\n(f) Right to object: Object to processing based on legitimate interests or for direct marketing.\n(g) Right to withdraw consent: Withdraw consent at any time, without affecting prior processing.\n\nTo exercise any of these rights, contact us at [DPO email]. We will respond within 30 days (or as required by applicable law). We may request identity verification before processing your request.",
+            "es": "Tiene los siguientes derechos respecto a sus Datos Personales:\n\n(a) Derecho de acceso: Solicitar una copia de los Datos Personales que conservamos sobre usted.\n(b) Derecho de rectificación: Solicitar la corrección de datos inexactos o incompletos.\n(c) Derecho de supresión: Solicitar la supresión de sus Datos Personales en determinadas circunstancias.\n(d) Derecho a la limitación del tratamiento: Solicitar la restricción del tratamiento en determinadas circunstancias.\n(e) Derecho a la portabilidad de datos: Recibir sus datos en un formato estructurado y legible por máquina.\n(f) Derecho de oposición: Oponerse al tratamiento basado en intereses legítimos o con fines de marketing directo.\n(g) Derecho a retirar el consentimiento: Retirar el consentimiento en cualquier momento, sin que ello afecte al tratamiento anterior.\n\nPara ejercer cualquiera de estos derechos, póngase en contacto con nosotros en [DPO email]. Responderemos en un plazo de 30 días (o según lo exija la legislación aplicable). Podemos solicitar la verificación de su identidad antes de tramitar su solicitud."
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        },
+        {
+          "id": "opt-enhanced-rights",
+          "code": "enhanced-rights",
+          "label": { "en": "Enhanced Rights with Self-Service", "es": "Derechos ampliados con autoservicio" },
+          "order": 2,
+          "plainDescription": {
+            "en": "Full rights disclosure with self-service portal and detailed procedures",
+            "es": "Divulgación completa de derechos con portal de autoservicio y procedimientos detallados"
+          },
+          "prosPartyA": { "en": ["Best practice approach", "Reduces manual request handling"], "es": ["Enfoque de mejores prácticas", "Reduce la gestión manual de solicitudes"] },
+          "consPartyA": { "en": ["Requires self-service portal development", "Higher operational commitment"], "es": ["Requiere desarrollo de portal de autoservicio", "Mayor compromiso operativo"] },
+          "prosPartyB": { "en": [], "es": [] },
+          "consPartyB": { "en": [], "es": [] },
+          "legalText": {
+            "en": "You have the following rights regarding your Personal Data, which you may exercise through our self-service privacy portal or by contacting us at [DPO email]:\n\n(a) Right of access: Request and download a copy of all Personal Data we hold about you in a structured, machine-readable format through your account settings.\n(b) Right to rectification: Update or correct your Personal Data directly in your account, or contact us for data not accessible through your account.\n(c) Right to erasure (\"right to be forgotten\"): Delete your account and associated data through your account settings. We will process erasure within 30 days, subject to legal retention requirements.\n(d) Right to restrict processing: Pause processing of your data while we resolve a concern. Available through your account privacy settings.\n(e) Right to data portability: Export your data in JSON or CSV format through your account settings.\n(f) Right to object: Object to processing at any time. For direct marketing, objection takes immediate effect.\n(g) Right to withdraw consent: Withdraw consent via your privacy settings or cookie preferences at any time.\n(h) Right not to be subject to automated decision-making: You will not be subject to decisions based solely on automated processing that produce legal or similarly significant effects.\n\nWe will respond to all requests within 30 days. If a request is complex, we may extend this by an additional 60 days and will notify you. All requests are free of charge, unless manifestly unfounded or excessive.",
+            "es": "Tiene los siguientes derechos respecto a sus Datos Personales, que puede ejercer a través de nuestro portal de privacidad de autoservicio o poniéndose en contacto con nosotros en [DPO email]:\n\n(a) Derecho de acceso: Solicitar y descargar una copia de todos los Datos Personales que conservamos sobre usted en un formato estructurado y legible por máquina a través de la configuración de su cuenta.\n(b) Derecho de rectificación: Actualizar o corregir sus Datos Personales directamente en su cuenta, o contactarnos para datos no accesibles a través de su cuenta.\n(c) Derecho de supresión (\"derecho al olvido\"): Eliminar su cuenta y los datos asociados a través de la configuración de su cuenta. Tramitaremos la supresión en un plazo de 30 días, con sujeción a los requisitos legales de conservación.\n(d) Derecho a la limitación del tratamiento: Pausar el tratamiento de sus datos mientras resolvemos una cuestión. Disponible a través de la configuración de privacidad de su cuenta.\n(e) Derecho a la portabilidad de datos: Exportar sus datos en formato JSON o CSV a través de la configuración de su cuenta.\n(f) Derecho de oposición: Oponerse al tratamiento en cualquier momento. En caso de marketing directo, la oposición surte efecto inmediato.\n(g) Derecho a retirar el consentimiento: Retirar el consentimiento a través de la configuración de privacidad o las preferencias de cookies en cualquier momento.\n(h) Derecho a no ser objeto de decisiones automatizadas: No será objeto de decisiones basadas únicamente en el tratamiento automatizado que produzcan efectos jurídicos o igualmente significativos.\n\nResponderemos a todas las solicitudes en un plazo de 30 días. Si una solicitud es compleja, podremos ampliar este plazo 60 días adicionales y se lo notificaremos. Todas las solicitudes son gratuitas, salvo que sean manifiestamente infundadas o excesivas."
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        }
+      ]
+    },
+    {
+      "id": "children-privacy",
+      "title": { "en": "Children's Privacy", "es": "Privacidad de los menores" },
+      "category": { "en": "Children", "es": "Menores" },
+      "order": 8,
+      "plainDescription": {
+        "en": "Defines how children's data is handled",
+        "es": "Define cómo se gestionan los datos de los menores"
+      },
+      "legalContext": {
+        "en": "GDPR Art. 8 sets conditions for children's consent (16 in EU, may be lowered to 13 by member states; 14 in Spain). COPPA applies to children under 13 in the US.",
+        "es": "El artículo 8 del RGPD establece condiciones para el consentimiento de menores (16 en la UE, puede reducirse a 13 por los Estados miembros; 14 en España). La COPPA se aplica a menores de 13 años en EE.UU."
+      },
+      "isRequired": true,
+      "options": [
+        {
+          "id": "opt-no-children",
+          "code": "no-children",
+          "label": { "en": "Not Directed at Children", "es": "No dirigido a menores" },
+          "order": 1,
+          "plainDescription": {
+            "en": "Services are not intended for children and no children's data is knowingly collected",
+            "es": "Los servicios no están dirigidos a menores y no se recogen datos de menores de forma consciente"
+          },
+          "prosPartyA": { "en": ["Simplest compliance", "No age verification needed"], "es": ["Cumplimiento más sencillo", "Sin necesidad de verificación de edad"] },
+          "consPartyA": { "en": ["Excludes younger users", "Must still respond if children's data is discovered"], "es": ["Excluye a usuarios más jóvenes", "Debe responder si se descubren datos de menores"] },
+          "prosPartyB": { "en": [], "es": [] },
+          "consPartyB": { "en": [], "es": [] },
+          "legalText": {
+            "en": "Our services are not directed at children under the age of 16 (or 14 in Spain, or 13 in the United States). We do not knowingly collect Personal Data from children.\n\nIf we become aware that we have collected Personal Data from a child without appropriate parental or guardian consent, we will take steps to delete that information as quickly as possible.\n\nIf you believe we have collected data from a child, please contact us immediately at [DPO email].",
+            "es": "Nuestros servicios no están dirigidos a menores de 16 años (o 14 en España, o 13 en Estados Unidos). No recogemos de forma consciente Datos Personales de menores.\n\nSi tuviéramos conocimiento de que hemos recogido Datos Personales de un menor sin el consentimiento adecuado del padre, madre o tutor legal, tomaremos las medidas necesarias para suprimir dicha información lo antes posible.\n\nSi cree que hemos recogido datos de un menor, póngase en contacto con nosotros de inmediato en [DPO email]."
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        },
+        {
+          "id": "opt-age-appropriate",
+          "code": "age-appropriate",
+          "label": { "en": "Age-Appropriate Safeguards", "es": "Salvaguardas adecuadas a la edad" },
+          "order": 2,
+          "plainDescription": {
+            "en": "Includes age verification and parental consent mechanisms",
+            "es": "Incluye mecanismos de verificación de edad y consentimiento paterno"
+          },
+          "prosPartyA": { "en": ["Allows younger users with safeguards", "Proactive compliance"], "es": ["Permite usuarios más jóvenes con salvaguardas", "Cumplimiento proactivo"] },
+          "consPartyA": { "en": ["Requires age verification system", "Higher compliance costs"], "es": ["Requiere sistema de verificación de edad", "Mayores costes de cumplimiento"] },
+          "prosPartyB": { "en": [], "es": [] },
+          "consPartyB": { "en": [], "es": [] },
+          "legalText": {
+            "en": "We are committed to protecting the privacy of children. Our approach includes:\n\n(a) Age verification: We implement age-screening mechanisms to identify users who may be children.\n\n(b) Parental consent: For users under 16 (14 in Spain, 13 in the US), we require verifiable parental or guardian consent before collecting any Personal Data.\n\n(c) Limited collection: We limit data collection from children to only what is necessary for service participation.\n\n(d) No behavioral advertising: We do not target children with behavioral or interest-based advertising.\n\n(e) Parental rights: Parents or guardians may review, request deletion of, or refuse further collection of their child's Personal Data by contacting us at [DPO email].\n\n(f) We comply with the Children's Online Privacy Protection Act (COPPA) for US users, GDPR Article 8 requirements, and the UK Age Appropriate Design Code where applicable.",
+            "es": "Nos comprometemos a proteger la privacidad de los menores. Nuestro enfoque incluye:\n\n(a) Verificación de edad: Implementamos mecanismos de verificación de edad para identificar a los usuarios que puedan ser menores.\n\n(b) Consentimiento paterno: Para usuarios menores de 16 años (14 en España, 13 en EE.UU.), requerimos el consentimiento verificable del padre, madre o tutor legal antes de recoger cualquier Dato Personal.\n\n(c) Recogida limitada: Limitamos la recogida de datos de menores a lo estrictamente necesario para la participación en el servicio.\n\n(d) Sin publicidad comportamental: No dirigimos publicidad comportamental o basada en intereses a los menores.\n\n(e) Derechos de los padres: Los padres o tutores legales pueden revisar, solicitar la supresión o rechazar la recogida adicional de los Datos Personales de su hijo poniéndose en contacto con nosotros en [DPO email].\n\n(f) Cumplimos con la Children's Online Privacy Protection Act (COPPA) para usuarios de EE.UU., los requisitos del artículo 8 del RGPD y el UK Age Appropriate Design Code cuando sean aplicables."
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        }
+      ]
+    },
+    {
+      "id": "security-measures",
+      "title": { "en": "Security Measures", "es": "Medidas de seguridad" },
+      "category": { "en": "Security", "es": "Seguridad" },
+      "order": 9,
+      "plainDescription": {
+        "en": "Describes the security safeguards in place to protect personal data",
+        "es": "Describe las medidas de seguridad implementadas para proteger los datos personales"
+      },
+      "legalContext": {
+        "en": "GDPR Art. 32 requires appropriate technical and organizational security measures. CCPA requires reasonable security procedures.",
+        "es": "El artículo 32 del RGPD exige medidas de seguridad técnicas y organizativas adecuadas. La CCPA exige procedimientos de seguridad razonables."
+      },
+      "isRequired": true,
+      "options": [
+        {
+          "id": "opt-standard-security",
+          "code": "standard-security",
+          "label": { "en": "Standard Security", "es": "Seguridad estándar" },
+          "order": 1,
+          "plainDescription": {
+            "en": "Industry-standard security measures",
+            "es": "Medidas de seguridad estándar de la industria"
+          },
+          "prosPartyA": { "en": ["Meets baseline requirements", "Cost-effective"], "es": ["Cumple los requisitos básicos", "Rentable"] },
+          "consPartyA": { "en": ["May not satisfy enterprise clients", "Minimal detail provided"], "es": ["Puede no satisfacer a clientes empresariales", "Detalle mínimo proporcionado"] },
+          "prosPartyB": { "en": [], "es": [] },
+          "consPartyB": { "en": [], "es": [] },
+          "legalText": {
+            "en": "We implement appropriate technical and organizational measures to protect your Personal Data, including:\n\n(a) Encryption of data in transit using TLS 1.2 or higher;\n(b) Encryption of data at rest;\n(c) Access controls and authentication requirements;\n(d) Regular security assessments and vulnerability testing;\n(e) Employee security training and confidentiality obligations;\n(f) Incident response procedures.\n\nWhile we take reasonable steps to protect your Personal Data, no method of transmission over the Internet or electronic storage is completely secure. We cannot guarantee absolute security.",
+            "es": "Implementamos medidas técnicas y organizativas adecuadas para proteger sus Datos Personales, incluidas:\n\n(a) Cifrado de datos en tránsito mediante TLS 1.2 o superior;\n(b) Cifrado de datos en reposo;\n(c) Controles de acceso y requisitos de autenticación;\n(d) Evaluaciones de seguridad periódicas y pruebas de vulnerabilidades;\n(e) Formación en seguridad para empleados y obligaciones de confidencialidad;\n(f) Procedimientos de respuesta a incidentes.\n\nAunque adoptamos medidas razonables para proteger sus Datos Personales, ningún método de transmisión por Internet o de almacenamiento electrónico es completamente seguro. No podemos garantizar una seguridad absoluta."
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        },
+        {
+          "id": "opt-enhanced-security",
+          "code": "enhanced-security",
+          "label": { "en": "Enhanced Security Detail", "es": "Seguridad detallada y reforzada" },
+          "order": 2,
+          "plainDescription": {
+            "en": "Detailed security measures with certifications and specific controls",
+            "es": "Medidas de seguridad detalladas con certificaciones y controles específicos"
+          },
+          "prosPartyA": { "en": ["Builds trust with users", "Demonstrates compliance maturity"], "es": ["Genera confianza en los usuarios", "Demuestra madurez en el cumplimiento"] },
+          "consPartyA": { "en": ["Must maintain stated certifications", "More detail to keep updated"], "es": ["Debe mantener las certificaciones declaradas", "Más detalle que mantener actualizado"] },
+          "prosPartyB": { "en": [], "es": [] },
+          "consPartyB": { "en": [], "es": [] },
+          "legalText": {
+            "en": "We maintain a comprehensive security program that includes:\n\n(a) Technical measures:\n  (i) TLS 1.3 encryption for all data in transit;\n  (ii) AES-256 encryption for data at rest;\n  (iii) Multi-factor authentication for all administrative access;\n  (iv) Role-based access control with principle of least privilege;\n  (v) Web application firewalls and intrusion detection systems;\n  (vi) Regular penetration testing by qualified third parties;\n  (vii) Automated vulnerability scanning and patch management.\n\n(b) Organizational measures:\n  (i) Dedicated security team with defined responsibilities;\n  (ii) Annual security awareness training for all personnel;\n  (iii) Background checks for employees handling Personal Data;\n  (iv) Documented security policies reviewed annually;\n  (v) Vendor security assessment program.\n\n(c) Incident response:\n  (i) Documented incident response plan tested regularly;\n  (ii) 72-hour notification to supervisory authorities (GDPR);\n  (iii) Prompt notification to affected individuals when required;\n  (iv) Post-incident review and improvement process.\n\n(d) Business continuity:\n  (i) Regular data backups with tested restoration procedures;\n  (ii) Disaster recovery plan with defined recovery objectives;\n  (iii) Redundant infrastructure across geographic regions.",
+            "es": "Mantenemos un programa de seguridad integral que incluye:\n\n(a) Medidas técnicas:\n  (i) Cifrado TLS 1.3 para todos los datos en tránsito;\n  (ii) Cifrado AES-256 para datos en reposo;\n  (iii) Autenticación multifactor para todo acceso administrativo;\n  (iv) Control de acceso basado en roles con principio de mínimo privilegio;\n  (v) Cortafuegos de aplicaciones web y sistemas de detección de intrusos;\n  (vi) Pruebas de penetración periódicas realizadas por terceros cualificados;\n  (vii) Escaneo automatizado de vulnerabilidades y gestión de parches.\n\n(b) Medidas organizativas:\n  (i) Equipo de seguridad dedicado con responsabilidades definidas;\n  (ii) Formación anual en concienciación de seguridad para todo el personal;\n  (iii) Verificación de antecedentes para empleados que manejan Datos Personales;\n  (iv) Políticas de seguridad documentadas y revisadas anualmente;\n  (v) Programa de evaluación de seguridad de proveedores.\n\n(c) Respuesta a incidentes:\n  (i) Plan de respuesta a incidentes documentado y probado periódicamente;\n  (ii) Notificación en 72 horas a las autoridades de control (RGPD);\n  (iii) Notificación inmediata a las personas afectadas cuando sea necesario;\n  (iv) Proceso de revisión y mejora post-incidente.\n\n(d) Continuidad del negocio:\n  (i) Copias de seguridad periódicas con procedimientos de restauración probados;\n  (ii) Plan de recuperación ante desastres con objetivos de recuperación definidos;\n  (iii) Infraestructura redundante en distintas regiones geográficas."
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        }
+      ]
+    },
+    {
+      "id": "updates-notification",
+      "title": { "en": "Updates and Notifications", "es": "Actualizaciones y notificaciones" },
+      "category": { "en": "Updates", "es": "Actualizaciones" },
+      "order": 10,
+      "plainDescription": {
+        "en": "How users are notified of changes to the privacy notice",
+        "es": "Cómo se notifica a los usuarios sobre cambios en el aviso de privacidad"
+      },
+      "legalContext": {
+        "en": "Transparency principle under GDPR Art. 5(1)(a) requires clear communication of changes. Material changes may require renewed consent.",
+        "es": "El principio de transparencia del artículo 5.1.a del RGPD exige una comunicación clara de los cambios. Los cambios sustanciales pueden requerir un nuevo consentimiento."
+      },
+      "isRequired": true,
+      "options": [
+        {
+          "id": "opt-website-only",
+          "code": "website-only",
+          "label": { "en": "Website Publication Only", "es": "Solo publicación en el sitio web" },
+          "order": 1,
+          "plainDescription": {
+            "en": "Changes communicated by updating the notice on the website",
+            "es": "Cambios comunicados mediante la actualización del aviso en el sitio web"
+          },
+          "prosPartyA": { "en": ["Simple process", "No additional infrastructure"], "es": ["Proceso sencillo", "Sin infraestructura adicional"] },
+          "consPartyA": { "en": ["Users may not notice changes", "May not meet all regulatory expectations"], "es": ["Los usuarios pueden no notar los cambios", "Puede no cumplir todas las expectativas regulatorias"] },
+          "prosPartyB": { "en": [], "es": [] },
+          "consPartyB": { "en": [], "es": [] },
+          "legalText": {
+            "en": "We may update this Privacy Notice from time to time to reflect changes in our practices, technology, or legal requirements.\n\nWhen we make changes, we will:\n\n(a) Update the \"Effective Date\" at the top of this notice;\n(b) Post the revised notice on our website.\n\nWe encourage you to review this Privacy Notice periodically. Your continued use of our services after changes are posted constitutes acceptance of the updated notice.",
+            "es": "Podemos actualizar el presente Aviso de Privacidad periódicamente para reflejar cambios en nuestras prácticas, tecnología o requisitos legales.\n\nCuando realicemos cambios:\n\n(a) Actualizaremos la \"Fecha de entrada en vigor\" en la parte superior de este aviso;\n(b) Publicaremos el aviso revisado en nuestro sitio web.\n\nLe animamos a revisar este Aviso de Privacidad periódicamente. El uso continuado de nuestros servicios tras la publicación de los cambios constituye la aceptación del aviso actualizado."
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        },
+        {
+          "id": "opt-proactive-notification",
+          "code": "proactive-notification",
+          "label": { "en": "Proactive Email Notification", "es": "Notificación proactiva por correo electrónico" },
+          "order": 2,
+          "plainDescription": {
+            "en": "Notify users by email of material changes with opt-out option",
+            "es": "Notificar a los usuarios por correo electrónico de cambios sustanciales con opción de exclusión"
+          },
+          "prosPartyA": { "en": ["Strong transparency", "Builds user trust"], "es": ["Fuerte transparencia", "Genera confianza del usuario"] },
+          "consPartyA": { "en": ["Requires notification system", "May prompt account deletions"], "es": ["Requiere sistema de notificación", "Puede provocar eliminaciones de cuentas"] },
+          "prosPartyB": { "en": [], "es": [] },
+          "consPartyB": { "en": [], "es": [] },
+          "legalText": {
+            "en": "We may update this Privacy Notice from time to time. Our notification approach depends on the significance of the changes:\n\n(a) Material changes: We will notify you by email at least 30 days before the changes take effect. Material changes include new categories of data collection, new purposes of processing, new categories of third-party recipients, or changes that affect your rights.\n\n(b) Non-material changes: Minor updates such as formatting, clarifications, or contact information changes will be made by updating the notice on our website.\n\nFor material changes:\n(i) You will receive a clear summary of what is changing and why;\n(ii) If the changes affect processing based on your consent, we will seek renewed consent;\n(iii) If you do not agree with material changes, you may close your account before the changes take effect.\n\nThe \"Effective Date\" at the top of this notice indicates the date of the last update.",
+            "es": "Podemos actualizar el presente Aviso de Privacidad periódicamente. Nuestro enfoque de notificación depende de la importancia de los cambios:\n\n(a) Cambios sustanciales: Le notificaremos por correo electrónico con al menos 30 días de antelación antes de que los cambios entren en vigor. Los cambios sustanciales incluyen nuevas categorías de recogida de datos, nuevos fines de tratamiento, nuevas categorías de destinatarios terceros o cambios que afecten a sus derechos.\n\n(b) Cambios no sustanciales: Las actualizaciones menores como formato, aclaraciones o cambios en la información de contacto se realizarán mediante la actualización del aviso en nuestro sitio web.\n\nPara cambios sustanciales:\n(i) Recibirá un resumen claro de qué está cambiando y por qué;\n(ii) Si los cambios afectan al tratamiento basado en su consentimiento, solicitaremos un nuevo consentimiento;\n(iii) Si no está de acuerdo con los cambios sustanciales, puede cerrar su cuenta antes de que los cambios entren en vigor.\n\nLa \"Fecha de entrada en vigor\" en la parte superior de este aviso indica la fecha de la última actualización."
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
+          "jurisdictionConfig": {
+            "CALIFORNIA": { "available": true },
+            "ENGLAND_WALES": { "available": true },
+            "SPAIN": { "available": true }
+          }
+        }
+      ]
+    }
+  ]
+}

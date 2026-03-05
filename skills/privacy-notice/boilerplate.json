@@ -1,0 +1,107 @@
+{
+  "contractTitle": {
+    "en": "PRIVACY NOTICE",
+    "es": "AVISO DE PRIVACIDAD"
+  },
+  "preamble": {
+    "en": "This Privacy Notice describes how {companyName} (\"we\", \"us\", or \"our\") collects, uses, shares, and protects personal information when you use our website at {companyWebsite} and our related services.\n\nEffective Date: {effectiveDate}\n\nFor privacy inquiries, contact us at: {dpoEmail}",
+    "es": "El presente Aviso de Privacidad describe cómo {companyName} (\"nosotros\" o \"la empresa\") recoge, utiliza, comparte y protege la información personal cuando usted utiliza nuestro sitio web en {companyWebsite} y nuestros servicios relacionados.\n\nFecha de entrada en vigor: {effectiveDate}\n\nPara consultas sobre privacidad, póngase en contacto con nosotros en: {dpoEmail}"
+  },
+  "definitions": [
+    {
+      "term": { "en": "Personal Data", "es": "Datos Personales" },
+      "definition": {
+        "en": "means any information relating to an identified or identifiable natural person, including but not limited to name, email address, IP address, device identifiers, and browsing behavior.",
+        "es": "designa toda información relativa a una persona física identificada o identificable, incluidos, entre otros, el nombre, la dirección de correo electrónico, la dirección IP, los identificadores de dispositivo y el comportamiento de navegación."
+      }
+    },
+    {
+      "term": { "en": "Processing", "es": "Tratamiento" },
+      "definition": {
+        "en": "means any operation performed on Personal Data, whether by automated means or not, including collection, recording, storage, use, disclosure, or erasure.",
+        "es": "designa cualquier operación realizada sobre Datos Personales, por medios automatizados o no, incluidas la recogida, el registro, el almacenamiento, la utilización, la comunicación o la supresión."
+      }
+    },
+    {
+      "term": { "en": "Data Controller", "es": "Responsable del Tratamiento" },
+      "definition": {
+        "en": "means {companyName}, which determines the purposes and means of processing your Personal Data.",
+        "es": "designa a {companyName}, que determina los fines y medios del tratamiento de sus Datos Personales."
+      }
+    },
+    {
+      "term": { "en": "Service Providers", "es": "Prestadores de Servicios" },
+      "definition": {
+        "en": "means third parties that process Personal Data on our behalf to help us operate our services.",
+        "es": "designa a terceros que tratan Datos Personales por nuestra cuenta para ayudarnos a operar nuestros servicios."
+      }
+    }
+  ],
+  "standardClauses": [
+    {
+      "id": "contact-information",
+      "title": { "en": "Contact Information", "es": "Información de contacto" },
+      "text": {
+        "en": "If you have questions about this Privacy Notice or wish to exercise your rights, please contact us:\n\n{companyName}\nWebsite: {companyWebsite}\nPrivacy contact: {dpoEmail}",
+        "es": "Si tiene preguntas sobre el presente Aviso de Privacidad o desea ejercer sus derechos, póngase en contacto con nosotros:\n\n{companyName}\nSitio web: {companyWebsite}\nContacto de privacidad: {dpoEmail}"
+      }
+    }
+  ],
+  "generalProvisions": [
+    {
+      "id": "governing-framework",
+      "title": { "en": "Governing Framework", "es": "Marco normativo" },
+      "text": {
+        "en": "This Privacy Notice is governed by the applicable data protection laws in the jurisdictions where we operate and where our users are located.",
+        "es": "El presente Aviso de Privacidad se rige por la legislación de protección de datos aplicable en las jurisdicciones donde operamos y donde se encuentran nuestros usuarios."
+      }
+    },
+    {
+      "id": "severability",
+      "title": { "en": "Severability", "es": "Divisibilidad" },
+      "text": {
+        "en": "If any provision of this Privacy Notice is found to be invalid or unenforceable, the remaining provisions will continue in full force and effect.",
+        "es": "Si alguna disposición del presente Aviso de Privacidad resultase inválida o inaplicable, las restantes disposiciones conservarán su plena vigencia y eficacia."
+      }
+    }
+  ],
+  "jurisdictionProvisions": {
+    "CALIFORNIA": {
+      "id": "jurisdiction-california",
+      "title": {
+        "en": "California Privacy Rights (CCPA/CPRA)",
+        "es": "Derechos de privacidad de California (CCPA/CPRA)"
+      },
+      "text": {
+        "en": "If you are a California resident, you have additional rights under the California Consumer Privacy Act (CCPA) and California Privacy Rights Act (CPRA):\n\n(a) Right to Know: You have the right to request that we disclose the categories and specific pieces of Personal Information we have collected about you, the categories of sources, the business purpose for collection, and the categories of third parties with whom we share it.\n\n(b) Right to Delete: You have the right to request deletion of your Personal Information, subject to certain exceptions.\n\n(c) Right to Correct: You have the right to request correction of inaccurate Personal Information.\n\n(d) Right to Opt Out of Sale/Sharing: You have the right to opt out of the sale or sharing of your Personal Information. We do not sell Personal Information as defined by the CCPA/CPRA.\n\n(e) Right to Limit Use of Sensitive Personal Information: You have the right to limit the use of your sensitive Personal Information to purposes necessary to provide the services.\n\n(f) Non-Discrimination: We will not discriminate against you for exercising any of your CCPA/CPRA rights.\n\nTo exercise these rights, contact us at {dpoEmail}. We will respond within 45 days of receiving a verifiable request.\n\nCategories of Personal Information collected in the preceding 12 months include: identifiers, commercial information, internet activity, and professional information.",
+        "es": "Si usted es residente en California, tiene derechos adicionales en virtud de la Ley de Privacidad del Consumidor de California (CCPA) y la Ley de Derechos de Privacidad de California (CPRA):\n\n(a) Derecho a saber: Tiene derecho a solicitar que le informemos sobre las categorías y los elementos específicos de Información Personal que hemos recopilado sobre usted, las categorías de fuentes, la finalidad empresarial de la recopilación y las categorías de terceros con quienes la compartimos.\n\n(b) Derecho de supresión: Tiene derecho a solicitar la supresión de su Información Personal, con sujeción a determinadas excepciones.\n\n(c) Derecho de rectificación: Tiene derecho a solicitar la corrección de la Información Personal inexacta.\n\n(d) Derecho a excluirse de la venta/cesión: Tiene derecho a excluirse de la venta o cesión de su Información Personal. No vendemos Información Personal en el sentido de la CCPA/CPRA.\n\n(e) Derecho a limitar el uso de Información Personal Sensible: Tiene derecho a limitar el uso de su Información Personal Sensible a los fines necesarios para prestar los servicios.\n\n(f) No discriminación: No le discriminaremos por ejercer cualquiera de sus derechos conforme a la CCPA/CPRA.\n\nPara ejercer estos derechos, póngase en contacto con nosotros en {dpoEmail}. Responderemos en un plazo de 45 días desde la recepción de una solicitud verificable.\n\nLas categorías de Información Personal recopiladas en los últimos 12 meses incluyen: identificadores, información comercial, actividad en internet e información profesional."
+      }
+    },
+    "ENGLAND_WALES": {
+      "id": "jurisdiction-uk",
+      "title": {
+        "en": "UK GDPR and Data Protection Act 2018",
+        "es": "RGPD del Reino Unido y Data Protection Act 2018"
+      },
+      "text": {
+        "en": "If you are located in the United Kingdom, the following provisions apply under the UK General Data Protection Regulation (UK GDPR) and the Data Protection Act 2018:\n\n(a) Data Controller: {companyName} is the data controller for the purposes of UK data protection law.\n\n(b) Lawful Basis: We process your Personal Data on the following lawful bases: (i) your consent; (ii) performance of a contract; (iii) compliance with legal obligations; (iv) our legitimate interests, provided these are not overridden by your rights and freedoms.\n\n(c) Your Rights: Under UK GDPR, you have the right to: access, rectification, erasure, restriction of processing, data portability, and objection. You also have the right to withdraw consent at any time.\n\n(d) International Transfers: Where we transfer your Personal Data outside the UK, we ensure appropriate safeguards are in place, including the UK International Data Transfer Agreement or UK Addendum to the EU Standard Contractual Clauses.\n\n(e) Data Protection Officer: For data protection inquiries, contact {dpoEmail}.\n\n(f) Right to Complain: You have the right to lodge a complaint with the Information Commissioner's Office (ICO) at https://ico.org.uk/make-a-complaint/.\n\n(g) Automated Decision-Making: We do not make decisions based solely on automated processing that produce legal or similarly significant effects concerning you.",
+        "es": "Si usted se encuentra en el Reino Unido, se aplican las siguientes disposiciones en virtud del Reglamento General de Protección de Datos del RU (RGPD del RU) y la Data Protection Act 2018:\n\n(a) Responsable del tratamiento: {companyName} es el responsable del tratamiento a efectos de la legislación de protección de datos del RU.\n\n(b) Base jurídica: Tratamos sus Datos Personales sobre las siguientes bases jurídicas: (i) su consentimiento; (ii) la ejecución de un contrato; (iii) el cumplimiento de obligaciones legales; (iv) nuestros intereses legítimos, siempre que no prevalezcan sus derechos y libertades.\n\n(c) Sus derechos: En virtud del RGPD del RU, tiene derecho a: acceso, rectificación, supresión, limitación del tratamiento, portabilidad de datos y oposición. También tiene derecho a retirar su consentimiento en cualquier momento.\n\n(d) Transferencias internacionales: Cuando transfiramos sus Datos Personales fuera del RU, garantizamos que se adoptan las salvaguardas adecuadas, incluido el Acuerdo de Transferencia Internacional de Datos del RU o el Addendum del RU a las Cláusulas Contractuales Tipo de la UE.\n\n(e) Delegado de protección de datos: Para consultas sobre protección de datos, contacte con {dpoEmail}.\n\n(f) Derecho de reclamación: Tiene derecho a presentar una reclamación ante la Information Commissioner's Office (ICO) en https://ico.org.uk/make-a-complaint/.\n\n(g) Decisiones automatizadas: No tomamos decisiones basadas únicamente en el tratamiento automatizado que produzcan efectos jurídicos o igualmente significativos sobre usted."
+      }
+    },
+    "SPAIN": {
+      "id": "jurisdiction-spain",
+      "title": {
+        "en": "GDPR and LOPDGDD (Spain)",
+        "es": "RGPD y LOPDGDD (España)"
+      },
+      "text": {
+        "en": "If you are located in Spain or the European Union, the following provisions apply under the General Data Protection Regulation (EU GDPR) and the Ley Orgánica 3/2018, de Protección de Datos Personales y garantía de los derechos digitales (LOPDGDD):\n\n(a) Data Controller: {companyName} is the data controller. Contact: {dpoEmail}.\n\n(b) Lawful Basis: We process your Personal Data on the following lawful bases as defined in Article 6 GDPR: (i) your consent (Article 6.1.a); (ii) performance of a contract (Article 6.1.b); (iii) compliance with legal obligations (Article 6.1.c); (iv) our legitimate interests (Article 6.1.f), provided these do not override your fundamental rights and freedoms.\n\n(c) Your Rights: Under the GDPR and LOPDGDD, you have the right to: access (Article 15), rectification (Article 16), erasure (Article 17), restriction of processing (Article 18), data portability (Article 20), objection (Article 21), and the right not to be subject to automated individual decision-making (Article 22). You also have the right to digital testament provisions under the LOPDGDD.\n\n(d) International Transfers: Where we transfer your Personal Data outside the EEA, we ensure appropriate safeguards are in place as required by Chapter V of the GDPR, including Standard Contractual Clauses adopted by the European Commission.\n\n(e) Supervisory Authority: You have the right to lodge a complaint with the Agencia Española de Protección de Datos (AEPD) at https://www.aepd.es/.\n\n(f) Data Retention: We retain your Personal Data only for as long as necessary to fulfil the purposes described in this notice, unless a longer retention period is required or permitted by law.\n\n(g) Digital Rights: In accordance with Title X of the LOPDGDD, we guarantee your digital rights in the context of using our services, including the right to digital security and digital education.",
+        "es": "Si usted se encuentra en España o la Unión Europea, se aplican las siguientes disposiciones en virtud del Reglamento General de Protección de Datos (RGPD de la UE) y la Ley Orgánica 3/2018, de Protección de Datos Personales y garantía de los derechos digitales (LOPDGDD):\n\n(a) Responsable del tratamiento: {companyName} es el responsable del tratamiento. Contacto: {dpoEmail}.\n\n(b) Base jurídica: Tratamos sus Datos Personales sobre las siguientes bases jurídicas conforme al artículo 6 del RGPD: (i) su consentimiento (artículo 6.1.a); (ii) la ejecución de un contrato (artículo 6.1.b); (iii) el cumplimiento de obligaciones legales (artículo 6.1.c); (iv) nuestros intereses legítimos (artículo 6.1.f), siempre que no prevalezcan sus derechos y libertades fundamentales.\n\n(c) Sus derechos: En virtud del RGPD y la LOPDGDD, tiene derecho a: acceso (artículo 15), rectificación (artículo 16), supresión (artículo 17), limitación del tratamiento (artículo 18), portabilidad de datos (artículo 20), oposición (artículo 21) y a no ser objeto de decisiones individuales automatizadas (artículo 22). También tiene derecho a las disposiciones de testamento digital conforme a la LOPDGDD.\n\n(d) Transferencias internacionales: Cuando transfiramos sus Datos Personales fuera del EEE, garantizamos que se adoptan las salvaguardas adecuadas conforme al Capítulo V del RGPD, incluidas las Cláusulas Contractuales Tipo adoptadas por la Comisión Europea.\n\n(e) Autoridad de control: Tiene derecho a presentar una reclamación ante la Agencia Española de Protección de Datos (AEPD) en https://www.aepd.es/.\n\n(f) Conservación de datos: Conservamos sus Datos Personales únicamente durante el tiempo necesario para cumplir con los fines descritos en este aviso, salvo que un período de conservación más largo sea exigido o permitido por la ley.\n\n(g) Derechos digitales: De conformidad con el Título X de la LOPDGDD, garantizamos sus derechos digitales en el contexto del uso de nuestros servicios, incluido el derecho a la seguridad digital y a la educación digital."
+      }
+    }
+  },
+  "signatureBlock": {
+    "en": "This Privacy Notice was last updated on {effectiveDate}.\n\n{companyName}\n{companyWebsite}\n{dpoEmail}",
+    "es": "El presente Aviso de Privacidad fue actualizado por última vez el {effectiveDate}.\n\n{companyName}\n{companyWebsite}\n{dpoEmail}"
+  }
+}

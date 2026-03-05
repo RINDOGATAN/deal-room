@@ -436,8 +436,17 @@ export function ContractPDF({ data }: ContractPDFProps) {
               </View>
             )}
 
-            {/* Jurisdiction-Specific Provisions */}
-            {data.boilerplate!.jurisdictionProvision && (
+            {/* Jurisdiction-Specific Provisions (multi or single) */}
+            {data.boilerplate!.jurisdictionProvisions?.length ? (
+              data.boilerplate!.jurisdictionProvisions.map((jp, i) => (
+                <View key={i} style={styles.section} wrap={false}>
+                  <Text style={styles.sectionTitle}>
+                    {sectionNumber++}. {jp.title}
+                  </Text>
+                  <Text style={styles.provisionText}>{jp.text}</Text>
+                </View>
+              ))
+            ) : data.boilerplate!.jurisdictionProvision ? (
               <View style={styles.section} wrap={false}>
                 <Text style={styles.sectionTitle}>
                   {sectionNumber++}.{" "}
@@ -447,7 +456,7 @@ export function ContractPDF({ data }: ContractPDFProps) {
                   {data.boilerplate!.jurisdictionProvision.text}
                 </Text>
               </View>
-            )}
+            ) : null}
 
             {/* Governing Law Box */}
             <View style={styles.governingLawBox}>
