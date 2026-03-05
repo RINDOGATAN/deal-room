@@ -64,7 +64,7 @@ export default function AnalyticsPage() {
           <p className="text-sm text-muted-foreground">Completed</p>
         </div>
         <div className="card-brutal text-center">
-          <BarChart className="w-6 h-6 text-purple-500 mx-auto mb-2" />
+          <BarChart className="w-6 h-6 text-primary mx-auto mb-2" />
           <p className="text-3xl font-bold">
             {analytics?.avgRounds ? analytics.avgRounds.toFixed(1) : "0"}
           </p>

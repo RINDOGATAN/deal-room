@@ -21,7 +21,7 @@ const statusConfig = {
   AWAITING_RESPONSE: { label: "Awaiting", color: "bg-yellow-500/20 text-yellow-500", icon: Clock },
   NEGOTIATING: { label: "Negotiating", color: "bg-blue-500/20 text-blue-500", icon: Users },
   AGREED: { label: "Agreed", color: "bg-primary/20 text-primary", icon: CheckCircle },
-  SIGNING: { label: "Signing", color: "bg-purple-500/20 text-purple-500", icon: FileText },
+  SIGNING: { label: "Signing", color: "bg-primary/20 text-primary", icon: FileText },
   COMPLETED: { label: "Completed", color: "bg-green-500/20 text-green-500", icon: CheckCircle },
   CANCELLED: { label: "Cancelled", color: "bg-yellow-500/20 text-yellow-600", icon: AlertCircle },
 };
@@ -162,7 +162,7 @@ export default function AllDealsPage() {
                     <div className="space-y-1">
                       {assignments.map((a) => (
                         <div key={a.id} className="flex items-center gap-2">
-                          <Badge className="bg-purple-500/20 text-purple-500 text-xs">
+                          <Badge className="bg-primary/20 text-primary text-xs">
                             {a.supervisor.name || a.supervisor.email}
                           </Badge>
                           <button
@@ -223,7 +223,7 @@ export default function AllDealsPage() {
                   ) : (
                     <button
                       onClick={() => setSelectedDeal(deal.id)}
-                      className="flex items-center gap-1 px-2 py-1 text-xs border border-purple-500 text-purple-500 hover:bg-purple-500/10"
+                      className="flex items-center gap-1 px-2 py-1 text-xs border border-primary text-primary hover:bg-primary/10"
                     >
                       <UserCog className="w-3 h-3" />
                       Assign

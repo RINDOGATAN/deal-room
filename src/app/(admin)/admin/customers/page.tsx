@@ -212,7 +212,7 @@ export default function CustomersPage() {
                   className={
                     customer.type === "SAAS"
                       ? "bg-blue-500/20 text-blue-500"
-                      : "bg-purple-500/20 text-purple-500"
+                      : "bg-primary/20 text-primary"
                   }
                 >
                   {customer.type === "SAAS" ? (

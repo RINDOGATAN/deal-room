@@ -127,7 +127,7 @@ export default function CustomerDetailPage() {
       case "SUBSCRIPTION":
         return <Badge className="bg-blue-500/20 text-blue-500">Subscription</Badge>;
       case "PERPETUAL":
-        return <Badge className="bg-purple-500/20 text-purple-500">Perpetual</Badge>;
+        return <Badge className="bg-primary/20 text-primary">Perpetual</Badge>;
       default:
         return <Badge>{type}</Badge>;
     }
@@ -199,7 +199,7 @@ export default function CustomerDetailPage() {
               className={
                 customer.type === "SAAS"
                   ? "bg-blue-500/20 text-blue-500"
-                  : "bg-purple-500/20 text-purple-500"
+                  : "bg-primary/20 text-primary"
               }
             >
               {customer.type === "SAAS" ? (
