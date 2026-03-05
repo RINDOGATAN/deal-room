@@ -96,7 +96,7 @@ export default function AdminDashboard() {
           <p className="text-sm text-muted-foreground">Skills</p>
         </div>
         <div className="card-brutal text-center">
-          <UserCog className="w-6 h-6 text-purple-500 mx-auto mb-2" />
+          <UserCog className="w-6 h-6 text-primary mx-auto mb-2" />
           <p className="text-3xl font-bold">{stats?.supervisorCount || 0}</p>
           <p className="text-sm text-muted-foreground">Supervisors</p>
         </div>
@@ -107,8 +107,8 @@ export default function AdminDashboard() {
         <Link href="/admin/supervisors" className="card-brutal group hover:border-primary transition-colors">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-purple-500/20 flex items-center justify-center">
-                <UserCog className="w-6 h-6 text-purple-500" />
+              <div className="w-12 h-12 bg-primary/20 flex items-center justify-center">
+                <UserCog className="w-6 h-6 text-primary" />
               </div>
               <div>
                 <h3 className="font-semibold">Manage Supervisors</h3>

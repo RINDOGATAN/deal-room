@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Shield, LogOut, Home, Users, UserCheck, FileText, Package, BarChart, UserCog } from "lucide-react";
+import { Shield, LogOut, Home, Users, UserCheck, FileText, Package, BarChart, UserCog, Cloud } from "lucide-react";
 import { brand } from "@/config/brand";
 
 export default function AdminLayout({
@@ -22,8 +22,9 @@ export default function AdminLayout({
         {/* Header */}
         <header className="border-b border-border">
           <div className="container mx-auto px-6 py-4 flex items-center gap-3">
-            <Link href="/" className="flex items-center gap-3">
-              <img src={brand.assets.logo} alt={brand.companyShort} className="h-8" />
+            <Link href="/" className="text-lg font-bold tracking-tight text-foreground">
+              {brand.company}<sup className="text-xs align-super">™</sup>{" "}
+              <span className="text-muted-foreground">DEALROOM</span>
             </Link>
             <div className="h-6 w-px bg-border" />
             <span className="text-primary font-medium text-sm uppercase tracking-wide">Platform Admin</span>
@@ -53,6 +54,7 @@ export default function AdminLayout({
     { href: "/admin/users", label: "Users", icon: UserCheck },
     { href: "/admin/skills", label: "Skills", icon: Package },
     { href: "/admin/analytics", label: "Analytics", icon: BarChart },
+    { href: "/admin/cloud-services", label: "Cloud", icon: Cloud },
   ];
 
   return (
@@ -61,8 +63,9 @@ export default function AdminLayout({
       <header className="border-b border-border">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <Link href="/admin" className="flex items-center gap-3">
-              <img src={brand.assets.logo} alt={brand.companyShort} className="h-8" />
+            <Link href="/admin" className="text-lg font-bold tracking-tight text-foreground">
+              {brand.company}<sup className="text-xs align-super">™</sup>{" "}
+              <span className="text-muted-foreground">DEALROOM</span>
             </Link>
             <div className="h-6 w-px bg-border" />
             <div className="flex items-center gap-2">
