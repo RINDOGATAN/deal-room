@@ -13,6 +13,7 @@ import {
   generateContractData,
   validateDealAccess,
   isDealSignable,
+  enrichWithCertification,
 } from "@/server/services/document/generator";
 import { ContractPDF } from "@/server/services/document/ContractPDF";
 
@@ -48,13 +49,16 @@ export async function GET(
     }
 
     // Generate contract data
-    const contractData = await generateContractData(dealRoomId);
+    let contractData = await generateContractData(dealRoomId);
     if (!contractData) {
       return NextResponse.json(
         { error: "Failed to generate contract data" },
         { status: 500 }
       );
     }
+
+    // Enrich with certification data if available
+    contractData = await enrichWithCertification(dealRoomId, contractData);
 
     // Generate PDF
     const pdfBuffer = await renderToBuffer(

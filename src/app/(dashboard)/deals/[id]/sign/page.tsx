@@ -20,16 +20,47 @@ import {
   MapPin,
   Hash,
   Briefcase,
+  ShieldCheck,
+  ShieldAlert,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { useTranslations, useLocale } from "next-intl";
+import { NextIntlClientProvider, useTranslations, useLocale } from "next-intl";
 import { formatDateTime } from "@/lib/date";
+import enMessages from "@/messages/en.json";
+import esMessages from "@/messages/es.json";
 
+function DownloadLinks({ dealId, className }: { dealId: string; className?: string }) {
+  return (
+    <div className={`flex items-center justify-center gap-1.5 text-xs text-muted-foreground ${className ?? ""}`}>
+      <Download className="w-3.5 h-3.5 flex-shrink-0" />
+      <a href={`/api/deals/${dealId}/document`} className="hover:text-foreground underline underline-offset-2">PDF</a>
+      <span aria-hidden>·</span>
+      <a href={`/api/deals/${dealId}/document/docx`} className="hover:text-foreground underline underline-offset-2">DOCX</a>
+      <span aria-hidden>·</span>
+      <a href={`/api/deals/${dealId}/document/txt`} className="hover:text-foreground underline underline-offset-2">TXT</a>
+    </div>
+  );
+}
+
+/** Outer wrapper: determines contract language and provides correct locale */
 export default function SigningPage() {
   const params = useParams();
-  const router = useRouter();
   const dealId = params.id as string;
+  const { data: deal } = trpc.deal.getById.useQuery({ id: dealId });
+  const contractLang = (deal as any)?.contractLanguage || "en";
+  const messages = contractLang === "es" ? esMessages : enMessages;
+
+  return (
+    <NextIntlClientProvider locale={contractLang} messages={messages}>
+      <SigningContent dealId={dealId} />
+    </NextIntlClientProvider>
+  );
+}
+
+/** Inner component: all UI and hooks, picks up contract locale from provider */
+function SigningContent({ dealId }: { dealId: string }) {
+  const router = useRouter();
   const t = useTranslations("signing");
   const tCommon = useTranslations("common");
   const locale = useLocale();
@@ -249,6 +280,33 @@ export default function SigningPage() {
           </div>
         </div>
       </div>
+
+      {/* Certification Status */}
+      {signingRequest && (
+        <div className={`card-brutal flex items-start gap-3 ${
+          signingRequest.ceremonyId
+            ? "border-green-500/30 bg-green-500/5"
+            : "border-muted bg-muted/20"
+        }`}>
+          {signingRequest.ceremonyId ? (
+            <>
+              <ShieldCheck className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+              <div>
+                <p className="font-semibold text-green-600 text-sm">{t("certifiedDocument")}</p>
+                <p className="text-xs text-muted-foreground">{t("certifiedSigningDescription")}</p>
+              </div>
+            </>
+          ) : (
+            <>
+              <ShieldAlert className="w-5 h-5 text-muted-foreground flex-shrink-0 mt-0.5" />
+              <div>
+                <p className="font-semibold text-muted-foreground text-sm">{t("uncertifiedDocument")}</p>
+                <p className="text-xs text-muted-foreground">{t("uncertifiedSigningDescription")}</p>
+              </div>
+            </>
+          )}
+        </div>
+      )}
 
       {/* Contract Summary */}
       <div className="card-brutal">
@@ -649,7 +707,7 @@ export default function SigningPage() {
               <p className="text-muted-foreground mb-6">
                 {t("contractSignedDescription")}
               </p>
-              <div className="flex items-center justify-center gap-3 flex-wrap">
+              <div className="flex items-center justify-center gap-4 flex-wrap">
                 <a
                   href={`/api/deals/${dealId}/document`}
                   className="btn-brutal inline-flex items-center gap-2"
@@ -657,20 +715,11 @@ export default function SigningPage() {
                   <Download className="w-4 h-4" />
                   {t("downloadSignedContract")}
                 </a>
-                <a
-                  href={`/api/deals/${dealId}/document/docx`}
-                  className="btn-brutal-outline inline-flex items-center gap-2"
-                >
-                  <Download className="w-4 h-4" />
-                  {t("downloadDocx")}
-                </a>
-                <a
-                  href={`/api/deals/${dealId}/document/txt`}
-                  className="btn-brutal-outline inline-flex items-center gap-2"
-                >
-                  <Download className="w-4 h-4" />
-                  {t("downloadTxt")}
-                </a>
+                <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
+                  <a href={`/api/deals/${dealId}/document/docx`} className="hover:text-foreground underline underline-offset-2">DOCX</a>
+                  <span aria-hidden>·</span>
+                  <a href={`/api/deals/${dealId}/document/txt`} className="hover:text-foreground underline underline-offset-2">TXT</a>
+                </div>
               </div>
             </div>
           ) : (
@@ -712,29 +761,7 @@ export default function SigningPage() {
                           </div>
                         </div>
                       )}
-                      <div className="flex items-center justify-center gap-3 flex-wrap mt-6">
-                        <a
-                          href={`/api/deals/${dealId}/document`}
-                          className="btn-brutal-outline inline-flex items-center gap-2"
-                        >
-                          <Download className="w-4 h-4" />
-                          {t("downloadContractPdf")}
-                        </a>
-                        <a
-                          href={`/api/deals/${dealId}/document/docx`}
-                          className="btn-brutal-outline inline-flex items-center gap-2"
-                        >
-                          <Download className="w-4 h-4" />
-                          {t("downloadContractDocx")}
-                        </a>
-                        <a
-                          href={`/api/deals/${dealId}/document/txt`}
-                          className="btn-brutal-outline inline-flex items-center gap-2"
-                        >
-                          <Download className="w-4 h-4" />
-                          {t("downloadContractTxt")}
-                        </a>
-                      </div>
+                      <DownloadLinks dealId={dealId} className="mt-6" />
                     </div>
                   );
                 }
@@ -839,29 +866,7 @@ export default function SigningPage() {
                       </div>
                     </div>
 
-                    <div className="flex items-center justify-center gap-3 flex-wrap mt-6">
-                      <a
-                        href={`/api/deals/${dealId}/document`}
-                        className="btn-brutal-outline inline-flex items-center gap-2"
-                      >
-                        <Download className="w-4 h-4" />
-                        {t("downloadContractPdf")}
-                      </a>
-                      <a
-                        href={`/api/deals/${dealId}/document/docx`}
-                        className="btn-brutal-outline inline-flex items-center gap-2"
-                      >
-                        <Download className="w-4 h-4" />
-                        {t("downloadContractDocx")}
-                      </a>
-                      <a
-                        href={`/api/deals/${dealId}/document/txt`}
-                        className="btn-brutal-outline inline-flex items-center gap-2"
-                      >
-                        <Download className="w-4 h-4" />
-                        {t("downloadContractTxt")}
-                      </a>
-                    </div>
+                    <DownloadLinks dealId={dealId} className="mt-6" />
                   </div>
                 );
               })()}
@@ -893,28 +898,8 @@ export default function SigningPage() {
                 </>
               )}
             </button>
-            <a
-              href={`/api/deals/${dealId}/document`}
-              className="btn-brutal-outline flex items-center gap-2"
-            >
-              <Download className="w-4 h-4" />
-              {t("downloadContractPdf")}
-            </a>
-            <a
-              href={`/api/deals/${dealId}/document/docx`}
-              className="btn-brutal-outline flex items-center gap-2"
-            >
-              <Download className="w-4 h-4" />
-              {t("downloadContractDocx")}
-            </a>
-            <a
-              href={`/api/deals/${dealId}/document/txt`}
-              className="btn-brutal-outline flex items-center gap-2"
-            >
-              <Download className="w-4 h-4" />
-              {t("downloadContractTxt")}
-            </a>
           </div>
+          <DownloadLinks dealId={dealId} className="mb-4" />
           <p className="text-xs text-muted-foreground">
             {t("canSignImmediately")}
           </p>

@@ -2,6 +2,8 @@ import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
 import { sendSigningInitiatedEmail, sendCounterpartySignedEmail } from "@/lib/email";
+import { certificationService } from "@/lib/certification-client";
+import { generateContractData } from "@/server/services/document/generator";
 
 const signingDetailsSchema = z.object({
   legalName: z.string().min(1),
@@ -220,6 +222,25 @@ export const signingRouter = createTRPCRouter({
       const initiator = party.dealRoom.parties.find((p) => p.role === "INITIATOR");
       const respondent = party.dealRoom.parties.find((p) => p.role === "RESPONDENT");
 
+      // Begin certification ceremony (degrades gracefully without API key)
+      let ceremonyId: string | null = null;
+      let documentHash: string | null = null;
+      try {
+        const contractData = await generateContractData(input.dealRoomId);
+        if (contractData) {
+          const ceremony = await certificationService.beginCeremony(
+            input.dealRoomId,
+            contractData
+          );
+          if (ceremony.certified) {
+            ceremonyId = ceremony.ceremonyId;
+            documentHash = ceremony.documentHash;
+          }
+        }
+      } catch (error) {
+        console.error("Certification ceremony failed (continuing uncertified):", error);
+      }
+
       const signingRequest = await ctx.prisma.signingRequest.create({
         data: {
           dealRoomId: input.dealRoomId,
@@ -227,6 +248,8 @@ export const signingRouter = createTRPCRouter({
           status: "PENDING",
           externalId: `sign_${Date.now()}`,
           documentUrl: null,
+          ceremonyId,
+          documentHash,
         },
       });
 
@@ -320,6 +343,20 @@ export const signingRouter = createTRPCRouter({
           code: "BAD_REQUEST",
           message: "You must submit your execution details before signing",
         });
+      }
+
+      // Record signature with certification (degrades gracefully)
+      if (signingRequest.ceremonyId) {
+        try {
+          await certificationService.recordSignature(
+            signingRequest.ceremonyId,
+            input.partyRole,
+            ctx.session.user.email || party.email || "",
+            party.name || ctx.session.user.name || "",
+          );
+        } catch (error) {
+          console.error("Certification signature recording failed:", error);
+        }
       }
 
       const now = new Date();

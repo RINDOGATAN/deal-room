@@ -11,6 +11,7 @@ import {
   buildBoilerplateVariables,
   type ParameterSchema,
 } from "@/lib/parameters";
+import { certificationService } from "@/lib/certification-client";
 
 export interface PartyData {
   name: string;
@@ -53,6 +54,20 @@ export interface BoilerplateData {
   partyLabels?: { partyA: string; partyB: string };
 }
 
+export interface CertificationData {
+  ceremonyId: string;
+  documentHash: string;
+  certified: boolean;
+  timestamps: Array<{
+    partyRole: string;
+    rfc3161Timestamp: string;
+    signedAt: string;
+    signerIp?: string;
+  }>;
+  verificationUrl?: string;
+  auditCertificateUrl?: string;
+}
+
 export interface ContractData {
   dealName: string;
   contractType: string;
@@ -64,6 +79,8 @@ export interface ContractData {
   clauses: ClauseData[];
   boilerplate: BoilerplateData | null;
   language: string;
+  /** Present when document has been certified via Cloud API */
+  certification?: CertificationData;
 }
 
 const GOVERNING_LAW_DISPLAY: Record<string, Record<string, string>> = {
@@ -422,4 +439,37 @@ export async function isDealSignable(dealRoomId: string): Promise<boolean> {
   }
 
   return ["AGREED", "SIGNING", "COMPLETED"].includes(deal.status);
+}
+
+/**
+ * Enrich ContractData with certification data from the signing request.
+ * If no certification exists, returns data unchanged.
+ */
+export async function enrichWithCertification(
+  dealRoomId: string,
+  data: ContractData
+): Promise<ContractData> {
+  try {
+    const signingRequest = await prisma.signingRequest.findFirst({
+      where: { dealRoomId },
+      orderBy: { createdAt: "desc" },
+    });
+
+    if (!signingRequest?.ceremonyId) {
+      return data;
+    }
+
+    const certData = await certificationService.buildCertificationData(
+      signingRequest.ceremonyId
+    );
+
+    if (!certData.certified) {
+      return data;
+    }
+
+    return { ...data, certification: certData };
+  } catch (error) {
+    console.error("Failed to enrich with certification:", error);
+    return data;
+  }
 }

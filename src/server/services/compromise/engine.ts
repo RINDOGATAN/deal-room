@@ -21,11 +21,19 @@ export interface OptionInput {
   biasPartyB: number; // -1 to 1
 }
 
+/** Per-option bias overrides from the Cloud Intelligence API */
+export interface DynamicBiasOverride {
+  biasPartyA: number;
+  biasPartyB: number;
+}
+
 export interface CompromiseInput {
   partyASelection: SelectionInput;
   partyBSelection: SelectionInput;
   options: OptionInput[];
   clauseTitle: string;
+  /** Optional data-driven bias overrides keyed by option ID */
+  dynamicBiases?: Record<string, DynamicBiasOverride>;
 }
 
 export interface CompromiseResult {
@@ -113,11 +121,21 @@ function findMiddleOption(
  * Main compromise calculation function
  */
 export function calculateCompromise(input: CompromiseInput): CompromiseResult {
-  const { partyASelection, partyBSelection, options, clauseTitle } = input;
+  const { partyASelection, partyBSelection, options, clauseTitle, dynamicBiases } = input;
+
+  // Apply dynamic bias overrides if available (from Cloud Intelligence API)
+  const effectiveOptions = dynamicBiases
+    ? options.map((o) => {
+        const override = dynamicBiases[o.id];
+        return override
+          ? { ...o, biasPartyA: override.biasPartyA, biasPartyB: override.biasPartyB }
+          : o;
+      })
+    : options;
 
   // Find the option objects
-  const optionA = options.find((o) => o.id === partyASelection.optionId);
-  const optionB = options.find((o) => o.id === partyBSelection.optionId);
+  const optionA = effectiveOptions.find((o) => o.id === partyASelection.optionId);
+  const optionB = effectiveOptions.find((o) => o.id === partyBSelection.optionId);
 
   if (!optionA || !optionB) {
     throw new Error("Invalid option IDs");
@@ -143,7 +161,7 @@ export function calculateCompromise(input: CompromiseInput): CompromiseResult {
   // Decision logic
   if (stakeDifference < 0.1) {
     // Stakes are similar - suggest middle option
-    suggestedOption = findMiddleOption(optionA.order, optionB.order, options);
+    suggestedOption = findMiddleOption(optionA.order, optionB.order, effectiveOptions);
     reasoning = `For "${clauseTitle}", both parties have similar levels of investment in this clause. The suggested option represents a balanced middle ground that aims to satisfy both parties equally.`;
   } else if (stakeA > stakeB) {
     // Party A has higher stake
@@ -154,7 +172,7 @@ export function calculateCompromise(input: CompromiseInput): CompromiseResult {
     } else {
       // Party B is less flexible - suggest compromise closer to A
       const targetOrder = optionA.order + (optionB.order - optionA.order) * 0.3;
-      suggestedOption = options.reduce((closest, opt) =>
+      suggestedOption = effectiveOptions.reduce((closest, opt) =>
         Math.abs(opt.order - targetOrder) < Math.abs(closest.order - targetOrder)
           ? opt
           : closest
@@ -170,7 +188,7 @@ export function calculateCompromise(input: CompromiseInput): CompromiseResult {
     } else {
       // Party A is less flexible - suggest compromise closer to B
       const targetOrder = optionB.order + (optionA.order - optionB.order) * 0.3;
-      suggestedOption = options.reduce((closest, opt) =>
+      suggestedOption = effectiveOptions.reduce((closest, opt) =>
         Math.abs(opt.order - targetOrder) < Math.abs(closest.order - targetOrder)
           ? opt
           : closest
@@ -183,7 +201,7 @@ export function calculateCompromise(input: CompromiseInput): CompromiseResult {
   const satisfactionPartyA = calculateSatisfaction(
     optionA.order,
     suggestedOption.order,
-    options.length,
+    effectiveOptions.length,
     suggestedOption.biasPartyA,
     true
   );

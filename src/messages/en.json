@@ -164,6 +164,10 @@
     "inviteCounterparty": "Invite Counterparty",
     "completeSelectionsFirst": "Complete your selections before inviting the counterparty.",
     "cancelDeal": "Cancel Deal",
+    "certifiedDocument": "Certified Document",
+    "uncertifiedDocument": "Uncertified Document",
+    "certifiedDescription": "This contract is cryptographically certified with timestamped signatures.",
+    "uncertifiedDescription": "Document certification unavailable. Signatures are not independently verifiable.",
     "downloadDocx": "Download DOCX",
     "downloadPdf": "Download PDF",
     "downloadTxt": "Download TXT",
@@ -227,6 +231,12 @@
     "reviewCompromises": "Review Compromises",
     "resubmit": "Update & Resubmit",
     "failedToLoad": "Failed to load deal: {error}",
+    "unverified": "Unverified",
+    "predictedSatisfaction": "Predicted Outcome",
+    "predictedSatisfactionDescription": "Based on similar negotiations, here is the predicted satisfaction for each party.",
+    "yourSatisfaction": "Your predicted satisfaction",
+    "theirSatisfaction": "Their predicted satisfaction",
+    "predictionUnavailable": "Prediction unavailable",
     "clauses": "Clauses",
     "toastMessages": {
       "bothPartiesSubmitted": "Both parties have submitted! Generating compromise suggestions...",
@@ -269,6 +279,8 @@
     "rejected": "Rejected",
     "failedToLoad": "Failed to load review data",
     "totalClauses": "Total Clauses",
+    "conflictWarnings": "Cross-Clause Conflicts Detected",
+    "validationUnavailable": "Cross-clause validation unavailable",
     "counterProposalBadge": "Counter-Proposal",
     "they": "They:",
     "attorneyReviewInProgress": "Attorney Review In Progress",
@@ -358,6 +370,10 @@
     "failedToLoad": "Failed to load deal",
     "attorneyReviewInProgress": "Attorney Review In Progress",
     "signingAfterReview": "Signing will be available once all attorney reviews are complete.",
+    "certifiedDocument": "Certified Document",
+    "uncertifiedDocument": "Uncertified Document",
+    "certifiedSigningDescription": "Signatures will be cryptographically timestamped and independently verifiable.",
+    "uncertifiedSigningDescription": "Document certification unavailable. Signatures will not be independently timestamped.",
     "legalNotice": "Legal Notice:",
     "legalNoticeText": "By signing this document electronically, you agree that your electronic signature is the legal equivalent of your manual signature on this agreement. This contract will become legally binding once both parties have signed.",
     "toastMessages": {
@@ -1181,5 +1197,16 @@
     "switchRole": "Switch role",
     "roleBusiness": "Business",
     "roleLawyer": "Lawyer"
+  },
+  "analytics": {
+    "title": "Deal Analytics",
+    "premium": "Premium",
+    "avgDays": "Avg. Days",
+    "completionRate": "Completion",
+    "totalDeals": "Total Deals",
+    "activeDeals": "Active",
+    "upgradeTitle": "Unlock Analytics",
+    "upgradeDescription": "Get negotiation benchmarks, deal trends, and insights powered by cloud intelligence.",
+    "learnMore": "Learn More"
   }
 }

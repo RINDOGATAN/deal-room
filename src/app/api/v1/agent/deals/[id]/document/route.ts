@@ -13,7 +13,7 @@ import {
   requireScope,
   ApiScopeError,
 } from "@/server/middleware/apiKeyAuth";
-import { generateContractData } from "@/server/services/document/generator";
+import { generateContractData, enrichWithCertification } from "@/server/services/document/generator";
 import { ContractPDF } from "@/server/services/document/ContractPDF";
 import { features } from "@/config/features";
 
@@ -65,13 +65,15 @@ export async function GET(
       );
     }
 
-    const contractData = await generateContractData(agentDeal.dealRoomId);
+    let contractData = await generateContractData(agentDeal.dealRoomId);
     if (!contractData) {
       return NextResponse.json(
         { error: "Failed to generate contract data" },
         { status: 500 }
       );
     }
+
+    contractData = await enrichWithCertification(agentDeal.dealRoomId, contractData);
 
     const pdfBuffer = await renderToBuffer(
       ContractPDF({ data: contractData })

@@ -11,4 +11,10 @@ export const features = {
   clientInvitations: brand.id === "todo",
   agentApi: brand.id === "todo",
   publicDocs: brand.id === "todo",
+  /** Cloud Intelligence API — data-driven biases, quality scoring, conflict detection */
+  cloudIntelligence: !!process.env.DEALROOM_CLOUD_API_KEY,
+  /** Document Certification — cryptographic hashing, RFC 3161 timestamps, audit certificates */
+  certification: !!process.env.DEALROOM_CLOUD_API_KEY,
+  /** Analytics Dashboard — negotiation benchmarks, counterparty intelligence */
+  analytics: !!process.env.DEALROOM_CLOUD_API_KEY,
 } as const;

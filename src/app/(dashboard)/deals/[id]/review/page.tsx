@@ -4,13 +4,14 @@ import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
-import { useTranslations } from "next-intl";
+import { NextIntlClientProvider, useTranslations } from "next-intl";
 import {
   ArrowLeft,
   ArrowRight,
   Check,
   X,
   AlertCircle,
+  AlertTriangle,
   Scale,
   ThumbsUp,
   ThumbsDown,
@@ -29,6 +30,21 @@ import {
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import enMessages from "@/messages/en.json";
+import esMessages from "@/messages/es.json";
+
+function DownloadLinks({ dealId, className }: { dealId: string; className?: string }) {
+  return (
+    <div className={`flex items-center gap-1.5 text-xs text-muted-foreground ${className ?? ""}`}>
+      <Download className="w-3.5 h-3.5 flex-shrink-0" />
+      <a href={`/api/deals/${dealId}/document`} className="hover:text-foreground underline underline-offset-2">PDF</a>
+      <span aria-hidden>·</span>
+      <a href={`/api/deals/${dealId}/document/docx`} className="hover:text-foreground underline underline-offset-2">DOCX</a>
+      <span aria-hidden>·</span>
+      <a href={`/api/deals/${dealId}/document/txt`} className="hover:text-foreground underline underline-offset-2">TXT</a>
+    </div>
+  );
+}
 
 interface CounterProposalForm {
   clauseId: string;
@@ -42,10 +58,24 @@ interface CounterProposalForm {
   currentSuggestionId: string;
 }
 
+/** Outer wrapper: determines contract language and provides correct locale */
 export default function ReviewPage() {
   const params = useParams();
-  const router = useRouter();
   const dealId = params.id as string;
+  const { data: deal } = trpc.deal.getById.useQuery({ id: dealId });
+  const contractLang = (deal as any)?.contractLanguage || "en";
+  const messages = contractLang === "es" ? esMessages : enMessages;
+
+  return (
+    <NextIntlClientProvider locale={contractLang} messages={messages}>
+      <ReviewContent dealId={dealId} />
+    </NextIntlClientProvider>
+  );
+}
+
+/** Inner component: all UI and hooks, picks up contract locale from provider */
+function ReviewContent({ dealId }: { dealId: string }) {
+  const router = useRouter();
 
   const t = useTranslations("review");
   const tCommon = useTranslations("common");
@@ -62,6 +92,7 @@ export default function ReviewPage() {
   const { data: suggestions, isLoading: suggestionsLoading, refetch } = trpc.compromise.getCurrent.useQuery({ dealRoomId: dealId });
   const { data: satisfactionScores } = trpc.compromise.getSatisfactionScores.useQuery({ dealRoomId: dealId });
   const { data: counterProposals, refetch: refetchCounterProposals } = trpc.compromise.getCounterProposals.useQuery({ dealRoomId: dealId });
+  const { data: validation } = trpc.compromise.getValidation.useQuery({ dealRoomId: dealId });
 
   // Attorney review queries
   const { data: reviewStatus, refetch: refetchReviewStatus } = trpc.attorneyReview.getReviewStatus.useQuery({ dealRoomId: dealId });
@@ -362,6 +393,31 @@ export default function ReviewPage() {
           <p className="text-sm text-muted-foreground">{t("totalClauses")}</p>
         </div>
       </div>
+
+      {/* Cross-Clause Conflict Warnings (from Cloud Intelligence API) */}
+      {validation?.conflicts && validation.conflicts.length > 0 && (
+        <div className="card-brutal border-l-4 border-l-warning bg-warning/5">
+          <div className="flex items-start gap-3">
+            <AlertTriangle className="w-5 h-5 text-warning flex-shrink-0 mt-0.5" />
+            <div className="space-y-2">
+              <p className="font-semibold text-warning">{t("conflictWarnings")}</p>
+              {validation.conflicts.map((conflict, i) => (
+                <div key={i} className="text-sm text-muted-foreground">
+                  <span className={conflict.severity === "error" ? "text-destructive font-medium" : "text-warning"}>
+                    {conflict.severity === "error" ? "Error: " : "Warning: "}
+                  </span>
+                  {conflict.message}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+      {validation && !validation.validated && !validation.conflicts.length && (
+        <div className="text-xs text-muted-foreground text-center">
+          {t("validationUnavailable")}
+        </div>
+      )}
 
       {/* Generate Button (if needed) */}
       {needsGeneration && (
@@ -792,30 +848,7 @@ export default function ReviewPage() {
                     )}
                   </p>
                   <div className="flex items-center gap-3 flex-wrap">
-                    <a
-                      href={`/api/deals/${dealId}/document/docx`}
-                      className="btn-brutal-outline inline-flex items-center gap-2 text-sm"
-                    >
-                      <Download className="w-4 h-4" />
-                      <span className="hidden sm:inline">{t("downloadDocx")}</span>
-                      <span className="sm:hidden">DOCX</span>
-                    </a>
-                    <a
-                      href={`/api/deals/${dealId}/document`}
-                      className="btn-brutal-outline inline-flex items-center gap-2 text-sm"
-                    >
-                      <Download className="w-4 h-4" />
-                      <span className="hidden sm:inline">{t("downloadPdf")}</span>
-                      <span className="sm:hidden">PDF</span>
-                    </a>
-                    <a
-                      href={`/api/deals/${dealId}/document/txt`}
-                      className="btn-brutal-outline inline-flex items-center gap-2 text-sm"
-                    >
-                      <Download className="w-4 h-4" />
-                      <span className="hidden sm:inline">{t("downloadTxt")}</span>
-                      <span className="sm:hidden">TXT</span>
-                    </a>
+                    <DownloadLinks dealId={dealId} />
                     <button
                       onClick={() => cancelReview.mutate({ dealRoomId: dealId })}
                       disabled={cancelReview.isPending}
@@ -926,28 +959,8 @@ export default function ReviewPage() {
                     {t("requestAttorneyReview")}
                   </button>
                 )}
-                <a
-                  href={`/api/deals/${dealId}/document/docx`}
-                  className="btn-brutal-outline flex items-center gap-2 w-full sm:w-auto justify-center"
-                >
-                  <Download className="w-4 h-4" />
-                  {t("downloadDocx")}
-                </a>
-                <a
-                  href={`/api/deals/${dealId}/document`}
-                  className="btn-brutal-outline flex items-center gap-2 w-full sm:w-auto justify-center"
-                >
-                  <Download className="w-4 h-4" />
-                  {t("downloadPdf")}
-                </a>
-                <a
-                  href={`/api/deals/${dealId}/document/txt`}
-                  className="btn-brutal-outline flex items-center gap-2 w-full sm:w-auto justify-center"
-                >
-                  <Download className="w-4 h-4" />
-                  {t("downloadTxt")}
-                </a>
               </div>
+              <DownloadLinks dealId={dealId} className="mt-4 justify-center" />
             </div>
           )}
 

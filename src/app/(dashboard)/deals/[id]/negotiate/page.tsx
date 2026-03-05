@@ -4,7 +4,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
-import { useTranslations } from "next-intl";
+import { NextIntlClientProvider, useTranslations } from "next-intl";
 import {
   ArrowLeft,
   ArrowRight,
@@ -22,6 +22,7 @@ import {
   Loader2,
   UserPlus,
   CheckCircle,
+  TrendingUp,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
@@ -29,6 +30,8 @@ import { Slider } from "@/components/ui/slider";
 import { AlertTriangle } from "lucide-react";
 import { interpolateParameters, type ParameterSchema } from "@/lib/parameters";
 import { LawyerWarningModal } from "@/components/LawyerWarningModal";
+import enMessages from "@/messages/en.json";
+import esMessages from "@/messages/es.json";
 
 type GoverningLaw = "CALIFORNIA" | "ENGLAND_WALES" | "SPAIN";
 
@@ -64,10 +67,24 @@ interface Selection {
   flexibility: number;
 }
 
+/** Outer wrapper: determines contract language and provides correct locale */
 export default function NegotiatePage() {
   const params = useParams();
-  const router = useRouter();
   const dealId = params.id as string;
+  const { data: deal } = trpc.deal.getById.useQuery({ id: dealId });
+  const contractLang = (deal as any)?.contractLanguage || "en";
+  const messages = contractLang === "es" ? esMessages : enMessages;
+
+  return (
+    <NextIntlClientProvider locale={contractLang} messages={messages}>
+      <NegotiateContent dealId={dealId} />
+    </NextIntlClientProvider>
+  );
+}
+
+/** Inner component: all UI and hooks, picks up contract locale from provider */
+function NegotiateContent({ dealId }: { dealId: string }) {
+  const router = useRouter();
   const t = useTranslations("negotiate");
   const tCommon = useTranslations("common");
   const tLawyer = useTranslations("lawyer");
@@ -82,6 +99,26 @@ export default function NegotiatePage() {
   const { data: deal, isLoading, error, refetch: refetchDeal } = trpc.deal.getById.useQuery({ id: dealId });
   const { data: existingSelections } = trpc.selections.getMySelections.useQuery({ dealRoomId: dealId });
   const { data: lawyerData } = trpc.lawyer.getRecommendations.useQuery({ dealRoomId: dealId });
+
+  // Cloud Intelligence: quality scores for current clause options
+  const currentClauseData = deal?.clauses[currentClauseIndex];
+  const { data: qualityScores } = trpc.compromise.getQualityScores.useQuery(
+    {
+      dealRoomId: dealId,
+      clauseTemplateId: currentClauseData?.clauseTemplate?.id || "",
+      optionIds: currentClauseData?.clauseTemplate?.options?.map((o: { id: string }) => o.id) || [],
+    },
+    { enabled: !!currentClauseData?.clauseTemplate?.id }
+  );
+  const qualityMap = new Map(qualityScores?.map((q) => [q.optionId, q]) || []);
+
+  const isSoloMode = (deal as any)?.dealMode === "SOLO";
+
+  // Cloud Intelligence: satisfaction prediction (only when both parties have selections)
+  const { data: prediction } = trpc.compromise.predictSatisfaction.useQuery(
+    { dealRoomId: dealId },
+    { enabled: !isSoloMode }
+  );
 
   // Parameter interpolation helper
   const paramSchema = deal?.contractTemplate?.parameterSchema as ParameterSchema | null | undefined;
@@ -99,13 +136,11 @@ export default function NegotiatePage() {
                                 initiatorParty?.status === "ACCEPTED";
   const canPrePopulate = isRespondent && hasInitiatorSubmitted;
 
-  const isSoloMode = (deal as any)?.dealMode === "SOLO";
-
   const saveSelections = trpc.selections.bulkSave.useMutation();
   const submitSelections = trpc.deal.submitSelections.useMutation({
     onSuccess: (result) => {
       if ((result as any).soloCompleted) {
-        toast.success(contractLang === "es" ? "Documento generado" : "Document generated");
+        toast.success(t("soloDocumentGenerated"));
         router.push(`/deals/${dealId}`);
       } else if (result.bothSubmitted) {
         toast.success(t("toastMessages.bothPartiesSubmitted"));
@@ -625,6 +660,7 @@ export default function NegotiatePage() {
               const hasNote = jurisdictionRules?.note;
               const lawyerRec = recommendationMap.get(currentClause.clauseTemplateId);
               const isLawyerRecommended = lawyerRec?.clauseOptionId === option.id;
+              const quality = qualityMap.get(option.id);
 
               return (
                 <div
@@ -654,6 +690,18 @@ export default function NegotiatePage() {
                               {tLawyer("recommendedByLawyer")}
                             </span>
                           )}
+                          {/* Cloud Intelligence quality badge */}
+                          <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
+                            quality?.score != null && quality.score >= 70
+                              ? "bg-green-500/10 text-green-600"
+                              : quality?.score != null && quality.score >= 40
+                                ? "bg-amber-500/10 text-amber-600"
+                                : quality?.score != null
+                                  ? "bg-red-500/10 text-red-600"
+                                  : "bg-secondary text-muted-foreground"
+                          }`}>
+                            {quality?.score != null ? `${quality.score}` : t("unverified")}
+                          </span>
                           {hasWarning && (
                             <AlertTriangle className="w-4 h-4 text-warning" />
                           )}
@@ -712,7 +760,7 @@ export default function NegotiatePage() {
                           <div>
                             <p className="text-xs font-medium text-primary uppercase tracking-wider mb-2">
                               {isSoloMode
-                                ? (contractLang === "es" ? "Ventajas" : "Advantages")
+                                ? t("soloAdvantages")
                                 : t("prosForYou")}
                             </p>
                             <ul className="space-y-1">
@@ -727,7 +775,7 @@ export default function NegotiatePage() {
                           <div>
                             <p className="text-xs font-medium text-warning uppercase tracking-wider mb-2">
                               {isSoloMode
-                                ? (contractLang === "es" ? "Consideraciones" : "Considerations")
+                                ? t("soloConsiderations")
                                 : t("consForYou")}
                             </p>
                             <ul className="space-y-1">
@@ -821,6 +869,31 @@ export default function NegotiatePage() {
             </div>
           )}
 
+          {/* Satisfaction Prediction — shown on last clause when complete, non-solo */}
+          {!isSoloMode && isComplete && currentClauseIndex === clauses.length - 1 && prediction?.predicted && (
+            <div className="card-brutal border-primary/20 bg-primary/5">
+              <div className="flex items-center gap-2 mb-3">
+                <TrendingUp className="w-4 h-4 text-primary" />
+                <span className="section-label">{t("predictedSatisfaction")}</span>
+              </div>
+              <p className="text-xs text-muted-foreground mb-3">{t("predictedSatisfactionDescription")}</p>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="text-center p-3 bg-card rounded-lg border border-border">
+                  <p className="text-2xl font-bold text-primary">
+                    {Math.round(deal.currentUserRole === "INITIATOR" ? prediction.predictedSatisfactionA : prediction.predictedSatisfactionB)}%
+                  </p>
+                  <p className="text-xs text-muted-foreground">{t("yourSatisfaction")}</p>
+                </div>
+                <div className="text-center p-3 bg-card rounded-lg border border-border">
+                  <p className="text-2xl font-bold text-muted-foreground">
+                    {Math.round(deal.currentUserRole === "INITIATOR" ? prediction.predictedSatisfactionB : prediction.predictedSatisfactionA)}%
+                  </p>
+                  <p className="text-xs text-muted-foreground">{t("theirSatisfaction")}</p>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Navigation */}
           <div className="flex items-center justify-between pt-4 border-t border-border">
             <button
@@ -883,7 +956,7 @@ export default function NegotiatePage() {
                   ) : (
                     <>
                       {isSoloMode
-                        ? (contractLang === "es" ? "Confirmar y generar documento" : "Confirm & Generate")
+                        ? t("soloConfirmGenerate")
                         : t("submitAllSelections")}
                       <Check className="w-4 h-4" />
                     </>
