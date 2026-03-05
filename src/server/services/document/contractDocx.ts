@@ -345,15 +345,20 @@ export async function generateContractDocx(
       });
     }
 
-    // Jurisdiction Provision
-    if (bp.jurisdictionProvision) {
+    // Jurisdiction Provision(s) — multi or single
+    const jpList = bp.jurisdictionProvisions?.length
+      ? bp.jurisdictionProvisions
+      : bp.jurisdictionProvision
+        ? [bp.jurisdictionProvision]
+        : [];
+    for (const jp of jpList) {
       children.push(
         new Paragraph({
           heading: HeadingLevel.HEADING_2,
           spacing: { before: 200, after: 100 },
           children: [
             new TextRun({
-              text: `${sectionNumber++}. ${bp.jurisdictionProvision.title}`,
+              text: `${sectionNumber++}. ${jp.title}`,
               bold: true,
               size: 24,
               font: "Times New Roman",
@@ -367,7 +372,7 @@ export async function generateContractDocx(
           spacing: { after: 300 },
           children: [
             new TextRun({
-              text: bp.jurisdictionProvision.text,
+              text: jp.text,
               size: 20,
               font: "Times New Roman",
             }),

@@ -48,6 +48,7 @@ export interface BoilerplateData {
   standardClauses: StandardClause[];
   generalProvisions: StandardClause[];
   jurisdictionProvision: StandardClause | null;
+  jurisdictionProvisions?: StandardClause[]; // Multi-jurisdiction (e.g., Privacy Notice)
   signatureBlock: string;
   partyLabels?: { partyA: string; partyB: string };
 }
@@ -99,7 +100,8 @@ function processBoilerplate(
   rawBoilerplate: Record<string, unknown> | null,
   governingLawKey: string,
   variables: Record<string, string>,
-  language: string = "en"
+  language: string = "en",
+  multiJurisdictionKeys?: string[]
 ): BoilerplateData | null {
   if (!rawBoilerplate) {
     return null;
@@ -111,12 +113,24 @@ function processBoilerplate(
   const resolve = (val: unknown): string =>
     interpolateText(resolveLocalizedString(val, language), variables);
 
-  // Get jurisdiction-specific provision
+  // Get jurisdiction-specific provision(s)
   const jpMap = bp.jurisdictionProvisions as Record<string, Record<string, unknown>> | undefined;
   const jp = jpMap?.[governingLawKey];
   const jurisdictionProvision = jp
     ? { title: resolve(jp.title), text: resolve(jp.text) }
     : null;
+
+  // Multi-jurisdiction support: collect provisions for all selected jurisdictions
+  let multiJurisdictionProvisions: StandardClause[] | undefined;
+  if (multiJurisdictionKeys && multiJurisdictionKeys.length > 0 && jpMap) {
+    multiJurisdictionProvisions = multiJurisdictionKeys
+      .map((key) => {
+        const provision = jpMap[key];
+        if (!provision) return null;
+        return { title: resolve(provision.title), text: resolve(provision.text) };
+      })
+      .filter((p): p is StandardClause => p !== null);
+  }
 
   const definitions = (bp.definitions as Array<Record<string, unknown>> || []).map((d) => ({
     term: resolveLocalizedString(d.term, language),
@@ -143,6 +157,7 @@ function processBoilerplate(
     standardClauses,
     generalProvisions,
     jurisdictionProvision,
+    jurisdictionProvisions: multiJurisdictionProvisions,
     signatureBlock: resolve(bp.signatureBlock),
     partyLabels: partyLabels
       ? {
@@ -325,12 +340,18 @@ export async function generateContractData(
   const paramBoilerplateVars = buildBoilerplateVariables(dealParams, parameterSchema);
   Object.assign(variables, paramBoilerplateVars);
 
+  // Check for multi-jurisdiction parameters (e.g., Privacy Notice)
+  const multiJurisdictionKeys = dealParams.jurisdictions
+    ? dealParams.jurisdictions.split(",").map((j: string) => j.trim()).filter(Boolean)
+    : undefined;
+
   // Process boilerplate with variable interpolation and i18n
   const boilerplate = processBoilerplate(
     deal.contractTemplate.boilerplate as Record<string, unknown> | null,
     deal.governingLaw,
     variables,
-    language
+    language,
+    multiJurisdictionKeys
   );
 
   return {

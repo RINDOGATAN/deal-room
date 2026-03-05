@@ -19,6 +19,7 @@ interface SkillMetadata {
   languages?: string[];
   soloModeSupported?: boolean;
   soloModeDefault?: boolean;
+  soloModeOnly?: boolean;
   templateFamily?: string;
 }
 
@@ -336,6 +337,7 @@ async function main() {
         parameterSchema: parameterSchema as Prisma.InputJsonValue ?? Prisma.DbNull,
         soloModeSupported: metadata?.soloModeSupported ?? false,
         soloModeDefault: metadata?.soloModeDefault ?? false,
+        soloModeOnly: metadata?.soloModeOnly ?? false,
         isActive: true,
       },
       update: {
@@ -356,6 +358,7 @@ async function main() {
         parameterSchema: parameterSchema as Prisma.InputJsonValue ?? Prisma.DbNull,
         soloModeSupported: metadata?.soloModeSupported ?? false,
         soloModeDefault: metadata?.soloModeDefault ?? false,
+        soloModeOnly: metadata?.soloModeOnly ?? false,
       },
     });
 

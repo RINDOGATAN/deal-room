@@ -13,7 +13,8 @@ export type ParameterType =
   | "number"
   | "percentage"
   | "date"
-  | "choice";
+  | "choice"
+  | "multiSelect";
 
 export interface ParameterDefinition {
   id: string;

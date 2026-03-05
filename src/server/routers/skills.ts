@@ -79,6 +79,7 @@ export const skillsRouter = createTRPCRouter({
         categoryLocalized: true,
         soloModeSupported: true,
         soloModeDefault: true,
+        soloModeOnly: true,
         skillPackageId: true,
         skillPackage: {
           select: {
@@ -150,6 +151,7 @@ export const skillsRouter = createTRPCRouter({
         skillPackageId: t.skillPackageId,
         soloModeSupported: t.soloModeSupported,
         soloModeDefault: t.soloModeDefault,
+        soloModeOnly: t.soloModeOnly,
         // Access info for licensed skills
         hasAccess: !requiresLicense || !!entitlement,
         entitledJurisdictions: entitlement?.jurisdictions || [],

@@ -186,6 +186,20 @@ const DEMO_PARAMETERS: Record<string, Record<string, string>> = {
     "plan-date": "1 de enero de 2026",
     "individual-vesting-months": "48",
   },
+  PRIVACY_NOTICE: {
+    "jurisdictions": "CALIFORNIA,ENGLAND_WALES,SPAIN",
+    "company-name": "Acme Technologies Inc.",
+    "company-website": "https://acme.example.com",
+    "dpo-email": "privacy@acme.example.com",
+    "effective-date": "March 1, 2026",
+  },
+  PRIVACY_NOTICE_ES: {
+    "jurisdictions": "SPAIN,ENGLAND_WALES",
+    "company-name": "Acme Tecnologías, S.L.",
+    "company-website": "https://acme.ejemplo.es",
+    "dpo-email": "privacidad@acme.ejemplo.es",
+    "effective-date": "1 de marzo de 2026",
+  },
 };
 
 interface DealVariant {
@@ -212,6 +226,8 @@ const DEAL_VARIANTS: DealVariant[] = [
   { contractType: "ACTA_CONSEJO_ADMINISTRACION", jurisdiction: GoverningLaw.SPAIN, language: "es", hasBoilerplate: true, dealMode: "SOLO" },
   { contractType: "PHANTOM_SHARES_PLAN", jurisdiction: GoverningLaw.SPAIN, language: "es", hasBoilerplate: true, dealMode: "SOLO" },
   { contractType: "PHANTOM_SHARES_GRANT", jurisdiction: GoverningLaw.SPAIN, language: "es", hasBoilerplate: true, dealMode: "SOLO" },
+  { contractType: "PRIVACY_NOTICE", jurisdiction: GoverningLaw.CALIFORNIA, language: "en", hasBoilerplate: true, dealMode: "SOLO" },
+  { contractType: "PRIVACY_NOTICE", jurisdiction: GoverningLaw.SPAIN, language: "es", hasBoilerplate: true, dealMode: "SOLO" },
 ];
 
 // ── Types ─────────────────────────────────────────────────────
@@ -344,7 +360,11 @@ async function simulateDeal(
   // ── Step 1: Create DealRoom (DRAFT) with initiator party + clauses ──
 
   // Provide demo parameter values if the template has a parameter schema
-  const demoParams = DEMO_PARAMETERS[variant.contractType] || null;
+  const demoParams = DEMO_PARAMETERS[
+    variant.language === "es" && DEMO_PARAMETERS[`${variant.contractType}_ES`]
+      ? `${variant.contractType}_ES`
+      : variant.contractType
+  ] || null;
 
   const dealRoom = await prisma.dealRoom.create({
     data: {
@@ -749,7 +769,11 @@ async function simulateSoloDeal(
 
   // ── Step 1: Create DealRoom (DRAFT) with initiator party + clauses ──
 
-  const demoParams = DEMO_PARAMETERS[variant.contractType] || null;
+  const demoParams = DEMO_PARAMETERS[
+    variant.language === "es" && DEMO_PARAMETERS[`${variant.contractType}_ES`]
+      ? `${variant.contractType}_ES`
+      : variant.contractType
+  ] || null;
 
   const dealRoom = await prisma.dealRoom.create({
     data: {

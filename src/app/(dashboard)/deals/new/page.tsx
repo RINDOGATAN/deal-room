@@ -44,6 +44,7 @@ import { EnableFeatureModal } from "@/components/premium/enable-feature-modal";
 const contractIcons: Record<string, typeof FileText> = {
   NDA: Shield,
   DPA: Shield,
+  PRIVACY_NOTICE: Shield,
   MSA: Briefcase,
   SAAS: Cloud,
   FOUNDERS: Briefcase,
@@ -72,6 +73,7 @@ interface TemplateInfo {
   skillPackageId: string | null;
   soloModeSupported: boolean;
   soloModeDefault: boolean;
+  soloModeOnly: boolean;
   hasAccess: boolean;
   entitledJurisdictions: string[];
   expiresAt: Date | null;
@@ -313,7 +315,17 @@ export default function NewDealPage() {
   };
 
   const handleCreate = () => {
-    if (!selectedType || !selectedJurisdiction || !dealName.trim()) {
+    // For multi-jurisdiction (soloModeOnly), derive governingLaw from jurisdictions parameter
+    const currentTemplate = templates?.find((tmpl) => tmpl.contractType === selectedType);
+    let effectiveJurisdiction = selectedJurisdiction;
+    if (currentTemplate?.soloModeOnly && !selectedJurisdiction && parameterValues.jurisdictions) {
+      const firstJurisdiction = parameterValues.jurisdictions.split(",")[0]?.trim();
+      if (firstJurisdiction) {
+        effectiveJurisdiction = firstJurisdiction as GoverningLaw;
+      }
+    }
+
+    if (!selectedType || !effectiveJurisdiction || !dealName.trim()) {
       toast.error(t("completeAllFields"));
       return;
     }
@@ -336,7 +348,7 @@ export default function NewDealPage() {
     createDeal.mutate({
       name: dealName.trim(),
       contractType: selectedType,
-      governingLaw: selectedJurisdiction,
+      governingLaw: effectiveJurisdiction,
       contractLanguage: selectedLanguage,
       dealMode,
       initiatorCompany: company.trim() || undefined,
@@ -623,13 +635,18 @@ export default function NewDealPage() {
                       setSelectedType(family.primaryTemplate.contractType);
                       setResolvedNativeTemplate(null);
                       // Auto-set deal mode based on template config
-                      if (family.primaryTemplate.soloModeDefault) {
+                      if (family.primaryTemplate.soloModeOnly || family.primaryTemplate.soloModeDefault) {
                         setDealMode("SOLO");
                       } else {
                         setDealMode("NEGOTIATION");
                       }
-                      // Reset jurisdiction when changing contract type
-                      setSelectedJurisdiction(null);
+                      // For soloModeOnly, auto-set jurisdiction (user picks multi-jurisdiction via parameters)
+                      if (family.primaryTemplate.soloModeOnly && family.primaryTemplate.jurisdictions.length > 0) {
+                        setSelectedJurisdiction(family.primaryTemplate.jurisdictions[0] as GoverningLaw);
+                      } else {
+                        // Reset jurisdiction when changing contract type
+                        setSelectedJurisdiction(null);
+                      }
                     }}
                     className={`
                       card-brutal text-left relative transition-colors
@@ -682,8 +699,8 @@ export default function NewDealPage() {
         )}
       </div>
 
-      {/* Step 2: Governing Law Selection */}
-      {selectedFamily && (
+      {/* Step 2: Governing Law Selection (hidden for soloModeOnly — uses multiSelect parameter) */}
+      {selectedFamily && !templates?.find((tmpl) => tmpl.contractType === selectedType)?.soloModeOnly && (
         <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-300">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold rounded-full">
@@ -807,12 +824,12 @@ export default function NewDealPage() {
         </div>
       )}
 
-      {/* Step 3: Contract Language Selection */}
+      {/* Step 3 (or 2 for soloModeOnly): Contract Language Selection */}
       {selectedFamily && selectedJurisdiction && (
         <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-300">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold rounded-full">
-              3
+              {templates?.find((tmpl) => tmpl.contractType === selectedType)?.soloModeOnly ? 2 : 3}
             </div>
             <Label className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
               {t("contractLanguage")}
@@ -874,7 +891,7 @@ export default function NewDealPage() {
       {/* Step 4: Deal Mode (only for templates that support both modes) */}
       {selectedFamily && selectedJurisdiction && (() => {
         const currentTemplate = templates?.find((tmpl) => tmpl.contractType === selectedType);
-        const showModeSelector = currentTemplate?.soloModeSupported && !currentTemplate?.soloModeDefault;
+        const showModeSelector = currentTemplate?.soloModeSupported && !currentTemplate?.soloModeDefault && !currentTemplate?.soloModeOnly;
         if (!showModeSelector) return null;
         return (
           <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-300">
@@ -955,8 +972,9 @@ export default function NewDealPage() {
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold rounded-full">
                 {(() => {
-                  const currentTemplate = templates?.find((tmpl) => tmpl.contractType === selectedType);
-                  return currentTemplate?.soloModeSupported && !currentTemplate?.soloModeDefault ? 5 : 4;
+                  const ct = templates?.find((tmpl) => tmpl.contractType === selectedType);
+                  if (ct?.soloModeOnly) return 3;
+                  return ct?.soloModeSupported && !ct?.soloModeDefault ? 5 : 4;
                 })()}
               </div>
               <Label className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
@@ -1026,8 +1044,9 @@ export default function NewDealPage() {
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold rounded-full">
                   {(() => {
-                    const currentTemplate = templates?.find((tmpl) => tmpl.contractType === selectedType);
-                    return (currentTemplate?.soloModeSupported && !currentTemplate?.soloModeDefault ? 6 : 5);
+                    const ct = templates?.find((tmpl) => tmpl.contractType === selectedType);
+                    if (ct?.soloModeOnly) return 4;
+                    return (ct?.soloModeSupported && !ct?.soloModeDefault ? 6 : 5);
                   })()}
                 </div>
                 <Label className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
@@ -1111,7 +1130,36 @@ function ParameterField({
         {label}
         {param.required && <span className="text-destructive ml-1">*</span>}
       </Label>
-      {param.type === "choice" && param.options ? (
+      {param.type === "multiSelect" && param.options ? (
+        <div className="flex flex-wrap gap-2">
+          {param.options.map((opt) => {
+            const selected = value.split(",").filter(Boolean);
+            const isSelected = selected.includes(opt);
+            return (
+              <button
+                key={opt}
+                type="button"
+                onClick={() => {
+                  const current = value.split(",").filter(Boolean);
+                  const next = isSelected
+                    ? current.filter((v) => v !== opt)
+                    : [...current, opt];
+                  onChange(next.join(","));
+                }}
+                className={`px-3 py-1.5 rounded-full text-sm border transition-colors ${
+                  isSelected
+                    ? "bg-primary text-primary-foreground border-primary"
+                    : "bg-muted/50 text-muted-foreground border-border hover:border-muted-foreground"
+                }`}
+              >
+                {opt === "CALIFORNIA" ? `🇺🇸 ${t("jurisdictions.california")}` :
+                 opt === "ENGLAND_WALES" ? `🇬🇧 ${t("jurisdictions.englandWales")}` :
+                 opt === "SPAIN" ? `🇪🇸 ${t("jurisdictions.spain")}` : opt}
+              </button>
+            );
+          })}
+        </div>
+      ) : param.type === "choice" && param.options ? (
         <div className="flex flex-wrap gap-2">
           {param.options.map((opt) => (
             <button

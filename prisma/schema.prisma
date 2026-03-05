@@ -318,6 +318,7 @@ model ContractTemplate {
   parameterSchema      Json? // Parameter definitions from parameters.json
   soloModeSupported    Boolean       @default(false)
   soloModeDefault      Boolean       @default(false)
+  soloModeOnly         Boolean       @default(false)
   isActive             Boolean       @default(true)
   createdAt            DateTime      @default(now())
   updatedAt            DateTime      @updatedAt

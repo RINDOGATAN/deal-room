@@ -1,0 +1,19 @@
+{
+  "contractType": "PRIVACY_NOTICE",
+  "category": { "en": "Privacy", "es": "Privacidad" },
+  "displayName": {
+    "en": "Privacy Notice",
+    "es": "Aviso de Privacidad"
+  },
+  "description": {
+    "en": "Comprehensive privacy notice compliant with GDPR, UK GDPR, and CCPA/CPRA",
+    "es": "Aviso de privacidad integral conforme al RGPD, RGPD del Reino Unido y CCPA/CPRA"
+  },
+  "version": "1.0",
+  "clauseCount": 10,
+  "jurisdictions": ["CALIFORNIA", "ENGLAND_WALES", "SPAIN"],
+  "languages": ["en", "es"],
+  "soloModeSupported": true,
+  "soloModeDefault": true,
+  "soloModeOnly": true
+}
