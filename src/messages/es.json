@@ -507,7 +507,21 @@
     "unpublishDescription": "Tu perfil está oculto del directorio",
     "saved": "Perfil guardado",
     "publishRequirements": "Añade una biografía y selecciona al menos una jurisdicción y un idioma para publicar",
-    "editProfile": "Editar Perfil"
+    "editProfile": "Editar Perfil",
+    "titleField": "Cargo",
+    "titlePlaceholder": "ej. Socio/a, Protección de Datos",
+    "expertType": "Tipo de Experto",
+    "specializations": "Especializaciones",
+    "certifications": "Certificaciones",
+    "country": "País",
+    "countryPlaceholder": "Código ISO del país (ej. DE, ES, US)",
+    "city": "Ciudad",
+    "cityPlaceholder": "ej. Berlín, Madrid, San Francisco",
+    "jurisdictionsCovered": "Jurisdicciones Cubiertas",
+    "jurisdictionsCoveredHint": "Regímenes regulatorios en los que asesoras (ej. EU, UK, US, CA)",
+    "contactUrl": "URL de Contacto / Reserva",
+    "contactUrlPlaceholder": "https://...",
+    "acceptingClients": "Aceptando Nuevos Clientes"
   },
   "requests": {
     "title": "Solicitudes de Recomendación",

@@ -927,15 +927,32 @@ model InviteCode {
 // LAWYER DIRECTORY & RECOMMENDATION REQUESTS
 // ============================================================
 
+enum ExpertType {
+  LEGAL
+  TECHNICAL
+  BOTH
+}
+
 model LawyerProfile {
   id            String        @id @default(cuid())
   userId        String        @unique
   bio           String?       @db.Text
   jurisdictions GoverningLaw[]
-  languages     String[]        // ["en", "es"]
+  languages     String[]        // ISO 639-1 codes: ["en", "es"]
   isPublished   Boolean       @default(false)
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
+
+  // Cross-product directory fields
+  title              String?          // e.g. "Partner, Data Protection"
+  expertType         ExpertType       @default(LEGAL)
+  specializations    String[]         // controlled vocabulary, validated at app layer
+  certifications     String[]         // e.g. ["CIPP_E", "CISSP"]
+  countryCode        String?          // ISO 3166-1 alpha-2 (where they are based)
+  city               String?
+  jurisdictionsCovered String[]       // broader than GoverningLaw, e.g. ["EU", "UK", "US", "CA"]
+  contactUrl         String?
+  acceptingClients   Boolean          @default(true)
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   @@map("lawyer_profiles")

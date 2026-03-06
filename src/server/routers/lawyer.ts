@@ -4,6 +4,7 @@ import { TRPCError } from "@trpc/server";
 import { GoverningLaw } from "@prisma/client";
 import { sendClientInvitationEmail, sendRecommendationRequestEmail } from "@/lib/email";
 import { checkDealCreationEntitlement } from "../services/licensing/entitlement";
+import { SPECIALIZATIONS, CERTIFICATIONS, EXPERT_TYPES } from "../services/experts/taxonomy";
 
 const GOVERNING_LAW_TO_JURISDICTION: Record<string, string> = {
   CALIFORNIA: "CALIFORNIA",
@@ -466,6 +467,16 @@ export const lawyerRouter = createTRPCRouter({
         jurisdictions: z.array(z.enum(["CALIFORNIA", "ENGLAND_WALES", "SPAIN"])),
         languages: z.array(z.string()).min(1),
         isPublished: z.boolean(),
+        // Cross-product directory fields
+        title: z.string().max(200).optional(),
+        expertType: z.enum(EXPERT_TYPES).optional(),
+        specializations: z.array(z.enum(SPECIALIZATIONS)).optional(),
+        certifications: z.array(z.enum(CERTIFICATIONS)).optional(),
+        countryCode: z.string().length(2).optional(),
+        city: z.string().max(200).optional(),
+        jurisdictionsCovered: z.array(z.string()).optional(),
+        contactUrl: z.string().url().max(500).optional(),
+        acceptingClients: z.boolean().optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -479,6 +490,18 @@ export const lawyerRouter = createTRPCRouter({
         }
       }
 
+      const crossProductFields = {
+        title: input.title ?? null,
+        expertType: (input.expertType ?? "LEGAL") as "LEGAL" | "TECHNICAL" | "BOTH",
+        specializations: input.specializations ?? [],
+        certifications: input.certifications ?? [],
+        countryCode: input.countryCode ?? null,
+        city: input.city ?? null,
+        jurisdictionsCovered: input.jurisdictionsCovered ?? [],
+        contactUrl: input.contactUrl ?? null,
+        acceptingClients: input.acceptingClients ?? true,
+      };
+
       const profile = await ctx.prisma.lawyerProfile.upsert({
         where: { userId: ctx.session.user.id },
         update: {
@@ -486,6 +509,7 @@ export const lawyerRouter = createTRPCRouter({
           jurisdictions: input.jurisdictions as GoverningLaw[],
           languages: input.languages,
           isPublished: input.isPublished,
+          ...crossProductFields,
         },
         create: {
           userId: ctx.session.user.id,
@@ -493,6 +517,7 @@ export const lawyerRouter = createTRPCRouter({
           jurisdictions: input.jurisdictions as GoverningLaw[],
           languages: input.languages,
           isPublished: input.isPublished,
+          ...crossProductFields,
         },
       });
       return profile;

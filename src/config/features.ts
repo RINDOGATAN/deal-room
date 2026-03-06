@@ -10,6 +10,7 @@ export const features = {
   marketplace: brand.id === "todo",
   clientInvitations: brand.id === "todo",
   agentApi: brand.id === "todo",
+  expertsApi: brand.id === "todo",
   publicDocs: brand.id === "todo",
   /** Cloud Intelligence API — data-driven biases, quality scoring, conflict detection */
   cloudIntelligence: !!process.env.DEALROOM_CLOUD_API_KEY,

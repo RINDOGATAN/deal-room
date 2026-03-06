@@ -507,7 +507,21 @@
     "unpublishDescription": "Your profile is hidden from the directory",
     "saved": "Profile saved",
     "publishRequirements": "Add a bio and select at least one jurisdiction and language to publish",
-    "editProfile": "Edit Profile"
+    "editProfile": "Edit Profile",
+    "titleField": "Title",
+    "titlePlaceholder": "e.g. Partner, Data Protection",
+    "expertType": "Expert Type",
+    "specializations": "Specializations",
+    "certifications": "Certifications",
+    "country": "Country",
+    "countryPlaceholder": "ISO country code (e.g. DE, ES, US)",
+    "city": "City",
+    "cityPlaceholder": "e.g. Berlin, Madrid, San Francisco",
+    "jurisdictionsCovered": "Jurisdictions Covered",
+    "jurisdictionsCoveredHint": "Regulatory regimes you advise on (e.g. EU, UK, US, CA)",
+    "contactUrl": "Contact / Booking URL",
+    "contactUrlPlaceholder": "https://...",
+    "acceptingClients": "Accepting New Clients"
   },
   "requests": {
     "title": "Recommendation Requests",
