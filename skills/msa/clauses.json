@@ -1,837 +1,2062 @@
 {
   "contractType": "MSA",
-  "displayName": "Master Services Agreement",
-  "description": "Framework agreement for professional and consulting services with Statement of Work structure",
+  "displayName": {
+    "en": "Master Services Agreement",
+    "es": "Contrato Marco de Prestación de Servicios"
+  },
+  "description": {
+    "en": "Framework agreement for professional and consulting services with Statement of Work structure",
+    "es": "Contrato marco para servicios profesionales y de consultoría con estructura de Órdenes de Trabajo"
+  },
   "version": "1.0",
+  "languages": ["en", "es"],
   "clauses": [
     {
       "id": "payment-terms",
-      "title": "Payment terms",
-      "category": "Financial",
+      "title": {
+        "en": "Payment terms",
+        "es": "Condiciones de pago"
+      },
+      "category": {
+        "en": "Financial",
+        "es": "Financiero"
+      },
       "order": 1,
-      "plainDescription": "How quickly must the client pay invoices after receipt?",
-      "legalContext": "Payment terms affect cash flow for both parties. Longer terms benefit clients; shorter terms benefit providers. Industry standard ranges from Net 15 to Net 60.",
+      "plainDescription": {
+        "en": "How quickly must the client pay invoices after receipt?",
+        "es": "¿En qué plazo debe el Cliente abonar las facturas tras su recepción?"
+      },
+      "legalContext": {
+        "en": "Payment terms affect cash flow for both parties. Longer terms benefit clients; shorter terms benefit providers. Industry standard ranges from Net 15 to Net 60.",
+        "es": "Las condiciones de pago afectan al flujo de caja de ambas partes. Plazos más largos benefician al Cliente; plazos más cortos benefician al Prestador. El estándar del sector oscila entre 15 y 60 días netos."
+      },
       "isRequired": true,
       "options": [
         {
           "id": "payment-net15",
           "code": "net-15",
-          "label": "Net 15 days",
+          "label": {
+            "en": "Net 15 days",
+            "es": "15 días netos"
+          },
           "order": 1,
-          "plainDescription": "Client must pay invoices within 15 days of receipt. Fast payment improves provider cash flow.",
-          "prosPartyA": [
-            "Quick payment",
-            "Better cash flow",
-            "Lower financing costs"
-          ],
-          "consPartyA": [
-            "Client may resist",
-            "May need to negotiate"
-          ],
-          "prosPartyB": [
-            "Quick expense processing"
-          ],
-          "consPartyB": [
-            "Tight payment window",
-            "Cash flow pressure",
-            "Admin burden"
-          ],
-          "legalText": "Client shall pay all undisputed invoices within fifteen (15) days of the invoice date.",
-          "biasPartyA": 0.4,
-          "biasPartyB": -0.4
+          "plainDescription": {
+            "en": "Client must pay invoices within 15 days of receipt. Fast payment improves provider cash flow.",
+            "es": "El Cliente debe abonar las facturas en un plazo de 15 días desde su recepción. El pago rápido mejora el flujo de caja del Prestador."
+          },
+          "pros": {
+            "partyA": {
+              "en": [
+                "Quick payment",
+                "Better cash flow",
+                "Lower financing costs"
+              ],
+              "es": [
+                "Cobro rápido",
+                "Mejor flujo de caja",
+                "Menores costes de financiación"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Quick expense processing"
+              ],
+              "es": [
+                "Tramitación rápida del gasto"
+              ]
+            }
+          },
+          "cons": {
+            "partyA": {
+              "en": [
+                "Client may resist",
+                "May need to negotiate"
+              ],
+              "es": [
+                "El Cliente puede oponerse",
+                "Puede requerir negociación"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Tight payment window",
+                "Cash flow pressure",
+                "Admin burden"
+              ],
+              "es": [
+                "Plazo de pago ajustado",
+                "Presión sobre el flujo de caja",
+                "Carga administrativa"
+              ]
+            }
+          },
+          "legalText": {
+            "en": "Client shall pay all undisputed invoices within fifteen (15) days of the invoice date.",
+            "es": "El Cliente abonará todas las facturas no impugnadas en un plazo de quince (15) días desde la fecha de emisión de la factura."
+          },
+          "bias": {
+            "partyA": 0.4,
+            "partyB": -0.4
+          }
         },
         {
           "id": "payment-net30",
           "code": "net-30",
-          "label": "Net 30 days",
+          "label": {
+            "en": "Net 30 days",
+            "es": "30 días netos"
+          },
           "order": 2,
-          "plainDescription": "Client must pay invoices within 30 days - the most common business standard.",
-          "prosPartyA": [
-            "Industry standard",
-            "Reasonable cash flow",
-            "Easy to negotiate"
-          ],
-          "consPartyA": [
-            "Not the fastest payment"
-          ],
-          "prosPartyB": [
-            "Standard terms",
-            "Adequate processing time",
-            "Widely accepted"
-          ],
-          "consPartyB": [
-            "Must track payment dates"
-          ],
-          "legalText": "Client shall pay all undisputed invoices within thirty (30) days of the invoice date.",
-          "biasPartyA": 0,
-          "biasPartyB": 0
+          "plainDescription": {
+            "en": "Client must pay invoices within 30 days - the most common business standard.",
+            "es": "El Cliente debe abonar las facturas en un plazo de 30 días, el estándar más habitual en el ámbito empresarial."
+          },
+          "pros": {
+            "partyA": {
+              "en": [
+                "Industry standard",
+                "Reasonable cash flow",
+                "Easy to negotiate"
+              ],
+              "es": [
+                "Estándar del sector",
+                "Flujo de caja razonable",
+                "Fácil de negociar"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Standard terms",
+                "Adequate processing time",
+                "Widely accepted"
+              ],
+              "es": [
+                "Condiciones estándar",
+                "Tiempo de tramitación adecuado",
+                "Ampliamente aceptado"
+              ]
+            }
+          },
+          "cons": {
+            "partyA": {
+              "en": [
+                "Not the fastest payment"
+              ],
+              "es": [
+                "No es el pago más rápido"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Must track payment dates"
+              ],
+              "es": [
+                "Requiere seguimiento de fechas de pago"
+              ]
+            }
+          },
+          "legalText": {
+            "en": "Client shall pay all undisputed invoices within thirty (30) days of the invoice date.",
+            "es": "El Cliente abonará todas las facturas no impugnadas en un plazo de treinta (30) días desde la fecha de emisión de la factura."
+          },
+          "bias": {
+            "partyA": 0,
+            "partyB": 0
+          }
         },
         {
           "id": "payment-net45",
           "code": "net-45",
-          "label": "Net 45 days",
+          "label": {
+            "en": "Net 45 days",
+            "es": "45 días netos"
+          },
           "order": 3,
-          "plainDescription": "Client has 45 days to pay invoices, providing extended payment flexibility.",
-          "prosPartyA": [
-            "May be required for enterprise clients"
-          ],
-          "consPartyA": [
-            "Slower cash flow",
-            "Extended receivables"
-          ],
-          "prosPartyB": [
-            "More cash flow flexibility",
-            "Common for large enterprises",
-            "Budget cycle alignment"
-          ],
-          "consPartyB": [
-            "Provider may charge more"
-          ],
-          "legalText": "Client shall pay all undisputed invoices within forty-five (45) days of the invoice date.",
-          "biasPartyA": -0.3,
-          "biasPartyB": 0.3
+          "plainDescription": {
+            "en": "Client has 45 days to pay invoices, providing extended payment flexibility.",
+            "es": "El Cliente dispone de 45 días para abonar las facturas, lo que proporciona mayor flexibilidad de pago."
+          },
+          "pros": {
+            "partyA": {
+              "en": [
+                "May be required for enterprise clients"
+              ],
+              "es": [
+                "Puede ser necesario para grandes clientes corporativos"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "More cash flow flexibility",
+                "Common for large enterprises",
+                "Budget cycle alignment"
+              ],
+              "es": [
+                "Mayor flexibilidad de flujo de caja",
+                "Habitual en grandes empresas",
+                "Alineación con el ciclo presupuestario"
+              ]
+            }
+          },
+          "cons": {
+            "partyA": {
+              "en": [
+                "Slower cash flow",
+                "Extended receivables"
+              ],
+              "es": [
+                "Flujo de caja más lento",
+                "Cuentas por cobrar ampliadas"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Provider may charge more"
+              ],
+              "es": [
+                "El Prestador puede incrementar sus tarifas"
+              ]
+            }
+          },
+          "legalText": {
+            "en": "Client shall pay all undisputed invoices within forty-five (45) days of the invoice date.",
+            "es": "El Cliente abonará todas las facturas no impugnadas en un plazo de cuarenta y cinco (45) días desde la fecha de emisión de la factura."
+          },
+          "bias": {
+            "partyA": -0.3,
+            "partyB": 0.3
+          }
         },
         {
           "id": "payment-net60",
           "code": "net-60",
-          "label": "Net 60 days",
+          "label": {
+            "en": "Net 60 days",
+            "es": "60 días netos"
+          },
           "order": 4,
-          "plainDescription": "Client has 60 days to pay invoices - maximum flexibility for client, longer wait for provider.",
-          "prosPartyA": [
-            "May win enterprise deals"
-          ],
-          "consPartyA": [
-            "Significant cash flow impact",
-            "May need financing",
-            "Higher risk"
-          ],
-          "prosPartyB": [
-            "Maximum flexibility",
-            "Aligns with corporate processes",
-            "Budget management"
-          ],
-          "consPartyB": [
-            "Provider may increase rates",
-            "May face resistance"
-          ],
-          "legalText": "Client shall pay all undisputed invoices within sixty (60) days of the invoice date.",
-          "biasPartyA": -0.5,
-          "biasPartyB": 0.5
+          "plainDescription": {
+            "en": "Client has 60 days to pay invoices - maximum flexibility for client, longer wait for provider.",
+            "es": "El Cliente dispone de 60 días para abonar las facturas: máxima flexibilidad para el Cliente y mayor espera para el Prestador."
+          },
+          "pros": {
+            "partyA": {
+              "en": [
+                "May win enterprise deals"
+              ],
+              "es": [
+                "Puede facilitar la captación de grandes cuentas"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Maximum flexibility",
+                "Aligns with corporate processes",
+                "Budget management"
+              ],
+              "es": [
+                "Máxima flexibilidad",
+                "Se ajusta a los procesos corporativos",
+                "Gestión presupuestaria"
+              ]
+            }
+          },
+          "cons": {
+            "partyA": {
+              "en": [
+                "Significant cash flow impact",
+                "May need financing",
+                "Higher risk"
+              ],
+              "es": [
+                "Impacto significativo en el flujo de caja",
+                "Puede requerir financiación",
+                "Mayor riesgo"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Provider may increase rates",
+                "May face resistance"
+              ],
+              "es": [
+                "El Prestador puede incrementar las tarifas",
+                "Puede encontrar resistencia"
+              ]
+            }
+          },
+          "legalText": {
+            "en": "Client shall pay all undisputed invoices within sixty (60) days of the invoice date.",
+            "es": "El Cliente abonará todas las facturas no impugnadas en un plazo de sesenta (60) días desde la fecha de emisión de la factura."
+          },
+          "bias": {
+            "partyA": -0.5,
+            "partyB": 0.5
+          }
         }
       ]
     },
     {
       "id": "ip-ownership",
-      "title": "Work product IP ownership",
-      "category": "Intellectual Property",
+      "title": {
+        "en": "Work product IP ownership",
+        "es": "Titularidad de la propiedad intelectual del trabajo realizado"
+      },
+      "category": {
+        "en": "Intellectual Property",
+        "es": "Propiedad Intelectual"
+      },
       "order": 2,
-      "plainDescription": "Who owns the intellectual property in work created by the provider specifically for this engagement?",
-      "legalContext": "IP ownership is often the most negotiated MSA provision. Work-for-hire gives clients full ownership; provider-owns-with-license gives providers reuse rights. This affects pricing and provider business models.",
+      "plainDescription": {
+        "en": "Who owns the intellectual property in work created by the provider specifically for this engagement?",
+        "es": "¿Quién ostenta la titularidad de la propiedad intelectual sobre el trabajo creado por el Prestador específicamente para este encargo?"
+      },
+      "legalContext": {
+        "en": "IP ownership is often the most negotiated MSA provision. Work-for-hire gives clients full ownership; provider-owns-with-license gives providers reuse rights. This affects pricing and provider business models.",
+        "es": "La titularidad de la propiedad intelectual suele ser la cláusula más negociada del Contrato Marco. La modalidad de obra por encargo otorga al Cliente la plena titularidad; la modalidad en que el Prestador retiene la titularidad con licencia le permite reutilizar el trabajo. Esto afecta a la fijación de precios y al modelo de negocio del Prestador."
+      },
       "isRequired": true,
       "options": [
         {
           "id": "ip-client-owns",
           "code": "client-owns",
-          "label": "Client owns all work product",
+          "label": {
+            "en": "Client owns all work product",
+            "es": "El Cliente es titular de todo el trabajo realizado"
+          },
           "order": 1,
-          "plainDescription": "Client owns all intellectual property in work created specifically for them. Provider assigns all rights to client.",
-          "prosPartyA": [
-            "Can reuse methodologies"
-          ],
-          "consPartyA": [
-            "No ownership of custom work",
-            "Cannot reuse for other clients",
-            "Higher prices may result"
-          ],
-          "prosPartyB": [
-            "Full ownership",
-            "No licensing concerns",
-            "Can modify freely",
-            "Can resell or license"
-          ],
-          "consPartyB": [
-            "May pay premium for full ownership"
-          ],
-          "legalText": "All Work Product created by Provider specifically for Client shall be owned by Client. Provider hereby assigns to Client all right, title, and interest in such Work Product, including all intellectual property rights.",
-          "biasPartyA": -0.5,
-          "biasPartyB": 0.5
+          "plainDescription": {
+            "en": "Client owns all intellectual property in work created specifically for them. Provider assigns all rights to client.",
+            "es": "El Cliente ostenta la titularidad de toda la propiedad intelectual sobre el trabajo creado específicamente para él. El Prestador cede todos los derechos al Cliente."
+          },
+          "pros": {
+            "partyA": {
+              "en": [
+                "Can reuse methodologies"
+              ],
+              "es": [
+                "Puede reutilizar las metodologías"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Full ownership",
+                "No licensing concerns",
+                "Can modify freely",
+                "Can resell or license"
+              ],
+              "es": [
+                "Plena titularidad",
+                "Sin restricciones de licencia",
+                "Puede modificar libremente",
+                "Puede revender o licenciar"
+              ]
+            }
+          },
+          "cons": {
+            "partyA": {
+              "en": [
+                "No ownership of custom work",
+                "Cannot reuse for other clients",
+                "Higher prices may result"
+              ],
+              "es": [
+                "Sin titularidad sobre el trabajo a medida",
+                "No puede reutilizarlo para otros clientes",
+                "Puede dar lugar a precios más elevados"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "May pay premium for full ownership"
+              ],
+              "es": [
+                "Puede pagar una prima por la plena titularidad"
+              ]
+            }
+          },
+          "legalText": {
+            "en": "All Work Product created by Provider specifically for Client shall be owned by Client. Provider hereby assigns to Client all right, title, and interest in such Work Product, including all intellectual property rights.",
+            "es": "Todo el Trabajo Realizado creado por el Prestador específicamente para el Cliente será de titularidad del Cliente. El Prestador cede al Cliente todos los derechos, títulos e intereses sobre dicho Trabajo Realizado, incluidos todos los derechos de propiedad intelectual e industrial."
+          },
+          "bias": {
+            "partyA": -0.5,
+            "partyB": 0.5
+          }
         },
         {
           "id": "ip-provider-license",
           "code": "provider-owns-license",
-          "label": "Provider owns, client gets license",
+          "label": {
+            "en": "Provider owns, client gets license",
+            "es": "El Prestador retiene la titularidad; el Cliente obtiene licencia"
+          },
           "order": 2,
-          "plainDescription": "Provider retains ownership but grants client a perpetual, royalty-free license to use the work for internal business purposes.",
-          "prosPartyA": [
-            "Retains IP ownership",
-            "Can reuse for other clients",
-            "Can improve and commercialize"
-          ],
-          "consPartyA": [
-            "Client has perpetual license",
-            "Cannot restrict client's internal use"
-          ],
-          "prosPartyB": [
-            "Perpetual license to use",
-            "Often lower pricing",
-            "No license fees"
-          ],
-          "consPartyB": [
-            "No ownership",
-            "Cannot sublicense",
-            "Cannot modify source (typically)"
-          ],
-          "legalText": "Provider retains all right, title, and interest in the Work Product. Provider grants Client a non-exclusive, perpetual, worldwide, royalty-free license to use, copy, and modify the Work Product for Client's internal business purposes.",
-          "biasPartyA": 0.3,
-          "biasPartyB": -0.3
+          "plainDescription": {
+            "en": "Provider retains ownership but grants client a perpetual, royalty-free license to use the work for internal business purposes.",
+            "es": "El Prestador conserva la titularidad pero concede al Cliente una licencia perpetua y libre de cánones para utilizar el trabajo con fines empresariales internos."
+          },
+          "pros": {
+            "partyA": {
+              "en": [
+                "Retains IP ownership",
+                "Can reuse for other clients",
+                "Can improve and commercialize"
+              ],
+              "es": [
+                "Conserva la titularidad de la PI",
+                "Puede reutilizarlo para otros clientes",
+                "Puede mejorarlo y comercializarlo"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Perpetual license to use",
+                "Often lower pricing",
+                "No license fees"
+              ],
+              "es": [
+                "Licencia perpetua de uso",
+                "Generalmente precios más reducidos",
+                "Sin cánones de licencia"
+              ]
+            }
+          },
+          "cons": {
+            "partyA": {
+              "en": [
+                "Client has perpetual license",
+                "Cannot restrict client's internal use"
+              ],
+              "es": [
+                "El Cliente tiene licencia perpetua",
+                "No puede restringir el uso interno del Cliente"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "No ownership",
+                "Cannot sublicense",
+                "Cannot modify source (typically)"
+              ],
+              "es": [
+                "Sin titularidad",
+                "No puede sublicenciar",
+                "No puede modificar el código fuente (generalmente)"
+              ]
+            }
+          },
+          "legalText": {
+            "en": "Provider retains all right, title, and interest in the Work Product. Provider grants Client a non-exclusive, perpetual, worldwide, royalty-free license to use, copy, and modify the Work Product for Client's internal business purposes.",
+            "es": "El Prestador conserva todos los derechos, títulos e intereses sobre el Trabajo Realizado. El Prestador concede al Cliente una licencia no exclusiva, perpetua, de ámbito mundial y libre de cánones para usar, copiar y modificar el Trabajo Realizado para los fines empresariales internos del Cliente."
+          },
+          "bias": {
+            "partyA": 0.3,
+            "partyB": -0.3
+          }
         },
         {
           "id": "ip-joint",
           "code": "joint-ownership",
-          "label": "Joint ownership",
+          "label": {
+            "en": "Joint ownership",
+            "es": "Cotitularidad"
+          },
           "order": 3,
-          "plainDescription": "Both parties jointly own the work product and can each use, license, or exploit it independently.",
-          "prosPartyA": [
-            "Can use for other clients",
-            "Can commercialize independently"
-          ],
-          "consPartyA": [
-            "Client can also commercialize",
-            "Less exclusive value"
-          ],
-          "prosPartyB": [
-            "Co-ownership rights",
-            "Can use and exploit freely"
-          ],
-          "consPartyB": [
-            "Provider can use for competitors",
-            "Less exclusive value"
-          ],
-          "legalText": "The Parties shall jointly own the Work Product. Each Party may use, license, and exploit the Work Product without accounting to the other, subject to the confidentiality obligations herein.",
-          "biasPartyA": 0,
-          "biasPartyB": 0
+          "plainDescription": {
+            "en": "Both parties jointly own the work product and can each use, license, or exploit it independently.",
+            "es": "Ambas partes son cotitulares del trabajo realizado y pueden usarlo, licenciarlo o explotarlo de forma independiente."
+          },
+          "pros": {
+            "partyA": {
+              "en": [
+                "Can use for other clients",
+                "Can commercialize independently"
+              ],
+              "es": [
+                "Puede utilizarlo para otros clientes",
+                "Puede comercializarlo de forma independiente"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Co-ownership rights",
+                "Can use and exploit freely"
+              ],
+              "es": [
+                "Derechos de cotitularidad",
+                "Puede usar y explotar libremente"
+              ]
+            }
+          },
+          "cons": {
+            "partyA": {
+              "en": [
+                "Client can also commercialize",
+                "Less exclusive value"
+              ],
+              "es": [
+                "El Cliente también puede comercializarlo",
+                "Menor valor de exclusividad"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Provider can use for competitors",
+                "Less exclusive value"
+              ],
+              "es": [
+                "El Prestador puede utilizarlo para competidores",
+                "Menor valor de exclusividad"
+              ]
+            }
+          },
+          "legalText": {
+            "en": "The Parties shall jointly own the Work Product. Each Party may use, license, and exploit the Work Product without accounting to the other, subject to the confidentiality obligations herein.",
+            "es": "Las Partes serán cotitulares del Trabajo Realizado. Cada Parte podrá usar, licenciar y explotar el Trabajo Realizado sin necesidad de rendir cuentas a la otra, con sujeción a las obligaciones de confidencialidad establecidas en el presente Contrato."
+          },
+          "bias": {
+            "partyA": 0,
+            "partyB": 0
+          }
         }
       ]
     },
     {
       "id": "liability-cap",
-      "title": "Limitation of liability",
-      "category": "Liability",
+      "title": {
+        "en": "Limitation of liability",
+        "es": "Limitación de responsabilidad"
+      },
+      "category": {
+        "en": "Liability",
+        "es": "Responsabilidad"
+      },
       "order": 3,
-      "plainDescription": "What is the maximum liability each party can face for breaches of this agreement?",
-      "legalContext": "Liability caps allocate risk between parties. Higher caps protect the injured party but increase risk exposure. Caps are typically tied to fees paid.",
+      "plainDescription": {
+        "en": "What is the maximum liability each party can face for breaches of this agreement?",
+        "es": "¿Cuál es la responsabilidad máxima a la que puede hacer frente cada parte por incumplimiento de este Contrato?"
+      },
+      "legalContext": {
+        "en": "Liability caps allocate risk between parties. Higher caps protect the injured party but increase risk exposure. Caps are typically tied to fees paid.",
+        "es": "Los límites de responsabilidad distribuyen el riesgo entre las partes. Límites más altos protegen a la parte perjudicada pero aumentan la exposición al riesgo. Los límites suelen vincularse a los honorarios abonados."
+      },
       "isRequired": true,
       "options": [
         {
           "id": "liability-12mo",
           "code": "12-months-fees",
-          "label": "12 months of fees",
+          "label": {
+            "en": "12 months of fees",
+            "es": "Honorarios de 12 meses"
+          },
           "order": 1,
-          "plainDescription": "Each party's liability capped at fees paid in the 12 months before the claim arose.",
-          "prosPartyA": [
-            "Predictable exposure",
-            "Industry standard"
-          ],
-          "consPartyA": [
-            "Limited recovery if client breaches"
-          ],
-          "prosPartyB": [
-            "Limited exposure",
-            "Standard cap"
-          ],
-          "consPartyB": [
-            "May not cover major damages"
-          ],
-          "legalText": "Each Party's total aggregate liability under this Agreement shall not exceed the fees paid or payable by Client in the twelve (12) months preceding the claim.",
-          "biasPartyA": 0,
-          "biasPartyB": 0
+          "plainDescription": {
+            "en": "Each party's liability capped at fees paid in the 12 months before the claim arose.",
+            "es": "La responsabilidad de cada parte se limita a los honorarios abonados en los 12 meses anteriores al nacimiento de la reclamación."
+          },
+          "pros": {
+            "partyA": {
+              "en": [
+                "Predictable exposure",
+                "Industry standard"
+              ],
+              "es": [
+                "Exposición previsible",
+                "Estándar del sector"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Limited exposure",
+                "Standard cap"
+              ],
+              "es": [
+                "Exposición limitada",
+                "Límite estándar"
+              ]
+            }
+          },
+          "cons": {
+            "partyA": {
+              "en": [
+                "Limited recovery if client breaches"
+              ],
+              "es": [
+                "Recuperación limitada en caso de incumplimiento del Cliente"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "May not cover major damages"
+              ],
+              "es": [
+                "Puede no cubrir daños de gran cuantía"
+              ]
+            }
+          },
+          "legalText": {
+            "en": "Each Party's total aggregate liability under this Agreement shall not exceed the fees paid or payable by Client in the twelve (12) months preceding the claim.",
+            "es": "La responsabilidad total acumulada de cada Parte en virtud del presente Contrato no excederá de los honorarios abonados o debidos por el Cliente durante los doce (12) meses anteriores a la reclamación."
+          },
+          "bias": {
+            "partyA": 0,
+            "partyB": 0
+          }
         },
         {
           "id": "liability-sow",
           "code": "fees-per-sow",
-          "label": "Fees under applicable SOW",
+          "label": {
+            "en": "Fees under applicable SOW",
+            "es": "Honorarios de la Orden de Trabajo aplicable"
+          },
           "order": 2,
-          "plainDescription": "Liability capped at fees paid under the specific Statement of Work that gave rise to the claim.",
-          "prosPartyA": [
-            "Caps tied to specific engagement",
-            "Lower overall exposure"
-          ],
-          "consPartyA": [
-            "Lower cap for small SOWs",
-            "Claim tracking by SOW"
-          ],
-          "prosPartyB": [
-            "May limit recovery for cross-SOW issues"
-          ],
-          "consPartyB": [
-            "Lower protection for client"
-          ],
-          "legalText": "Each Party's total aggregate liability for claims arising from a particular Statement of Work shall not exceed the fees paid or payable under that Statement of Work.",
-          "biasPartyA": 0.2,
-          "biasPartyB": -0.2
+          "plainDescription": {
+            "en": "Liability capped at fees paid under the specific Statement of Work that gave rise to the claim.",
+            "es": "La responsabilidad se limita a los honorarios abonados en virtud de la Orden de Trabajo específica que dio origen a la reclamación."
+          },
+          "pros": {
+            "partyA": {
+              "en": [
+                "Caps tied to specific engagement",
+                "Lower overall exposure"
+              ],
+              "es": [
+                "Límites vinculados al encargo concreto",
+                "Menor exposición global"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "May limit recovery for cross-SOW issues"
+              ],
+              "es": [
+                "Puede limitar la recuperación en asuntos que afecten a varias Órdenes de Trabajo"
+              ]
+            }
+          },
+          "cons": {
+            "partyA": {
+              "en": [
+                "Lower cap for small SOWs",
+                "Claim tracking by SOW"
+              ],
+              "es": [
+                "Límite inferior en Órdenes de Trabajo de menor cuantía",
+                "Seguimiento de reclamaciones por Orden de Trabajo"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Lower protection for client"
+              ],
+              "es": [
+                "Menor protección para el Cliente"
+              ]
+            }
+          },
+          "legalText": {
+            "en": "Each Party's total aggregate liability for claims arising from a particular Statement of Work shall not exceed the fees paid or payable under that Statement of Work.",
+            "es": "La responsabilidad total acumulada de cada Parte por reclamaciones derivadas de una Orden de Trabajo concreta no excederá de los honorarios abonados o debidos en virtud de dicha Orden de Trabajo."
+          },
+          "bias": {
+            "partyA": 0.2,
+            "partyB": -0.2
+          }
         },
         {
           "id": "liability-2x",
           "code": "2x-annual-fees",
-          "label": "2x annual fees",
+          "label": {
+            "en": "2x annual fees",
+            "es": "2x honorarios anuales"
+          },
           "order": 3,
-          "plainDescription": "Liability capped at twice the annual fees, providing greater protection for significant damages.",
-          "prosPartyA": [
-            "Higher exposure"
-          ],
-          "consPartyA": [
-            "Higher cap increases risk"
-          ],
-          "prosPartyB": [
-            "Better protection",
-            "More recovery potential"
-          ],
-          "consPartyB": [
-            "Provider may charge more"
-          ],
-          "legalText": "Each Party's total aggregate liability under this Agreement shall not exceed two times (2x) the fees paid or payable by Client in the twelve (12) months preceding the claim.",
-          "biasPartyA": -0.2,
-          "biasPartyB": 0.2
+          "plainDescription": {
+            "en": "Liability capped at twice the annual fees, providing greater protection for significant damages.",
+            "es": "La responsabilidad se limita al doble de los honorarios anuales, lo que proporciona mayor protección frente a daños significativos."
+          },
+          "pros": {
+            "partyA": {
+              "en": [
+                "Higher exposure"
+              ],
+              "es": [
+                "Mayor exposición"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Better protection",
+                "More recovery potential"
+              ],
+              "es": [
+                "Mayor protección",
+                "Mayor potencial de recuperación"
+              ]
+            }
+          },
+          "cons": {
+            "partyA": {
+              "en": [
+                "Higher cap increases risk"
+              ],
+              "es": [
+                "Un límite más alto incrementa el riesgo"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Provider may charge more"
+              ],
+              "es": [
+                "El Prestador puede incrementar sus tarifas"
+              ]
+            }
+          },
+          "legalText": {
+            "en": "Each Party's total aggregate liability under this Agreement shall not exceed two times (2x) the fees paid or payable by Client in the twelve (12) months preceding the claim.",
+            "es": "La responsabilidad total acumulada de cada Parte en virtud del presente Contrato no excederá del doble (2x) de los honorarios abonados o debidos por el Cliente durante los doce (12) meses anteriores a la reclamación."
+          },
+          "bias": {
+            "partyA": -0.2,
+            "partyB": 0.2
+          }
         }
       ]
     },
     {
       "id": "termination-convenience",
-      "title": "Termination for convenience",
-      "category": "Term",
+      "title": {
+        "en": "Termination for convenience",
+        "es": "Resolución por conveniencia"
+      },
+      "category": {
+        "en": "Term",
+        "es": "Plazo"
+      },
       "order": 4,
-      "plainDescription": "Can either party end the agreement without cause, and with what notice period?",
-      "legalContext": "Termination for convenience gives flexibility to exit the relationship. The question is whether it's mutual, one-sided, and what notice period applies.",
+      "plainDescription": {
+        "en": "Can either party end the agreement without cause, and with what notice period?",
+        "es": "¿Puede cualquiera de las partes resolver el Contrato sin causa justificada y con qué plazo de preaviso?"
+      },
+      "legalContext": {
+        "en": "Termination for convenience gives flexibility to exit the relationship. The question is whether it's mutual, one-sided, and what notice period applies.",
+        "es": "La resolución por conveniencia ofrece flexibilidad para poner fin a la relación contractual. La cuestión es si es mutua, unilateral y qué plazo de preaviso resulta aplicable."
+      },
       "isRequired": true,
       "options": [
         {
           "id": "term-no-convenience",
           "code": "no-convenience",
-          "label": "No termination for convenience",
+          "label": {
+            "en": "No termination for convenience",
+            "es": "Sin resolución por conveniencia"
+          },
           "order": 1,
-          "plainDescription": "Neither party can terminate without cause. Agreement continues for full term or until material breach.",
-          "prosPartyA": [
-            "Revenue stability",
-            "Committed engagement"
-          ],
-          "consPartyA": [
-            "Cannot exit bad client",
-            "Stuck for full term"
-          ],
-          "prosPartyB": [
-            "Service continuity",
-            "Provider commitment"
-          ],
-          "consPartyB": [
-            "Cannot exit if needs change",
-            "Locked in"
-          ],
-          "legalText": "Neither Party may terminate this Agreement for convenience. This Agreement may only be terminated for cause as otherwise provided in this Agreement.",
-          "biasPartyA": 0.2,
-          "biasPartyB": -0.2
+          "plainDescription": {
+            "en": "Neither party can terminate without cause. Agreement continues for full term or until material breach.",
+            "es": "Ninguna de las partes puede resolver el Contrato sin causa justificada. El Contrato permanece vigente durante todo su plazo o hasta que se produzca un incumplimiento esencial."
+          },
+          "pros": {
+            "partyA": {
+              "en": [
+                "Revenue stability",
+                "Committed engagement"
+              ],
+              "es": [
+                "Estabilidad de ingresos",
+                "Compromiso del encargo"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Service continuity",
+                "Provider commitment"
+              ],
+              "es": [
+                "Continuidad del servicio",
+                "Compromiso del Prestador"
+              ]
+            }
+          },
+          "cons": {
+            "partyA": {
+              "en": [
+                "Cannot exit bad client",
+                "Stuck for full term"
+              ],
+              "es": [
+                "No puede desvincularse de un mal cliente",
+                "Obligado durante todo el plazo"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Cannot exit if needs change",
+                "Locked in"
+              ],
+              "es": [
+                "No puede desvincularse si cambian las necesidades",
+                "Vinculación obligatoria"
+              ]
+            }
+          },
+          "legalText": {
+            "en": "Neither Party may terminate this Agreement for convenience. This Agreement may only be terminated for cause as otherwise provided in this Agreement.",
+            "es": "Ninguna de las Partes podrá resolver el presente Contrato por conveniencia. El presente Contrato solo podrá resolverse por causa justificada conforme a lo establecido en el mismo."
+          },
+          "bias": {
+            "partyA": 0.2,
+            "partyB": -0.2
+          }
         },
         {
           "id": "term-30-days",
           "code": "mutual-30-days",
-          "label": "Mutual with 30 days notice",
+          "label": {
+            "en": "Mutual with 30 days notice",
+            "es": "Mutua con 30 días de preaviso"
+          },
           "order": 2,
-          "plainDescription": "Either party can terminate the agreement with 30 days written notice, without needing to show cause.",
-          "prosPartyA": [
-            "Can exit problematic engagements",
-            "Reasonable notice period"
-          ],
-          "consPartyA": [
-            "Client can exit quickly",
-            "Less revenue certainty"
-          ],
-          "prosPartyB": [
-            "Can exit if needs change",
-            "Reasonable notice"
-          ],
-          "consPartyB": [
-            "Provider could leave mid-project"
-          ],
-          "legalText": "Either Party may terminate this Agreement for convenience upon thirty (30) days' prior written notice to the other Party.",
-          "biasPartyA": 0,
-          "biasPartyB": 0
+          "plainDescription": {
+            "en": "Either party can terminate the agreement with 30 days written notice, without needing to show cause.",
+            "es": "Cualquiera de las partes puede resolver el Contrato con 30 días de preaviso por escrito, sin necesidad de justificar causa alguna."
+          },
+          "pros": {
+            "partyA": {
+              "en": [
+                "Can exit problematic engagements",
+                "Reasonable notice period"
+              ],
+              "es": [
+                "Puede desvincularse de encargos problemáticos",
+                "Plazo de preaviso razonable"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Can exit if needs change",
+                "Reasonable notice"
+              ],
+              "es": [
+                "Puede desvincularse si cambian las necesidades",
+                "Preaviso razonable"
+              ]
+            }
+          },
+          "cons": {
+            "partyA": {
+              "en": [
+                "Client can exit quickly",
+                "Less revenue certainty"
+              ],
+              "es": [
+                "El Cliente puede desvincularse rápidamente",
+                "Menor certidumbre de ingresos"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Provider could leave mid-project"
+              ],
+              "es": [
+                "El Prestador podría abandonar a mitad de proyecto"
+              ]
+            }
+          },
+          "legalText": {
+            "en": "Either Party may terminate this Agreement for convenience upon thirty (30) days' prior written notice to the other Party.",
+            "es": "Cualquiera de las Partes podrá resolver el presente Contrato por conveniencia mediante notificación escrita a la otra Parte con una antelación mínima de treinta (30) días."
+          },
+          "bias": {
+            "partyA": 0,
+            "partyB": 0
+          }
         },
         {
           "id": "term-60-days",
           "code": "mutual-60-days",
-          "label": "Mutual with 60 days notice",
+          "label": {
+            "en": "Mutual with 60 days notice",
+            "es": "Mutua con 60 días de preaviso"
+          },
           "order": 3,
-          "plainDescription": "Either party can terminate with 60 days written notice, allowing more transition time.",
-          "prosPartyA": [
-            "Longer notice for planning",
-            "Time to find replacement work"
-          ],
-          "consPartyA": [
-            "Must give longer notice too"
-          ],
-          "prosPartyB": [
-            "Time to transition",
-            "Can find replacement provider"
-          ],
-          "consPartyB": [
-            "Longer commitment to notice period"
-          ],
-          "legalText": "Either Party may terminate this Agreement for convenience upon sixty (60) days' prior written notice to the other Party.",
-          "biasPartyA": 0.1,
-          "biasPartyB": -0.1
+          "plainDescription": {
+            "en": "Either party can terminate with 60 days written notice, allowing more transition time.",
+            "es": "Cualquiera de las partes puede resolver el Contrato con 60 días de preaviso por escrito, lo que permite un mayor plazo de transición."
+          },
+          "pros": {
+            "partyA": {
+              "en": [
+                "Longer notice for planning",
+                "Time to find replacement work"
+              ],
+              "es": [
+                "Mayor preaviso para planificación",
+                "Tiempo para buscar nuevos encargos"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Time to transition",
+                "Can find replacement provider"
+              ],
+              "es": [
+                "Tiempo para la transición",
+                "Puede buscar un prestador sustituto"
+              ]
+            }
+          },
+          "cons": {
+            "partyA": {
+              "en": [
+                "Must give longer notice too"
+              ],
+              "es": [
+                "También debe dar un preaviso más largo"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Longer commitment to notice period"
+              ],
+              "es": [
+                "Mayor compromiso con el plazo de preaviso"
+              ]
+            }
+          },
+          "legalText": {
+            "en": "Either Party may terminate this Agreement for convenience upon sixty (60) days' prior written notice to the other Party.",
+            "es": "Cualquiera de las Partes podrá resolver el presente Contrato por conveniencia mediante notificación escrita a la otra Parte con una antelación mínima de sesenta (60) días."
+          },
+          "bias": {
+            "partyA": 0.1,
+            "partyB": -0.1
+          }
         }
       ]
     },
     {
       "id": "warranty-period",
-      "title": "Warranty period for deliverables",
-      "category": "Warranties",
+      "title": {
+        "en": "Warranty period for deliverables",
+        "es": "Período de garantía de los entregables"
+      },
+      "category": {
+        "en": "Warranties",
+        "es": "Garantías"
+      },
       "order": 5,
-      "plainDescription": "How long does the provider warrant that deliverables will work as specified after delivery?",
-      "legalContext": "Warranty periods give clients time to identify defects. Longer warranties benefit clients; shorter warranties reduce provider risk. 30-90 days is typical.",
+      "plainDescription": {
+        "en": "How long does the provider warrant that deliverables will work as specified after delivery?",
+        "es": "¿Durante cuánto tiempo garantiza el Prestador que los entregables funcionarán conforme a las especificaciones tras su entrega?"
+      },
+      "legalContext": {
+        "en": "Warranty periods give clients time to identify defects. Longer warranties benefit clients; shorter warranties reduce provider risk. 30-90 days is typical.",
+        "es": "Los períodos de garantía otorgan al Cliente tiempo para identificar defectos. Garantías más largas benefician al Cliente; garantías más cortas reducen el riesgo del Prestador. Lo habitual oscila entre 30 y 90 días."
+      },
       "isRequired": true,
       "options": [
         {
           "id": "warranty-30d",
           "code": "30-days",
-          "label": "30 days",
+          "label": {
+            "en": "30 days",
+            "es": "30 días"
+          },
           "order": 1,
-          "plainDescription": "Provider warrants deliverables for 30 days following delivery or acceptance.",
-          "prosPartyA": [
-            "Short exposure window",
-            "Quick close-out"
-          ],
-          "consPartyA": [
-            "Client may resist short period"
-          ],
-          "prosPartyB": [
-            "Quick review needed"
-          ],
-          "consPartyB": [
-            "Short window to find issues",
-            "Must test quickly"
-          ],
-          "legalText": "Provider warrants that Deliverables will substantially conform to specifications for thirty (30) days following delivery or acceptance, whichever is later.",
-          "biasPartyA": 0.3,
-          "biasPartyB": -0.3
+          "plainDescription": {
+            "en": "Provider warrants deliverables for 30 days following delivery or acceptance.",
+            "es": "El Prestador garantiza los entregables durante 30 días desde su entrega o aceptación."
+          },
+          "pros": {
+            "partyA": {
+              "en": [
+                "Short exposure window",
+                "Quick close-out"
+              ],
+              "es": [
+                "Período de exposición breve",
+                "Cierre rápido"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Quick review needed"
+              ],
+              "es": [
+                "Requiere revisión rápida"
+              ]
+            }
+          },
+          "cons": {
+            "partyA": {
+              "en": [
+                "Client may resist short period"
+              ],
+              "es": [
+                "El Cliente puede oponerse a un período tan breve"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Short window to find issues",
+                "Must test quickly"
+              ],
+              "es": [
+                "Plazo reducido para detectar incidencias",
+                "Debe realizar las pruebas rápidamente"
+              ]
+            }
+          },
+          "legalText": {
+            "en": "Provider warrants that Deliverables will substantially conform to specifications for thirty (30) days following delivery or acceptance, whichever is later.",
+            "es": "El Prestador garantiza que los Entregables se ajustarán sustancialmente a las especificaciones durante los treinta (30) días siguientes a su entrega o aceptación, lo que ocurra más tarde."
+          },
+          "bias": {
+            "partyA": 0.3,
+            "partyB": -0.3
+          }
         },
         {
           "id": "warranty-60d",
           "code": "60-days",
-          "label": "60 days",
+          "label": {
+            "en": "60 days",
+            "es": "60 días"
+          },
           "order": 2,
-          "plainDescription": "Provider warrants deliverables for 60 days - a balanced standard warranty period.",
-          "prosPartyA": [
-            "Reasonable exposure",
-            "Industry standard"
-          ],
-          "consPartyA": [
-            "Must support for two months"
-          ],
-          "prosPartyB": [
-            "Adequate testing time",
-            "Standard period"
-          ],
-          "consPartyB": [
-            "Must track warranty dates"
-          ],
-          "legalText": "Provider warrants that Deliverables will substantially conform to specifications for sixty (60) days following delivery or acceptance, whichever is later.",
-          "biasPartyA": 0,
-          "biasPartyB": 0
+          "plainDescription": {
+            "en": "Provider warrants deliverables for 60 days - a balanced standard warranty period.",
+            "es": "El Prestador garantiza los entregables durante 60 días, un período de garantía estándar y equilibrado."
+          },
+          "pros": {
+            "partyA": {
+              "en": [
+                "Reasonable exposure",
+                "Industry standard"
+              ],
+              "es": [
+                "Exposición razonable",
+                "Estándar del sector"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Adequate testing time",
+                "Standard period"
+              ],
+              "es": [
+                "Tiempo adecuado para pruebas",
+                "Período estándar"
+              ]
+            }
+          },
+          "cons": {
+            "partyA": {
+              "en": [
+                "Must support for two months"
+              ],
+              "es": [
+                "Debe prestar soporte durante dos meses"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Must track warranty dates"
+              ],
+              "es": [
+                "Requiere seguimiento de las fechas de garantía"
+              ]
+            }
+          },
+          "legalText": {
+            "en": "Provider warrants that Deliverables will substantially conform to specifications for sixty (60) days following delivery or acceptance, whichever is later.",
+            "es": "El Prestador garantiza que los Entregables se ajustarán sustancialmente a las especificaciones durante los sesenta (60) días siguientes a su entrega o aceptación, lo que ocurra más tarde."
+          },
+          "bias": {
+            "partyA": 0,
+            "partyB": 0
+          }
         },
         {
           "id": "warranty-90d",
           "code": "90-days",
-          "label": "90 days",
+          "label": {
+            "en": "90 days",
+            "es": "90 días"
+          },
           "order": 3,
-          "plainDescription": "Provider warrants deliverables for 90 days, providing extended protection for the client.",
-          "prosPartyA": [
-            "May win competitive deals"
-          ],
-          "consPartyA": [
-            "Extended support obligation",
-            "More potential rework"
-          ],
-          "prosPartyB": [
-            "Longer testing window",
-            "Better protection",
-            "Catches delayed issues"
-          ],
-          "consPartyB": [
-            "Provider may factor into pricing"
-          ],
-          "legalText": "Provider warrants that Deliverables will substantially conform to specifications for ninety (90) days following delivery or acceptance, whichever is later.",
-          "biasPartyA": -0.2,
-          "biasPartyB": 0.2
+          "plainDescription": {
+            "en": "Provider warrants deliverables for 90 days, providing extended protection for the client.",
+            "es": "El Prestador garantiza los entregables durante 90 días, lo que proporciona una protección ampliada al Cliente."
+          },
+          "pros": {
+            "partyA": {
+              "en": [
+                "May win competitive deals"
+              ],
+              "es": [
+                "Puede facilitar la obtención de contratos competitivos"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Longer testing window",
+                "Better protection",
+                "Catches delayed issues"
+              ],
+              "es": [
+                "Mayor plazo para pruebas",
+                "Mejor protección",
+                "Permite detectar incidencias tardías"
+              ]
+            }
+          },
+          "cons": {
+            "partyA": {
+              "en": [
+                "Extended support obligation",
+                "More potential rework"
+              ],
+              "es": [
+                "Obligación de soporte ampliada",
+                "Mayor posibilidad de reelaboración"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Provider may factor into pricing"
+              ],
+              "es": [
+                "El Prestador puede repercutirlo en el precio"
+              ]
+            }
+          },
+          "legalText": {
+            "en": "Provider warrants that Deliverables will substantially conform to specifications for ninety (90) days following delivery or acceptance, whichever is later.",
+            "es": "El Prestador garantiza que los Entregables se ajustarán sustancialmente a las especificaciones durante los noventa (90) días siguientes a su entrega o aceptación, lo que ocurra más tarde."
+          },
+          "bias": {
+            "partyA": -0.2,
+            "partyB": 0.2
+          }
         }
       ]
     },
     {
       "id": "indemnification",
-      "title": "Indemnification scope",
-      "category": "Liability",
+      "title": {
+        "en": "Indemnification scope",
+        "es": "Alcance de la indemnización"
+      },
+      "category": {
+        "en": "Liability",
+        "es": "Responsabilidad"
+      },
       "order": 6,
-      "plainDescription": "What claims must each party defend the other against, and how broad is the protection?",
-      "legalContext": "Indemnification transfers risk for third-party claims. Broader indemnification benefits the protected party but increases risk for the indemnifying party.",
+      "plainDescription": {
+        "en": "What claims must each party defend the other against, and how broad is the protection?",
+        "es": "¿Frente a qué reclamaciones debe cada parte defender a la otra y cuál es el alcance de dicha protección?"
+      },
+      "legalContext": {
+        "en": "Indemnification transfers risk for third-party claims. Broader indemnification benefits the protected party but increases risk for the indemnifying party.",
+        "es": "La indemnización transfiere el riesgo de reclamaciones de terceros. Una indemnización más amplia beneficia a la parte protegida pero incrementa el riesgo de la parte indemnizante."
+      },
       "isRequired": true,
       "options": [
         {
           "id": "indem-ip-only",
           "code": "ip-infringement-only",
-          "label": "IP infringement only",
+          "label": {
+            "en": "IP infringement only",
+            "es": "Solo infracción de propiedad intelectual"
+          },
           "order": 1,
-          "plainDescription": "Provider indemnifies client only for third-party IP infringement claims related to deliverables.",
-          "prosPartyA": [
-            "Limited exposure",
-            "Clear scope"
-          ],
-          "consPartyA": [
-            "No coverage for other claims"
-          ],
-          "prosPartyB": [
-            "IP protection covered"
-          ],
-          "consPartyB": [
-            "Limited coverage",
-            "Other claims not covered"
-          ],
-          "legalText": "Provider shall indemnify Client against third-party claims that the Deliverables infringe any patent, copyright, trademark, or trade secret.",
-          "biasPartyA": 0.2,
-          "biasPartyB": -0.2
+          "plainDescription": {
+            "en": "Provider indemnifies client only for third-party IP infringement claims related to deliverables.",
+            "es": "El Prestador indemniza al Cliente únicamente por reclamaciones de terceros relativas a infracciones de propiedad intelectual relacionadas con los entregables."
+          },
+          "pros": {
+            "partyA": {
+              "en": [
+                "Limited exposure",
+                "Clear scope"
+              ],
+              "es": [
+                "Exposición limitada",
+                "Alcance claro"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "IP protection covered"
+              ],
+              "es": [
+                "Protección de PI cubierta"
+              ]
+            }
+          },
+          "cons": {
+            "partyA": {
+              "en": [
+                "No coverage for other claims"
+              ],
+              "es": [
+                "Sin cobertura para otras reclamaciones"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Limited coverage",
+                "Other claims not covered"
+              ],
+              "es": [
+                "Cobertura limitada",
+                "Otras reclamaciones no cubiertas"
+              ]
+            }
+          },
+          "legalText": {
+            "en": "Provider shall indemnify Client against third-party claims that the Deliverables infringe any patent, copyright, trademark, or trade secret.",
+            "es": "El Prestador indemnizará al Cliente frente a reclamaciones de terceros por infracción de patentes, derechos de autor, marcas o secretos empresariales derivada de los Entregables."
+          },
+          "bias": {
+            "partyA": 0.2,
+            "partyB": -0.2
+          }
         },
         {
           "id": "indem-standard",
           "code": "standard-mutual",
-          "label": "Standard mutual (IP + negligence)",
+          "label": {
+            "en": "Standard mutual (IP + negligence)",
+            "es": "Estándar mutua (PI + negligencia)"
+          },
           "order": 2,
-          "plainDescription": "Each party indemnifies the other for IP infringement, gross negligence, and confidentiality breaches.",
-          "prosPartyA": [
-            "Balanced protection",
-            "Mutual obligations"
-          ],
-          "consPartyA": [
-            "Must indemnify for own breaches"
-          ],
-          "prosPartyB": [
-            "Balanced protection",
-            "Covers key risks"
-          ],
-          "consPartyB": [
-            "Must indemnify for own breaches"
-          ],
-          "legalText": "Each Party shall indemnify the other against third-party claims arising from: (a) infringement of intellectual property rights; (b) gross negligence or willful misconduct; and (c) breach of confidentiality obligations.",
-          "biasPartyA": 0,
-          "biasPartyB": 0
+          "plainDescription": {
+            "en": "Each party indemnifies the other for IP infringement, gross negligence, and confidentiality breaches.",
+            "es": "Cada parte indemniza a la otra por infracciones de propiedad intelectual, negligencia grave e incumplimiento de las obligaciones de confidencialidad."
+          },
+          "pros": {
+            "partyA": {
+              "en": [
+                "Balanced protection",
+                "Mutual obligations"
+              ],
+              "es": [
+                "Protección equilibrada",
+                "Obligaciones mutuas"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Balanced protection",
+                "Covers key risks"
+              ],
+              "es": [
+                "Protección equilibrada",
+                "Cubre los riesgos principales"
+              ]
+            }
+          },
+          "cons": {
+            "partyA": {
+              "en": [
+                "Must indemnify for own breaches"
+              ],
+              "es": [
+                "Debe indemnizar por sus propios incumplimientos"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Must indemnify for own breaches"
+              ],
+              "es": [
+                "Debe indemnizar por sus propios incumplimientos"
+              ]
+            }
+          },
+          "legalText": {
+            "en": "Each Party shall indemnify the other against third-party claims arising from: (a) infringement of intellectual property rights; (b) gross negligence or willful misconduct; and (c) breach of confidentiality obligations.",
+            "es": "Cada Parte indemnizará a la otra frente a reclamaciones de terceros derivadas de: (a) infracción de derechos de propiedad intelectual e industrial; (b) negligencia grave o conducta dolosa; y (c) incumplimiento de las obligaciones de confidencialidad."
+          },
+          "bias": {
+            "partyA": 0,
+            "partyB": 0
+          }
         },
         {
           "id": "indem-broad",
           "code": "broad-provider",
-          "label": "Broad provider indemnification",
+          "label": {
+            "en": "Broad provider indemnification",
+            "es": "Indemnización amplia del Prestador"
+          },
           "order": 3,
-          "plainDescription": "Provider broadly indemnifies client for IP infringement, negligence, confidentiality breaches, and compliance violations.",
-          "prosPartyA": [
-            "Significant exposure",
-            "Broad obligations"
-          ],
-          "consPartyA": [
-            "High risk",
-            "May need insurance"
-          ],
-          "prosPartyB": [
-            "Comprehensive protection",
-            "Covers many scenarios"
-          ],
-          "consPartyB": [
-            "Provider may charge more"
-          ],
-          "legalText": "Provider shall indemnify Client against third-party claims arising from: (a) IP infringement; (b) Provider's negligence; (c) confidentiality breaches; (d) Provider's violation of applicable laws; and (e) Provider's acts or omissions in performing the Services.",
-          "biasPartyA": -0.4,
-          "biasPartyB": 0.4
+          "plainDescription": {
+            "en": "Provider broadly indemnifies client for IP infringement, negligence, confidentiality breaches, and compliance violations.",
+            "es": "El Prestador indemniza ampliamente al Cliente por infracciones de propiedad intelectual, negligencia, incumplimiento de confidencialidad e infracciones normativas."
+          },
+          "pros": {
+            "partyA": {
+              "en": [
+                "Significant exposure",
+                "Broad obligations"
+              ],
+              "es": [
+                "Exposición significativa",
+                "Obligaciones amplias"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Comprehensive protection",
+                "Covers many scenarios"
+              ],
+              "es": [
+                "Protección integral",
+                "Cubre múltiples escenarios"
+              ]
+            }
+          },
+          "cons": {
+            "partyA": {
+              "en": [
+                "High risk",
+                "May need insurance"
+              ],
+              "es": [
+                "Alto riesgo",
+                "Puede requerir seguro"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Provider may charge more"
+              ],
+              "es": [
+                "El Prestador puede incrementar sus tarifas"
+              ]
+            }
+          },
+          "legalText": {
+            "en": "Provider shall indemnify Client against third-party claims arising from: (a) IP infringement; (b) Provider's negligence; (c) confidentiality breaches; (d) Provider's violation of applicable laws; and (e) Provider's acts or omissions in performing the Services.",
+            "es": "El Prestador indemnizará al Cliente frente a reclamaciones de terceros derivadas de: (a) infracción de propiedad intelectual e industrial; (b) negligencia del Prestador; (c) incumplimiento de las obligaciones de confidencialidad; (d) incumplimiento por el Prestador de la legislación aplicable; y (e) acciones u omisiones del Prestador en la prestación de los Servicios."
+          },
+          "bias": {
+            "partyA": -0.4,
+            "partyB": 0.4
+          }
         }
       ]
     },
     {
       "id": "confidentiality-term",
-      "title": "Confidentiality duration",
-      "category": "Confidentiality",
+      "title": {
+        "en": "Confidentiality duration",
+        "es": "Duración de la confidencialidad"
+      },
+      "category": {
+        "en": "Confidentiality",
+        "es": "Confidencialidad"
+      },
       "order": 7,
-      "plainDescription": "How long do confidentiality obligations last after the agreement ends?",
-      "legalContext": "Confidentiality obligations often survive the agreement. Longer periods protect information but extend obligations. Trade secrets warrant indefinite protection.",
+      "plainDescription": {
+        "en": "How long do confidentiality obligations last after the agreement ends?",
+        "es": "¿Cuánto tiempo perduran las obligaciones de confidencialidad tras la finalización del Contrato?"
+      },
+      "legalContext": {
+        "en": "Confidentiality obligations often survive the agreement. Longer periods protect information but extend obligations. Trade secrets warrant indefinite protection.",
+        "es": "Las obligaciones de confidencialidad suelen sobrevivir al Contrato. Períodos más largos protegen la información pero prolongan las obligaciones. Los secretos empresariales justifican una protección indefinida."
+      },
       "isRequired": true,
       "options": [
         {
           "id": "conf-3yr",
           "code": "3-years",
-          "label": "3 years after termination",
+          "label": {
+            "en": "3 years after termination",
+            "es": "3 años tras la resolución"
+          },
           "order": 1,
-          "plainDescription": "Confidentiality obligations survive for 3 years after the agreement ends.",
-          "prosPartyA": [
-            "Reasonable protection period",
-            "Standard term"
-          ],
-          "consPartyA": [
-            "Extended obligations"
-          ],
-          "prosPartyB": [
-            "Reasonable protection period",
-            "Standard term"
-          ],
-          "consPartyB": [
-            "Extended obligations"
-          ],
-          "legalText": "Confidentiality obligations shall survive termination of this Agreement for three (3) years, except for trade secrets which shall be protected indefinitely.",
-          "biasPartyA": 0,
-          "biasPartyB": 0
+          "plainDescription": {
+            "en": "Confidentiality obligations survive for 3 years after the agreement ends.",
+            "es": "Las obligaciones de confidencialidad perduran durante 3 años tras la finalización del Contrato."
+          },
+          "pros": {
+            "partyA": {
+              "en": [
+                "Reasonable protection period",
+                "Standard term"
+              ],
+              "es": [
+                "Período de protección razonable",
+                "Plazo estándar"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Reasonable protection period",
+                "Standard term"
+              ],
+              "es": [
+                "Período de protección razonable",
+                "Plazo estándar"
+              ]
+            }
+          },
+          "cons": {
+            "partyA": {
+              "en": [
+                "Extended obligations"
+              ],
+              "es": [
+                "Obligaciones prolongadas"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Extended obligations"
+              ],
+              "es": [
+                "Obligaciones prolongadas"
+              ]
+            }
+          },
+          "legalText": {
+            "en": "Confidentiality obligations shall survive termination of this Agreement for three (3) years, except for trade secrets which shall be protected indefinitely.",
+            "es": "Las obligaciones de confidencialidad sobrevivirán a la resolución del presente Contrato durante un período de tres (3) años, salvo en lo relativo a los secretos empresariales, que gozarán de protección indefinida."
+          },
+          "bias": {
+            "partyA": 0,
+            "partyB": 0
+          }
         },
         {
           "id": "conf-5yr",
           "code": "5-years",
-          "label": "5 years after termination",
+          "label": {
+            "en": "5 years after termination",
+            "es": "5 años tras la resolución"
+          },
           "order": 2,
-          "plainDescription": "Confidentiality obligations survive for 5 years, providing extended protection.",
-          "prosPartyA": [
-            "Strong protection"
-          ],
-          "consPartyA": [
-            "Extended obligations"
-          ],
-          "prosPartyB": [
-            "Strong protection"
-          ],
-          "consPartyB": [
-            "Extended obligations"
-          ],
-          "legalText": "Confidentiality obligations shall survive termination of this Agreement for five (5) years, except for trade secrets which shall be protected indefinitely.",
-          "biasPartyA": 0.1,
-          "biasPartyB": 0.1
+          "plainDescription": {
+            "en": "Confidentiality obligations survive for 5 years, providing extended protection.",
+            "es": "Las obligaciones de confidencialidad perduran durante 5 años, proporcionando una protección ampliada."
+          },
+          "pros": {
+            "partyA": {
+              "en": [
+                "Strong protection"
+              ],
+              "es": [
+                "Protección sólida"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Strong protection"
+              ],
+              "es": [
+                "Protección sólida"
+              ]
+            }
+          },
+          "cons": {
+            "partyA": {
+              "en": [
+                "Extended obligations"
+              ],
+              "es": [
+                "Obligaciones prolongadas"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Extended obligations"
+              ],
+              "es": [
+                "Obligaciones prolongadas"
+              ]
+            }
+          },
+          "legalText": {
+            "en": "Confidentiality obligations shall survive termination of this Agreement for five (5) years, except for trade secrets which shall be protected indefinitely.",
+            "es": "Las obligaciones de confidencialidad sobrevivirán a la resolución del presente Contrato durante un período de cinco (5) años, salvo en lo relativo a los secretos empresariales, que gozarán de protección indefinida."
+          },
+          "bias": {
+            "partyA": 0.1,
+            "partyB": 0.1
+          }
         },
         {
           "id": "conf-perpetual",
           "code": "perpetual",
-          "label": "Perpetual",
+          "label": {
+            "en": "Perpetual",
+            "es": "Perpetua"
+          },
           "order": 3,
-          "plainDescription": "Confidentiality obligations continue indefinitely for all confidential information.",
-          "prosPartyA": [
-            "Maximum protection"
-          ],
-          "consPartyA": [
-            "Indefinite obligations"
-          ],
-          "prosPartyB": [
-            "Maximum protection"
-          ],
-          "consPartyB": [
-            "Indefinite obligations",
-            "Ongoing compliance"
-          ],
-          "legalText": "Confidentiality obligations shall survive termination of this Agreement indefinitely.",
-          "biasPartyA": 0.2,
-          "biasPartyB": 0.2
+          "plainDescription": {
+            "en": "Confidentiality obligations continue indefinitely for all confidential information.",
+            "es": "Las obligaciones de confidencialidad se mantienen indefinidamente para toda la información confidencial."
+          },
+          "pros": {
+            "partyA": {
+              "en": [
+                "Maximum protection"
+              ],
+              "es": [
+                "Máxima protección"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Maximum protection"
+              ],
+              "es": [
+                "Máxima protección"
+              ]
+            }
+          },
+          "cons": {
+            "partyA": {
+              "en": [
+                "Indefinite obligations"
+              ],
+              "es": [
+                "Obligaciones indefinidas"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Indefinite obligations",
+                "Ongoing compliance"
+              ],
+              "es": [
+                "Obligaciones indefinidas",
+                "Cumplimiento continuado"
+              ]
+            }
+          },
+          "legalText": {
+            "en": "Confidentiality obligations shall survive termination of this Agreement indefinitely.",
+            "es": "Las obligaciones de confidencialidad sobrevivirán a la resolución del presente Contrato con carácter indefinido."
+          },
+          "bias": {
+            "partyA": 0.2,
+            "partyB": 0.2
+          }
         }
       ]
     },
     {
       "id": "insurance",
-      "title": "Insurance requirements",
-      "category": "Risk Management",
+      "title": {
+        "en": "Insurance requirements",
+        "es": "Requisitos de seguro"
+      },
+      "category": {
+        "en": "Risk Management",
+        "es": "Gestión de Riesgos"
+      },
       "order": 8,
-      "plainDescription": "What insurance must the provider maintain throughout the engagement?",
-      "legalContext": "Insurance requirements ensure providers can cover potential claims. Higher requirements provide more protection but may limit provider options or increase costs.",
+      "plainDescription": {
+        "en": "What insurance must the provider maintain throughout the engagement?",
+        "es": "¿Qué seguros debe mantener el Prestador durante la vigencia del encargo?"
+      },
+      "legalContext": {
+        "en": "Insurance requirements ensure providers can cover potential claims. Higher requirements provide more protection but may limit provider options or increase costs.",
+        "es": "Los requisitos de seguro garantizan que el Prestador pueda hacer frente a posibles reclamaciones. Requisitos más elevados proporcionan mayor protección pero pueden limitar las opciones del Prestador o incrementar los costes."
+      },
       "isRequired": true,
       "options": [
         {
           "id": "insurance-standard",
           "code": "standard",
-          "label": "Standard ($1m/$2m)",
+          "label": {
+            "en": "Standard ($1m/$2m)",
+            "es": "Estándar (1 M$/2 M$)"
+          },
           "order": 1,
-          "plainDescription": "Provider maintains $1M per occurrence / $2M aggregate general liability and $1M professional liability.",
-          "prosPartyA": [
-            "Standard coverage levels",
-            "Widely available insurance"
-          ],
-          "consPartyA": [
-            "Must maintain coverage"
-          ],
-          "prosPartyB": [
-            "Basic protection",
-            "Standard requirement"
-          ],
-          "consPartyB": [
-            "May want higher limits for large projects"
-          ],
-          "legalText": "Provider shall maintain: (a) Commercial General Liability: $1,000,000 per occurrence, $2,000,000 aggregate; (b) Professional Liability: $1,000,000 per claim.",
-          "biasPartyA": 0,
-          "biasPartyB": 0
+          "plainDescription": {
+            "en": "Provider maintains $1M per occurrence / $2M aggregate general liability and $1M professional liability.",
+            "es": "El Prestador mantiene un seguro de responsabilidad civil general de 1 M$ por siniestro / 2 M$ agregado y un seguro de responsabilidad profesional de 1 M$."
+          },
+          "pros": {
+            "partyA": {
+              "en": [
+                "Standard coverage levels",
+                "Widely available insurance"
+              ],
+              "es": [
+                "Niveles de cobertura estándar",
+                "Seguros ampliamente disponibles"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Basic protection",
+                "Standard requirement"
+              ],
+              "es": [
+                "Protección básica",
+                "Requisito estándar"
+              ]
+            }
+          },
+          "cons": {
+            "partyA": {
+              "en": [
+                "Must maintain coverage"
+              ],
+              "es": [
+                "Debe mantener la cobertura"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "May want higher limits for large projects"
+              ],
+              "es": [
+                "Puede desear límites superiores para proyectos de gran envergadura"
+              ]
+            }
+          },
+          "legalText": {
+            "en": "Provider shall maintain: (a) Commercial General Liability: $1,000,000 per occurrence, $2,000,000 aggregate; (b) Professional Liability: $1,000,000 per claim.",
+            "es": "El Prestador mantendrá vigentes los siguientes seguros: (a) Seguro de Responsabilidad Civil General: 1.000.000 $ por siniestro, 2.000.000 $ en total acumulado; (b) Seguro de Responsabilidad Civil Profesional: 1.000.000 $ por reclamación."
+          },
+          "bias": {
+            "partyA": 0,
+            "partyB": 0
+          }
         },
         {
           "id": "insurance-enhanced",
           "code": "enhanced",
-          "label": "Enhanced ($2m/$5m)",
+          "label": {
+            "en": "Enhanced ($2m/$5m)",
+            "es": "Ampliado (2 M$/5 M$)"
+          },
           "order": 2,
-          "plainDescription": "Provider maintains $2M per occurrence / $5M aggregate general liability and $2M professional liability.",
-          "prosPartyA": [
-            "Higher coverage costs",
-            "Must ensure adequate limits"
-          ],
-          "consPartyA": [
-            "May increase operational costs"
-          ],
-          "prosPartyB": [
-            "Better protection",
-            "Covers larger claims"
-          ],
-          "consPartyB": [
-            "Provider may pass through costs"
-          ],
-          "legalText": "Provider shall maintain: (a) Commercial General Liability: $2,000,000 per occurrence, $5,000,000 aggregate; (b) Professional Liability: $2,000,000 per claim.",
-          "biasPartyA": -0.2,
-          "biasPartyB": 0.2
+          "plainDescription": {
+            "en": "Provider maintains $2M per occurrence / $5M aggregate general liability and $2M professional liability.",
+            "es": "El Prestador mantiene un seguro de responsabilidad civil general de 2 M$ por siniestro / 5 M$ agregado y un seguro de responsabilidad profesional de 2 M$."
+          },
+          "pros": {
+            "partyA": {
+              "en": [
+                "Higher coverage costs",
+                "Must ensure adequate limits"
+              ],
+              "es": [
+                "Mayor coste de cobertura",
+                "Debe asegurar límites adecuados"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Better protection",
+                "Covers larger claims"
+              ],
+              "es": [
+                "Mayor protección",
+                "Cubre reclamaciones de mayor cuantía"
+              ]
+            }
+          },
+          "cons": {
+            "partyA": {
+              "en": [
+                "May increase operational costs"
+              ],
+              "es": [
+                "Puede incrementar los costes operativos"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Provider may pass through costs"
+              ],
+              "es": [
+                "El Prestador puede repercutir los costes"
+              ]
+            }
+          },
+          "legalText": {
+            "en": "Provider shall maintain: (a) Commercial General Liability: $2,000,000 per occurrence, $5,000,000 aggregate; (b) Professional Liability: $2,000,000 per claim.",
+            "es": "El Prestador mantendrá vigentes los siguientes seguros: (a) Seguro de Responsabilidad Civil General: 2.000.000 $ por siniestro, 5.000.000 $ en total acumulado; (b) Seguro de Responsabilidad Civil Profesional: 2.000.000 $ por reclamación."
+          },
+          "bias": {
+            "partyA": -0.2,
+            "partyB": 0.2
+          }
         },
         {
           "id": "insurance-basic",
           "code": "basic",
-          "label": "Basic (No minimum)",
+          "label": {
+            "en": "Basic (No minimum)",
+            "es": "Básico (sin mínimo)"
+          },
           "order": 3,
-          "plainDescription": "Provider maintains commercially reasonable insurance with no specific minimums required.",
-          "prosPartyA": [
-            "Flexibility in coverage",
-            "May reduce costs"
-          ],
-          "consPartyA": [
-            "Client may want more certainty"
-          ],
-          "prosPartyB": [
-            "Less assurance of coverage"
-          ],
-          "consPartyB": [
-            "Potential gaps in protection"
-          ],
-          "legalText": "Provider shall maintain commercially reasonable insurance coverage appropriate for the Services, including general liability and professional liability insurance.",
-          "biasPartyA": 0.2,
-          "biasPartyB": -0.2
+          "plainDescription": {
+            "en": "Provider maintains commercially reasonable insurance with no specific minimums required.",
+            "es": "El Prestador mantiene un seguro comercialmente razonable sin requisitos mínimos específicos."
+          },
+          "pros": {
+            "partyA": {
+              "en": [
+                "Flexibility in coverage",
+                "May reduce costs"
+              ],
+              "es": [
+                "Flexibilidad en la cobertura",
+                "Puede reducir costes"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Less assurance of coverage"
+              ],
+              "es": [
+                "Menor certidumbre de cobertura"
+              ]
+            }
+          },
+          "cons": {
+            "partyA": {
+              "en": [
+                "Client may want more certainty"
+              ],
+              "es": [
+                "El Cliente puede exigir mayor certidumbre"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Potential gaps in protection"
+              ],
+              "es": [
+                "Posibles lagunas en la protección"
+              ]
+            }
+          },
+          "legalText": {
+            "en": "Provider shall maintain commercially reasonable insurance coverage appropriate for the Services, including general liability and professional liability insurance.",
+            "es": "El Prestador mantendrá una cobertura de seguro comercialmente razonable y adecuada para los Servicios, que incluya un seguro de responsabilidad civil general y un seguro de responsabilidad civil profesional."
+          },
+          "bias": {
+            "partyA": 0.2,
+            "partyB": -0.2
+          }
         }
       ]
     },
     {
       "id": "change-orders",
-      "title": "Change order process",
-      "category": "Project Management",
+      "title": {
+        "en": "Change order process",
+        "es": "Procedimiento de órdenes de cambio"
+      },
+      "category": {
+        "en": "Project Management",
+        "es": "Gestión de Proyectos"
+      },
       "order": 9,
-      "plainDescription": "How are scope changes to Statements of Work handled and approved?",
-      "legalContext": "Change orders manage scope creep and ensure both parties agree on adjustments. Formal processes protect both parties but add administrative overhead.",
+      "plainDescription": {
+        "en": "How are scope changes to Statements of Work handled and approved?",
+        "es": "¿Cómo se gestionan y aprueban los cambios de alcance en las Órdenes de Trabajo?"
+      },
+      "legalContext": {
+        "en": "Change orders manage scope creep and ensure both parties agree on adjustments. Formal processes protect both parties but add administrative overhead.",
+        "es": "Las órdenes de cambio gestionan las desviaciones de alcance y garantizan que ambas partes acuerden los ajustes. Los procedimientos formales protegen a ambas partes pero añaden carga administrativa."
+      },
       "isRequired": true,
       "options": [
         {
           "id": "change-formal",
           "code": "formal-written",
-          "label": "Formal written change orders",
+          "label": {
+            "en": "Formal written change orders",
+            "es": "Órdenes de cambio formales por escrito"
+          },
           "order": 1,
-          "plainDescription": "All scope changes require a formal written change order signed by both parties before work begins.",
-          "prosPartyA": [
-            "Clear documentation",
-            "No disputed changes",
-            "Price certainty"
-          ],
-          "consPartyA": [
-            "Administrative overhead",
-            "May slow changes"
-          ],
-          "prosPartyB": [
-            "Clear documentation",
-            "No surprise bills",
-            "Control over scope"
-          ],
-          "consPartyB": [
-            "Slows agile responses",
-            "More paperwork"
-          ],
-          "legalText": "No change to scope is binding unless documented in a written change order signed by authorized representatives of both Parties, specifying the scope change, fee adjustment, and timeline impact.",
-          "biasPartyA": 0.1,
-          "biasPartyB": 0.1
+          "plainDescription": {
+            "en": "All scope changes require a formal written change order signed by both parties before work begins.",
+            "es": "Todos los cambios de alcance requieren una orden de cambio formal por escrito firmada por ambas partes antes del inicio de los trabajos."
+          },
+          "pros": {
+            "partyA": {
+              "en": [
+                "Clear documentation",
+                "No disputed changes",
+                "Price certainty"
+              ],
+              "es": [
+                "Documentación clara",
+                "Sin cambios controvertidos",
+                "Certidumbre de precios"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Clear documentation",
+                "No surprise bills",
+                "Control over scope"
+              ],
+              "es": [
+                "Documentación clara",
+                "Sin facturas inesperadas",
+                "Control sobre el alcance"
+              ]
+            }
+          },
+          "cons": {
+            "partyA": {
+              "en": [
+                "Administrative overhead",
+                "May slow changes"
+              ],
+              "es": [
+                "Carga administrativa",
+                "Puede ralentizar los cambios"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Slows agile responses",
+                "More paperwork"
+              ],
+              "es": [
+                "Ralentiza las respuestas ágiles",
+                "Mayor burocracia"
+              ]
+            }
+          },
+          "legalText": {
+            "en": "No change to scope is binding unless documented in a written change order signed by authorized representatives of both Parties, specifying the scope change, fee adjustment, and timeline impact.",
+            "es": "Ningún cambio de alcance será vinculante salvo que se documente en una orden de cambio por escrito firmada por los representantes autorizados de ambas Partes, en la que se especifiquen el cambio de alcance, el ajuste de honorarios y el impacto en el calendario."
+          },
+          "bias": {
+            "partyA": 0.1,
+            "partyB": 0.1
+          }
         },
         {
           "id": "change-email",
           "code": "email-approval",
-          "label": "Email approval acceptable",
+          "label": {
+            "en": "Email approval acceptable",
+            "es": "Aprobación por correo electrónico aceptable"
+          },
           "order": 2,
-          "plainDescription": "Scope changes can be approved via email from authorized representatives, then documented.",
-          "prosPartyA": [
-            "Faster approvals",
-            "More agile"
-          ],
-          "consPartyA": [
-            "Less formal record"
-          ],
-          "prosPartyB": [
-            "Faster approvals",
-            "More flexibility"
-          ],
-          "consPartyB": [
-            "May lack detail",
-            "Potential disputes"
-          ],
-          "legalText": "Scope changes may be approved via email from authorized representatives, followed by documentation in a written change order within five (5) business days.",
-          "biasPartyA": 0,
-          "biasPartyB": 0
+          "plainDescription": {
+            "en": "Scope changes can be approved via email from authorized representatives, then documented.",
+            "es": "Los cambios de alcance pueden aprobarse por correo electrónico de los representantes autorizados y documentarse posteriormente."
+          },
+          "pros": {
+            "partyA": {
+              "en": [
+                "Faster approvals",
+                "More agile"
+              ],
+              "es": [
+                "Aprobaciones más rápidas",
+                "Mayor agilidad"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Faster approvals",
+                "More flexibility"
+              ],
+              "es": [
+                "Aprobaciones más rápidas",
+                "Mayor flexibilidad"
+              ]
+            }
+          },
+          "cons": {
+            "partyA": {
+              "en": [
+                "Less formal record"
+              ],
+              "es": [
+                "Registro menos formal"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "May lack detail",
+                "Potential disputes"
+              ],
+              "es": [
+                "Puede carecer de detalle",
+                "Posibles controversias"
+              ]
+            }
+          },
+          "legalText": {
+            "en": "Scope changes may be approved via email from authorized representatives, followed by documentation in a written change order within five (5) business days.",
+            "es": "Los cambios de alcance podrán aprobarse por correo electrónico de los representantes autorizados, seguidos de su documentación en una orden de cambio por escrito en un plazo de cinco (5) días hábiles."
+          },
+          "bias": {
+            "partyA": 0,
+            "partyB": 0
+          }
         },
         {
           "id": "change-threshold",
           "code": "threshold-based",
-          "label": "Threshold-based (Small changes informal)",
+          "label": {
+            "en": "Threshold-based (Small changes informal)",
+            "es": "Basado en umbrales (cambios menores informales)"
+          },
           "order": 3,
-          "plainDescription": "Small changes (under a threshold) can be approved informally; larger changes require formal change orders.",
-          "prosPartyA": [
-            "Efficient for small changes",
-            "Formal control for large ones"
-          ],
-          "consPartyA": [
-            "Must define threshold",
-            "Track cumulative changes"
-          ],
-          "prosPartyB": [
-            "Agile for small changes",
-            "Control for significant scope"
-          ],
-          "consPartyB": [
-            "Must monitor thresholds"
-          ],
-          "legalText": "Changes with impact under $5,000 or 5% of SOW value may be approved via email. Changes exceeding this threshold require a formal written change order signed by both Parties.",
-          "biasPartyA": 0,
-          "biasPartyB": 0
+          "plainDescription": {
+            "en": "Small changes (under a threshold) can be approved informally; larger changes require formal change orders.",
+            "es": "Los cambios menores (por debajo de un umbral) pueden aprobarse de manera informal; los cambios de mayor envergadura requieren órdenes de cambio formales."
+          },
+          "pros": {
+            "partyA": {
+              "en": [
+                "Efficient for small changes",
+                "Formal control for large ones"
+              ],
+              "es": [
+                "Eficiente para cambios menores",
+                "Control formal para los de mayor envergadura"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Agile for small changes",
+                "Control for significant scope"
+              ],
+              "es": [
+                "Ágil para cambios menores",
+                "Control para cambios de alcance significativo"
+              ]
+            }
+          },
+          "cons": {
+            "partyA": {
+              "en": [
+                "Must define threshold",
+                "Track cumulative changes"
+              ],
+              "es": [
+                "Debe definir el umbral",
+                "Seguimiento de cambios acumulados"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Must monitor thresholds"
+              ],
+              "es": [
+                "Debe supervisar los umbrales"
+              ]
+            }
+          },
+          "legalText": {
+            "en": "Changes with impact under $5,000 or 5% of SOW value may be approved via email. Changes exceeding this threshold require a formal written change order signed by both Parties.",
+            "es": "Los cambios con un impacto inferior a 5.000 $ o al 5 % del valor de la Orden de Trabajo podrán aprobarse por correo electrónico. Los cambios que superen dicho umbral requerirán una orden de cambio formal por escrito firmada por ambas Partes."
+          },
+          "bias": {
+            "partyA": 0,
+            "partyB": 0
+          }
         }
       ]
     },
     {
       "id": "non-compete",
-      "title": "Non-compete / non-circumvention",
-      "category": "Restrictions",
+      "title": {
+        "en": "Non-compete / non-circumvention",
+        "es": "No competencia / no elusión"
+      },
+      "category": {
+        "en": "Restrictions",
+        "es": "Restricciones"
+      },
       "order": 10,
-      "plainDescription": "Are there restrictions on the provider working with the client's competitors or clients?",
-      "legalContext": "Non-compete provisions restrict provider's business. California Business & Professions Code 16600 makes most non-competes unenforceable. Non-circumvention (protecting customer relationships) may be treated differently than non-compete provisions.",
+      "plainDescription": {
+        "en": "Are there restrictions on the provider working with the client's competitors or clients?",
+        "es": "¿Existen restricciones para que el Prestador trabaje con competidores o clientes del Cliente?"
+      },
+      "legalContext": {
+        "en": "Non-compete provisions restrict provider's business. California Business & Professions Code 16600 makes most non-competes unenforceable. Non-circumvention (protecting customer relationships) may be treated differently than non-compete provisions.",
+        "es": "Las cláusulas de no competencia restringen la actividad empresarial del Prestador. El artículo 16600 del Business & Professions Code de California hace inaplicables la mayoría de las cláusulas de no competencia. Las cláusulas de no elusión (protección de relaciones comerciales) pueden recibir un tratamiento distinto al de las cláusulas de no competencia."
+      },
       "isRequired": false,
       "options": [
         {
           "id": "compete-none",
           "code": "no-restrictions",
-          "label": "No restrictions",
+          "label": {
+            "en": "No restrictions",
+            "es": "Sin restricciones"
+          },
           "order": 1,
-          "plainDescription": "Provider has no restrictions on working with client's competitors or clients.",
-          "prosPartyA": [
-            "Full business freedom",
-            "Can serve any market"
-          ],
-          "consPartyA": [
-            "Client may want exclusivity"
-          ],
-          "prosPartyB": [
-            "Flexible provider relationships"
-          ],
-          "consPartyB": [
-            "Provider may work with competitors",
-            "No exclusivity"
-          ],
-          "legalText": "[No non-compete or non-circumvention provisions]",
-          "biasPartyA": 0.3,
-          "biasPartyB": -0.3,
+          "plainDescription": {
+            "en": "Provider has no restrictions on working with client's competitors or clients.",
+            "es": "El Prestador no tiene restricción alguna para trabajar con competidores o clientes del Cliente."
+          },
+          "pros": {
+            "partyA": {
+              "en": [
+                "Full business freedom",
+                "Can serve any market"
+              ],
+              "es": [
+                "Plena libertad empresarial",
+                "Puede operar en cualquier mercado"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Flexible provider relationships"
+              ],
+              "es": [
+                "Relaciones flexibles con prestadores"
+              ]
+            }
+          },
+          "cons": {
+            "partyA": {
+              "en": [
+                "Client may want exclusivity"
+              ],
+              "es": [
+                "El Cliente puede desear exclusividad"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Provider may work with competitors",
+                "No exclusivity"
+              ],
+              "es": [
+                "El Prestador puede trabajar con competidores",
+                "Sin exclusividad"
+              ]
+            }
+          },
+          "legalText": {
+            "en": "[No non-compete or non-circumvention provisions]",
+            "es": "[Sin cláusulas de no competencia ni de no elusión]"
+          },
+          "bias": {
+            "partyA": 0.3,
+            "partyB": -0.3
+          },
           "jurisdictionConfig": {
             "CALIFORNIA": {
               "available": true,
@@ -848,25 +2073,61 @@
         {
           "id": "compete-circumvention",
           "code": "non-circumvention",
-          "label": "Non-circumvention only",
+          "label": {
+            "en": "Non-circumvention only",
+            "es": "Solo no elusión"
+          },
           "order": 2,
-          "plainDescription": "Provider cannot directly solicit or contract with client's customers discovered through the engagement.",
-          "prosPartyA": [
-            "Can work with competitors",
-            "Reasonable restriction"
-          ],
-          "consPartyA": [
-            "Cannot pursue discovered opportunities"
-          ],
-          "prosPartyB": [
-            "Protects customer relationships"
-          ],
-          "consPartyB": [
-            "Provider can work with competitors"
-          ],
-          "legalText": "During the term and for one (1) year thereafter, Provider shall not directly solicit or contract with any customer or prospect of Client that Provider became aware of solely through this engagement, without Client's prior written consent.",
-          "biasPartyA": -0.1,
-          "biasPartyB": 0.1,
+          "plainDescription": {
+            "en": "Provider cannot directly solicit or contract with client's customers discovered through the engagement.",
+            "es": "El Prestador no puede captar ni contratar directamente con los clientes del Cliente que haya conocido a través del encargo."
+          },
+          "pros": {
+            "partyA": {
+              "en": [
+                "Can work with competitors",
+                "Reasonable restriction"
+              ],
+              "es": [
+                "Puede trabajar con competidores",
+                "Restricción razonable"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Protects customer relationships"
+              ],
+              "es": [
+                "Protege las relaciones comerciales"
+              ]
+            }
+          },
+          "cons": {
+            "partyA": {
+              "en": [
+                "Cannot pursue discovered opportunities"
+              ],
+              "es": [
+                "No puede aprovechar oportunidades descubiertas"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Provider can work with competitors"
+              ],
+              "es": [
+                "El Prestador puede trabajar con competidores"
+              ]
+            }
+          },
+          "legalText": {
+            "en": "During the term and for one (1) year thereafter, Provider shall not directly solicit or contract with any customer or prospect of Client that Provider became aware of solely through this engagement, without Client's prior written consent.",
+            "es": "Durante la vigencia del Contrato y durante un (1) año adicional, el Prestador no podrá captar ni contratar directamente con ningún cliente o cliente potencial del Cliente del que el Prestador haya tenido conocimiento exclusivamente a través de este encargo, sin el consentimiento previo y por escrito del Cliente."
+          },
+          "bias": {
+            "partyA": -0.1,
+            "partyB": 0.1
+          },
           "jurisdictionConfig": {
             "CALIFORNIA": {
               "available": true,
@@ -885,27 +2146,65 @@
         {
           "id": "compete-full",
           "code": "full-non-compete",
-          "label": "Full non-compete (During term)",
+          "label": {
+            "en": "Full non-compete (During term)",
+            "es": "No competencia plena (durante la vigencia)"
+          },
           "order": 3,
-          "plainDescription": "Provider cannot work with named competitors during the agreement term. Restrictions end at termination.",
-          "prosPartyA": [
-            "Limits business during term",
-            "May be unenforceable"
-          ],
-          "consPartyA": [
-            "Restricts client base"
-          ],
-          "prosPartyB": [
-            "Exclusive focus during engagement",
-            "No competitor access"
-          ],
-          "consPartyB": [
-            "Provider may charge premium",
-            "Enforceability varies"
-          ],
-          "legalText": "During the term of this Agreement, Provider shall not provide substantially similar services to the following competitors: [NAMED COMPETITORS]. This restriction does not survive termination.",
-          "biasPartyA": -0.4,
-          "biasPartyB": 0.4,
+          "plainDescription": {
+            "en": "Provider cannot work with named competitors during the agreement term. Restrictions end at termination.",
+            "es": "El Prestador no puede trabajar con competidores designados durante la vigencia del Contrato. Las restricciones cesan con la resolución."
+          },
+          "pros": {
+            "partyA": {
+              "en": [
+                "Limits business during term",
+                "May be unenforceable"
+              ],
+              "es": [
+                "Limita la actividad empresarial durante la vigencia",
+                "Puede ser inaplicable"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Exclusive focus during engagement",
+                "No competitor access"
+              ],
+              "es": [
+                "Dedicación exclusiva durante el encargo",
+                "Sin acceso de competidores"
+              ]
+            }
+          },
+          "cons": {
+            "partyA": {
+              "en": [
+                "Restricts client base"
+              ],
+              "es": [
+                "Restringe la base de clientes"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Provider may charge premium",
+                "Enforceability varies"
+              ],
+              "es": [
+                "El Prestador puede aplicar una prima",
+                "La aplicabilidad varía según la jurisdicción"
+              ]
+            }
+          },
+          "legalText": {
+            "en": "During the term of this Agreement, Provider shall not provide substantially similar services to the following competitors: [NAMED COMPETITORS]. This restriction does not survive termination.",
+            "es": "Durante la vigencia del presente Contrato, el Prestador no prestará servicios sustancialmente similares a los siguientes competidores: [NAMED COMPETITORS]. Esta restricción no sobrevive a la resolución del Contrato."
+          },
+          "bias": {
+            "partyA": -0.4,
+            "partyB": 0.4
+          },
           "jurisdictionConfig": {
             "CALIFORNIA": {
               "available": false,
@@ -925,184 +2224,445 @@
     },
     {
       "id": "dispute-resolution",
-      "title": "Dispute resolution",
-      "category": "Legal",
+      "title": {
+        "en": "Dispute resolution",
+        "es": "Resolución de controversias"
+      },
+      "category": {
+        "en": "Legal",
+        "es": "Legal"
+      },
       "order": 11,
-      "plainDescription": "How and where will disputes about this agreement be resolved? You can choose courts in the governing law jurisdiction, courts elsewhere, or private arbitration.",
-      "legalContext": "For services disputes, the choice of forum can significantly impact cost and convenience. Arbitration is popular for professional services due to confidentiality and specialized arbitrators.",
+      "plainDescription": {
+        "en": "How and where will disputes about this agreement be resolved? You can choose courts in the governing law jurisdiction, courts elsewhere, or private arbitration.",
+        "es": "¿Cómo y dónde se resolverán las controversias derivadas de este Contrato? Puede elegir los tribunales de la jurisdicción de la ley aplicable, tribunales de otra jurisdicción o arbitraje privado."
+      },
+      "legalContext": {
+        "en": "For services disputes, the choice of forum can significantly impact cost and convenience. Arbitration is popular for professional services due to confidentiality and specialized arbitrators.",
+        "es": "En las controversias relativas a servicios, la elección del foro puede afectar significativamente al coste y a la conveniencia. El arbitraje es habitual en servicios profesionales por la confidencialidad y la especialización de los árbitros."
+      },
       "isRequired": true,
       "options": [
         {
           "id": "dispute-courts-default",
           "code": "courts-default",
-          "label": "Default courts (Per governing law)",
+          "label": {
+            "en": "Default courts (Per governing law)",
+            "es": "Tribunales por defecto (según la ley aplicable)"
+          },
           "order": 1,
           "jurisdictionDefault": true,
-          "plainDescription": "Disputes resolved in courts of the governing law jurisdiction: San Francisco (California), London (England & Wales), or Madrid (Spain).",
-          "prosPartyA": [
-            "Consistent with governing law",
-            "No jurisdictional complexity",
-            "Established local precedent"
-          ],
-          "consPartyA": [
-            "May be inconvenient for one party",
-            "Public proceedings"
-          ],
-          "prosPartyB": [
-            "Clear and predictable",
-            "Same jurisdiction as governing law",
-            "Established procedures"
-          ],
-          "consPartyB": [
-            "Travel may be required",
-            "Public record of disputes"
-          ],
-          "legalText": "Any dispute arising from this Agreement will be resolved exclusively in the state and federal courts located in the jurisdiction of the governing law. Each Party irrevocably submits to the exclusive jurisdiction of such courts.",
-          "biasPartyA": 0,
-          "biasPartyB": 0
+          "plainDescription": {
+            "en": "Disputes resolved in courts of the governing law jurisdiction: San Francisco (California), London (England & Wales), or Madrid (Spain).",
+            "es": "Las controversias se resuelven ante los tribunales de la jurisdicción de la ley aplicable: San Francisco (California), Londres (Inglaterra y Gales) o Madrid (España)."
+          },
+          "pros": {
+            "partyA": {
+              "en": [
+                "Consistent with governing law",
+                "No jurisdictional complexity",
+                "Established local precedent"
+              ],
+              "es": [
+                "Coherente con la ley aplicable",
+                "Sin complejidad jurisdiccional",
+                "Jurisprudencia local consolidada"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Clear and predictable",
+                "Same jurisdiction as governing law",
+                "Established procedures"
+              ],
+              "es": [
+                "Claro y previsible",
+                "Misma jurisdicción que la ley aplicable",
+                "Procedimientos consolidados"
+              ]
+            }
+          },
+          "cons": {
+            "partyA": {
+              "en": [
+                "May be inconvenient for one party",
+                "Public proceedings"
+              ],
+              "es": [
+                "Puede resultar inconveniente para una de las partes",
+                "Procedimientos públicos"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Travel may be required",
+                "Public record of disputes"
+              ],
+              "es": [
+                "Puede requerir desplazamiento",
+                "Registro público de las controversias"
+              ]
+            }
+          },
+          "legalText": {
+            "en": "Any dispute arising from this Agreement will be resolved exclusively in the state and federal courts located in the jurisdiction of the governing law. Each Party irrevocably submits to the exclusive jurisdiction of such courts.",
+            "es": "Toda controversia derivada del presente Contrato se resolverá exclusivamente ante los juzgados y tribunales de la jurisdicción de la ley aplicable. Cada Parte se somete irrevocablemente a la jurisdicción exclusiva de dichos tribunales."
+          },
+          "bias": {
+            "partyA": 0,
+            "partyB": 0
+          }
         },
         {
           "id": "dispute-courts-delaware",
           "code": "courts-delaware",
-          "label": "Delaware courts (Neutral - US)",
+          "label": {
+            "en": "Delaware courts (Neutral - US)",
+            "es": "Tribunales de Delaware (neutral - EE. UU.)"
+          },
           "order": 2,
-          "plainDescription": "Disputes resolved in Delaware courts, known for sophisticated commercial law and business-friendly judiciary.",
-          "prosPartyA": [
-            "Highly developed commercial law",
-            "Expert judges",
-            "Predictable outcomes"
-          ],
-          "consPartyA": [
-            "May require Delaware counsel",
-            "Travel for non-Delaware parties"
-          ],
-          "prosPartyB": [
-            "Neutral forum",
-            "Quick resolution",
-            "Well-established precedent"
-          ],
-          "consPartyB": [
-            "Unfamiliar jurisdiction",
-            "Additional legal costs"
-          ],
-          "legalText": "Any dispute arising from this Agreement will be resolved exclusively in the Court of Chancery of the State of Delaware (or, if such court lacks jurisdiction, the state and federal courts located in Delaware).",
-          "biasPartyA": 0,
-          "biasPartyB": 0
+          "plainDescription": {
+            "en": "Disputes resolved in Delaware courts, known for sophisticated commercial law and business-friendly judiciary.",
+            "es": "Las controversias se resuelven ante los tribunales de Delaware, reconocidos por su sofisticado derecho mercantil y su judicatura favorable al ámbito empresarial."
+          },
+          "pros": {
+            "partyA": {
+              "en": [
+                "Highly developed commercial law",
+                "Expert judges",
+                "Predictable outcomes"
+              ],
+              "es": [
+                "Derecho mercantil muy desarrollado",
+                "Jueces especializados",
+                "Resultados previsibles"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Neutral forum",
+                "Quick resolution",
+                "Well-established precedent"
+              ],
+              "es": [
+                "Foro neutral",
+                "Resolución rápida",
+                "Jurisprudencia consolidada"
+              ]
+            }
+          },
+          "cons": {
+            "partyA": {
+              "en": [
+                "May require Delaware counsel",
+                "Travel for non-Delaware parties"
+              ],
+              "es": [
+                "Puede requerir abogados de Delaware",
+                "Desplazamiento para partes fuera de Delaware"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Unfamiliar jurisdiction",
+                "Additional legal costs"
+              ],
+              "es": [
+                "Jurisdicción desconocida",
+                "Costes legales adicionales"
+              ]
+            }
+          },
+          "legalText": {
+            "en": "Any dispute arising from this Agreement will be resolved exclusively in the Court of Chancery of the State of Delaware (or, if such court lacks jurisdiction, the state and federal courts located in Delaware).",
+            "es": "Toda controversia derivada del presente Contrato se resolverá exclusivamente ante el Court of Chancery del Estado de Delaware (o, en caso de que dicho tribunal carezca de jurisdicción, ante los juzgados y tribunales estatales y federales con sede en Delaware)."
+          },
+          "bias": {
+            "partyA": 0,
+            "partyB": 0
+          }
         },
         {
           "id": "dispute-arbitration-jams",
           "code": "arbitration-jams",
-          "label": "JAMS arbitration",
+          "label": {
+            "en": "JAMS arbitration",
+            "es": "Arbitraje JAMS"
+          },
           "order": 3,
-          "plainDescription": "Private arbitration under JAMS rules - popular with technology companies and professional services firms.",
-          "prosPartyA": [
-            "Private and confidential",
-            "Faster than courts",
-            "Business-savvy arbitrators"
-          ],
-          "consPartyA": [
-            "Arbitrator fees",
-            "Limited discovery",
-            "No jury trial"
-          ],
-          "prosPartyB": [
-            "Confidential process",
-            "Efficient resolution",
-            "Flexible scheduling"
-          ],
-          "consPartyB": [
-            "Decision is final",
-            "Limited appeal rights",
-            "Shared arbitration costs"
-          ],
-          "legalText": "Any dispute arising from this Agreement will be finally resolved by binding arbitration administered by JAMS under its Comprehensive Arbitration Rules. The arbitration will be conducted by one arbitrator in the seat of the governing law jurisdiction.",
-          "biasPartyA": 0.1,
-          "biasPartyB": -0.1
+          "plainDescription": {
+            "en": "Private arbitration under JAMS rules - popular with technology companies and professional services firms.",
+            "es": "Arbitraje privado conforme al reglamento de JAMS, frecuente en empresas tecnológicas y de servicios profesionales."
+          },
+          "pros": {
+            "partyA": {
+              "en": [
+                "Private and confidential",
+                "Faster than courts",
+                "Business-savvy arbitrators"
+              ],
+              "es": [
+                "Privado y confidencial",
+                "Más rápido que los tribunales",
+                "Árbitros con experiencia empresarial"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Confidential process",
+                "Efficient resolution",
+                "Flexible scheduling"
+              ],
+              "es": [
+                "Proceso confidencial",
+                "Resolución eficiente",
+                "Calendario flexible"
+              ]
+            }
+          },
+          "cons": {
+            "partyA": {
+              "en": [
+                "Arbitrator fees",
+                "Limited discovery",
+                "No jury trial"
+              ],
+              "es": [
+                "Honorarios del árbitro",
+                "Descubrimiento probatorio limitado",
+                "Sin juicio con jurado"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Decision is final",
+                "Limited appeal rights",
+                "Shared arbitration costs"
+              ],
+              "es": [
+                "La decisión es firme",
+                "Derechos de apelación limitados",
+                "Costes de arbitraje compartidos"
+              ]
+            }
+          },
+          "legalText": {
+            "en": "Any dispute arising from this Agreement will be finally resolved by binding arbitration administered by JAMS under its Comprehensive Arbitration Rules. The arbitration will be conducted by one arbitrator in the seat of the governing law jurisdiction.",
+            "es": "Toda controversia derivada del presente Contrato se resolverá definitivamente mediante arbitraje vinculante administrado por JAMS conforme a su Reglamento de Arbitraje General (Comprehensive Arbitration Rules). El arbitraje será conducido por un árbitro único en la sede de la jurisdicción de la ley aplicable."
+          },
+          "bias": {
+            "partyA": 0.1,
+            "partyB": -0.1
+          }
         },
         {
           "id": "dispute-arbitration-icc",
           "code": "arbitration-icc",
-          "label": "ICC arbitration",
+          "label": {
+            "en": "ICC arbitration",
+            "es": "Arbitraje CCI"
+          },
           "order": 4,
-          "plainDescription": "International arbitration under ICC rules - the gold standard for cross-border services disputes.",
-          "prosPartyA": [
-            "Globally recognized",
-            "Enforceable in 170+ countries",
-            "Professional administration"
-          ],
-          "consPartyA": [
-            "Higher fees",
-            "More formal process"
-          ],
-          "prosPartyB": [
-            "Neutral international forum",
-            "Experienced arbitrators",
-            "Clear procedures"
-          ],
-          "consPartyB": [
-            "More expensive",
-            "Longer process than domestic arbitration"
-          ],
-          "legalText": "Any dispute arising from this Agreement will be finally resolved by arbitration under the Rules of Arbitration of the International Chamber of Commerce. The arbitration will be conducted by one arbitrator, with the seat in the capital of the governing law jurisdiction.",
-          "biasPartyA": 0,
-          "biasPartyB": 0
+          "plainDescription": {
+            "en": "International arbitration under ICC rules - the gold standard for cross-border services disputes.",
+            "es": "Arbitraje internacional conforme al reglamento de la CCI, la referencia para controversias transfronterizas en materia de servicios."
+          },
+          "pros": {
+            "partyA": {
+              "en": [
+                "Globally recognized",
+                "Enforceable in 170+ countries",
+                "Professional administration"
+              ],
+              "es": [
+                "Reconocimiento mundial",
+                "Ejecutable en más de 170 países",
+                "Administración profesional"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Neutral international forum",
+                "Experienced arbitrators",
+                "Clear procedures"
+              ],
+              "es": [
+                "Foro internacional neutral",
+                "Árbitros experimentados",
+                "Procedimientos claros"
+              ]
+            }
+          },
+          "cons": {
+            "partyA": {
+              "en": [
+                "Higher fees",
+                "More formal process"
+              ],
+              "es": [
+                "Honorarios más elevados",
+                "Proceso más formal"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "More expensive",
+                "Longer process than domestic arbitration"
+              ],
+              "es": [
+                "Más costoso",
+                "Proceso más largo que el arbitraje nacional"
+              ]
+            }
+          },
+          "legalText": {
+            "en": "Any dispute arising from this Agreement will be finally resolved by arbitration under the Rules of Arbitration of the International Chamber of Commerce. The arbitration will be conducted by one arbitrator, with the seat in the capital of the governing law jurisdiction.",
+            "es": "Toda controversia derivada del presente Contrato se resolverá definitivamente mediante arbitraje conforme al Reglamento de Arbitraje de la Cámara de Comercio Internacional. El arbitraje será conducido por un árbitro único, con sede en la capital de la jurisdicción de la ley aplicable."
+          },
+          "bias": {
+            "partyA": 0,
+            "partyB": 0
+          }
         },
         {
           "id": "dispute-arbitration-aaa",
           "code": "arbitration-aaa",
-          "label": "AAA arbitration",
+          "label": {
+            "en": "AAA arbitration",
+            "es": "Arbitraje AAA"
+          },
           "order": 5,
-          "plainDescription": "Arbitration under AAA Commercial Rules - well-established with extensive arbitrator network for services disputes.",
-          "prosPartyA": [
-            "Large panel of arbitrators",
-            "Well-established procedures",
-            "Cost-effective"
-          ],
-          "consPartyA": [
-            "US-focused",
-            "Variable arbitrator quality"
-          ],
-          "prosPartyB": [
-            "Predictable process",
-            "Nationwide hearing locations",
-            "Moderate costs"
-          ],
-          "consPartyB": [
-            "Final decision",
-            "Limited appeal",
-            "May favor US procedures"
-          ],
-          "legalText": "Any dispute arising from this Agreement will be finally resolved by arbitration administered by the American Arbitration Association under its Commercial Arbitration Rules. The arbitration will be conducted by one arbitrator in the seat of the governing law jurisdiction.",
-          "biasPartyA": 0,
-          "biasPartyB": 0
+          "plainDescription": {
+            "en": "Arbitration under AAA Commercial Rules - well-established with extensive arbitrator network for services disputes.",
+            "es": "Arbitraje conforme al Reglamento Comercial de la AAA, bien consolidado y con una amplia red de árbitros para controversias en materia de servicios."
+          },
+          "pros": {
+            "partyA": {
+              "en": [
+                "Large panel of arbitrators",
+                "Well-established procedures",
+                "Cost-effective"
+              ],
+              "es": [
+                "Amplio panel de árbitros",
+                "Procedimientos bien consolidados",
+                "Coste competitivo"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Predictable process",
+                "Nationwide hearing locations",
+                "Moderate costs"
+              ],
+              "es": [
+                "Proceso previsible",
+                "Sedes de audiencia en todo el territorio",
+                "Costes moderados"
+              ]
+            }
+          },
+          "cons": {
+            "partyA": {
+              "en": [
+                "US-focused",
+                "Variable arbitrator quality"
+              ],
+              "es": [
+                "Centrado en EE. UU.",
+                "Calidad variable de los árbitros"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Final decision",
+                "Limited appeal",
+                "May favor US procedures"
+              ],
+              "es": [
+                "Decisión firme",
+                "Apelación limitada",
+                "Puede favorecer procedimientos estadounidenses"
+              ]
+            }
+          },
+          "legalText": {
+            "en": "Any dispute arising from this Agreement will be finally resolved by arbitration administered by the American Arbitration Association under its Commercial Arbitration Rules. The arbitration will be conducted by one arbitrator in the seat of the governing law jurisdiction.",
+            "es": "Toda controversia derivada del presente Contrato se resolverá definitivamente mediante arbitraje administrado por la American Arbitration Association conforme a su Reglamento de Arbitraje Comercial (Commercial Arbitration Rules). El arbitraje será conducido por un árbitro único en la sede de la jurisdicción de la ley aplicable."
+          },
+          "bias": {
+            "partyA": 0,
+            "partyB": 0
+          }
         },
         {
           "id": "dispute-arbitration-lcia",
           "code": "arbitration-lcia",
-          "label": "LCIA arbitration",
+          "label": {
+            "en": "LCIA arbitration",
+            "es": "Arbitraje LCIA"
+          },
           "order": 6,
-          "plainDescription": "Arbitration under LCIA rules - preferred for UK and international professional services disputes.",
-          "prosPartyA": [
-            "Strong international reputation",
-            "Efficient case management",
-            "Reasonable costs"
-          ],
-          "consPartyA": [
-            "London-centric",
-            "English legal influence"
-          ],
-          "prosPartyB": [
-            "Neutral and respected",
-            "Quick appointment of arbitrators",
-            "Clear timeline"
-          ],
-          "consPartyB": [
-            "UK-focused administration",
-            "Travel may be required"
-          ],
-          "legalText": "Any dispute arising from this Agreement will be finally resolved by arbitration under the LCIA Rules. The arbitration will be conducted by a sole arbitrator appointed by the LCIA Court. The seat of arbitration will be London, United Kingdom.",
-          "biasPartyA": 0,
-          "biasPartyB": 0
+          "plainDescription": {
+            "en": "Arbitration under LCIA rules - preferred for UK and international professional services disputes.",
+            "es": "Arbitraje conforme al reglamento de la LCIA, preferido para controversias de servicios profesionales en el Reino Unido e internacionales."
+          },
+          "pros": {
+            "partyA": {
+              "en": [
+                "Strong international reputation",
+                "Efficient case management",
+                "Reasonable costs"
+              ],
+              "es": [
+                "Sólida reputación internacional",
+                "Gestión eficiente de los asuntos",
+                "Costes razonables"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Neutral and respected",
+                "Quick appointment of arbitrators",
+                "Clear timeline"
+              ],
+              "es": [
+                "Neutral y respetado",
+                "Rápida designación de árbitros",
+                "Calendario claro"
+              ]
+            }
+          },
+          "cons": {
+            "partyA": {
+              "en": [
+                "London-centric",
+                "English legal influence"
+              ],
+              "es": [
+                "Centrado en Londres",
+                "Influencia del derecho inglés"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "UK-focused administration",
+                "Travel may be required"
+              ],
+              "es": [
+                "Administración centrada en el Reino Unido",
+                "Puede requerir desplazamiento"
+              ]
+            }
+          },
+          "legalText": {
+            "en": "Any dispute arising from this Agreement will be finally resolved by arbitration under the LCIA Rules. The arbitration will be conducted by a sole arbitrator appointed by the LCIA Court. The seat of arbitration will be London, United Kingdom.",
+            "es": "Toda controversia derivada del presente Contrato se resolverá definitivamente mediante arbitraje conforme al Reglamento de la LCIA. El arbitraje será conducido por un árbitro único designado por la Corte de la LCIA. La sede del arbitraje será Londres, Reino Unido."
+          },
+          "bias": {
+            "partyA": 0,
+            "partyB": 0
+          }
         }
       ]
     }

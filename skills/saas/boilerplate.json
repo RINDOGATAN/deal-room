@@ -1,126 +1,306 @@
 {
-  "contractTitle": "SOFTWARE AS A SERVICE AGREEMENT",
-  "preamble": "This Software as a Service Agreement (this \"Agreement\") is entered into as of {effectiveDate} (the \"Effective Date\") by and between:\n\nPROVIDER:\n{partyAName}, with its principal place of business at {partyAAddress} (the \"Provider\")\n\nCUSTOMER:\n{partyBName}, with its principal place of business at {partyBAddress} (the \"Customer\")",
-  "background": "WHEREAS the Provider operates a software-as-a-service platform; and WHEREAS the Customer desires to access and use the Service on the terms and conditions set forth herein; NOW, THEREFORE, in consideration of the mutual promises and covenants contained in this Agreement, and for other good and valuable consideration, the receipt and sufficiency of which are hereby acknowledged, the parties agree as follows:",
+  "contractTitle": {
+    "en": "SOFTWARE AS A SERVICE AGREEMENT",
+    "es": "CONTRATO DE PRESTACIÓN DE SERVICIOS EN MODALIDAD SAAS"
+  },
+  "preamble": {
+    "en": "This Software as a Service Agreement (this \"Agreement\") is entered into as of {effectiveDate} (the \"Effective Date\") by and between:\n\nPROVIDER:\n{partyAName}, with its principal place of business at {partyAAddress} (the \"Provider\")\n\nCUSTOMER:\n{partyBName}, with its principal place of business at {partyBAddress} (the \"Customer\")",
+    "es": "El presente Contrato de Prestación de Servicios en Modalidad SaaS (en adelante, el \"Contrato\") se formaliza con fecha {effectiveDate} (la \"Fecha de Efectividad\") entre:\n\nPROVEEDOR:\n{partyAName}, con domicilio social en {partyAAddress} (el \"Proveedor\")\n\nCLIENTE:\n{partyBName}, con domicilio social en {partyBAddress} (el \"Cliente\")"
+  },
+  "background": {
+    "en": "WHEREAS the Provider operates a software-as-a-service platform; and WHEREAS the Customer desires to access and use the Service on the terms and conditions set forth herein; NOW, THEREFORE, in consideration of the mutual promises and covenants contained in this Agreement, and for other good and valuable consideration, the receipt and sufficiency of which are hereby acknowledged, the parties agree as follows:",
+    "es": "CONSIDERANDO que el Proveedor opera una plataforma de software como servicio; y CONSIDERANDO que el Cliente desea acceder y utilizar el Servicio en los términos y condiciones aquí establecidos; EN CONSECUENCIA, en virtud de las promesas y compromisos mutuos contenidos en el presente Contrato, y de otra contraprestación válida y suficiente, cuya recepción y suficiencia se reconocen expresamente, las partes acuerdan lo siguiente:"
+  },
   "definitions": [
     {
-      "term": "Authorized Users",
-      "definition": "means the employees, agents, and independent contractors of the Customer who are authorized by the Customer to access and use the Service under this Agreement, subject to any user limits specified in the applicable Order Form."
+      "term": {
+        "en": "Authorized Users",
+        "es": "Usuarios Autorizados"
+      },
+      "definition": {
+        "en": "means the employees, agents, and independent contractors of the Customer who are authorized by the Customer to access and use the Service under this Agreement, subject to any user limits specified in the applicable Order Form.",
+        "es": "designa a los empleados, agentes y colaboradores externos del Cliente que estén autorizados por este para acceder y utilizar el Servicio en virtud del presente Contrato, con sujeción a los límites de usuarios especificados en el Formulario de Pedido correspondiente."
+      }
     },
     {
-      "term": "Customer Data",
-      "definition": "means all data, content, and information submitted, uploaded, or transmitted by the Customer or its Authorized Users to the Service, including any Personal Data."
+      "term": {
+        "en": "Customer Data",
+        "es": "Datos del Cliente"
+      },
+      "definition": {
+        "en": "means all data, content, and information submitted, uploaded, or transmitted by the Customer or its Authorized Users to the Service, including any Personal Data.",
+        "es": "designa todos los datos, contenidos e información enviados, cargados o transmitidos por el Cliente o sus Usuarios Autorizados al Servicio, incluidos cualesquiera Datos Personales."
+      }
     },
     {
-      "term": "Documentation",
-      "definition": "means the user guides, online help, release notes, training materials, and other documentation provided by the Provider to the Customer regarding the use of the Service, as updated from time to time."
+      "term": {
+        "en": "Documentation",
+        "es": "Documentación"
+      },
+      "definition": {
+        "en": "means the user guides, online help, release notes, training materials, and other documentation provided by the Provider to the Customer regarding the use of the Service, as updated from time to time.",
+        "es": "designa las guías de usuario, la ayuda en línea, las notas de versión, los materiales de formación y demás documentación proporcionada por el Proveedor al Cliente en relación con el uso del Servicio, según se actualice periódicamente."
+      }
     },
     {
-      "term": "Fees",
-      "definition": "means the subscription fees, usage fees, and any other charges payable by the Customer to the Provider as set forth in the applicable Order Form."
+      "term": {
+        "en": "Fees",
+        "es": "Tarifas"
+      },
+      "definition": {
+        "en": "means the subscription fees, usage fees, and any other charges payable by the Customer to the Provider as set forth in the applicable Order Form.",
+        "es": "designa las cuotas de suscripción, las tarifas por uso y cualesquiera otros importes a abonar por el Cliente al Proveedor según se establezca en el Formulario de Pedido correspondiente."
+      }
     },
     {
-      "term": "Order Form",
-      "definition": "means a document executed by both parties that specifies the Service plan, number of Authorized Users, Subscription Term, Fees, and any other terms applicable to the Customer's use of the Service."
+      "term": {
+        "en": "Order Form",
+        "es": "Formulario de Pedido"
+      },
+      "definition": {
+        "en": "means a document executed by both parties that specifies the Service plan, number of Authorized Users, Subscription Term, Fees, and any other terms applicable to the Customer's use of the Service.",
+        "es": "designa el documento firmado por ambas partes que especifica el plan del Servicio, el número de Usuarios Autorizados, el Período de Suscripción, las Tarifas y cualesquiera otras condiciones aplicables al uso del Servicio por parte del Cliente."
+      }
     },
     {
-      "term": "Personal Data",
-      "definition": "means any information relating to an identified or identifiable natural person that is included in Customer Data, as defined under applicable data protection laws."
+      "term": {
+        "en": "Personal Data",
+        "es": "Datos Personales"
+      },
+      "definition": {
+        "en": "means any information relating to an identified or identifiable natural person that is included in Customer Data, as defined under applicable data protection laws.",
+        "es": "designa toda información relativa a una persona física identificada o identificable que esté incluida en los Datos del Cliente, según se define en la legislación aplicable en materia de protección de datos."
+      }
     },
     {
-      "term": "Provider Materials",
-      "definition": "means the Service, Documentation, and any software, tools, methodologies, processes, techniques, know-how, and other materials provided or made available by the Provider, including all intellectual property rights therein."
+      "term": {
+        "en": "Provider Materials",
+        "es": "Materiales del Proveedor"
+      },
+      "definition": {
+        "en": "means the Service, Documentation, and any software, tools, methodologies, processes, techniques, know-how, and other materials provided or made available by the Provider, including all intellectual property rights therein.",
+        "es": "designa el Servicio, la Documentación y cualesquiera software, herramientas, metodologías, procesos, técnicas, know-how y demás materiales proporcionados o puestos a disposición por el Proveedor, incluidos todos los derechos de propiedad intelectual e industrial sobre los mismos."
+      }
     },
     {
-      "term": "Service",
-      "definition": "means the Provider's proprietary software-as-a-service platform and related applications made available to the Customer via the internet under this Agreement."
+      "term": {
+        "en": "Service",
+        "es": "Servicio"
+      },
+      "definition": {
+        "en": "means the Provider's proprietary software-as-a-service platform and related applications made available to the Customer via the internet under this Agreement.",
+        "es": "designa la plataforma de software como servicio y las aplicaciones relacionadas de titularidad del Proveedor, puestas a disposición del Cliente a través de internet al amparo del presente Contrato."
+      }
     },
     {
-      "term": "Subscription Term",
-      "definition": "means the initial period during which the Customer is entitled to access and use the Service, as specified in the applicable Order Form, together with any renewal periods."
+      "term": {
+        "en": "Subscription Term",
+        "es": "Período de Suscripción"
+      },
+      "definition": {
+        "en": "means the initial period during which the Customer is entitled to access and use the Service, as specified in the applicable Order Form, together with any renewal periods.",
+        "es": "designa el período inicial durante el cual el Cliente tiene derecho a acceder y utilizar el Servicio, según se especifique en el Formulario de Pedido correspondiente, junto con cualesquiera períodos de renovación."
+      }
     }
   ],
   "standardClauses": [
     {
-      "title": "Grant of access",
-      "text": "Subject to the terms of this Agreement and payment of all applicable Fees, the Provider grants the Customer a non-exclusive, non-transferable, non-sublicensable right during the Subscription Term to:\n\n(a) access and use the Service solely for the Customer's internal business purposes;\n\n(b) permit its Authorized Users to access and use the Service in accordance with this Agreement and the Documentation;\n\n(c) access and use the Documentation in connection with the Customer's permitted use of the Service.\n\nThe rights granted under this section are limited to the number of Authorized Users, usage volume, and Service tier specified in the applicable Order Form."
+      "title": {
+        "en": "Grant of access",
+        "es": "Concesión de acceso"
+      },
+      "text": {
+        "en": "Subject to the terms of this Agreement and payment of all applicable Fees, the Provider grants the Customer a non-exclusive, non-transferable, non-sublicensable right during the Subscription Term to:\n\n(a) access and use the Service solely for the Customer's internal business purposes;\n\n(b) permit its Authorized Users to access and use the Service in accordance with this Agreement and the Documentation;\n\n(c) access and use the Documentation in connection with the Customer's permitted use of the Service.\n\nThe rights granted under this section are limited to the number of Authorized Users, usage volume, and Service tier specified in the applicable Order Form.",
+        "es": "Con sujeción a los términos del presente Contrato y al pago de todas las Tarifas aplicables, el Proveedor otorga al Cliente un derecho no exclusivo, intransferible y no sublicenciable durante el Período de Suscripción para:\n\n(a) acceder y utilizar el Servicio exclusivamente para los fines internos de negocio del Cliente;\n\n(b) permitir a sus Usuarios Autorizados el acceso y uso del Servicio conforme al presente Contrato y a la Documentación;\n\n(c) acceder y utilizar la Documentación en relación con el uso permitido del Servicio por parte del Cliente.\n\nLos derechos otorgados en virtud de esta cláusula están limitados al número de Usuarios Autorizados, el volumen de uso y el nivel de Servicio especificados en el Formulario de Pedido correspondiente."
+      }
     },
     {
-      "title": "Usage restrictions",
-      "text": "The Customer shall not, and shall ensure that its Authorized Users do not:\n\n(a) sublicense, sell, resell, rent, lease, transfer, assign, or distribute the Service or any rights therein to any third party;\n\n(b) modify, adapt, or create derivative works based on the Service;\n\n(c) reverse engineer, decompile, disassemble, or otherwise attempt to discover the source code, object code, or underlying algorithms of the Service;\n\n(d) use the Service to store or transmit material that is infringing, unlawful, defamatory, or otherwise tortious;\n\n(e) use the Service to store or transmit malicious code, viruses, or any harmful software;\n\n(f) interfere with or disrupt the integrity or performance of the Service or any third-party data contained therein;\n\n(g) attempt to gain unauthorized access to the Service or its related systems or networks;\n\n(h) use the Service in violation of any applicable law or regulation;\n\n(i) exceed the usage limits specified in the applicable Order Form."
+      "title": {
+        "en": "Usage restrictions",
+        "es": "Restricciones de uso"
+      },
+      "text": {
+        "en": "The Customer shall not, and shall ensure that its Authorized Users do not:\n\n(a) sublicense, sell, resell, rent, lease, transfer, assign, or distribute the Service or any rights therein to any third party;\n\n(b) modify, adapt, or create derivative works based on the Service;\n\n(c) reverse engineer, decompile, disassemble, or otherwise attempt to discover the source code, object code, or underlying algorithms of the Service;\n\n(d) use the Service to store or transmit material that is infringing, unlawful, defamatory, or otherwise tortious;\n\n(e) use the Service to store or transmit malicious code, viruses, or any harmful software;\n\n(f) interfere with or disrupt the integrity or performance of the Service or any third-party data contained therein;\n\n(g) attempt to gain unauthorized access to the Service or its related systems or networks;\n\n(h) use the Service in violation of any applicable law or regulation;\n\n(i) exceed the usage limits specified in the applicable Order Form.",
+        "es": "El Cliente no podrá, y se asegurará de que sus Usuarios Autorizados no puedan:\n\n(a) sublicenciar, vender, revender, arrendar, ceder, transferir o distribuir el Servicio ni ningún derecho sobre el mismo a terceros;\n\n(b) modificar, adaptar o crear obras derivadas basadas en el Servicio;\n\n(c) realizar ingeniería inversa, descompilar, desensamblar o intentar de cualquier otro modo descubrir el código fuente, el código objeto o los algoritmos subyacentes del Servicio;\n\n(d) utilizar el Servicio para almacenar o transmitir material que infrinja derechos de terceros, sea ilícito, difamatorio o de cualquier otro modo ilegal;\n\n(e) utilizar el Servicio para almacenar o transmitir código malicioso, virus o cualquier software dañino;\n\n(f) interferir con o alterar la integridad o el rendimiento del Servicio o de los datos de terceros contenidos en él;\n\n(g) intentar obtener acceso no autorizado al Servicio o a sus sistemas o redes asociados;\n\n(h) utilizar el Servicio de forma contraria a la legislación o normativa aplicable;\n\n(i) exceder los límites de uso especificados en el Formulario de Pedido correspondiente."
+      }
     },
     {
-      "title": "Customer responsibilities",
-      "text": "The Customer shall:\n\n(a) be responsible for the accuracy, quality, and legality of all Customer Data and the means by which it was acquired;\n\n(b) use commercially reasonable efforts to prevent unauthorized access to or use of the Service, and notify the Provider promptly of any unauthorized access or use;\n\n(c) ensure that its Authorized Users comply with this Agreement and the Documentation;\n\n(d) be solely responsible for the administration of Authorized User accounts, including the creation, modification, and deactivation of user accounts;\n\n(e) maintain the security of all login credentials and authentication tokens, and not share credentials between multiple individuals."
+      "title": {
+        "en": "Customer responsibilities",
+        "es": "Responsabilidades del Cliente"
+      },
+      "text": {
+        "en": "The Customer shall:\n\n(a) be responsible for the accuracy, quality, and legality of all Customer Data and the means by which it was acquired;\n\n(b) use commercially reasonable efforts to prevent unauthorized access to or use of the Service, and notify the Provider promptly of any unauthorized access or use;\n\n(c) ensure that its Authorized Users comply with this Agreement and the Documentation;\n\n(d) be solely responsible for the administration of Authorized User accounts, including the creation, modification, and deactivation of user accounts;\n\n(e) maintain the security of all login credentials and authentication tokens, and not share credentials between multiple individuals.",
+        "es": "El Cliente deberá:\n\n(a) ser responsable de la exactitud, calidad y legalidad de todos los Datos del Cliente y de los medios por los que fueron obtenidos;\n\n(b) adoptar las medidas comercialmente razonables para evitar el acceso o uso no autorizado del Servicio, y notificar sin demora al Proveedor cualquier acceso o uso no autorizado;\n\n(c) asegurarse de que sus Usuarios Autorizados cumplan con el presente Contrato y la Documentación;\n\n(d) ser el único responsable de la administración de las cuentas de los Usuarios Autorizados, incluida la creación, modificación y desactivación de dichas cuentas;\n\n(e) mantener la seguridad de todas las credenciales de acceso y los tokens de autenticación, y no compartir las credenciales entre varias personas."
+      }
     },
     {
-      "title": "Provider intellectual property",
-      "text": "The Provider retains all right, title, and interest in and to the Service, the Documentation, and all Provider Materials, including all intellectual property rights therein. No rights are granted to the Customer other than as expressly set forth in this Agreement.\n\nTo the extent the Customer or any Authorized User provides suggestions, ideas, enhancement requests, feedback, or recommendations regarding the Service (\"Feedback\"), the Customer hereby grants the Provider a royalty-free, worldwide, irrevocable, perpetual license to use and incorporate such Feedback into the Service and Provider Materials without restriction or obligation."
+      "title": {
+        "en": "Provider intellectual property",
+        "es": "Propiedad intelectual e industrial del Proveedor"
+      },
+      "text": {
+        "en": "The Provider retains all right, title, and interest in and to the Service, the Documentation, and all Provider Materials, including all intellectual property rights therein. No rights are granted to the Customer other than as expressly set forth in this Agreement.\n\nTo the extent the Customer or any Authorized User provides suggestions, ideas, enhancement requests, feedback, or recommendations regarding the Service (\"Feedback\"), the Customer hereby grants the Provider a royalty-free, worldwide, irrevocable, perpetual license to use and incorporate such Feedback into the Service and Provider Materials without restriction or obligation.",
+        "es": "El Proveedor conserva todos los derechos, títulos e intereses sobre el Servicio, la Documentación y todos los Materiales del Proveedor, incluidos todos los derechos de propiedad intelectual e industrial sobre los mismos. No se otorgan al Cliente más derechos que los expresamente establecidos en el presente Contrato.\n\nEn la medida en que el Cliente o cualquier Usuario Autorizado proporcione sugerencias, ideas, solicitudes de mejora, comentarios o recomendaciones relativas al Servicio (\"Comentarios\"), el Cliente otorga al Proveedor una licencia gratuita, mundial, irrevocable y perpetua para utilizar e incorporar dichos Comentarios al Servicio y los Materiales del Proveedor sin restricción ni obligación alguna."
+      }
     },
     {
-      "title": "Service availability and maintenance",
-      "text": "The Provider shall use commercially reasonable efforts to make the Service available in accordance with the uptime commitment specified in this Agreement.\n\n(a) Scheduled Maintenance: The Provider may perform scheduled maintenance during designated maintenance windows. The Provider shall use commercially reasonable efforts to provide at least forty-eight (48) hours' advance notice of scheduled maintenance that may affect Service availability.\n\n(b) Emergency Maintenance: The Provider may perform emergency maintenance at any time to address critical security vulnerabilities, data integrity issues, or other conditions that pose an imminent risk. The Provider shall notify the Customer as soon as reasonably practicable of any emergency maintenance.\n\n(c) Exclusions: Downtime resulting from scheduled maintenance, emergency maintenance, force majeure events, or the Customer's acts or omissions shall not be counted against the uptime commitment."
+      "title": {
+        "en": "Service availability and maintenance",
+        "es": "Disponibilidad del Servicio y mantenimiento"
+      },
+      "text": {
+        "en": "The Provider shall use commercially reasonable efforts to make the Service available in accordance with the uptime commitment specified in this Agreement.\n\n(a) Scheduled Maintenance: The Provider may perform scheduled maintenance during designated maintenance windows. The Provider shall use commercially reasonable efforts to provide at least forty-eight (48) hours' advance notice of scheduled maintenance that may affect Service availability.\n\n(b) Emergency Maintenance: The Provider may perform emergency maintenance at any time to address critical security vulnerabilities, data integrity issues, or other conditions that pose an imminent risk. The Provider shall notify the Customer as soon as reasonably practicable of any emergency maintenance.\n\n(c) Exclusions: Downtime resulting from scheduled maintenance, emergency maintenance, force majeure events, or the Customer's acts or omissions shall not be counted against the uptime commitment.",
+        "es": "El Proveedor empleará esfuerzos comercialmente razonables para mantener el Servicio disponible conforme al compromiso de disponibilidad especificado en el presente Contrato.\n\n(a) Mantenimiento programado: El Proveedor podrá realizar tareas de mantenimiento programado durante las ventanas de mantenimiento designadas. El Proveedor empleará esfuerzos comercialmente razonables para notificar con al menos cuarenta y ocho (48) horas de antelación cualquier mantenimiento programado que pueda afectar a la disponibilidad del Servicio.\n\n(b) Mantenimiento de emergencia: El Proveedor podrá realizar mantenimiento de emergencia en cualquier momento para abordar vulnerabilidades de seguridad críticas, problemas de integridad de datos u otras situaciones que supongan un riesgo inminente. El Proveedor notificará al Cliente tan pronto como sea razonablemente posible cualquier mantenimiento de emergencia.\n\n(c) Exclusiones: Las interrupciones derivadas del mantenimiento programado, del mantenimiento de emergencia, de supuestos de fuerza mayor o de actos u omisiones del Cliente no se computarán a efectos del compromiso de disponibilidad."
+      }
     },
     {
-      "title": "Data protection",
-      "text": "The Provider shall implement and maintain appropriate technical and organizational measures to protect Customer Data, including:\n\n(a) encryption of Customer Data in transit (TLS 1.2 or higher) and at rest (AES-256 or equivalent);\n\n(b) access controls that limit access to Customer Data to authorized personnel on a need-to-know basis;\n\n(c) regular security assessments and vulnerability testing;\n\n(d) incident response procedures.\n\nIn the event of a security breach affecting Customer Data, the Provider shall:\n\n(e) notify the Customer without undue delay and in any event within seventy-two (72) hours of becoming aware of the breach;\n\n(f) provide the Customer with sufficient information to enable the Customer to meet its obligations under applicable data protection laws;\n\n(g) take commercially reasonable steps to contain, investigate, and remediate the breach.\n\nWhere the Provider processes Personal Data on behalf of the Customer, the parties shall enter into a Data Processing Agreement that complies with applicable data protection laws."
+      "title": {
+        "en": "Data protection",
+        "es": "Protección de datos"
+      },
+      "text": {
+        "en": "The Provider shall implement and maintain appropriate technical and organizational measures to protect Customer Data, including:\n\n(a) encryption of Customer Data in transit (TLS 1.2 or higher) and at rest (AES-256 or equivalent);\n\n(b) access controls that limit access to Customer Data to authorized personnel on a need-to-know basis;\n\n(c) regular security assessments and vulnerability testing;\n\n(d) incident response procedures.\n\nIn the event of a security breach affecting Customer Data, the Provider shall:\n\n(e) notify the Customer without undue delay and in any event within seventy-two (72) hours of becoming aware of the breach;\n\n(f) provide the Customer with sufficient information to enable the Customer to meet its obligations under applicable data protection laws;\n\n(g) take commercially reasonable steps to contain, investigate, and remediate the breach.\n\nWhere the Provider processes Personal Data on behalf of the Customer, the parties shall enter into a Data Processing Agreement that complies with applicable data protection laws.",
+        "es": "El Proveedor aplicará y mantendrá las medidas técnicas y organizativas apropiadas para proteger los Datos del Cliente, incluidas:\n\n(a) cifrado de los Datos del Cliente en tránsito (TLS 1.2 o superior) y en reposo (AES-256 o equivalente);\n\n(b) controles de acceso que limiten el acceso a los Datos del Cliente al personal autorizado con necesidad de conocer;\n\n(c) evaluaciones de seguridad y pruebas de vulnerabilidad periódicas;\n\n(d) procedimientos de respuesta ante incidentes.\n\nEn caso de brecha de seguridad que afecte a los Datos del Cliente, el Proveedor deberá:\n\n(e) notificar al Cliente sin dilación indebida y, en todo caso, dentro de las setenta y dos (72) horas siguientes al conocimiento de la brecha;\n\n(f) proporcionar al Cliente la información suficiente para que este pueda cumplir con sus obligaciones conforme a la legislación aplicable en materia de protección de datos;\n\n(g) adoptar las medidas comercialmente razonables para contener, investigar y subsanar la brecha.\n\nCuando el Proveedor trate Datos Personales por cuenta del Cliente, las partes formalizarán un Acuerdo de Encargo de Tratamiento de Datos que cumpla con la legislación aplicable en materia de protección de datos."
+      }
     },
     {
-      "title": "Suspension rights",
-      "text": "The Provider may suspend the Customer's access to the Service, in whole or in part, immediately upon written notice if:\n\n(a) the Customer's use of the Service poses a security risk to the Service or any third party;\n\n(b) the Customer's use of the Service may adversely impact the Service or the systems or content of any other customer;\n\n(c) the Customer is in material breach of this Agreement, including non-payment of Fees beyond any applicable cure period;\n\n(d) suspension is required to comply with applicable law or a governmental request.\n\nThe Provider shall use commercially reasonable efforts to limit the scope and duration of any suspension and to notify the Customer in advance where practicable. Suspension shall not relieve the Customer of its obligation to pay Fees during the suspension period, except where the suspension is due to the Provider's breach."
+      "title": {
+        "en": "Suspension rights",
+        "es": "Derecho de suspensión"
+      },
+      "text": {
+        "en": "The Provider may suspend the Customer's access to the Service, in whole or in part, immediately upon written notice if:\n\n(a) the Customer's use of the Service poses a security risk to the Service or any third party;\n\n(b) the Customer's use of the Service may adversely impact the Service or the systems or content of any other customer;\n\n(c) the Customer is in material breach of this Agreement, including non-payment of Fees beyond any applicable cure period;\n\n(d) suspension is required to comply with applicable law or a governmental request.\n\nThe Provider shall use commercially reasonable efforts to limit the scope and duration of any suspension and to notify the Customer in advance where practicable. Suspension shall not relieve the Customer of its obligation to pay Fees during the suspension period, except where the suspension is due to the Provider's breach.",
+        "es": "El Proveedor podrá suspender el acceso del Cliente al Servicio, total o parcialmente, con efecto inmediato y previa notificación escrita, si:\n\n(a) el uso del Servicio por parte del Cliente supone un riesgo de seguridad para el Servicio o para terceros;\n\n(b) el uso del Servicio por parte del Cliente puede afectar negativamente al Servicio o a los sistemas o contenidos de otros clientes;\n\n(c) el Cliente se encuentra en incumplimiento esencial del presente Contrato, incluido el impago de las Tarifas una vez transcurrido el período de subsanación aplicable;\n\n(d) la suspensión sea necesaria para cumplir con la legislación aplicable o con un requerimiento de las autoridades.\n\nEl Proveedor empleará esfuerzos comercialmente razonables para limitar el alcance y la duración de cualquier suspensión y para notificar al Cliente con antelación cuando sea factible. La suspensión no eximirá al Cliente de su obligación de pago de las Tarifas durante el período de suspensión, salvo cuando la suspensión se deba a un incumplimiento del Proveedor."
+      }
     }
   ],
   "generalProvisions": [
     {
-      "title": "Entire agreement",
-      "text": "This Agreement, together with all Order Forms and exhibits, constitutes the entire agreement between the parties with respect to the subject matter hereof and supersedes all prior negotiations, representations, warranties, commitments, offers, and agreements, whether written or oral."
+      "title": {
+        "en": "Entire agreement",
+        "es": "Integridad del contrato"
+      },
+      "text": {
+        "en": "This Agreement, together with all Order Forms and exhibits, constitutes the entire agreement between the parties with respect to the subject matter hereof and supersedes all prior negotiations, representations, warranties, commitments, offers, and agreements, whether written or oral.",
+        "es": "El presente Contrato, junto con todos los Formularios de Pedido y anexos, constituye el acuerdo íntegro entre las partes en relación con su objeto y deja sin efecto cualesquiera negociaciones, declaraciones, garantías, compromisos, ofertas y acuerdos anteriores, ya sean escritos u orales."
+      }
     },
     {
-      "title": "Amendments",
-      "text": "This Agreement may not be amended, modified, or supplemented except by a written instrument signed by both parties."
+      "title": {
+        "en": "Amendments",
+        "es": "Modificaciones"
+      },
+      "text": {
+        "en": "This Agreement may not be amended, modified, or supplemented except by a written instrument signed by both parties.",
+        "es": "El presente Contrato no podrá ser modificado ni complementado salvo mediante documento escrito firmado por ambas partes."
+      }
     },
     {
-      "title": "Severability",
-      "text": "If any provision of this Agreement is held to be invalid, illegal, or unenforceable, the remaining provisions shall continue in full force and effect, and the invalid provision shall be modified to the minimum extent necessary to make it valid and enforceable."
+      "title": {
+        "en": "Severability",
+        "es": "Divisibilidad"
+      },
+      "text": {
+        "en": "If any provision of this Agreement is held to be invalid, illegal, or unenforceable, the remaining provisions shall continue in full force and effect, and the invalid provision shall be modified to the minimum extent necessary to make it valid and enforceable.",
+        "es": "Si cualquier disposición del presente Contrato fuera declarada nula, ilegal o inaplicable, las restantes disposiciones mantendrán su plena vigencia y eficacia, y la disposición afectada será modificada en la medida mínima necesaria para que resulte válida y ejecutable."
+      }
     },
     {
-      "title": "Waiver",
-      "text": "No failure or delay by either party in exercising any right under this Agreement shall operate as a waiver thereof, nor shall any single or partial exercise of any right preclude any further exercise of that or any other right."
+      "title": {
+        "en": "Waiver",
+        "es": "Renuncia"
+      },
+      "text": {
+        "en": "No failure or delay by either party in exercising any right under this Agreement shall operate as a waiver thereof, nor shall any single or partial exercise of any right preclude any further exercise of that or any other right.",
+        "es": "La falta de ejercicio o el retraso de cualquiera de las partes en el ejercicio de cualquier derecho en virtud del presente Contrato no constituirá una renuncia al mismo, ni el ejercicio parcial de un derecho impedirá el ejercicio posterior de ese u otro derecho."
+      }
     },
     {
-      "title": "Notices",
-      "text": "All notices under this Agreement shall be in writing and shall be deemed given: (a) when delivered personally; (b) when sent by confirmed electronic mail; (c) one (1) business day after being sent by internationally recognized overnight courier; or (d) three (3) business days after being mailed by registered or certified mail, postage prepaid, to the parties at their respective addresses set forth above."
+      "title": {
+        "en": "Notices",
+        "es": "Notificaciones"
+      },
+      "text": {
+        "en": "All notices under this Agreement shall be in writing and shall be deemed given: (a) when delivered personally; (b) when sent by confirmed electronic mail; (c) one (1) business day after being sent by internationally recognized overnight courier; or (d) three (3) business days after being mailed by registered or certified mail, postage prepaid, to the parties at their respective addresses set forth above.",
+        "es": "Todas las notificaciones en virtud del presente Contrato deberán realizarse por escrito y se entenderán efectuadas: (a) en el momento de su entrega personal; (b) en el momento de su envío por correo electrónico con confirmación de recepción; (c) un (1) día hábil después de su envío mediante servicio de mensajería urgente internacionalmente reconocido; o (d) tres (3) días hábiles después de su envío por correo certificado con acuse de recibo, franqueo pagado, a las direcciones de las partes indicadas anteriormente."
+      }
     },
     {
-      "title": "Assignment",
-      "text": "Neither party may assign or transfer this Agreement or any of its rights or obligations hereunder without the prior written consent of the other party, except that either party may assign this Agreement to an Affiliate or in connection with a merger, acquisition, or sale of all or substantially all of its assets, provided the assignee assumes all obligations under this Agreement."
+      "title": {
+        "en": "Assignment",
+        "es": "Cesión"
+      },
+      "text": {
+        "en": "Neither party may assign or transfer this Agreement or any of its rights or obligations hereunder without the prior written consent of the other party, except that either party may assign this Agreement to an Affiliate or in connection with a merger, acquisition, or sale of all or substantially all of its assets, provided the assignee assumes all obligations under this Agreement.",
+        "es": "Ninguna de las partes podrá ceder ni transferir el presente Contrato ni ninguno de sus derechos u obligaciones sin el previo consentimiento escrito de la otra parte, salvo que cualquiera de las partes podrá ceder el presente Contrato a una entidad vinculada o en el contexto de una fusión, adquisición o venta de la totalidad o la parte sustancial de sus activos, siempre que el cesionario asuma todas las obligaciones derivadas del presente Contrato."
+      }
     },
     {
-      "title": "Survival",
-      "text": "The provisions of this Agreement relating to intellectual property, confidentiality, limitation of liability, indemnification, data protection, and any provisions that by their nature are intended to survive, shall survive the expiration or termination of this Agreement."
+      "title": {
+        "en": "Survival",
+        "es": "Subsistencia"
+      },
+      "text": {
+        "en": "The provisions of this Agreement relating to intellectual property, confidentiality, limitation of liability, indemnification, data protection, and any provisions that by their nature are intended to survive, shall survive the expiration or termination of this Agreement.",
+        "es": "Las disposiciones del presente Contrato relativas a la propiedad intelectual e industrial, la confidencialidad, la limitación de responsabilidad, la indemnización, la protección de datos y cualesquiera otras disposiciones que por su naturaleza deban subsistir, continuarán en vigor tras la expiración o resolución del presente Contrato."
+      }
     },
     {
-      "title": "Counterparts",
-      "text": "This Agreement may be executed in counterparts, each of which shall be deemed an original, and all of which together shall constitute one and the same instrument. Electronic signatures shall be deemed original signatures for all purposes."
+      "title": {
+        "en": "Counterparts",
+        "es": "Ejemplares"
+      },
+      "text": {
+        "en": "This Agreement may be executed in counterparts, each of which shall be deemed an original, and all of which together shall constitute one and the same instrument. Electronic signatures shall be deemed original signatures for all purposes.",
+        "es": "El presente Contrato podrá firmarse en varios ejemplares, cada uno de los cuales se considerará un original y todos ellos conjuntamente constituirán un único instrumento. Las firmas electrónicas tendrán la misma validez que las firmas manuscritas a todos los efectos."
+      }
     }
   ],
   "jurisdictionProvisions": {
     "CALIFORNIA": {
-      "title": "California-specific provisions",
-      "text": "(a) Auto-Renewal Disclosure: In accordance with the California Automatic Renewal Law (Cal. Bus. & Prof. Code §17601–17606), the Provider shall: (i) present the auto-renewal terms in a clear and conspicuous manner before the Customer completes any purchase; (ii) provide an acknowledgment that includes the auto-renewal terms, cancellation policy, and information regarding how to cancel; (iii) provide a mechanism for the Customer to cancel that is accessible online.\n\n(b) Jury Waiver: EACH PARTY HEREBY IRREVOCABLY WAIVES, TO THE FULLEST EXTENT PERMITTED BY APPLICABLE LAW, ALL RIGHTS TO TRIAL BY JURY IN ANY ACTION, PROCEEDING, OR COUNTERCLAIM ARISING OUT OF OR RELATING TO THIS AGREEMENT.\n\n(c) CCPA/CPRA: To the extent that the Provider processes personal information (as defined under Cal. Civ. Code §1798.100 et seq.) on behalf of the Customer, the Provider shall act as a \"Service Provider\" and shall comply with all applicable requirements of the California Consumer Privacy Act and the California Privacy Rights Act, including the restrictions set forth in Cal. Civ. Code §1798.140(ag)."
+      "title": {
+        "en": "California-specific provisions",
+        "es": "Disposiciones específicas de California"
+      },
+      "text": {
+        "en": "(a) Auto-Renewal Disclosure: In accordance with the California Automatic Renewal Law (Cal. Bus. & Prof. Code §17601–17606), the Provider shall: (i) present the auto-renewal terms in a clear and conspicuous manner before the Customer completes any purchase; (ii) provide an acknowledgment that includes the auto-renewal terms, cancellation policy, and information regarding how to cancel; (iii) provide a mechanism for the Customer to cancel that is accessible online.\n\n(b) Jury Waiver: EACH PARTY HEREBY IRREVOCABLY WAIVES, TO THE FULLEST EXTENT PERMITTED BY APPLICABLE LAW, ALL RIGHTS TO TRIAL BY JURY IN ANY ACTION, PROCEEDING, OR COUNTERCLAIM ARISING OUT OF OR RELATING TO THIS AGREEMENT.\n\n(c) CCPA/CPRA: To the extent that the Provider processes personal information (as defined under Cal. Civ. Code §1798.100 et seq.) on behalf of the Customer, the Provider shall act as a \"Service Provider\" and shall comply with all applicable requirements of the California Consumer Privacy Act and the California Privacy Rights Act, including the restrictions set forth in Cal. Civ. Code §1798.140(ag).",
+        "es": "(a) Divulgación de renovación automática: De conformidad con la California Automatic Renewal Law (Cal. Bus. & Prof. Code §17601–17606), el Proveedor deberá: (i) presentar las condiciones de renovación automática de forma clara y visible antes de que el Cliente complete cualquier compra; (ii) proporcionar un acuse de recibo que incluya las condiciones de renovación automática, la política de cancelación e información sobre cómo cancelar; (iii) proporcionar un mecanismo de cancelación accesible en línea para el Cliente.\n\n(b) Renuncia al juicio con jurado: CADA PARTE RENUNCIA IRREVOCABLEMENTE, EN LA MEDIDA MÁXIMA PERMITIDA POR LA LEGISLACIÓN APLICABLE, A TODOS LOS DERECHOS A UN JUICIO CON JURADO EN CUALQUIER ACCIÓN, PROCEDIMIENTO O RECONVENCIÓN DERIVADO DE O RELACIONADO CON EL PRESENTE CONTRATO.\n\n(c) CCPA/CPRA: En la medida en que el Proveedor trate información personal (según se define en Cal. Civ. Code §1798.100 y ss.) por cuenta del Cliente, el Proveedor actuará como \"Proveedor de Servicios\" y cumplirá con todos los requisitos aplicables de la California Consumer Privacy Act y la California Privacy Rights Act, incluidas las restricciones establecidas en Cal. Civ. Code §1798.140(ag)."
+      }
     },
     "ENGLAND_WALES": {
-      "title": "England & Wales-specific provisions",
-      "text": "(a) Third Party Rights: No person who is not a party to this Agreement shall have any rights under the Contracts (Rights of Third Parties) Act 1999 to enforce any term of this Agreement.\n\n(b) Non-Excludable Liability: Nothing in this Agreement shall exclude or limit liability for: (i) fraud or fraudulent misrepresentation; (ii) death or personal injury caused by negligence; or (iii) any other liability that cannot be excluded or limited under applicable law.\n\n(c) Consumer Rights: To the extent applicable, nothing in this Agreement shall affect the Customer's statutory rights under the Consumer Rights Act 2015.\n\n(d) UK GDPR: To the extent that the Provider processes personal data (as defined under the UK General Data Protection Regulation and the Data Protection Act 2018) on behalf of the Customer, the Provider shall act as a \"processor\" and both parties shall comply with all applicable data protection requirements. The parties agree to enter into a Data Processing Agreement that complies with Article 28 of the UK GDPR."
+      "title": {
+        "en": "England & Wales-specific provisions",
+        "es": "Disposiciones específicas de Inglaterra y Gales"
+      },
+      "text": {
+        "en": "(a) Third Party Rights: No person who is not a party to this Agreement shall have any rights under the Contracts (Rights of Third Parties) Act 1999 to enforce any term of this Agreement.\n\n(b) Non-Excludable Liability: Nothing in this Agreement shall exclude or limit liability for: (i) fraud or fraudulent misrepresentation; (ii) death or personal injury caused by negligence; or (iii) any other liability that cannot be excluded or limited under applicable law.\n\n(c) Consumer Rights: To the extent applicable, nothing in this Agreement shall affect the Customer's statutory rights under the Consumer Rights Act 2015.\n\n(d) UK GDPR: To the extent that the Provider processes personal data (as defined under the UK General Data Protection Regulation and the Data Protection Act 2018) on behalf of the Customer, the Provider shall act as a \"processor\" and both parties shall comply with all applicable data protection requirements. The parties agree to enter into a Data Processing Agreement that complies with Article 28 of the UK GDPR.",
+        "es": "(a) Derechos de terceros: Ninguna persona que no sea parte del presente Contrato tendrá derecho alguno en virtud de la Contracts (Rights of Third Parties) Act 1999 para exigir el cumplimiento de cualquier estipulación de este Contrato.\n\n(b) Responsabilidad no excluible: Nada en el presente Contrato excluirá ni limitará la responsabilidad por: (i) fraude o declaración fraudulenta; (ii) muerte o lesiones personales causadas por negligencia; o (iii) cualquier otra responsabilidad que no pueda ser excluida o limitada conforme a la legislación aplicable.\n\n(c) Derechos del consumidor: En la medida en que resulte aplicable, nada en el presente Contrato afectará a los derechos legales del Cliente conforme a la Consumer Rights Act 2015.\n\n(d) RGPD del RU: En la medida en que el Proveedor trate datos personales (según se definen en el Reglamento General de Protección de Datos del Reino Unido y la Data Protection Act 2018) por cuenta del Cliente, el Proveedor actuará como \"encargado del tratamiento\" y ambas partes cumplirán con todos los requisitos aplicables en materia de protección de datos. Las partes acuerdan formalizar un Acuerdo de Encargo de Tratamiento de Datos que cumpla con el artículo 28 del RGPD del RU."
+      }
     },
     "SPAIN": {
-      "title": "Spain-specific provisions (Disposiciones específicas para España)",
-      "text": "(a) LSSI-CE: The Provider shall comply with the Ley 34/2002 de Servicios de la Sociedad de la Información y de Comercio Electrónico (LSSI-CE), including the obligations regarding commercial communications and information duties.\n\n(b) Good Faith: This Agreement shall be interpreted and performed in accordance with the principle of good faith (buena fe) as set forth in Articles 7 and 1258 of the Código Civil.\n\n(c) Interpretation: In the event of any ambiguity, this Agreement shall be interpreted in accordance with the rules of interpretation set forth in Articles 1281 through 1289 of the Código Civil.\n\n(d) GDPR/LOPDGDD: To the extent that the Provider processes personal data on behalf of the Customer, the Provider shall act as an \"encargado del tratamiento\" and both parties shall comply with the EU General Data Protection Regulation (Regulation (EU) 2016/679) and the Ley Orgánica 3/2018 de Protección de Datos Personales y garantía de los derechos digitales (LOPDGDD). The parties agree to enter into a Data Processing Agreement (Acuerdo de encargo de tratamiento de datos) that complies with Article 28 of the GDPR."
+      "title": {
+        "en": "Spain-specific provisions",
+        "es": "Disposiciones específicas de España"
+      },
+      "text": {
+        "en": "(a) LSSI-CE: The Provider shall comply with the Ley 34/2002 de Servicios de la Sociedad de la Información y de Comercio Electrónico (LSSI-CE), including the obligations regarding commercial communications and information duties.\n\n(b) Good Faith: This Agreement shall be interpreted and performed in accordance with the principle of good faith (buena fe) as set forth in Articles 7 and 1258 of the Código Civil.\n\n(c) Interpretation: In the event of any ambiguity, this Agreement shall be interpreted in accordance with the rules of interpretation set forth in Articles 1281 through 1289 of the Código Civil.\n\n(d) GDPR/LOPDGDD: To the extent that the Provider processes personal data on behalf of the Customer, the Provider shall act as an \"encargado del tratamiento\" and both parties shall comply with the EU General Data Protection Regulation (Regulation (EU) 2016/679) and the Ley Orgánica 3/2018 de Protección de Datos Personales y garantía de los derechos digitales (LOPDGDD). The parties agree to enter into a Data Processing Agreement (Acuerdo de encargo de tratamiento de datos) that complies with Article 28 of the GDPR.",
+        "es": "(a) LSSI-CE: El Proveedor cumplirá con la Ley 34/2002, de Servicios de la Sociedad de la Información y de Comercio Electrónico (LSSI-CE), incluidas las obligaciones relativas a las comunicaciones comerciales y los deberes de información.\n\n(b) Buena fe: El presente Contrato se interpretará y ejecutará conforme al principio de buena fe establecido en los artículos 7 y 1258 del Código Civil.\n\n(c) Interpretación: En caso de ambigüedad, el presente Contrato se interpretará conforme a las reglas de interpretación previstas en los artículos 1281 a 1289 del Código Civil.\n\n(d) RGPD/LOPDGDD: En la medida en que el Proveedor trate datos personales por cuenta del Cliente, el Proveedor actuará como encargado del tratamiento y ambas partes cumplirán con el Reglamento General de Protección de Datos de la UE (Reglamento (UE) 2016/679) y la Ley Orgánica 3/2018, de Protección de Datos Personales y garantía de los derechos digitales (LOPDGDD). Las partes acuerdan formalizar un Acuerdo de Encargo de Tratamiento de Datos que cumpla con el artículo 28 del RGPD."
+      }
     }
   },
-  "signatureBlock": "SIGNED by the parties:\n\n{partyASignatureBlock}\n\n{partyBSignatureBlock}",
+  "signatureBlock": {
+    "en": "SIGNED by the parties:\n\n{partyASignatureBlock}\n\n{partyBSignatureBlock}",
+    "es": "FIRMADO por las partes:\n\n{partyASignatureBlock}\n\n{partyBSignatureBlock}"
+  },
   "partyLabels": {
-    "partyA": "Provider",
-    "partyB": "Customer"
+    "partyA": {
+      "en": "Provider",
+      "es": "Proveedor"
+    },
+    "partyB": {
+      "en": "Customer",
+      "es": "Cliente"
+    }
   }
 }

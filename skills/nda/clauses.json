@@ -1,852 +1,2063 @@
 {
   "contractType": "NDA",
-  "displayName": "Non-Disclosure Agreement",
-  "description": "Mutual or one-way confidentiality agreements for protecting sensitive business information",
+  "displayName": {
+    "en": "Non-Disclosure Agreement",
+    "es": "Acuerdo de Confidencialidad"
+  },
+  "description": {
+    "en": "Mutual or one-way confidentiality agreements for protecting sensitive business information",
+    "es": "Acuerdos de confidencialidad mutuos o unilaterales para la protección de información empresarial sensible"
+  },
   "version": "1.0",
+  "languages": ["en", "es"],
   "clauses": [
     {
       "id": "confidentiality-duration",
-      "title": "Confidentiality duration",
-      "category": "Term",
+      "title": {
+        "en": "Confidentiality duration",
+        "es": "Duración de la confidencialidad"
+      },
+      "category": {
+        "en": "Term",
+        "es": "Plazo"
+      },
       "order": 1,
-      "plainDescription": "How long must the receiving party keep information confidential after the agreement ends?",
-      "legalContext": "Longer durations provide more protection but may be harder to enforce. Trade secrets may warrant perpetual protection. Courts generally find 2-5 year terms reasonable for most business information.",
+      "plainDescription": {
+        "en": "How long must the receiving party keep information confidential after the agreement ends?",
+        "es": "¿Durante cuánto tiempo debe la Parte Receptora mantener la confidencialidad de la información tras la finalización del acuerdo?"
+      },
+      "legalContext": {
+        "en": "Longer durations provide more protection but may be harder to enforce. Trade secrets may warrant perpetual protection. Courts generally find 2-5 year terms reasonable for most business information.",
+        "es": "Los plazos más largos proporcionan mayor protección, pero pueden ser más difíciles de ejecutar. Los secretos empresariales pueden justificar una protección perpetua. Los tribunales generalmente consideran razonables los plazos de 2 a 5 años para la mayoría de la información comercial."
+      },
       "isRequired": true,
       "options": [
         {
           "id": "duration-2yr",
           "code": "2-years",
-          "label": "2 years",
+          "label": {
+            "en": "2 years",
+            "es": "2 años"
+          },
           "order": 1,
-          "plainDescription": "Confidentiality obligations last 2 years after termination - standard for most business discussions.",
-          "prosPartyA": [
-            "Industry standard duration",
-            "Easier to negotiate",
-            "Lower compliance monitoring burden"
-          ],
-          "consPartyA": [
-            "Shorter protection window",
-            "May not cover slow-moving deals",
-            "Information may still be valuable when protection ends"
-          ],
-          "prosPartyB": [
-            "Limited long-term exposure",
-            "Easier to manage compliance",
-            "Clear end date for obligations"
-          ],
-          "consPartyB": [
-            "Short window for raising disputes",
-            "May need to track expiration dates"
-          ],
-          "legalText": "The confidentiality obligations in this Agreement will survive termination or expiration for a period of two (2) years.",
-          "biasPartyA": -0.3,
-          "biasPartyB": 0.3
+          "plainDescription": {
+            "en": "Confidentiality obligations last 2 years after termination - standard for most business discussions.",
+            "es": "Las obligaciones de confidencialidad se extienden durante 2 años tras la resolución del acuerdo, lo cual es habitual en la mayoría de las relaciones comerciales."
+          },
+          "pros": {
+            "partyA": {
+              "en": [
+                "Industry standard duration",
+                "Easier to negotiate",
+                "Lower compliance monitoring burden"
+              ],
+              "es": [
+                "Duración estándar en el sector",
+                "Mayor facilidad de negociación",
+                "Menor carga de supervisión del cumplimiento"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Limited long-term exposure",
+                "Easier to manage compliance",
+                "Clear end date for obligations"
+              ],
+              "es": [
+                "Exposición limitada a largo plazo",
+                "Mayor facilidad en la gestión del cumplimiento",
+                "Fecha de fin de obligaciones claramente definida"
+              ]
+            }
+          },
+          "cons": {
+            "partyA": {
+              "en": [
+                "Shorter protection window",
+                "May not cover slow-moving deals",
+                "Information may still be valuable when protection ends"
+              ],
+              "es": [
+                "Período de protección más breve",
+                "Puede no cubrir operaciones de larga duración",
+                "La información puede seguir siendo valiosa al expirar la protección"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Short window for raising disputes",
+                "May need to track expiration dates"
+              ],
+              "es": [
+                "Plazo reducido para plantear reclamaciones",
+                "Puede requerir el seguimiento de las fechas de vencimiento"
+              ]
+            }
+          },
+          "legalText": {
+            "en": "The confidentiality obligations in this Agreement will survive termination or expiration for a period of two (2) years.",
+            "es": "Las obligaciones de confidencialidad establecidas en el presente Acuerdo subsistirán tras su resolución o expiración durante un período de dos (2) años."
+          },
+          "bias": {
+            "partyA": -0.3,
+            "partyB": 0.3
+          }
         },
         {
           "id": "duration-3yr",
           "code": "3-years",
-          "label": "3 years",
+          "label": {
+            "en": "3 years",
+            "es": "3 años"
+          },
           "order": 2,
-          "plainDescription": "Confidentiality obligations last 3 years - balanced protection for sensitive industries.",
-          "prosPartyA": [
-            "Extended protection period",
-            "Good for longer sales cycles",
-            "More time for value extraction"
-          ],
-          "consPartyA": [
-            "Slightly harder to negotiate",
-            "May seem aggressive in some industries"
-          ],
-          "prosPartyB": [
-            "Clear end date",
-            "Reasonable timeframe for compliance",
-            "Standard in many industries"
-          ],
-          "consPartyB": [
-            "Longer compliance obligation",
-            "More tracking required"
-          ],
-          "legalText": "The confidentiality obligations in this Agreement will survive termination or expiration for a period of three (3) years.",
-          "biasPartyA": 0,
-          "biasPartyB": 0
+          "plainDescription": {
+            "en": "Confidentiality obligations last 3 years - balanced protection for sensitive industries.",
+            "es": "Las obligaciones de confidencialidad se extienden durante 3 años, ofreciendo una protección equilibrada para sectores sensibles."
+          },
+          "pros": {
+            "partyA": {
+              "en": [
+                "Extended protection period",
+                "Good for longer sales cycles",
+                "More time for value extraction"
+              ],
+              "es": [
+                "Período de protección ampliado",
+                "Adecuado para ciclos comerciales largos",
+                "Mayor tiempo para la obtención de valor"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Clear end date",
+                "Reasonable timeframe for compliance",
+                "Standard in many industries"
+              ],
+              "es": [
+                "Fecha de finalización claramente definida",
+                "Plazo razonable para el cumplimiento",
+                "Habitual en numerosos sectores"
+              ]
+            }
+          },
+          "cons": {
+            "partyA": {
+              "en": [
+                "Slightly harder to negotiate",
+                "May seem aggressive in some industries"
+              ],
+              "es": [
+                "Negociación ligeramente más compleja",
+                "Puede percibirse como agresivo en algunos sectores"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Longer compliance obligation",
+                "More tracking required"
+              ],
+              "es": [
+                "Obligación de cumplimiento más prolongada",
+                "Mayor necesidad de seguimiento"
+              ]
+            }
+          },
+          "legalText": {
+            "en": "The confidentiality obligations in this Agreement will survive termination or expiration for a period of three (3) years.",
+            "es": "Las obligaciones de confidencialidad establecidas en el presente Acuerdo subsistirán tras su resolución o expiración durante un período de tres (3) años."
+          },
+          "bias": {
+            "partyA": 0,
+            "partyB": 0
+          }
         },
         {
           "id": "duration-5yr",
           "code": "5-years",
-          "label": "5 years",
+          "label": {
+            "en": "5 years",
+            "es": "5 años"
+          },
           "order": 3,
-          "plainDescription": "Confidentiality obligations last 5 years - strong protection for highly sensitive information.",
-          "prosPartyA": [
-            "Strong protection period",
-            "Covers extended business relationships",
-            "Better for technical information"
-          ],
-          "consPartyA": [
-            "May face resistance in negotiations",
-            "Counterparty may request concessions"
-          ],
-          "prosPartyB": [
-            "Shows commitment to protecting information",
-            "May indicate serious partnership intent"
-          ],
-          "consPartyB": [
-            "Long compliance period",
-            "Administrative burden",
-            "May limit future opportunities"
-          ],
-          "legalText": "The confidentiality obligations in this Agreement will survive termination or expiration for a period of five (5) years.",
-          "biasPartyA": 0.3,
-          "biasPartyB": -0.3
+          "plainDescription": {
+            "en": "Confidentiality obligations last 5 years - strong protection for highly sensitive information.",
+            "es": "Las obligaciones de confidencialidad se extienden durante 5 años, proporcionando una protección sólida para información altamente sensible."
+          },
+          "pros": {
+            "partyA": {
+              "en": [
+                "Strong protection period",
+                "Covers extended business relationships",
+                "Better for technical information"
+              ],
+              "es": [
+                "Período de protección sólido",
+                "Cubre relaciones comerciales prolongadas",
+                "Más adecuado para información técnica"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Shows commitment to protecting information",
+                "May indicate serious partnership intent"
+              ],
+              "es": [
+                "Demuestra compromiso con la protección de la información",
+                "Puede indicar una intención seria de colaboración"
+              ]
+            }
+          },
+          "cons": {
+            "partyA": {
+              "en": [
+                "May face resistance in negotiations",
+                "Counterparty may request concessions"
+              ],
+              "es": [
+                "Puede encontrar resistencia en la negociación",
+                "La contraparte puede solicitar concesiones"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Long compliance period",
+                "Administrative burden",
+                "May limit future opportunities"
+              ],
+              "es": [
+                "Período de cumplimiento prolongado",
+                "Carga administrativa elevada",
+                "Puede limitar oportunidades futuras"
+              ]
+            }
+          },
+          "legalText": {
+            "en": "The confidentiality obligations in this Agreement will survive termination or expiration for a period of five (5) years.",
+            "es": "Las obligaciones de confidencialidad establecidas en el presente Acuerdo subsistirán tras su resolución o expiración durante un período de cinco (5) años."
+          },
+          "bias": {
+            "partyA": 0.3,
+            "partyB": -0.3
+          }
         },
         {
           "id": "duration-perpetual",
           "code": "perpetual",
-          "label": "Perpetual (Trade secrets)",
+          "label": {
+            "en": "Perpetual (Trade secrets)",
+            "es": "Perpetua (Secretos empresariales)"
+          },
           "order": 4,
-          "plainDescription": "Confidentiality obligations continue indefinitely for information qualifying as trade secrets.",
-          "prosPartyA": [
-            "Maximum protection for trade secrets",
-            "Aligned with trade secret law",
-            "No expiration concerns"
-          ],
-          "consPartyA": [
-            "May be seen as overreaching",
-            "Harder to negotiate",
-            "May require proving trade secret status"
-          ],
-          "prosPartyB": [
-            "Protects genuine trade secrets appropriately",
-            "Aligned with legal standards"
-          ],
-          "consPartyB": [
-            "Indefinite obligation",
-            "Ongoing compliance burden",
-            "Uncertainty about what qualifies"
-          ],
-          "legalText": "The confidentiality obligations in this Agreement with respect to information qualifying as a trade secret under applicable law will survive indefinitely.",
-          "biasPartyA": 0.5,
-          "biasPartyB": -0.5
+          "plainDescription": {
+            "en": "Confidentiality obligations continue indefinitely for information qualifying as trade secrets.",
+            "es": "Las obligaciones de confidencialidad se mantienen de forma indefinida respecto a la información que constituya secreto empresarial."
+          },
+          "pros": {
+            "partyA": {
+              "en": [
+                "Maximum protection for trade secrets",
+                "Aligned with trade secret law",
+                "No expiration concerns"
+              ],
+              "es": [
+                "Protección máxima para secretos empresariales",
+                "Alineado con la legislación sobre secretos empresariales",
+                "Sin preocupaciones por vencimiento"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Protects genuine trade secrets appropriately",
+                "Aligned with legal standards"
+              ],
+              "es": [
+                "Protege adecuadamente los secretos empresariales legítimos",
+                "Conforme con los estándares legales vigentes"
+              ]
+            }
+          },
+          "cons": {
+            "partyA": {
+              "en": [
+                "May be seen as overreaching",
+                "Harder to negotiate",
+                "May require proving trade secret status"
+              ],
+              "es": [
+                "Puede considerarse excesivo",
+                "Mayor dificultad en la negociación",
+                "Puede requerir la acreditación de la condición de secreto empresarial"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Indefinite obligation",
+                "Ongoing compliance burden",
+                "Uncertainty about what qualifies"
+              ],
+              "es": [
+                "Obligación indefinida",
+                "Carga de cumplimiento continuada",
+                "Incertidumbre sobre qué información se considera secreto empresarial"
+              ]
+            }
+          },
+          "legalText": {
+            "en": "The confidentiality obligations in this Agreement with respect to information qualifying as a trade secret under applicable law will survive indefinitely.",
+            "es": "Las obligaciones de confidencialidad establecidas en el presente Acuerdo respecto a la información que constituya secreto empresarial conforme a la legislación aplicable subsistirán de forma indefinida."
+          },
+          "bias": {
+            "partyA": 0.5,
+            "partyB": -0.5
+          }
         }
       ]
     },
     {
       "id": "permitted-disclosures",
-      "title": "Permitted disclosures",
-      "category": "Obligations",
+      "title": {
+        "en": "Permitted disclosures",
+        "es": "Divulgaciones permitidas"
+      },
+      "category": {
+        "en": "Obligations",
+        "es": "Obligaciones"
+      },
       "order": 2,
-      "plainDescription": "Under what circumstances can the receiving party share confidential information with others?",
-      "legalContext": "Broader permitted disclosures give the receiving party flexibility but reduce the disclosing party's control. Most agreements allow disclosure to professional advisors; the question is how much further to extend.",
+      "plainDescription": {
+        "en": "Under what circumstances can the receiving party share confidential information with others?",
+        "es": "¿En qué circunstancias puede la Parte Receptora compartir la Información Confidencial con terceros?"
+      },
+      "legalContext": {
+        "en": "Broader permitted disclosures give the receiving party flexibility but reduce the disclosing party's control. Most agreements allow disclosure to professional advisors; the question is how much further to extend.",
+        "es": "Unas divulgaciones permitidas más amplias otorgan flexibilidad a la Parte Receptora, pero reducen el control de la Parte Divulgante. La mayoría de los acuerdos permiten la divulgación a asesores profesionales; la cuestión es hasta dónde extender dicha autorización."
+      },
       "isRequired": true,
       "options": [
         {
           "id": "disclosures-strict",
           "code": "strict",
-          "label": "Strict (Legal requirement only)",
+          "label": {
+            "en": "Strict (Legal requirement only)",
+            "es": "Estricta (Solo por exigencia legal)"
+          },
           "order": 1,
-          "plainDescription": "Only disclose when legally compelled by court order or government authority, with prior notice to the disclosing party.",
-          "prosPartyA": [
-            "Maximum control over information",
-            "Fewest leak vectors",
-            "Strong protection"
-          ],
-          "consPartyA": [
-            "May be seen as unreasonable",
-            "Could delay counterparty's due diligence"
-          ],
-          "prosPartyB": [
-            "Clear boundaries",
-            "Simple compliance"
-          ],
-          "consPartyB": [
-            "Cannot share with advisors",
-            "Limited flexibility",
-            "May hinder evaluation"
-          ],
-          "legalText": "The Receiving Party may only disclose Confidential Information if required by law, court order, or governmental authority, provided that the Receiving Party gives the Disclosing Party prompt written notice to allow the Disclosing Party to seek protective measures.",
-          "biasPartyA": 0.5,
-          "biasPartyB": -0.5
+          "plainDescription": {
+            "en": "Only disclose when legally compelled by court order or government authority, with prior notice to the disclosing party.",
+            "es": "Divulgación únicamente cuando sea legalmente exigida por resolución judicial o requerimiento de autoridad pública, con notificación previa a la Parte Divulgante."
+          },
+          "pros": {
+            "partyA": {
+              "en": [
+                "Maximum control over information",
+                "Fewest leak vectors",
+                "Strong protection"
+              ],
+              "es": [
+                "Control máximo sobre la información",
+                "Mínimos vectores de filtración",
+                "Protección sólida"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Clear boundaries",
+                "Simple compliance"
+              ],
+              "es": [
+                "Límites claros",
+                "Cumplimiento sencillo"
+              ]
+            }
+          },
+          "cons": {
+            "partyA": {
+              "en": [
+                "May be seen as unreasonable",
+                "Could delay counterparty's due diligence"
+              ],
+              "es": [
+                "Puede percibirse como poco razonable",
+                "Podría retrasar la debida diligencia de la contraparte"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Cannot share with advisors",
+                "Limited flexibility",
+                "May hinder evaluation"
+              ],
+              "es": [
+                "No permite compartir con asesores",
+                "Flexibilidad limitada",
+                "Puede dificultar la evaluación"
+              ]
+            }
+          },
+          "legalText": {
+            "en": "The Receiving Party may only disclose Confidential Information if required by law, court order, or governmental authority, provided that the Receiving Party gives the Disclosing Party prompt written notice to allow the Disclosing Party to seek protective measures.",
+            "es": "La Parte Receptora únicamente podrá divulgar la Información Confidencial cuando así lo exija la ley, una resolución judicial o un requerimiento de autoridad gubernamental, siempre que la Parte Receptora notifique por escrito y sin dilación a la Parte Divulgante, a fin de que esta pueda solicitar las medidas de protección oportunas."
+          },
+          "bias": {
+            "partyA": 0.5,
+            "partyB": -0.5
+          }
         },
         {
           "id": "disclosures-standard",
           "code": "standard",
-          "label": "Standard (+ professional advisors)",
+          "label": {
+            "en": "Standard (+ professional advisors)",
+            "es": "Estándar (+ asesores profesionales)"
+          },
           "order": 2,
-          "plainDescription": "Legal requirements plus disclosure to lawyers, accountants, and financial advisors bound by professional confidentiality duties.",
-          "prosPartyA": [
-            "Good protection level",
-            "Industry standard",
-            "Reasonable balance"
-          ],
-          "consPartyA": [
-            "Information reaches third parties",
-            "Relies on advisor confidentiality"
-          ],
-          "prosPartyB": [
-            "Can get professional advice",
-            "Reasonable flexibility",
-            "Enables proper due diligence"
-          ],
-          "consPartyB": [
-            "Must ensure advisor confidentiality",
-            "Limited to certain advisor types"
-          ],
-          "legalText": "The Receiving Party may disclose Confidential Information: (a) if required by law, court order, or governmental authority, provided prompt notice is given; (b) to professional legal or financial advisors bound by duties of confidentiality.",
-          "biasPartyA": 0,
-          "biasPartyB": 0
+          "plainDescription": {
+            "en": "Legal requirements plus disclosure to lawyers, accountants, and financial advisors bound by professional confidentiality duties.",
+            "es": "Exigencias legales, además de divulgación a abogados, auditores y asesores financieros sujetos a deber profesional de confidencialidad."
+          },
+          "pros": {
+            "partyA": {
+              "en": [
+                "Good protection level",
+                "Industry standard",
+                "Reasonable balance"
+              ],
+              "es": [
+                "Buen nivel de protección",
+                "Estándar del sector",
+                "Equilibrio razonable"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Can get professional advice",
+                "Reasonable flexibility",
+                "Enables proper due diligence"
+              ],
+              "es": [
+                "Permite obtener asesoramiento profesional",
+                "Flexibilidad razonable",
+                "Facilita una debida diligencia adecuada"
+              ]
+            }
+          },
+          "cons": {
+            "partyA": {
+              "en": [
+                "Information reaches third parties",
+                "Relies on advisor confidentiality"
+              ],
+              "es": [
+                "La información llega a terceros",
+                "Depende de la confidencialidad de los asesores"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Must ensure advisor confidentiality",
+                "Limited to certain advisor types"
+              ],
+              "es": [
+                "Debe garantizar la confidencialidad de los asesores",
+                "Limitado a determinados tipos de asesores"
+              ]
+            }
+          },
+          "legalText": {
+            "en": "The Receiving Party may disclose Confidential Information: (a) if required by law, court order, or governmental authority, provided prompt notice is given; (b) to professional legal or financial advisors bound by duties of confidentiality.",
+            "es": "La Parte Receptora podrá divulgar la Información Confidencial: (a) cuando así lo exija la ley, una resolución judicial o un requerimiento de autoridad gubernamental, previa notificación sin demora; (b) a asesores jurídicos o financieros profesionales sujetos a deber de confidencialidad."
+          },
+          "bias": {
+            "partyA": 0,
+            "partyB": 0
+          }
         },
         {
           "id": "disclosures-extended",
           "code": "extended",
-          "label": "Extended (+ employees & contractors)",
+          "label": {
+            "en": "Extended (+ employees & contractors)",
+            "es": "Ampliada (+ empleados y contratistas)"
+          },
           "order": 3,
-          "plainDescription": "Includes advisors plus employees and contractors who need to know for the business purpose, bound by written confidentiality agreements.",
-          "prosPartyA": [
-            "Enables practical business operations",
-            "Allows team involvement"
-          ],
-          "consPartyA": [
-            "Wider distribution of information",
-            "More people with access"
-          ],
-          "prosPartyB": [
-            "Can involve necessary team members",
-            "Practical for evaluation",
-            "Enables thorough due diligence"
-          ],
-          "consPartyB": [
-            "Must manage more recipients",
-            "Need confidentiality agreements in place"
-          ],
-          "legalText": "The Receiving Party may disclose Confidential Information to: (a) legal requirements with notice; (b) professional advisors; (c) employees and contractors with a need to know, provided they are bound by written confidentiality obligations at least as protective as this Agreement.",
-          "biasPartyA": -0.2,
-          "biasPartyB": 0.2
+          "plainDescription": {
+            "en": "Includes advisors plus employees and contractors who need to know for the business purpose, bound by written confidentiality agreements.",
+            "es": "Incluye a asesores, así como a empleados y contratistas que necesiten conocer la información para el fin comercial previsto, sujetos a acuerdos escritos de confidencialidad."
+          },
+          "pros": {
+            "partyA": {
+              "en": [
+                "Enables practical business operations",
+                "Allows team involvement"
+              ],
+              "es": [
+                "Facilita las operaciones comerciales prácticas",
+                "Permite la participación del equipo"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Can involve necessary team members",
+                "Practical for evaluation",
+                "Enables thorough due diligence"
+              ],
+              "es": [
+                "Permite involucrar a los miembros necesarios del equipo",
+                "Práctico para la evaluación",
+                "Facilita una debida diligencia exhaustiva"
+              ]
+            }
+          },
+          "cons": {
+            "partyA": {
+              "en": [
+                "Wider distribution of information",
+                "More people with access"
+              ],
+              "es": [
+                "Mayor difusión de la información",
+                "Más personas con acceso"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Must manage more recipients",
+                "Need confidentiality agreements in place"
+              ],
+              "es": [
+                "Debe gestionar un mayor número de destinatarios",
+                "Requiere disponer de acuerdos de confidencialidad previos"
+              ]
+            }
+          },
+          "legalText": {
+            "en": "The Receiving Party may disclose Confidential Information to: (a) legal requirements with notice; (b) professional advisors; (c) employees and contractors with a need to know, provided they are bound by written confidentiality obligations at least as protective as this Agreement.",
+            "es": "La Parte Receptora podrá divulgar la Información Confidencial a: (a) los supuestos legalmente exigidos, previa notificación; (b) asesores profesionales; (c) empleados y contratistas que necesiten conocerla, siempre que estén vinculados por obligaciones escritas de confidencialidad al menos tan protectoras como las del presente Acuerdo."
+          },
+          "bias": {
+            "partyA": -0.2,
+            "partyB": 0.2
+          }
         },
         {
           "id": "disclosures-broad",
           "code": "broad",
-          "label": "Broad (+ affiliates & partners)",
+          "label": {
+            "en": "Broad (+ affiliates & partners)",
+            "es": "Amplia (+ sociedades vinculadas y socios)"
+          },
           "order": 4,
-          "plainDescription": "Includes all above plus affiliated companies and potential business partners under written confidentiality terms.",
-          "prosPartyA": [
-            "Maximum flexibility",
-            "Enables complex deal structures"
-          ],
-          "consPartyA": [
-            "Information spreads wider",
-            "Less control",
-            "More potential leak points"
-          ],
-          "prosPartyB": [
-            "Can share within corporate group",
-            "Business flexibility",
-            "Enables partnership discussions"
-          ],
-          "consPartyB": [
-            "Must manage many recipients",
-            "Complex compliance tracking"
-          ],
-          "legalText": "The Receiving Party may disclose Confidential Information to: (a) legal requirements with notice; (b) professional advisors; (c) employees and contractors with need to know; (d) affiliates and potential business partners who agree in writing to confidentiality terms at least as protective as this Agreement.",
-          "biasPartyA": -0.5,
-          "biasPartyB": 0.5
+          "plainDescription": {
+            "en": "Includes all above plus affiliated companies and potential business partners under written confidentiality terms.",
+            "es": "Incluye todas las anteriores, además de sociedades vinculadas y potenciales socios comerciales sujetos a compromisos escritos de confidencialidad."
+          },
+          "pros": {
+            "partyA": {
+              "en": [
+                "Maximum flexibility",
+                "Enables complex deal structures"
+              ],
+              "es": [
+                "Máxima flexibilidad",
+                "Permite estructuras contractuales complejas"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Can share within corporate group",
+                "Business flexibility",
+                "Enables partnership discussions"
+              ],
+              "es": [
+                "Permite compartir dentro del grupo societario",
+                "Flexibilidad comercial",
+                "Facilita las negociaciones de colaboración"
+              ]
+            }
+          },
+          "cons": {
+            "partyA": {
+              "en": [
+                "Information spreads wider",
+                "Less control",
+                "More potential leak points"
+              ],
+              "es": [
+                "Mayor difusión de la información",
+                "Menor control",
+                "Más puntos potenciales de filtración"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Must manage many recipients",
+                "Complex compliance tracking"
+              ],
+              "es": [
+                "Debe gestionar numerosos destinatarios",
+                "Seguimiento del cumplimiento más complejo"
+              ]
+            }
+          },
+          "legalText": {
+            "en": "The Receiving Party may disclose Confidential Information to: (a) legal requirements with notice; (b) professional advisors; (c) employees and contractors with need to know; (d) affiliates and potential business partners who agree in writing to confidentiality terms at least as protective as this Agreement.",
+            "es": "La Parte Receptora podrá divulgar la Información Confidencial a: (a) los supuestos legalmente exigidos, previa notificación; (b) asesores profesionales; (c) empleados y contratistas que necesiten conocerla; (d) sociedades vinculadas y potenciales socios comerciales que se comprometan por escrito a respetar condiciones de confidencialidad al menos tan protectoras como las del presente Acuerdo."
+          },
+          "bias": {
+            "partyA": -0.5,
+            "partyB": 0.5
+          }
         }
       ]
     },
     {
       "id": "confidential-info-definition",
-      "title": "Definition of confidential information",
-      "category": "Definitions",
+      "title": {
+        "en": "Definition of confidential information",
+        "es": "Definición de Información Confidencial"
+      },
+      "category": {
+        "en": "Definitions",
+        "es": "Definiciones"
+      },
       "order": 3,
-      "plainDescription": "What types of information are protected under this agreement? How is confidential information identified?",
-      "legalContext": "A broad definition protects more information but may be harder to enforce. A narrow definition with marking requirements provides clarity but may miss oral disclosures.",
+      "plainDescription": {
+        "en": "What types of information are protected under this agreement? How is confidential information identified?",
+        "es": "¿Qué tipos de información están protegidos en virtud de este acuerdo? ¿Cómo se identifica la Información Confidencial?"
+      },
+      "legalContext": {
+        "en": "A broad definition protects more information but may be harder to enforce. A narrow definition with marking requirements provides clarity but may miss oral disclosures.",
+        "es": "Una definición amplia protege más información, pero puede ser más difícil de ejecutar. Una definición restrictiva con requisitos de marcado proporciona claridad, pero puede no cubrir las comunicaciones verbales."
+      },
       "isRequired": true,
       "options": [
         {
           "id": "definition-narrow",
           "code": "narrow-marked",
-          "label": "Narrow (Marked information only)",
+          "label": {
+            "en": "Narrow (Marked information only)",
+            "es": "Restrictiva (Solo información marcada)"
+          },
           "order": 1,
-          "plainDescription": "Only information explicitly marked as 'Confidential' or 'Proprietary' at the time of disclosure is protected.",
-          "prosPartyA": [
-            "Clear what's protected",
-            "Easy to track"
-          ],
-          "consPartyA": [
-            "May forget to mark information",
-            "Oral disclosures harder to protect",
-            "Administrative burden"
-          ],
-          "prosPartyB": [
-            "Clear obligations",
-            "Easy to identify what's protected",
-            "Less ambiguity"
-          ],
-          "consPartyB": [
-            "May receive unmarked sensitive information",
-            "Uncertainty about verbal disclosures"
-          ],
-          "legalText": "\"Confidential Information\" means any information disclosed by the Disclosing Party that is marked as \"confidential\" or \"proprietary\" at the time of disclosure.",
-          "biasPartyA": -0.4,
-          "biasPartyB": 0.4
+          "plainDescription": {
+            "en": "Only information explicitly marked as 'Confidential' or 'Proprietary' at the time of disclosure is protected.",
+            "es": "Solo se protege la información expresamente marcada como «Confidencial» o «Reservada» en el momento de su divulgación."
+          },
+          "pros": {
+            "partyA": {
+              "en": [
+                "Clear what's protected",
+                "Easy to track"
+              ],
+              "es": [
+                "Claridad sobre qué está protegido",
+                "Fácil seguimiento"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Clear obligations",
+                "Easy to identify what's protected",
+                "Less ambiguity"
+              ],
+              "es": [
+                "Obligaciones claras",
+                "Fácil identificación de lo protegido",
+                "Menor ambigüedad"
+              ]
+            }
+          },
+          "cons": {
+            "partyA": {
+              "en": [
+                "May forget to mark information",
+                "Oral disclosures harder to protect",
+                "Administrative burden"
+              ],
+              "es": [
+                "Riesgo de omitir el marcado de información",
+                "Mayor dificultad para proteger comunicaciones verbales",
+                "Carga administrativa"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "May receive unmarked sensitive information",
+                "Uncertainty about verbal disclosures"
+              ],
+              "es": [
+                "Puede recibir información sensible sin marcar",
+                "Incertidumbre respecto a las comunicaciones verbales"
+              ]
+            }
+          },
+          "legalText": {
+            "en": "\"Confidential Information\" means any information disclosed by the Disclosing Party that is marked as \"confidential\" or \"proprietary\" at the time of disclosure.",
+            "es": "Se entenderá por «Información Confidencial» toda información divulgada por la Parte Divulgante que esté marcada como «confidencial» o «reservada» en el momento de su divulgación."
+          },
+          "bias": {
+            "partyA": -0.4,
+            "partyB": 0.4
+          }
         },
         {
           "id": "definition-standard",
           "code": "standard",
-          "label": "Standard (Marked + reasonable understanding)",
+          "label": {
+            "en": "Standard (Marked + reasonable understanding)",
+            "es": "Estándar (Marcada + comprensión razonable)"
+          },
           "order": 2,
-          "plainDescription": "Information that is marked as confidential OR would reasonably be understood to be confidential given its nature.",
-          "prosPartyA": [
-            "Balanced protection",
-            "Covers oral disclosures",
-            "Industry standard"
-          ],
-          "consPartyA": [
-            "Some ambiguity about 'reasonable'",
-            "May lead to disputes"
-          ],
-          "prosPartyB": [
-            "Reasonable standard",
-            "Clear intent matters",
-            "Allows common sense application"
-          ],
-          "consPartyB": [
-            "Some uncertainty",
-            "May need to ask about specific items"
-          ],
-          "legalText": "\"Confidential Information\" means any information disclosed by the Disclosing Party that: (a) is marked as \"confidential\" or \"proprietary\"; or (b) would reasonably be understood to be confidential given its nature or the circumstances of disclosure.",
-          "biasPartyA": 0,
-          "biasPartyB": 0
+          "plainDescription": {
+            "en": "Information that is marked as confidential OR would reasonably be understood to be confidential given its nature.",
+            "es": "Información marcada como confidencial O que, por su naturaleza, pueda razonablemente considerarse como tal."
+          },
+          "pros": {
+            "partyA": {
+              "en": [
+                "Balanced protection",
+                "Covers oral disclosures",
+                "Industry standard"
+              ],
+              "es": [
+                "Protección equilibrada",
+                "Cubre las comunicaciones verbales",
+                "Estándar del sector"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Reasonable standard",
+                "Clear intent matters",
+                "Allows common sense application"
+              ],
+              "es": [
+                "Criterio razonable",
+                "La intención clara es relevante",
+                "Permite una aplicación conforme al sentido común"
+              ]
+            }
+          },
+          "cons": {
+            "partyA": {
+              "en": [
+                "Some ambiguity about 'reasonable'",
+                "May lead to disputes"
+              ],
+              "es": [
+                "Cierta ambigüedad sobre lo «razonable»",
+                "Puede dar lugar a controversias"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Some uncertainty",
+                "May need to ask about specific items"
+              ],
+              "es": [
+                "Cierta incertidumbre",
+                "Puede requerir aclaraciones sobre elementos concretos"
+              ]
+            }
+          },
+          "legalText": {
+            "en": "\"Confidential Information\" means any information disclosed by the Disclosing Party that: (a) is marked as \"confidential\" or \"proprietary\"; or (b) would reasonably be understood to be confidential given its nature or the circumstances of disclosure.",
+            "es": "Se entenderá por «Información Confidencial» toda información divulgada por la Parte Divulgante que: (a) esté marcada como «confidencial» o «reservada»; o (b) pueda razonablemente considerarse confidencial dada su naturaleza o las circunstancias de su divulgación."
+          },
+          "bias": {
+            "partyA": 0,
+            "partyB": 0
+          }
         },
         {
           "id": "definition-broad",
           "code": "broad",
-          "label": "Broad (All non-public information)",
+          "label": {
+            "en": "Broad (All non-public information)",
+            "es": "Amplia (Toda información no pública)"
+          },
           "order": 3,
-          "plainDescription": "All non-public information disclosed by either party, regardless of marking, is considered confidential.",
-          "prosPartyA": [
-            "Maximum protection",
-            "No marking burden",
-            "Covers everything"
-          ],
-          "consPartyA": [
-            "May be seen as overreaching",
-            "Harder to negotiate"
-          ],
-          "prosPartyB": [
-            "Simple rule to follow",
-            "No guesswork needed"
-          ],
-          "consPartyB": [
-            "Broad obligations",
-            "Everything requires careful handling",
-            "Higher compliance burden"
-          ],
-          "legalText": "\"Confidential Information\" means any non-public information disclosed by the Disclosing Party to the Receiving Party, whether orally, in writing, or in any other form, regardless of whether marked as confidential.",
-          "biasPartyA": 0.4,
-          "biasPartyB": -0.4
+          "plainDescription": {
+            "en": "All non-public information disclosed by either party, regardless of marking, is considered confidential.",
+            "es": "Toda información no pública divulgada por cualquiera de las partes, con independencia de su marcado, se considerará confidencial."
+          },
+          "pros": {
+            "partyA": {
+              "en": [
+                "Maximum protection",
+                "No marking burden",
+                "Covers everything"
+              ],
+              "es": [
+                "Protección máxima",
+                "Sin carga de marcado",
+                "Cobertura total"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Simple rule to follow",
+                "No guesswork needed"
+              ],
+              "es": [
+                "Regla sencilla de seguir",
+                "Sin necesidad de conjeturas"
+              ]
+            }
+          },
+          "cons": {
+            "partyA": {
+              "en": [
+                "May be seen as overreaching",
+                "Harder to negotiate"
+              ],
+              "es": [
+                "Puede considerarse excesivo",
+                "Mayor dificultad de negociación"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Broad obligations",
+                "Everything requires careful handling",
+                "Higher compliance burden"
+              ],
+              "es": [
+                "Obligaciones amplias",
+                "Todo requiere un tratamiento cuidadoso",
+                "Mayor carga de cumplimiento"
+              ]
+            }
+          },
+          "legalText": {
+            "en": "\"Confidential Information\" means any non-public information disclosed by the Disclosing Party to the Receiving Party, whether orally, in writing, or in any other form, regardless of whether marked as confidential.",
+            "es": "Se entenderá por «Información Confidencial» toda información no pública divulgada por la Parte Divulgante a la Parte Receptora, ya sea verbalmente, por escrito o en cualquier otro formato, con independencia de que esté marcada como confidencial."
+          },
+          "bias": {
+            "partyA": 0.4,
+            "partyB": -0.4
+          }
         }
       ]
     },
     {
       "id": "return-destruction",
-      "title": "Return or destruction of information",
-      "category": "Termination",
+      "title": {
+        "en": "Return or destruction of information",
+        "es": "Devolución o destrucción de la información"
+      },
+      "category": {
+        "en": "Termination",
+        "es": "Resolución"
+      },
       "order": 4,
-      "plainDescription": "What happens to confidential information when the agreement ends? Must it be returned, destroyed, or can copies be retained?",
-      "legalContext": "Complete destruction provides maximum protection but may conflict with legal retention requirements. Allowing archival copies is practical but extends obligations.",
+      "plainDescription": {
+        "en": "What happens to confidential information when the agreement ends? Must it be returned, destroyed, or can copies be retained?",
+        "es": "¿Qué sucede con la Información Confidencial cuando finaliza el acuerdo? ¿Debe devolverse, destruirse o pueden conservarse copias?"
+      },
+      "legalContext": {
+        "en": "Complete destruction provides maximum protection but may conflict with legal retention requirements. Allowing archival copies is practical but extends obligations.",
+        "es": "La destrucción completa proporciona la máxima protección, pero puede entrar en conflicto con las obligaciones legales de conservación. Permitir copias de archivo es práctico, pero prolonga las obligaciones."
+      },
       "isRequired": true,
       "options": [
         {
           "id": "return-strict",
           "code": "strict-return",
-          "label": "Strict (Return or destroy all)",
+          "label": {
+            "en": "Strict (Return or destroy all)",
+            "es": "Estricta (Devolver o destruir todo)"
+          },
           "order": 1,
-          "plainDescription": "All confidential information must be returned or destroyed within 10 business days, with written certification.",
-          "prosPartyA": [
-            "Maximum control post-termination",
-            "Clean break",
-            "Written proof of compliance"
-          ],
-          "consPartyA": [
-            "May be impractical for counterparty",
-            "Could delay business"
-          ],
-          "prosPartyB": [
-            "Clear end to obligations",
-            "Clean slate"
-          ],
-          "consPartyB": [
-            "Administrative burden",
-            "May miss backup copies",
-            "Legal retention conflicts"
-          ],
-          "legalText": "Upon termination or expiration, the Receiving Party must return or destroy all Confidential Information within ten (10) business days and certify destruction in writing.",
-          "biasPartyA": 0.4,
-          "biasPartyB": -0.4
+          "plainDescription": {
+            "en": "All confidential information must be returned or destroyed within 10 business days, with written certification.",
+            "es": "Toda la Información Confidencial debe devolverse o destruirse en el plazo de 10 días hábiles, con certificación escrita."
+          },
+          "pros": {
+            "partyA": {
+              "en": [
+                "Maximum control post-termination",
+                "Clean break",
+                "Written proof of compliance"
+              ],
+              "es": [
+                "Control máximo tras la resolución",
+                "Ruptura limpia",
+                "Prueba escrita del cumplimiento"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Clear end to obligations",
+                "Clean slate"
+              ],
+              "es": [
+                "Fin claro de las obligaciones",
+                "Borrón y cuenta nueva"
+              ]
+            }
+          },
+          "cons": {
+            "partyA": {
+              "en": [
+                "May be impractical for counterparty",
+                "Could delay business"
+              ],
+              "es": [
+                "Puede resultar impracticable para la contraparte",
+                "Podría retrasar la actividad comercial"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Administrative burden",
+                "May miss backup copies",
+                "Legal retention conflicts"
+              ],
+              "es": [
+                "Carga administrativa",
+                "Posibilidad de omitir copias de seguridad",
+                "Conflictos con obligaciones legales de conservación"
+              ]
+            }
+          },
+          "legalText": {
+            "en": "Upon termination or expiration, the Receiving Party must return or destroy all Confidential Information within ten (10) business days and certify destruction in writing.",
+            "es": "Tras la resolución o expiración del Acuerdo, la Parte Receptora deberá devolver o destruir toda la Información Confidencial en el plazo de diez (10) días hábiles y certificar por escrito dicha destrucción."
+          },
+          "bias": {
+            "partyA": 0.4,
+            "partyB": -0.4
+          }
         },
         {
           "id": "return-standard",
           "code": "standard-archive",
-          "label": "Standard (With legal archive exception)",
+          "label": {
+            "en": "Standard (With legal archive exception)",
+            "es": "Estándar (Con excepción de archivo legal)"
+          },
           "order": 2,
-          "plainDescription": "Return or destroy all information, but may retain one archival copy for legal compliance purposes.",
-          "prosPartyA": [
-            "Practical balance",
-            "Allows legal compliance",
-            "Industry standard"
-          ],
-          "consPartyA": [
-            "Some information remains",
-            "Ongoing obligations for archive"
-          ],
-          "prosPartyB": [
-            "Can meet legal retention requirements",
-            "Reasonable approach",
-            "Avoids conflicts"
-          ],
-          "consPartyB": [
-            "Must still protect archived copy",
-            "Ongoing obligations"
-          ],
-          "legalText": "Upon termination, the Receiving Party must return or destroy all Confidential Information within thirty (30) days, except that one archival copy may be retained solely for legal compliance purposes, which remains subject to this Agreement.",
-          "biasPartyA": 0,
-          "biasPartyB": 0
+          "plainDescription": {
+            "en": "Return or destroy all information, but may retain one archival copy for legal compliance purposes.",
+            "es": "Devolver o destruir toda la información, con posibilidad de conservar una copia de archivo a efectos de cumplimiento normativo."
+          },
+          "pros": {
+            "partyA": {
+              "en": [
+                "Practical balance",
+                "Allows legal compliance",
+                "Industry standard"
+              ],
+              "es": [
+                "Equilibrio práctico",
+                "Permite el cumplimiento normativo",
+                "Estándar del sector"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Can meet legal retention requirements",
+                "Reasonable approach",
+                "Avoids conflicts"
+              ],
+              "es": [
+                "Permite cumplir con las obligaciones legales de conservación",
+                "Enfoque razonable",
+                "Evita conflictos"
+              ]
+            }
+          },
+          "cons": {
+            "partyA": {
+              "en": [
+                "Some information remains",
+                "Ongoing obligations for archive"
+              ],
+              "es": [
+                "Parte de la información se conserva",
+                "Obligaciones vigentes respecto a la copia de archivo"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Must still protect archived copy",
+                "Ongoing obligations"
+              ],
+              "es": [
+                "Debe seguir protegiendo la copia archivada",
+                "Obligaciones vigentes"
+              ]
+            }
+          },
+          "legalText": {
+            "en": "Upon termination, the Receiving Party must return or destroy all Confidential Information within thirty (30) days, except that one archival copy may be retained solely for legal compliance purposes, which remains subject to this Agreement.",
+            "es": "Tras la resolución, la Parte Receptora deberá devolver o destruir toda la Información Confidencial en el plazo de treinta (30) días, salvo que podrá conservarse una copia de archivo exclusivamente a efectos de cumplimiento normativo, la cual seguirá sujeta a las disposiciones del presente Acuerdo."
+          },
+          "bias": {
+            "partyA": 0,
+            "partyB": 0
+          }
         },
         {
           "id": "return-flexible",
           "code": "flexible-backup",
-          "label": "Flexible (With backup exception)",
+          "label": {
+            "en": "Flexible (With backup exception)",
+            "es": "Flexible (Con excepción de copias de seguridad)"
+          },
           "order": 3,
-          "plainDescription": "Return or destroy accessible copies, but automatic backup copies may be retained if not accessed except for recovery.",
-          "prosPartyA": [
-            "Acknowledges technical reality",
-            "Practical approach"
-          ],
-          "consPartyA": [
-            "Less control",
-            "Information persists longer",
-            "Harder to verify compliance"
-          ],
-          "prosPartyB": [
-            "Practical for IT systems",
-            "Avoids costly backup modifications",
-            "Reflects reality"
-          ],
-          "consPartyB": [
-            "Must still protect backups",
-            "Longer obligation period"
-          ],
-          "legalText": "Upon termination, the Receiving Party must return or destroy all readily accessible Confidential Information within thirty (30) days. Copies in routine backup systems may be retained provided they are not accessed except for backup recovery purposes and remain subject to confidentiality obligations.",
-          "biasPartyA": -0.3,
-          "biasPartyB": 0.3
+          "plainDescription": {
+            "en": "Return or destroy accessible copies, but automatic backup copies may be retained if not accessed except for recovery.",
+            "es": "Devolver o destruir las copias accesibles, pero las copias de seguridad automáticas podrán conservarse siempre que no se acceda a ellas salvo para fines de recuperación."
+          },
+          "pros": {
+            "partyA": {
+              "en": [
+                "Acknowledges technical reality",
+                "Practical approach"
+              ],
+              "es": [
+                "Reconoce la realidad técnica",
+                "Enfoque práctico"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Practical for IT systems",
+                "Avoids costly backup modifications",
+                "Reflects reality"
+              ],
+              "es": [
+                "Práctico para los sistemas informáticos",
+                "Evita modificaciones costosas en las copias de seguridad",
+                "Refleja la realidad operativa"
+              ]
+            }
+          },
+          "cons": {
+            "partyA": {
+              "en": [
+                "Less control",
+                "Information persists longer",
+                "Harder to verify compliance"
+              ],
+              "es": [
+                "Menor control",
+                "La información persiste durante más tiempo",
+                "Mayor dificultad para verificar el cumplimiento"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Must still protect backups",
+                "Longer obligation period"
+              ],
+              "es": [
+                "Debe seguir protegiendo las copias de seguridad",
+                "Período de obligación más prolongado"
+              ]
+            }
+          },
+          "legalText": {
+            "en": "Upon termination, the Receiving Party must return or destroy all readily accessible Confidential Information within thirty (30) days. Copies in routine backup systems may be retained provided they are not accessed except for backup recovery purposes and remain subject to confidentiality obligations.",
+            "es": "Tras la resolución, la Parte Receptora deberá devolver o destruir toda la Información Confidencial de fácil acceso en el plazo de treinta (30) días. Las copias existentes en sistemas rutinarios de copias de seguridad podrán conservarse siempre que no se acceda a ellas salvo para fines de recuperación y permanezcan sujetas a las obligaciones de confidencialidad."
+          },
+          "bias": {
+            "partyA": -0.3,
+            "partyB": 0.3
+          }
         }
       ]
     },
     {
       "id": "dispute-resolution",
-      "title": "Dispute resolution",
-      "category": "Legal",
+      "title": {
+        "en": "Dispute resolution",
+        "es": "Resolución de controversias"
+      },
+      "category": {
+        "en": "Legal",
+        "es": "Legal"
+      },
       "order": 5,
-      "plainDescription": "How and where will disputes about this agreement be resolved? You can choose courts in the governing law jurisdiction, courts elsewhere, or private arbitration.",
-      "legalContext": "The forum for disputes is negotiable even though the governing law is fixed. Court litigation is public with appeal rights. Arbitration is private and faster but typically final. The choice of forum can significantly impact cost and convenience.",
+      "plainDescription": {
+        "en": "How and where will disputes about this agreement be resolved? You can choose courts in the governing law jurisdiction, courts elsewhere, or private arbitration.",
+        "es": "¿Cómo y dónde se resolverán las controversias relativas a este acuerdo? Se puede optar por los tribunales de la jurisdicción de la ley aplicable, tribunales de otra jurisdicción o arbitraje privado."
+      },
+      "legalContext": {
+        "en": "The forum for disputes is negotiable even though the governing law is fixed. Court litigation is public with appeal rights. Arbitration is private and faster but typically final. The choice of forum can significantly impact cost and convenience.",
+        "es": "El foro para la resolución de controversias es negociable aunque la ley aplicable sea fija. El procedimiento judicial es público y permite recurso. El arbitraje es privado y más rápido, pero generalmente definitivo. La elección del foro puede tener un impacto significativo en los costes y la conveniencia."
+      },
       "isRequired": true,
       "options": [
         {
           "id": "dispute-courts-default",
           "code": "courts-default",
-          "label": "Default courts (Per governing law)",
+          "label": {
+            "en": "Default courts (Per governing law)",
+            "es": "Tribunales por defecto (Según ley aplicable)"
+          },
           "order": 1,
           "jurisdictionDefault": true,
-          "plainDescription": "Disputes resolved in courts of the governing law jurisdiction: San Francisco (California), London (England & Wales), or Madrid (Spain).",
-          "prosPartyA": [
-            "Consistent with governing law",
-            "No jurisdictional complexity",
-            "Established local precedent"
-          ],
-          "consPartyA": [
-            "May be inconvenient for one party",
-            "Public proceedings"
-          ],
-          "prosPartyB": [
-            "Clear and predictable",
-            "Same jurisdiction as governing law",
-            "Established procedures"
-          ],
-          "consPartyB": [
-            "Travel may be required",
-            "Public record of disputes"
-          ],
-          "legalText": "Any dispute arising from this Agreement will be resolved exclusively in the state and federal courts located in the jurisdiction of the governing law. Each Party irrevocably submits to the exclusive jurisdiction of such courts.",
-          "biasPartyA": 0,
-          "biasPartyB": 0
+          "plainDescription": {
+            "en": "Disputes resolved in courts of the governing law jurisdiction: San Francisco (California), London (England & Wales), or Madrid (Spain).",
+            "es": "Controversias resueltas ante los tribunales de la jurisdicción de la ley aplicable: San Francisco (California), Londres (Inglaterra y Gales) o Madrid (España)."
+          },
+          "pros": {
+            "partyA": {
+              "en": [
+                "Consistent with governing law",
+                "No jurisdictional complexity",
+                "Established local precedent"
+              ],
+              "es": [
+                "Coherente con la ley aplicable",
+                "Sin complejidad jurisdiccional",
+                "Jurisprudencia local consolidada"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Clear and predictable",
+                "Same jurisdiction as governing law",
+                "Established procedures"
+              ],
+              "es": [
+                "Claro y predecible",
+                "Misma jurisdicción que la ley aplicable",
+                "Procedimientos consolidados"
+              ]
+            }
+          },
+          "cons": {
+            "partyA": {
+              "en": [
+                "May be inconvenient for one party",
+                "Public proceedings"
+              ],
+              "es": [
+                "Puede resultar inconveniente para una de las partes",
+                "Procedimientos públicos"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Travel may be required",
+                "Public record of disputes"
+              ],
+              "es": [
+                "Puede requerir desplazamiento",
+                "Registro público de las controversias"
+              ]
+            }
+          },
+          "legalText": {
+            "en": "Any dispute arising from this Agreement will be resolved exclusively in the state and federal courts located in the jurisdiction of the governing law. Each Party irrevocably submits to the exclusive jurisdiction of such courts.",
+            "es": "Toda controversia derivada del presente Acuerdo se resolverá exclusivamente ante los juzgados y tribunales de la jurisdicción de la ley aplicable. Cada Parte se somete irrevocablemente a la jurisdicción exclusiva de dichos tribunales."
+          },
+          "bias": {
+            "partyA": 0,
+            "partyB": 0
+          }
         },
         {
           "id": "dispute-courts-delaware",
           "code": "courts-delaware",
-          "label": "Delaware courts (Neutral - US)",
+          "label": {
+            "en": "Delaware courts (Neutral - US)",
+            "es": "Tribunales de Delaware (Neutral - EE. UU.)"
+          },
           "order": 2,
-          "plainDescription": "Disputes resolved in Delaware courts, known for sophisticated commercial law and business-friendly judiciary.",
-          "prosPartyA": [
-            "Highly developed commercial law",
-            "Expert judges",
-            "Predictable outcomes"
-          ],
-          "consPartyA": [
-            "May require Delaware counsel",
-            "Travel for non-Delaware parties"
-          ],
-          "prosPartyB": [
-            "Neutral forum",
-            "Quick resolution",
-            "Well-established precedent"
-          ],
-          "consPartyB": [
-            "Unfamiliar jurisdiction",
-            "Additional legal costs"
-          ],
-          "legalText": "Any dispute arising from this Agreement will be resolved exclusively in the Court of Chancery of the State of Delaware (or, if such court lacks jurisdiction, the state and federal courts located in Delaware). Each Party irrevocably submits to the exclusive jurisdiction of such courts.",
-          "biasPartyA": 0,
-          "biasPartyB": 0
+          "plainDescription": {
+            "en": "Disputes resolved in Delaware courts, known for sophisticated commercial law and business-friendly judiciary.",
+            "es": "Controversias resueltas ante los tribunales de Delaware, reconocidos por su sofisticado derecho mercantil y su judicatura favorable a la actividad empresarial."
+          },
+          "pros": {
+            "partyA": {
+              "en": [
+                "Highly developed commercial law",
+                "Expert judges",
+                "Predictable outcomes"
+              ],
+              "es": [
+                "Derecho mercantil muy desarrollado",
+                "Jueces especializados",
+                "Resultados predecibles"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Neutral forum",
+                "Quick resolution",
+                "Well-established precedent"
+              ],
+              "es": [
+                "Foro neutral",
+                "Resolución rápida",
+                "Jurisprudencia consolidada"
+              ]
+            }
+          },
+          "cons": {
+            "partyA": {
+              "en": [
+                "May require Delaware counsel",
+                "Travel for non-Delaware parties"
+              ],
+              "es": [
+                "Puede requerir abogados de Delaware",
+                "Desplazamiento para partes no establecidas en Delaware"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Unfamiliar jurisdiction",
+                "Additional legal costs"
+              ],
+              "es": [
+                "Jurisdicción desconocida",
+                "Costes legales adicionales"
+              ]
+            }
+          },
+          "legalText": {
+            "en": "Any dispute arising from this Agreement will be resolved exclusively in the Court of Chancery of the State of Delaware (or, if such court lacks jurisdiction, the state and federal courts located in Delaware). Each Party irrevocably submits to the exclusive jurisdiction of such courts.",
+            "es": "Toda controversia derivada del presente Acuerdo se resolverá exclusivamente ante el Tribunal de Equidad del Estado de Delaware (o, si dicho tribunal careciere de competencia, ante los tribunales estatales y federales radicados en Delaware). Cada Parte se somete irrevocablemente a la jurisdicción exclusiva de dichos tribunales."
+          },
+          "bias": {
+            "partyA": 0,
+            "partyB": 0
+          }
         },
         {
           "id": "dispute-arbitration-jams",
           "code": "arbitration-jams",
-          "label": "JAMS arbitration",
+          "label": {
+            "en": "JAMS arbitration",
+            "es": "Arbitraje JAMS"
+          },
           "order": 3,
-          "plainDescription": "Private arbitration under JAMS (Judicial Arbitration and Mediation Services) rules - popular with technology companies and startups.",
-          "prosPartyA": [
-            "Private and confidential",
-            "Faster than courts",
-            "Tech-savvy arbitrators available"
-          ],
-          "consPartyA": [
-            "Arbitrator fees",
-            "Limited discovery",
-            "No jury trial"
-          ],
-          "prosPartyB": [
-            "Confidential process",
-            "Efficient resolution",
-            "Flexible scheduling"
-          ],
-          "consPartyB": [
-            "Decision is final",
-            "Limited appeal rights",
-            "Shared arbitration costs"
-          ],
-          "legalText": "Any dispute arising from this Agreement will be finally resolved by binding arbitration administered by JAMS under its Comprehensive Arbitration Rules. The arbitration will be conducted by one arbitrator in the seat of the governing law jurisdiction. The arbitrator's award is final and binding.",
-          "biasPartyA": 0.1,
-          "biasPartyB": -0.1
+          "plainDescription": {
+            "en": "Private arbitration under JAMS (Judicial Arbitration and Mediation Services) rules - popular with technology companies and startups.",
+            "es": "Arbitraje privado conforme al reglamento de JAMS (Judicial Arbitration and Mediation Services), habitual entre empresas tecnológicas y startups."
+          },
+          "pros": {
+            "partyA": {
+              "en": [
+                "Private and confidential",
+                "Faster than courts",
+                "Tech-savvy arbitrators available"
+              ],
+              "es": [
+                "Privado y confidencial",
+                "Más rápido que los tribunales",
+                "Disponibilidad de árbitros especializados en tecnología"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Confidential process",
+                "Efficient resolution",
+                "Flexible scheduling"
+              ],
+              "es": [
+                "Procedimiento confidencial",
+                "Resolución eficiente",
+                "Calendario flexible"
+              ]
+            }
+          },
+          "cons": {
+            "partyA": {
+              "en": [
+                "Arbitrator fees",
+                "Limited discovery",
+                "No jury trial"
+              ],
+              "es": [
+                "Honorarios del árbitro",
+                "Práctica probatoria limitada",
+                "Sin juicio con jurado"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Decision is final",
+                "Limited appeal rights",
+                "Shared arbitration costs"
+              ],
+              "es": [
+                "La decisión es firme",
+                "Derecho de recurso limitado",
+                "Costes de arbitraje compartidos"
+              ]
+            }
+          },
+          "legalText": {
+            "en": "Any dispute arising from this Agreement will be finally resolved by binding arbitration administered by JAMS under its Comprehensive Arbitration Rules. The arbitration will be conducted by one arbitrator in the seat of the governing law jurisdiction. The arbitrator's award is final and binding.",
+            "es": "Toda controversia derivada del presente Acuerdo se resolverá definitivamente mediante arbitraje vinculante administrado por JAMS conforme a su Reglamento de Arbitraje Integral. El arbitraje será conducido por un único árbitro en la sede de la jurisdicción de la ley aplicable. El laudo arbitral será firme y vinculante."
+          },
+          "bias": {
+            "partyA": 0.1,
+            "partyB": -0.1
+          }
         },
         {
           "id": "dispute-arbitration-icc",
           "code": "arbitration-icc",
-          "label": "ICC arbitration",
+          "label": {
+            "en": "ICC arbitration",
+            "es": "Arbitraje CCI"
+          },
           "order": 4,
-          "plainDescription": "International arbitration under ICC (International Chamber of Commerce) rules - the gold standard for cross-border disputes.",
-          "prosPartyA": [
-            "Globally recognized",
-            "Enforceable in 170+ countries",
-            "Professional administration"
-          ],
-          "consPartyA": [
-            "Higher fees than other options",
-            "More formal process"
-          ],
-          "prosPartyB": [
-            "Neutral international forum",
-            "Experienced arbitrators",
-            "Clear procedures"
-          ],
-          "consPartyB": [
-            "More expensive",
-            "Longer process than domestic arbitration"
-          ],
-          "legalText": "Any dispute arising from this Agreement will be finally resolved by arbitration under the Rules of Arbitration of the International Chamber of Commerce. The arbitration will be conducted by one arbitrator, with the seat in the capital of the governing law jurisdiction. The award is final and binding.",
-          "biasPartyA": 0,
-          "biasPartyB": 0
+          "plainDescription": {
+            "en": "International arbitration under ICC (International Chamber of Commerce) rules - the gold standard for cross-border disputes.",
+            "es": "Arbitraje internacional conforme al reglamento de la CCI (Cámara de Comercio Internacional), referencia en materia de controversias transfronterizas."
+          },
+          "pros": {
+            "partyA": {
+              "en": [
+                "Globally recognized",
+                "Enforceable in 170+ countries",
+                "Professional administration"
+              ],
+              "es": [
+                "Reconocimiento a nivel mundial",
+                "Ejecutable en más de 170 países",
+                "Administración profesional"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Neutral international forum",
+                "Experienced arbitrators",
+                "Clear procedures"
+              ],
+              "es": [
+                "Foro internacional neutral",
+                "Árbitros experimentados",
+                "Procedimientos claros"
+              ]
+            }
+          },
+          "cons": {
+            "partyA": {
+              "en": [
+                "Higher fees than other options",
+                "More formal process"
+              ],
+              "es": [
+                "Honorarios superiores a otras opciones",
+                "Procedimiento más formal"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "More expensive",
+                "Longer process than domestic arbitration"
+              ],
+              "es": [
+                "Mayor coste",
+                "Procedimiento más largo que el arbitraje nacional"
+              ]
+            }
+          },
+          "legalText": {
+            "en": "Any dispute arising from this Agreement will be finally resolved by arbitration under the Rules of Arbitration of the International Chamber of Commerce. The arbitration will be conducted by one arbitrator, with the seat in the capital of the governing law jurisdiction. The award is final and binding.",
+            "es": "Toda controversia derivada del presente Acuerdo se resolverá definitivamente mediante arbitraje conforme al Reglamento de Arbitraje de la Cámara de Comercio Internacional. El arbitraje será conducido por un único árbitro, con sede en la capital de la jurisdicción de la ley aplicable. El laudo será firme y vinculante."
+          },
+          "bias": {
+            "partyA": 0,
+            "partyB": 0
+          }
         },
         {
           "id": "dispute-arbitration-aaa",
           "code": "arbitration-aaa",
-          "label": "AAA arbitration",
+          "label": {
+            "en": "AAA arbitration",
+            "es": "Arbitraje AAA"
+          },
           "order": 5,
-          "plainDescription": "Arbitration under AAA (American Arbitration Association) Commercial Rules - well-established with extensive arbitrator network.",
-          "prosPartyA": [
-            "Large panel of arbitrators",
-            "Well-established procedures",
-            "Cost-effective"
-          ],
-          "consPartyA": [
-            "US-focused",
-            "Variable arbitrator quality"
-          ],
-          "prosPartyB": [
-            "Predictable process",
-            "Nationwide hearing locations",
-            "Moderate costs"
-          ],
-          "consPartyB": [
-            "Final decision",
-            "Limited appeal",
-            "May favor US procedures"
-          ],
-          "legalText": "Any dispute arising from this Agreement will be finally resolved by arbitration administered by the American Arbitration Association under its Commercial Arbitration Rules. The arbitration will be conducted by one arbitrator in the seat of the governing law jurisdiction.",
-          "biasPartyA": 0,
-          "biasPartyB": 0
+          "plainDescription": {
+            "en": "Arbitration under AAA (American Arbitration Association) Commercial Rules - well-established with extensive arbitrator network.",
+            "es": "Arbitraje conforme al Reglamento Comercial de la AAA (Asociación Americana de Arbitraje), consolidado y con una amplia red de árbitros."
+          },
+          "pros": {
+            "partyA": {
+              "en": [
+                "Large panel of arbitrators",
+                "Well-established procedures",
+                "Cost-effective"
+              ],
+              "es": [
+                "Amplio panel de árbitros",
+                "Procedimientos consolidados",
+                "Relación coste-eficacia favorable"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Predictable process",
+                "Nationwide hearing locations",
+                "Moderate costs"
+              ],
+              "es": [
+                "Procedimiento predecible",
+                "Sedes de audiencia en todo el territorio nacional",
+                "Costes moderados"
+              ]
+            }
+          },
+          "cons": {
+            "partyA": {
+              "en": [
+                "US-focused",
+                "Variable arbitrator quality"
+              ],
+              "es": [
+                "Orientado a EE. UU.",
+                "Calidad variable de los árbitros"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Final decision",
+                "Limited appeal",
+                "May favor US procedures"
+              ],
+              "es": [
+                "Decisión firme",
+                "Recurso limitado",
+                "Puede favorecer procedimientos estadounidenses"
+              ]
+            }
+          },
+          "legalText": {
+            "en": "Any dispute arising from this Agreement will be finally resolved by arbitration administered by the American Arbitration Association under its Commercial Arbitration Rules. The arbitration will be conducted by one arbitrator in the seat of the governing law jurisdiction.",
+            "es": "Toda controversia derivada del presente Acuerdo se resolverá definitivamente mediante arbitraje administrado por la Asociación Americana de Arbitraje conforme a su Reglamento de Arbitraje Comercial. El arbitraje será conducido por un único árbitro en la sede de la jurisdicción de la ley aplicable."
+          },
+          "bias": {
+            "partyA": 0,
+            "partyB": 0
+          }
         },
         {
           "id": "dispute-arbitration-lcia",
           "code": "arbitration-lcia",
-          "label": "LCIA arbitration",
+          "label": {
+            "en": "LCIA arbitration",
+            "es": "Arbitraje LCIA"
+          },
           "order": 6,
-          "plainDescription": "Arbitration under LCIA (London Court of International Arbitration) rules - preferred for UK and international commercial disputes.",
-          "prosPartyA": [
-            "Strong international reputation",
-            "Efficient case management",
-            "Reasonable costs"
-          ],
-          "consPartyA": [
-            "London-centric",
-            "English legal influence"
-          ],
-          "prosPartyB": [
-            "Neutral and respected",
-            "Quick appointment of arbitrators",
-            "Clear timeline"
-          ],
-          "consPartyB": [
-            "UK-focused administration",
-            "Travel may be required"
-          ],
-          "legalText": "Any dispute arising from this Agreement will be finally resolved by arbitration under the LCIA Rules. The arbitration will be conducted by a sole arbitrator appointed by the LCIA Court. The seat of arbitration will be London, United Kingdom.",
-          "biasPartyA": 0,
-          "biasPartyB": 0
+          "plainDescription": {
+            "en": "Arbitration under LCIA (London Court of International Arbitration) rules - preferred for UK and international commercial disputes.",
+            "es": "Arbitraje conforme al reglamento de la LCIA (Corte de Arbitraje Internacional de Londres), preferido para controversias comerciales del Reino Unido e internacionales."
+          },
+          "pros": {
+            "partyA": {
+              "en": [
+                "Strong international reputation",
+                "Efficient case management",
+                "Reasonable costs"
+              ],
+              "es": [
+                "Sólida reputación internacional",
+                "Gestión eficiente de los procedimientos",
+                "Costes razonables"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Neutral and respected",
+                "Quick appointment of arbitrators",
+                "Clear timeline"
+              ],
+              "es": [
+                "Neutral y respetado",
+                "Designación rápida de árbitros",
+                "Calendario claro"
+              ]
+            }
+          },
+          "cons": {
+            "partyA": {
+              "en": [
+                "London-centric",
+                "English legal influence"
+              ],
+              "es": [
+                "Centrado en Londres",
+                "Influencia del derecho inglés"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "UK-focused administration",
+                "Travel may be required"
+              ],
+              "es": [
+                "Administración centrada en el Reino Unido",
+                "Puede requerir desplazamiento"
+              ]
+            }
+          },
+          "legalText": {
+            "en": "Any dispute arising from this Agreement will be finally resolved by arbitration under the LCIA Rules. The arbitration will be conducted by a sole arbitrator appointed by the LCIA Court. The seat of arbitration will be London, United Kingdom.",
+            "es": "Toda controversia derivada del presente Acuerdo se resolverá definitivamente mediante arbitraje conforme al Reglamento de la LCIA. El arbitraje será conducido por un árbitro único designado por la Corte de la LCIA. La sede del arbitraje será Londres, Reino Unido."
+          },
+          "bias": {
+            "partyA": 0,
+            "partyB": 0
+          }
         }
       ]
     },
     {
       "id": "remedies",
-      "title": "Remedies for breach",
-      "category": "Legal",
+      "title": {
+        "en": "Remedies for breach",
+        "es": "Recursos por incumplimiento"
+      },
+      "category": {
+        "en": "Legal",
+        "es": "Legal"
+      },
       "order": 6,
-      "plainDescription": "What remedies are available if a party breaches the agreement? Can the injured party seek injunctive relief without proving damages?",
-      "legalContext": "Injunctive relief allows courts to stop ongoing breaches quickly. Without explicit provisions, proving irreparable harm can be difficult.",
+      "plainDescription": {
+        "en": "What remedies are available if a party breaches the agreement? Can the injured party seek injunctive relief without proving damages?",
+        "es": "¿Qué recursos están disponibles si una de las partes incumple el acuerdo? ¿Puede la parte perjudicada solicitar medidas cautelares sin necesidad de acreditar daños?"
+      },
+      "legalContext": {
+        "en": "Injunctive relief allows courts to stop ongoing breaches quickly. Without explicit provisions, proving irreparable harm can be difficult.",
+        "es": "Las medidas cautelares permiten a los tribunales detener rápidamente los incumplimientos en curso. Sin disposiciones expresas, la acreditación del daño irreparable puede resultar difícil."
+      },
       "isRequired": true,
       "options": [
         {
           "id": "remedies-standard",
           "code": "standard",
-          "label": "Standard (Injunctive relief available)",
+          "label": {
+            "en": "Standard (Injunctive relief available)",
+            "es": "Estándar (Medidas cautelares disponibles)"
+          },
           "order": 1,
-          "plainDescription": "The disclosing party may seek injunctive relief for breach without proving actual damages, acknowledging confidential information is unique.",
-          "prosPartyA": [
-            "Can stop breaches quickly",
-            "No need to prove monetary harm",
-            "Strong deterrent"
-          ],
-          "consPartyA": [
-            "Standard provision",
-            "May not prevent all harm"
-          ],
-          "prosPartyB": [
-            "Industry standard",
-            "Clear expectations",
-            "Acknowledges info value"
-          ],
-          "consPartyB": [
-            "Exposes to injunction risk",
-            "Courts may act quickly"
-          ],
-          "legalText": "Each Party acknowledges that Confidential Information is valuable and unique, and that unauthorized disclosure may cause irreparable harm. The Disclosing Party is entitled to seek injunctive relief without proving actual damages, in addition to other legal remedies.",
-          "biasPartyA": 0.2,
-          "biasPartyB": -0.2
+          "plainDescription": {
+            "en": "The disclosing party may seek injunctive relief for breach without proving actual damages, acknowledging confidential information is unique.",
+            "es": "La Parte Divulgante podrá solicitar medidas cautelares por incumplimiento sin necesidad de acreditar daños efectivos, reconociendo el carácter único de la Información Confidencial."
+          },
+          "pros": {
+            "partyA": {
+              "en": [
+                "Can stop breaches quickly",
+                "No need to prove monetary harm",
+                "Strong deterrent"
+              ],
+              "es": [
+                "Permite detener incumplimientos rápidamente",
+                "No es necesario acreditar daño económico",
+                "Fuerte efecto disuasorio"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Industry standard",
+                "Clear expectations",
+                "Acknowledges info value"
+              ],
+              "es": [
+                "Estándar del sector",
+                "Expectativas claras",
+                "Reconoce el valor de la información"
+              ]
+            }
+          },
+          "cons": {
+            "partyA": {
+              "en": [
+                "Standard provision",
+                "May not prevent all harm"
+              ],
+              "es": [
+                "Cláusula estándar",
+                "Puede no evitar todo el perjuicio"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Exposes to injunction risk",
+                "Courts may act quickly"
+              ],
+              "es": [
+                "Exposición al riesgo de medidas cautelares",
+                "Los tribunales pueden actuar con rapidez"
+              ]
+            }
+          },
+          "legalText": {
+            "en": "Each Party acknowledges that Confidential Information is valuable and unique, and that unauthorized disclosure may cause irreparable harm. The Disclosing Party is entitled to seek injunctive relief without proving actual damages, in addition to other legal remedies.",
+            "es": "Cada Parte reconoce que la Información Confidencial es valiosa y de carácter único, y que su divulgación no autorizada puede causar un daño irreparable. La Parte Divulgante tendrá derecho a solicitar medidas cautelares sin necesidad de acreditar daños efectivos, además de cualesquiera otros recursos legales."
+          },
+          "bias": {
+            "partyA": 0.2,
+            "partyB": -0.2
+          }
         },
         {
           "id": "remedies-enhanced",
           "code": "enhanced",
-          "label": "Enhanced (+ no bond requirement)",
+          "label": {
+            "en": "Enhanced (+ no bond requirement)",
+            "es": "Reforzado (+ sin exigencia de caución)"
+          },
           "order": 2,
-          "plainDescription": "Injunctive relief available without proving damages AND without requirement to post a bond.",
-          "prosPartyA": [
-            "Faster relief",
-            "Lower cost to enforce",
-            "Maximum protection"
-          ],
-          "consPartyA": [
-            "May face resistance",
-            "Seems aggressive"
-          ],
-          "prosPartyB": [
-            "Clear consequences",
-            "Shows seriousness of obligations"
-          ],
-          "consPartyB": [
-            "Higher risk exposure",
-            "Easier for counterparty to get injunction"
-          ],
-          "legalText": "The Disclosing Party is entitled to seek injunctive relief without proving actual damages and without the requirement to post a bond, to the extent permitted by applicable law, in addition to other legal remedies.",
-          "biasPartyA": 0.4,
-          "biasPartyB": -0.4
+          "plainDescription": {
+            "en": "Injunctive relief available without proving damages AND without requirement to post a bond.",
+            "es": "Medidas cautelares disponibles sin necesidad de acreditar daños NI de prestar caución."
+          },
+          "pros": {
+            "partyA": {
+              "en": [
+                "Faster relief",
+                "Lower cost to enforce",
+                "Maximum protection"
+              ],
+              "es": [
+                "Tutela más rápida",
+                "Menor coste de ejecución",
+                "Protección máxima"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Clear consequences",
+                "Shows seriousness of obligations"
+              ],
+              "es": [
+                "Consecuencias claras",
+                "Demuestra la seriedad de las obligaciones"
+              ]
+            }
+          },
+          "cons": {
+            "partyA": {
+              "en": [
+                "May face resistance",
+                "Seems aggressive"
+              ],
+              "es": [
+                "Puede encontrar resistencia",
+                "Puede percibirse como agresivo"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Higher risk exposure",
+                "Easier for counterparty to get injunction"
+              ],
+              "es": [
+                "Mayor exposición al riesgo",
+                "Mayor facilidad para que la contraparte obtenga medidas cautelares"
+              ]
+            }
+          },
+          "legalText": {
+            "en": "The Disclosing Party is entitled to seek injunctive relief without proving actual damages and without the requirement to post a bond, to the extent permitted by applicable law, in addition to other legal remedies.",
+            "es": "La Parte Divulgante tendrá derecho a solicitar medidas cautelares sin necesidad de acreditar daños efectivos y sin la obligación de prestar caución, en la medida en que lo permita la legislación aplicable, además de cualesquiera otros recursos legales."
+          },
+          "bias": {
+            "partyA": 0.4,
+            "partyB": -0.4
+          }
         },
         {
           "id": "remedies-balanced",
           "code": "balanced",
-          "label": "Balanced (All legal remedies)",
+          "label": {
+            "en": "Balanced (All legal remedies)",
+            "es": "Equilibrado (Todos los recursos legales)"
+          },
           "order": 3,
-          "plainDescription": "Either party may pursue any legal remedies available, including damages and injunctive relief where appropriate.",
-          "prosPartyA": [
-            "Full range of remedies",
-            "No waiver of rights"
-          ],
-          "consPartyA": [
-            "May need to prove irreparable harm",
-            "Standard legal burdens apply"
-          ],
-          "prosPartyB": [
-            "Balanced approach",
-            "Normal legal protections apply"
-          ],
-          "consPartyB": [
-            "Still exposed to legal action",
-            "Standard process applies"
-          ],
-          "legalText": "Each Party reserves all rights and remedies available at law or in equity for any breach of this Agreement, including the right to seek monetary damages and injunctive relief where appropriate.",
-          "biasPartyA": -0.1,
-          "biasPartyB": 0.1
+          "plainDescription": {
+            "en": "Either party may pursue any legal remedies available, including damages and injunctive relief where appropriate.",
+            "es": "Cualquiera de las partes podrá ejercer todos los recursos legales disponibles, incluida la indemnización por daños y las medidas cautelares cuando proceda."
+          },
+          "pros": {
+            "partyA": {
+              "en": [
+                "Full range of remedies",
+                "No waiver of rights"
+              ],
+              "es": [
+                "Gama completa de recursos",
+                "Sin renuncia a derechos"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Balanced approach",
+                "Normal legal protections apply"
+              ],
+              "es": [
+                "Enfoque equilibrado",
+                "Se aplican las protecciones legales habituales"
+              ]
+            }
+          },
+          "cons": {
+            "partyA": {
+              "en": [
+                "May need to prove irreparable harm",
+                "Standard legal burdens apply"
+              ],
+              "es": [
+                "Puede requerir la acreditación de daño irreparable",
+                "Se aplican las cargas probatorias habituales"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Still exposed to legal action",
+                "Standard process applies"
+              ],
+              "es": [
+                "Sigue expuesto a acciones legales",
+                "Se aplica el procedimiento ordinario"
+              ]
+            }
+          },
+          "legalText": {
+            "en": "Each Party reserves all rights and remedies available at law or in equity for any breach of this Agreement, including the right to seek monetary damages and injunctive relief where appropriate.",
+            "es": "Cada Parte se reserva todos los derechos y recursos disponibles en derecho y en equidad por cualquier incumplimiento del presente Acuerdo, incluido el derecho a reclamar una indemnización por daños y perjuicios y a solicitar medidas cautelares cuando proceda."
+          },
+          "bias": {
+            "partyA": -0.1,
+            "partyB": 0.1
+          }
         }
       ]
     },
     {
       "id": "agreement-term",
-      "title": "Agreement term",
-      "category": "Term",
+      "title": {
+        "en": "Agreement term",
+        "es": "Duración del acuerdo"
+      },
+      "category": {
+        "en": "Term",
+        "es": "Plazo"
+      },
       "order": 7,
-      "plainDescription": "How long will this NDA remain in effect? When can either party terminate it?",
-      "legalContext": "The agreement term is different from confidentiality duration. The term covers when new disclosures can be made; confidentiality obligations on already-disclosed information survive termination.",
+      "plainDescription": {
+        "en": "How long will this NDA remain in effect? When can either party terminate it?",
+        "es": "¿Durante cuánto tiempo estará en vigor este acuerdo de confidencialidad? ¿Cuándo puede cualquiera de las partes resolverlo?"
+      },
+      "legalContext": {
+        "en": "The agreement term is different from confidentiality duration. The term covers when new disclosures can be made; confidentiality obligations on already-disclosed information survive termination.",
+        "es": "La duración del acuerdo difiere de la duración de las obligaciones de confidencialidad. El plazo del acuerdo cubre el período durante el cual pueden realizarse nuevas divulgaciones; las obligaciones de confidencialidad sobre la información ya divulgada subsisten tras la resolución."
+      },
       "isRequired": true,
       "options": [
         {
           "id": "term-1yr",
           "code": "1-year",
-          "label": "1 year",
+          "label": {
+            "en": "1 year",
+            "es": "1 año"
+          },
           "order": 1,
-          "plainDescription": "Agreement remains in effect for 1 year, with option to extend by mutual agreement.",
-          "prosPartyA": [
-            "Short commitment",
-            "Can reassess relationship",
-            "Easy to not renew"
-          ],
-          "consPartyA": [
-            "Need to track renewal",
-            "May lapse accidentally",
-            "Short protection window"
-          ],
-          "prosPartyB": [
-            "Limited initial commitment",
-            "Natural exit point",
-            "Can reassess terms"
-          ],
-          "consPartyB": [
-            "Need to track renewal",
-            "Uncertainty about continuation"
-          ],
-          "legalText": "This Agreement begins on the Effective Date and continues for one (1) year, unless terminated earlier by either Party giving thirty (30) days' written notice.",
-          "biasPartyA": -0.2,
-          "biasPartyB": 0.2
+          "plainDescription": {
+            "en": "Agreement remains in effect for 1 year, with option to extend by mutual agreement.",
+            "es": "El acuerdo permanecerá en vigor durante 1 año, con posibilidad de prórroga por mutuo acuerdo."
+          },
+          "pros": {
+            "partyA": {
+              "en": [
+                "Short commitment",
+                "Can reassess relationship",
+                "Easy to not renew"
+              ],
+              "es": [
+                "Compromiso breve",
+                "Permite reevaluar la relación",
+                "Fácil no renovación"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Limited initial commitment",
+                "Natural exit point",
+                "Can reassess terms"
+              ],
+              "es": [
+                "Compromiso inicial limitado",
+                "Punto de salida natural",
+                "Permite reevaluar las condiciones"
+              ]
+            }
+          },
+          "cons": {
+            "partyA": {
+              "en": [
+                "Need to track renewal",
+                "May lapse accidentally",
+                "Short protection window"
+              ],
+              "es": [
+                "Necesidad de seguimiento de la renovación",
+                "Riesgo de vencimiento inadvertido",
+                "Ventana de protección breve"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Need to track renewal",
+                "Uncertainty about continuation"
+              ],
+              "es": [
+                "Necesidad de seguimiento de la renovación",
+                "Incertidumbre sobre la continuidad"
+              ]
+            }
+          },
+          "legalText": {
+            "en": "This Agreement begins on the Effective Date and continues for one (1) year, unless terminated earlier by either Party giving thirty (30) days' written notice.",
+            "es": "El presente Acuerdo entrará en vigor en la Fecha de Efectividad y tendrá una duración de un (1) año, salvo resolución anticipada por cualquiera de las Partes mediante notificación escrita con treinta (30) días de antelación."
+          },
+          "bias": {
+            "partyA": -0.2,
+            "partyB": 0.2
+          }
         },
         {
           "id": "term-2yr",
           "code": "2-years",
-          "label": "2 years",
+          "label": {
+            "en": "2 years",
+            "es": "2 años"
+          },
           "order": 2,
-          "plainDescription": "Agreement remains in effect for 2 years, providing a reasonable window for business discussions.",
-          "prosPartyA": [
-            "Good duration for most deals",
-            "Less administrative burden",
-            "Industry standard"
-          ],
-          "consPartyA": [
-            "Locked in longer",
-            "Need to track expiration"
-          ],
-          "prosPartyB": [
-            "Reasonable commitment",
-            "Covers typical deal cycles",
-            "Standard term"
-          ],
-          "consPartyB": [
-            "Longer commitment",
-            "Need to track expiration"
-          ],
-          "legalText": "This Agreement begins on the Effective Date and continues for two (2) years, unless terminated earlier by either Party giving thirty (30) days' written notice.",
-          "biasPartyA": 0,
-          "biasPartyB": 0
+          "plainDescription": {
+            "en": "Agreement remains in effect for 2 years, providing a reasonable window for business discussions.",
+            "es": "El acuerdo permanecerá en vigor durante 2 años, proporcionando un plazo razonable para las negociaciones comerciales."
+          },
+          "pros": {
+            "partyA": {
+              "en": [
+                "Good duration for most deals",
+                "Less administrative burden",
+                "Industry standard"
+              ],
+              "es": [
+                "Buena duración para la mayoría de las operaciones",
+                "Menor carga administrativa",
+                "Estándar del sector"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Reasonable commitment",
+                "Covers typical deal cycles",
+                "Standard term"
+              ],
+              "es": [
+                "Compromiso razonable",
+                "Cubre los ciclos de negociación habituales",
+                "Plazo estándar"
+              ]
+            }
+          },
+          "cons": {
+            "partyA": {
+              "en": [
+                "Locked in longer",
+                "Need to track expiration"
+              ],
+              "es": [
+                "Vinculación durante más tiempo",
+                "Necesidad de seguimiento del vencimiento"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Longer commitment",
+                "Need to track expiration"
+              ],
+              "es": [
+                "Compromiso más prolongado",
+                "Necesidad de seguimiento del vencimiento"
+              ]
+            }
+          },
+          "legalText": {
+            "en": "This Agreement begins on the Effective Date and continues for two (2) years, unless terminated earlier by either Party giving thirty (30) days' written notice.",
+            "es": "El presente Acuerdo entrará en vigor en la Fecha de Efectividad y tendrá una duración de dos (2) años, salvo resolución anticipada por cualquiera de las Partes mediante notificación escrita con treinta (30) días de antelación."
+          },
+          "bias": {
+            "partyA": 0,
+            "partyB": 0
+          }
         },
         {
           "id": "term-3yr",
           "code": "3-years",
-          "label": "3 years",
+          "label": {
+            "en": "3 years",
+            "es": "3 años"
+          },
           "order": 3,
-          "plainDescription": "Agreement remains in effect for 3 years, suitable for complex or long-term business discussions.",
-          "prosPartyA": [
-            "Extended window for discussions",
-            "Less frequent renewal",
-            "Good for complex deals"
-          ],
-          "consPartyA": [
-            "Longer commitment",
-            "Harder to exit"
-          ],
-          "prosPartyB": [
-            "Stable relationship",
-            "Less administrative work"
-          ],
-          "consPartyB": [
-            "Long commitment period",
-            "May outlive business need"
-          ],
-          "legalText": "This Agreement begins on the Effective Date and continues for three (3) years, unless terminated earlier by either Party giving sixty (60) days' written notice.",
-          "biasPartyA": 0.2,
-          "biasPartyB": -0.2
+          "plainDescription": {
+            "en": "Agreement remains in effect for 3 years, suitable for complex or long-term business discussions.",
+            "es": "El acuerdo permanecerá en vigor durante 3 años, adecuado para negociaciones comerciales complejas o de larga duración."
+          },
+          "pros": {
+            "partyA": {
+              "en": [
+                "Extended window for discussions",
+                "Less frequent renewal",
+                "Good for complex deals"
+              ],
+              "es": [
+                "Ventana ampliada para las negociaciones",
+                "Renovación menos frecuente",
+                "Adecuado para operaciones complejas"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Stable relationship",
+                "Less administrative work"
+              ],
+              "es": [
+                "Relación estable",
+                "Menor carga administrativa"
+              ]
+            }
+          },
+          "cons": {
+            "partyA": {
+              "en": [
+                "Longer commitment",
+                "Harder to exit"
+              ],
+              "es": [
+                "Compromiso más prolongado",
+                "Mayor dificultad para resolver el acuerdo"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Long commitment period",
+                "May outlive business need"
+              ],
+              "es": [
+                "Período de compromiso prolongado",
+                "Puede exceder la necesidad comercial"
+              ]
+            }
+          },
+          "legalText": {
+            "en": "This Agreement begins on the Effective Date and continues for three (3) years, unless terminated earlier by either Party giving sixty (60) days' written notice.",
+            "es": "El presente Acuerdo entrará en vigor en la Fecha de Efectividad y tendrá una duración de tres (3) años, salvo resolución anticipada por cualquiera de las Partes mediante notificación escrita con sesenta (60) días de antelación."
+          },
+          "bias": {
+            "partyA": 0.2,
+            "partyB": -0.2
+          }
         }
       ]
     },
     {
       "id": "non-solicitation",
-      "title": "Non-solicitation of employees",
-      "category": "Restrictions",
+      "title": {
+        "en": "Non-solicitation of employees",
+        "es": "Prohibición de captación de empleados"
+      },
+      "category": {
+        "en": "Restrictions",
+        "es": "Restricciones"
+      },
       "order": 8,
-      "plainDescription": "Should the parties agree not to recruit or hire each other's employees during and after the NDA term?",
-      "legalContext": "Non-solicitation provisions are common in NDAs where parties will have significant contact. However, they may be unenforceable in some jurisdictions like California under Business & Professions Code 16600.",
+      "plainDescription": {
+        "en": "Should the parties agree not to recruit or hire each other's employees during and after the NDA term?",
+        "es": "¿Deben las partes comprometerse a no captar ni contratar a los empleados de la otra parte durante y después de la vigencia del acuerdo de confidencialidad?"
+      },
+      "legalContext": {
+        "en": "Non-solicitation provisions are common in NDAs where parties will have significant contact. However, they may be unenforceable in some jurisdictions like California under Business & Professions Code 16600.",
+        "es": "Las cláusulas de no captación son habituales en los acuerdos de confidencialidad en los que las partes tendrán un contacto significativo. No obstante, pueden resultar inejecutables en determinadas jurisdicciones como California, en virtud del Código de Negocios y Profesiones, sección 16600."
+      },
       "isRequired": false,
       "options": [
         {
           "id": "nonsol-none",
           "code": "none",
-          "label": "No non-solicitation",
+          "label": {
+            "en": "No non-solicitation",
+            "es": "Sin cláusula de no captación"
+          },
           "order": 1,
-          "plainDescription": "No restrictions on hiring or recruiting each other's employees.",
-          "prosPartyA": [
-            "Flexibility to hire talent",
-            "No restrictions",
-            "Simpler agreement"
-          ],
-          "consPartyA": [
-            "Risk of losing key employees",
-            "No protection from poaching"
-          ],
-          "prosPartyB": [
-            "Freedom to hire",
-            "No obligations",
-            "Simpler compliance"
-          ],
-          "consPartyB": [
-            "Same risks of employee loss",
-            "No mutual protection"
-          ],
-          "legalText": "[No non-solicitation provision included]",
-          "biasPartyA": 0,
-          "biasPartyB": 0,
+          "plainDescription": {
+            "en": "No restrictions on hiring or recruiting each other's employees.",
+            "es": "Sin restricciones sobre la contratación o captación de empleados de la otra parte."
+          },
+          "pros": {
+            "partyA": {
+              "en": [
+                "Flexibility to hire talent",
+                "No restrictions",
+                "Simpler agreement"
+              ],
+              "es": [
+                "Flexibilidad para contratar talento",
+                "Sin restricciones",
+                "Acuerdo más sencillo"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Freedom to hire",
+                "No obligations",
+                "Simpler compliance"
+              ],
+              "es": [
+                "Libertad de contratación",
+                "Sin obligaciones",
+                "Cumplimiento más sencillo"
+              ]
+            }
+          },
+          "cons": {
+            "partyA": {
+              "en": [
+                "Risk of losing key employees",
+                "No protection from poaching"
+              ],
+              "es": [
+                "Riesgo de pérdida de empleados clave",
+                "Sin protección frente a la captación de talento"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Same risks of employee loss",
+                "No mutual protection"
+              ],
+              "es": [
+                "Mismos riesgos de pérdida de empleados",
+                "Sin protección mutua"
+              ]
+            }
+          },
+          "legalText": {
+            "en": "[No non-solicitation provision included]",
+            "es": "[No se incluye cláusula de no captación]"
+          },
+          "bias": {
+            "partyA": 0,
+            "partyB": 0
+          },
           "jurisdictionConfig": {
             "CALIFORNIA": {
               "available": true,
@@ -863,30 +2074,71 @@
         {
           "id": "nonsol-during",
           "code": "during-term",
-          "label": "During agreement term only",
+          "label": {
+            "en": "During agreement term only",
+            "es": "Solo durante la vigencia del acuerdo"
+          },
           "order": 2,
-          "plainDescription": "Parties agree not to solicit each other's employees while the NDA is in effect, but may do so after termination.",
-          "prosPartyA": [
-            "Protection during active relationship",
-            "Time-limited obligation",
-            "Reasonable scope"
-          ],
-          "consPartyA": [
-            "Only protects during term",
-            "May be hard to enforce"
-          ],
-          "prosPartyB": [
-            "Clear boundaries",
-            "Limited obligation",
-            "Ends when agreement ends"
-          ],
-          "consPartyB": [
-            "Still restricts hiring",
-            "May miss good candidates"
-          ],
-          "legalText": "During the term of this Agreement, neither Party will directly solicit for employment any employee of the other Party with whom it has had contact in connection with the Purpose.",
-          "biasPartyA": 0.1,
-          "biasPartyB": -0.1,
+          "plainDescription": {
+            "en": "Parties agree not to solicit each other's employees while the NDA is in effect, but may do so after termination.",
+            "es": "Las partes se comprometen a no captar a los empleados de la otra parte mientras el acuerdo de confidencialidad esté en vigor, pudiendo hacerlo tras su resolución."
+          },
+          "pros": {
+            "partyA": {
+              "en": [
+                "Protection during active relationship",
+                "Time-limited obligation",
+                "Reasonable scope"
+              ],
+              "es": [
+                "Protección durante la relación activa",
+                "Obligación limitada en el tiempo",
+                "Alcance razonable"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Clear boundaries",
+                "Limited obligation",
+                "Ends when agreement ends"
+              ],
+              "es": [
+                "Límites claros",
+                "Obligación limitada",
+                "Finaliza al resolverse el acuerdo"
+              ]
+            }
+          },
+          "cons": {
+            "partyA": {
+              "en": [
+                "Only protects during term",
+                "May be hard to enforce"
+              ],
+              "es": [
+                "Solo protege durante la vigencia",
+                "Puede ser difícil de ejecutar"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Still restricts hiring",
+                "May miss good candidates"
+              ],
+              "es": [
+                "Sigue restringiendo la contratación",
+                "Puede suponer la pérdida de buenos candidatos"
+              ]
+            }
+          },
+          "legalText": {
+            "en": "During the term of this Agreement, neither Party will directly solicit for employment any employee of the other Party with whom it has had contact in connection with the Purpose.",
+            "es": "Durante la vigencia del presente Acuerdo, ninguna de las Partes captará directamente para su contratación a ningún empleado de la otra Parte con quien haya tenido contacto en relación con el Objeto del acuerdo."
+          },
+          "bias": {
+            "partyA": 0.1,
+            "partyB": -0.1
+          },
           "jurisdictionConfig": {
             "CALIFORNIA": {
               "available": true,
@@ -905,30 +2157,71 @@
         {
           "id": "nonsol-extended",
           "code": "extended",
-          "label": "Extended (Term + 1 year after)",
+          "label": {
+            "en": "Extended (Term + 1 year after)",
+            "es": "Ampliada (Vigencia + 1 año posterior)"
+          },
           "order": 3,
-          "plainDescription": "Non-solicitation applies during the agreement term and for 1 year after termination.",
-          "prosPartyA": [
-            "Extended protection",
-            "Covers post-termination period",
-            "Strong deterrent"
-          ],
-          "consPartyA": [
-            "May face enforceability challenges",
-            "Longer restriction"
-          ],
-          "prosPartyB": [
-            "Mutual protection extended",
-            "Shows commitment to fair dealing"
-          ],
-          "consPartyB": [
-            "Longer obligation period",
-            "May miss opportunities",
-            "Enforceability varies by location"
-          ],
-          "legalText": "During the term of this Agreement and for one (1) year thereafter, neither Party will directly solicit for employment any employee of the other Party with whom it has had contact in connection with the Purpose.",
-          "biasPartyA": 0.3,
-          "biasPartyB": -0.3,
+          "plainDescription": {
+            "en": "Non-solicitation applies during the agreement term and for 1 year after termination.",
+            "es": "La prohibición de captación se aplica durante la vigencia del acuerdo y durante 1 año después de su resolución."
+          },
+          "pros": {
+            "partyA": {
+              "en": [
+                "Extended protection",
+                "Covers post-termination period",
+                "Strong deterrent"
+              ],
+              "es": [
+                "Protección ampliada",
+                "Cubre el período posterior a la resolución",
+                "Fuerte efecto disuasorio"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Mutual protection extended",
+                "Shows commitment to fair dealing"
+              ],
+              "es": [
+                "Protección mutua ampliada",
+                "Demuestra compromiso con la buena fe contractual"
+              ]
+            }
+          },
+          "cons": {
+            "partyA": {
+              "en": [
+                "May face enforceability challenges",
+                "Longer restriction"
+              ],
+              "es": [
+                "Puede enfrentar problemas de ejecutabilidad",
+                "Restricción más prolongada"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Longer obligation period",
+                "May miss opportunities",
+                "Enforceability varies by location"
+              ],
+              "es": [
+                "Período de obligación más prolongado",
+                "Puede suponer la pérdida de oportunidades",
+                "La ejecutabilidad varía según la jurisdicción"
+              ]
+            }
+          },
+          "legalText": {
+            "en": "During the term of this Agreement and for one (1) year thereafter, neither Party will directly solicit for employment any employee of the other Party with whom it has had contact in connection with the Purpose.",
+            "es": "Durante la vigencia del presente Acuerdo y durante un (1) año a partir de su resolución, ninguna de las Partes captará directamente para su contratación a ningún empleado de la otra Parte con quien haya tenido contacto en relación con el Objeto del acuerdo."
+          },
+          "bias": {
+            "partyA": 0.3,
+            "partyB": -0.3
+          },
           "jurisdictionConfig": {
             "CALIFORNIA": {
               "available": false,
@@ -948,90 +2241,219 @@
     },
     {
       "id": "assignment",
-      "title": "Assignment rights",
-      "category": "General",
+      "title": {
+        "en": "Assignment rights",
+        "es": "Derechos de cesión"
+      },
+      "category": {
+        "en": "General",
+        "es": "General"
+      },
       "order": 9,
-      "plainDescription": "Can either party transfer their rights and obligations under this NDA to another entity?",
-      "legalContext": "Assignment provisions matter for M&A situations. Restricting assignment protects against unwanted disclosure to acquiring companies.",
+      "plainDescription": {
+        "en": "Can either party transfer their rights and obligations under this NDA to another entity?",
+        "es": "¿Puede cualquiera de las partes transferir sus derechos y obligaciones en virtud de este acuerdo de confidencialidad a otra entidad?"
+      },
+      "legalContext": {
+        "en": "Assignment provisions matter for M&A situations. Restricting assignment protects against unwanted disclosure to acquiring companies.",
+        "es": "Las disposiciones sobre cesión son relevantes en operaciones de fusiones y adquisiciones. Restringir la cesión protege frente a divulgaciones no deseadas a las sociedades adquirentes."
+      },
       "isRequired": true,
       "options": [
         {
           "id": "assign-none",
           "code": "no-assignment",
-          "label": "No assignment allowed",
+          "label": {
+            "en": "No assignment allowed",
+            "es": "Cesión no permitida"
+          },
           "order": 1,
-          "plainDescription": "Neither party may assign this agreement to any third party without written consent.",
-          "prosPartyA": [
-            "Maximum control over who receives information",
-            "Can block unwanted transfers"
-          ],
-          "consPartyA": [
-            "Inflexible for corporate restructuring",
-            "May complicate M&A"
-          ],
-          "prosPartyB": [
-            "Know exactly who the counterparty is",
-            "Protection from unwanted assignments"
-          ],
-          "consPartyB": [
-            "Same inflexibility",
-            "Need consent for any transfer"
-          ],
-          "legalText": "Neither Party may assign or transfer this Agreement without the prior written consent of the other Party. Any attempted assignment without consent is void.",
-          "biasPartyA": 0,
-          "biasPartyB": 0
+          "plainDescription": {
+            "en": "Neither party may assign this agreement to any third party without written consent.",
+            "es": "Ninguna de las partes podrá ceder este acuerdo a terceros sin consentimiento previo por escrito."
+          },
+          "pros": {
+            "partyA": {
+              "en": [
+                "Maximum control over who receives information",
+                "Can block unwanted transfers"
+              ],
+              "es": [
+                "Control máximo sobre quién recibe la información",
+                "Posibilidad de bloquear transferencias no deseadas"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Know exactly who the counterparty is",
+                "Protection from unwanted assignments"
+              ],
+              "es": [
+                "Conocimiento exacto de la identidad de la contraparte",
+                "Protección frente a cesiones no deseadas"
+              ]
+            }
+          },
+          "cons": {
+            "partyA": {
+              "en": [
+                "Inflexible for corporate restructuring",
+                "May complicate M&A"
+              ],
+              "es": [
+                "Inflexible para reestructuraciones societarias",
+                "Puede complicar operaciones de fusión y adquisición"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Same inflexibility",
+                "Need consent for any transfer"
+              ],
+              "es": [
+                "Misma inflexibilidad",
+                "Necesidad de consentimiento para cualquier transferencia"
+              ]
+            }
+          },
+          "legalText": {
+            "en": "Neither Party may assign or transfer this Agreement without the prior written consent of the other Party. Any attempted assignment without consent is void.",
+            "es": "Ninguna de las Partes podrá ceder ni transferir el presente Acuerdo sin el consentimiento previo y por escrito de la otra Parte. Toda cesión intentada sin dicho consentimiento será nula de pleno derecho."
+          },
+          "bias": {
+            "partyA": 0,
+            "partyB": 0
+          }
         },
         {
           "id": "assign-affiliate",
           "code": "affiliate-only",
-          "label": "Affiliates only",
+          "label": {
+            "en": "Affiliates only",
+            "es": "Solo a sociedades vinculadas"
+          },
           "order": 2,
-          "plainDescription": "Assignment allowed to affiliates (entities under common control) without consent, but not to third parties.",
-          "prosPartyA": [
-            "Flexibility within corporate group",
-            "Practical for restructuring"
-          ],
-          "consPartyA": [
-            "Information may go to affiliate",
-            "Less control"
-          ],
-          "prosPartyB": [
-            "Same flexibility",
-            "Can reorganize internally"
-          ],
-          "consPartyB": [
-            "Counterparty affiliates may receive info",
-            "Less visibility"
-          ],
-          "legalText": "Neither Party may assign this Agreement without consent, except to an affiliate under common control upon written notice. The assigning Party remains responsible for the affiliate's compliance.",
-          "biasPartyA": 0,
-          "biasPartyB": 0
+          "plainDescription": {
+            "en": "Assignment allowed to affiliates (entities under common control) without consent, but not to third parties.",
+            "es": "Cesión permitida a sociedades vinculadas (entidades bajo control común) sin necesidad de consentimiento, pero no a terceros."
+          },
+          "pros": {
+            "partyA": {
+              "en": [
+                "Flexibility within corporate group",
+                "Practical for restructuring"
+              ],
+              "es": [
+                "Flexibilidad dentro del grupo societario",
+                "Práctico para reestructuraciones"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Same flexibility",
+                "Can reorganize internally"
+              ],
+              "es": [
+                "Misma flexibilidad",
+                "Permite reorganizaciones internas"
+              ]
+            }
+          },
+          "cons": {
+            "partyA": {
+              "en": [
+                "Information may go to affiliate",
+                "Less control"
+              ],
+              "es": [
+                "La información puede transferirse a una sociedad vinculada",
+                "Menor control"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Counterparty affiliates may receive info",
+                "Less visibility"
+              ],
+              "es": [
+                "Las sociedades vinculadas de la contraparte pueden recibir la información",
+                "Menor visibilidad"
+              ]
+            }
+          },
+          "legalText": {
+            "en": "Neither Party may assign this Agreement without consent, except to an affiliate under common control upon written notice. The assigning Party remains responsible for the affiliate's compliance.",
+            "es": "Ninguna de las Partes podrá ceder el presente Acuerdo sin consentimiento, salvo a una sociedad vinculada bajo control común, previa notificación escrita. La Parte cedente seguirá siendo responsable del cumplimiento por parte de la sociedad vinculada."
+          },
+          "bias": {
+            "partyA": 0,
+            "partyB": 0
+          }
         },
         {
           "id": "assign-merger",
           "code": "merger-exception",
-          "label": "Affiliates + merger/acquisition",
+          "label": {
+            "en": "Affiliates + merger/acquisition",
+            "es": "Sociedades vinculadas + fusión/adquisición"
+          },
           "order": 3,
-          "plainDescription": "Assignment allowed to affiliates or in connection with a merger, acquisition, or sale of substantially all assets.",
-          "prosPartyA": [
-            "Maximum flexibility for corporate transactions",
-            "Standard M&A friendly"
-          ],
-          "consPartyA": [
-            "Information may transfer in M&A",
-            "Less control over ultimate recipient"
-          ],
-          "prosPartyB": [
-            "Same M&A flexibility",
-            "Won't block deal transactions"
-          ],
-          "consPartyB": [
-            "New owner receives obligations",
-            "May deal with unknown entity"
-          ],
-          "legalText": "Neither Party may assign this Agreement without consent, except: (a) to an affiliate; or (b) in connection with a merger, acquisition, or sale of substantially all assets, upon written notice to the other Party.",
-          "biasPartyA": -0.1,
-          "biasPartyB": 0.1
+          "plainDescription": {
+            "en": "Assignment allowed to affiliates or in connection with a merger, acquisition, or sale of substantially all assets.",
+            "es": "Cesión permitida a sociedades vinculadas o en el marco de una fusión, adquisición o venta de la totalidad o parte sustancial de los activos."
+          },
+          "pros": {
+            "partyA": {
+              "en": [
+                "Maximum flexibility for corporate transactions",
+                "Standard M&A friendly"
+              ],
+              "es": [
+                "Máxima flexibilidad para operaciones societarias",
+                "Compatible con operaciones estándar de fusión y adquisición"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Same M&A flexibility",
+                "Won't block deal transactions"
+              ],
+              "es": [
+                "Misma flexibilidad en fusiones y adquisiciones",
+                "No bloquea operaciones de negocio"
+              ]
+            }
+          },
+          "cons": {
+            "partyA": {
+              "en": [
+                "Information may transfer in M&A",
+                "Less control over ultimate recipient"
+              ],
+              "es": [
+                "La información puede transferirse en operaciones de fusión y adquisición",
+                "Menor control sobre el destinatario final"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "New owner receives obligations",
+                "May deal with unknown entity"
+              ],
+              "es": [
+                "El nuevo titular asume las obligaciones",
+                "Puede implicar tratar con una entidad desconocida"
+              ]
+            }
+          },
+          "legalText": {
+            "en": "Neither Party may assign this Agreement without consent, except: (a) to an affiliate; or (b) in connection with a merger, acquisition, or sale of substantially all assets, upon written notice to the other Party.",
+            "es": "Ninguna de las Partes podrá ceder el presente Acuerdo sin consentimiento, salvo: (a) a una sociedad vinculada; o (b) en el marco de una fusión, adquisición o venta de la totalidad o parte sustancial de los activos, previa notificación escrita a la otra Parte."
+          },
+          "bias": {
+            "partyA": -0.1,
+            "partyB": 0.1
+          }
         }
       ]
     }

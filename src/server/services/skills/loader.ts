@@ -96,7 +96,7 @@ const LegacyClauseSchema = z.object({
 const I18nClauseSchema = z.object({
   id: z.string(),
   title: LocalizedStringSchema,
-  category: z.string(),
+  category: LocalizedStringSchema,
   order: z.number(),
   plainDescription: LocalizedStringSchema,
   legalContext: LocalizedStringSchema.optional(),
@@ -142,31 +142,39 @@ const MetadataSchema = z.object({
   category: z.union([z.string(), z.record(z.string(), z.string())]).optional(),
 });
 
-// Boilerplate schema for standard contract sections
+// Boilerplate schema for standard contract sections (supports both plain strings and i18n objects)
+const BoilerplateStringSchema = z.union([z.string(), z.record(z.string(), z.string())]);
+
 const DefinitionSchema = z.object({
-  term: z.string(),
-  definition: z.string(),
+  term: BoilerplateStringSchema,
+  definition: BoilerplateStringSchema,
 });
 
 const StandardClauseSchema = z.object({
-  title: z.string(),
-  text: z.string(),
+  title: BoilerplateStringSchema,
+  text: BoilerplateStringSchema,
 });
 
 const JurisdictionProvisionSchema = z.object({
-  title: z.string(),
-  text: z.string(),
+  title: BoilerplateStringSchema,
+  text: BoilerplateStringSchema,
 });
 
+const PartyLabelsSchema = z.object({
+  partyA: BoilerplateStringSchema,
+  partyB: BoilerplateStringSchema,
+}).optional();
+
 const BoilerplateSchema = z.object({
-  contractTitle: z.string(),
-  preamble: z.string(),
-  background: z.string().optional(),
+  contractTitle: BoilerplateStringSchema,
+  preamble: BoilerplateStringSchema,
+  background: BoilerplateStringSchema.optional(),
   definitions: z.array(DefinitionSchema),
   standardClauses: z.array(StandardClauseSchema),
   generalProvisions: z.array(StandardClauseSchema),
   jurisdictionProvisions: z.record(z.string(), JurisdictionProvisionSchema),
-  signatureBlock: z.string(),
+  signatureBlock: BoilerplateStringSchema,
+  partyLabels: PartyLabelsSchema,
 });
 
 export type ClausesFile = z.infer<typeof ClausesFileSchema>;
@@ -322,7 +330,7 @@ function normalizeClause(
   return {
     id: c.id as string,
     title: resolveLocalizedString(c.title, language),
-    category: c.category as string,
+    category: resolveLocalizedString(c.category, language),
     order: c.order as number,
     plainDescription: resolveLocalizedString(c.plainDescription, language),
     legalContext: c.legalContext
@@ -367,6 +375,7 @@ function buildClauseLocalizedContent(clause: Record<string, unknown>): Record<st
   let hasLocalized = false;
 
   if (isLocalized(clause.title)) { content.title = clause.title; hasLocalized = true; }
+  if (isLocalized(clause.category)) { content.category = clause.category; hasLocalized = true; }
   if (isLocalized(clause.plainDescription)) { content.plainDescription = clause.plainDescription; hasLocalized = true; }
   if (clause.legalContext && isLocalized(clause.legalContext)) { content.legalContext = clause.legalContext; hasLocalized = true; }
 

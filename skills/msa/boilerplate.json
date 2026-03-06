@@ -1,118 +1,286 @@
 {
-  "contractTitle": "MASTER SERVICES AGREEMENT",
-  "preamble": "This Master Services Agreement (this \"Agreement\") is entered into as of {effectiveDate} (the \"Effective Date\") by and between:\n\nPROVIDER:\n{partyAName}, with its principal place of business at {partyAAddress} (the \"Provider\")\n\nCLIENT:\n{partyBName}, with its principal place of business at {partyBAddress} (the \"Client\")",
-  "background": "WHEREAS the Provider is in the business of providing professional services; and WHEREAS the Client desires to engage the Provider to perform certain services on the terms and conditions set forth herein; NOW, THEREFORE, in consideration of the mutual promises and covenants contained in this Agreement, and for other good and valuable consideration, the receipt and sufficiency of which are hereby acknowledged, the parties agree as follows:",
+  "contractTitle": {
+    "en": "MASTER SERVICES AGREEMENT",
+    "es": "CONTRATO MARCO DE PRESTACIÓN DE SERVICIOS"
+  },
+  "preamble": {
+    "en": "This Master Services Agreement (this \"Agreement\") is entered into as of {effectiveDate} (the \"Effective Date\") by and between:\n\nPROVIDER:\n{partyAName}, with its principal place of business at {partyAAddress} (the \"Provider\")\n\nCLIENT:\n{partyBName}, with its principal place of business at {partyBAddress} (the \"Client\")",
+    "es": "El presente Contrato Marco de Prestación de Servicios (en adelante, el \"Contrato\") se formaliza con fecha {effectiveDate} (la \"Fecha de Efectividad\") entre:\n\nPRESTADOR:\n{partyAName}, con domicilio social en {partyAAddress} (el \"Prestador\")\n\nCLIENTE:\n{partyBName}, con domicilio social en {partyBAddress} (el \"Cliente\")"
+  },
+  "background": {
+    "en": "WHEREAS the Provider is in the business of providing professional services; and WHEREAS the Client desires to engage the Provider to perform certain services on the terms and conditions set forth herein; NOW, THEREFORE, in consideration of the mutual promises and covenants contained in this Agreement, and for other good and valuable consideration, the receipt and sufficiency of which are hereby acknowledged, the parties agree as follows:",
+    "es": "CONSIDERANDO que el Prestador se dedica a la prestación de servicios profesionales; y CONSIDERANDO que el Cliente desea contratar al Prestador para la realización de determinados servicios en los términos y condiciones aquí establecidos; EN CONSECUENCIA, en virtud de las promesas y compromisos mutuos contenidos en el presente Contrato, y de otra contraprestación válida y suficiente, cuya recepción y suficiencia se reconocen expresamente, las partes acuerdan lo siguiente:"
+  },
   "definitions": [
     {
-      "term": "Affiliate",
-      "definition": "means any entity that directly or indirectly controls, is controlled by, or is under common control with a party, where \"control\" means the ownership of more than fifty percent (50%) of the voting securities or equivalent ownership interest."
+      "term": {
+        "en": "Affiliate",
+        "es": "Entidad Vinculada"
+      },
+      "definition": {
+        "en": "means any entity that directly or indirectly controls, is controlled by, or is under common control with a party, where \"control\" means the ownership of more than fifty percent (50%) of the voting securities or equivalent ownership interest.",
+        "es": "designa toda entidad que directa o indirectamente controle, sea controlada por o se encuentre bajo control común con una parte, entendiéndose por \"control\" la titularidad de más del cincuenta por ciento (50%) de los derechos de voto o de una participación equivalente."
+      }
     },
     {
-      "term": "Background IP",
-      "definition": "means any intellectual property owned by or licensed to a party prior to the Effective Date, or developed independently of this Agreement."
+      "term": {
+        "en": "Background IP",
+        "es": "Propiedad Intelectual Preexistente"
+      },
+      "definition": {
+        "en": "means any intellectual property owned by or licensed to a party prior to the Effective Date, or developed independently of this Agreement.",
+        "es": "designa toda propiedad intelectual e industrial de la que sea titular o licenciataria una parte con anterioridad a la Fecha de Efectividad, o que haya sido desarrollada con independencia del presente Contrato."
+      }
     },
     {
-      "term": "Confidential Information",
-      "definition": "means all non-public information disclosed by one party to the other in connection with this Agreement, whether orally, in writing, or by inspection, including trade secrets, business plans, financial information, technical data, and customer information."
+      "term": {
+        "en": "Confidential Information",
+        "es": "Información Confidencial"
+      },
+      "definition": {
+        "en": "means all non-public information disclosed by one party to the other in connection with this Agreement, whether orally, in writing, or by inspection, including trade secrets, business plans, financial information, technical data, and customer information.",
+        "es": "designa toda información no pública revelada por una parte a la otra en relación con el presente Contrato, ya sea de forma oral, escrita o mediante inspección, incluidos secretos empresariales, planes de negocio, información financiera, datos técnicos e información de clientes."
+      }
     },
     {
-      "term": "Deliverables",
-      "definition": "means the tangible and intangible work products, materials, reports, documents, software, and other items to be delivered by the Provider to the Client under a Statement of Work."
+      "term": {
+        "en": "Deliverables",
+        "es": "Entregables"
+      },
+      "definition": {
+        "en": "means the tangible and intangible work products, materials, reports, documents, software, and other items to be delivered by the Provider to the Client under a Statement of Work.",
+        "es": "designa los productos de trabajo tangibles e intangibles, materiales, informes, documentos, software y demás elementos que el Prestador deba entregar al Cliente en virtud de una Orden de Trabajo."
+      }
     },
     {
-      "term": "Intellectual Property",
-      "definition": "means all patents, copyrights, trademarks, trade secrets, know-how, and any other intellectual property rights, whether registered or unregistered, and all applications and rights to apply for any of the foregoing."
+      "term": {
+        "en": "Intellectual Property",
+        "es": "Propiedad Intelectual e Industrial"
+      },
+      "definition": {
+        "en": "means all patents, copyrights, trademarks, trade secrets, know-how, and any other intellectual property rights, whether registered or unregistered, and all applications and rights to apply for any of the foregoing.",
+        "es": "designa todas las patentes, derechos de autor, marcas, secretos empresariales, know-how y cualesquiera otros derechos de propiedad intelectual e industrial, registrados o no, así como todas las solicitudes y derechos a solicitar cualquiera de los anteriores."
+      }
     },
     {
-      "term": "Services",
-      "definition": "means the professional, consulting, development, or other services to be provided by the Provider to the Client as described in one or more Statements of Work executed under this Agreement."
+      "term": {
+        "en": "Services",
+        "es": "Servicios"
+      },
+      "definition": {
+        "en": "means the professional, consulting, development, or other services to be provided by the Provider to the Client as described in one or more Statements of Work executed under this Agreement.",
+        "es": "designa los servicios profesionales, de consultoría, desarrollo u otros que el Prestador deba prestar al Cliente según se describan en una o más Órdenes de Trabajo formalizadas al amparo del presente Contrato."
+      }
     },
     {
-      "term": "Statement of Work (SOW)",
-      "definition": "means a document executed by both parties that describes the specific Services to be performed, Deliverables, timelines, fees, and other terms applicable to a particular engagement under this Agreement."
+      "term": {
+        "en": "Statement of Work (SOW)",
+        "es": "Orden de Trabajo (OT)"
+      },
+      "definition": {
+        "en": "means a document executed by both parties that describes the specific Services to be performed, Deliverables, timelines, fees, and other terms applicable to a particular engagement under this Agreement.",
+        "es": "designa el documento firmado por ambas partes que describe los Servicios específicos a realizar, los Entregables, los plazos, los honorarios y demás condiciones aplicables a un encargo concreto al amparo del presente Contrato."
+      }
     },
     {
-      "term": "Work Product",
-      "definition": "means all inventions, works of authorship, designs, discoveries, improvements, and other materials created, conceived, or developed by the Provider in the course of performing the Services, excluding Background IP."
+      "term": {
+        "en": "Work Product",
+        "es": "Resultado del Trabajo"
+      },
+      "definition": {
+        "en": "means all inventions, works of authorship, designs, discoveries, improvements, and other materials created, conceived, or developed by the Provider in the course of performing the Services, excluding Background IP.",
+        "es": "designa todas las invenciones, obras, diseños, descubrimientos, mejoras y demás materiales creados, concebidos o desarrollados por el Prestador en el curso de la prestación de los Servicios, excluida la Propiedad Intelectual Preexistente."
+      }
     }
   ],
   "standardClauses": [
     {
-      "title": "Scope of services and SOW framework",
-      "text": "The Provider shall perform the Services as described in one or more Statements of Work executed by both parties. Each SOW shall reference this Agreement and shall include, at a minimum:\n\n(a) a description of the Services to be performed;\n\n(b) the Deliverables, milestones, and acceptance criteria (if applicable);\n\n(c) the timeline or schedule for performance;\n\n(d) the fees and payment terms applicable to the engagement;\n\n(e) any additional terms specific to the engagement.\n\nIn the event of a conflict between this Agreement and any SOW, this Agreement shall prevail unless the SOW expressly states otherwise with specific reference to the provision being modified."
+      "title": {
+        "en": "Scope of services and SOW framework",
+        "es": "Ámbito de los servicios y marco de las Órdenes de Trabajo"
+      },
+      "text": {
+        "en": "The Provider shall perform the Services as described in one or more Statements of Work executed by both parties. Each SOW shall reference this Agreement and shall include, at a minimum:\n\n(a) a description of the Services to be performed;\n\n(b) the Deliverables, milestones, and acceptance criteria (if applicable);\n\n(c) the timeline or schedule for performance;\n\n(d) the fees and payment terms applicable to the engagement;\n\n(e) any additional terms specific to the engagement.\n\nIn the event of a conflict between this Agreement and any SOW, this Agreement shall prevail unless the SOW expressly states otherwise with specific reference to the provision being modified.",
+        "es": "El Prestador realizará los Servicios según se describan en una o más Órdenes de Trabajo firmadas por ambas partes. Cada Orden de Trabajo hará referencia al presente Contrato e incluirá, como mínimo:\n\n(a) una descripción de los Servicios a realizar;\n\n(b) los Entregables, hitos y criterios de aceptación (en su caso);\n\n(c) el calendario o plazo de ejecución;\n\n(d) los honorarios y condiciones de pago aplicables al encargo;\n\n(e) cualesquiera condiciones adicionales específicas del encargo.\n\nEn caso de conflicto entre el presente Contrato y cualquier Orden de Trabajo, prevalecerá el presente Contrato salvo que la Orden de Trabajo disponga expresamente lo contrario con referencia específica a la disposición que se modifica."
+      }
     },
     {
-      "title": "Performance standards",
-      "text": "The Provider shall perform the Services:\n\n(a) in a professional and workmanlike manner, consistent with generally accepted industry standards and practices;\n\n(b) in accordance with all applicable laws and regulations;\n\n(c) using personnel who are suitably qualified and experienced to perform the Services;\n\n(d) in accordance with the timelines and specifications set forth in the applicable SOW.\n\nIf the Client reasonably determines that any Deliverable does not conform to the specifications in the SOW, the Client shall notify the Provider in writing within fifteen (15) business days of delivery, and the Provider shall re-perform the non-conforming Services or correct the Deliverable at no additional cost."
+      "title": {
+        "en": "Performance standards",
+        "es": "Estándares de ejecución"
+      },
+      "text": {
+        "en": "The Provider shall perform the Services:\n\n(a) in a professional and workmanlike manner, consistent with generally accepted industry standards and practices;\n\n(b) in accordance with all applicable laws and regulations;\n\n(c) using personnel who are suitably qualified and experienced to perform the Services;\n\n(d) in accordance with the timelines and specifications set forth in the applicable SOW.\n\nIf the Client reasonably determines that any Deliverable does not conform to the specifications in the SOW, the Client shall notify the Provider in writing within fifteen (15) business days of delivery, and the Provider shall re-perform the non-conforming Services or correct the Deliverable at no additional cost.",
+        "es": "El Prestador realizará los Servicios:\n\n(a) de manera profesional y diligente, conforme a los estándares y prácticas generalmente aceptados en el sector;\n\n(b) de conformidad con toda la legislación y normativa aplicable;\n\n(c) empleando personal debidamente cualificado y con experiencia para la realización de los Servicios;\n\n(d) de acuerdo con los plazos y especificaciones establecidos en la Orden de Trabajo correspondiente.\n\nSi el Cliente determina razonablemente que algún Entregable no se ajusta a las especificaciones de la Orden de Trabajo, el Cliente lo notificará por escrito al Prestador en un plazo de quince (15) días hábiles desde la entrega, y el Prestador volverá a realizar los Servicios no conformes o corregirá el Entregable sin coste adicional."
+      }
     },
     {
-      "title": "Client responsibilities",
-      "text": "The Client shall:\n\n(a) provide the Provider with timely access to such information, materials, facilities, and personnel as are reasonably necessary for the Provider to perform the Services;\n\n(b) designate a primary contact person to liaise with the Provider regarding the Services;\n\n(c) review and provide feedback on Deliverables within the timeframes specified in the applicable SOW;\n\n(d) comply with its obligations as set forth in this Agreement and each SOW.\n\nThe Provider shall not be liable for any delay or deficiency in performing the Services to the extent such delay or deficiency is caused by the Client's failure to fulfill its responsibilities under this section."
+      "title": {
+        "en": "Client responsibilities",
+        "es": "Responsabilidades del Cliente"
+      },
+      "text": {
+        "en": "The Client shall:\n\n(a) provide the Provider with timely access to such information, materials, facilities, and personnel as are reasonably necessary for the Provider to perform the Services;\n\n(b) designate a primary contact person to liaise with the Provider regarding the Services;\n\n(c) review and provide feedback on Deliverables within the timeframes specified in the applicable SOW;\n\n(d) comply with its obligations as set forth in this Agreement and each SOW.\n\nThe Provider shall not be liable for any delay or deficiency in performing the Services to the extent such delay or deficiency is caused by the Client's failure to fulfill its responsibilities under this section.",
+        "es": "El Cliente deberá:\n\n(a) facilitar al Prestador el acceso oportuno a la información, los materiales, las instalaciones y el personal que sean razonablemente necesarios para que el Prestador pueda realizar los Servicios;\n\n(b) designar una persona de contacto principal para la coordinación con el Prestador en relación con los Servicios;\n\n(c) revisar y proporcionar comentarios sobre los Entregables dentro de los plazos especificados en la Orden de Trabajo correspondiente;\n\n(d) cumplir con sus obligaciones según se establecen en el presente Contrato y en cada Orden de Trabajo.\n\nEl Prestador no será responsable de los retrasos o deficiencias en la realización de los Servicios en la medida en que dichos retrasos o deficiencias se deban al incumplimiento por parte del Cliente de sus responsabilidades conforme a la presente cláusula."
+      }
     },
     {
-      "title": "Representations and warranties",
-      "text": "Each party represents and warrants that:\n\n(a) it has the legal power and authority to enter into this Agreement and to perform its obligations hereunder;\n\n(b) the execution and performance of this Agreement does not conflict with any other agreement to which it is a party;\n\n(c) it shall comply with all applicable laws and regulations in performing its obligations under this Agreement.\n\nThe Provider additionally represents and warrants that:\n\n(d) the Services will be performed in a professional manner consistent with industry standards;\n\n(e) the Deliverables will conform to the specifications set forth in the applicable SOW;\n\n(f) to the Provider's knowledge, the Deliverables will not infringe the intellectual property rights of any third party."
+      "title": {
+        "en": "Representations and warranties",
+        "es": "Declaraciones y garantías"
+      },
+      "text": {
+        "en": "Each party represents and warrants that:\n\n(a) it has the legal power and authority to enter into this Agreement and to perform its obligations hereunder;\n\n(b) the execution and performance of this Agreement does not conflict with any other agreement to which it is a party;\n\n(c) it shall comply with all applicable laws and regulations in performing its obligations under this Agreement.\n\nThe Provider additionally represents and warrants that:\n\n(d) the Services will be performed in a professional manner consistent with industry standards;\n\n(e) the Deliverables will conform to the specifications set forth in the applicable SOW;\n\n(f) to the Provider's knowledge, the Deliverables will not infringe the intellectual property rights of any third party.",
+        "es": "Cada parte declara y garantiza que:\n\n(a) tiene la capacidad jurídica y la autorización necesarias para celebrar el presente Contrato y cumplir sus obligaciones en virtud del mismo;\n\n(b) la celebración y el cumplimiento del presente Contrato no entran en conflicto con ningún otro acuerdo del que sea parte;\n\n(c) cumplirá con toda la legislación y normativa aplicable en el cumplimiento de sus obligaciones conforme al presente Contrato.\n\nEl Prestador declara y garantiza adicionalmente que:\n\n(d) los Servicios se realizarán de manera profesional y conforme a los estándares del sector;\n\n(e) los Entregables se ajustarán a las especificaciones establecidas en la Orden de Trabajo correspondiente;\n\n(f) según el leal saber y entender del Prestador, los Entregables no infringirán los derechos de propiedad intelectual o industrial de terceros."
+      }
     },
     {
-      "title": "Independent contractor",
-      "text": "The Provider is an independent contractor and nothing in this Agreement shall be construed to create a partnership, joint venture, agency, or employment relationship between the parties. The Provider shall be solely responsible for:\n\n(a) determining the manner and means by which the Services are performed, subject to the specifications in each SOW;\n\n(b) employing, compensating, and supervising its personnel;\n\n(c) withholding and remitting all applicable taxes, social security contributions, and other statutory deductions for its personnel;\n\n(d) maintaining adequate workers' compensation and employer's liability insurance for its personnel.\n\nNeither party shall have the authority to bind or commit the other party to any obligation without the other party's prior written consent."
+      "title": {
+        "en": "Independent contractor",
+        "es": "Prestador independiente"
+      },
+      "text": {
+        "en": "The Provider is an independent contractor and nothing in this Agreement shall be construed to create a partnership, joint venture, agency, or employment relationship between the parties. The Provider shall be solely responsible for:\n\n(a) determining the manner and means by which the Services are performed, subject to the specifications in each SOW;\n\n(b) employing, compensating, and supervising its personnel;\n\n(c) withholding and remitting all applicable taxes, social security contributions, and other statutory deductions for its personnel;\n\n(d) maintaining adequate workers' compensation and employer's liability insurance for its personnel.\n\nNeither party shall have the authority to bind or commit the other party to any obligation without the other party's prior written consent.",
+        "es": "El Prestador actúa como contratista independiente y nada en el presente Contrato podrá interpretarse como la creación de una sociedad, empresa conjunta, relación de agencia o relación laboral entre las partes. El Prestador será el único responsable de:\n\n(a) determinar la forma y los medios mediante los cuales se realizan los Servicios, con sujeción a las especificaciones de cada Orden de Trabajo;\n\n(b) contratar, remunerar y supervisar a su personal;\n\n(c) practicar y remitir todas las retenciones fiscales, cotizaciones a la Seguridad Social y demás deducciones legales aplicables a su personal;\n\n(d) mantener un seguro de accidentes de trabajo y de responsabilidad patronal adecuado para su personal.\n\nNinguna de las partes tendrá la facultad de vincular u obligar a la otra parte sin el previo consentimiento escrito de esta."
+      }
     },
     {
-      "title": "Force majeure",
-      "text": "Neither party shall be liable for any failure or delay in performing its obligations under this Agreement to the extent that such failure or delay results from circumstances beyond the party's reasonable control, including acts of God, natural disasters, war, terrorism, riots, embargoes, labor disputes, governmental actions, power failures, internet or telecommunications failures, or pandemics (each a \"Force Majeure Event\").\n\nThe affected party shall:\n\n(a) promptly notify the other party in writing of the Force Majeure Event and its expected duration;\n\n(b) use commercially reasonable efforts to mitigate the impact of the Force Majeure Event;\n\n(c) resume performance as soon as reasonably practicable after the Force Majeure Event ceases.\n\nIf a Force Majeure Event continues for more than sixty (60) consecutive days, either party may terminate the affected SOW upon written notice without liability."
+      "title": {
+        "en": "Force majeure",
+        "es": "Fuerza mayor"
+      },
+      "text": {
+        "en": "Neither party shall be liable for any failure or delay in performing its obligations under this Agreement to the extent that such failure or delay results from circumstances beyond the party's reasonable control, including acts of God, natural disasters, war, terrorism, riots, embargoes, labor disputes, governmental actions, power failures, internet or telecommunications failures, or pandemics (each a \"Force Majeure Event\").\n\nThe affected party shall:\n\n(a) promptly notify the other party in writing of the Force Majeure Event and its expected duration;\n\n(b) use commercially reasonable efforts to mitigate the impact of the Force Majeure Event;\n\n(c) resume performance as soon as reasonably practicable after the Force Majeure Event ceases.\n\nIf a Force Majeure Event continues for more than sixty (60) consecutive days, either party may terminate the affected SOW upon written notice without liability.",
+        "es": "Ninguna de las partes será responsable del incumplimiento o del retraso en el cumplimiento de sus obligaciones conforme al presente Contrato en la medida en que dicho incumplimiento o retraso resulte de circunstancias ajenas al control razonable de la parte afectada, incluidos casos fortuitos, desastres naturales, guerras, terrorismo, disturbios, embargos, conflictos laborales, actuaciones gubernamentales, cortes de suministro eléctrico, fallos de internet o telecomunicaciones, o pandemias (cada uno, un \"Supuesto de Fuerza Mayor\").\n\nLa parte afectada deberá:\n\n(a) notificar sin demora a la otra parte por escrito el Supuesto de Fuerza Mayor y su duración prevista;\n\n(b) adoptar las medidas comercialmente razonables para mitigar el impacto del Supuesto de Fuerza Mayor;\n\n(c) reanudar el cumplimiento tan pronto como sea razonablemente posible tras el cese del Supuesto de Fuerza Mayor.\n\nSi un Supuesto de Fuerza Mayor se prolonga durante más de sesenta (60) días consecutivos, cualquiera de las partes podrá resolver la Orden de Trabajo afectada mediante notificación escrita y sin responsabilidad."
+      }
     }
   ],
   "generalProvisions": [
     {
-      "title": "Entire agreement",
-      "text": "This Agreement, together with all SOWs and exhibits, constitutes the entire agreement between the parties with respect to the subject matter hereof and supersedes all prior negotiations, representations, warranties, commitments, offers, and agreements, whether written or oral."
+      "title": {
+        "en": "Entire agreement",
+        "es": "Integridad del contrato"
+      },
+      "text": {
+        "en": "This Agreement, together with all SOWs and exhibits, constitutes the entire agreement between the parties with respect to the subject matter hereof and supersedes all prior negotiations, representations, warranties, commitments, offers, and agreements, whether written or oral.",
+        "es": "El presente Contrato, junto con todas las Órdenes de Trabajo y anexos, constituye el acuerdo íntegro entre las partes en relación con su objeto y deja sin efecto cualesquiera negociaciones, declaraciones, garantías, compromisos, ofertas y acuerdos anteriores, ya sean escritos u orales."
+      }
     },
     {
-      "title": "Amendments",
-      "text": "This Agreement may not be amended, modified, or supplemented except by a written instrument signed by both parties."
+      "title": {
+        "en": "Amendments",
+        "es": "Modificaciones"
+      },
+      "text": {
+        "en": "This Agreement may not be amended, modified, or supplemented except by a written instrument signed by both parties.",
+        "es": "El presente Contrato no podrá ser modificado ni complementado salvo mediante documento escrito firmado por ambas partes."
+      }
     },
     {
-      "title": "Severability",
-      "text": "If any provision of this Agreement is held to be invalid, illegal, or unenforceable, the remaining provisions shall continue in full force and effect, and the invalid provision shall be modified to the minimum extent necessary to make it valid and enforceable."
+      "title": {
+        "en": "Severability",
+        "es": "Divisibilidad"
+      },
+      "text": {
+        "en": "If any provision of this Agreement is held to be invalid, illegal, or unenforceable, the remaining provisions shall continue in full force and effect, and the invalid provision shall be modified to the minimum extent necessary to make it valid and enforceable.",
+        "es": "Si cualquier disposición del presente Contrato fuera declarada nula, ilegal o inaplicable, las restantes disposiciones mantendrán su plena vigencia y eficacia, y la disposición afectada será modificada en la medida mínima necesaria para que resulte válida y ejecutable."
+      }
     },
     {
-      "title": "Notices",
-      "text": "All notices under this Agreement shall be in writing and shall be deemed given: (a) when delivered personally; (b) when sent by confirmed electronic mail; (c) one (1) business day after being sent by internationally recognized overnight courier; or (d) three (3) business days after being mailed by registered or certified mail, postage prepaid, to the parties at their respective addresses set forth above."
+      "title": {
+        "en": "Notices",
+        "es": "Notificaciones"
+      },
+      "text": {
+        "en": "All notices under this Agreement shall be in writing and shall be deemed given: (a) when delivered personally; (b) when sent by confirmed electronic mail; (c) one (1) business day after being sent by internationally recognized overnight courier; or (d) three (3) business days after being mailed by registered or certified mail, postage prepaid, to the parties at their respective addresses set forth above.",
+        "es": "Todas las notificaciones en virtud del presente Contrato deberán realizarse por escrito y se entenderán efectuadas: (a) en el momento de su entrega personal; (b) en el momento de su envío por correo electrónico con confirmación de recepción; (c) un (1) día hábil después de su envío mediante servicio de mensajería urgente internacionalmente reconocido; o (d) tres (3) días hábiles después de su envío por correo certificado con acuse de recibo, franqueo pagado, a las direcciones de las partes indicadas anteriormente."
+      }
     },
     {
-      "title": "Waiver",
-      "text": "No failure or delay by either party in exercising any right under this Agreement shall operate as a waiver thereof, nor shall any single or partial exercise of any right preclude any further exercise of that or any other right."
+      "title": {
+        "en": "Waiver",
+        "es": "Renuncia"
+      },
+      "text": {
+        "en": "No failure or delay by either party in exercising any right under this Agreement shall operate as a waiver thereof, nor shall any single or partial exercise of any right preclude any further exercise of that or any other right.",
+        "es": "La falta de ejercicio o el retraso de cualquiera de las partes en el ejercicio de cualquier derecho en virtud del presente Contrato no constituirá una renuncia al mismo, ni el ejercicio parcial de un derecho impedirá el ejercicio posterior de ese u otro derecho."
+      }
     },
     {
-      "title": "Survival",
-      "text": "The provisions of this Agreement relating to confidentiality, intellectual property, limitation of liability, indemnification, and any provisions that by their nature are intended to survive, shall survive the expiration or termination of this Agreement."
+      "title": {
+        "en": "Survival",
+        "es": "Subsistencia"
+      },
+      "text": {
+        "en": "The provisions of this Agreement relating to confidentiality, intellectual property, limitation of liability, indemnification, and any provisions that by their nature are intended to survive, shall survive the expiration or termination of this Agreement.",
+        "es": "Las disposiciones del presente Contrato relativas a la confidencialidad, la propiedad intelectual e industrial, la limitación de responsabilidad, la indemnización y cualesquiera otras disposiciones que por su naturaleza deban subsistir, continuarán en vigor tras la expiración o resolución del presente Contrato."
+      }
     },
     {
-      "title": "Counterparts",
-      "text": "This Agreement may be executed in counterparts, each of which shall be deemed an original, and all of which together shall constitute one and the same instrument. Electronic signatures shall be deemed original signatures for all purposes."
+      "title": {
+        "en": "Counterparts",
+        "es": "Ejemplares"
+      },
+      "text": {
+        "en": "This Agreement may be executed in counterparts, each of which shall be deemed an original, and all of which together shall constitute one and the same instrument. Electronic signatures shall be deemed original signatures for all purposes.",
+        "es": "El presente Contrato podrá firmarse en varios ejemplares, cada uno de los cuales se considerará un original y todos ellos conjuntamente constituirán un único instrumento. Las firmas electrónicas tendrán la misma validez que las firmas manuscritas a todos los efectos."
+      }
     },
     {
-      "title": "Assignment",
-      "text": "Neither party may assign or transfer this Agreement or any of its rights or obligations hereunder without the prior written consent of the other party, except that either party may assign this Agreement to an Affiliate or in connection with a merger, acquisition, or sale of all or substantially all of its assets, provided the assignee assumes all obligations under this Agreement."
+      "title": {
+        "en": "Assignment",
+        "es": "Cesión"
+      },
+      "text": {
+        "en": "Neither party may assign or transfer this Agreement or any of its rights or obligations hereunder without the prior written consent of the other party, except that either party may assign this Agreement to an Affiliate or in connection with a merger, acquisition, or sale of all or substantially all of its assets, provided the assignee assumes all obligations under this Agreement.",
+        "es": "Ninguna de las partes podrá ceder ni transferir el presente Contrato ni ninguno de sus derechos u obligaciones sin el previo consentimiento escrito de la otra parte, salvo que cualquiera de las partes podrá ceder el presente Contrato a una Entidad Vinculada o en el contexto de una fusión, adquisición o venta de la totalidad o la parte sustancial de sus activos, siempre que el cesionario asuma todas las obligaciones derivadas del presente Contrato."
+      }
     }
   ],
   "jurisdictionProvisions": {
     "CALIFORNIA": {
-      "title": "California-specific provisions",
-      "text": "(a) Independent Contractor Compliance: The parties acknowledge the requirements of California Assembly Bill 5 (AB 5) and the applicable provisions of the California Labor Code. The Provider represents and warrants that the engagement under this Agreement satisfies the applicable test for independent contractor status under California law.\n\n(b) Jury Waiver: EACH PARTY HEREBY IRREVOCABLY WAIVES, TO THE FULLEST EXTENT PERMITTED BY APPLICABLE LAW, ALL RIGHTS TO TRIAL BY JURY IN ANY ACTION, PROCEEDING, OR COUNTERCLAIM ARISING OUT OF OR RELATING TO THIS AGREEMENT.\n\n(c) CCPA/CPRA: To the extent that either party processes personal information (as defined under Cal. Civ. Code §1798.100 et seq.) in the course of performing or receiving the Services, such party shall comply with all applicable requirements of the California Consumer Privacy Act and the California Privacy Rights Act."
+      "title": {
+        "en": "California-specific provisions",
+        "es": "Disposiciones específicas de California"
+      },
+      "text": {
+        "en": "(a) Independent Contractor Compliance: The parties acknowledge the requirements of California Assembly Bill 5 (AB 5) and the applicable provisions of the California Labor Code. The Provider represents and warrants that the engagement under this Agreement satisfies the applicable test for independent contractor status under California law.\n\n(b) Jury Waiver: EACH PARTY HEREBY IRREVOCABLY WAIVES, TO THE FULLEST EXTENT PERMITTED BY APPLICABLE LAW, ALL RIGHTS TO TRIAL BY JURY IN ANY ACTION, PROCEEDING, OR COUNTERCLAIM ARISING OUT OF OR RELATING TO THIS AGREEMENT.\n\n(c) CCPA/CPRA: To the extent that either party processes personal information (as defined under Cal. Civ. Code §1798.100 et seq.) in the course of performing or receiving the Services, such party shall comply with all applicable requirements of the California Consumer Privacy Act and the California Privacy Rights Act.",
+        "es": "(a) Cumplimiento normativo sobre contratistas independientes: Las partes reconocen los requisitos del California Assembly Bill 5 (AB 5) y las disposiciones aplicables del California Labor Code. El Prestador declara y garantiza que la relación contractual al amparo del presente Contrato cumple con los requisitos aplicables para la calificación como contratista independiente conforme a la legislación de California.\n\n(b) Renuncia al juicio con jurado: CADA PARTE RENUNCIA IRREVOCABLEMENTE, EN LA MEDIDA MÁXIMA PERMITIDA POR LA LEGISLACIÓN APLICABLE, A TODOS LOS DERECHOS A UN JUICIO CON JURADO EN CUALQUIER ACCIÓN, PROCEDIMIENTO O RECONVENCIÓN DERIVADO DE O RELACIONADO CON EL PRESENTE CONTRATO.\n\n(c) CCPA/CPRA: En la medida en que cualquiera de las partes trate información personal (según se define en Cal. Civ. Code §1798.100 y ss.) en el curso de la prestación o recepción de los Servicios, dicha parte cumplirá con todos los requisitos aplicables de la California Consumer Privacy Act y la California Privacy Rights Act."
+      }
     },
     "ENGLAND_WALES": {
-      "title": "England & Wales-specific provisions",
-      "text": "(a) Third Party Rights: No person who is not a party to this Agreement shall have any rights under the Contracts (Rights of Third Parties) Act 1999 to enforce any term of this Agreement.\n\n(b) Non-Excludable Liability: Nothing in this Agreement shall exclude or limit liability for: (i) fraud or fraudulent misrepresentation; (ii) death or personal injury caused by negligence; or (iii) any other liability that cannot be excluded or limited under applicable law.\n\n(c) IR35: Where applicable, the parties shall comply with the off-payroll working rules (IR35) under the Income Tax (Earnings and Pensions) Act 2003, as amended. The Client shall be responsible for making any status determination statement required under Chapter 10 of Part 2 of that Act.\n\n(d) UK GDPR: To the extent that any personal data (as defined under the UK General Data Protection Regulation and the Data Protection Act 2018) is processed in connection with the Services, both parties shall comply with all applicable data protection requirements."
+      "title": {
+        "en": "England & Wales-specific provisions",
+        "es": "Disposiciones específicas de Inglaterra y Gales"
+      },
+      "text": {
+        "en": "(a) Third Party Rights: No person who is not a party to this Agreement shall have any rights under the Contracts (Rights of Third Parties) Act 1999 to enforce any term of this Agreement.\n\n(b) Non-Excludable Liability: Nothing in this Agreement shall exclude or limit liability for: (i) fraud or fraudulent misrepresentation; (ii) death or personal injury caused by negligence; or (iii) any other liability that cannot be excluded or limited under applicable law.\n\n(c) IR35: Where applicable, the parties shall comply with the off-payroll working rules (IR35) under the Income Tax (Earnings and Pensions) Act 2003, as amended. The Client shall be responsible for making any status determination statement required under Chapter 10 of Part 2 of that Act.\n\n(d) UK GDPR: To the extent that any personal data (as defined under the UK General Data Protection Regulation and the Data Protection Act 2018) is processed in connection with the Services, both parties shall comply with all applicable data protection requirements.",
+        "es": "(a) Derechos de terceros: Ninguna persona que no sea parte del presente Contrato tendrá derecho alguno en virtud de la Contracts (Rights of Third Parties) Act 1999 para exigir el cumplimiento de cualquier estipulación de este Contrato.\n\n(b) Responsabilidad no excluible: Nada en el presente Contrato excluirá ni limitará la responsabilidad por: (i) fraude o declaración fraudulenta; (ii) muerte o lesiones personales causadas por negligencia; o (iii) cualquier otra responsabilidad que no pueda ser excluida o limitada conforme a la legislación aplicable.\n\n(c) IR35: Cuando resulte aplicable, las partes cumplirán con las normas sobre trabajo fuera de nómina (IR35) conforme a la Income Tax (Earnings and Pensions) Act 2003, en su versión modificada. El Cliente será responsable de emitir cualquier declaración de determinación de estatus requerida conforme al Capítulo 10 de la Parte 2 de dicha ley.\n\n(d) RGPD del RU: En la medida en que se traten datos personales (según se definen en el Reglamento General de Protección de Datos del Reino Unido y la Data Protection Act 2018) en relación con los Servicios, ambas partes cumplirán con todos los requisitos aplicables en materia de protección de datos."
+      }
     },
     "SPAIN": {
-      "title": "Spain-specific provisions (Disposiciones específicas para España)",
-      "text": "(a) Applicable Law: This Agreement shall be governed by and construed in accordance with Spanish law, including the Código Civil and the Código de Comercio, as applicable.\n\n(b) Good Faith: This Agreement shall be interpreted and performed in accordance with the principle of good faith (buena fe) as set forth in Articles 7 and 1258 of the Código Civil.\n\n(c) Interpretation: In the event of any ambiguity, this Agreement shall be interpreted in accordance with the rules of interpretation set forth in Articles 1281 through 1289 of the Código Civil.\n\n(d) Independent Contractor: The Provider confirms that the engagement under this Agreement is governed by the Estatuto del Trabajo Autónomo (Ley 20/2007) or applicable commercial law, and does not constitute an employment relationship (relación laboral) under the Estatuto de los Trabajadores.\n\n(e) GDPR/LOPDGDD: To the extent that any personal data is processed in connection with the Services, both parties shall comply with the EU General Data Protection Regulation (Regulation (EU) 2016/679) and the Ley Orgánica 3/2018 de Protección de Datos Personales y garantía de los derechos digitales (LOPDGDD)."
+      "title": {
+        "en": "Spain-specific provisions",
+        "es": "Disposiciones específicas de España"
+      },
+      "text": {
+        "en": "(a) Applicable Law: This Agreement shall be governed by and construed in accordance with Spanish law, including the Código Civil and the Código de Comercio, as applicable.\n\n(b) Good Faith: This Agreement shall be interpreted and performed in accordance with the principle of good faith (buena fe) as set forth in Articles 7 and 1258 of the Código Civil.\n\n(c) Interpretation: In the event of any ambiguity, this Agreement shall be interpreted in accordance with the rules of interpretation set forth in Articles 1281 through 1289 of the Código Civil.\n\n(d) Independent Contractor: The Provider confirms that the engagement under this Agreement is governed by the Estatuto del Trabajo Autónomo (Ley 20/2007) or applicable commercial law, and does not constitute an employment relationship (relación laboral) under the Estatuto de los Trabajadores.\n\n(e) GDPR/LOPDGDD: To the extent that any personal data is processed in connection with the Services, both parties shall comply with the EU General Data Protection Regulation (Regulation (EU) 2016/679) and the Ley Orgánica 3/2018 de Protección de Datos Personales y garantía de los derechos digitales (LOPDGDD).",
+        "es": "(a) Legislación aplicable: El presente Contrato se regirá e interpretará conforme al Derecho español, incluidos el Código Civil y el Código de Comercio, según corresponda.\n\n(b) Buena fe: El presente Contrato se interpretará y ejecutará conforme al principio de buena fe establecido en los artículos 7 y 1258 del Código Civil.\n\n(c) Interpretación: En caso de ambigüedad, el presente Contrato se interpretará conforme a las reglas de interpretación previstas en los artículos 1281 a 1289 del Código Civil.\n\n(d) Prestador independiente: El Prestador confirma que la relación contractual al amparo del presente Contrato se rige por el Estatuto del Trabajo Autónomo (Ley 20/2007) o por la legislación mercantil aplicable, y no constituye una relación laboral conforme al Estatuto de los Trabajadores.\n\n(e) RGPD/LOPDGDD: En la medida en que se traten datos personales en relación con los Servicios, ambas partes cumplirán con el Reglamento General de Protección de Datos de la UE (Reglamento (UE) 2016/679) y la Ley Orgánica 3/2018, de Protección de Datos Personales y garantía de los derechos digitales (LOPDGDD)."
+      }
     }
   },
-  "signatureBlock": "SIGNED by the parties:\n\n{partyASignatureBlock}\n\n{partyBSignatureBlock}",
+  "signatureBlock": {
+    "en": "SIGNED by the parties:\n\n{partyASignatureBlock}\n\n{partyBSignatureBlock}",
+    "es": "FIRMADO por las partes:\n\n{partyASignatureBlock}\n\n{partyBSignatureBlock}"
+  },
   "partyLabels": {
-    "partyA": "Provider",
-    "partyB": "Client"
+    "partyA": {
+      "en": "Provider",
+      "es": "Prestador"
+    },
+    "partyB": {
+      "en": "Client",
+      "es": "Cliente"
+    }
   }
 }
