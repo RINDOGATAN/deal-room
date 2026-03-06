@@ -23,6 +23,9 @@ import {
   Ticket,
   Copy,
   User,
+  Key,
+  Trash2,
+  Ban,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { AssignSkillModal } from "@/components/admin/AssignSkillModal";
@@ -39,6 +42,10 @@ export default function CustomerDetailPage() {
   const [editedJurisdictions, setEditedJurisdictions] = useState<string[]>([]);
 
   const [copiedCode, setCopiedCode] = useState<string | null>(null);
+  const [showCreateKey, setShowCreateKey] = useState(false);
+  const [newKeyName, setNewKeyName] = useState("");
+  const [newKeyScopes, setNewKeyScopes] = useState<string[]>(["experts:read"]);
+  const [createdKeyRaw, setCreatedKeyRaw] = useState<string | null>(null);
 
   const utils = trpc.useUtils();
   const { data: customer, isLoading, error } = trpc.platformAdmin.getCustomer.useQuery({
@@ -60,6 +67,46 @@ export default function CustomerDetailPage() {
     navigator.clipboard.writeText(code);
     setCopiedCode(code);
     setTimeout(() => setCopiedCode(null), 2000);
+  };
+
+  const { data: apiKeys, isLoading: apiKeysLoading } = trpc.platformAdmin.listApiKeys.useQuery({
+    customerId,
+  });
+
+  const createApiKeyMutation = trpc.platformAdmin.createApiKey.useMutation({
+    onSuccess: (data) => {
+      setCreatedKeyRaw(data.key);
+      setShowCreateKey(false);
+      setNewKeyName("");
+      utils.platformAdmin.listApiKeys.invalidate({ customerId });
+    },
+  });
+
+  const revokeApiKeyMutation = trpc.platformAdmin.revokeApiKey.useMutation({
+    onSuccess: () => {
+      utils.platformAdmin.listApiKeys.invalidate({ customerId });
+    },
+  });
+
+  const deleteApiKeyMutation = trpc.platformAdmin.deleteApiKey.useMutation({
+    onSuccess: () => {
+      utils.platformAdmin.listApiKeys.invalidate({ customerId });
+    },
+  });
+
+  const handleCreateApiKey = () => {
+    if (!newKeyName.trim() || newKeyScopes.length === 0) return;
+    createApiKeyMutation.mutate({
+      customerId,
+      name: newKeyName.trim(),
+      scopes: newKeyScopes,
+    });
+  };
+
+  const toggleScope = (scope: string) => {
+    setNewKeyScopes((prev) =>
+      prev.includes(scope) ? prev.filter((s) => s !== scope) : [...prev, scope]
+    );
   };
 
   const suspendMutation = trpc.platformAdmin.suspendEntitlement.useMutation({
@@ -371,6 +418,186 @@ export default function CustomerDetailPage() {
                       )}
                     </button>
                   ) : null}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* API Keys */}
+      <div>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-semibold">API Keys</h2>
+          <button
+            onClick={() => setShowCreateKey(true)}
+            className="btn-brutal flex items-center gap-2 text-sm"
+          >
+            <Key className="w-4 h-4" />
+            Create API Key
+          </button>
+        </div>
+
+        {/* Created key banner — shown once after creation */}
+        {createdKeyRaw && (
+          <div className="card-brutal border-green-500 mb-4">
+            <div className="space-y-2">
+              <p className="text-sm font-medium text-green-600">
+                API key created — copy it now, it won&apos;t be shown again:
+              </p>
+              <div className="flex items-center gap-2">
+                <code className="flex-1 text-sm font-mono bg-muted px-3 py-2 break-all">
+                  {createdKeyRaw}
+                </code>
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText(createdKeyRaw);
+                    setCopiedCode(createdKeyRaw);
+                    setTimeout(() => setCopiedCode(null), 2000);
+                  }}
+                  className="p-2 text-muted-foreground hover:text-foreground hover:bg-muted rounded"
+                >
+                  {copiedCode === createdKeyRaw ? (
+                    <Check className="w-4 h-4 text-green-500" />
+                  ) : (
+                    <Copy className="w-4 h-4" />
+                  )}
+                </button>
+              </div>
+              <button
+                onClick={() => setCreatedKeyRaw(null)}
+                className="text-xs text-muted-foreground hover:text-foreground"
+              >
+                Dismiss
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Create key form */}
+        {showCreateKey && (
+          <div className="card-brutal mb-4 space-y-4">
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Key Name</label>
+              <input
+                type="text"
+                value={newKeyName}
+                onChange={(e) => setNewKeyName(e.target.value)}
+                placeholder="e.g. DPO Central Production"
+                className="w-full px-3 py-2 text-sm border border-border rounded-lg bg-background text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Scopes</label>
+              <div className="flex flex-wrap gap-2">
+                {["experts:read", "deals:read", "deals:write", "negotiate"].map((scope) => (
+                  <button
+                    key={scope}
+                    onClick={() => toggleScope(scope)}
+                    className={`px-3 py-1.5 text-xs border rounded-full transition-colors ${
+                      newKeyScopes.includes(scope)
+                        ? "bg-primary/10 border-primary text-primary"
+                        : "border-border text-muted-foreground hover:border-foreground"
+                    }`}
+                  >
+                    {scope}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className="flex gap-2">
+              <button
+                onClick={handleCreateApiKey}
+                disabled={createApiKeyMutation.isPending || !newKeyName.trim() || newKeyScopes.length === 0}
+                className="btn-brutal flex items-center gap-2 text-sm disabled:opacity-50"
+              >
+                {createApiKeyMutation.isPending ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <Key className="w-4 h-4" />
+                )}
+                Create
+              </button>
+              <button
+                onClick={() => { setShowCreateKey(false); setNewKeyName(""); }}
+                className="px-4 py-2 text-sm border border-border hover:bg-muted transition-colors"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Key list */}
+        {apiKeysLoading ? (
+          <div className="flex items-center justify-center py-8">
+            <Loader2 className="w-6 h-6 animate-spin text-primary" />
+          </div>
+        ) : !apiKeys || apiKeys.length === 0 ? (
+          <div className="card-brutal text-center py-8">
+            <Key className="w-10 h-10 text-muted-foreground mx-auto mb-3" />
+            <h3 className="text-base font-semibold mb-1">No API keys</h3>
+            <p className="text-sm text-muted-foreground">
+              Create an API key to allow this customer to access the API
+            </p>
+          </div>
+        ) : (
+          <div className="border border-border">
+            <div className="grid grid-cols-6 gap-4 p-3 bg-muted/30 text-xs font-medium text-muted-foreground uppercase">
+              <div>Name</div>
+              <div>Key Prefix</div>
+              <div>Scopes</div>
+              <div>Status</div>
+              <div>Last Used</div>
+              <div>Actions</div>
+            </div>
+            {apiKeys.map((ak) => (
+              <div
+                key={ak.id}
+                className="grid grid-cols-6 gap-4 p-3 border-t border-border items-center text-sm"
+              >
+                <div className="font-medium">{ak.name}</div>
+                <div>
+                  <code className="text-xs font-mono bg-muted px-1.5 py-0.5">{ak.keyPrefix}...</code>
+                </div>
+                <div className="flex flex-wrap gap-1">
+                  {ak.scopes.map((s) => (
+                    <Badge key={s} variant="outline" className="text-xs">{s}</Badge>
+                  ))}
+                </div>
+                <div>
+                  {ak.isActive ? (
+                    <Badge className="bg-green-500/20 text-green-500">Active</Badge>
+                  ) : (
+                    <Badge className="bg-red-500/20 text-red-500">Revoked</Badge>
+                  )}
+                </div>
+                <div className="text-muted-foreground text-xs">
+                  {ak.lastUsedAt ? format(new Date(ak.lastUsedAt), "MMM d, yyyy") : "Never"}
+                </div>
+                <div className="flex items-center gap-1">
+                  {ak.isActive && (
+                    <button
+                      onClick={() => revokeApiKeyMutation.mutate({ apiKeyId: ak.id })}
+                      disabled={revokeApiKeyMutation.isPending}
+                      className="p-1 text-orange-500 hover:bg-orange-500/10 rounded"
+                      title="Revoke"
+                    >
+                      <Ban className="w-4 h-4" />
+                    </button>
+                  )}
+                  <button
+                    onClick={() => {
+                      if (confirm("Permanently delete this API key?")) {
+                        deleteApiKeyMutation.mutate({ apiKeyId: ak.id });
+                      }
+                    }}
+                    disabled={deleteApiKeyMutation.isPending}
+                    className="p-1 text-red-500 hover:bg-red-500/10 rounded"
+                    title="Delete"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
                 </div>
               </div>
             ))}
