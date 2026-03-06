@@ -926,8 +926,8 @@ function ReviewContent({ dealId }: { dealId: string }) {
 
           {/* No reviews or all approved — show proceed + option to request */}
           {reviewStatus?.canProceedToSigning && (
-            <div className="card-brutal border-primary text-center py-8">
-              <Check className="w-12 h-12 text-primary mx-auto mb-4" />
+            <div className="card-brutal border-primary text-center py-6">
+              <Check className="w-8 h-8 text-primary mx-auto mb-3" />
               <h2 className="text-lg font-semibold mb-2">{t("allClausesAgreed")}</h2>
               <p className="text-muted-foreground mb-6">
                 {reviewStatus.myReview?.approvedAt
@@ -966,8 +966,8 @@ function ReviewContent({ dealId }: { dealId: string }) {
 
           {/* Reviews active — signing blocked */}
           {!reviewStatus?.canProceedToSigning && !reviewStatus?.myReview && !reviewStatus?.otherPartyReviewActive && (
-            <div className="card-brutal border-primary text-center py-8">
-              <Check className="w-12 h-12 text-primary mx-auto mb-4" />
+            <div className="card-brutal border-primary text-center py-6">
+              <Check className="w-8 h-8 text-primary mx-auto mb-3" />
               <h2 className="text-lg font-semibold mb-2">{t("allClausesAgreed")}</h2>
               <p className="text-muted-foreground mb-6">
                 {t("allAgreedSimple")}

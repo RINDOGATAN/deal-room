@@ -271,7 +271,7 @@
 
   /* Button variants — use CSS variables */
   .btn-brutal {
-    @apply bg-primary text-primary-foreground font-semibold px-6 py-3 rounded-full;
+    @apply bg-primary text-primary-foreground font-semibold px-5 py-2.5 text-sm rounded-full;
     box-shadow: var(--shadow-soft);
     @apply hover:-translate-y-0.5 transition-all duration-200;
   }
@@ -289,7 +289,7 @@
   }
 
   .btn-brutal-outline {
-    @apply bg-transparent text-primary font-semibold px-6 py-3 border-2 border-primary rounded-full;
+    @apply bg-transparent text-primary font-semibold px-5 py-2.5 text-sm border-2 border-primary rounded-full;
     @apply hover:bg-secondary transition-all duration-200;
   }
   [data-brand="northend"] .btn-brutal-outline {

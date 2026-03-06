@@ -702,9 +702,9 @@ function SigningContent({ dealId }: { dealId: string }) {
 
           {signingRequest.status === "COMPLETED" ? (
             <div className="text-center py-6 border-t border-border">
-              <Check className="w-12 h-12 text-primary mx-auto mb-4" />
+              <Check className="w-8 h-8 text-primary mx-auto mb-3" />
               <h3 className="text-lg font-semibold mb-2">{t("contractSigned")}</h3>
-              <p className="text-muted-foreground mb-6">
+              <p className="text-sm text-muted-foreground mb-4">
                 {t("contractSignedDescription")}
               </p>
               <div className="flex items-center justify-center gap-4 flex-wrap">
@@ -739,8 +739,8 @@ function SigningContent({ dealId }: { dealId: string }) {
                 if (currentPartyHasSigned) {
                   return (
                     <div className="py-6 border-t border-border">
-                      <div className="text-center mb-6">
-                        <Check className="w-12 h-12 text-primary mx-auto mb-4" />
+                      <div className="text-center mb-4">
+                        <Check className="w-8 h-8 text-primary mx-auto mb-3" />
                         <h3 className="text-lg font-semibold mb-2">{t("youHaveSigned")}</h3>
                         <p className="text-muted-foreground">
                           {otherPartyHasSigned
@@ -874,10 +874,10 @@ function SigningContent({ dealId }: { dealId: string }) {
           )}
         </div>
       ) : (
-        <div className="card-brutal text-center py-8">
-          <FileSignature className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+        <div className="card-brutal text-center py-6">
+          <FileSignature className="w-8 h-8 text-muted-foreground mx-auto mb-3" />
           <h2 className="text-lg font-semibold mb-2">{t("readyForSignatures")}</h2>
-          <p className="text-muted-foreground mb-6 max-w-md mx-auto">
+          <p className="text-sm text-muted-foreground mb-4 max-w-md mx-auto">
             {t("readyForSignaturesDescription")}
           </p>
           <div className="flex items-center justify-center gap-3 mb-4">
