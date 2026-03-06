@@ -798,8 +798,8 @@ npm run skill:upload
 The `DEAL_ROOM_TOKEN` may expire. To refresh:
 
 1. Create a new PAT at https://github.com/settings/personal-access-tokens
-2. Grant `Contents: Read` access to `sergiomaldo/deal-room`
-3. Update the secret in legalskills repo settings
+2. Grant `Contents: Read` access to `RINDOGATAN/deal-room`
+3. Update the secret in `RINDOGATAN/legalskills` repo settings
 
 ### Licensing & Entitlements
 

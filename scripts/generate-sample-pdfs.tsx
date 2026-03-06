@@ -16,7 +16,7 @@ import { ContractPDF } from "../src/server/services/document/ContractPDF";
 import type { ContractData, ClauseData, BoilerplateData } from "../src/server/services/document/generator";
 import { interpolateParameters, buildBoilerplateVariables, type ParameterSchema } from "../src/lib/parameters";
 
-const LEGALSKILLS_DIR = "/Users/sme/NEL/legalskills";
+const LEGALSKILLS_DIR = process.env.SKILLS_DIR || "./legalskills";
 const BUILTIN_SKILLS_DIR = path.resolve(__dirname, "../skills");
 const OUTPUT_DIR = path.resolve(__dirname, "../sample-pdfs");
 
