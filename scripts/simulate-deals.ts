@@ -200,6 +200,24 @@ const DEMO_PARAMETERS: Record<string, Record<string, string>> = {
     "dpo-email": "privacidad@acme.ejemplo.es",
     "effective-date": "1 de marzo de 2026",
   },
+  DATA_LICENSING: {
+    "data-categories": "anonymized user analytics and usage metrics",
+    "license-fee": "$50,000",
+    "license-term": "24 months",
+  },
+  INFLUENCER_MARKETING: {
+    "campaign-name": "Summer Product Launch",
+    "total-compensation": "$25,000",
+    "num-deliverables": "10",
+    "campaign-start": "June 1, 2026",
+    "campaign-end": "August 31, 2026",
+  },
+  WHITE_LABEL_RESELLER: {
+    "territory": "European Union",
+    "minimum-commitment": "$100,000",
+    "revenue-share-pct": "30",
+    "support-sla-hours": "24",
+  },
 };
 
 interface DealVariant {
@@ -231,6 +249,34 @@ const DEAL_VARIANTS: DealVariant[] = [
   { contractType: "PHANTOM_SHARES_GRANT", jurisdiction: GoverningLaw.SPAIN, language: "es", hasBoilerplate: true, dealMode: "SOLO" },
   { contractType: "PRIVACY_NOTICE", jurisdiction: GoverningLaw.CALIFORNIA, language: "en", hasBoilerplate: true, dealMode: "SOLO" },
   { contractType: "PRIVACY_NOTICE", jurisdiction: GoverningLaw.SPAIN, language: "es", hasBoilerplate: true, dealMode: "SOLO" },
+  // Premium bilingual skills
+  { contractType: "CONSULTING", jurisdiction: GoverningLaw.CALIFORNIA, language: "en", hasBoilerplate: true },
+  { contractType: "CONSULTING", jurisdiction: GoverningLaw.SPAIN, language: "es", hasBoilerplate: true },
+  { contractType: "CONVERTIBLE_NOTE", jurisdiction: GoverningLaw.CALIFORNIA, language: "en", hasBoilerplate: true },
+  { contractType: "CONVERTIBLE_NOTE", jurisdiction: GoverningLaw.SPAIN, language: "es", hasBoilerplate: true },
+  { contractType: "DATA_LICENSING", jurisdiction: GoverningLaw.CALIFORNIA, language: "en", hasBoilerplate: true },
+  { contractType: "DATA_LICENSING", jurisdiction: GoverningLaw.SPAIN, language: "es", hasBoilerplate: true },
+  { contractType: "EMPLOYMENT", jurisdiction: GoverningLaw.CALIFORNIA, language: "en", hasBoilerplate: true },
+  { contractType: "EMPLOYMENT", jurisdiction: GoverningLaw.SPAIN, language: "es", hasBoilerplate: true },
+  { contractType: "FOUNDERS", jurisdiction: GoverningLaw.CALIFORNIA, language: "en", hasBoilerplate: true },
+  { contractType: "FOUNDERS", jurisdiction: GoverningLaw.SPAIN, language: "es", hasBoilerplate: true },
+  { contractType: "INFLUENCER_MARKETING", jurisdiction: GoverningLaw.CALIFORNIA, language: "en", hasBoilerplate: true },
+  { contractType: "INFLUENCER_MARKETING", jurisdiction: GoverningLaw.SPAIN, language: "es", hasBoilerplate: true },
+  { contractType: "IP_ASSIGNMENT", jurisdiction: GoverningLaw.CALIFORNIA, language: "en", hasBoilerplate: true },
+  { contractType: "IP_ASSIGNMENT", jurisdiction: GoverningLaw.SPAIN, language: "es", hasBoilerplate: true },
+  { contractType: "SAFE", jurisdiction: GoverningLaw.CALIFORNIA, language: "en", hasBoilerplate: true },
+  { contractType: "SAFE", jurisdiction: GoverningLaw.SPAIN, language: "es", hasBoilerplate: true },
+  { contractType: "SHAREHOLDERS", jurisdiction: GoverningLaw.CALIFORNIA, language: "en", hasBoilerplate: true },
+  { contractType: "SHAREHOLDERS", jurisdiction: GoverningLaw.SPAIN, language: "es", hasBoilerplate: true },
+  { contractType: "TERM_SHEET", jurisdiction: GoverningLaw.CALIFORNIA, language: "en", hasBoilerplate: true },
+  { contractType: "TERM_SHEET", jurisdiction: GoverningLaw.SPAIN, language: "es", hasBoilerplate: true },
+  { contractType: "WHITE_LABEL_RESELLER", jurisdiction: GoverningLaw.CALIFORNIA, language: "en", hasBoilerplate: true },
+  { contractType: "WHITE_LABEL_RESELLER", jurisdiction: GoverningLaw.SPAIN, language: "es", hasBoilerplate: true },
+  // Spanish-native premium skills
+  { contractType: "CESION_PI", jurisdiction: GoverningLaw.SPAIN, language: "es", hasBoilerplate: true },
+  { contractType: "CONTRATO_LABORAL", jurisdiction: GoverningLaw.SPAIN, language: "es", hasBoilerplate: true },
+  { contractType: "CONTRATO_SERVICIOS", jurisdiction: GoverningLaw.SPAIN, language: "es", hasBoilerplate: true },
+  { contractType: "PACTO_SOCIOS", jurisdiction: GoverningLaw.SPAIN, language: "es", hasBoilerplate: true },
 ];
 
 // ── Types ─────────────────────────────────────────────────────
