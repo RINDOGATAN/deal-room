@@ -1,8 +1,10 @@
 {
   "contractType": "SAAS",
   "category": { "en": "Sales", "es": "Ventas" },
-  "displayName": "SaaS Subscription Agreement",
-  "description": "Software-as-a-Service subscription agreements covering access rights, usage terms, service levels, support, data rights, and commercial terms.",
+  "displayName": { "en": "SaaS Subscription Agreement", "es": "Contrato de Suscripción SaaS" },
+  "description": { "en": "Software-as-a-Service subscription agreements covering access rights, usage terms, service levels, support, data rights, and commercial terms.", "es": "Contratos de suscripción de software como servicio que regulan los derechos de acceso, las condiciones de uso, los niveles de servicio, el soporte, los derechos sobre los datos y las condiciones comerciales." },
   "version": "1.0",
-  "clauseCount": 10
+  "clauseCount": 10,
+  "languages": ["en", "es"],
+  "jurisdictions": ["CALIFORNIA", "ENGLAND_WALES", "SPAIN"]
 }

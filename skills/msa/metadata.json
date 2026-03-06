@@ -1,8 +1,10 @@
 {
   "contractType": "MSA",
   "category": { "en": "Sales", "es": "Ventas" },
-  "displayName": "Master Services Agreement",
-  "description": "Framework agreement for professional and consulting services, providing consistent terms across multiple Statements of Work and project engagements.",
+  "displayName": { "en": "Master Services Agreement", "es": "Contrato Marco de Prestación de Servicios" },
+  "description": { "en": "Framework agreement for professional and consulting services, providing consistent terms across multiple Statements of Work and project engagements.", "es": "Contrato marco para servicios profesionales y de consultoría, que establece condiciones uniformes para múltiples Órdenes de Trabajo y encargos de proyectos." },
   "version": "1.0",
-  "clauseCount": 10
+  "clauseCount": 10,
+  "languages": ["en", "es"],
+  "jurisdictions": ["CALIFORNIA", "ENGLAND_WALES", "SPAIN"]
 }
