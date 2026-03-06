@@ -55,7 +55,16 @@ function ExpertsList({
   onCreateNew: () => void;
 }) {
   const [searchQuery, setSearchQuery] = useState("");
+  const utils = trpc.useUtils();
   const { data: profiles, isLoading, error } = trpc.platformAdmin.listExpertProfiles.useQuery();
+
+  const deleteMutation = trpc.platformAdmin.deleteExpertProfile.useMutation({
+    onSuccess: () => {
+      toast.success("Expert profile deleted");
+      utils.platformAdmin.listExpertProfiles.invalidate();
+    },
+    onError: (err) => toast.error(err.message),
+  });
 
   const filtered = profiles?.filter(
     (p) =>
@@ -121,24 +130,27 @@ function ExpertsList({
         </div>
       ) : (
         <div className="border border-border">
-          <div className="grid grid-cols-6 gap-4 p-3 bg-muted/30 text-xs font-medium text-muted-foreground uppercase">
+          <div className="grid grid-cols-7 gap-4 p-3 bg-muted/30 text-xs font-medium text-muted-foreground uppercase">
             <div>Name</div>
             <div>Type</div>
             <div>Specializations</div>
             <div>Location</div>
             <div>Status</div>
             <div>Created</div>
+            <div>Actions</div>
           </div>
           {filtered?.map((profile) => (
-            <button
+            <div
               key={profile.id}
-              onClick={() => onSelect(profile.userId)}
-              className="w-full grid grid-cols-6 gap-4 p-3 border-t border-border items-center text-sm text-left hover:bg-muted/20 transition-colors"
+              className="grid grid-cols-7 gap-4 p-3 border-t border-border items-center text-sm"
             >
-              <div>
+              <button
+                onClick={() => onSelect(profile.userId)}
+                className="text-left hover:underline"
+              >
                 <p className="font-medium">{profile.user.name || "No name"}</p>
                 <p className="text-muted-foreground text-xs">{profile.user.email}</p>
-              </div>
+              </button>
               <div>
                 <Badge
                   className={
@@ -177,7 +189,28 @@ function ExpertsList({
               <div className="text-muted-foreground text-xs">
                 {format(new Date(profile.createdAt), "MMM d, yyyy")}
               </div>
-            </button>
+              <div className="flex items-center gap-1">
+                <button
+                  onClick={() => onSelect(profile.userId)}
+                  className="p-1 text-muted-foreground hover:text-foreground hover:bg-muted rounded"
+                  title="Edit"
+                >
+                  <Save className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => {
+                    if (confirm(`Delete expert profile for ${profile.user.name || profile.user.email}?`)) {
+                      deleteMutation.mutate({ userId: profile.userId });
+                    }
+                  }}
+                  disabled={deleteMutation.isPending}
+                  className="p-1 text-red-500 hover:bg-red-500/10 rounded"
+                  title="Delete"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
           ))}
         </div>
       )}
