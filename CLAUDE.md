@@ -47,15 +47,16 @@ docs/administration.md          # Full admin, skills, lifecycle & signing docs
 
 ## Skills (Open-Core Model)
 
-- **Free:** Any skill in `skills/` without a `manifest.json` — available to all users
-- **Premium:** Any skill with a `manifest.json` — requires `SkillEntitlement` + active license
-- Premium skills live in the private `legalskills` repo; seeded via `SKILLS_DIR` env var
+- **Free:** Skills in `skills/` (nda, msa, saas, dpa, privacy-notice) — available to all users, no `manifest.json`
+- **Premium:** Skills in the private [`RINDOGATAN/legalskills`](https://github.com/RINDOGATAN/legalskills) repo — requires `manifest.json` + `SkillEntitlement` + active Stripe license
+- Premium skills are loaded via `SKILLS_DIR` env var at seed time, or installed as `.skill` packages via marketplace
 - Admin assigns entitlements at `/admin/customers`
+- **Never commit premium skills to this public repo** — they belong in `legalskills`
 
 ## Commands
 ```bash
 npx prisma db seed                                # Seed built-in skills only
-SKILLS_DIR=/path/to/legalskills npx prisma db seed  # Seed built-in + licensed
+SKILLS_DIR=/path/to/legalskills npx prisma db seed  # Seed built-in + premium
 npm run admin:create                              # Create platform admin
 npm run deal:simulate                             # Create demo deals (idempotent)
 npm run deal:simulate -- --clean                  # Recreate all demo deals from scratch
