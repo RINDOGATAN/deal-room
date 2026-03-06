@@ -4,6 +4,7 @@ Two-party async contract negotiation with weighted compromise algorithm.
 
 **Stack:** Next.js 14 | TypeScript | tRPC | PostgreSQL + Prisma | NextAuth
 **Deployment:** Two Vercel projects → same repo, `NEXT_PUBLIC_BRAND` env var selects brand
+**Build:** `prisma migrate deploy && prisma generate && next build` (migrations run automatically on deploy)
 
 | Brand | Domain | Auth | UI |
 |-------|--------|------|----|
@@ -38,7 +39,7 @@ docs/administration.md          # Full admin, skills, lifecycle & signing docs
 ## Brand System
 
 - `brand.ts` imports from `brands/todo.ts` or `brands/northend.ts` based on `NEXT_PUBLIC_BRAND`
-- `features.ts` gates features by brand: `lawyerInvolvement`, `marketplace`, `billing`, `agentApi`, `publicDocs`, `clientInvitations`
+- `features.ts` gates features by brand: `lawyerInvolvement`, `marketplace`, `billing`, `agentApi`, `expertsApi`, `publicDocs`, `clientInvitations`
 - CSS theming via `data-brand` attribute on `<html>` — `[data-brand="northend"]` overrides variables + component classes
 - Northend: 0 radii, no shadows, no noise texture, headings use body font, amber destructive
 - Route-level feature gates via `layout.tsx` files that call `notFound()`
@@ -62,6 +63,37 @@ SKILLS_DIR=/path/to/legalskills npm run skill:build             # Build .skill p
 SKILLS_DIR=/path/to/legalskills npm run skill:build skill-name  # Build specific skill(s)
 npm run skill:upload                              # Upload dist/*.skill to Vercel Blob
 ```
+
+## Cross-Product Experts Directory API
+
+Exposes the lawyer/expert directory to other TodoLaw apps (DPO Central, VendorWatch, AI Sentinel).
+
+**Endpoints:**
+- `POST /api/v1/experts/search` — filtered search with pagination
+- `GET /api/v1/experts/:id` — single profile by user ID
+
+**Auth:** Bearer token (`drk_...`) with scope `experts:read`. Keys issued per customer via `/admin/customers/[id]`.
+
+**Base URL (production):** `https://dealroom.todo.law/api/v1/experts`
+
+**Feature flag:** `features.expertsApi` (brand-gated to `todo`)
+
+**Key files:**
+```
+src/app/api/v1/experts/search/route.ts   # Search endpoint
+src/app/api/v1/experts/[id]/route.ts     # Get-by-ID endpoint
+src/server/services/experts/taxonomy.ts  # Specializations, certifications, completeness score
+src/app/(admin)/admin/experts/page.tsx   # Admin UI for managing expert profiles
+```
+
+**LawyerProfile extended fields** (added via migration `20260305000000`):
+`title`, `expertType` (LEGAL/TECHNICAL/BOTH), `specializations[]`, `certifications[]`, `countryCode`, `city`, `jurisdictionsCovered[]`, `contactUrl`, `acceptingClients`
+
+**Taxonomy:** 16 specializations + 10 certifications defined as controlled vocabularies in `taxonomy.ts`, validated at app layer (not Prisma enums) for flexibility.
+
+**Admin onboarding flow:** `/admin` → Experts → New Expert → pick user → fill fields → save. Also editable from the lawyer self-service profile at `/lawyers/profile`.
+
+**Consumer caching guidance:** Search results cached 5 min, individual profiles 1 hour (consumer-side).
 
 ## Quick Reference
 
