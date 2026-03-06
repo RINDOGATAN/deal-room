@@ -10,6 +10,8 @@ import {
   updateEntitlementJurisdictions,
 } from "../services/licensing/entitlement";
 import { features } from "@/config/features";
+import { SPECIALIZATIONS, CERTIFICATIONS, EXPERT_TYPES } from "../services/experts/taxonomy";
+import { GoverningLaw } from "@prisma/client";
 
 // Helper to check 2FA and get admin record
 const requireVerified2FA = async (
@@ -770,5 +772,145 @@ export const platformAdminRouter = createTRPCRouter({
           customerId: input.customerId,
         },
       });
+    }),
+
+  // ────────────────────────────────────────────────────────────
+  // Expert Directory Management (cross-product lawyer onboarding)
+  // ────────────────────────────────────────────────────────────
+
+  listExpertProfiles: adminProcedure.query(async ({ ctx }) => {
+    await requireVerified2FA(ctx.adminSession.email, ctx.getCookie, ctx.prisma);
+
+    return ctx.prisma.lawyerProfile.findMany({
+      orderBy: { createdAt: "desc" },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            company: true,
+            image: true,
+            isLawyer: true,
+            role: true,
+          },
+        },
+      },
+    });
+  }),
+
+  getExpertProfile: adminProcedure
+    .input(z.object({ userId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      await requireVerified2FA(ctx.adminSession.email, ctx.getCookie, ctx.prisma);
+
+      const profile = await ctx.prisma.lawyerProfile.findUnique({
+        where: { userId: input.userId },
+        include: {
+          user: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+              company: true,
+              image: true,
+              isLawyer: true,
+              role: true,
+            },
+          },
+        },
+      });
+
+      if (!profile) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Expert profile not found" });
+      }
+
+      return profile;
+    }),
+
+  /** Create or update a full expert profile — used for admin onboarding */
+  upsertExpertProfile: adminProcedure
+    .input(z.object({
+      userId: z.string(),
+      bio: z.string().max(2000).optional(),
+      jurisdictions: z.array(z.enum(["CALIFORNIA", "ENGLAND_WALES", "SPAIN"])).default([]),
+      languages: z.array(z.string()).min(1),
+      isPublished: z.boolean().default(false),
+      title: z.string().max(200).optional(),
+      expertType: z.enum(EXPERT_TYPES).default("LEGAL"),
+      specializations: z.array(z.enum(SPECIALIZATIONS)).default([]),
+      certifications: z.array(z.enum(CERTIFICATIONS)).default([]),
+      countryCode: z.string().length(2).optional(),
+      city: z.string().max(200).optional(),
+      jurisdictionsCovered: z.array(z.string()).default([]),
+      contactUrl: z.string().url().max(500).optional(),
+      acceptingClients: z.boolean().default(true),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      await requireVerified2FA(ctx.adminSession.email, ctx.getCookie, ctx.prisma);
+
+      // Ensure the user exists
+      const user = await ctx.prisma.user.findUnique({
+        where: { id: input.userId },
+      });
+      if (!user) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "User not found" });
+      }
+
+      // Mark user as lawyer if not already
+      if (!user.isLawyer || user.role !== "LAWYER") {
+        await ctx.prisma.user.update({
+          where: { id: input.userId },
+          data: { isLawyer: true, role: "LAWYER", onboardedAt: user.onboardedAt ?? new Date() },
+        });
+      }
+
+      const data = {
+        bio: input.bio ?? null,
+        jurisdictions: input.jurisdictions as GoverningLaw[],
+        languages: input.languages,
+        isPublished: input.isPublished,
+        title: input.title ?? null,
+        expertType: input.expertType as "LEGAL" | "TECHNICAL" | "BOTH",
+        specializations: input.specializations,
+        certifications: input.certifications,
+        countryCode: input.countryCode ?? null,
+        city: input.city ?? null,
+        jurisdictionsCovered: input.jurisdictionsCovered,
+        contactUrl: input.contactUrl ?? null,
+        acceptingClients: input.acceptingClients,
+      };
+
+      return ctx.prisma.lawyerProfile.upsert({
+        where: { userId: input.userId },
+        update: data,
+        create: { userId: input.userId, ...data },
+        include: {
+          user: {
+            select: { id: true, name: true, email: true, company: true },
+          },
+        },
+      });
+    }),
+
+  /** Delete an expert profile (unpublishes from directory) */
+  deleteExpertProfile: adminProcedure
+    .input(z.object({ userId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      await requireVerified2FA(ctx.adminSession.email, ctx.getCookie, ctx.prisma);
+
+      const profile = await ctx.prisma.lawyerProfile.findUnique({
+        where: { userId: input.userId },
+      });
+
+      if (!profile) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Expert profile not found" });
+      }
+
+      await ctx.prisma.lawyerProfile.delete({
+        where: { userId: input.userId },
+      });
+
+      return { success: true };
     }),
 });

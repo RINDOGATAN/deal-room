@@ -11,13 +11,29 @@ export default function AdminVerifyPage() {
   const router = useRouter();
   const [code, setCode] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [setupData, setSetupData] = useState<{ qrCode: string; secret: string } | null>(null);
+  const [setupLoading, setSetupLoading] = useState(false);
 
   const { data: twoFactorStatus, isLoading: statusLoading, error: statusError } =
     trpc.platformAdminTwoFactor.getStatus.useQuery();
 
   const setupMutation = trpc.platformAdminTwoFactor.setup.useMutation({
-    onError: (err) => setError(err.message),
+    onSuccess: (data) => {
+      setSetupData(data);
+      setSetupLoading(false);
+    },
+    onError: (err) => {
+      setError(err.message);
+      setSetupLoading(false);
+    },
   });
+
+  const handleStartSetup = () => {
+    if (setupLoading || setupData) return;
+    setSetupLoading(true);
+    setError(null);
+    setupMutation.mutate();
+  };
 
   const verifyMutation = trpc.platformAdminTwoFactor.verify.useMutation({
     onSuccess: () => {
@@ -39,12 +55,6 @@ export default function AdminVerifyPage() {
     }
   }, [twoFactorStatus, router]);
 
-  // Start setup if admin hasn't set up 2FA yet
-  useEffect(() => {
-    if (twoFactorStatus?.isAdmin && !twoFactorStatus.isSetup && !setupMutation.data) {
-      setupMutation.mutate();
-    }
-  }, [twoFactorStatus, setupMutation]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -105,18 +115,30 @@ export default function AdminVerifyPage() {
             </p>
           </div>
 
-          {setupMutation.isPending && (
+          {!setupData && !setupLoading && (
+            <div className="flex justify-center py-4">
+              <button
+                onClick={handleStartSetup}
+                className="btn-brutal flex items-center gap-2"
+              >
+                <Shield className="w-4 h-4" />
+                Generate QR Code
+              </button>
+            </div>
+          )}
+
+          {setupLoading && !setupData && (
             <div className="flex justify-center py-8">
               <Loader2 className="w-8 h-8 animate-spin text-primary" />
             </div>
           )}
 
-          {setupMutation.data && (
+          {setupData && (
             <div className="space-y-6">
               <div className="flex justify-center">
                 <div className="p-4 bg-white">
                   <img
-                    src={setupMutation.data.qrCode}
+                    src={setupData.qrCode}
                     alt="2FA QR Code"
                     className="w-48 h-48"
                   />
@@ -128,7 +150,7 @@ export default function AdminVerifyPage() {
                   Or enter this code manually:
                 </p>
                 <code className="text-sm bg-muted px-3 py-1.5 font-mono">
-                  {setupMutation.data.secret}
+                  {setupData.secret}
                 </code>
               </div>
 

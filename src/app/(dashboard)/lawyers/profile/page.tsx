@@ -7,6 +7,17 @@ import { useTranslations } from "next-intl";
 import { useUserRole } from "@/contexts/UserRoleContext";
 import { Save } from "lucide-react";
 import { redirect } from "next/navigation";
+import { Input } from "@/components/ui/input";
+import {
+  SPECIALIZATIONS,
+  SPECIALIZATION_LABELS,
+  CERTIFICATIONS,
+  CERTIFICATION_LABELS,
+  EXPERT_TYPES,
+  type Specialization,
+  type Certification,
+  type ExpertType,
+} from "@/server/services/experts/taxonomy";
 
 type GoverningLaw = "CALIFORNIA" | "ENGLAND_WALES" | "SPAIN";
 
@@ -23,6 +34,14 @@ const languageKeys: Record<string, string> = {
   es: "languageSpanish",
 };
 
+const expertTypeLabels: Record<ExpertType, string> = {
+  LEGAL: "Legal",
+  TECHNICAL: "Technical",
+  BOTH: "Both",
+};
+
+const jurisdictionsCoveredOptions = ["EU", "UK", "US", "CA", "LATAM", "APAC"] as const;
+
 export default function LawyerProfilePage() {
   const t = useTranslations("lawyerProfile");
   const tCommon = useTranslations("common");
@@ -37,6 +56,15 @@ export default function LawyerProfilePage() {
   const [jurisdictions, setJurisdictions] = useState<GoverningLaw[]>([]);
   const [languages, setLanguages] = useState<string[]>([]);
   const [isPublished, setIsPublished] = useState(false);
+  const [title, setTitle] = useState("");
+  const [expertType, setExpertType] = useState<ExpertType>("LEGAL");
+  const [specializations, setSpecializations] = useState<Specialization[]>([]);
+  const [certifications, setCertifications] = useState<Certification[]>([]);
+  const [countryCode, setCountryCode] = useState("");
+  const [city, setCity] = useState("");
+  const [jurisdictionsCovered, setJurisdictionsCovered] = useState<string[]>([]);
+  const [contactUrl, setContactUrl] = useState("");
+  const [acceptingClients, setAcceptingClients] = useState(true);
 
   useEffect(() => {
     if (profile) {
@@ -44,6 +72,15 @@ export default function LawyerProfilePage() {
       setJurisdictions(profile.jurisdictions as GoverningLaw[]);
       setLanguages(profile.languages);
       setIsPublished(profile.isPublished);
+      setTitle(profile.title || "");
+      setExpertType((profile.expertType as ExpertType) || "LEGAL");
+      setSpecializations((profile.specializations as Specialization[]) || []);
+      setCertifications((profile.certifications as Certification[]) || []);
+      setCountryCode(profile.countryCode || "");
+      setCity(profile.city || "");
+      setJurisdictionsCovered(profile.jurisdictionsCovered || []);
+      setContactUrl(profile.contactUrl || "");
+      setAcceptingClients(profile.acceptingClients ?? true);
     }
   }, [profile]);
 
@@ -71,6 +108,15 @@ export default function LawyerProfilePage() {
       jurisdictions,
       languages,
       isPublished: canPublish ? isPublished : false,
+      title: title || undefined,
+      expertType: expertType,
+      specializations,
+      certifications,
+      countryCode: countryCode || undefined,
+      city: city || undefined,
+      jurisdictionsCovered,
+      contactUrl: contactUrl || undefined,
+      acceptingClients,
     });
   };
 
@@ -157,6 +203,172 @@ export default function LawyerProfilePage() {
             ))}
           </div>
         </div>
+
+        {/* Separator */}
+        <hr className="border-border" />
+
+        {/* Title */}
+        <div className="space-y-2">
+          <label className="text-sm font-medium">{t("titleField")}</label>
+          <Input
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder={t("titlePlaceholder")}
+            maxLength={200}
+            className="input-brutal"
+          />
+        </div>
+
+        {/* Expert Type */}
+        <div className="space-y-2">
+          <label className="text-sm font-medium">{t("expertType")}</label>
+          <div className="flex flex-wrap gap-2">
+            {EXPERT_TYPES.map((et) => (
+              <button
+                key={et}
+                onClick={() => setExpertType(et)}
+                className={`px-3 py-1.5 text-sm border rounded-full transition-colors ${
+                  expertType === et
+                    ? "bg-primary/10 border-primary text-primary"
+                    : "border-border text-muted-foreground hover:border-foreground"
+                }`}
+              >
+                {expertTypeLabels[et]}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Specializations */}
+        <div className="space-y-2">
+          <label className="text-sm font-medium">{t("specializations")}</label>
+          <div className="flex flex-wrap gap-2">
+            {SPECIALIZATIONS.map((s) => (
+              <button
+                key={s}
+                onClick={() =>
+                  setSpecializations((prev) =>
+                    prev.includes(s) ? prev.filter((x) => x !== s) : [...prev, s]
+                  )
+                }
+                className={`px-3 py-1.5 text-xs border rounded-full transition-colors ${
+                  specializations.includes(s)
+                    ? "bg-primary/10 border-primary text-primary"
+                    : "border-border text-muted-foreground hover:border-foreground"
+                }`}
+              >
+                {SPECIALIZATION_LABELS[s]}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Certifications */}
+        <div className="space-y-2">
+          <label className="text-sm font-medium">{t("certifications")}</label>
+          <div className="flex flex-wrap gap-2">
+            {CERTIFICATIONS.map((c) => (
+              <button
+                key={c}
+                onClick={() =>
+                  setCertifications((prev) =>
+                    prev.includes(c) ? prev.filter((x) => x !== c) : [...prev, c]
+                  )
+                }
+                className={`px-3 py-1.5 text-xs border rounded-full transition-colors ${
+                  certifications.includes(c)
+                    ? "bg-primary/10 border-primary text-primary"
+                    : "border-border text-muted-foreground hover:border-foreground"
+                }`}
+              >
+                {CERTIFICATION_LABELS[c]}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Location */}
+        <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <label className="text-sm font-medium">{t("country")}</label>
+            <Input
+              value={countryCode}
+              onChange={(e) => setCountryCode(e.target.value.toUpperCase().slice(0, 2))}
+              placeholder={t("countryPlaceholder")}
+              maxLength={2}
+              className="input-brutal"
+            />
+          </div>
+          <div className="space-y-2">
+            <label className="text-sm font-medium">{t("city")}</label>
+            <Input
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
+              placeholder={t("cityPlaceholder")}
+              maxLength={200}
+              className="input-brutal"
+            />
+          </div>
+        </div>
+
+        {/* Jurisdictions Covered */}
+        <div className="space-y-2">
+          <label className="text-sm font-medium">{t("jurisdictionsCovered")}</label>
+          <p className="text-xs text-muted-foreground">{t("jurisdictionsCoveredHint")}</p>
+          <div className="flex flex-wrap gap-2">
+            {jurisdictionsCoveredOptions.map((j) => (
+              <button
+                key={j}
+                onClick={() =>
+                  setJurisdictionsCovered((prev) =>
+                    prev.includes(j) ? prev.filter((x) => x !== j) : [...prev, j]
+                  )
+                }
+                className={`px-3 py-1.5 text-sm border rounded-full transition-colors ${
+                  jurisdictionsCovered.includes(j)
+                    ? "bg-primary/10 border-primary text-primary"
+                    : "border-border text-muted-foreground hover:border-foreground"
+                }`}
+              >
+                {j}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Contact URL */}
+        <div className="space-y-2">
+          <label className="text-sm font-medium">{t("contactUrl")}</label>
+          <Input
+            value={contactUrl}
+            onChange={(e) => setContactUrl(e.target.value)}
+            placeholder={t("contactUrlPlaceholder")}
+            type="url"
+            maxLength={500}
+            className="input-brutal"
+          />
+        </div>
+
+        {/* Accepting Clients Toggle */}
+        <div className="space-y-2">
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setAcceptingClients(!acceptingClients)}
+              className={`relative w-11 h-6 rounded-full transition-colors cursor-pointer ${
+                acceptingClients ? "bg-primary" : "bg-muted"
+              }`}
+            >
+              <span
+                className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white transition-transform ${
+                  acceptingClients ? "translate-x-5" : ""
+                }`}
+              />
+            </button>
+            <span className="text-sm font-medium">{t("acceptingClients")}</span>
+          </div>
+        </div>
+
+        <hr className="border-border" />
 
         {/* Publish Toggle */}
         <div className="space-y-2">
