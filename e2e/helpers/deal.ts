@@ -9,6 +9,42 @@ export interface DealOptions {
 }
 
 /**
+ * Dismisses any blocking dialog (role selection, lawyer warning, etc.)
+ * by looking for common dismiss buttons.
+ */
+export async function dismissDialogs(page: Page): Promise<void> {
+  // Loop to handle multiple sequential dialogs (e.g. lawyer warning + role selection)
+  for (let attempt = 0; attempt < 3; attempt++) {
+    // "Proceeding Without a Lawyer" → click "I Understand" / "Entendido"
+    const lawyerBtn = page.locator("button", { hasText: /I Understand|Entendido/i });
+    const hasLawyer = await lawyerBtn.first().waitFor({ state: "visible", timeout: 3_000 }).then(() => true).catch(() => false);
+    if (hasLawyer) {
+      // force: true bypasses overlay interception when multiple dialogs stack
+      await lawyerBtn.first().click({ force: true });
+      await lawyerBtn.first().waitFor({ state: "hidden", timeout: 5_000 }).catch(() => {});
+      continue; // Check for more dialogs
+    }
+
+    // "How will you use Dealroom?" → click "Startup Mode" card button, then "Continue as Business"
+    const onboardingDialog = page.locator("[role=dialog]").filter({ hasText: /Startup Mode|Modo Startups/i });
+    const hasOnboarding = await onboardingDialog.first().waitFor({ state: "visible", timeout: 2_000 }).then(() => true).catch(() => false);
+    if (hasOnboarding) {
+      // Click the card button containing "Startup Mode" / "Modo Startups"
+      const startupBtn = onboardingDialog.locator("button").filter({ hasText: /Startup Mode|Modo Startups/i });
+      await startupBtn.first().click({ force: true });
+      // After selecting, the bottom submit button text changes to "Continue as Business"
+      const roleBtn = onboardingDialog.locator("button.btn-brutal");
+      await expect(roleBtn).toBeEnabled({ timeout: 3_000 });
+      await roleBtn.click({ force: true });
+      await onboardingDialog.first().waitFor({ state: "hidden", timeout: 5_000 }).catch(() => {});
+      continue; // Check for more dialogs
+    }
+
+    break; // No more dialogs found
+  }
+}
+
+/**
  * Creates a deal through the wizard and navigates to /negotiate.
  * Returns the deal ID extracted from the URL.
  */
@@ -21,37 +57,61 @@ export async function createDealWithOptions(
     timeout: 10_000,
   });
 
+  // Dismiss any blocking dialog (role selection etc.)
+  await dismissDialogs(page);
+
   // Step 1: Select contract type
   await page.locator("h3", { hasText: options.contractType }).first().click();
 
-  // Step 2: Select jurisdiction
-  await page.locator("text=" + options.jurisdiction).click();
+  // Step 2: Select jurisdiction (soloModeOnly templates skip this)
+  // Use h3 inside button to match jurisdiction cards, not parameter chip buttons
+  const jurisdictionCard = page.locator("button").filter({
+    has: page.locator("h3", { hasText: options.jurisdiction }),
+  });
+  const hasJurisdictionStep = await jurisdictionCard.first().waitFor({ state: "visible", timeout: 3_000 }).then(() => true).catch(() => false);
+  if (hasJurisdictionStep) {
+    await jurisdictionCard.first().click();
+  }
 
   // Step 3: Select language (English is auto-selected; click if different)
   if (options.language !== "English") {
-    await page
-      .locator("h3", { hasText: options.language })
-      .first()
-      .click();
+    const langCard = page.locator("h3", { hasText: options.language }).first();
+    // Wait for card to be enabled (may animate in after jurisdiction selection)
+    await expect(langCard).toBeVisible({ timeout: 5_000 });
+    // Use force click in case the card is still settling
+    await langCard.click({ force: true, timeout: 10_000 });
   }
 
   // Step 4: Fill deal name
   const dealNameInput = page.locator("input#dealName");
-  await expect(dealNameInput).toBeVisible();
+  await expect(dealNameInput).toBeVisible({ timeout: 10_000 });
   await dealNameInput.fill(options.dealName);
 
   // Fill optional parameters (Seed Investment etc.)
   if (options.parameters) {
     for (const [paramId, value] of Object.entries(options.parameters)) {
+      // Jurisdiction chips are toggled by clicking, not filling an input
+      if (paramId === "jurisdictions") {
+        for (const j of value.split("|")) {
+          const chipText = j.trim();
+          // Match partial text in jurisdiction chip buttons
+          const chip = page.locator("button", { hasText: new RegExp(chipText.replace(/_/g, ".*"), "i") });
+          // waitFor actually waits (unlike isVisible which returns immediately)
+          const visible = await chip.first().waitFor({ state: "visible", timeout: 5_000 }).then(() => true).catch(() => false);
+          if (visible) await chip.first().click();
+        }
+        continue;
+      }
       const input = page.locator(`#param-${paramId}`);
-      await expect(input).toBeVisible({ timeout: 5_000 });
-      await input.fill(value);
+      // waitFor actually waits for the element to appear
+      const visible = await input.waitFor({ state: "visible", timeout: 5_000 }).then(() => true).catch(() => false);
+      if (visible) await input.fill(value);
     }
   }
 
   // Submit
   const continueButton = page.locator("button", { hasText: /continue|continuar/i });
-  await expect(continueButton).toBeEnabled();
+  await expect(continueButton).toBeEnabled({ timeout: 10_000 });
   await continueButton.click();
 
   // Wait for negotiate page
@@ -68,6 +128,7 @@ export async function createDealWithOptions(
  * Reads the clause count from the negotiate page header ("Clause X of Y").
  */
 export async function getClauseCount(page: Page): Promise<number> {
+  await dismissDialogs(page);
   const headerText = await page
     .locator("p", { hasText: /(?:Clause|Cl[aá]usula) \d+ (?:of|de) \d+/i })
     .first()
@@ -88,6 +149,9 @@ export async function walkAllClauses(
   page: Page,
   expectedCount: number,
 ): Promise<void> {
+  // Dismiss any blocking dialog ("Proceeding Without a Lawyer" etc.)
+  await dismissDialogs(page);
+
   for (let i = 0; i < expectedCount; i++) {
     const isLast = i === expectedCount - 1;
 
@@ -109,7 +173,7 @@ export async function walkAllClauses(
       // On the last clause, verify submit button is visible
       const submitButton = page.locator(
         "button",
-        { hasText: /submit|enviar/i },
+        { hasText: /submit|enviar|confirm.*generate|confirmar.*generar/i },
       );
       await expect(submitButton).toBeVisible({ timeout: 10_000 });
     } else {
