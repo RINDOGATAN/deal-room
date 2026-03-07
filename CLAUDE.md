@@ -50,8 +50,10 @@ docs/administration.md          # Full admin, skills, lifecycle & signing docs
 - **Free:** Skills in `skills/` (nda, msa, saas, dpa, privacy-notice) — available to all users, no `manifest.json`
 - **Premium:** Skills in the private [`RINDOGATAN/legalskills`](https://github.com/RINDOGATAN/legalskills) repo — requires `manifest.json` + `SkillEntitlement` + active Stripe license
 - Premium skills are loaded via `SKILLS_DIR` env var at seed time, or installed as `.skill` packages via marketplace
+- Auto-seed: `legalskills/.github/workflows/seed.yml` runs on push to `*/clauses.json`, `*/metadata.json`, `*/manifest.json` — checks out both repos, runs `prisma db push` + `prisma db seed`
 - Admin assigns entitlements at `/admin/customers`
 - **Never commit premium skills to this public repo** — they belong in `legalskills`
+- Seed defaults `biasPartyA`/`biasPartyB` to `0` when missing from clauses.json (MSA, NDA, SaaS don't define them)
 
 ## Commands
 ```bash
@@ -98,7 +100,7 @@ src/app/(admin)/admin/experts/page.tsx   # Admin UI for managing expert profiles
 
 ## Quick Reference
 
-**Compromise:** `stake = (priority/5 * 0.4) + ((5-flexibility)/5 * 0.3) + (|bias| * 0.3)`
+**Compromise:** `stake = ((5-flexibility)/5 * 0.6) + (|bias| * 0.4)` — priority param exists for backward compat but is ignored. UI shows "firmness" (= 6 - flexibility).
 
 **Enums:** `GoverningLaw`: CALIFORNIA, ENGLAND_WALES, SPAIN
 
