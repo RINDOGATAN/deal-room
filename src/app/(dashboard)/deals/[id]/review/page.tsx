@@ -27,9 +27,11 @@ import {
   XCircle,
   Info,
   Briefcase,
+  History,
+  Settings2,
 } from "lucide-react";
+import { resolveParamString } from "@/lib/parameters";
 import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
 import enMessages from "@/messages/en.json";
 import esMessages from "@/messages/es.json";
 
@@ -85,13 +87,21 @@ function ReviewContent({ dealId }: { dealId: string }) {
   const [selectedOptionId, setSelectedOptionId] = useState<string>("");
   const [rationale, setRationale] = useState<string>("");
   const [expandedClause, setExpandedClause] = useState<string | null>(null);
+  const [expandedAnalysis, setExpandedAnalysis] = useState<string | null>(null);
+  const [expandedHistory, setExpandedHistory] = useState<string | null>(null);
   const [showAttorneyModal, setShowAttorneyModal] = useState(false);
   const [selectedAttorneyId, setSelectedAttorneyId] = useState<string>("");
+  const [paramProposalForm, setParamProposalForm] = useState<{ parameterId: string; label: string } | null>(null);
+  const [paramProposedValue, setParamProposedValue] = useState("");
+  const [paramRationale, setParamRationale] = useState("");
 
   const { data: deal, isLoading: dealLoading } = trpc.deal.getById.useQuery({ id: dealId });
+  const contractLang = (deal as any)?.contractLanguage || "en";
   const { data: suggestions, isLoading: suggestionsLoading, refetch } = trpc.compromise.getCurrent.useQuery({ dealRoomId: dealId });
-  const { data: satisfactionScores } = trpc.compromise.getSatisfactionScores.useQuery({ dealRoomId: dealId });
+  const { data: satisfactionScores, refetch: refetchSatisfaction } = trpc.compromise.getSatisfactionScores.useQuery({ dealRoomId: dealId });
   const { data: counterProposals, refetch: refetchCounterProposals } = trpc.compromise.getCounterProposals.useQuery({ dealRoomId: dealId });
+  const { data: history } = trpc.compromise.getHistory.useQuery({ dealRoomId: dealId });
+  const { data: parameterProposals, refetch: refetchParamProposals } = trpc.compromise.getParameterProposals.useQuery({ dealRoomId: dealId });
   const { data: validation } = trpc.compromise.getValidation.useQuery({ dealRoomId: dealId });
 
   // Attorney review queries
@@ -105,6 +115,7 @@ function ReviewContent({ dealId }: { dealId: string }) {
     onSuccess: () => {
       toast.success(t("toastMessages.compromiseGenerated"));
       refetch();
+      refetchSatisfaction();
     },
     onError: (error) => {
       toast.error(t("toastMessages.generateFailed", { error: error.message }));
@@ -116,6 +127,7 @@ function ReviewContent({ dealId }: { dealId: string }) {
       toast.success(t("toastMessages.newSuggestionsGenerated", { number: data.roundNumber }));
       refetch();
       refetchCounterProposals();
+      refetchSatisfaction();
     },
     onError: (error) => {
       toast.error(t("toastMessages.regenerateFailed", { error: error.message }));
@@ -125,6 +137,7 @@ function ReviewContent({ dealId }: { dealId: string }) {
   const respondToSuggestion = trpc.compromise.respond.useMutation({
     onSuccess: () => {
       refetch();
+      refetchSatisfaction();
     },
     onError: (error) => {
       toast.error(t("toastMessages.respondFailed", { error: error.message }));
@@ -221,6 +234,35 @@ function ReviewContent({ dealId }: { dealId: string }) {
       }
       refetch();
       refetchCounterProposals();
+      refetchSatisfaction();
+    },
+    onError: (error) => {
+      toast.error(t("toastMessages.respondFailed", { error: error.message }));
+    },
+  });
+
+  const submitParameterProposal = trpc.compromise.proposeParameterChange.useMutation({
+    onSuccess: () => {
+      toast.success(t("toastMessages.counterProposalSubmitted"));
+      setParamProposalForm(null);
+      setParamProposedValue("");
+      setParamRationale("");
+      refetchParamProposals();
+    },
+    onError: (error) => {
+      toast.error(t("toastMessages.submitFailed", { error: error.message }));
+    },
+  });
+
+  const respondToParameterProposal = trpc.compromise.respondToParameterProposal.useMutation({
+    onSuccess: (data) => {
+      if (data.accepted) {
+        toast.success(t("toastMessages.counterProposalAccepted"));
+      } else {
+        toast.success(t("toastMessages.counterProposalRejected"));
+      }
+      refetchParamProposals();
+      refetch(); // re-fetch deal data since parameter values may have changed
     },
     onError: (error) => {
       toast.error(t("toastMessages.respondFailed", { error: error.message }));
@@ -252,7 +294,7 @@ function ReviewContent({ dealId }: { dealId: string }) {
   const needsGeneration = suggestions.every((s) => !s.suggestion);
   const agreedCount = suggestions.filter((s) => s.status === "AGREED").length;
   const pendingCount = suggestions.filter((s) => s.status !== "AGREED").length;
-  const allAgreed = agreedCount === suggestions.length;
+  const allAgreed = suggestions.length > 0 && agreedCount === suggestions.length;
 
   const isInitiator = deal.currentUserRole === "INITIATOR";
   const pendingCounterProposalsForMe = counterProposals?.pendingForMe || [];
@@ -346,37 +388,54 @@ function ReviewContent({ dealId }: { dealId: string }) {
         </div>
       )}
 
-      {/* Satisfaction Scores */}
-      {satisfactionScores && !needsGeneration && (
-        <div className="card-brutal">
-          <div className="flex items-center gap-2 mb-4">
-            <Scale className="w-5 h-5 text-muted-foreground" />
-            <span className="font-semibold">{t("overallSatisfaction")}</span>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-muted-foreground">
-                  {satisfactionScores.partyA.name}
-                  {isInitiator && ` (${tCommon("you")})`}
-                </span>
-                <span className="font-semibold text-primary">{satisfactionScores.partyA.satisfaction}%</span>
-              </div>
-              <Progress value={satisfactionScores.partyA.satisfaction} className="h-3 [&>div]:bg-primary" />
+      {/* Negotiation Outcome */}
+      {satisfactionScores && !needsGeneration && (() => {
+        const getLabel = (s: number) => s >= 85 ? t("satisfactionCloseToPreference") : s >= 65 ? t("satisfactionFavorable") : s >= 45 ? t("satisfactionBalanced") : s >= 25 ? t("satisfactionAccommodated") : t("satisfactionSignificantConcession");
+        const getColor = (s: number) => s >= 85 ? "text-green-600 bg-green-50 border-green-200" : s >= 65 ? "text-primary bg-primary/5 border-primary/20" : s >= 45 ? "text-foreground bg-muted/50 border-border" : s >= 25 ? "text-amber-600 bg-amber-50 border-amber-200" : "text-red-600 bg-red-50 border-red-200";
+
+        const myScores = isInitiator ? satisfactionScores.partyA : satisfactionScores.partyB;
+        const theirScores = isInitiator ? satisfactionScores.partyB : satisfactionScores.partyA;
+
+        return (
+          <div className="card-brutal">
+            <div className="flex items-center gap-2 mb-4">
+              <Scale className="w-5 h-5 text-muted-foreground" />
+              <span className="font-semibold">{t("negotiationOutcome")}</span>
             </div>
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-muted-foreground">
-                  {satisfactionScores.partyB.name}
-                  {!isInitiator && ` (${tCommon("you")})`}
-                </span>
-                <span className="font-semibold">{satisfactionScores.partyB.satisfaction}%</span>
+
+            {/* Qualitative outcome labels */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
+              <div className={`p-4 rounded-xl border ${getColor(myScores.satisfaction)}`}>
+                <p className="text-xs text-muted-foreground mb-1">{t("forYou")}</p>
+                <p className="font-semibold">{getLabel(myScores.satisfaction)}</p>
               </div>
-              <Progress value={satisfactionScores.partyB.satisfaction} className="h-3" />
+              <div className={`p-4 rounded-xl border ${getColor(theirScores.satisfaction)}`}>
+                <p className="text-xs text-muted-foreground mb-1">{t("forThem")}</p>
+                <p className="font-semibold">{getLabel(theirScores.satisfaction)}</p>
+              </div>
+            </div>
+
+            {/* Negotiation summary */}
+            <div className="p-4 bg-muted/30 rounded-xl border border-border">
+              <p className="text-sm font-medium mb-2">{t("negotiationSummary")}</p>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
+                <div>
+                  <span className="text-muted-foreground">{t("gotPreferenceLabel")}</span>
+                  <p className="font-semibold">{t("clauseCount", { count: myScores.gotPreference, total: satisfactionScores.totalClauses })}</p>
+                </div>
+                <div>
+                  <span className="text-muted-foreground">{t("heldFirmLabel")}</span>
+                  <p className="font-semibold">{t("clauseCountSimple", { count: myScores.firmClauses })}</p>
+                </div>
+                <div>
+                  <span className="text-muted-foreground">{t("showedOpennessLabel")}</span>
+                  <p className="font-semibold">{t("clauseCountSimple", { count: myScores.openClauses })}</p>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        );
+      })()}
 
       {/* Progress Summary */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -416,6 +475,203 @@ function ReviewContent({ dealId }: { dealId: string }) {
       {validation && !validation.validated && !validation.conflicts.length && (
         <div className="text-xs text-muted-foreground text-center">
           {t("validationUnavailable")}
+        </div>
+      )}
+
+      {/* Negotiable Parameters */}
+      {parameterProposals && parameterProposals.parameters.length > 0 && !needsGeneration && (
+        <div className="card-brutal">
+          <div className="flex items-center gap-2 mb-4">
+            <Settings2 className="w-5 h-5 text-muted-foreground" />
+            <span className="font-semibold">{t("negotiableParameters")}</span>
+          </div>
+          <p className="text-sm text-muted-foreground mb-4">{t("negotiableParametersDescription")}</p>
+
+          <div className="space-y-4">
+            {parameterProposals.parameters.map((param) => {
+              const label = resolveParamString(param.label as string | Record<string, string>, contractLang, param.id);
+              const pendingForMe = param.pendingForMe || [];
+              const myProposals = param.myProposals || [];
+
+              return (
+                <div key={param.id} className="p-4 border border-border space-y-3">
+                  <div className="flex items-center justify-between gap-2 flex-wrap">
+                    <div>
+                      <p className="font-medium">{label}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {t("currentValue", { value: param.currentValue || "—" })}
+                      </p>
+                    </div>
+                    {!paramProposalForm && (
+                      <button
+                        onClick={() => {
+                          setParamProposalForm({ parameterId: param.id, label });
+                          setParamProposedValue("");
+                          setParamRationale("");
+                        }}
+                        className="flex items-center gap-2 px-3 py-2 border border-muted-foreground text-muted-foreground hover:border-primary hover:text-primary transition-colors rounded-full text-sm"
+                      >
+                        <MessageSquare className="w-4 h-4" />
+                        {t("proposeChange")}
+                      </button>
+                    )}
+                  </div>
+
+                  {/* Incoming proposals for this param */}
+                  {pendingForMe.map((pp: any) => (
+                    <div key={pp.id} className="p-3 border border-yellow-500/30 bg-yellow-500/10 space-y-2">
+                      <p className="text-sm font-medium text-yellow-200">
+                        {t("incomingParameterProposal", { label })}
+                      </p>
+                      <div className="flex items-center gap-4 text-sm">
+                        <span className="text-muted-foreground">{t("parameterProposalFrom", { value: pp.currentValue })}</span>
+                        <span className="font-semibold text-primary">{t("parameterProposalTo", { value: pp.proposedValue })}</span>
+                      </div>
+                      {pp.rationale && (
+                        <div className="flex items-start gap-2 p-2 bg-blue-500/10 border border-blue-500/20">
+                          <MessageSquare className="w-3.5 h-3.5 text-blue-400 flex-shrink-0 mt-0.5" />
+                          <p className="text-xs text-blue-200">&quot;{pp.rationale}&quot;</p>
+                        </div>
+                      )}
+                      <div className="flex items-center gap-2 pt-1">
+                        <button
+                          onClick={() => respondToParameterProposal.mutate({ proposalId: pp.id, accept: false })}
+                          disabled={respondToParameterProposal.isPending}
+                          className="flex items-center gap-2 px-3 py-2 border border-yellow-500 text-yellow-600 hover:bg-yellow-500 hover:text-white transition-colors rounded-full text-sm"
+                        >
+                          <ThumbsDown className="w-4 h-4" />
+                          {t("reject")}
+                        </button>
+                        <button
+                          onClick={() => respondToParameterProposal.mutate({ proposalId: pp.id, accept: true })}
+                          disabled={respondToParameterProposal.isPending}
+                          className="btn-brutal flex items-center gap-2 text-sm"
+                        >
+                          <ThumbsUp className="w-4 h-4" />
+                          {t("accept")}
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+
+                  {/* My proposals for this param */}
+                  {myProposals.map((pp: any) => (
+                    <div key={pp.id} className="p-3 border border-blue-500/30 bg-blue-500/5 space-y-2">
+                      <div className="flex items-center justify-between gap-2">
+                        <p className="text-sm font-medium text-blue-300">
+                          {t("yourParameterProposal", { label })}
+                        </p>
+                        <Badge
+                          className={
+                            pp.status === "ACCEPTED" ? "bg-green-500/20 text-green-400" :
+                            pp.status === "REJECTED" ? "bg-red-500/20 text-red-400" :
+                            "bg-yellow-500/20 text-yellow-400"
+                          }
+                        >
+                          {pp.status === "ACCEPTED" ? t("accepted") :
+                           pp.status === "REJECTED" ? t("rejected") :
+                           t("counterProposalPending")}
+                        </Badge>
+                      </div>
+                      <div className="flex items-center gap-4 text-sm">
+                        <span className="text-muted-foreground">{t("parameterProposalFrom", { value: pp.currentValue })}</span>
+                        <span className="font-semibold">{t("parameterProposalTo", { value: pp.proposedValue })}</span>
+                      </div>
+                      {pp.rationale && (
+                        <div className="flex items-start gap-2 p-2 bg-blue-500/10 border border-blue-500/20">
+                          <MessageSquare className="w-3.5 h-3.5 text-blue-400 flex-shrink-0 mt-0.5" />
+                          <p className="text-xs text-blue-200">&quot;{pp.rationale}&quot;</p>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+
+                  {/* Inline proposal form */}
+                  {paramProposalForm?.parameterId === param.id && (
+                    <div className="p-3 border border-primary/30 bg-primary/5 space-y-3">
+                      <div>
+                        <label className="block text-sm font-medium mb-1">{t("proposedValueLabel")}</label>
+                        <input
+                          type={param.type === "percentage" || param.type === "number" || param.type === "currency" ? "text" : "text"}
+                          value={paramProposedValue}
+                          onChange={(e) => setParamProposedValue(e.target.value)}
+                          placeholder={t("proposedValuePlaceholder")}
+                          className="w-full p-2 bg-background border border-border focus:border-primary outline-none text-sm"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium mb-1">{t("parameterRationale")}</label>
+                        <textarea
+                          value={paramRationale}
+                          onChange={(e) => setParamRationale(e.target.value)}
+                          placeholder={t("parameterRationalePlaceholder")}
+                          className="w-full p-2 bg-background border border-border focus:border-primary outline-none resize-none h-16 text-sm"
+                        />
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => {
+                            setParamProposalForm(null);
+                            setParamProposedValue("");
+                            setParamRationale("");
+                          }}
+                          className="px-3 py-2 text-sm text-muted-foreground hover:text-foreground"
+                        >
+                          {tCommon("cancel")}
+                        </button>
+                        <button
+                          onClick={() => {
+                            if (!paramProposedValue.trim()) return;
+                            submitParameterProposal.mutate({
+                              dealRoomId: dealId,
+                              parameterId: param.id,
+                              proposedValue: paramProposedValue.trim(),
+                              rationale: paramRationale.trim() || undefined,
+                            });
+                          }}
+                          disabled={!paramProposedValue.trim() || submitParameterProposal.isPending}
+                          className="btn-brutal text-sm disabled:opacity-50"
+                        >
+                          {submitParameterProposal.isPending ? t("generating") : t("submitParameterProposal")}
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+
+            {/* Parameter history events */}
+            {(() => {
+              const paramEvents = history?.events.filter((e) => e.clauseId === "") || [];
+              if (paramEvents.length === 0) return null;
+              return (
+                <div className="mt-4 pt-4 border-t border-border">
+                  <p className="text-xs text-muted-foreground mb-2 flex items-center gap-1.5">
+                    <History className="w-3.5 h-3.5" />
+                    {t("negotiationHistory")}
+                  </p>
+                  <div className="space-y-2">
+                    {paramEvents.map((event, idx) => (
+                      <div key={idx} className="flex items-start gap-2 text-xs text-muted-foreground">
+                        <div className="w-2 h-2 rounded-full mt-1.5 flex-shrink-0 bg-purple-400" />
+                        <div>
+                          <span className="text-foreground">
+                            {event.type === "parameter_proposed" && t("historyParameterProposed", { party: event.party === "you" ? t("historyYou") : t("historyThem"), param: event.clauseTitle, from: event.parameterFrom || "", to: event.parameterTo || "" })}
+                            {event.type === "parameter_accepted" && t("historyParameterAccepted", { party: event.party === "you" ? t("historyYou") : t("historyThem"), param: event.clauseTitle })}
+                            {event.type === "parameter_rejected" && t("historyParameterRejected", { party: event.party === "you" ? t("historyYou") : t("historyThem"), param: event.clauseTitle })}
+                          </span>
+                          {event.rationale && (
+                            <p className="mt-0.5 pl-2 border-l-2 border-muted-foreground/30 italic">{event.rationale}</p>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              );
+            })()}
+          </div>
         </div>
       )}
 
@@ -533,6 +789,11 @@ function ReviewContent({ dealId }: { dealId: string }) {
               (cp) => cp.dealRoomClauseId === item.clauseId && cp.status === "PENDING"
             ) || [];
 
+            // My sent counter-proposals for this clause
+            const myCounterProposals = counterProposals?.fromMe.filter(
+              (cp) => cp.dealRoomClauseId === item.clauseId
+            ) || [];
+
             const isExpanded = expandedClause === item.clauseId;
 
             return (
@@ -582,9 +843,12 @@ function ReviewContent({ dealId }: { dealId: string }) {
                           </div>
                         </div>
                         {cp.rationale && (
-                          <p className="text-sm italic text-muted-foreground">
-                            "{cp.rationale}"
-                          </p>
+                          <div className="flex items-start gap-2 p-3 bg-blue-500/10 border border-blue-500/20">
+                            <MessageSquare className="w-4 h-4 text-blue-400 flex-shrink-0 mt-0.5" />
+                            <p className="text-sm text-blue-200">
+                              &quot;{cp.rationale}&quot;
+                            </p>
+                          </div>
                         )}
                         <div className="flex items-center gap-2 pt-2 flex-wrap">
                           <button
@@ -610,6 +874,41 @@ function ReviewContent({ dealId }: { dealId: string }) {
                             {t("accept")}
                           </button>
                         </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* My Sent Counter-Proposals */}
+                {myCounterProposals.length > 0 && (
+                  <div className="mb-4 p-4 border border-blue-500/30 bg-blue-500/5">
+                    <p className="text-sm font-medium text-blue-300 mb-3">
+                      {t("yourCounterProposal")}
+                    </p>
+                    {myCounterProposals.map((cp) => (
+                      <div key={cp.id} className="space-y-2">
+                        <div className="flex items-center justify-between gap-2">
+                          <p className="font-semibold text-sm">{cp.proposedOption.label}</p>
+                          <Badge
+                            className={
+                              cp.status === "ACCEPTED" ? "bg-green-500/20 text-green-400" :
+                              cp.status === "REJECTED" ? "bg-red-500/20 text-red-400" :
+                              "bg-yellow-500/20 text-yellow-400"
+                            }
+                          >
+                            {cp.status === "ACCEPTED" ? t("accepted") :
+                             cp.status === "REJECTED" ? t("rejected") :
+                             t("counterProposalPending")}
+                          </Badge>
+                        </div>
+                        {cp.rationale && (
+                          <div className="flex items-start gap-2 p-2 bg-blue-500/10 border border-blue-500/20">
+                            <MessageSquare className="w-3.5 h-3.5 text-blue-400 flex-shrink-0 mt-0.5" />
+                            <p className="text-xs text-blue-200">
+                              &quot;{cp.rationale}&quot;
+                            </p>
+                          </div>
+                        )}
                       </div>
                     ))}
                   </div>
@@ -641,29 +940,189 @@ function ReviewContent({ dealId }: { dealId: string }) {
                       <p className="text-sm text-muted-foreground">{suggestion.reasoning}</p>
                     </div>
 
-                    {/* Satisfaction for this clause */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-                      <div className="flex items-center gap-3">
-                        <span className="text-xs text-muted-foreground">{t("yourSatisfaction")}</span>
-                        <Progress
-                          value={isInitiator ? suggestion.satisfactionPartyA : suggestion.satisfactionPartyB}
-                          className="flex-1 h-2"
-                        />
-                        <span className="text-sm font-medium">
-                          {isInitiator ? suggestion.satisfactionPartyA : suggestion.satisfactionPartyB}%
-                        </span>
+                    {/* Outcome for this clause */}
+                    {(() => {
+                      const yourScore = isInitiator ? suggestion.satisfactionPartyA : suggestion.satisfactionPartyB;
+                      const theirScore = isInitiator ? suggestion.satisfactionPartyB : suggestion.satisfactionPartyA;
+                      const getLabel = (s: number) => s >= 85 ? t("satisfactionCloseToPreference") : s >= 65 ? t("satisfactionFavorable") : s >= 45 ? t("satisfactionBalanced") : s >= 25 ? t("satisfactionAccommodated") : t("satisfactionSignificantConcession");
+                      const getColor = (s: number) => s >= 85 ? "bg-green-100 text-green-700" : s >= 65 ? "bg-primary/10 text-primary" : s >= 45 ? "bg-muted text-foreground" : s >= 25 ? "bg-amber-100 text-amber-700" : "bg-red-100 text-red-700";
+                      return (
+                        <div className="flex flex-wrap gap-2 mb-4">
+                          <span className={`text-xs px-2.5 py-1 rounded-full font-medium ${getColor(yourScore)}`}>
+                            {t("forYou")}: {getLabel(yourScore)}
+                          </span>
+                          <span className={`text-xs px-2.5 py-1 rounded-full font-medium ${getColor(theirScore)}`}>
+                            {t("forThem")}: {getLabel(theirScore)}
+                          </span>
+                        </div>
+                      );
+                    })()}
+
+                    {/* Expandable Pros/Cons Analysis for suggested option */}
+                    {suggestion.suggestedOption && (
+                      <div className="mb-4 border border-border">
+                        <button
+                          onClick={() => setExpandedAnalysis(expandedAnalysis === item.clauseId ? null : item.clauseId)}
+                          className="w-full flex items-center justify-between p-3 text-sm text-muted-foreground hover:text-foreground transition-colors"
+                        >
+                          <span className="flex items-center gap-2">
+                            <Info className="w-4 h-4" />
+                            {t("optionAnalysis")}
+                          </span>
+                          {expandedAnalysis === item.clauseId
+                            ? <ChevronUp className="w-4 h-4" />
+                            : <ChevronDown className="w-4 h-4" />}
+                        </button>
+                        <div
+                          className="grid transition-[grid-template-rows] duration-300 ease-out"
+                          style={{ gridTemplateRows: expandedAnalysis === item.clauseId ? "1fr" : "0fr" }}
+                        >
+                          <div className="overflow-hidden">
+                            <div className="px-3 pb-3 space-y-3">
+                              {suggestion.suggestedOption.plainDescription && (
+                                <p className="text-sm text-muted-foreground">
+                                  {suggestion.suggestedOption.plainDescription}
+                                </p>
+                              )}
+                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                  <p className="text-xs font-medium text-primary uppercase tracking-wider mb-2">
+                                    {t("prosForYou")}
+                                  </p>
+                                  <ul className="space-y-1">
+                                    {(isInitiator
+                                      ? suggestion.suggestedOption.prosPartyA
+                                      : suggestion.suggestedOption.prosPartyB
+                                    ).map((pro: string, i: number) => (
+                                      <li key={i} className="text-sm text-muted-foreground flex items-start gap-2">
+                                        <span className="text-primary">+</span>
+                                        {pro}
+                                      </li>
+                                    ))}
+                                  </ul>
+                                </div>
+                                <div>
+                                  <p className="text-xs font-medium text-warning uppercase tracking-wider mb-2">
+                                    {t("consForYou")}
+                                  </p>
+                                  <ul className="space-y-1">
+                                    {(isInitiator
+                                      ? suggestion.suggestedOption.consPartyA
+                                      : suggestion.suggestedOption.consPartyB
+                                    ).map((con: string, i: number) => (
+                                      <li key={i} className="text-sm text-muted-foreground flex items-start gap-2">
+                                        <span className="text-warning">-</span>
+                                        {con}
+                                      </li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                       </div>
-                      <div className="flex items-center gap-3">
-                        <span className="text-xs text-muted-foreground">{t("theirSatisfaction")}</span>
-                        <Progress
-                          value={isInitiator ? suggestion.satisfactionPartyB : suggestion.satisfactionPartyA}
-                          className="flex-1 h-2"
-                        />
-                        <span className="text-sm font-medium">
-                          {isInitiator ? suggestion.satisfactionPartyB : suggestion.satisfactionPartyA}%
-                        </span>
-                      </div>
-                    </div>
+                    )}
+
+                    {/* Expandable Negotiation History for this clause */}
+                    {(() => {
+                      const clauseEvents = history?.events.filter((e) => e.clauseId === item.clauseId) || [];
+                      if (clauseEvents.length === 0) return null;
+                      return (
+                        <div className="mb-4 border border-border">
+                          <button
+                            onClick={() => setExpandedHistory(expandedHistory === item.clauseId ? null : item.clauseId)}
+                            className="w-full flex items-center justify-between p-3 text-sm text-muted-foreground hover:text-foreground transition-colors"
+                          >
+                            <span className="flex items-center gap-2">
+                              <History className="w-4 h-4" />
+                              {t("negotiationHistory")}
+                              <Badge variant="outline" className="text-xs">{clauseEvents.length}</Badge>
+                            </span>
+                            {expandedHistory === item.clauseId
+                              ? <ChevronUp className="w-4 h-4" />
+                              : <ChevronDown className="w-4 h-4" />}
+                          </button>
+                          <div
+                            className="grid transition-[grid-template-rows] duration-300 ease-out"
+                            style={{ gridTemplateRows: expandedHistory === item.clauseId ? "1fr" : "0fr" }}
+                          >
+                            <div className="overflow-hidden">
+                              <div className="px-3 pb-3">
+                                <div className="relative pl-6 space-y-0">
+                                  {/* Vertical timeline line */}
+                                  <div className="absolute left-[7px] top-2 bottom-2 w-px bg-border" />
+                                  {clauseEvents.map((event, idx) => {
+                                    const partyLabel = event.party === "you" ? t("historyYou") : t("historyThem");
+                                    let dotColor = "bg-muted-foreground";
+                                    let message = "";
+
+                                    switch (event.type) {
+                                      case "compromise_generated":
+                                        dotColor = "bg-primary";
+                                        message = t("historyCompromiseGenerated", { option: event.optionLabel || "" });
+                                        break;
+                                      case "compromise_accepted":
+                                        dotColor = "bg-green-500";
+                                        message = t("historyAccepted", { party: partyLabel, option: event.optionLabel || "" });
+                                        break;
+                                      case "compromise_rejected":
+                                        dotColor = "bg-yellow-500";
+                                        message = t("historyRejected", { party: partyLabel, option: event.optionLabel || "" });
+                                        break;
+                                      case "counter_proposal":
+                                        dotColor = "bg-blue-500";
+                                        message = t("historyCounterProposal", { party: partyLabel, option: event.optionLabel || "" });
+                                        break;
+                                      case "counter_accepted":
+                                        dotColor = "bg-green-500";
+                                        message = t("historyCounterAccepted", { party: partyLabel, option: event.optionLabel || "" });
+                                        break;
+                                      case "counter_rejected":
+                                        dotColor = "bg-red-500";
+                                        message = t("historyCounterRejected", { party: partyLabel, option: event.optionLabel || "" });
+                                        break;
+                                      case "parameter_proposed":
+                                        dotColor = "bg-purple-500";
+                                        message = t("historyParameterProposed", { party: partyLabel, param: event.clauseTitle, from: event.parameterFrom || "", to: event.parameterTo || "" });
+                                        break;
+                                      case "parameter_accepted":
+                                        dotColor = "bg-green-500";
+                                        message = t("historyParameterAccepted", { party: partyLabel, param: event.clauseTitle });
+                                        break;
+                                      case "parameter_rejected":
+                                        dotColor = "bg-red-500";
+                                        message = t("historyParameterRejected", { party: partyLabel, param: event.clauseTitle });
+                                        break;
+                                    }
+
+                                    return (
+                                      <div key={idx} className="relative pb-3 last:pb-0">
+                                        {/* Timeline dot */}
+                                        <div className={`absolute -left-6 top-1.5 w-[9px] h-[9px] rounded-full ${dotColor} ring-2 ring-background`} />
+                                        <div className="space-y-1">
+                                          <div className="flex items-center gap-2 flex-wrap">
+                                            <span className="text-xs text-muted-foreground">
+                                              {t("historyRoundLabel", { number: event.roundNumber })}
+                                            </span>
+                                          </div>
+                                          <p className="text-sm">{message}</p>
+                                          {event.rationale && (
+                                            <p className="text-xs text-muted-foreground italic border-l-2 border-muted-foreground/30 pl-2 mt-1">
+                                              {t("historyRationale")} &quot;{event.rationale}&quot;
+                                            </p>
+                                          )}
+                                        </div>
+                                      </div>
+                                    );
+                                  })}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })()}
                   </>
                 )}
 
@@ -832,6 +1291,22 @@ function ReviewContent({ dealId }: { dealId: string }) {
       {/* All Agreed Section — with attorney review flow */}
       {allAgreed && (
         <>
+          {/* Download Your Contract — always shown first */}
+          <div className="card-brutal border-primary/50 bg-primary/5">
+            <div className="flex items-start gap-4">
+              <div className="w-12 h-12 bg-primary/20 flex items-center justify-center flex-shrink-0 rounded-2xl">
+                <Download className="w-6 h-6 text-primary" />
+              </div>
+              <div className="flex-1">
+                <h2 className="text-lg font-semibold mb-1">{t("downloadContract")}</h2>
+                <p className="text-sm text-muted-foreground mb-3">
+                  {t("downloadContractDescription")}
+                </p>
+                <DownloadLinks dealId={dealId} />
+              </div>
+            </div>
+          </div>
+
           {/* My review in progress */}
           {reviewStatus?.myReview && !reviewStatus.myReview.approvedAt && (
             <div className="card-brutal border-purple-500/50">
@@ -848,7 +1323,6 @@ function ReviewContent({ dealId }: { dealId: string }) {
                     )}
                   </p>
                   <div className="flex items-center gap-3 flex-wrap">
-                    <DownloadLinks dealId={dealId} />
                     <button
                       onClick={() => cancelReview.mutate({ dealRoomId: dealId })}
                       disabled={cancelReview.isPending}
@@ -894,13 +1368,18 @@ function ReviewContent({ dealId }: { dealId: string }) {
                     {!reviewStatus.suppressReviewForInitiator && ` ${t("youMayRequestReview")}`}
                   </p>
                   {!reviewStatus.suppressReviewForInitiator && (
-                    <button
-                      onClick={() => setShowAttorneyModal(true)}
-                      className="btn-brutal-outline inline-flex items-center gap-2 text-sm"
-                    >
-                      <Shield className="w-4 h-4" />
-                      {t("requestYourOwnReview")}
-                    </button>
+                    <div className="space-y-2">
+                      <button
+                        onClick={() => setShowAttorneyModal(true)}
+                        className="btn-brutal-outline inline-flex items-center gap-2 text-sm"
+                      >
+                        <Shield className="w-4 h-4" />
+                        {t("requestYourOwnReview")}
+                      </button>
+                      <p className="text-xs text-muted-foreground">
+                        {t("attorneyReviewPriceNote", { price: contractLang === "es" ? "200 €" : "$200" })}
+                      </p>
+                    </div>
                   )}
                 </div>
               </div>
@@ -960,7 +1439,11 @@ function ReviewContent({ dealId }: { dealId: string }) {
                   </button>
                 )}
               </div>
-              <DownloadLinks dealId={dealId} className="mt-4 justify-center" />
+              {!reviewStatus.myReview && !reviewStatus.suppressReviewForInitiator && (
+                <p className="text-xs text-muted-foreground mt-4">
+                  {t("attorneyReviewPriceNote", { price: contractLang === "es" ? "200 €" : "$200" })}
+                </p>
+              )}
             </div>
           )}
 
@@ -995,6 +1478,11 @@ function ReviewContent({ dealId }: { dealId: string }) {
                   </button>
                 )}
               </div>
+              {!reviewStatus?.suppressReviewForInitiator && (
+                <p className="text-xs text-muted-foreground mt-4">
+                  {t("attorneyReviewPriceNote", { price: contractLang === "es" ? "200 €" : "$200" })}
+                </p>
+              )}
             </div>
           )}
         </>

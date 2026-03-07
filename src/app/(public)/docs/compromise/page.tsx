@@ -62,16 +62,7 @@ export default function CompromisePage() {
             </div>
             <ul className="space-y-2 text-sm">
               <li className="flex items-start gap-2">
-                <span className="text-primary font-bold">40%</span>
-                <span className="text-muted-foreground">
-                  <strong className="text-foreground">
-                    {t("stakePriorityLabel")}
-                  </strong>{" "}
-                  — {t("stakePriorityDesc")}
-                </span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-primary font-bold">30%</span>
+                <span className="text-primary font-bold">60%</span>
                 <span className="text-muted-foreground">
                   <strong className="text-foreground">
                     {t("stakeInflexibilityLabel")}
@@ -80,7 +71,7 @@ export default function CompromisePage() {
                 </span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-primary font-bold">30%</span>
+                <span className="text-primary font-bold">40%</span>
                 <span className="text-muted-foreground">
                   <strong className="text-foreground">
                     {t("stakeBiasLabel")}
@@ -111,26 +102,21 @@ export default function CompromisePage() {
         <h2 className="text-xl font-bold">{t("formulaTitle")}</h2>
         <div className="p-6 border border-primary bg-card rounded-2xl">
           <code className="text-lg text-primary font-mono">
-            stake = (priority/5 × 0.4) + ((5-flexibility)/5 × 0.3) + (|bias| ×
-            0.3)
+            stake = ((5-flexibility)/5 × 0.6) + (|bias| × 0.4)
           </code>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-          <div className="p-4 border border-border rounded-xl">
-            <p className="font-mono text-primary mb-2">priority/5 × 0.4</p>
-            <p className="text-muted-foreground">{t("formulaPriorityDesc")}</p>
-          </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
           <div className="p-4 border border-border rounded-xl">
             <p className="font-mono text-primary mb-2">
-              (5-flexibility)/5 × 0.3
+              (5-flexibility)/5 × 0.6
             </p>
             <p className="text-muted-foreground">
               {t("formulaInflexibilityDesc")}
             </p>
           </div>
           <div className="p-4 border border-border rounded-xl">
-            <p className="font-mono text-primary mb-2">|bias| × 0.3</p>
+            <p className="font-mono text-primary mb-2">|bias| × 0.4</p>
             <p className="text-muted-foreground">{t("formulaBiasDesc")}</p>
           </div>
         </div>

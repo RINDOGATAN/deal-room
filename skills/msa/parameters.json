@@ -9,7 +9,8 @@
       "required": false,
       "label": { "en": "Named Competitors", "es": "Competidores Designados" },
       "hint": { "en": "Comma-separated list of competitors the provider cannot serve during the term", "es": "Lista de competidores separada por comas a los que el proveedor no puede prestar servicios durante la vigencia" },
-      "placeholder": { "en": "e.g. Competitor A, Competitor B", "es": "p. ej. Competidor A, Competidor B" }
+      "placeholder": { "en": "e.g. Competitor A, Competitor B", "es": "p. ej. Competidor A, Competidor B" },
+      "negotiable": true
     }
   ]
 }
