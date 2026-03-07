@@ -28,6 +28,7 @@ export interface ParameterDefinition {
   default?: string;
   options?: string[]; // for "choice" type
   boilerplateVariable?: string; // also inject into {curly} boilerplate
+  negotiable?: boolean; // if true, counterparty can propose changes during review
 }
 
 export interface ParameterSchema {

@@ -13,7 +13,6 @@ import {
   Info,
   ChevronDown,
   ChevronUp,
-  Star,
   Sliders,
   Copy,
   List,
@@ -298,22 +297,12 @@ function NegotiateContent({ dealId }: { dealId: string }) {
     })));
   };
 
-  const handlePriorityChange = (value: number[]) => {
+  const handleFirmnessChange = (value: number[]) => {
     const existing = selections.get(currentClause.id);
     if (existing) {
       setSelections(new Map(selections.set(currentClause.id, {
         ...existing,
-        priority: value[0],
-      })));
-    }
-  };
-
-  const handleFlexibilityChange = (value: number[]) => {
-    const existing = selections.get(currentClause.id);
-    if (existing) {
-      setSelections(new Map(selections.set(currentClause.id, {
-        ...existing,
-        flexibility: value[0],
+        flexibility: 6 - value[0], // firmness 5 (firm) = flexibility 1, firmness 1 (open) = flexibility 5
       })));
     }
   };
@@ -804,95 +793,64 @@ function NegotiateContent({ dealId }: { dealId: string }) {
             })}
           </div>
 
-          {/* Priority & Flexibility (hidden in solo mode) */}
+          {/* Firmness (hidden in solo mode) */}
           {currentSelection && !isSoloMode && (
-            <div className="card-brutal space-y-6">
+            <div className="card-brutal space-y-4">
               <div className="flex items-center gap-2">
                 <Sliders className="w-4 h-4 text-muted-foreground" />
                 <span className="section-label">
-                  {t("importanceSettings")}
+                  {t("firmnessSettings")}
                 </span>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="font-medium">{t("priority")}</p>
-                      <p className="text-xs text-muted-foreground">{t("priorityDescription")}</p>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      {[1, 2, 3, 4, 5].map((n) => (
-                        <Star
-                          key={n}
-                          className={`w-4 h-4 ${n <= currentSelection.priority ? "text-primary fill-primary" : "text-muted-foreground"}`}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                  <Slider
-                    value={[currentSelection.priority]}
-                    onValueChange={handlePriorityChange}
-                    min={1}
-                    max={5}
-                    step={1}
-                    className="w-full"
-                  />
-                  <div className="flex justify-between text-xs text-muted-foreground">
-                    <span>{t("lowPriority")}</span>
-                    <span>{t("highPriority")}</span>
-                  </div>
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="font-medium">{t("firmness")}</p>
+                  <p className="text-xs text-muted-foreground">{t("firmnessDescription")}</p>
                 </div>
-
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="font-medium">{t("flexibility")}</p>
-                      <p className="text-xs text-muted-foreground">{t("flexibilityDescription")}</p>
-                    </div>
-                    <span className="text-sm font-medium">{currentSelection.flexibility}/5</span>
-                  </div>
-                  <Slider
-                    value={[currentSelection.flexibility]}
-                    onValueChange={handleFlexibilityChange}
-                    min={1}
-                    max={5}
-                    step={1}
-                    className="w-full"
-                  />
-                  <div className="flex justify-between text-xs text-muted-foreground">
-                    <span>{t("mustHaveMyWay")}</span>
-                    <span>{t("veryFlexible")}</span>
-                  </div>
-                </div>
+                <span className="text-sm font-medium">{6 - currentSelection.flexibility}/5</span>
+              </div>
+              <Slider
+                value={[6 - currentSelection.flexibility]}
+                onValueChange={handleFirmnessChange}
+                min={1}
+                max={5}
+                step={1}
+                className="w-full"
+              />
+              <div className="flex justify-between text-xs text-muted-foreground">
+                <span>{t("openToAlternatives")}</span>
+                <span>{t("firmOnThis")}</span>
               </div>
             </div>
           )}
 
           {/* Satisfaction Prediction — shown on last clause when complete, non-solo */}
-          {!isSoloMode && isComplete && currentClauseIndex === clauses.length - 1 && prediction?.predicted && (
-            <div className="card-brutal border-primary/20 bg-primary/5">
-              <div className="flex items-center gap-2 mb-3">
-                <TrendingUp className="w-4 h-4 text-primary" />
-                <span className="section-label">{t("predictedSatisfaction")}</span>
-              </div>
-              <p className="text-xs text-muted-foreground mb-3">{t("predictedSatisfactionDescription")}</p>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="text-center p-3 bg-card rounded-lg border border-border">
-                  <p className="text-2xl font-bold text-primary">
-                    {Math.round(deal.currentUserRole === "INITIATOR" ? prediction.predictedSatisfactionA : prediction.predictedSatisfactionB)}%
-                  </p>
-                  <p className="text-xs text-muted-foreground">{t("yourSatisfaction")}</p>
+          {!isSoloMode && isComplete && currentClauseIndex === clauses.length - 1 && prediction?.predicted && (() => {
+            const yourScore = Math.round(deal.currentUserRole === "INITIATOR" ? prediction.predictedSatisfactionA : prediction.predictedSatisfactionB);
+            const theirScore = Math.round(deal.currentUserRole === "INITIATOR" ? prediction.predictedSatisfactionB : prediction.predictedSatisfactionA);
+            const getLabel = (s: number) => s >= 85 ? t("satisfactionCloseToPreference") : s >= 65 ? t("satisfactionFavorable") : s >= 45 ? t("satisfactionBalanced") : s >= 25 ? t("satisfactionAccommodated") : t("satisfactionSignificantConcession");
+            const getColor = (s: number) => s >= 85 ? "text-green-600" : s >= 65 ? "text-primary" : s >= 45 ? "text-foreground" : s >= 25 ? "text-amber-600" : "text-red-600";
+            return (
+              <div className="card-brutal border-primary/20 bg-primary/5">
+                <div className="flex items-center gap-2 mb-3">
+                  <TrendingUp className="w-4 h-4 text-primary" />
+                  <span className="section-label">{t("predictedOutcome")}</span>
                 </div>
-                <div className="text-center p-3 bg-card rounded-lg border border-border">
-                  <p className="text-2xl font-bold text-muted-foreground">
-                    {Math.round(deal.currentUserRole === "INITIATOR" ? prediction.predictedSatisfactionB : prediction.predictedSatisfactionA)}%
-                  </p>
-                  <p className="text-xs text-muted-foreground">{t("theirSatisfaction")}</p>
+                <p className="text-xs text-muted-foreground mb-3">{t("predictedOutcomeDescription")}</p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="text-center p-3 bg-card rounded-lg border border-border">
+                    <p className={`text-sm font-semibold ${getColor(yourScore)}`}>{getLabel(yourScore)}</p>
+                    <p className="text-xs text-muted-foreground mt-1">{t("forYou")}</p>
+                  </div>
+                  <div className="text-center p-3 bg-card rounded-lg border border-border">
+                    <p className={`text-sm font-semibold ${getColor(theirScore)}`}>{getLabel(theirScore)}</p>
+                    <p className="text-xs text-muted-foreground mt-1">{t("forThem")}</p>
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
+            );
+          })()}
 
           {/* Navigation */}
           <div className="flex items-center justify-between pt-4 border-t border-border">

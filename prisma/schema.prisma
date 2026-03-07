@@ -462,6 +462,7 @@ model DealRoom {
   signingRequest         SigningRequest?
   supervisorAssignments  SupervisorAssignment[]
   agentDealRoom          AgentDealRoom?
+  parameterProposals     ParameterProposal[]
 
   @@map("deal_rooms")
 }
@@ -494,6 +495,7 @@ model DealRoomParty {
   attorneySupervisor Supervisor?       @relation(fields: [attorneySupervisorId], references: [id])
   selections         PartySelection[]
   counterProposals   CounterProposal[]
+  parameterProposals ParameterProposal[]
 
   @@unique([dealRoomId, role])
   @@map("deal_room_parties")
@@ -581,8 +583,9 @@ model NegotiationRound {
   status      RoundStatus @default(PENDING_RESPONSE)
   createdAt   DateTime    @default(now())
 
-  dealRoom         DealRoom          @relation(fields: [dealRoomId], references: [id], onDelete: Cascade)
-  counterProposals CounterProposal[]
+  dealRoom           DealRoom            @relation(fields: [dealRoomId], references: [id], onDelete: Cascade)
+  counterProposals   CounterProposal[]
+  parameterProposals ParameterProposal[]
 
   @@unique([dealRoomId, roundNumber])
   @@map("negotiation_rounds")
@@ -612,6 +615,26 @@ model CounterProposal {
 
   @@unique([roundId, dealRoomClauseId, partyId])
   @@map("counter_proposals")
+}
+
+model ParameterProposal {
+  id            String         @id @default(cuid())
+  dealRoomId    String
+  roundId       String
+  partyId       String
+  parameterId   String // Parameter ID from parameterSchema (e.g. "equity-percentage")
+  currentValue  String
+  proposedValue String
+  rationale     String?        @db.Text
+  status        ProposalStatus @default(PENDING)
+  createdAt     DateTime       @default(now())
+
+  dealRoom DealRoom         @relation(fields: [dealRoomId], references: [id], onDelete: Cascade)
+  round    NegotiationRound @relation(fields: [roundId], references: [id], onDelete: Cascade)
+  party    DealRoomParty    @relation(fields: [partyId], references: [id], onDelete: Cascade)
+
+  @@unique([roundId, parameterId, partyId])
+  @@map("parameter_proposals")
 }
 
 enum ProposalStatus {

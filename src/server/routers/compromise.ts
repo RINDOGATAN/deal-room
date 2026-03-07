@@ -343,6 +343,234 @@ export const compromiseRouter = createTRPCRouter({
       }));
     }),
 
+  // Get full negotiation history for a deal room (all rounds, suggestions, counter-proposals)
+  getHistory: protectedProcedure
+    .input(z.object({ dealRoomId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const userId = ctx.session.user.id;
+
+      const dealRoom = await ctx.prisma.dealRoom.findUnique({
+        where: { id: input.dealRoomId },
+        include: { parties: true },
+      });
+
+      if (!dealRoom) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Deal room not found" });
+      }
+
+      const party = dealRoom.parties.find((p) => p.userId === userId);
+      if (!party) {
+        throw new TRPCError({ code: "FORBIDDEN", message: "Access denied" });
+      }
+
+      const isInitiator = party.role === PartyRole.INITIATOR;
+
+      // Fetch all rounds with counter-proposals
+      const rounds = await ctx.prisma.negotiationRound.findMany({
+        where: { dealRoomId: input.dealRoomId },
+        include: {
+          counterProposals: {
+            include: {
+              party: true,
+              proposedOption: true,
+              dealRoomClause: { include: { clauseTemplate: true } },
+            },
+            orderBy: { createdAt: "asc" },
+          },
+        },
+        orderBy: { roundNumber: "asc" },
+      });
+
+      // Fetch all suggestions (all rounds, not just latest)
+      const suggestions = await ctx.prisma.compromiseSuggestion.findMany({
+        where: {
+          dealRoomClause: { dealRoomId: input.dealRoomId },
+        },
+        include: {
+          suggestedOption: true,
+          dealRoomClause: { include: { clauseTemplate: true } },
+        },
+        orderBy: [
+          { roundNumber: "asc" },
+          { dealRoomClause: { clauseTemplate: { order: "asc" } } },
+        ],
+      });
+
+      // Fetch parameter proposals
+      const parameterProposals = await ctx.prisma.parameterProposal.findMany({
+        where: { dealRoomId: input.dealRoomId },
+        include: { party: true, round: true },
+        orderBy: { createdAt: "asc" },
+      });
+
+      // Build timeline events
+      const events: Array<{
+        type: "compromise_generated" | "compromise_accepted" | "compromise_rejected" | "counter_proposal" | "counter_accepted" | "counter_rejected" | "parameter_proposed" | "parameter_accepted" | "parameter_rejected";
+        roundNumber: number;
+        clauseId: string;
+        clauseTitle: string;
+        party: "you" | "them";
+        optionLabel?: string;
+        rationale?: string | null;
+        satisfactionYou?: number;
+        satisfactionThem?: number;
+        parameterId?: string;
+        parameterFrom?: string;
+        parameterTo?: string;
+        createdAt: Date;
+      }> = [];
+
+      for (const round of rounds) {
+        // Add suggestion events for this round
+        const roundSuggestions = suggestions.filter((s) => s.roundNumber === round.roundNumber);
+        for (const s of roundSuggestions) {
+          events.push({
+            type: "compromise_generated",
+            roundNumber: round.roundNumber,
+            clauseId: s.dealRoomClauseId,
+            clauseTitle: s.dealRoomClause.clauseTemplate.title,
+            party: "you", // system event
+            optionLabel: s.suggestedOption.label,
+            satisfactionYou: isInitiator ? s.satisfactionPartyA : s.satisfactionPartyB,
+            satisfactionThem: isInitiator ? s.satisfactionPartyB : s.satisfactionPartyA,
+            createdAt: s.createdAt,
+          });
+
+          // Acceptance/rejection events
+          if (s.partyAAccepted === true) {
+            events.push({
+              type: "compromise_accepted",
+              roundNumber: round.roundNumber,
+              clauseId: s.dealRoomClauseId,
+              clauseTitle: s.dealRoomClause.clauseTemplate.title,
+              party: isInitiator ? "you" : "them",
+              optionLabel: s.suggestedOption.label,
+              createdAt: s.createdAt,
+            });
+          } else if (s.partyAAccepted === false) {
+            events.push({
+              type: "compromise_rejected",
+              roundNumber: round.roundNumber,
+              clauseId: s.dealRoomClauseId,
+              clauseTitle: s.dealRoomClause.clauseTemplate.title,
+              party: isInitiator ? "you" : "them",
+              optionLabel: s.suggestedOption.label,
+              createdAt: s.createdAt,
+            });
+          }
+          if (s.partyBAccepted === true) {
+            events.push({
+              type: "compromise_accepted",
+              roundNumber: round.roundNumber,
+              clauseId: s.dealRoomClauseId,
+              clauseTitle: s.dealRoomClause.clauseTemplate.title,
+              party: isInitiator ? "them" : "you",
+              optionLabel: s.suggestedOption.label,
+              createdAt: s.createdAt,
+            });
+          } else if (s.partyBAccepted === false) {
+            events.push({
+              type: "compromise_rejected",
+              roundNumber: round.roundNumber,
+              clauseId: s.dealRoomClauseId,
+              clauseTitle: s.dealRoomClause.clauseTemplate.title,
+              party: isInitiator ? "them" : "you",
+              optionLabel: s.suggestedOption.label,
+              createdAt: s.createdAt,
+            });
+          }
+        }
+
+        // Counter-proposal events
+        for (const cp of round.counterProposals) {
+          const isFromMe = cp.partyId === party.id;
+          events.push({
+            type: "counter_proposal",
+            roundNumber: round.roundNumber,
+            clauseId: cp.dealRoomClauseId,
+            clauseTitle: cp.dealRoomClause.clauseTemplate.title,
+            party: isFromMe ? "you" : "them",
+            optionLabel: cp.proposedOption.label,
+            rationale: cp.rationale,
+            createdAt: cp.createdAt,
+          });
+
+          if (cp.status === "ACCEPTED") {
+            events.push({
+              type: "counter_accepted",
+              roundNumber: round.roundNumber,
+              clauseId: cp.dealRoomClauseId,
+              clauseTitle: cp.dealRoomClause.clauseTemplate.title,
+              party: isFromMe ? "them" : "you",
+              optionLabel: cp.proposedOption.label,
+              createdAt: cp.createdAt,
+            });
+          } else if (cp.status === "REJECTED") {
+            events.push({
+              type: "counter_rejected",
+              roundNumber: round.roundNumber,
+              clauseId: cp.dealRoomClauseId,
+              clauseTitle: cp.dealRoomClause.clauseTemplate.title,
+              party: isFromMe ? "them" : "you",
+              optionLabel: cp.proposedOption.label,
+              createdAt: cp.createdAt,
+            });
+          }
+        }
+      }
+
+      // Parameter proposal events
+      for (const pp of parameterProposals) {
+        const isFromMe = pp.partyId === party.id;
+        events.push({
+          type: "parameter_proposed",
+          roundNumber: pp.round.roundNumber,
+          clauseId: "", // not clause-specific
+          clauseTitle: pp.parameterId,
+          party: isFromMe ? "you" : "them",
+          rationale: pp.rationale,
+          parameterId: pp.parameterId,
+          parameterFrom: pp.currentValue,
+          parameterTo: pp.proposedValue,
+          createdAt: pp.createdAt,
+        });
+
+        if (pp.status === "ACCEPTED") {
+          events.push({
+            type: "parameter_accepted",
+            roundNumber: pp.round.roundNumber,
+            clauseId: "",
+            clauseTitle: pp.parameterId,
+            party: isFromMe ? "them" : "you",
+            parameterId: pp.parameterId,
+            parameterFrom: pp.currentValue,
+            parameterTo: pp.proposedValue,
+            createdAt: pp.createdAt,
+          });
+        } else if (pp.status === "REJECTED") {
+          events.push({
+            type: "parameter_rejected",
+            roundNumber: pp.round.roundNumber,
+            clauseId: "",
+            clauseTitle: pp.parameterId,
+            party: isFromMe ? "them" : "you",
+            parameterId: pp.parameterId,
+            parameterFrom: pp.currentValue,
+            parameterTo: pp.proposedValue,
+            createdAt: pp.createdAt,
+          });
+        }
+      }
+
+      // Sort by time
+      events.sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
+
+      return {
+        currentRound: dealRoom.currentRound,
+        events,
+      };
+    }),
+
   // Get quality scores for clause options (from Cloud Intelligence API)
   getQualityScores: protectedProcedure
     .input(
@@ -637,18 +865,27 @@ export const compromiseRouter = createTRPCRouter({
         });
       }
 
-      // Calculate weighted satisfaction
+      // Calculate average satisfaction (equal weight per clause)
       const initiator = dealRoom.parties.find((p) => p.role === PartyRole.INITIATOR);
       const respondent = dealRoom.parties.find((p) => p.role === PartyRole.RESPONDENT);
 
-      let totalWeightA = 0;
-      let totalWeightB = 0;
-      let weightedSatisfactionA = 0;
-      let weightedSatisfactionB = 0;
+      let clauseCount = 0;
+      let totalSatisfactionA = 0;
+      let totalSatisfactionB = 0;
+      let gotPreferenceA = 0;
+      let gotPreferenceB = 0;
+      let firmClausesA = 0;
+      let firmClausesB = 0;
+      let openClausesA = 0;
+      let openClausesB = 0;
 
       for (const clause of dealRoom.clauses) {
         const suggestion = clause.compromiseSuggestions[0];
         if (!suggestion) continue;
+
+        clauseCount++;
+        totalSatisfactionA += suggestion.satisfactionPartyA;
+        totalSatisfactionB += suggestion.satisfactionPartyB;
 
         const selectionA = clause.selections.find(
           (s) => s.partyId === initiator?.id
@@ -657,30 +894,43 @@ export const compromiseRouter = createTRPCRouter({
           (s) => s.partyId === respondent?.id
         );
 
-        const weightA = selectionA?.priority || 3;
-        const weightB = selectionB?.priority || 3;
+        // Count clauses where party got their preferred option
+        if (selectionA && suggestion.suggestedOptionId === selectionA.optionId) gotPreferenceA++;
+        if (selectionB && suggestion.suggestedOptionId === selectionB.optionId) gotPreferenceB++;
 
-        totalWeightA += weightA;
-        totalWeightB += weightB;
-        weightedSatisfactionA += suggestion.satisfactionPartyA * weightA;
-        weightedSatisfactionB += suggestion.satisfactionPartyB * weightB;
+        // Count firm (flexibility <= 2) vs open (flexibility >= 4) clauses
+        if (selectionA) {
+          if (selectionA.flexibility <= 2) firmClausesA++;
+          if (selectionA.flexibility >= 4) openClausesA++;
+        }
+        if (selectionB) {
+          if (selectionB.flexibility <= 2) firmClausesB++;
+          if (selectionB.flexibility >= 4) openClausesB++;
+        }
       }
 
       return {
         partyA: {
           name: initiator?.name || initiator?.email || "Party A",
           satisfaction:
-            totalWeightA > 0
-              ? Math.round(weightedSatisfactionA / totalWeightA)
+            clauseCount > 0
+              ? Math.round(totalSatisfactionA / clauseCount)
               : 0,
+          gotPreference: gotPreferenceA,
+          firmClauses: firmClausesA,
+          openClauses: openClausesA,
         },
         partyB: {
           name: respondent?.name || respondent?.email || "Party B",
           satisfaction:
-            totalWeightB > 0
-              ? Math.round(weightedSatisfactionB / totalWeightB)
+            clauseCount > 0
+              ? Math.round(totalSatisfactionB / clauseCount)
               : 0,
+          gotPreference: gotPreferenceB,
+          firmClauses: firmClausesB,
+          openClauses: openClausesB,
         },
+        totalClauses: clauseCount,
       };
     }),
 
@@ -1220,5 +1470,235 @@ export const compromiseRouter = createTRPCRouter({
       });
 
       return { roundNumber, suggestionsCount: fairnessAdjusted.length };
+    }),
+
+  // ── Parameter Proposals ─────────────────────────────────
+
+  // Get negotiable parameters and any proposals for the current deal
+  getParameterProposals: protectedProcedure
+    .input(z.object({ dealRoomId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const userId = ctx.session.user.id;
+
+      const dealRoom = await ctx.prisma.dealRoom.findUnique({
+        where: { id: input.dealRoomId },
+        include: {
+          contractTemplate: true,
+          parties: true,
+          parameterProposals: {
+            include: { party: true },
+            orderBy: { createdAt: "desc" },
+          },
+        },
+      });
+
+      if (!dealRoom) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Deal room not found" });
+      }
+
+      const party = dealRoom.parties.find((p) => p.userId === userId);
+      if (!party) {
+        throw new TRPCError({ code: "FORBIDDEN", message: "Access denied" });
+      }
+
+      // Extract negotiable parameters from skill's parameterSchema
+      const schema = dealRoom.contractTemplate.parameterSchema as { parameters?: Array<{ id: string; token: string; type: string; label: string | Record<string, string>; negotiable?: boolean; scope: string }> } | null;
+      const negotiableParams = schema?.parameters?.filter((p) => p.negotiable) || [];
+
+      const dealParams = (dealRoom.parameters || {}) as Record<string, string>;
+
+      // Build response: each negotiable param with its current value and any proposals
+      const parameters = negotiableParams.map((param) => {
+        const proposals = dealRoom.parameterProposals.filter(
+          (pp) => pp.parameterId === param.id
+        );
+        const pendingForMe = proposals.filter(
+          (pp) => pp.partyId !== party.id && pp.status === "PENDING"
+        );
+        const myProposals = proposals.filter(
+          (pp) => pp.partyId === party.id
+        );
+
+        return {
+          id: param.id,
+          token: param.token,
+          type: param.type,
+          label: param.label,
+          scope: param.scope,
+          currentValue: dealParams[param.id] || "",
+          pendingForMe,
+          myProposals,
+          allProposals: proposals,
+        };
+      });
+
+      return { parameters };
+    }),
+
+  // Submit a parameter change proposal
+  proposeParameterChange: protectedProcedure
+    .input(
+      z.object({
+        dealRoomId: z.string(),
+        parameterId: z.string(),
+        proposedValue: z.string().min(1),
+        rationale: z.string().optional(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.session.user.id;
+
+      const dealRoom = await ctx.prisma.dealRoom.findUnique({
+        where: { id: input.dealRoomId },
+        include: {
+          contractTemplate: true,
+          parties: true,
+          rounds: { orderBy: { roundNumber: "desc" }, take: 1 },
+        },
+      });
+
+      if (!dealRoom) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Deal room not found" });
+      }
+
+      const party = dealRoom.parties.find((p) => p.userId === userId);
+      if (!party) {
+        throw new TRPCError({ code: "FORBIDDEN", message: "Access denied" });
+      }
+
+      // Verify the parameter is negotiable
+      const schema = dealRoom.contractTemplate.parameterSchema as { parameters?: Array<{ id: string; negotiable?: boolean }> } | null;
+      const paramDef = schema?.parameters?.find((p) => p.id === input.parameterId);
+      if (!paramDef?.negotiable) {
+        throw new TRPCError({ code: "BAD_REQUEST", message: "This parameter is not negotiable" });
+      }
+
+      const dealParams = (dealRoom.parameters || {}) as Record<string, string>;
+      const currentValue = dealParams[input.parameterId] || "";
+
+      // Must have an active round (parameter proposals are per-round)
+      let round = dealRoom.rounds[0];
+      if (!round) {
+        // Create a round if none exists (e.g. first time proposing after initial compromise)
+        round = await ctx.prisma.negotiationRound.create({
+          data: {
+            dealRoomId: input.dealRoomId,
+            roundNumber: dealRoom.currentRound || 1,
+            initiatedBy: party.role,
+          },
+        });
+      }
+
+      // Create the proposal (upsert: one proposal per param per party per round)
+      const proposal = await ctx.prisma.parameterProposal.upsert({
+        where: {
+          roundId_parameterId_partyId: {
+            roundId: round.id,
+            parameterId: input.parameterId,
+            partyId: party.id,
+          },
+        },
+        create: {
+          dealRoomId: input.dealRoomId,
+          roundId: round.id,
+          partyId: party.id,
+          parameterId: input.parameterId,
+          currentValue,
+          proposedValue: input.proposedValue,
+          rationale: input.rationale || null,
+        },
+        update: {
+          proposedValue: input.proposedValue,
+          rationale: input.rationale || null,
+          status: "PENDING",
+        },
+      });
+
+      // Audit log
+      await ctx.prisma.auditLog.create({
+        data: {
+          dealRoomId: input.dealRoomId,
+          userId,
+          action: "PARAMETER_PROPOSAL_SUBMITTED",
+          details: {
+            parameterId: input.parameterId,
+            currentValue,
+            proposedValue: input.proposedValue,
+          },
+        },
+      });
+
+      return proposal;
+    }),
+
+  // Respond to a parameter change proposal (accept or reject)
+  respondToParameterProposal: protectedProcedure
+    .input(
+      z.object({
+        proposalId: z.string(),
+        accept: z.boolean(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.session.user.id;
+
+      const proposal = await ctx.prisma.parameterProposal.findUnique({
+        where: { id: input.proposalId },
+        include: {
+          dealRoom: { include: { parties: true } },
+          party: true,
+        },
+      });
+
+      if (!proposal) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Proposal not found" });
+      }
+
+      const myParty = proposal.dealRoom.parties.find((p) => p.userId === userId);
+      if (!myParty) {
+        throw new TRPCError({ code: "FORBIDDEN", message: "Access denied" });
+      }
+
+      // Can't respond to your own proposal
+      if (proposal.partyId === myParty.id) {
+        throw new TRPCError({ code: "BAD_REQUEST", message: "Cannot respond to your own proposal" });
+      }
+
+      if (proposal.status !== "PENDING") {
+        throw new TRPCError({ code: "BAD_REQUEST", message: "Proposal is no longer pending" });
+      }
+
+      const newStatus = input.accept ? "ACCEPTED" : "REJECTED";
+
+      await ctx.prisma.parameterProposal.update({
+        where: { id: input.proposalId },
+        data: { status: newStatus },
+      });
+
+      // If accepted, update the deal's parameter value
+      if (input.accept) {
+        const currentParams = (proposal.dealRoom.parameters || {}) as Record<string, string>;
+        currentParams[proposal.parameterId] = proposal.proposedValue;
+
+        await ctx.prisma.dealRoom.update({
+          where: { id: proposal.dealRoomId },
+          data: { parameters: currentParams },
+        });
+      }
+
+      // Audit log
+      await ctx.prisma.auditLog.create({
+        data: {
+          dealRoomId: proposal.dealRoomId,
+          userId,
+          action: input.accept ? "PARAMETER_PROPOSAL_ACCEPTED" : "PARAMETER_PROPOSAL_REJECTED",
+          details: {
+            parameterId: proposal.parameterId,
+            proposedValue: proposal.proposedValue,
+          },
+        },
+      });
+
+      return { accepted: input.accept };
     }),
 });

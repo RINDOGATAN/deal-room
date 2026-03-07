@@ -47,26 +47,21 @@ export interface CompromiseResult {
  * Calculate stake score for a party
  * Higher stake = party cares more about this clause / less willing to compromise
  *
- * Formula: stake = (priority/5 × 0.4) + ((5-flexibility)/5 × 0.3) + (|bias| × 0.3)
+ * Formula: stake = ((5-flexibility)/5 × 0.6) + (|bias| × 0.4)
+ * Priority is accepted for backward compatibility but not used.
  */
 function calculateStake(
   priority: number,
   flexibility: number,
   bias: number
 ): number {
-  const priorityWeight = 0.4;
-  const flexibilityWeight = 0.3;
-  const biasWeight = 0.3;
+  const firmnessWeight = 0.6;
+  const biasWeight = 0.4;
 
-  const priorityScore = priority / 5;
-  const inflexibilityScore = (5 - flexibility) / 5;
+  const firmnessScore = (5 - flexibility) / 5;
   const biasScore = Math.abs(bias);
 
-  return (
-    priorityScore * priorityWeight +
-    inflexibilityScore * flexibilityWeight +
-    biasScore * biasWeight
-  );
+  return firmnessScore * firmnessWeight + biasScore * biasWeight;
 }
 
 /**

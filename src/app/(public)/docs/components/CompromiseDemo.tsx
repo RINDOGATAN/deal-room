@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { Slider } from "@/components/ui/slider";
-import { Star, ArrowRight, Check } from "lucide-react";
+import { ArrowRight, Check } from "lucide-react";
 
 // Sample clause options for the demo
 const DEMO_OPTIONS = [
@@ -54,19 +54,13 @@ function calculateStake(
   flexibility: number,
   bias: number
 ): number {
-  const priorityWeight = 0.4;
-  const flexibilityWeight = 0.3;
-  const biasWeight = 0.3;
+  const firmnessWeight = 0.6;
+  const biasWeight = 0.4;
 
-  const priorityScore = priority / 5;
-  const inflexibilityScore = (5 - flexibility) / 5;
+  const firmnessScore = (5 - flexibility) / 5;
   const biasScore = Math.abs(bias);
 
-  return (
-    priorityScore * priorityWeight +
-    inflexibilityScore * flexibilityWeight +
-    biasScore * biasWeight
-  );
+  return firmnessScore * firmnessWeight + biasScore * biasWeight;
 }
 
 // Satisfaction calculation - matches engine.ts
@@ -391,48 +385,22 @@ function PartyCard({
         </select>
       </div>
 
-      {/* Priority */}
-      <div className="mb-4">
-        <div className="flex items-center justify-between mb-2">
-          <p className="text-xs text-muted-foreground">Priority</p>
-          <div className="flex items-center gap-0.5">
-            {[1, 2, 3, 4, 5].map((n) => (
-              <Star
-                key={n}
-                className={`w-3 h-3 ${
-                  n <= state.priority
-                    ? `${accentColor} fill-current`
-                    : "text-muted-foreground"
-                }`}
-              />
-            ))}
-          </div>
-        </div>
-        <Slider
-          value={[state.priority]}
-          onValueChange={([v]) => onChange({ ...state, priority: v })}
-          min={1}
-          max={5}
-          step={1}
-        />
-      </div>
-
-      {/* Flexibility */}
+      {/* Firmness */}
       <div>
         <div className="flex items-center justify-between mb-2">
-          <p className="text-xs text-muted-foreground">Flexibility</p>
-          <span className="text-xs font-medium">{state.flexibility}/5</span>
+          <p className="text-xs text-muted-foreground">Firmness</p>
+          <span className="text-xs font-medium">{6 - state.flexibility}/5</span>
         </div>
         <Slider
-          value={[state.flexibility]}
-          onValueChange={([v]) => onChange({ ...state, flexibility: v })}
+          value={[6 - state.flexibility]}
+          onValueChange={([v]) => onChange({ ...state, flexibility: 6 - v })}
           min={1}
           max={5}
           step={1}
         />
         <div className="flex justify-between text-[10px] text-muted-foreground mt-1">
-          <span>Inflexible</span>
-          <span>Very Flexible</span>
+          <span>Open</span>
+          <span>Must have</span>
         </div>
       </div>
     </div>

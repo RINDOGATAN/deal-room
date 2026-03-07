@@ -105,7 +105,7 @@ export default function HowItWorksPage() {
               <p className="text-sm text-muted-foreground">
                 {t("ws3SelectIntro")}
               </p>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
                 <div className="p-3 border border-border rounded-xl">
                   <p className="font-medium text-foreground">{t("ws3Option")}</p>
                   <p className="text-muted-foreground text-xs mt-1">
@@ -116,12 +116,6 @@ export default function HowItWorksPage() {
                   <p className="font-medium text-foreground">{t("ws3Priority")}</p>
                   <p className="text-muted-foreground text-xs mt-1">
                     {t("ws3PriorityDesc")}
-                  </p>
-                </div>
-                <div className="p-3 border border-border rounded-xl">
-                  <p className="font-medium text-foreground">{t("ws3Flexibility")}</p>
-                  <p className="text-muted-foreground text-xs mt-1">
-                    {t("ws3FlexibilityDesc")}
                   </p>
                 </div>
               </div>
