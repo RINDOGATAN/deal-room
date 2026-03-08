@@ -1,7 +1,7 @@
 import { test, expect, type Page, type Browser } from "@playwright/test";
 import { trialLogin, loginAs, createSecondUser } from "./helpers/auth";
 import { createDealWithOptions, getClauseCount, walkAllClauses } from "./helpers/deal";
-import { submitSelections, inviteCounterparty, proceedToSigning, signContract } from "./helpers/lifecycle";
+import { submitSelections, inviteCounterparty, proceedToSigning, signContract, downloadContractPDF, generateCompromises, acceptAllCompromises } from "./helpers/lifecycle";
 
 const TS = Date.now();
 
@@ -19,6 +19,40 @@ interface LifecycleVariant {
   solo: boolean;          // true = solo mode (no counterparty)
   parameters?: Record<string, string>;
 }
+
+const SEED_PARAMS_ES = {
+  "pre-money-valuation": "2000000",
+  "investment-amount": "500000",
+  "share-count": "500000",
+  "share-price": "1",
+  "board-size": "3",
+  "dividend-rate": "8",
+  "qualified-financing-threshold": "1000000",
+  "lock-up-months": "12",
+  "legal-fee-cap": "25000",
+  "business-description": "desarrollo de soluciones tecnológicas legales con IA",
+  "court-county": "Madrid",
+  "court-city": "Madrid",
+  "arbitration-institution": "Corte de Arbitraje de Madrid",
+  "arbitration-language": "Español",
+};
+
+const PHANTOM_PLAN_PARAMS = {
+  "company-name": "E2E Technologies, S.L.",
+  "cif": "B98765432",
+  "total-pool-percentage": "10%",
+  "cliff-months": "12",
+  "vesting-months": "48",
+  "plan-effective-date": "1 de enero de 2026",
+};
+
+const PHANTOM_GRANT_PARAMS = {
+  "employee-name": "María García López",
+  "phantom-count": "1.000",
+  "grant-date": "15 de marzo de 2026",
+  "plan-date": "1 de enero de 2026",
+  "individual-vesting-months": "48",
+};
 
 const PRIVACY_PARAMS = {
   "jurisdictions": "California|England|Spain",
@@ -44,6 +78,17 @@ const LIFECYCLE_MATRIX: LifecycleVariant[] = [
   // ── SaaS ──
   { tag: "SAAS-CA-EN", contractType: "SaaS Subscription Agreement", jurisdiction: "California, USA", language: "English", solo: false },
   { tag: "SAAS-ES-ES", contractType: "SaaS Subscription Agreement", jurisdiction: "Spain, EU", language: "Español", solo: false },
+
+  // ── Seed Investment (two-party, Spanish) ──
+  { tag: "SEED-ES-ES", contractType: "Seed Investment Agreement", jurisdiction: "Spain, EU", language: "Español", solo: false, parameters: SEED_PARAMS_ES },
+
+  // ── Phantom Shares Plan (solo, Spanish) — premium skill, requires entitlement ──
+  // Uncomment when e2e user has SkillEntitlement for phantom-shares-plan
+  // { tag: "PHANTOM-PLAN-ES", contractType: "Marco de Phantom Shares", jurisdiction: "Spain, EU", language: "Español", solo: true, parameters: PHANTOM_PLAN_PARAMS },
+
+  // ── Phantom Shares Grant (solo, Spanish) — premium skill, requires entitlement ──
+  // Uncomment when e2e user has SkillEntitlement for phantom-shares-grant
+  // { tag: "PHANTOM-GRANT-ES", contractType: "Asignación Individual de Phantom Shares", jurisdiction: "Spain, EU", language: "Español", solo: true, parameters: PHANTOM_GRANT_PARAMS },
 
   // ── Privacy Notice (solo only) ──
   { tag: "PRIV-CA-EN", contractType: "Privacy Notice", jurisdiction: "California, USA", language: "English", solo: true, parameters: PRIVACY_PARAMS },
@@ -92,13 +137,24 @@ test.describe("Full Lifecycle — Solo Mode", () => {
       // Submit — solo mode redirects to /deals/{id}
       await submitSelections(page);
 
-      // Navigate to sign page
+      // Navigate to sign page and sign the contract
       await page.goto(`/deals/${dealId}/sign`);
       await page.waitForLoadState("networkidle");
 
       // Verify sign page loads without crash
       const pageContent = page.locator("h1, h2, .card-brutal").first();
       await expect(pageContent).toBeVisible({ timeout: 15_000 });
+
+      await signContract(page, {
+        legalName: "E2E Test Corp",
+        address: "100 Test St, San Francisco, CA 94105",
+        signatoryName: "E2E Test User",
+        signatoryTitle: "CEO",
+      });
+
+      // Download contract PDF for manual legal review
+      const pdfPath = await downloadContractPDF(page, dealId!, variant.tag);
+      console.log(`[PDF] ${variant.tag}: ${pdfPath}`);
 
       // Assert no React crashes
       const crashes = consoleErrors.filter(
@@ -169,18 +225,42 @@ test.describe("Full Lifecycle — Two-Party Negotiation", () => {
       await respPage.goto(`/deals/${dealId}/negotiate`);
       await respPage.waitForLoadState("networkidle");
 
-      // Respondent walks all clauses
+      // Respondent walks all clauses (selects last option for divergent compromise testing)
       const respClauseCount = await getClauseCount(respPage);
       expect(respClauseCount).toBe(clauseCount);
-      await walkAllClauses(respPage, respClauseCount);
+      await walkAllClauses(respPage, respClauseCount, true);
       await submitSelections(respPage);
 
-      // Both submitted → should land on review page
-      // Verify review page loads for initiator
+      // Both submitted → navigate to review page
       await page.goto(`/deals/${dealId}/review`);
       await page.waitForLoadState("networkidle");
       const reviewContent = page.locator("h1, h2, .card-brutal").first();
       await expect(reviewContent).toBeVisible({ timeout: 15_000 });
+
+      // Initiator: generate compromises (only called once per round)
+      await generateCompromises(page);
+
+      // Initiator: accept all suggestions
+      await acceptAllCompromises(page);
+
+      // Respondent: accept all suggestions on their side
+      await respPage.goto(`/deals/${dealId}/review`);
+      await respPage.waitForLoadState("networkidle");
+      await acceptAllCompromises(respPage);
+
+      // Reload initiator page to pick up AGREED state
+      await page.reload();
+      await page.waitForLoadState("networkidle");
+
+      // Confirm deal is in AGREED state — "Proceed to Signing" button visible
+      const proceedBtn = page.locator("button, a").filter({
+        hasText: /Proceed to Signing|Proceder a la [Ff]irma|Proceder a [Ff]irma/i,
+      }).first();
+      await expect(proceedBtn).toBeVisible({ timeout: 15_000 });
+
+      // Download contract PDF for manual legal review (AGREED state, pre-signing)
+      const pdfPath = await downloadContractPDF(page, dealId!, variant.tag);
+      console.log(`[PDF] ${variant.tag}: ${pdfPath}`);
 
       // Clean up respondent context
       await respCtx.close();

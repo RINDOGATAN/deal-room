@@ -218,12 +218,15 @@ export const compromiseRouter = createTRPCRouter({
         });
       }
 
-      // Update deal room round and status
+      // If all clauses are already agreed (both parties chose same options),
+      // set deal to AGREED; otherwise NEGOTIATING
+      const allAlreadyAgreed = divergentClauses.length === 0 && suggestions.length > 0;
+
       await ctx.prisma.dealRoom.update({
         where: { id: input.dealRoomId },
         data: {
           currentRound: roundNumber,
-          status: DealRoomStatus.NEGOTIATING,
+          status: allAlreadyAgreed ? DealRoomStatus.AGREED : DealRoomStatus.NEGOTIATING,
         },
       });
 
@@ -233,7 +236,7 @@ export const compromiseRouter = createTRPCRouter({
           dealRoomId: input.dealRoomId,
         },
         data: {
-          status: PartyStatus.REVIEWING,
+          status: allAlreadyAgreed ? PartyStatus.ACCEPTED : PartyStatus.REVIEWING,
         },
       });
 
