@@ -8,7 +8,9 @@ import { getResend } from "@/lib/email";
 import { brand } from "@/config/brand";
 import { features } from "@/config/features";
 
-const isProduction = process.env.NODE_ENV === "production";
+const isProduction =
+  process.env.NODE_ENV === "production" &&
+  (process.env.NEXTAUTH_URL?.startsWith("https://") ?? true);
 
 // Build providers list based on brand/features
 const providers: NextAuthOptions["providers"] = [

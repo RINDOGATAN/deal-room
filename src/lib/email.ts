@@ -1,9 +1,18 @@
 import { Resend } from "resend";
 import { brand } from "@/config/brand";
 
+const noopResend = {
+  emails: {
+    send: async (params: { subject?: string; to?: string | string[] }) => {
+      console.log(`[email] Skipped (no RESEND_API_KEY): "${params.subject}" → ${params.to}`);
+      return { data: { id: "skipped" }, error: null };
+    },
+  },
+} as unknown as Resend;
+
 export function getResend() {
   if (!process.env.RESEND_API_KEY) {
-    throw new Error("RESEND_API_KEY is not configured");
+    return noopResend;
   }
   return new Resend(process.env.RESEND_API_KEY);
 }

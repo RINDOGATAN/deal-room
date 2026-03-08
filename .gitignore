@@ -29,6 +29,7 @@
 .DS_Store
 *.pem
 /sample-pdfs
+/e2e/output/
 
 # debug
 npm-debug.log*

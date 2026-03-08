@@ -148,6 +148,7 @@ export async function getClauseCount(page: Page): Promise<number> {
 export async function walkAllClauses(
   page: Page,
   expectedCount: number,
+  selectLast = false,
 ): Promise<void> {
   // Dismiss any blocking dialog ("Proceeding Without a Lawyer" etc.)
   await dismissDialogs(page);
@@ -166,7 +167,8 @@ export async function walkAllClauses(
 
     // Click the radio circle (top-left of card) to avoid the expand button
     // and the expanded content area which both have stopPropagation
-    const radioCircle = optionCards.first().locator(".rounded-full.border-2").first();
+    const targetCard = selectLast ? optionCards.last() : optionCards.first();
+    const radioCircle = targetCard.locator(".rounded-full.border-2").first();
     await radioCircle.click();
 
     if (isLast) {

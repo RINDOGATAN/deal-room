@@ -1,4 +1,8 @@
 import { type Page, expect } from "@playwright/test";
+import * as fs from "fs";
+import * as path from "path";
+
+const PDF_OUTPUT_DIR = path.join(process.cwd(), "e2e", "output", "contracts");
 
 /**
  * After walking all clauses and selecting the last one, clicks the submit button.
@@ -75,7 +79,7 @@ export async function proceedToSigning(page: Page, dealId: string): Promise<void
 
   // Wait for the "All Clauses Agreed" state or "Proceed to Signing" button
   const proceedButton = page.locator("button, a").filter({
-    hasText: /Proceed to Signing|Proceder a la firma/i,
+    hasText: /Proceed to Signing|Proceder a la [Ff]irma|Proceder a [Ff]irma/i,
   });
 
   await expect(proceedButton).toBeVisible({ timeout: 30_000 });
@@ -147,6 +151,90 @@ export async function signContract(page: Page, opts: {
     // Wait for signature to be recorded
     await page.waitForTimeout(3_000);
   }
+}
+
+/**
+ * On the review page, clicks "Generate Compromise Suggestions" and waits for generation.
+ * Should only be called once per round (typically by the initiator).
+ */
+export async function generateCompromises(page: Page): Promise<void> {
+  const generateBtn = page.locator("button").filter({
+    hasText: /Generate Compromise|Generar Propuestas/i,
+  });
+  await expect(generateBtn).toBeVisible({ timeout: 10_000 });
+  await generateBtn.click();
+  // Wait for compromise generation to complete
+  await expect(generateBtn).toBeHidden({ timeout: 60_000 });
+  await page.waitForLoadState("networkidle");
+
+  // Wait for suggestion cards to render (Accept buttons should appear)
+  const acceptBtn = page.locator("button.btn-brutal").filter({
+    hasText: /Accept|Aceptar/,
+  });
+  // Suggestion cards may take a moment to render after the refetch
+  await expect(acceptBtn.first()).toBeVisible({ timeout: 15_000 });
+}
+
+/**
+ * On the review page, accepts all pending compromise suggestions.
+ * Call for each party after compromises have been generated.
+ * If no accept buttons are found, reloads the page once and retries.
+ */
+export async function acceptAllCompromises(page: Page): Promise<void> {
+  const getAcceptButtons = () =>
+    page.locator("button.btn-brutal").filter({ hasText: /Accept|Aceptar/ });
+
+  // Wait for accept buttons to appear (may need page reload after generation)
+  let acceptButtons = getAcceptButtons();
+  let count = await acceptButtons.count();
+  if (count === 0) {
+    // Buttons not yet rendered — reload to pick up fresh data
+    await page.reload();
+    await page.waitForLoadState("networkidle");
+    acceptButtons = getAcceptButtons();
+    count = await acceptButtons.count();
+  }
+
+  // Click each accept button sequentially (they trigger mutations)
+  const MAX_CLICKS = 50;
+  let clicks = 0;
+  while (count > 0 && clicks < MAX_CLICKS) {
+    const btn = acceptButtons.first();
+    await btn.scrollIntoViewIfNeeded();
+    await btn.click();
+    clicks++;
+    // Wait for mutation + re-render
+    await page.waitForTimeout(2_000);
+    acceptButtons = getAcceptButtons();
+    count = await acceptButtons.count();
+  }
+
+  await page.waitForLoadState("networkidle");
+}
+
+/**
+ * Downloads the contract PDF for a deal and saves it to e2e/output/contracts/.
+ * Requires the deal to be in AGREED, SIGNING, or COMPLETED status.
+ * Returns the path to the saved file.
+ */
+export async function downloadContractPDF(
+  page: Page,
+  dealId: string,
+  filename: string,
+): Promise<string> {
+  fs.mkdirSync(PDF_OUTPUT_DIR, { recursive: true });
+
+  const response = await page.request.get(`/api/deals/${dealId}/document`);
+  if (response.status() !== 200) {
+    const body = await response.text();
+    throw new Error(`PDF download failed (${response.status()}): ${body}`);
+  }
+
+  const buffer = await response.body();
+  const outputPath = path.join(PDF_OUTPUT_DIR, `${filename}.pdf`);
+  fs.writeFileSync(outputPath, buffer);
+
+  return outputPath;
 }
 
 /**
