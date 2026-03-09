@@ -86,46 +86,6 @@
   "standardClauses": [
     {
       "title": {
-        "en": "Processing on instructions",
-        "es": "Tratamiento conforme a instrucciones"
-      },
-      "text": {
-        "en": "The Processor must:\n\n(a) Process Personal Data only on documented instructions from the Controller, including with regard to transfers to third countries, unless required to do so by applicable law (in which case the Processor must inform the Controller of that legal requirement before processing, unless the law prohibits such notification);\n\n(b) Immediately inform the Controller if, in the Processor's opinion, an instruction infringes Data Protection Laws.",
-        "es": "El Encargado deberá:\n\n(a) Tratar los Datos Personales únicamente siguiendo instrucciones documentadas del Responsable, incluidas las relativas a transferencias a terceros países, salvo que esté obligado a ello por la legislación aplicable (en cuyo caso el Encargado informará al Responsable de dicha obligación legal antes de proceder al tratamiento, salvo que la ley prohíba dicha notificación);\n\n(b) Informar inmediatamente al Responsable si, a juicio del Encargado, una instrucción infringe la Legislación de Protección de Datos."
-      }
-    },
-    {
-      "title": {
-        "en": "Confidentiality",
-        "es": "Confidencialidad"
-      },
-      "text": {
-        "en": "The Processor must ensure that all personnel authorized to process Personal Data:\n\n(a) Have committed to confidentiality or are under an appropriate statutory obligation of confidentiality; and\n\n(b) Process Personal Data only as instructed by the Controller.",
-        "es": "El Encargado deberá garantizar que todo el personal autorizado para tratar Datos Personales:\n\n(a) Se haya comprometido a respetar la confidencialidad o esté sujeto a una obligación legal adecuada de confidencialidad; y\n\n(b) Trate los Datos Personales únicamente conforme a las instrucciones del Responsable."
-      }
-    },
-    {
-      "title": {
-        "en": "Security measures",
-        "es": "Medidas de seguridad"
-      },
-      "text": {
-        "en": "The Processor must implement and maintain appropriate technical and organizational measures to protect Personal Data against unauthorized or unlawful processing, accidental loss, destruction, or damage. These measures must:\n\n(a) Be appropriate to the risk, taking into account the state of the art, costs of implementation, and the nature, scope, context, and purposes of processing;\n\n(b) Include, as appropriate: (i) Pseudonymization and encryption of Personal Data; (ii) Ability to ensure ongoing confidentiality, integrity, availability, and resilience of processing systems; (iii) Ability to restore availability and access to Personal Data in a timely manner following an incident; (iv) Regular testing and evaluation of the effectiveness of security measures.",
-        "es": "El Encargado deberá aplicar y mantener las medidas técnicas y organizativas apropiadas para proteger los Datos Personales frente al tratamiento no autorizado o ilícito, la pérdida accidental, la destrucción o el daño. Dichas medidas deberán:\n\n(a) Ser adecuadas al riesgo, teniendo en cuenta el estado de la técnica, los costes de aplicación y la naturaleza, el alcance, el contexto y los fines del tratamiento;\n\n(b) Incluir, según proceda: (i) la seudonimización y el cifrado de los Datos Personales; (ii) la capacidad de garantizar la confidencialidad, integridad, disponibilidad y resiliencia permanentes de los sistemas de tratamiento; (iii) la capacidad de restaurar la disponibilidad y el acceso a los Datos Personales de forma oportuna en caso de incidente; (iv) la verificación y evaluación periódicas de la eficacia de las medidas de seguridad."
-      }
-    },
-    {
-      "title": {
-        "en": "Assistance with data subject rights",
-        "es": "Asistencia con los derechos de los interesados"
-      },
-      "text": {
-        "en": "The Processor must:\n\n(a) Taking into account the nature of the processing, assist the Controller by appropriate technical and organizational measures to respond to requests from Data Subjects exercising their rights under Data Protection Laws (including access, rectification, erasure, restriction, portability, and objection);\n\n(b) Promptly notify the Controller of any request received directly from a Data Subject, and not respond to that request except as authorized by the Controller or required by law.",
-        "es": "El Encargado deberá:\n\n(a) Teniendo en cuenta la naturaleza del tratamiento, asistir al Responsable mediante las medidas técnicas y organizativas apropiadas para atender las solicitudes de los Interesados que ejerzan sus derechos en virtud de la Legislación de Protección de Datos (incluidos los de acceso, rectificación, supresión, limitación, portabilidad y oposición);\n\n(b) Notificar sin dilación al Responsable cualquier solicitud recibida directamente de un Interesado y no responder a dicha solicitud salvo autorización del Responsable u obligación legal."
-      }
-    },
-    {
-      "title": {
         "en": "Assistance with compliance",
         "es": "Asistencia en el cumplimiento"
       },
@@ -136,52 +96,12 @@
     },
     {
       "title": {
-        "en": "Audit rights",
-        "es": "Derechos de auditoría"
-      },
-      "text": {
-        "en": "The Processor must:\n\n(a) Make available to the Controller all information necessary to demonstrate compliance with this DPA and Article 28 of the GDPR;\n\n(b) Allow for and contribute to audits, including inspections, conducted by the Controller or an auditor mandated by the Controller, subject to: (i) Reasonable advance notice (at least 30 days, except in case of emergency or regulatory requirement); (ii) Reasonable scope and duration; (iii) Confidentiality obligations regarding any information obtained.",
-        "es": "El Encargado deberá:\n\n(a) Poner a disposición del Responsable toda la información necesaria para demostrar el cumplimiento del presente ATD y del artículo 28 del RGPD;\n\n(b) Permitir y contribuir a las auditorías, incluidas las inspecciones, realizadas por el Responsable o por un auditor designado por el Responsable, con sujeción a: (i) un preaviso razonable (al menos 30 días, salvo en caso de emergencia o requerimiento normativo); (ii) un alcance y duración razonables; (iii) obligaciones de confidencialidad respecto de toda información obtenida."
-      }
-    },
-    {
-      "title": {
         "en": "Controller obligations",
         "es": "Obligaciones del responsable"
       },
       "text": {
         "en": "The Controller warrants that:\n\n(a) It has obtained all necessary consents, provided all necessary notices, and otherwise has a lawful basis to transfer Personal Data to the Processor for processing under this DPA;\n\n(b) Its instructions to the Processor will comply with Data Protection Laws;\n\n(c) It will provide the Processor with accurate and complete information regarding the processing.",
         "es": "El Responsable garantiza que:\n\n(a) Ha obtenido todos los consentimientos necesarios, ha proporcionado todas las informaciones requeridas y, en todo caso, dispone de una base jurídica válida para transferir los Datos Personales al Encargado para su tratamiento conforme al presente ATD;\n\n(b) Sus instrucciones al Encargado cumplirán con la Legislación de Protección de Datos;\n\n(c) Proporcionará al Encargado información precisa y completa sobre el tratamiento."
-      }
-    },
-    {
-      "title": {
-        "en": "International data transfers",
-        "es": "Transferencias internacionales de datos"
-      },
-      "text": {
-        "en": "The Processor must not transfer Personal Data to a country outside the European Economic Area (\"EEA\") or the United Kingdom (\"UK\") unless:\n\n(a) The transfer is to a country that has been deemed to provide an adequate level of data protection by the European Commission or UK authorities (as applicable);\n\n(b) Appropriate safeguards are in place, including Standard Contractual Clauses adopted by the European Commission; or\n\n(c) A derogation under Article 49 of the GDPR applies.",
-        "es": "El Encargado no transferirá Datos Personales a un país fuera del Espacio Económico Europeo (\"EEE\") o del Reino Unido (\"RU\") salvo que:\n\n(a) La transferencia se realice a un país que haya sido reconocido como proveedor de un nivel adecuado de protección de datos por la Comisión Europea o las autoridades del RU (según corresponda);\n\n(b) Se hayan establecido garantías adecuadas, incluidas las Cláusulas Contractuales Tipo adoptadas por la Comisión Europea; o\n\n(c) Sea de aplicación una excepción conforme al artículo 49 del RGPD."
-      }
-    },
-    {
-      "title": {
-        "en": "Liability and indemnification",
-        "es": "Responsabilidad e indemnización"
-      },
-      "text": {
-        "en": "Each party's liability under this DPA is subject to the limitations of liability set out in any principal agreement, except that:\n\n(a) Neither party excludes or limits liability for breaches of Data Protection Laws to the extent such exclusion or limitation is prohibited by law;\n\n(b) The Processor will be liable for damage caused by processing that violates Data Protection Laws or this DPA.",
-        "es": "La responsabilidad de cada parte en virtud del presente ATD está sujeta a las limitaciones de responsabilidad establecidas en cualquier contrato principal, con la salvedad de que:\n\n(a) Ninguna de las partes excluirá ni limitará su responsabilidad por incumplimientos de la Legislación de Protección de Datos en la medida en que dicha exclusión o limitación esté prohibida por la ley;\n\n(b) El Encargado será responsable de los daños causados por un tratamiento que infrinja la Legislación de Protección de Datos o el presente ATD."
-      }
-    },
-    {
-      "title": {
-        "en": "Deletion or return of data",
-        "es": "Supresión o devolución de datos"
-      },
-      "text": {
-        "en": "Upon termination or expiry of the services involving the processing of Personal Data, the Processor must, at the Controller's choice:\n\n(a) Return a complete copy of all Personal Data to the Controller in a structured, commonly used, and machine-readable format; or\n\n(b) Delete all Personal Data and all existing copies, unless applicable law requires further storage of the Personal Data.\n\nThe Processor must complete the deletion or return within thirty (30) days of the Controller's written request. Where the Controller does not issue a written instruction within thirty (30) days of termination, the Processor must delete all Personal Data and certify such deletion in writing.\n\nThe Processor must ensure that any Sub-processors likewise delete or return all Personal Data in accordance with this clause.\n\nThe obligations under this clause survive the termination or expiry of this DPA.",
-        "es": "A la finalización o expiración de los servicios que impliquen el tratamiento de Datos Personales, el Encargado deberá, a elección del Responsable:\n\n(a) Devolver al Responsable una copia completa de todos los Datos Personales en un formato estructurado, de uso común y lectura mecánica; o\n\n(b) Suprimir todos los Datos Personales y todas las copias existentes, salvo que la legislación aplicable exija la conservación de los Datos Personales.\n\nEl Encargado deberá completar la supresión o devolución en un plazo de treinta (30) días desde la solicitud por escrito del Responsable. En caso de que el Responsable no emita instrucciones por escrito en los treinta (30) días siguientes a la finalización, el Encargado deberá suprimir todos los Datos Personales y certificar dicha supresión por escrito.\n\nEl Encargado deberá garantizar que todos los Subencargados supriman o devuelvan igualmente todos los Datos Personales conforme a la presente cláusula.\n\nLas obligaciones derivadas de la presente cláusula subsistirán tras la resolución o expiración del presente ATD."
       }
     },
     {
