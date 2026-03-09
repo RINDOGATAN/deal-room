@@ -551,7 +551,7 @@
   },
   "directory": {
     "title": "Directorio de Abogados",
-    "subtitle": "Consulta perfiles de abogados publicados y solicita recomendaciones",
+    "subtitle": "Consulta perfiles de abogados relevantes y solicita asistencia",
     "noLawyers": "Aún no hay abogados disponibles",
     "noLawyersFiltered": "Ningún abogado/a coincide con tus filtros",
     "filterJurisdiction": "Jurisdicción",
@@ -559,7 +559,7 @@
     "allJurisdictions": "Todas las jurisdicciones",
     "allLanguages": "Todos los idiomas",
     "approvedVettings": "{count} revisiones aprobadas",
-    "requestRecommendation": "Solicitar Recomendación",
+    "requestRecommendation": "Solicitar Asistencia",
     "lawyerHint": "¿Te gustaría que un abogado/a lo revisase primero?",
     "lawyerHintLink": "Buscar Abogado/a"
   },
