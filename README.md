@@ -7,7 +7,7 @@ Two-party async contract negotiation platform with weighted compromise algorithm
 ## Features
 
 - **Contract Negotiation** — Structured clause-by-clause negotiation workflow
-- **Weighted Compromise** — Algorithm suggests fair compromises based on party priorities
+- **Weighted Compromise** — Algorithm suggests fair compromises based on party firmness and option bias
 - **Skills Marketplace** — Licensed contract templates (NDA, DPA, MSA, etc.)
 - **Multilingual Support** — Cross-language negotiation (Party A in English, Party B in Spanish)
 - **Two-Level Admin** — Platform admins manage marketplace; supervisors monitor deals
@@ -142,18 +142,18 @@ docs/                      # Documentation
 
 1. **Create** — Initiator creates deal, selects skill and jurisdiction
 2. **Invite** — Respondent receives invitation link
-3. **Submit** — Both parties submit clause preferences
-4. **Negotiate** — Algorithm suggests compromises
+3. **Submit** — Both parties submit clause preferences and firmness levels
+4. **Negotiate** — Algorithm suggests compromises; parties can also propose changes to open fields (negotiable parameters)
 5. **Agree** — Parties accept final terms
 6. **Sign** — Contract generated for signing
 
 ### Compromise Algorithm
 
 ```
-stake = (priority/5 × 0.4) + ((5-flexibility)/5 × 0.3) + (|bias| × 0.3)
+stake = ((5-flexibility)/5 × 0.6) + (|bias| × 0.4)
 ```
 
-Party with higher stake wins the clause; equal stakes trigger compromise.
+Each party sets a **firmness** level (1–5) per clause; the UI shows firmness while the database stores flexibility (6 − firmness). The party with higher stake wins the clause; equal stakes trigger a balanced compromise. A global fairness pass rebalances if one party wins disproportionately.
 
 ### Administration Levels
 
