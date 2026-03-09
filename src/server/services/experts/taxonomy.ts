@@ -21,6 +21,7 @@ export const SPECIALIZATIONS = [
   "CHILDRENS_PRIVACY_AADC",
   "ISO_27001_SOC2_AUDITING",
   "COMPLIANCE_FRAMEWORKS_ROPA",
+  "COPYRIGHT_IP",
 ] as const;
 
 export type Specialization = (typeof SPECIALIZATIONS)[number];
@@ -43,6 +44,7 @@ export const SPECIALIZATION_LABELS: Record<Specialization, string> = {
   CHILDRENS_PRIVACY_AADC: "Children's Privacy / AADC",
   ISO_27001_SOC2_AUDITING: "ISO 27001 / SOC 2 Auditing",
   COMPLIANCE_FRAMEWORKS_ROPA: "Compliance Frameworks / ROPA",
+  COPYRIGHT_IP: "Copyright / IP",
 };
 
 export const CERTIFICATIONS = [
