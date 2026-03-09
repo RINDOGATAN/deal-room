@@ -76,8 +76,8 @@
     },
     {
       "title": {
-        "en": "Mutual confidentiality obligations",
-        "es": "Obligaciones mutuas de confidencialidad"
+        "en": "Confidentiality obligations",
+        "es": "Obligaciones de confidencialidad"
       },
       "text": {
         "en": "The Receiving Party shall:\n\n(a) hold the Confidential Information in strict confidence and not disclose it to any third party except to its Representatives who have a need to know for the Purpose and who are bound by confidentiality obligations no less restrictive than those contained in this Agreement;\n\n(b) use the Confidential Information solely for the Purpose and not for any other purpose whatsoever;\n\n(c) exercise at least the same degree of care to protect the Confidential Information as it uses to protect its own confidential information of a similar nature, but in no event less than reasonable care;\n\n(d) be responsible for any breach of this Agreement by its Representatives.",
