@@ -551,52 +551,61 @@ export function ContractPDF({ data }: ContractPDFProps) {
             </View>
 
             {/* Signature Section */}
-            <View style={styles.signatureSection} wrap={false}>
-              <Text style={styles.sectionTitle}>{sectionNumber}. {labels.signatures}</Text>
-              <Text style={styles.signatureText}>
-                {labels.inWitnessWhereof}
-              </Text>
-              <View style={styles.signatureGrid}>
-                <View style={styles.signatureBox}>
-                  <Text style={styles.signatureLabel}>
-                    {data.boilerplate!.partyLabels?.partyA || labels.partyA}
-                  </Text>
-                  <View style={styles.signatureLine} />
-                  <Text style={styles.signaturePartyName}>
-                    {data.partyA.legalName || data.partyA.company || data.partyA.name}
-                  </Text>
-                  <Text style={{ fontSize: 9, color: "#666" }}>
-                    {data.partyA.signatoryName || data.partyA.name}
-                  </Text>
-                  {data.partyA.signatoryTitle && (
-                    <Text style={{ fontSize: 9, color: "#666" }}>
-                      {data.partyA.signatoryTitle}
+            {data.partyB !== null ? (
+              <View style={styles.signatureSection} wrap={false}>
+                <Text style={styles.sectionTitle}>{sectionNumber}. {labels.signatures}</Text>
+                <Text style={styles.signatureText}>
+                  {labels.inWitnessWhereof}
+                </Text>
+                <View style={styles.signatureGrid}>
+                  <View style={styles.signatureBox}>
+                    <Text style={styles.signatureLabel}>
+                      {data.boilerplate!.partyLabels?.partyA || labels.partyA}
                     </Text>
-                  )}
-                  <Text style={styles.signatureDate}>{labels.date}</Text>
-                  <View style={styles.dateLine} />
-                </View>
-                <View style={styles.signatureBox}>
-                  <Text style={styles.signatureLabel}>
-                    {data.boilerplate!.partyLabels?.partyB || labels.partyB}
-                  </Text>
-                  <View style={styles.signatureLine} />
-                  <Text style={styles.signaturePartyName}>
-                    {data.partyB ? (data.partyB.legalName || data.partyB.company || data.partyB.name) : "[_________________]"}
-                  </Text>
-                  <Text style={{ fontSize: 9, color: "#666" }}>
-                    {data.partyB ? (data.partyB.signatoryName || data.partyB.name) : "[_________________]"}
-                  </Text>
-                  {data.partyB?.signatoryTitle && (
-                    <Text style={{ fontSize: 9, color: "#666" }}>
-                      {data.partyB.signatoryTitle}
+                    <View style={styles.signatureLine} />
+                    <Text style={styles.signaturePartyName}>
+                      {data.partyA.legalName || data.partyA.company || data.partyA.name}
                     </Text>
-                  )}
-                  <Text style={styles.signatureDate}>{labels.date}</Text>
-                  <View style={styles.dateLine} />
+                    <Text style={{ fontSize: 9, color: "#666" }}>
+                      {data.partyA.signatoryName || data.partyA.name}
+                    </Text>
+                    {data.partyA.signatoryTitle && (
+                      <Text style={{ fontSize: 9, color: "#666" }}>
+                        {data.partyA.signatoryTitle}
+                      </Text>
+                    )}
+                    <Text style={styles.signatureDate}>{labels.date}</Text>
+                    <View style={styles.dateLine} />
+                  </View>
+                  <View style={styles.signatureBox}>
+                    <Text style={styles.signatureLabel}>
+                      {data.boilerplate!.partyLabels?.partyB || labels.partyB}
+                    </Text>
+                    <View style={styles.signatureLine} />
+                    <Text style={styles.signaturePartyName}>
+                      {data.partyB.legalName || data.partyB.company || data.partyB.name}
+                    </Text>
+                    <Text style={{ fontSize: 9, color: "#666" }}>
+                      {data.partyB.signatoryName || data.partyB.name}
+                    </Text>
+                    {data.partyB.signatoryTitle && (
+                      <Text style={{ fontSize: 9, color: "#666" }}>
+                        {data.partyB.signatoryTitle}
+                      </Text>
+                    )}
+                    <Text style={styles.signatureDate}>{labels.date}</Text>
+                    <View style={styles.dateLine} />
+                  </View>
                 </View>
               </View>
-            </View>
+            ) : (
+              <View style={styles.signatureSection} wrap={false}>
+                <View style={styles.divider} />
+                <Text style={styles.signatureText}>
+                  {data.boilerplate!.signatureBlock}
+                </Text>
+              </View>
+            )}
           </>
         ) : (
           <>
