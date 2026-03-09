@@ -607,13 +607,54 @@ async function main() {
     create: {
       supervisorId: supervisor.id,
       jurisdiction: "SPAIN",
-      barNumber: "ICAM-12345",
+      barNumber: "ICAM-64040",
     },
     update: {
-      barNumber: "ICAM-12345",
+      barNumber: "ICAM-64040",
     },
   });
-  console.log("  Created/updated bar admissions: CALIFORNIA (#367079), SPAIN (ICAM-12345)");
+  console.log("  Created/updated bar admissions: CALIFORNIA (#367079), SPAIN (ICAM-64040)");
+
+  // ── Seed Sergio Maldonado as Lawyer Directory expert ──
+  const sergioUser = await prisma.user.upsert({
+    where: { email: "smaldonado@privacycloud.com" },
+    create: {
+      email: "smaldonado@privacycloud.com",
+      name: "Sergio Maldonado",
+    },
+    update: {
+      name: "Sergio Maldonado",
+    },
+  });
+  await prisma.lawyerProfile.upsert({
+    where: { userId: sergioUser.id },
+    create: {
+      userId: sergioUser.id,
+      title: "Attorney — Privacy / Data Protection & Copyright / IP",
+      bio: "Admitted to the State Bar of California (#367079) and the Madrid Bar / ICAM (#64040). Specializing in privacy, data protection, and intellectual property across US and EU jurisdictions.",
+      jurisdictions: ["CALIFORNIA", "SPAIN"],
+      languages: ["en", "es"],
+      expertType: "LEGAL",
+      specializations: ["GDPR", "CCPA_US_STATE_PRIVACY", "CROSS_BORDER_TRANSFERS", "DPA_VENDOR_CONTRACTS", "COPYRIGHT_IP"],
+      certifications: ["CIPP_E", "CIPP_US", "FIP", "CIPT"],
+      countryCode: "US",
+      city: "San Francisco",
+      jurisdictionsCovered: ["US", "EU", "ES"],
+      acceptingClients: true,
+      isPublished: true,
+    },
+    update: {
+      title: "Attorney — Privacy / Data Protection & Copyright / IP",
+      bio: "Admitted to the State Bar of California (#367079) and the Madrid Bar / ICAM (#64040). Specializing in privacy, data protection, and intellectual property across US and EU jurisdictions.",
+      jurisdictions: ["CALIFORNIA", "SPAIN"],
+      languages: ["en", "es"],
+      specializations: ["GDPR", "CCPA_US_STATE_PRIVACY", "CROSS_BORDER_TRANSFERS", "DPA_VENDOR_CONTRACTS", "COPYRIGHT_IP"],
+      certifications: ["CIPP_E", "CIPP_US", "FIP", "CIPT"],
+      jurisdictionsCovered: ["US", "EU", "ES"],
+      isPublished: true,
+    },
+  });
+  console.log("  Created/updated LawyerProfile: Sergio Maldonado (CA + ES)");
 
   // ── Seed sample invite codes for northend.law brand ──
   if (process.env.NEXT_PUBLIC_BRAND === "northend") {
