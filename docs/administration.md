@@ -456,7 +456,10 @@ After creation the deal enters DRAFT and the initiator lands on `/deals/[id]/neg
 
 ### Deal Parameters
 
-Some contracts require deal-specific values that are **not negotiable** — monetary amounts, dates, geographic scope, etc. These are defined per-skill in `parameters.json` and filled in by the initiator at deal creation (Step 5).
+Some contracts require deal-specific values — monetary amounts, dates, geographic scope, etc. These are defined per-skill in `parameters.json` and come in two flavors:
+
+- **Non-negotiable parameters** — filled in by the initiator at deal creation (Step 5). These values are fixed and appear directly in the contract.
+- **Negotiable parameters** (`"negotiable": true`) — set initially by the initiator, but either party can propose changes during the review phase. Proposals include the new value and an optional rationale; the other party accepts or rejects each independently.
 
 #### Parameter Types
 
@@ -468,6 +471,7 @@ Some contracts require deal-specific values that are **not negotiable** — mone
 | `percentage` | Number with % suffix | Discount rate, equity percentage |
 | `date` | Date picker | Start date, maturity date |
 | `choice` | Pill selector from predefined options | Arbitration institution |
+| `multiSelect` | Multi-toggle from predefined options | Covered jurisdictions |
 
 #### `parameters.json` Format
 
@@ -481,6 +485,7 @@ Some contracts require deal-specific values that are **not negotiable** — mone
       "scope": "investment-amount-clause",
       "type": "currency",
       "required": true,
+      "negotiable": true,
       "label": { "en": "Investment Amount", "es": "Importe de la Inversión" },
       "hint": { "en": "Total investment in this round", "es": "Inversión total en esta ronda" },
       "placeholder": { "en": "e.g., 500000", "es": "ej., 500000" },
@@ -497,6 +502,25 @@ Some contracts require deal-specific values that are **not negotiable** — mone
 #### Token Interpolation
 
 At render time (negotiate UI, PDF, DOCX), `[bracket]` tokens in clause legal text are replaced with user-supplied values. Tokens are automatically translated for non-English contracts (e.g., `[amount]` → `[importe]` in Spanish).
+
+#### Negotiable Parameter Flow
+
+Parameters with `"negotiable": true` can be proposed and negotiated during the review phase:
+
+1. **Propose** — Either party clicks "Propose Change" on a negotiable parameter, enters a new value and optional rationale
+2. **Review** — The other party sees the proposal with current → proposed value comparison and the rationale
+3. **Respond** — The other party accepts (value is updated immediately) or rejects (original value preserved)
+4. **History** — All proposals and responses are logged in the negotiation history timeline
+
+Proposals are scoped per negotiation round. Each party can have one active proposal per parameter per round. Accepted proposals update the `DealRoom.parameters` JSON field in real time.
+
+#### tRPC Procedures for Parameters
+
+| Router | Procedure | Description |
+|--------|-----------|-------------|
+| `compromise` | `getParameterProposals` | Get all negotiable parameters with pending/active proposals |
+| `compromise` | `proposeParameterChange` | Submit a parameter change proposal |
+| `compromise` | `respondToParameterProposal` | Accept or reject a pending proposal |
 
 #### Skills with Parameters
 
@@ -524,11 +548,24 @@ Skills without `parameters.json` (NDA, DPA, SaaS, Founders, etc.) skip Step 5 en
 
 ### Negotiation
 
-Both parties independently select their preferred option for each clause, along with a priority (1–5) and flexibility (1–5) rating. Selections are **blind** — neither party sees the other's choices until both have submitted.
+Both parties independently select their preferred option for each clause and set a **firmness** level (1–5) indicating how strongly they feel about their choice. The UI displays firmness while the database stores flexibility (6 − firmness). Selections are **blind** — neither party sees the other's choices until both have submitted.
+
+For contracts with **negotiable parameters** (open fields such as monetary amounts, dates, or geographic scope), parties can propose changes to these values during the review phase. Each proposal includes the proposed value and an optional rationale. The other party can accept or reject each proposal independently.
 
 ### Compromise
 
-Once both parties submit, the compromise engine generates suggestions using the weighted stake formula. Parties can accept, reject, or counter-propose each suggestion. Multiple rounds are supported.
+Once both parties submit, the compromise engine generates suggestions using the weighted stake formula:
+
+```
+stake = ((5-flexibility)/5 × 0.6) + (|bias| × 0.4)
+```
+
+- **Firmness (60%):** How firmly the party feels about their choice (inverted flexibility)
+- **Option bias (40%):** How much the selected option inherently favors one party
+
+The party with the higher stake wins the clause. When stakes are similar, the algorithm selects a balanced middle-ground option. A global fairness pass rebalances if one party wins disproportionately many clauses.
+
+Parties can accept, reject, or counter-propose each suggestion. Multiple rounds are supported.
 
 ### Lawyer Involvement
 
