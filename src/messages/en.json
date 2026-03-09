@@ -551,7 +551,7 @@
   },
   "directory": {
     "title": "Lawyer Directory",
-    "subtitle": "Browse published lawyer profiles and request recommendations",
+    "subtitle": "Browse relevant lawyer profiles and request assistance",
     "noLawyers": "No lawyers available yet",
     "noLawyersFiltered": "No lawyers match your filters",
     "filterJurisdiction": "Jurisdiction",
@@ -559,7 +559,7 @@
     "allJurisdictions": "All Jurisdictions",
     "allLanguages": "All Languages",
     "approvedVettings": "{count} approved vettings",
-    "requestRecommendation": "Request Recommendation",
+    "requestRecommendation": "Request Assistance",
     "lawyerHint": "Would you like a lawyer to review this first?",
     "lawyerHintLink": "Find a Lawyer"
   },
