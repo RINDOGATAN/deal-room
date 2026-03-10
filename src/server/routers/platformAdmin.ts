@@ -907,9 +907,22 @@ export const platformAdminRouter = createTRPCRouter({
         throw new TRPCError({ code: "NOT_FOUND", message: "Expert profile not found" });
       }
 
-      await ctx.prisma.lawyerProfile.delete({
-        where: { userId: input.userId },
-      });
+      try {
+        await ctx.prisma.$transaction([
+          ctx.prisma.lawyerProfile.delete({
+            where: { userId: input.userId },
+          }),
+          ctx.prisma.user.update({
+            where: { id: input.userId },
+            data: { isLawyer: false },
+          }),
+        ]);
+      } catch (error) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Could not delete expert profile. The user may have active deals or vettings that reference this account.",
+        });
+      }
 
       return { success: true };
     }),
