@@ -25,6 +25,7 @@ import {
   Download,
   ChevronDown,
   Search,
+  X,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -603,8 +604,16 @@ export default function NewDealPage() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder={t("searchContracts")}
-                className="input-brutal pl-9"
+                className="input-brutal pl-10 pr-9"
               />
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery("")}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              )}
             </div>
             {categories.length > 1 && (
               <div className="flex gap-2 overflow-x-auto pb-1 -mx-1 px-1 scrollbar-hide">
@@ -636,9 +645,9 @@ export default function NewDealPage() {
               </div>
             )}
             {filteredFamilies.length === 0 && searchQuery.trim() && (
-              <div className="card-brutal p-12 text-center">
-                <Search className="h-10 w-10 mx-auto text-muted-foreground mb-3" />
-                <p className="text-muted-foreground">{t("noContractsFound")}</p>
+              <div className="card-brutal p-8 sm:p-12 text-center">
+                <Search className="h-8 w-8 sm:h-10 sm:w-10 mx-auto text-muted-foreground/50 mb-2" />
+                <p className="text-sm text-muted-foreground">{t("noContractsFound")}</p>
               </div>
             )}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
