@@ -10,6 +10,7 @@ import {
   Languages,
   Download,
   ShoppingCart,
+  Search,
 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { EnableFeatureModal } from "@/components/premium/enable-feature-modal";
@@ -32,6 +33,7 @@ export default function MarketplacePage() {
   const router = useRouter();
   const [jurisdictionFilter, setJurisdictionFilter] = useState<string | null>(null);
   const [languageFilter, setLanguageFilter] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
   const [enableSkill, setEnableSkill] = useState<{
     id: string;
     name: string;
@@ -61,9 +63,17 @@ export default function MarketplacePage() {
       if (jurisdictionFilter && !s.jurisdictions.includes(jurisdictionFilter))
         return false;
       if (languageFilter && !s.languages.includes(languageFilter)) return false;
+      if (searchQuery.trim()) {
+        const q = searchQuery.toLowerCase();
+        if (
+          !s.displayName.toLowerCase().includes(q) &&
+          !s.description?.toLowerCase().includes(q)
+        )
+          return false;
+      }
       return true;
     });
-  }, [skills, jurisdictionFilter, languageFilter]);
+  }, [skills, jurisdictionFilter, languageFilter, searchQuery]);
 
   if (isLoading) {
     return (
@@ -80,7 +90,16 @@ export default function MarketplacePage() {
         <p className="text-muted-foreground">{t("subtitle")}</p>
       </div>
 
-      {/* Filter bar */}
+      {/* Search + filter bar */}
+      <div className="relative">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+        <input
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          placeholder={t("searchSkills")}
+          className="w-full pl-9 pr-4 py-2 text-sm border border-border rounded-xl bg-background focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
+        />
+      </div>
       <div className="flex flex-wrap items-center gap-2">
         {/* Jurisdiction pills */}
         <button

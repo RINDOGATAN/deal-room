@@ -24,6 +24,7 @@ import {
   Users,
   Download,
   ChevronDown,
+  Search,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -175,6 +176,7 @@ export default function NewDealPage() {
   const [parameterValues, setParameterValues] = useState<Record<string, string>>({});
   const [missingParams, setMissingParams] = useState<Set<string>>(new Set());
   const [dealMode, setDealMode] = useState<DealMode>("NEGOTIATION");
+  const [searchQuery, setSearchQuery] = useState("");
 
   // Lawyer vetting flow
   const vettingId = searchParams.get("vetting");
@@ -241,10 +243,21 @@ export default function NewDealPage() {
     return Array.from(cats).sort();
   }, [templateFamilies]);
 
-  // Filter families by selected category
-  const filteredFamilies = selectedCategory
-    ? templateFamilies.filter(f => f.category === selectedCategory)
-    : templateFamilies;
+  // Filter families by selected category and search query
+  const filteredFamilies = useMemo(() => {
+    let result = templateFamilies;
+    if (selectedCategory) {
+      result = result.filter(f => f.category === selectedCategory);
+    }
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase();
+      result = result.filter(f =>
+        f.displayName.toLowerCase().includes(q) ||
+        f.description?.toLowerCase().includes(q)
+      );
+    }
+    return result;
+  }, [templateFamilies, selectedCategory, searchQuery]);
 
   // Reset selection when filter hides the currently selected family
   useEffect(() => {
@@ -583,6 +596,16 @@ export default function NewDealPage() {
         {/* Full grid when no contract type is selected */}
         {!selectedFamily && (
           <>
+            {/* Search + category filters */}
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+              <Input
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder={t("searchContracts")}
+                className="input-brutal pl-9"
+              />
+            </div>
             {categories.length > 1 && (
               <div className="flex gap-2 overflow-x-auto pb-1 -mx-1 px-1 scrollbar-hide">
                 <button
@@ -610,6 +633,12 @@ export default function NewDealPage() {
                     {cat}
                   </button>
                 ))}
+              </div>
+            )}
+            {filteredFamilies.length === 0 && searchQuery.trim() && (
+              <div className="card-brutal p-12 text-center">
+                <Search className="h-10 w-10 mx-auto text-muted-foreground mb-3" />
+                <p className="text-muted-foreground">{t("noContractsFound")}</p>
               </div>
             )}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

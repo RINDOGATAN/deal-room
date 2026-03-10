@@ -145,14 +145,16 @@
     },
     "dealParameters": "Datos del Acuerdo",
     "dealParametersDescription": "Introduce los valores específicos del acuerdo. Aparecerán en el texto del contrato.",
-    "parameterRequired": "Por favor, completa todos los datos obligatorios"
+    "parameterRequired": "Por favor, completa todos los datos obligatorios",
+    "searchContracts": "Buscar contratos...",
+    "noContractsFound": "No se encontraron contratos."
   },
   "dealDetail": {
     "makeSelections": "Elegir Opciones",
     "continueNegotiation": "Continuar Negociación",
     "reviewCompromises": "Revisar Compromisos",
     "yourSelections": "Tus Selecciones",
-    "counterparty": "Contra\u00ADparte",
+    "counterparty": "Contra­parte",
     "agreedClauses": "Cláusulas Acordadas",
     "soloConfirmedClauses": "Cláusulas confirmadas",
     "initiator": "Iniciador",
@@ -707,7 +709,8 @@
     "contactUs": "Contactar",
     "createDeal": "Crear Acuerdo",
     "download": "Descargar",
-    "enable": "Activar"
+    "enable": "Activar",
+    "searchSkills": "Buscar habilidades..."
   },
   "docs": {
     "title": "Guía de Usuario",
