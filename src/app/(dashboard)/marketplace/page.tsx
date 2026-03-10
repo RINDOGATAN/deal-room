@@ -11,8 +11,10 @@ import {
   Download,
   ShoppingCart,
   Search,
+  X,
 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
+import { Input } from "@/components/ui/input";
 import { EnableFeatureModal } from "@/components/premium/enable-feature-modal";
 import { formatPrice } from "@/lib/currency";
 import { useTranslations } from "next-intl";
@@ -91,16 +93,25 @@ export default function MarketplacePage() {
       </div>
 
       {/* Search + filter bar */}
-      <div className="relative">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
-        <input
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder={t("searchSkills")}
-          className="w-full pl-9 pr-4 py-2 text-sm border border-border rounded-xl bg-background focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
-        />
-      </div>
-      <div className="flex flex-wrap items-center gap-2">
+      <div className="space-y-3">
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+          <Input
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder={t("searchSkills")}
+            className="input-brutal pl-10 pr-9"
+          />
+          {searchQuery && (
+            <button
+              onClick={() => setSearchQuery("")}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          )}
+        </div>
+        <div className="flex flex-wrap items-center gap-2">
         {/* Jurisdiction pills */}
         <button
           onClick={() => setJurisdictionFilter(null)}
@@ -156,13 +167,18 @@ export default function MarketplacePage() {
             {LANGUAGE_LABELS[l] || l}
           </button>
         ))}
+        </div>
       </div>
 
       {/* Skills grid */}
       {filtered.length === 0 ? (
-        <div className="card-brutal p-12 text-center">
-          <Package className="h-10 w-10 mx-auto text-muted-foreground mb-3" />
-          <p className="text-muted-foreground">{t("noSkillsFound")}</p>
+        <div className="card-brutal p-8 sm:p-12 text-center">
+          {searchQuery.trim() ? (
+            <Search className="h-8 w-8 sm:h-10 sm:w-10 mx-auto text-muted-foreground/50 mb-2" />
+          ) : (
+            <Package className="h-8 w-8 sm:h-10 sm:w-10 mx-auto text-muted-foreground/50 mb-2" />
+          )}
+          <p className="text-sm text-muted-foreground">{t("noSkillsFound")}</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
