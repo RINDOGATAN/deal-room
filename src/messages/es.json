@@ -553,8 +553,8 @@
   },
   "directory": {
     "title": "Directorio de Abogados",
-    "subtitle": "Consulta perfiles de abogados relevantes y solicita asistencia",
-    "noLawyers": "Aún no hay abogados disponibles",
+    "subtitle": "Consulta perfiles de abogados/as relevantes y solicita asistencia",
+    "noLawyers": "Aún no hay abogados/as disponibles",
     "noLawyersFiltered": "Ningún abogado/a coincide con tus filtros",
     "filterJurisdiction": "Jurisdicción",
     "filterLanguage": "Idioma",
@@ -567,7 +567,7 @@
   },
   "lawyerProfile": {
     "title": "Perfil del Directorio",
-    "subtitle": "Gestiona tu perfil público en el directorio de abogados",
+    "subtitle": "Gestiona tu perfil público en el directorio de abogados/as",
     "bio": "Biografía",
     "bioPlaceholder": "Describe tu experiencia, áreas de práctica y especialización...",
     "jurisdictions": "Jurisdicciones",
@@ -656,7 +656,7 @@
   },
   "lawyerWarning": {
     "title": "Procediendo sin Abogado/a",
-    "description": "Este contrato no ha estado sujeto a revisión previa por tu abogado.",
+    "description": "Este contrato no ha estado sujeto a revisión previa por tu abogado/a.",
     "riskWarning": "Negociar sin asesoramiento legal puede exponerte a condiciones desfavorables. Aunque la plataforma te guía cláusula a cláusula, no sustituye al asesoramiento jurídico profesional.",
     "lawyerStages": "Fases de Intervención Legal",
     "stage0Title": "Revisión Previa",
@@ -719,7 +719,7 @@
     "navigation": "Ciclo del Acuerdo",
     "negotiation": "Negociación",
     "compromiseAlgorithm": "Algoritmo de Compromiso",
-    "skillsLicensing": "Habilidades y Licencias",
+    "skillsLicensing": "Skills y Licencias",
     "lawyerVetting": "Revisión Legal",
     "howVettingWorks": "Cómo Funciona",
     "selfHosted": "Autoalojado",
