@@ -145,14 +145,16 @@
     },
     "dealParameters": "Deal Parameters",
     "dealParametersDescription": "Fill in the deal-specific values below. These will appear in the contract text.",
-    "parameterRequired": "Please fill in all required parameters"
+    "parameterRequired": "Please fill in all required parameters",
+    "searchContracts": "Search contracts...",
+    "noContractsFound": "No contracts match your search."
   },
   "dealDetail": {
     "makeSelections": "Make Selections",
     "continueNegotiation": "Continue Negotiation",
     "reviewCompromises": "Review Compromises",
     "yourSelections": "Your Selections",
-    "counterparty": "Counter\u00ADparty",
+    "counterparty": "Counter­party",
     "agreedClauses": "Agreed Clauses",
     "soloConfirmedClauses": "Confirmed clauses",
     "initiator": "Initiator",
@@ -707,7 +709,8 @@
     "contactUs": "Contact Us",
     "createDeal": "Create Deal",
     "download": "Download",
-    "enable": "Enable"
+    "enable": "Enable",
+    "searchSkills": "Search skills..."
   },
   "docs": {
     "title": "User Guide",
