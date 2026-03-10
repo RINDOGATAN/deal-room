@@ -62,6 +62,7 @@ const TOKEN_TRANSLATIONS: Record<string, Record<string, string>> = {
   "subject matter/project": { es: "materia/proyecto" },
   "milestone 1": { es: "hito 1" },
   "milestone 2": { es: "hito 2" },
+  "number of shares": { es: "número de participaciones" },
   "appointing body": { es: "órgano designante" },
   "arbitration institution": { es: "institución arbitral" },
   "arbitration language": { es: "idioma del arbitraje" },
