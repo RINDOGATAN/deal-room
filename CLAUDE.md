@@ -47,10 +47,10 @@ docs/administration.md          # Full admin, skills, lifecycle & signing docs
 
 ## Skills (Open-Core Model)
 
-- **Free:** Skills in `skills/` (nda, msa, saas, dpa, privacy-notice) — available to all users, no `manifest.json`
-- **Premium:** Skills in the private [`RINDOGATAN/legalskills`](https://github.com/RINDOGATAN/legalskills) repo — requires `manifest.json` + `SkillEntitlement` + active Stripe license
+- **Free (5):** Skills in `skills/` (nda, msa, saas, dpa, privacy-notice) — available to all users, no `manifest.json`
+- **Premium (27):** Skills in the private [`RINDOGATAN/legalskills`](https://github.com/RINDOGATAN/legalskills) repo — requires `manifest.json` + `SkillEntitlement` + active Stripe license
 - Premium skills are loaded via `SKILLS_DIR` env var at seed time, or installed as `.skill` packages via marketplace
-- Auto-seed: `legalskills/.github/workflows/seed.yml` runs on push to `*/clauses.json`, `*/metadata.json`, `*/manifest.json` — checks out both repos, runs `prisma db push` + `prisma db seed`
+- Auto-seed: `legalskills/.github/workflows/seed.yml` runs on push to `*/clauses.json`, `*/metadata.json`, `*/manifest.json`, `*/boilerplate.json`, `*/parameters.json` — checks out both repos, runs `prisma db push` + `prisma db seed`
 - Admin assigns entitlements at `/admin/customers`
 - **Never commit premium skills to this public repo** — they belong in `legalskills`
 - Seed defaults `biasPartyA`/`biasPartyB` to `0` when missing from clauses.json (MSA, NDA, SaaS don't define them)
@@ -108,8 +108,12 @@ src/app/(admin)/admin/experts/page.tsx   # Admin UI for managing expert profiles
 
 **Mobile:** All grids use `grid-cols-1` base with `sm:` or `md:` breakpoints. Buttons use icon-only on mobile where text overflows. Dashboard header uses `backdrop-blur-sm` for mobile GPU performance.
 
-**Parameters:** Skills define parameters in `parameters.json`. Two interpolation modes: `[bracket]` tokens in clause legal text, `{curly}` variables in boilerplate. Token names are localized (e.g. `amount` → `importe` in Spanish). Values stored on `DealRoom.parameters` JSON field.
+**Parameters:** Skills define parameters in `parameters.json`. Two interpolation modes: `[bracket]` tokens in clause legal text, `{curly}` variables in boilerplate. The `boilerplateVariable` field in parameters.json bridges a parameter to a `{variable}` in boilerplate — without it, user values don't reach the PDF. Token names are localized (e.g. `amount` → `importe` in Spanish). Values stored on `DealRoom.parameters` JSON field. Built-in boilerplate variables (no parameter needed): `{effectiveDate}`, `{partyAName}`, `{partyBName}`, `{partyAAddress}`, `{partyBAddress}`, `{partyASignatureBlock}`, `{partyBSignatureBlock}`.
+
+**i18n:** All Spanish text must be Castilian (Spain), never Latin American. Use "skills" as loanword (not "habilidades"). Use gender-inclusive forms ("abogado/a"). Token translations in `src/lib/parameters.ts` → `TOKEN_TRANSLATIONS`.
 
 **Simulate:** `npm run deal:simulate` runs full lifecycle for all contract types (DPA, NDA, MSA, SAAS, SEED_INVESTMENT, ADVERTISING_IO, AFFILIATE_PROGRAM) with 14 validation checks per deal including unresolved placeholder detection.
+
+**Boilerplate quality:** All 27 premium + 5 free skills have been audited (2026-03-10). No `[BRACKET]` placeholders remain in boilerplate files. All bilingual skills use `{"en": "...", "es": "..."}` objects. Spanish-only corporate docs (acta-consejo, acta-junta, etc.) remain Spanish-only by design. When adding new parameters, always add `boilerplateVariable` if the value needs to appear in the boilerplate PDF. Avoid duplicating negotiable clause topics in standardClauses (causes contradictory PDF output).
 
 **Skill Packages:** Premium skills are distributed as `.skill` ZIP files (manifest.json + content/clauses.json + content/boilerplate.json + parameters.json + signature.sig). Build with `npm run skill:build`, upload with `npm run skill:upload`.

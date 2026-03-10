@@ -55,6 +55,7 @@ function ExpertsList({
   onCreateNew: () => void;
 }) {
   const [searchQuery, setSearchQuery] = useState("");
+  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
   const utils = trpc.useUtils();
   const { data: profiles, isLoading, error } = trpc.platformAdmin.listExpertProfiles.useQuery();
 
@@ -190,25 +191,47 @@ function ExpertsList({
                 {format(new Date(profile.createdAt), "MMM d, yyyy")}
               </div>
               <div className="flex items-center gap-1">
-                <button
-                  onClick={() => onSelect(profile.userId)}
-                  className="p-1 text-muted-foreground hover:text-foreground hover:bg-muted rounded"
-                  title="Edit"
-                >
-                  <Save className="w-4 h-4" />
-                </button>
-                <button
-                  onClick={() => {
-                    if (confirm(`Delete expert profile for ${profile.user.name || profile.user.email}?`)) {
-                      deleteMutation.mutate({ userId: profile.userId });
-                    }
-                  }}
-                  disabled={deleteMutation.isPending}
-                  className="p-1 text-red-500 hover:bg-red-500/10 rounded"
-                  title="Delete"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </button>
+                {confirmDeleteId === profile.userId ? (
+                  <>
+                    <span className="text-xs text-red-500 mr-1">Delete?</span>
+                    <button
+                      onClick={() => {
+                        deleteMutation.mutate({ userId: profile.userId });
+                        setConfirmDeleteId(null);
+                      }}
+                      disabled={deleteMutation.isPending}
+                      className="p-1 text-red-500 hover:bg-red-500/10 rounded"
+                      title="Confirm delete"
+                    >
+                      <Check className="w-4 h-4" />
+                    </button>
+                    <button
+                      onClick={() => setConfirmDeleteId(null)}
+                      className="p-1 text-muted-foreground hover:text-foreground hover:bg-muted rounded"
+                      title="Cancel"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <button
+                      onClick={() => onSelect(profile.userId)}
+                      className="p-1 text-muted-foreground hover:text-foreground hover:bg-muted rounded"
+                      title="Edit"
+                    >
+                      <Save className="w-4 h-4" />
+                    </button>
+                    <button
+                      onClick={() => setConfirmDeleteId(profile.userId)}
+                      disabled={deleteMutation.isPending}
+                      className="p-1 text-red-500 hover:bg-red-500/10 rounded"
+                      title="Delete"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </>
+                )}
               </div>
             </div>
           ))}
@@ -232,6 +255,7 @@ function ExpertEditor({
   // For "new expert" mode: pick a user
   const [selectedUserId, setSelectedUserId] = useState<string | null>(userId);
   const [userSearch, setUserSearch] = useState("");
+  const [confirmDelete, setConfirmDelete] = useState(false);
   const { data: allUsers } = trpc.platformAdmin.listUsers.useQuery(undefined, {
     enabled: !userId,
   });
@@ -415,18 +439,32 @@ function ExpertEditor({
             )}
           </div>
         </div>
-        {userId && (
+        {userId && !confirmDelete && (
           <button
-            onClick={() => {
-              if (confirm("Delete this expert profile? The user account will remain.")) {
-                deleteMutation.mutate({ userId: selectedUserId! });
-              }
-            }}
+            onClick={() => setConfirmDelete(true)}
             className="text-red-500 hover:text-red-600 flex items-center gap-2 text-sm"
           >
             <Trash2 className="w-4 h-4" />
             Delete Profile
           </button>
+        )}
+        {userId && confirmDelete && (
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-red-500">Delete this profile?</span>
+            <button
+              onClick={() => deleteMutation.mutate({ userId: selectedUserId! })}
+              disabled={deleteMutation.isPending}
+              className="px-3 py-1.5 text-xs font-medium bg-red-500 text-white rounded hover:bg-red-600 transition-colors"
+            >
+              {deleteMutation.isPending ? "Deleting..." : "Confirm"}
+            </button>
+            <button
+              onClick={() => setConfirmDelete(false)}
+              className="px-3 py-1.5 text-xs font-medium border border-border rounded hover:bg-muted transition-colors"
+            >
+              Cancel
+            </button>
+          </div>
         )}
       </div>
 
