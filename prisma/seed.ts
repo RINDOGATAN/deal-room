@@ -746,6 +746,53 @@ async function main() {
   });
   console.log("  Created/updated LawyerProfile: Carlos García Berned (ES)");
 
+  // ── Seed Wences Spiegel Marquez as Deployment expert ──
+  const wencesUser = await prisma.user.upsert({
+    where: { email: "wences.spiegel@rindogatan.com" },
+    create: {
+      email: "wences.spiegel@rindogatan.com",
+      name: "Wences Spiegel Marquez",
+      company: "Rindogatan",
+      isLawyer: true,
+      role: "LAWYER",
+    },
+    update: {
+      name: "Wences Spiegel Marquez",
+      company: "Rindogatan",
+      isLawyer: true,
+      role: "LAWYER",
+    },
+  });
+  await prisma.lawyerProfile.upsert({
+    where: { userId: wencesUser.id },
+    create: {
+      userId: wencesUser.id,
+      title: "Deployment Consultant",
+      bio: "Self-hosting and deployment specialist covering EU, US, and UK environments.",
+      jurisdictions: [],
+      languages: ["en", "es"],
+      expertTypes: ["DEPLOYMENT"],
+      specializations: ["SELF_HOSTING_DEPLOYMENT"],
+      certifications: [],
+      countryCode: "GB",
+      city: "London",
+      jurisdictionsCovered: ["EU", "US", "UK"],
+      acceptingClients: true,
+      isPublished: true,
+    },
+    update: {
+      title: "Deployment Consultant",
+      languages: ["en", "es"],
+      expertTypes: ["DEPLOYMENT"],
+      specializations: ["SELF_HOSTING_DEPLOYMENT"],
+      countryCode: "GB",
+      city: "London",
+      jurisdictionsCovered: ["EU", "US", "UK"],
+      isPublished: true,
+    },
+  });
+  console.log("  Created/updated LawyerProfile: Wences Spiegel Marquez (Deployment)");
+
   // ── Seed sample invite codes for northend.law brand ──
   if (process.env.NEXT_PUBLIC_BRAND === "northend") {
     // Create a demo customer if none exists
