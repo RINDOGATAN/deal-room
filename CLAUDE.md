@@ -74,8 +74,10 @@ Exposes the lawyer/expert directory to other TodoLaw apps (DPO Central, VendorWa
 **Endpoints:**
 - `POST /api/v1/experts/search` — filtered search with pagination
 - `GET /api/v1/experts/:id` — single profile by user ID
+- `POST /api/v1/experts/:id/contact` — send contact request to expert (scope: `experts:contact`)
+- `GET /api/v1/experts/requests/:id` — poll request status (scope: `experts:contact`)
 
-**Auth:** Bearer token (`drk_...`) with scope `experts:read`. Keys issued per customer via `/admin/customers/[id]`.
+**Auth:** Bearer token (`drk_...`) with scopes `experts:read` and/or `experts:contact`. Keys issued per customer via `/admin/customers/[id]`.
 
 **Base URL (production):** `https://dealroom.todo.law/api/v1/experts`
 
@@ -83,14 +85,16 @@ Exposes the lawyer/expert directory to other TodoLaw apps (DPO Central, VendorWa
 
 **Key files:**
 ```
-src/app/api/v1/experts/search/route.ts   # Search endpoint
-src/app/api/v1/experts/[id]/route.ts     # Get-by-ID endpoint
-src/server/services/experts/taxonomy.ts  # Specializations, certifications, completeness score
-src/app/(admin)/admin/experts/page.tsx   # Admin UI for managing expert profiles
+src/app/api/v1/experts/search/route.ts        # Search endpoint
+src/app/api/v1/experts/[id]/route.ts          # Get-by-ID endpoint
+src/app/api/v1/experts/[id]/contact/route.ts  # Contact request endpoint
+src/app/api/v1/experts/requests/[id]/route.ts # Request status polling endpoint
+src/server/services/experts/taxonomy.ts       # Specializations, certifications, completeness score
+src/app/(admin)/admin/experts/page.tsx        # Admin UI for managing expert profiles
 ```
 
-**LawyerProfile extended fields** (added via migration `20260305000000`):
-`title`, `expertType` (LEGAL/TECHNICAL/BOTH), `specializations[]`, `certifications[]`, `countryCode`, `city`, `jurisdictionsCovered[]`, `contactUrl`, `acceptingClients`
+**LawyerProfile extended fields** (added via migration `20260305000000`, updated `20260311000000`):
+`title`, `expertTypes[]` (LEGAL/TECHNICAL/DEPLOYMENT, non-exclusive), `specializations[]`, `certifications[]`, `countryCode`, `city`, `jurisdictionsCovered[]`, `contactUrl`, `acceptingClients`
 
 **Taxonomy:** 16 specializations + 10 certifications defined as controlled vocabularies in `taxonomy.ts`, validated at app layer (not Prisma enums) for flexibility.
 

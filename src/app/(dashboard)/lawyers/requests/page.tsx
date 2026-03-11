@@ -117,6 +117,7 @@ export default function RequestsPage() {
             const person = isLawyer
               ? (request as NonNullable<typeof incomingRequests>[number]).requester
               : (request as NonNullable<typeof sentRequests>[number]).lawyer;
+            const isExternal = !!request.externalRequesterName;
 
             return (
               <div key={request.id} className="card-brutal">
@@ -132,9 +133,19 @@ export default function RequestsPage() {
                       </span>
                     </div>
                     <div className="flex flex-wrap gap-3 text-sm text-muted-foreground">
-                      <span>{isLawyer ? t("from") : t("to")}: {person.name || person.email}</span>
-                      {person.company && <span>{person.company}</span>}
-                      <span>{tCommon(jurisdictionKeys[request.governingLaw] || request.governingLaw)}</span>
+                      <span>
+                        {isLawyer ? t("from") : t("to")}:{" "}
+                        {isExternal
+                          ? `${request.externalRequesterName}${request.externalRequesterCompany ? ` (${request.externalRequesterCompany})` : ""}`
+                          : (person?.name || person?.email || "Unknown")}
+                      </span>
+                      {!isExternal && person?.company && <span>{person.company}</span>}
+                      {request.sourceApp && (
+                        <span className="text-xs px-2 py-0.5 rounded-full bg-secondary">{request.sourceApp}</span>
+                      )}
+                      {request.governingLaw && (
+                        <span>{tCommon(jurisdictionKeys[request.governingLaw] || request.governingLaw)}</span>
+                      )}
                     </div>
                     {request.message && (
                       <p className="text-sm text-muted-foreground mt-2 italic">
@@ -164,7 +175,7 @@ export default function RequestsPage() {
                   )}
                   {isLawyer && request.status === "ACCEPTED" && (
                     <Link
-                      href={`/lawyer/vettings/new?requestId=${request.id}&contractType=${request.contractType}&governingLaw=${request.governingLaw}`}
+                      href={`/lawyer/vettings/new?requestId=${request.id}&contractType=${request.contractType}${request.governingLaw ? `&governingLaw=${request.governingLaw}` : ""}`}
                       className="btn-brutal text-xs px-3 py-1.5 flex items-center gap-1 shrink-0"
                     >
                       <Plus className="w-3 h-3" />
