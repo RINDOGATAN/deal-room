@@ -490,7 +490,7 @@ export default function CustomerDetailPage() {
             <div className="space-y-2">
               <label className="text-sm font-medium">Scopes</label>
               <div className="flex flex-wrap gap-2">
-                {["experts:read", "deals:read", "deals:write", "negotiate"].map((scope) => (
+                {["experts:read", "experts:contact", "deals:read", "deals:write", "negotiate"].map((scope) => (
                   <button
                     key={scope}
                     onClick={() => toggleScope(scope)}

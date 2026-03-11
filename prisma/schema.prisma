@@ -249,11 +249,12 @@ model Customer {
   createdAt        DateTime     @default(now())
   updatedAt        DateTime     @updatedAt
 
-  entitlements SkillEntitlement[]
-  activations  SkillActivation[]
-  apiKeys      ApiKey[]
-  playbooks    Playbook[]
-  inviteCodes  InviteCode[]
+  entitlements           SkillEntitlement[]
+  activations            SkillActivation[]
+  apiKeys                ApiKey[]
+  playbooks              Playbook[]
+  inviteCodes            InviteCode[]
+  contactRequests        RecommendationRequest[]
 
   @@map("customers")
 }
@@ -984,10 +985,10 @@ enum RecommendationRequestStatus {
 
 model RecommendationRequest {
   id           String                      @id @default(cuid())
-  requesterId  String
+  requesterId  String?
   lawyerId     String
   contractType String
-  governingLaw GoverningLaw
+  governingLaw GoverningLaw?
   message      String?                     @db.Text
   status       RecommendationRequestStatus @default(PENDING)
   vettingId    String?
@@ -995,9 +996,17 @@ model RecommendationRequest {
   createdAt    DateTime                    @default(now())
   updatedAt    DateTime                    @updatedAt
 
-  requester User           @relation("RequestsSent", fields: [requesterId], references: [id])
-  lawyer    User           @relation("RequestsReceived", fields: [lawyerId], references: [id])
-  vetting   LawyerVetting? @relation(fields: [vettingId], references: [id])
+  // External request tracking (from DPO Central, AI Sentinel, etc.)
+  sourceApp              String?
+  sourceCustomerId       String?
+  externalRequesterName  String?
+  externalRequesterEmail String?
+  externalRequesterCompany String?
+
+  requester      User?          @relation("RequestsSent", fields: [requesterId], references: [id])
+  lawyer         User           @relation("RequestsReceived", fields: [lawyerId], references: [id])
+  vetting        LawyerVetting? @relation(fields: [vettingId], references: [id])
+  sourceCustomer Customer?      @relation(fields: [sourceCustomerId], references: [id], onDelete: SetNull)
   @@map("recommendation_requests")
 }
 
