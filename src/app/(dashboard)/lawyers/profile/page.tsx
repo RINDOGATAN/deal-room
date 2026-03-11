@@ -37,7 +37,7 @@ const languageKeys: Record<string, string> = {
 const expertTypeLabels: Record<ExpertType, string> = {
   LEGAL: "Legal",
   TECHNICAL: "Technical",
-  BOTH: "Both",
+  DEPLOYMENT: "Deployment",
 };
 
 const jurisdictionsCoveredOptions = ["EU", "UK", "US", "CA", "LATAM", "APAC"] as const;
@@ -57,7 +57,7 @@ export default function LawyerProfilePage() {
   const [languages, setLanguages] = useState<string[]>([]);
   const [isPublished, setIsPublished] = useState(false);
   const [title, setTitle] = useState("");
-  const [expertType, setExpertType] = useState<ExpertType>("LEGAL");
+  const [expertTypes, setExpertTypes] = useState<ExpertType[]>(["LEGAL"]);
   const [specializations, setSpecializations] = useState<Specialization[]>([]);
   const [certifications, setCertifications] = useState<Certification[]>([]);
   const [countryCode, setCountryCode] = useState("");
@@ -73,7 +73,7 @@ export default function LawyerProfilePage() {
       setLanguages(profile.languages);
       setIsPublished(profile.isPublished);
       setTitle(profile.title || "");
-      setExpertType((profile.expertType as ExpertType) || "LEGAL");
+      setExpertTypes((profile.expertTypes as ExpertType[]) || ["LEGAL"]);
       setSpecializations((profile.specializations as Specialization[]) || []);
       setCertifications((profile.certifications as Certification[]) || []);
       setCountryCode(profile.countryCode || "");
@@ -109,7 +109,7 @@ export default function LawyerProfilePage() {
       languages,
       isPublished: canPublish ? isPublished : false,
       title: title || undefined,
-      expertType: expertType,
+      expertTypes: expertTypes,
       specializations,
       certifications,
       countryCode: countryCode || undefined,
@@ -226,9 +226,13 @@ export default function LawyerProfilePage() {
             {EXPERT_TYPES.map((et) => (
               <button
                 key={et}
-                onClick={() => setExpertType(et)}
+                onClick={() => {
+                  setExpertTypes((prev) =>
+                    prev.includes(et) ? prev.filter((x) => x !== et) : [...prev, et]
+                  );
+                }}
                 className={`px-3 py-1.5 text-sm border rounded-full transition-colors ${
-                  expertType === et
+                  expertTypes.includes(et)
                     ? "bg-primary/10 border-primary text-primary"
                     : "border-border text-muted-foreground hover:border-foreground"
                 }`}

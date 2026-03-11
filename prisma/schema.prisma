@@ -950,12 +950,6 @@ model InviteCode {
 // LAWYER DIRECTORY & RECOMMENDATION REQUESTS
 // ============================================================
 
-enum ExpertType {
-  LEGAL
-  TECHNICAL
-  BOTH
-}
-
 model LawyerProfile {
   id            String        @id @default(cuid())
   userId        String        @unique
@@ -968,7 +962,7 @@ model LawyerProfile {
 
   // Cross-product directory fields
   title              String?          // e.g. "Partner, Data Protection"
-  expertType         ExpertType       @default(LEGAL)
+  expertTypes        String[]         // controlled vocabulary: LEGAL, TECHNICAL, DEPLOYMENT — validated at app layer
   specializations    String[]         // controlled vocabulary, validated at app layer
   certifications     String[]         // e.g. ["CIPP_E", "CISSP"]
   countryCode        String?          // ISO 3166-1 alpha-2 (where they are based)

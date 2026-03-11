@@ -77,7 +77,7 @@ export const CERTIFICATION_LABELS: Record<Certification, string> = {
   FIP: "FIP",
 };
 
-export const EXPERT_TYPES = ["LEGAL", "TECHNICAL", "BOTH"] as const;
+export const EXPERT_TYPES = ["LEGAL", "TECHNICAL", "DEPLOYMENT"] as const;
 export type ExpertType = (typeof EXPERT_TYPES)[number];
 
 /**
