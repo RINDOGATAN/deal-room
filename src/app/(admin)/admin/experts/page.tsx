@@ -32,7 +32,7 @@ import {
 const expertTypeLabels: Record<ExpertType, string> = {
   LEGAL: "Legal",
   TECHNICAL: "Technical",
-  BOTH: "Both",
+  DEPLOYMENT: "Deployment",
 };
 
 type GoverningLaw = "CALIFORNIA" | "ENGLAND_WALES" | "SPAIN";
@@ -152,18 +152,21 @@ function ExpertsList({
                 <p className="font-medium">{profile.user.name || "No name"}</p>
                 <p className="text-muted-foreground text-xs">{profile.user.email}</p>
               </button>
-              <div>
-                <Badge
-                  className={
-                    profile.expertType === "LEGAL"
-                      ? "bg-blue-500/20 text-blue-500"
-                      : profile.expertType === "TECHNICAL"
-                        ? "bg-orange-500/20 text-orange-500"
-                        : "bg-purple-500/20 text-purple-500"
-                  }
-                >
-                  {expertTypeLabels[profile.expertType as ExpertType] || profile.expertType}
-                </Badge>
+              <div className="flex flex-wrap gap-1">
+                {(profile.expertTypes ?? []).map((et: string) => (
+                  <Badge
+                    key={et}
+                    className={
+                      et === "LEGAL"
+                        ? "bg-blue-500/20 text-blue-500"
+                        : et === "TECHNICAL"
+                          ? "bg-orange-500/20 text-orange-500"
+                          : "bg-green-500/20 text-green-500"
+                    }
+                  >
+                    {expertTypeLabels[et as ExpertType] || et}
+                  </Badge>
+                ))}
               </div>
               <div className="flex flex-wrap gap-1">
                 {profile.specializations.slice(0, 2).map((s) => (
@@ -273,7 +276,7 @@ function ExpertEditor({
   const [languages, setLanguages] = useState<string[]>([]);
   const [isPublished, setIsPublished] = useState(false);
   const [title, setTitle] = useState("");
-  const [expertType, setExpertType] = useState<ExpertType>("LEGAL");
+  const [expertTypes, setExpertTypes] = useState<ExpertType[]>(["LEGAL"]);
   const [specializations, setSpecializations] = useState<Specialization[]>([]);
   const [certifications, setCertifications] = useState<Certification[]>([]);
   const [countryCode, setCountryCode] = useState("");
@@ -289,7 +292,7 @@ function ExpertEditor({
       setLanguages(existingProfile.languages);
       setIsPublished(existingProfile.isPublished);
       setTitle(existingProfile.title || "");
-      setExpertType((existingProfile.expertType as ExpertType) || "LEGAL");
+      setExpertTypes((existingProfile.expertTypes as ExpertType[]) || ["LEGAL"]);
       setSpecializations((existingProfile.specializations as Specialization[]) || []);
       setCertifications((existingProfile.certifications as Certification[]) || []);
       setCountryCode(existingProfile.countryCode || "");
@@ -331,7 +334,7 @@ function ExpertEditor({
       languages: languages.length > 0 ? languages : ["en"],
       isPublished,
       title: title || undefined,
-      expertType,
+      expertTypes,
       specializations,
       certifications,
       countryCode: countryCode || undefined,
@@ -494,16 +497,16 @@ function ExpertEditor({
           />
         </div>
 
-        {/* Expert Type */}
+        {/* Expert Types (multi-select) */}
         <div className="space-y-2">
           <label className="text-sm font-medium">Expert Type</label>
           <div className="flex flex-wrap gap-2">
             {EXPERT_TYPES.map((et) => (
               <button
                 key={et}
-                onClick={() => setExpertType(et)}
+                onClick={() => toggleArray(expertTypes, et, setExpertTypes)}
                 className={`px-3 py-1.5 text-sm border rounded-full transition-colors ${
-                  expertType === et
+                  expertTypes.includes(et)
                     ? "bg-primary/10 border-primary text-primary"
                     : "border-border text-muted-foreground hover:border-foreground"
                 }`}

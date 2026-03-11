@@ -25,7 +25,7 @@ function formatProfile(profile: {
   id: string;
   bio: string | null;
   title: string | null;
-  expertType: string;
+  expertTypes: string[];
   specializations: string[];
   certifications: string[];
   languages: string[];
@@ -49,7 +49,7 @@ function formatProfile(profile: {
     title: profile.title,
     firm: profile.user.company,
     bio: profile.bio,
-    expertType: profile.expertType.toLowerCase(),
+    expertTypes: profile.expertTypes.map((t) => t.toLowerCase()),
     specializations: profile.specializations.map(
       (s) => SPECIALIZATION_LABELS[s as Specialization] ?? s
     ),
@@ -125,8 +125,8 @@ export async function POST(req: NextRequest) {
     }
     if (expertType) {
       const mapped = expertType.toUpperCase();
-      if (mapped === "LEGAL" || mapped === "TECHNICAL" || mapped === "BOTH") {
-        where.expertType = mapped;
+      if (mapped === "LEGAL" || mapped === "TECHNICAL" || mapped === "DEPLOYMENT") {
+        where.expertTypes = { has: mapped };
       }
     }
 

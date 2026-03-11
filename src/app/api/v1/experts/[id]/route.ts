@@ -72,7 +72,7 @@ export async function GET(
       title: profile.title,
       firm: profile.user.company,
       bio: profile.bio,
-      expertType: profile.expertType.toLowerCase(),
+      expertTypes: profile.expertTypes.map((t: string) => t.toLowerCase()),
       specializations: profile.specializations.map(
         (s) => SPECIALIZATION_LABELS[s as Specialization] ?? s
       ),

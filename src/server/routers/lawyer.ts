@@ -469,7 +469,7 @@ export const lawyerRouter = createTRPCRouter({
         isPublished: z.boolean(),
         // Cross-product directory fields
         title: z.string().max(200).optional(),
-        expertType: z.enum(EXPERT_TYPES).optional(),
+        expertTypes: z.array(z.enum(EXPERT_TYPES)).optional(),
         specializations: z.array(z.enum(SPECIALIZATIONS)).optional(),
         certifications: z.array(z.enum(CERTIFICATIONS)).optional(),
         countryCode: z.string().length(2).optional(),
@@ -492,7 +492,7 @@ export const lawyerRouter = createTRPCRouter({
 
       const crossProductFields = {
         title: input.title ?? null,
-        expertType: (input.expertType ?? "LEGAL") as "LEGAL" | "TECHNICAL" | "BOTH",
+        expertTypes: input.expertTypes ?? ["LEGAL"],
         specializations: input.specializations ?? [],
         certifications: input.certifications ?? [],
         countryCode: input.countryCode ?? null,

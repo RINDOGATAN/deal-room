@@ -634,7 +634,7 @@ async function main() {
       bio: "Admitted to the State Bar of California (#367079) and the Madrid Bar / ICAM (#64040). Specializing in privacy, data protection, and intellectual property across US and EU jurisdictions.",
       jurisdictions: ["CALIFORNIA", "SPAIN"],
       languages: ["en", "es"],
-      expertType: "LEGAL",
+      expertTypes: ["LEGAL"],
       specializations: ["GDPR", "CCPA_US_STATE_PRIVACY", "CROSS_BORDER_TRANSFERS", "DPA_VENDOR_CONTRACTS", "COPYRIGHT_IP"],
       certifications: ["CIPP_E", "CIPP_US", "FIP", "CIPT"],
       countryCode: "US",
