@@ -656,6 +656,96 @@ async function main() {
   });
   console.log("  Created/updated LawyerProfile: Sergio Maldonado (CA + ES)");
 
+  // ── Seed Sergio De Juan-Creix as Lawyer Directory expert ──
+  const sergiodjUser = await prisma.user.upsert({
+    where: { email: "sergio.dejuandreix@croma.legal" },
+    create: {
+      email: "sergio.dejuandreix@croma.legal",
+      name: "Sergio De Juan-Creix Cuatrecasas",
+      company: "Croma Legal",
+      isLawyer: true,
+      role: "LAWYER",
+    },
+    update: {
+      name: "Sergio De Juan-Creix Cuatrecasas",
+      company: "Croma Legal",
+      isLawyer: true,
+      role: "LAWYER",
+    },
+  });
+  await prisma.lawyerProfile.upsert({
+    where: { userId: sergiodjUser.id },
+    create: {
+      userId: sergiodjUser.id,
+      title: "Abogado — Croma Legal",
+      bio: "Colegiado en el Ilustre Colegio de la Abogacía de Barcelona (ICAB). Número de colegiado pendiente de asignación.",
+      jurisdictions: ["SPAIN"],
+      languages: ["es", "en"],
+      expertTypes: ["LEGAL"],
+      specializations: [],
+      certifications: [],
+      countryCode: "ES",
+      city: "Barcelona",
+      jurisdictionsCovered: ["EU", "ES"],
+      acceptingClients: true,
+      isPublished: true,
+    },
+    update: {
+      title: "Abogado — Croma Legal",
+      jurisdictions: ["SPAIN"],
+      languages: ["es", "en"],
+      countryCode: "ES",
+      city: "Barcelona",
+      isPublished: true,
+    },
+  });
+  console.log("  Created/updated LawyerProfile: Sergio De Juan-Creix Cuatrecasas (ES)");
+
+  // ── Seed Carlos García Berned as Lawyer Directory expert ──
+  const carlosUser = await prisma.user.upsert({
+    where: { email: "carlos.garcia@croma.legal" },
+    create: {
+      email: "carlos.garcia@croma.legal",
+      name: "Carlos García Berned",
+      company: "Croma Legal",
+      isLawyer: true,
+      role: "LAWYER",
+    },
+    update: {
+      name: "Carlos García Berned",
+      company: "Croma Legal",
+      isLawyer: true,
+      role: "LAWYER",
+    },
+  });
+  await prisma.lawyerProfile.upsert({
+    where: { userId: carlosUser.id },
+    create: {
+      userId: carlosUser.id,
+      title: "Abogado — Croma Legal",
+      bio: "Colegiado en el Ilustre Colegio de la Abogacía de Barcelona (ICAB). Número de colegiado pendiente de asignación.",
+      jurisdictions: ["SPAIN"],
+      languages: ["es", "en"],
+      expertTypes: ["LEGAL"],
+      specializations: [],
+      certifications: [],
+      countryCode: "ES",
+      city: "Barcelona",
+      jurisdictionsCovered: ["EU", "ES"],
+      acceptingClients: true,
+      isPublished: true,
+    },
+    update: {
+      title: "Abogado — Croma Legal",
+      jurisdictions: ["SPAIN"],
+      languages: ["es", "en"],
+      countryCode: "ES",
+      city: "Barcelona",
+      isPublished: true,
+    },
+  });
+  console.log("  Created/updated LawyerProfile: Carlos García Berned (ES)");
+
   // ── Seed sample invite codes for northend.law brand ──
   if (process.env.NEXT_PUBLIC_BRAND === "northend") {
     // Create a demo customer if none exists
