@@ -1,13 +1,13 @@
 # Skills & Licensing System
 
-This document explains how Deal Room's skill packaging and licensing system works. Use this as a reference for generating FAQ pages and onboarding documentation.
+This document explains how Dealroom's skill packaging and licensing system works. Use this as a reference for generating FAQ pages and onboarding documentation.
 
 ---
 
 ## Overview
 
-Deal Room uses a "free coffee machine, paid capsules" model:
-- **The platform is open-source** - anyone can run Deal Room
+Dealroom uses a "free coffee machine, paid capsules" model:
+- **The platform is open-source** - anyone can run Dealroom
 - **Skills are proprietary** - contract templates (NDA, DPA, MSA, etc.) are sold as licensed packages
 - **Jurisdictions are tiered** - customers pay for specific jurisdictions they need
 
@@ -15,11 +15,11 @@ Deal Room uses a "free coffee machine, paid capsules" model:
 
 ## Taster vs Premium Skills
 
-Deal Room includes free "taster" skills so users can experience the platform before purchasing premium licenses.
+Dealroom includes free "taster" skills so users can experience the platform before purchasing premium licenses.
 
 ### What are Taster Skills?
 
-Taster skills are basic contract templates (NDA, MSA, DPA) included with the open-source platform. They demonstrate Deal Room's negotiation workflow without requiring a license.
+Taster skills are basic contract templates (NDA, MSA, DPA) included with the open-source platform. They demonstrate Dealroom's negotiation workflow without requiring a license.
 
 ### What's the difference?
 
@@ -37,7 +37,7 @@ Taster skills are basic contract templates (NDA, MSA, DPA) included with the ope
 ### Why offer free taster skills?
 
 1. **Try before you buy** - Experience the full negotiation workflow risk-free
-2. **Proof of value** - See how Deal Room improves contract negotiations
+2. **Proof of value** - See how Dealroom improves contract negotiations
 3. **Easy onboarding** - Start using the platform immediately
 4. **Open-source commitment** - Core functionality remains accessible
 
@@ -123,7 +123,7 @@ The entitlement stores which jurisdictions the customer paid for. Deal creation 
 ### Online Activation (SaaS)
 
 1. Customer receives license key: `LIC-XXXX-XXXX-XXXX-XXXX`
-2. Enters key in Deal Room settings
+2. Enters key in Dealroom settings
 3. System validates key against license server
 4. Activation recorded with machine fingerprint
 5. Skills become available for use
@@ -135,7 +135,7 @@ For air-gapped deployments that can't phone home:
 1. Customer runs `npm run license:fingerprint` to get machine ID
 2. Sends fingerprint to license administrator
 3. Receives signed `license.json` file
-4. Imports license file into Deal Room
+4. Imports license file into Dealroom
 5. System validates signature (no network required)
 6. Skills become available for use
 

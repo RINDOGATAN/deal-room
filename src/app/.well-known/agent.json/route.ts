@@ -34,7 +34,7 @@ export async function GET() {
   const baseUrl = `https://${brand.appDomain}`;
 
   const agentCard = {
-    name: "Deal Room",
+    name: "Dealroom",
     description:
       "Two-party contract negotiation platform. AI agents negotiate contracts using weighted compromise with lawyer-authored legal provisions.",
     url: baseUrl,

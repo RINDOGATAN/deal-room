@@ -1,6 +1,6 @@
 # Agent Negotiation API
 
-REST API for automated contract negotiation between AI agents. Companies pre-configure negotiation preferences ("playbooks") with red lines, then deploy agents that negotiate contracts against each other using Deal Room's weighted compromise engine.
+REST API for automated contract negotiation between AI agents. Companies pre-configure negotiation preferences ("playbooks") with red lines, then deploy agents that negotiate contracts against each other using Dealroom's weighted compromise engine.
 
 **Base URL:** `https://dealroom.todo.law/api/v1/agent`
 

@@ -4,7 +4,7 @@ export const todo: BrandConfig = {
   id: "todo",
 
   // Product identity
-  name: "Deal Room",
+  name: "Dealroom",
   shortName: "Dealroom",
   tagline: "Contract Negotiation Platform",
   description: "Two-party asynchronous contract negotiation platform with intelligent compromise suggestions",

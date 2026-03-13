@@ -122,7 +122,7 @@ export async function POST(
             ],
             contractType: agentDeal.contractType,
             governingLaw: agentDeal.governingLaw,
-            reason: reason || "Dispute escalated from Deal Room",
+            reason: reason || "Dispute escalated from Dealroom",
             escrowAmount: escrowAmount || undefined,
             metadata: {
               agentDealRoomId: agentDeal.id,

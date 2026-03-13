@@ -1,12 +1,12 @@
 # Administration System
 
-This document explains Deal Room's two-level administration system for managing the platform and supervising negotiations.
+This document explains Dealroom's two-level administration system for managing the platform and supervising negotiations.
 
 ---
 
 ## Overview
 
-Deal Room uses a separation of concerns for administration:
+Dealroom uses a separation of concerns for administration:
 
 | Role | Portal | Access | Purpose |
 |------|--------|--------|---------|
