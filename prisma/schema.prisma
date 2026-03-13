@@ -32,7 +32,7 @@ model User {
   sessions        Session[]
   twoFactorSecret TwoFactorSecret?
 
-  // Deal Room relations
+  // Dealroom relations
   dealRoomParties DealRoomParty[]
   invitations     Invitation[]
   auditLogs       AuditLog[]

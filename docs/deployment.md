@@ -1,6 +1,6 @@
 # Deployment — Multi-Brand Architecture
 
-Deal Room is a single codebase that serves multiple brands. Each brand is a separate Vercel project pointing to the same GitHub repository, differentiated only by environment variables.
+Dealroom is a single codebase that serves multiple brands. Each brand is a separate Vercel project pointing to the same GitHub repository, differentiated only by environment variables.
 
 ---
 

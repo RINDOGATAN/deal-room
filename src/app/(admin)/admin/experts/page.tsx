@@ -519,7 +519,7 @@ function ExpertEditor({
 
         {/* Deal-room Jurisdictions */}
         <div className="space-y-2">
-          <label className="text-sm font-medium">Jurisdictions (Deal Room)</label>
+          <label className="text-sm font-medium">Jurisdictions (Dealroom)</label>
           <div className="flex flex-wrap gap-2">
             {governingLawValues.map((j) => (
               <button

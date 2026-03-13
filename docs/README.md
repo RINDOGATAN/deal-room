@@ -13,7 +13,7 @@
 
 ## Architecture Overview
 
-Deal Room is a single codebase serving multiple brands. The brand is selected at build time via `NEXT_PUBLIC_BRAND` (default: `todo`). Each brand gets its own Vercel project, database, and domain.
+Dealroom is a single codebase serving multiple brands. The brand is selected at build time via `NEXT_PUBLIC_BRAND` (default: `todo`). Each brand gets its own Vercel project, database, and domain.
 
 ```
 NEXT_PUBLIC_BRAND=todo      → dealroom.todo.law     (rounded blue, magic-link auth)
@@ -26,7 +26,7 @@ See [deployment.md](./deployment.md) for the full multi-brand architecture.
 
 The `skills-and-licensing.md` document is structured for easy FAQ extraction:
 
-- **Overview** → "What is Deal Room's business model?"
+- **Overview** → "What is Dealroom's business model?"
 - **Core Concepts** → "What is a skill?", "What's in a skill package?"
 - **Licensing Model** → "What license types are available?", "How do jurisdiction tiers work?"
 - **How Activation Works** → "How do I activate my license?", "What about air-gapped systems?"

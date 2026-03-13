@@ -1,4 +1,4 @@
-# Deal Room
+# Dealroom
 
 Two-party async contract negotiation with weighted compromise algorithm.
 

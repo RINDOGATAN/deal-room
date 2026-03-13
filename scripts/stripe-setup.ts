@@ -1,5 +1,5 @@
 /**
- * Creates Stripe products and prices for Deal Room.
+ * Creates Stripe products and prices for Dealroom.
  *
  * Usage:
  *   STRIPE_SECRET_KEY=sk_... npx tsx scripts/stripe-setup.ts

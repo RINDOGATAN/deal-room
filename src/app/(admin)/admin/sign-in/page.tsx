@@ -86,7 +86,7 @@ export default function AdminSignInPage() {
           </div>
           <h1 className="text-2xl font-bold mb-2">Platform Admin</h1>
           <p className="text-muted-foreground">
-            Sign in to manage the Deal Room platform
+            Sign in to manage the Dealroom platform
           </p>
         </div>
 

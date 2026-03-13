@@ -1,6 +1,6 @@
 #!/usr/bin/env npx tsx
 /**
- * Deal Room CLI
+ * Dealroom CLI
  *
  * Unified CLI for skill and license management.
  *
@@ -36,7 +36,7 @@ const COMMANDS: Record<string, string> = {
 
 function showHelp() {
   console.log(`
-Deal Room CLI
+Dealroom CLI
 
 Usage: npx deal-room <command> [options]
 
