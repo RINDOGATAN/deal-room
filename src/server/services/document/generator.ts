@@ -81,6 +81,13 @@ export interface ContractData {
   language: string;
   /** Present when document has been certified via Cloud API */
   certification?: CertificationData;
+  /** Present when deal is from agent negotiation with attorney attestation */
+  agentAttestation?: {
+    attorneyName: string;
+    barNumber: string;
+    uetaPreamble: string;
+    attestationFooter: string;
+  };
 }
 
 const GOVERNING_LAW_DISPLAY: Record<string, Record<string, string>> = {
@@ -371,6 +378,33 @@ export async function generateContractData(
     multiJurisdictionKeys
   );
 
+  // Check for agent deal attestation
+  const agentDeal = await prisma.agentDealRoom.findFirst({
+    where: { dealRoomId },
+  });
+
+  let agentAttestation: ContractData["agentAttestation"];
+  if (agentDeal) {
+    const uetaPreamble = `This agreement was formed by the interaction of electronic agents of the parties pursuant to the Uniform Electronic Transactions Act § 14 and the Electronic Signatures in Global and National Commerce Act (15 U.S.C. § 7001 et seq.). Each party authorized its electronic agent to negotiate and accept the terms herein.`;
+
+    if (agentDeal.attestingBarNumber && agentDeal.attestingAttorneyName) {
+      agentAttestation = {
+        attorneyName: agentDeal.attestingAttorneyName,
+        barNumber: agentDeal.attestingBarNumber,
+        uetaPreamble,
+        attestationFooter: `The legal provisions in this contract have been reviewed and attested by ${agentDeal.attestingAttorneyName} (Bar No. ${agentDeal.attestingBarNumber}) pursuant to UETA § 14 and the federal E-SIGN Act.`,
+      };
+    } else {
+      // Still include UETA preamble for agent deals even without attorney attestation
+      agentAttestation = {
+        attorneyName: "",
+        barNumber: "",
+        uetaPreamble,
+        attestationFooter: "",
+      };
+    }
+  }
+
   return {
     dealName: deal.name,
     contractType: deal.contractTemplate.displayName,
@@ -405,6 +439,7 @@ export async function generateContractData(
     clauses,
     boilerplate,
     language,
+    agentAttestation,
   };
 }
 

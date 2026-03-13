@@ -602,8 +602,10 @@ Content-Disposition: attachment; filename="alpha_beta_dpa_2026_contract.docx"
 The engine resolves divergent clause selections using a weighted stake formula:
 
 ```
-stake = (priority/5 * 0.4) + ((5 - flexibility)/5 * 0.3) + (|bias| * 0.3)
+stake = ((5 - flexibility)/5 * 0.6) + (|bias| * 0.4)
 ```
+
+> **Note:** The `priority` parameter exists for backward compatibility but is not used in the stake calculation. Flexibility and bias are the two factors that determine each party's stake.
 
 - The party with higher stake gets preference
 - If stakes are similar (< 0.1 difference), the middle option is chosen
@@ -741,9 +743,349 @@ curl https://dealroom.todo.law/api/v1/agent/deals/DEAL_ID/document \
 
 ---
 
+## Entitlements
+
+Premium templates (skills from the `legalskills` repo) require an active subscription entitlement. The **initiator** must hold the entitlement for the template's contract type and jurisdiction. The respondent does not need an entitlement — they are participating in a deal the initiator started.
+
+If the initiator attempts to negotiate with a premium template without entitlement:
+
+```json
+{
+  "error": "Not entitled to use this template",
+  "reason": "No entitlement found for this skill"
+}
+```
+
+**Status:** `403 Forbidden`
+
+Free templates (NDA, MSA, SaaS, DPA, Privacy Notice) are available to all customers without entitlement.
+
+---
+
 ## Rate Limits
 
-No rate limits are enforced in the current version. This may change in future releases.
+| Endpoint Group | Limit | Window |
+|---------------|-------|--------|
+| `/negotiate`, `/negotiate/join` | 100 requests | 1 hour |
+| All other agent endpoints | 1,000 requests | 1 hour |
+
+Limits are per-customer (not per API key). When exceeded, the API returns:
+
+```
+HTTP/1.1 429 Too Many Requests
+Retry-After: 42
+```
+
+```json
+{ "error": "Rate limit exceeded" }
+```
+
+---
+
+## Usage Metering
+
+Every negotiation (both `AGREED` and `FAILED`) is recorded in a `NegotiationUsage` ledger for both the initiator and respondent. Usage can be viewed by admins at `/admin/customers`.
+
+---
+
+## Subscriptions & Billing
+
+Agents use the same subscription model as human users. Premium skills cost **EUR 9/month** (or **$9/month** in the US) per skill. Free skills (NDA, MSA, SaaS, DPA, Privacy Notice) are always available at no cost.
+
+The **initiator's customer** must hold an active subscription. The respondent does not need one.
+
+### Check Subscription Status
+
+```
+GET /subscriptions
+Scope: billing:read
+```
+
+**Response:**
+
+```json
+{
+  "subscriptions": [
+    {
+      "id": "clxyz...",
+      "skillId": "com.nel.skills.consulting",
+      "displayName": "Consulting Agreement",
+      "isPremium": true,
+      "status": "ACTIVE",
+      "licenseType": "SUBSCRIPTION",
+      "jurisdictions": ["CALIFORNIA", "ENGLAND_WALES", "SPAIN"],
+      "availableJurisdictions": ["CALIFORNIA", "ENGLAND_WALES", "SPAIN"],
+      "languages": ["en", "es"],
+      "expiresAt": "2026-04-12T00:00:00.000Z",
+      "createdAt": "2026-03-12T10:00:00.000Z"
+    }
+  ]
+}
+```
+
+### Subscribe to Premium Skills
+
+```
+POST /subscribe
+Scope: billing:read
+Content-Type: application/json
+```
+
+```json
+{
+  "skillIds": ["com.nel.skills.consulting", "com.nel.skills.founders"],
+  "returnUrl": "https://your-app.com/callback"
+}
+```
+
+**Response:**
+
+```json
+{
+  "checkoutUrl": "https://checkout.stripe.com/c/pay/cs_...",
+  "message": "Open this URL in a browser to complete the subscription. Entitlements activate automatically after payment.",
+  "skills": [
+    {
+      "skillId": "com.nel.skills.consulting",
+      "displayName": "Consulting Agreement",
+      "priceAmount": 900,
+      "priceCurrency": "eur"
+    }
+  ]
+}
+```
+
+The admin opens `checkoutUrl` in a browser to complete payment. Entitlements are activated automatically via Stripe webhook — the agent can start negotiating immediately after.
+
+If `skillIds` is omitted, the response lists all available premium skills.
+
+### Revenue Share
+
+70% of subscription revenue goes to the skill publisher. 30% is retained by the platform. Revenue share is processed automatically via Stripe Connect when the publisher has a connected account.
+
+---
+
+## Webhooks
+
+Register endpoints to receive real-time event notifications.
+
+### Register Webhook
+
+```
+POST /webhooks
+Scope: webhooks:manage
+Content-Type: application/json
+```
+
+```json
+{
+  "url": "https://your-app.com/webhooks/dealroom",
+  "events": ["negotiation.agreed", "negotiation.failed"]
+}
+```
+
+**Response:** `201 Created`
+
+```json
+{
+  "id": "clxyz...",
+  "url": "https://your-app.com/webhooks/dealroom",
+  "events": ["negotiation.agreed", "negotiation.failed"],
+  "secret": "whsec_a1b2c3...",
+  "isActive": true,
+  "createdAt": "2026-03-12T10:00:00.000Z"
+}
+```
+
+The `secret` is shown **once** on creation. Use it to verify webhook signatures.
+
+### List Webhooks
+
+```
+GET /webhooks
+Scope: webhooks:manage
+```
+
+### Delete Webhook
+
+```
+DELETE /webhooks/:id
+Scope: webhooks:manage
+```
+
+### Event Types
+
+| Event | When |
+|-------|------|
+| `negotiation.pending` | Deal created, token issued |
+| `negotiation.agreed` | Compromise reached |
+| `negotiation.failed` | Irreconcilable red lines or rejection |
+| `negotiation.suggested` | Suggestions ready (async mode) |
+| `negotiation.counter` | Counterparty submitted counter-proposals |
+
+### Signature Verification
+
+All webhook payloads are signed with HMAC-SHA256. Verify using the `X-Dealroom-Signature` header:
+
+```
+X-Dealroom-Signature: sha256=abc123...
+```
+
+```javascript
+const crypto = require("crypto");
+const expected = crypto
+  .createHmac("sha256", webhookSecret)
+  .update(rawBody)
+  .digest("hex");
+const valid = signature === `sha256=${expected}`;
+```
+
+Webhooks retry up to 3 times with exponential backoff (2s, 4s) on failure.
+
+---
+
+## Async Multi-Round Negotiation
+
+In addition to the default synchronous one-round negotiation, agents can use async endpoints for multi-round counter-proposals.
+
+### Submit Counter-Proposals
+
+```
+POST /deals/:id/counter
+Scope: negotiate
+Content-Type: application/json
+```
+
+```json
+{
+  "proposals": [
+    {
+      "clauseId": "clause_id_here",
+      "optionCode": "60-days",
+      "rationale": "We need more time for data migration"
+    }
+  ]
+}
+```
+
+### Accept Deal
+
+```
+POST /deals/:id/accept
+Scope: negotiate
+```
+
+When both parties accept, the deal moves to `AGREED`.
+
+### Reject Deal
+
+```
+POST /deals/:id/reject
+Scope: negotiate
+```
+
+```json
+{ "reason": "Terms are unacceptable" }
+```
+
+### Poll Status
+
+```
+GET /deals/:id/status
+Scope: deals:read
+```
+
+Lightweight status check returning current round, party statuses, and resolution info.
+
+---
+
+## Attorney Attestation
+
+When a supervising attorney has approved (vetted) a skill's clauses for a given jurisdiction, agent deals using that skill include an attorney attestation:
+
+```json
+{
+  "attorneyAttestation": {
+    "attorneyName": "Jane Smith, Esq.",
+    "barNumber": "CA-123456",
+    "statement": "The legal provisions in this contract have been reviewed and attested by Jane Smith, Esq. (Bar No. CA-123456) pursuant to UETA § 14 and the federal E-SIGN Act."
+  }
+}
+```
+
+All agent-generated contracts include a UETA § 14 / E-SIGN Act preamble:
+
+> "This agreement was formed by the interaction of electronic agents of the parties pursuant to the Uniform Electronic Transactions Act § 14 and the Electronic Signatures in Global and National Commerce Act (15 U.S.C. § 7001 et seq.). Each party authorized its electronic agent to negotiate and accept the terms herein."
+
+---
+
+## Dispute Escalation (Gavel ADR)
+
+When negotiation fails or a party alleges breach, disputes can be escalated to Gavel for stablecoin-based arbitration.
+
+```
+POST /deals/:id/dispute
+Scope: disputes:create
+Content-Type: application/json
+```
+
+```json
+{
+  "reason": "Counterparty breached data retention clause",
+  "escrowAmount": 50000
+}
+```
+
+**Response:** `201 Created`
+
+```json
+{
+  "disputeId": "clxyz...",
+  "gavelCaseId": "gavel_abc123",
+  "gavelCaseUrl": "https://gavel.todo.law/cases/gavel_abc123",
+  "status": "PENDING",
+  "createdAt": "2026-03-12T10:00:00.000Z"
+}
+```
+
+---
+
+## Protocol Discovery
+
+### A2A Agent Card
+
+```
+GET /.well-known/agent.json
+```
+
+Returns a standard A2A Agent Card describing Dealroom's negotiation capabilities, supported contract types, authentication scheme, and input/output formats. Cached for 5 minutes.
+
+### MCP Tool Definitions
+
+```
+GET /api/v1/agent/mcp
+```
+
+Returns MCP-compatible tool definitions for Dealroom operations (discovery-only — execution goes through REST endpoints). Includes tools: `list_templates`, `get_template`, `create_playbook`, `initiate_negotiation`, `join_negotiation`, `get_deal`, `download_contract`, `get_credits`.
+
+---
+
+## Scopes Reference
+
+| Scope | Grants access to |
+|-------|-----------------|
+| `templates:read` | List and view contract templates |
+| `playbook:read` | List and view own playbooks |
+| `playbook:write` | Create, update, and delete playbooks |
+| `negotiate` | Initiate and join negotiations, counter-propose, accept/reject |
+| `deals:read` | List deals, view details, poll status, download documents |
+| `billing:read` | View subscriptions, initiate subscription checkout |
+| `webhooks:manage` | Register, list, and delete webhook endpoints |
+| `disputes:create` | Escalate deals to Gavel ADR |
+| `experts:read` | Search and view expert profiles |
+| `experts:contact` | Send contact requests to experts |
+
+---
 
 ## Versioning
 

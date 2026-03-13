@@ -230,12 +230,18 @@ model SkillPackage {
   isPremium     Boolean @default(false)
   description   String? @db.Text
 
+  // Revenue share (Phase 2)
+  authorId        String? // User ID of authoring lawyer
+  revenueSharePct Int     @default(70) // 0-100, configurable per skill
+
   // Marketplace / distribution
   packageUrl  String? // Vercel Blob URL to .skill file
   packageSize Int? // File size in bytes
 
-  contractTemplate ContractTemplate?
-  entitlements     SkillEntitlement[]
+  contractTemplate  ContractTemplate?
+  entitlements      SkillEntitlement[]
+  negotiationUsages NegotiationUsage[]
+  revenueEvents     RevenueEvent[]
 
   @@map("skill_packages")
 }
@@ -249,12 +255,14 @@ model Customer {
   createdAt        DateTime     @default(now())
   updatedAt        DateTime     @updatedAt
 
-  entitlements           SkillEntitlement[]
-  activations            SkillActivation[]
-  apiKeys                ApiKey[]
-  playbooks              Playbook[]
-  inviteCodes            InviteCode[]
-  contactRequests        RecommendationRequest[]
+  entitlements      SkillEntitlement[]
+  activations       SkillActivation[]
+  apiKeys           ApiKey[]
+  playbooks         Playbook[]
+  inviteCodes       InviteCode[]
+  contactRequests   RecommendationRequest[]
+  negotiationUsages NegotiationUsage[]
+  webhookEndpoints  WebhookEndpoint[]
 
   @@map("customers")
 }
@@ -491,9 +499,9 @@ model DealRoomParty {
   attorneyReviewApprovedAt  DateTime? // Set by the supervisor
   lawyerWarningDismissedAt  DateTime?
 
-  dealRoom           DealRoom          @relation(fields: [dealRoomId], references: [id], onDelete: Cascade)
-  user               User?             @relation(fields: [userId], references: [id])
-  attorneySupervisor Supervisor?       @relation(fields: [attorneySupervisorId], references: [id])
+  dealRoom           DealRoom            @relation(fields: [dealRoomId], references: [id], onDelete: Cascade)
+  user               User?               @relation(fields: [userId], references: [id])
+  attorneySupervisor Supervisor?         @relation(fields: [attorneySupervisorId], references: [id])
   selections         PartySelection[]
   counterProposals   CounterProposal[]
   parameterProposals ParameterProposal[]
@@ -747,11 +755,11 @@ model LawyerVetting {
   createdAt          DateTime            @default(now())
   updatedAt          DateTime            @updatedAt
 
-  lawyer            User                   @relation(fields: [lawyerId], references: [id])
-  contractTemplate  ContractTemplate       @relation(fields: [contractTemplateId], references: [id])
-  recommendations   LawyerRecommendation[]
-  clientInvitations ClientInvitation[]
-  dealRooms         DealRoom[]
+  lawyer                 User                    @relation(fields: [lawyerId], references: [id])
+  contractTemplate       ContractTemplate        @relation(fields: [contractTemplateId], references: [id])
+  recommendations        LawyerRecommendation[]
+  clientInvitations      ClientInvitation[]
+  dealRooms              DealRoom[]
   recommendationRequests RecommendationRequest[]
 
   @@map("lawyer_vettings")
@@ -923,9 +931,14 @@ model AgentDealRoom {
   resolvedAt           DateTime?
   createdAt            DateTime        @default(now())
 
-  dealRoom           DealRoom? @relation(fields: [dealRoomId], references: [id])
-  initiatorPlaybook  Playbook  @relation("initiatorPlaybook", fields: [initiatorPlaybookId], references: [id])
-  respondentPlaybook Playbook? @relation("respondentPlaybook", fields: [respondentPlaybookId], references: [id])
+  // Attorney attestation (Phase 2)
+  attestingBarNumber    String? // e.g. "CA-123456"
+  attestingAttorneyName String? // e.g. "John Doe, Esq."
+
+  dealRoom           DealRoom?     @relation(fields: [dealRoomId], references: [id])
+  initiatorPlaybook  Playbook      @relation("initiatorPlaybook", fields: [initiatorPlaybookId], references: [id])
+  respondentPlaybook Playbook?     @relation("respondentPlaybook", fields: [respondentPlaybookId], references: [id])
+  dispute            AgentDispute?
 
   @@map("agent_deal_rooms")
 }
@@ -952,27 +965,29 @@ model InviteCode {
 // ============================================================
 
 model LawyerProfile {
-  id            String        @id @default(cuid())
-  userId        String        @unique
-  bio           String?       @db.Text
+  id            String         @id @default(cuid())
+  userId        String         @unique
+  bio           String?        @db.Text
   jurisdictions GoverningLaw[]
-  languages     String[]        // ISO 639-1 codes: ["en", "es"]
-  isPublished   Boolean       @default(false)
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
+  languages     String[] // ISO 639-1 codes: ["en", "es"]
+  isPublished   Boolean        @default(false)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
 
   // Cross-product directory fields
-  title              String?          // e.g. "Partner, Data Protection"
-  expertTypes        String[]         // controlled vocabulary: LEGAL, TECHNICAL, DEPLOYMENT — validated at app layer
-  specializations    String[]         // controlled vocabulary, validated at app layer
-  certifications     String[]         // e.g. ["CIPP_E", "CISSP"]
-  countryCode        String?          // ISO 3166-1 alpha-2 (where they are based)
-  city               String?
-  jurisdictionsCovered String[]       // broader than GoverningLaw, e.g. ["EU", "UK", "US", "CA"]
-  contactUrl         String?
-  acceptingClients   Boolean          @default(true)
+  title                  String? // e.g. "Partner, Data Protection"
+  expertTypes            String[] // controlled vocabulary: LEGAL, TECHNICAL, DEPLOYMENT — validated at app layer
+  specializations        String[] // controlled vocabulary, validated at app layer
+  certifications         String[] // e.g. ["CIPP_E", "CISSP"]
+  countryCode            String? // ISO 3166-1 alpha-2 (where they are based)
+  city                   String?
+  jurisdictionsCovered   String[] // broader than GoverningLaw, e.g. ["EU", "UK", "US", "CA"]
+  contactUrl             String?
+  acceptingClients       Boolean  @default(true)
+  stripeConnectAccountId String? // Stripe Connect account for revenue share (Phase 2)
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@map("lawyer_profiles")
 }
 
@@ -997,16 +1012,17 @@ model RecommendationRequest {
   updatedAt    DateTime                    @updatedAt
 
   // External request tracking (from DPO Central, AI Sentinel, etc.)
-  sourceApp              String?
-  sourceCustomerId       String?
-  externalRequesterName  String?
-  externalRequesterEmail String?
+  sourceApp                String?
+  sourceCustomerId         String?
+  externalRequesterName    String?
+  externalRequesterEmail   String?
   externalRequesterCompany String?
 
   requester      User?          @relation("RequestsSent", fields: [requesterId], references: [id])
   lawyer         User           @relation("RequestsReceived", fields: [lawyerId], references: [id])
   vetting        LawyerVetting? @relation(fields: [vettingId], references: [id])
   sourceCustomer Customer?      @relation(fields: [sourceCustomerId], references: [id], onDelete: SetNull)
+
   @@map("recommendation_requests")
 }
 
@@ -1021,4 +1037,84 @@ model Feedback {
   createdAt DateTime @default(now())
 
   @@map("feedback")
+}
+
+// ============================================================
+// NEGOTIATION USAGE METERING (Phase 1)
+// ============================================================
+
+model NegotiationUsage {
+  id              String       @id @default(cuid())
+  customerId      String
+  skillPackageId  String?
+  agentDealRoomId String
+  contractType    String
+  governingLaw    GoverningLaw
+  outcome         String // AGREED | FAILED
+  billedAt        DateTime?
+  createdAt       DateTime     @default(now())
+
+  customer     Customer      @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  skillPackage SkillPackage? @relation(fields: [skillPackageId], references: [id])
+
+  @@map("negotiation_usage")
+}
+
+// ============================================================
+// REVENUE EVENTS (Phase 2)
+// ============================================================
+
+model RevenueEvent {
+  id               String    @id @default(cuid())
+  skillPackageId   String
+  authorId         String
+  eventType        String // SUBSCRIPTION_PAYMENT | DEAL_COMPLETION
+  grossAmount      Int // cents
+  platformAmount   Int // todo.law share
+  authorAmount     Int // author share
+  currency         String    @default("eur")
+  stripeTransferId String?
+  settledAt        DateTime?
+  createdAt        DateTime  @default(now())
+
+  skillPackage SkillPackage @relation(fields: [skillPackageId], references: [id])
+
+  @@map("revenue_events")
+}
+
+// ============================================================
+// WEBHOOKS (Phase 4)
+// ============================================================
+
+model WebhookEndpoint {
+  id         String   @id @default(cuid())
+  customerId String
+  url        String
+  secret     String // HMAC-SHA256 signing secret
+  events     String[] // subscribed event types
+  isActive   Boolean  @default(true)
+  createdAt  DateTime @default(now())
+
+  customer Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
+  @@map("webhook_endpoints")
+}
+
+// ============================================================
+// AGENT DISPUTES / GAVEL INTEGRATION (Phase 6)
+// ============================================================
+
+model AgentDispute {
+  id              String    @id @default(cuid())
+  agentDealRoomId String    @unique
+  gavelCaseId     String    @unique
+  escrowAmount    Int? // USDC smallest unit
+  status          String // PENDING | IN_ARBITRATION | RESOLVED
+  resolutionData  Json?
+  resolvedAt      DateTime?
+  createdAt       DateTime  @default(now())
+
+  agentDealRoom AgentDealRoom @relation(fields: [agentDealRoomId], references: [id])
+
+  @@map("agent_disputes")
 }

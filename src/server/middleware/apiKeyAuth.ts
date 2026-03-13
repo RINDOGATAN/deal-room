@@ -69,3 +69,60 @@ export class ApiScopeError extends Error {
     this.name = "ApiScopeError";
   }
 }
+
+// ────────────────────────────────────────────────────────────
+// Rate Limiting (in-memory sliding window)
+// ────────────────────────────────────────────────────────────
+
+interface RateLimitWindow {
+  timestamps: number[];
+}
+
+const rateLimitStore = new Map<string, RateLimitWindow>();
+
+// Clean up stale entries every 5 minutes
+setInterval(() => {
+  const now = Date.now();
+  for (const [key, window] of rateLimitStore) {
+    window.timestamps = window.timestamps.filter((t) => now - t < 3600_000);
+    if (window.timestamps.length === 0) rateLimitStore.delete(key);
+  }
+}, 300_000);
+
+export interface RateLimitResult {
+  allowed: boolean;
+  remaining: number;
+  retryAfter?: number;
+}
+
+/**
+ * Check rate limit for a customer on a specific endpoint group.
+ * Returns whether the request is allowed and remaining quota.
+ */
+export function checkRateLimit(
+  customerId: string,
+  group: "negotiate" | "default",
+): RateLimitResult {
+  const limit = group === "negotiate" ? 100 : 1000;
+  const windowMs = 3600_000; // 1 hour
+  const now = Date.now();
+  const key = `${customerId}:${group}`;
+
+  let window = rateLimitStore.get(key);
+  if (!window) {
+    window = { timestamps: [] };
+    rateLimitStore.set(key, window);
+  }
+
+  // Remove timestamps outside the window
+  window.timestamps = window.timestamps.filter((t) => now - t < windowMs);
+
+  if (window.timestamps.length >= limit) {
+    const oldestInWindow = window.timestamps[0];
+    const retryAfter = Math.ceil((oldestInWindow + windowMs - now) / 1000);
+    return { allowed: false, remaining: 0, retryAfter };
+  }
+
+  window.timestamps.push(now);
+  return { allowed: true, remaining: limit - window.timestamps.length };
+}

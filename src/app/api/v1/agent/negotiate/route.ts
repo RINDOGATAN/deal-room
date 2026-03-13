@@ -13,8 +13,11 @@ import {
   authenticateApiKey,
   requireScope,
   ApiScopeError,
+  checkRateLimit,
 } from "@/server/middleware/apiKeyAuth";
+import { checkDealCreationEntitlement } from "@/server/services/licensing/entitlement";
 import { features } from "@/config/features";
+import { fireWebhook } from "@/server/services/agent/webhooks";
 
 export async function POST(req: NextRequest) {
   try {
@@ -34,6 +37,18 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ error: e.message }, { status: 403 });
       }
       throw e;
+    }
+
+    // Rate limit check
+    const rateLimit = checkRateLimit(auth.customer.id, "negotiate");
+    if (!rateLimit.allowed) {
+      return NextResponse.json(
+        { error: "Rate limit exceeded" },
+        {
+          status: 429,
+          headers: { "Retry-After": String(rateLimit.retryAfter) },
+        }
+      );
     }
 
     const body = await req.json();
@@ -96,6 +111,23 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Check entitlement for premium templates
+    const entitlementCheck = await checkDealCreationEntitlement(
+      auth.customer.id,
+      playbook.contractType,
+      playbook.governingLaw
+    );
+
+    if (!entitlementCheck.entitled) {
+      return NextResponse.json(
+        {
+          error: "Not entitled to use this template",
+          reason: entitlementCheck.reason,
+        },
+        { status: 403 }
+      );
+    }
+
     // Generate a unique negotiation token
     const negotiationToken = `nt_${randomBytes(24).toString("hex")}`;
 
@@ -116,6 +148,14 @@ export async function POST(req: NextRequest) {
         status: "PENDING_RESPONDENT",
       },
     });
+
+    // Fire webhook (fire-and-forget)
+    fireWebhook(auth.customer.id, "negotiation.pending", {
+      agentDealRoomId: agentDealRoom.id,
+      negotiationToken: agentDealRoom.negotiationToken,
+      contractType: agentDealRoom.contractType,
+      dealName: agentDealRoom.dealName,
+    }).catch(() => {});
 
     return NextResponse.json(
       {
