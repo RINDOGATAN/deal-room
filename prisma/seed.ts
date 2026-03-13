@@ -23,6 +23,12 @@ interface SkillMetadata {
   templateFamily?: string;
 }
 
+interface SkillManifestAuthor {
+  name: string;
+  email?: string;
+  stripeConnectAccountId?: string;
+}
+
 interface SkillManifest {
   skillId: string;
   name: string;
@@ -30,7 +36,7 @@ interface SkillManifest {
   version: string;
   jurisdictions: string[];
   languages: string[];
-  author?: string;
+  author?: string | SkillManifestAuthor;
   license?: string;
   templateFamily?: string;
   nativeJurisdiction?: string;
@@ -286,6 +292,34 @@ async function main() {
         },
       });
       console.log(`  Created/updated SkillPackage: ${skillPackage.skillId} (licensing enabled)`);
+
+      // Sync publisher info from manifest author object (written by Clausemaster on export)
+      const authorObj = manifest.author && typeof manifest.author === "object" ? manifest.author : null;
+      if (authorObj?.email) {
+        // Find the user by email to link as author
+        const authorUser = await prisma.user.findUnique({
+          where: { email: authorObj.email },
+          select: { id: true },
+        });
+
+        if (authorUser) {
+          // Set authorId on SkillPackage
+          await prisma.skillPackage.update({
+            where: { id: skillPackage.id },
+            data: { authorId: authorUser.id },
+          });
+          console.log(`  Linked author: ${authorObj.email}`);
+
+          // Sync stripeConnectAccountId to LawyerProfile if provided
+          if (authorObj.stripeConnectAccountId) {
+            await prisma.lawyerProfile.updateMany({
+              where: { userId: authorUser.id },
+              data: { stripeConnectAccountId: authorObj.stripeConnectAccountId },
+            });
+            console.log(`  Synced Stripe Connect account for ${authorObj.email}`);
+          }
+        }
+      }
     }
 
     // Resolve jurisdictions and languages from metadata/manifest or infer from clauses
