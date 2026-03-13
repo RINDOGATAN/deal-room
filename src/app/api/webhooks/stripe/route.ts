@@ -61,6 +61,10 @@ export async function POST(request: NextRequest) {
         await handleSubscriptionDeleted(event.data.object as Stripe.Subscription);
         break;
 
+      case "invoice.payment_succeeded":
+        await handleInvoicePaymentSucceeded(event.data.object as Stripe.Invoice);
+        break;
+
       case "invoice.payment_failed":
         await handlePaymentFailed(event.data.object as Stripe.Invoice);
         break;
@@ -81,6 +85,7 @@ export async function POST(request: NextRequest) {
 
 async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
   const { customerId } = session.metadata || {};
+
   const skillPackageIds = parseSkillPackageIds(session.metadata as Record<string, string> | null);
 
   if (!customerId || !skillPackageIds.length) {
@@ -316,6 +321,94 @@ async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
   console.log(
     `Expired entitlements for customer ${customer.id}, skills: ${skillPackageIds.join(", ")}`
   );
+}
+
+async function handleInvoicePaymentSucceeded(invoice: Stripe.Invoice) {
+  // Only process subscription invoices
+  const subscriptionRef = invoice.parent?.subscription_details?.subscription;
+  if (!subscriptionRef) return;
+
+  const subscriptionId =
+    typeof subscriptionRef === "string"
+      ? subscriptionRef
+      : subscriptionRef.id;
+
+  // Find entitlements linked to this subscription
+  const entitlements = await prisma.skillEntitlement.findMany({
+    where: { stripeSubscriptionId: subscriptionId },
+    include: {
+      skillPackage: true,
+    },
+  });
+
+  if (!entitlements.length) return;
+
+  const amountPaid = invoice.amount_paid; // in cents
+  if (!amountPaid || amountPaid <= 0) return;
+
+  // Split revenue per skill package
+  const perSkillAmount = Math.floor(amountPaid / entitlements.length);
+
+  for (const entitlement of entitlements) {
+    const pkg = entitlement.skillPackage;
+    if (!pkg.authorId) continue; // No author = no revenue share
+
+    const authorAmount = Math.floor(perSkillAmount * pkg.revenueSharePct / 100);
+    const platformAmount = perSkillAmount - authorAmount;
+
+    // Create revenue event
+    await prisma.revenueEvent.create({
+      data: {
+        skillPackageId: pkg.id,
+        authorId: pkg.authorId,
+        eventType: "SUBSCRIPTION_PAYMENT",
+        grossAmount: perSkillAmount,
+        platformAmount,
+        authorAmount,
+        currency: (invoice.currency || "eur").toLowerCase(),
+      },
+    });
+
+    // Attempt Stripe Connect transfer if author has connected account
+    if (authorAmount > 0) {
+      const authorProfile = await prisma.lawyerProfile.findFirst({
+        where: { userId: pkg.authorId },
+      });
+
+      if (authorProfile?.stripeConnectAccountId) {
+        try {
+          const { createConnectTransfer } = await import("@/lib/stripe");
+          const transfer = await createConnectTransfer({
+            amount: authorAmount,
+            currency: (invoice.currency || "eur").toLowerCase(),
+            destinationAccountId: authorProfile.stripeConnectAccountId,
+            description: `Revenue share: ${pkg.displayName}`,
+            metadata: {
+              skillPackageId: pkg.id,
+              authorId: pkg.authorId,
+              invoiceId: invoice.id,
+            },
+          });
+
+          await prisma.revenueEvent.updateMany({
+            where: {
+              skillPackageId: pkg.id,
+              authorId: pkg.authorId,
+              eventType: "SUBSCRIPTION_PAYMENT",
+              stripeTransferId: null,
+              createdAt: { gte: new Date(Date.now() - 60_000) },
+            },
+            data: {
+              stripeTransferId: transfer.id,
+              settledAt: new Date(),
+            },
+          });
+        } catch (err) {
+          console.error(`Failed Stripe Connect transfer for author ${pkg.authorId}:`, err);
+        }
+      }
+    }
+  }
 }
 
 async function handlePaymentFailed(invoice: Stripe.Invoice) {

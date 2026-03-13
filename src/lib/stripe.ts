@@ -118,6 +118,23 @@ export async function getSubscription(
   return stripe.subscriptions.retrieve(subscriptionId);
 }
 
+export async function createConnectTransfer(params: {
+  amount: number;
+  currency: string;
+  destinationAccountId: string;
+  description?: string;
+  metadata?: Record<string, string>;
+}): Promise<Stripe.Transfer> {
+  const stripe = getStripe();
+  return stripe.transfers.create({
+    amount: params.amount,
+    currency: params.currency,
+    destination: params.destinationAccountId,
+    description: params.description,
+    metadata: params.metadata,
+  });
+}
+
 export async function getOrCreateStripeCustomer(
   prisma: any,
   email: string,

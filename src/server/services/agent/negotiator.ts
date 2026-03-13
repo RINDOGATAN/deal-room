@@ -13,6 +13,7 @@ import prisma from "@/lib/prisma";
 import type { Prisma } from "@prisma/client";
 import {
   DealRoomStatus,
+  GoverningLaw,
   PartyRole,
   PartyStatus,
   ClauseStatus,
@@ -28,6 +29,49 @@ import {
   checkRedLines,
   validateSuggestionAgainstRedLines,
 } from "./redlines";
+import { fireWebhook } from "./webhooks";
+
+async function recordNegotiationUsage(
+  agentDealRoom: {
+    id: string;
+    initiatorCustomerId: string;
+    respondentCustomerId: string | null;
+    contractType: string;
+    governingLaw: GoverningLaw;
+  },
+  outcome: "AGREED" | "FAILED"
+) {
+  // Find skill package for this contract type
+  const template = await prisma.contractTemplate.findUnique({
+    where: { contractType: agentDealRoom.contractType },
+    select: { skillPackageId: true },
+  });
+
+  const usageRecords = [
+    {
+      customerId: agentDealRoom.initiatorCustomerId,
+      skillPackageId: template?.skillPackageId || null,
+      agentDealRoomId: agentDealRoom.id,
+      contractType: agentDealRoom.contractType,
+      governingLaw: agentDealRoom.governingLaw,
+      outcome,
+    },
+  ];
+
+  // Record for respondent too if present
+  if (agentDealRoom.respondentCustomerId) {
+    usageRecords.push({
+      customerId: agentDealRoom.respondentCustomerId,
+      skillPackageId: template?.skillPackageId || null,
+      agentDealRoomId: agentDealRoom.id,
+      contractType: agentDealRoom.contractType,
+      governingLaw: agentDealRoom.governingLaw,
+      outcome,
+    });
+  }
+
+  await prisma.negotiationUsage.createMany({ data: usageRecords });
+}
 
 export interface NegotiationResult {
   status: "AGREED" | "FAILED";
@@ -87,6 +131,20 @@ export async function runNegotiation(
       },
     });
 
+    recordNegotiationUsage(agentDealRoom, "FAILED").catch(console.error);
+
+    // Fire webhook events (fire-and-forget)
+    const failedData = {
+      agentDealRoomId: agentDealRoom.id,
+      status: "FAILED",
+      failureReason: `Irreconcilable red line conflicts on ${redLineResult.conflicts.length} clause(s)`,
+      conflicts: redLineResult.conflicts,
+    };
+    fireWebhook(agentDealRoom.initiatorCustomerId, "negotiation.failed", failedData).catch(() => {});
+    if (agentDealRoom.respondentCustomerId) {
+      fireWebhook(agentDealRoom.respondentCustomerId, "negotiation.failed", failedData).catch(() => {});
+    }
+
     return {
       status: "FAILED",
       agentDealRoomId: agentDealRoom.id,
@@ -114,6 +172,47 @@ export async function runNegotiation(
 
   if (!template) {
     throw new Error(`Contract template not found: ${agentDealRoom.contractType}`);
+  }
+
+  // Look up attorney attestation for this template + jurisdiction
+  const attestation = await prisma.lawyerVetting.findFirst({
+    where: {
+      contractTemplateId: template.id,
+      governingLaw: agentDealRoom.governingLaw,
+      status: "APPROVED",
+    },
+    orderBy: { approvedAt: "desc" },
+    include: {
+      lawyer: {
+        include: {
+          lawyerProfile: true,
+        },
+      },
+    },
+  });
+
+  let attestingBarNumber: string | null = null;
+  let attestingAttorneyName: string | null = null;
+
+  if (attestation) {
+    // Look up the supervisor bar admission for this jurisdiction
+    // The lawyer who approved the vetting is the attesting attorney
+    attestingAttorneyName = attestation.lawyer.name || null;
+
+    // Try to find bar number from supervisor bar admissions
+    // (the vetting lawyer may also be a supervisor)
+    const supervisorRecord = await prisma.supervisor.findFirst({
+      where: { email: attestation.lawyer.email },
+      include: {
+        barAdmissions: {
+          where: { jurisdiction: agentDealRoom.governingLaw },
+        },
+      },
+    });
+
+    if (supervisorRecord?.barAdmissions[0]) {
+      attestingBarNumber = supervisorRecord.barAdmissions[0].barNumber;
+    }
   }
 
   // Index playbook entries by clauseId
@@ -457,8 +556,26 @@ export async function runNegotiation(
       dealRoomId: dealRoom.id,
       negotiationLog: negotiationLog as unknown as Prisma.InputJsonValue,
       resolvedAt: new Date(),
+      attestingBarNumber,
+      attestingAttorneyName,
     },
   });
+
+  recordNegotiationUsage(agentDealRoom, "AGREED").catch(console.error);
+
+  // Fire webhook events (fire-and-forget)
+  const webhookData = {
+    agentDealRoomId: agentDealRoom.id,
+    dealRoomId: dealRoom.id,
+    status: "AGREED",
+    contractType: agentDealRoom.contractType,
+    governingLaw: agentDealRoom.governingLaw,
+    dealName: agentDealRoom.dealName,
+  };
+  fireWebhook(agentDealRoom.initiatorCustomerId, "negotiation.agreed", webhookData).catch(() => {});
+  if (agentDealRoom.respondentCustomerId) {
+    fireWebhook(agentDealRoom.respondentCustomerId, "negotiation.agreed", webhookData).catch(() => {});
+  }
 
   return {
     status: "AGREED",

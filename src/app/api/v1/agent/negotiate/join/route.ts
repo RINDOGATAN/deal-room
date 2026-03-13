@@ -12,6 +12,7 @@ import {
   authenticateApiKey,
   requireScope,
   ApiScopeError,
+  checkRateLimit,
 } from "@/server/middleware/apiKeyAuth";
 import { runNegotiation } from "@/server/services/agent/negotiator";
 import { features } from "@/config/features";
@@ -34,6 +35,18 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ error: e.message }, { status: 403 });
       }
       throw e;
+    }
+
+    // Rate limit check
+    const rateLimit = checkRateLimit(auth.customer.id, "negotiate");
+    if (!rateLimit.allowed) {
+      return NextResponse.json(
+        { error: "Rate limit exceeded" },
+        {
+          status: 429,
+          headers: { "Retry-After": String(rateLimit.retryAfter) },
+        }
+      );
     }
 
     const body = await req.json();

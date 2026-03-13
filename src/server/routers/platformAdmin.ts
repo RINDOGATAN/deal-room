@@ -926,4 +926,96 @@ export const platformAdminRouter = createTRPCRouter({
 
       return { success: true };
     }),
+
+  // ────────────────────────────────────────────────────────────
+  // Negotiation Usage Reporting (Phase 1)
+  // ────────────────────────────────────────────────────────────
+
+  getCustomerUsage: adminProcedure
+    .input(z.object({ customerId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      await requireVerified2FA(ctx.adminSession.email, ctx.getCookie, ctx.prisma);
+
+      const usages = await ctx.prisma.negotiationUsage.findMany({
+        where: { customerId: input.customerId },
+        orderBy: { createdAt: "desc" },
+        include: {
+          skillPackage: {
+            select: { displayName: true, skillId: true },
+          },
+        },
+      });
+
+      // Aggregate by month and skill
+      const byMonth: Record<string, Record<string, { agreed: number; failed: number }>> = {};
+      for (const u of usages) {
+        const month = u.createdAt.toISOString().slice(0, 7); // YYYY-MM
+        const skill = u.skillPackage?.displayName || u.contractType;
+        if (!byMonth[month]) byMonth[month] = {};
+        if (!byMonth[month][skill]) byMonth[month][skill] = { agreed: 0, failed: 0 };
+        if (u.outcome === "AGREED") byMonth[month][skill].agreed++;
+        else byMonth[month][skill].failed++;
+      }
+
+      return {
+        total: usages.length,
+        byMonth,
+        recent: usages.slice(0, 20),
+      };
+    }),
+
+  // ────────────────────────────────────────────────────────────
+  // Revenue Reporting (Phase 2)
+  // ────────────────────────────────────────────────────────────
+
+  getRevenueReport: adminProcedure.query(async ({ ctx }) => {
+    await requireVerified2FA(ctx.adminSession.email, ctx.getCookie, ctx.prisma);
+
+    const [events, totalByType, totalBySkill] = await Promise.all([
+      ctx.prisma.revenueEvent.findMany({
+        take: 50,
+        orderBy: { createdAt: "desc" },
+        include: {
+          skillPackage: { select: { displayName: true, skillId: true } },
+        },
+      }),
+      ctx.prisma.revenueEvent.groupBy({
+        by: ["eventType"],
+        _sum: { grossAmount: true, platformAmount: true, authorAmount: true },
+        _count: true,
+      }),
+      ctx.prisma.revenueEvent.groupBy({
+        by: ["skillPackageId"],
+        _sum: { grossAmount: true, platformAmount: true, authorAmount: true },
+        _count: true,
+      }),
+    ]);
+
+    // Resolve skill names
+    const skillIds = totalBySkill.map((s) => s.skillPackageId);
+    const skills = await ctx.prisma.skillPackage.findMany({
+      where: { id: { in: skillIds } },
+      select: { id: true, displayName: true },
+    });
+    const skillMap = Object.fromEntries(skills.map((s) => [s.id, s.displayName]));
+
+    return {
+      recentEvents: events,
+      totalByType: totalByType.map((t) => ({
+        eventType: t.eventType,
+        count: t._count,
+        grossAmount: t._sum.grossAmount || 0,
+        platformAmount: t._sum.platformAmount || 0,
+        authorAmount: t._sum.authorAmount || 0,
+      })),
+      totalBySkill: totalBySkill.map((s) => ({
+        skillName: skillMap[s.skillPackageId] || "Unknown",
+        count: s._count,
+        grossAmount: s._sum.grossAmount || 0,
+        platformAmount: s._sum.platformAmount || 0,
+        authorAmount: s._sum.authorAmount || 0,
+      })),
+    };
+  }),
+
 });

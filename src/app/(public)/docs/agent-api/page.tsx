@@ -12,6 +12,13 @@ import {
   CheckCircle,
   XCircle,
   Download,
+  CreditCard,
+  Bell,
+  Timer,
+  Shield,
+  Globe,
+  Scale,
+  RefreshCw,
 } from "lucide-react";
 
 export default function AgentApiPage() {
@@ -23,6 +30,9 @@ export default function AgentApiPage() {
     { scope: "playbook:write", desc: t("scopePlaybookWrite") },
     { scope: "negotiate", desc: t("scopeNegotiate") },
     { scope: "deals:read", desc: t("scopeDealsRead") },
+    { scope: "billing:read", desc: t("scopeBillingRead") },
+    { scope: "webhooks:manage", desc: t("scopeWebhooksManage") },
+    { scope: "disputes:create", desc: t("scopeDisputesCreate") },
   ];
 
   const flowSteps = [
@@ -78,6 +88,36 @@ export default function AgentApiPage() {
     ["GET", "/deals/:id/document/docx", t("purposeDownloadDocx")],
   ];
 
+  const asyncEndpoints: [string, string, string][] = [
+    ["POST", "/deals/:id/counter", t("purposeCounter")],
+    ["POST", "/deals/:id/accept", t("purposeAccept")],
+    ["POST", "/deals/:id/reject", t("purposeReject")],
+    ["GET", "/deals/:id/status", t("purposeStatus")],
+  ];
+
+  const subscriptionEndpoints: [string, string, string][] = [
+    ["GET", "/subscriptions", t("purposeGetSubscriptions")],
+    ["POST", "/subscribe", t("purposeSubscribe")],
+  ];
+
+  const webhookEndpoints: [string, string, string][] = [
+    ["POST", "/webhooks", t("purposeRegisterWebhook")],
+    ["GET", "/webhooks", t("purposeListWebhooks")],
+    ["DELETE", "/webhooks/:id", t("purposeDeleteWebhook")],
+  ];
+
+  const disputeEndpoints: [string, string, string][] = [
+    ["POST", "/deals/:id/dispute", t("purposeDispute")],
+  ];
+
+  const webhookEvents = [
+    { event: "negotiation.pending", desc: t("webhookEventPending") },
+    { event: "negotiation.agreed", desc: t("webhookEventAgreed") },
+    { event: "negotiation.failed", desc: t("webhookEventFailed") },
+    { event: "negotiation.suggested", desc: t("webhookEventSuggested") },
+    { event: "negotiation.counter", desc: t("webhookEventCounter") },
+  ];
+
   return (
     <div className="space-y-12">
       {/* Header */}
@@ -127,6 +167,72 @@ export default function AgentApiPage() {
             </tbody>
           </table>
         </div>
+      </div>
+
+      {/* Entitlements */}
+      <div className="space-y-4">
+        <h2 className="text-xl font-bold">{t("entitlements")}</h2>
+        <p className="text-muted-foreground">{t("entitlementsDesc")}</p>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="card-brutal p-5">
+            <div className="flex items-center gap-3 mb-2">
+              <CreditCard className="w-4 h-4 text-primary" />
+              <h3 className="font-bold">{t("entitlementInitiatorTitle")}</h3>
+            </div>
+            <p className="text-sm text-muted-foreground">
+              {t("entitlementInitiatorDesc")}
+            </p>
+          </div>
+          <div className="card-brutal p-5">
+            <div className="flex items-center gap-3 mb-2">
+              <CheckCircle className="w-4 h-4 text-emerald-500" />
+              <h3 className="font-bold">{t("entitlementRespondentTitle")}</h3>
+            </div>
+            <p className="text-sm text-muted-foreground">
+              {t("entitlementRespondentDesc")}
+            </p>
+          </div>
+        </div>
+
+        <div className="p-3 border border-primary/30 bg-primary/5 rounded-xl text-sm">
+          {t("entitlementPricing")}
+        </div>
+      </div>
+
+      {/* Rate Limits */}
+      <div className="space-y-4">
+        <h2 className="text-xl font-bold flex items-center gap-2">
+          <Timer className="w-5 h-5 text-primary" />
+          {t("rateLimits")}
+        </h2>
+        <p className="text-muted-foreground">{t("rateLimitsDesc")}</p>
+
+        <div className="border border-border rounded-2xl overflow-hidden">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-border bg-muted/30">
+                <th className="text-left p-3 font-medium">{t("rateLimitGroup")}</th>
+                <th className="text-left p-3 font-medium">{t("rateLimitEndpointsCol")}</th>
+                <th className="text-left p-3 font-medium">{t("rateLimitLimit")}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr className="border-b border-border">
+                <td className="p-3 font-medium">negotiate</td>
+                <td className="p-3 font-mono text-xs">{t("rateLimitNegotiate")}</td>
+                <td className="p-3">{t("rateLimitNegotiateLimit")}</td>
+              </tr>
+              <tr>
+                <td className="p-3 font-medium">default</td>
+                <td className="p-3 text-muted-foreground">{t("rateLimitDefault")}</td>
+                <td className="p-3">{t("rateLimitDefaultLimit")}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p className="text-sm text-muted-foreground">{t("rateLimitRetryAfter")}</p>
       </div>
 
       {/* Negotiation Flow */}
@@ -330,6 +436,167 @@ export default function AgentApiPage() {
             </table>
           </div>
         </div>
+
+        {/* Subscriptions & Billing */}
+        <div className="space-y-3">
+          <h3 className="text-lg font-bold flex items-center gap-2">
+            <CreditCard className="w-4 h-4 text-primary" />
+            {t("sectionSubscriptions")}
+          </h3>
+          <div className="border border-border rounded-2xl overflow-hidden">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-border bg-muted/30">
+                  <th className="text-left p-3 font-medium">{t("tableMethod")}</th>
+                  <th className="text-left p-3 font-medium">{t("tablePath")}</th>
+                  <th className="text-left p-3 font-medium">{t("tablePurpose")}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {subscriptionEndpoints.map(([method, path, purpose], i) => (
+                  <tr
+                    key={i}
+                    className="border-b border-border last:border-0"
+                  >
+                    <td className="p-3">
+                      <code
+                        className={`text-xs px-1.5 py-0.5 rounded border ${
+                          method === "GET"
+                            ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/30"
+                            : "bg-blue-500/10 text-blue-500 border-blue-500/30"
+                        }`}
+                      >
+                        {method}
+                      </code>
+                    </td>
+                    <td className="p-3 font-mono text-xs">{path}</td>
+                    <td className="p-3 text-muted-foreground">{purpose}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* Webhooks */}
+        <div className="space-y-3">
+          <h3 className="text-lg font-bold flex items-center gap-2">
+            <Bell className="w-4 h-4 text-primary" />
+            {t("sectionWebhooks")}
+          </h3>
+          <div className="border border-border rounded-2xl overflow-hidden">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-border bg-muted/30">
+                  <th className="text-left p-3 font-medium">{t("tableMethod")}</th>
+                  <th className="text-left p-3 font-medium">{t("tablePath")}</th>
+                  <th className="text-left p-3 font-medium">{t("tablePurpose")}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {webhookEndpoints.map(([method, path, purpose], i) => (
+                  <tr
+                    key={i}
+                    className="border-b border-border last:border-0"
+                  >
+                    <td className="p-3">
+                      <code
+                        className={`text-xs px-1.5 py-0.5 rounded border ${
+                          method === "GET"
+                            ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/30"
+                            : method === "POST"
+                              ? "bg-blue-500/10 text-blue-500 border-blue-500/30"
+                              : "bg-red-500/10 text-red-500 border-red-500/30"
+                        }`}
+                      >
+                        {method}
+                      </code>
+                    </td>
+                    <td className="p-3 font-mono text-xs">{path}</td>
+                    <td className="p-3 text-muted-foreground">{purpose}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* Async Endpoints */}
+        <div className="space-y-3">
+          <h3 className="text-lg font-bold flex items-center gap-2">
+            <RefreshCw className="w-4 h-4 text-primary" />
+            {t("sectionAsyncEndpoints")}
+          </h3>
+          <div className="border border-border rounded-2xl overflow-hidden">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-border bg-muted/30">
+                  <th className="text-left p-3 font-medium">{t("tableMethod")}</th>
+                  <th className="text-left p-3 font-medium">{t("tablePath")}</th>
+                  <th className="text-left p-3 font-medium">{t("tablePurpose")}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {asyncEndpoints.map(([method, path, purpose], i) => (
+                  <tr
+                    key={i}
+                    className="border-b border-border last:border-0"
+                  >
+                    <td className="p-3">
+                      <code
+                        className={`text-xs px-1.5 py-0.5 rounded border ${
+                          method === "GET"
+                            ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/30"
+                            : "bg-blue-500/10 text-blue-500 border-blue-500/30"
+                        }`}
+                      >
+                        {method}
+                      </code>
+                    </td>
+                    <td className="p-3 font-mono text-xs">{path}</td>
+                    <td className="p-3 text-muted-foreground">{purpose}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* Disputes */}
+        <div className="space-y-3">
+          <h3 className="text-lg font-bold flex items-center gap-2">
+            <Scale className="w-4 h-4 text-primary" />
+            {t("sectionDisputes")}
+          </h3>
+          <p className="text-sm text-muted-foreground">{t("disputesDesc")}</p>
+          <div className="border border-border rounded-2xl overflow-hidden">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-border bg-muted/30">
+                  <th className="text-left p-3 font-medium">{t("tableMethod")}</th>
+                  <th className="text-left p-3 font-medium">{t("tablePath")}</th>
+                  <th className="text-left p-3 font-medium">{t("tablePurpose")}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {disputeEndpoints.map(([method, path, purpose], i) => (
+                  <tr
+                    key={i}
+                    className="border-b border-border last:border-0"
+                  >
+                    <td className="p-3">
+                      <code className="text-xs px-1.5 py-0.5 bg-blue-500/10 text-blue-500 border border-blue-500/30 rounded">
+                        {method}
+                      </code>
+                    </td>
+                    <td className="p-3 font-mono text-xs">{path}</td>
+                    <td className="p-3 text-muted-foreground">{purpose}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
 
       {/* Playbook Configuration */}
@@ -453,6 +720,135 @@ export default function AgentApiPage() {
             <p className="text-xs text-muted-foreground">
               {t("redLineConflictDesc")}
             </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Webhooks Detail */}
+      <div className="space-y-4">
+        <h2 className="text-xl font-bold flex items-center gap-2">
+          <Bell className="w-5 h-5 text-primary" />
+          {t("sectionWebhooks")}
+        </h2>
+        <p className="text-muted-foreground">{t("webhooksDesc")}</p>
+
+        <h3 className="text-lg font-bold">{t("webhookEvents")}</h3>
+        <div className="border border-border rounded-2xl overflow-hidden">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-border bg-muted/30">
+                <th className="text-left p-3 font-medium">Event</th>
+                <th className="text-left p-3 font-medium">{t("tablePurpose")}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {webhookEvents.map(({ event, desc }) => (
+                <tr key={event} className="border-b border-border last:border-0">
+                  <td className="p-3">
+                    <code className="text-primary text-xs">{event}</code>
+                  </td>
+                  <td className="p-3 text-muted-foreground">{desc}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        <p className="text-sm text-muted-foreground">{t("webhookSigning")}</p>
+        <p className="text-sm text-muted-foreground">{t("webhookRetries")}</p>
+      </div>
+
+      {/* Async Multi-Round Negotiation */}
+      <div className="space-y-4">
+        <h2 className="text-xl font-bold flex items-center gap-2">
+          <RefreshCw className="w-5 h-5 text-primary" />
+          {t("asyncNegotiation")}
+        </h2>
+        <p className="text-muted-foreground">{t("asyncNegotiationDesc")}</p>
+
+        <div className="space-y-3">
+          <div className="card-brutal p-5">
+            <div className="flex items-center gap-3 mb-2">
+              <div className="w-6 h-6 border border-muted-foreground rounded-full flex items-center justify-center text-xs font-bold">
+                1
+              </div>
+              <h3 className="font-bold">{t("asyncStep1Title")}</h3>
+            </div>
+            <p className="text-sm text-muted-foreground ml-9">{t("asyncStep1Desc")}</p>
+          </div>
+          <div className="card-brutal p-5">
+            <div className="flex items-center gap-3 mb-2">
+              <div className="w-6 h-6 border border-muted-foreground rounded-full flex items-center justify-center text-xs font-bold">
+                2
+              </div>
+              <h3 className="font-bold">{t("asyncStep2Title")}</h3>
+            </div>
+            <p className="text-sm text-muted-foreground ml-9">{t("asyncStep2Desc")}</p>
+          </div>
+          <div className="card-brutal p-5">
+            <div className="flex items-center gap-3 mb-2">
+              <div className="w-6 h-6 border border-muted-foreground rounded-full flex items-center justify-center text-xs font-bold">
+                3
+              </div>
+              <h3 className="font-bold">{t("asyncStep3Title")}</h3>
+            </div>
+            <p className="text-sm text-muted-foreground ml-9">{t("asyncStep3Desc")}</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Attorney Attestation */}
+      <div className="space-y-4">
+        <h2 className="text-xl font-bold flex items-center gap-2">
+          <Shield className="w-5 h-5 text-primary" />
+          {t("attestation")}
+        </h2>
+        <p className="text-muted-foreground">{t("attestationDesc")}</p>
+
+        <div className="p-3 border border-primary/30 bg-primary/5 rounded-xl text-sm">
+          {t("attestationUeta")}
+        </div>
+
+        <div className="space-y-2">
+          <h3 className="text-lg font-bold">{t("attestationResponseTitle")}</h3>
+          <div className="p-5 border border-border bg-card font-mono text-sm rounded-2xl overflow-x-auto">
+            <pre className="text-xs leading-relaxed">
+              {`{
+  "attorneyAttestation": {
+    "name": "John Doe, Esq.",
+    "barNumber": "CA-123456",
+    "statement": "Reviewed pursuant to UETA § 14 and E-SIGN Act"
+  }
+}`}
+            </pre>
+          </div>
+        </div>
+      </div>
+
+      {/* Protocol Discovery */}
+      <div className="space-y-4">
+        <h2 className="text-xl font-bold flex items-center gap-2">
+          <Globe className="w-5 h-5 text-primary" />
+          {t("protocolDiscovery")}
+        </h2>
+        <p className="text-muted-foreground">{t("protocolDiscoveryDesc")}</p>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="card-brutal p-5">
+            <div className="flex items-center gap-3 mb-2">
+              <Bot className="w-4 h-4 text-primary" />
+              <h3 className="font-bold">{t("a2aCard")}</h3>
+            </div>
+            <p className="text-sm text-muted-foreground mb-2">{t("a2aCardDesc")}</p>
+            <code className="text-xs text-primary">{t("a2aCardPath")}</code>
+          </div>
+          <div className="card-brutal p-5">
+            <div className="flex items-center gap-3 mb-2">
+              <Key className="w-4 h-4 text-primary" />
+              <h3 className="font-bold">{t("mcpTools")}</h3>
+            </div>
+            <p className="text-sm text-muted-foreground mb-2">{t("mcpToolsDesc")}</p>
+            <code className="text-xs text-primary">{t("mcpToolsPath")}</code>
           </div>
         </div>
       </div>
@@ -604,20 +1000,14 @@ export default function AgentApiPage() {
         </div>
       </div>
 
-      {/* Full Reference */}
+      {/* Versioning */}
       <div className="space-y-4">
-        <h2 className="text-xl font-bold">{t("fullReference")}</h2>
+        <h2 className="text-xl font-bold">{t("versioning")}</h2>
         <div className="p-5 border border-border bg-muted/30 rounded-2xl">
           <p className="text-sm text-muted-foreground">
-            {t("fullReferenceDesc")}
-          </p>
-          <code className="block mt-3 text-xs bg-card p-3 border border-border rounded-xl">
-            docs/agent-api.md
-          </code>
-          <p className="text-sm text-muted-foreground mt-3">
-            {t("fullReferenceVersioning1")}
+            {t("versioningDesc1")}
             <code className="text-primary">/v1/</code>
-            {t("fullReferenceVersioning2")}
+            {t("versioningDesc2")}
           </p>
         </div>
       </div>

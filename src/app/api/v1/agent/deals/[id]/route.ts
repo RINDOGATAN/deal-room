@@ -85,6 +85,14 @@ export async function GET(
       failureReason: agentDeal.failureReason,
       resolvedAt: agentDeal.resolvedAt,
       createdAt: agentDeal.createdAt,
+      // Attorney attestation
+      attorneyAttestation: agentDeal.attestingBarNumber
+        ? {
+            attorneyName: agentDeal.attestingAttorneyName,
+            barNumber: agentDeal.attestingBarNumber,
+            statement: `The legal provisions in this contract have been reviewed and attested by ${agentDeal.attestingAttorneyName} (Bar No. ${agentDeal.attestingBarNumber}) pursuant to UETA § 14 and the federal E-SIGN Act.`,
+          }
+        : null,
     };
 
     // Include clause details if deal was resolved
