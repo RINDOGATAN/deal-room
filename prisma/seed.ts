@@ -552,6 +552,11 @@ async function main() {
     "com.nel.skills.acta-consejo",
     "com.nel.skills.phantom-shares-plan",
     "com.nel.skills.phantom-shares-grant",
+    "com.nel.skills.advisory",
+    "com.nel.skills.technology-license",
+    "com.nel.skills.joint-venture",
+    "com.nel.skills.software-development",
+    "com.nel.skills.equity-incentive",
   ];
 
   for (const skillId of premiumSkillIds) {
