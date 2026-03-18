@@ -531,8 +531,13 @@ Proposals are scoped per negotiation round. Each party can have one active propo
 | Employment Agreement | 12 |
 | Shareholders Agreement | 12 |
 | Consulting Agreement | 10 |
+| Joint Venture | 8 |
+| Advisory Agreement | 7 |
+| Software Development | 7 |
+| Equity Incentive Plan | 7 |
 | Advertising Insertion Order | 6 |
 | IP Assignment | 6 |
+| Technology License | 6 |
 | Affiliate / Referral Program | 5 |
 | Convertible Note | 3 |
 | SAFE | 2 |
@@ -1075,6 +1080,222 @@ All emails follow the same dark-themed template as invitation emails.
 | `jointCounsel` | `decline` | Other party declines joint counsel request |
 | `jointCounsel` | `getStatus` | Joint counsel state + adaptive waiver text |
 | `deal` | `dismissLawyerWarning` | Dismiss the lawyer warning modal for a party |
+
+---
+
+## Skill Catalog
+
+Dealroom ships 32 contract skills: 5 free taster skills and 27 premium skills. All premium skills are bilingual (EN/ES), cover 3 jurisdictions, and include 10 negotiable clauses each.
+
+### Free Taster Skills
+
+Included in the open-source repo (`skills/` directory). English only, basic jurisdiction coverage.
+
+| Skill | Contract Type | Clauses | Params | Description |
+|-------|--------------|---------|--------|-------------|
+| NDA | NDA | 7 | 0 | Non-disclosure agreement |
+| MSA | MSA | 7 | 1 | Master services agreement |
+| SaaS Agreement | SAAS | 8 | 0 | SaaS subscription terms |
+| DPA | DPA | 8 | 0 | Data processing agreement (GDPR) |
+| Privacy Notice | PRIVACY_NOTICE | 6 | 0 | Website/app privacy notice |
+
+### Premium Skills
+
+Require `SkillEntitlement` + active Stripe subscription (€9/mo per skill). All bilingual EN/ES, all support CALIFORNIA, ENGLAND_WALES, and SPAIN jurisdictions.
+
+#### Corporate & Equity
+
+| Skill | Contract Type | Clauses | Params | Party A / Party B |
+|-------|--------------|---------|--------|-------------------|
+| Founders Agreement | FOUNDERS | 10 | 0 | Lead Founder / Co-Founder |
+| Shareholders Agreement | SHAREHOLDERS | 10 | 12 | Majority Shareholder / Minority Shareholder |
+| Pacto de Socios | PACTO_SOCIOS | 10 | 0 | Socio Mayoritario / Socio Minoritario |
+| Joint Venture Agreement | JOINT_VENTURE | 10 | 8 | Lead Venturer / Co-Venturer |
+| Equity Incentive Plan | EQUITY_INCENTIVE | 10 | 7 | Company / Participant |
+| Phantom Shares Plan | PHANTOM_SHARES_PLAN | 10 | 0 | Company / Plan Administrator |
+| Phantom Shares Grant | PHANTOM_SHARES_GRANT | 10 | 0 | Company / Participant |
+| Acta de Junta | ACTA_JUNTA | 10 | 0 | Sociedad / Socios |
+| Acta de Consejo | ACTA_CONSEJO | 10 | 0 | Sociedad / Consejeros |
+
+#### Fundraising & Investment
+
+| Skill | Contract Type | Clauses | Params | Party A / Party B |
+|-------|--------------|---------|--------|-------------------|
+| Seed Investment | SEED_INVESTMENT | 10 | 14 | Company / Investor |
+| SAFE Agreement | SAFE | 10 | 2 | Company / Investor |
+| Convertible Note | CONVERTIBLE_NOTE | 10 | 3 | Company / Investor |
+| Term Sheet | TERM_SHEET | 10 | 15 | Company / Investor |
+
+#### Employment & Services
+
+| Skill | Contract Type | Clauses | Params | Party A / Party B |
+|-------|--------------|---------|--------|-------------------|
+| Employment Agreement | EMPLOYMENT | 10 | 12 | Employer / Employee |
+| Consulting Agreement | CONSULTING | 10 | 10 | Client / Consultant |
+| Contrato Laboral | CONTRATO_LABORAL | 10 | 0 | Empleador / Trabajador |
+| Contrato de Servicios | CONTRATO_SERVICIOS | 10 | 0 | Cliente / Prestador |
+| Advisory Agreement | ADVISORY | 10 | 7 | Company / Advisor |
+
+#### IP & Technology
+
+| Skill | Contract Type | Clauses | Params | Party A / Party B |
+|-------|--------------|---------|--------|-------------------|
+| IP Assignment | IP_ASSIGNMENT | 10 | 6 | Assignee / Assignor |
+| Cesión de PI | CESION_PI | 10 | 0 | Cesionario / Cedente |
+| Technology License | TECHNOLOGY_LICENSE | 10 | 6 | Licensor / Licensee |
+| Software Development | SOFTWARE_DEVELOPMENT | 10 | 7 | Client / Developer |
+| Data Licensing | DATA_LICENSING | 10 | 0 | Data Provider / Data Licensee |
+
+#### Commercial & Marketing
+
+| Skill | Contract Type | Clauses | Params | Party A / Party B |
+|-------|--------------|---------|--------|-------------------|
+| Advertising IO | ADVERTISING_IO | 10 | 6 | Publisher / Advertiser |
+| Affiliate Program | AFFILIATE_PROGRAM | 10 | 5 | Company / Affiliate |
+| Influencer Marketing | INFLUENCER_MARKETING | 10 | 0 | Brand / Influencer |
+| White Label Reseller | WHITE_LABEL_RESELLER | 10 | 0 | Provider / Reseller |
+
+### New Skills (March 2026)
+
+Five premium skills added on 2026-03-18. Each has 10 negotiable clauses with 3–4 options, bilingual EN/ES legal text, jurisdiction-specific provisions (CA/E&W/ES), and deal parameters with boilerplate variable bindings.
+
+#### Advisory Agreement (`ADVISORY`)
+
+Board or startup advisory agreement covering equity compensation, vesting, time commitment, and scope of advisory services.
+
+**Clauses:**
+
+| # | ID | Title | Options | Category |
+|---|-----|-------|---------|----------|
+| 1 | `compensation-structure` | Compensation Structure | 4 (Equity Only, Cash Retainer, Hybrid, Success Fee) | Economics |
+| 2 | `vesting-schedule` | Vesting Schedule | 3 (Monthly/No Cliff, Quarterly/6mo Cliff, Annual Milestones) | Duration |
+| 3 | `time-commitment` | Time Commitment | 3 (Fixed Hours, As Needed, Structured Cadence) | Operations |
+| 4 | `advisory-scope` | Advisory Scope | 4 (Strategic Only, Operational, Full Board Seat, Limited Intro) | Scope |
+| 5 | `ip-work-product` | IP and Work Product | 3 (Company Owns All, Advisor Retains/Licenses, Shared) | IP |
+| 6 | `confidentiality` | Confidentiality | 3 (Comprehensive Mutual, Company One-Way, Limited Duration) | Protection |
+| 7 | `term-and-renewal` | Term and Renewal | 3 (Fixed 12mo, Auto-Renew, Evergreen) | Duration |
+| 8 | `non-compete` | Non-Compete | 3 (Broad, Narrow/Direct Competitors, None) | Restrictions |
+| 9 | `termination-rights` | Termination Rights | 3 (At Will 30 Days, Cause Only, Mutual with Vesting Acceleration) | Duration |
+| 10 | `equity-acceleration` | Equity Acceleration | 4 (Full on CoC, Double Trigger, Pro-Rata Partial, None) | Events |
+
+**Parameters:** `advisor-name` (text, req), `advisor-title` (text), `equity-percentage` (%), `monthly-hours` (num, default 5), `retainer-amount` (currency), `vesting-months` (num, default 24), `start-date` (date)
+
+**Jurisdiction highlights:**
+- **California:** Cal. Corp. Code § 25102(o) exemption for compensatory equity, IRC § 83(b) election, Cal. Bus. & Prof. Code §§ 16600–16607 non-compete limits
+- **England & Wales:** EMI scheme eligibility (ITEPA 2003), Companies Act 2006 §§ 551/561 for share allotment, 12-month non-compete maximum per restraint of trade doctrine
+- **Spain:** Ley 28/2022 startup equity exemption (€50,000), LSC arts. 107–112 share transfer restrictions, Estatuto de los Trabajadores art. 21 non-compete rules
+
+---
+
+#### Technology License Agreement (`TECHNOLOGY_LICENSE`)
+
+Technology licensing agreement for software, patents, or proprietary systems covering license scope, royalties, sublicensing, and audit rights.
+
+**Clauses:**
+
+| # | ID | Title | Options | Category |
+|---|-----|-------|---------|----------|
+| 1 | `license-scope` | License Scope | 4 (Exclusive, Non-Exclusive, Sole, Field-of-Use) | Scope |
+| 2 | `fee-structure` | Fee Structure | 4 (Lump Sum, Running Royalty, Hybrid, Minimum Guarantee) | Economics |
+| 3 | `sublicensing-rights` | Sublicensing Rights | 3 (None, With Consent, Unrestricted) | Rights |
+| 4 | `source-code-escrow` | Source Code Access | 3 (No Access, Escrow, Full Source) | IP |
+| 5 | `warranty-and-support` | Warranty and Support | 3 (As-Is, Limited, Comprehensive) | Operations |
+| 6 | `ip-improvements` | Ownership of Improvements | 3 (Licensor Owns, Licensee Owns, Joint) | IP |
+| 7 | `term-and-renewal` | Term and Renewal | 3 (Fixed, Auto-Renew, Perpetual) | Duration |
+| 8 | `termination-rights` | Termination Rights | 3 (Cause Only, Convenience, Breach+Cure) | Duration |
+| 9 | `liability-cap` | Liability Cap | 3 (Mutual Cap, Unlimited IP, Tiered) | Risk |
+| 10 | `audit-rights` | Audit Rights | 3 (None, Annual, On Suspicion) | Compliance |
+
+**Parameters:** `technology-description` (text, req), `license-fee` (currency), `royalty-rate` (%), `territory` (text, default "Worldwide"), `term-years` (num, default 3), `minimum-guarantee` (currency)
+
+**Jurisdiction highlights:**
+- **California:** Cal. Civ. Code § 1647 (place of contracting), Cal. UCC for implied warranties, antitrust review under Cartwright Act
+- **England & Wales:** Patents Act 1977, CDPA 1988 for copyright licensing, CMA/Competition Act 1998 for technology transfer block exemptions
+- **Spain:** LPI (RDL 1/1996) arts. 48–50 for software licensing, Ley de Patentes 24/2015, CNMC competition review for exclusive licenses
+
+---
+
+#### Joint Venture Agreement (`JOINT_VENTURE`)
+
+Joint venture agreement for collaborative business ventures covering structure, capital contributions, governance, profit sharing, and exit mechanisms.
+
+**Clauses:**
+
+| # | ID | Title | Options | Category |
+|---|-----|-------|---------|----------|
+| 1 | `jv-structure` | JV Structure | 3 (Contractual, New LLC/Entity, Partnership) | Structure |
+| 2 | `capital-contributions` | Capital Contributions | 3 (Equal Cash, Proportional, In-Kind) | Economics |
+| 3 | `management-governance` | Management and Governance | 3 (Equal Voting, Majority Control, Independent Board) | Governance |
+| 4 | `profit-loss-sharing` | Profit and Loss Sharing | 3 (Pro Rata, Performance-Based, Preferred Return) | Economics |
+| 5 | `decision-making` | Major Decision Thresholds | 3 (Unanimous, Supermajority, Deadlock Mechanism) | Governance |
+| 6 | `ip-contributions` | IP Contributions | 3 (License-In, Assign to JV, License with Reversion) | IP |
+| 7 | `non-compete` | Non-Compete | 3 (Full, Field-Limited, None) | Restrictions |
+| 8 | `exit-mechanisms` | Exit Mechanisms | 3 (Buy-Sell Shotgun, Put-Call, ROFR) | Duration |
+| 9 | `term-and-dissolution` | Term and Dissolution | 3 (Fixed, Indefinite, Project-Based) | Duration |
+| 10 | `dispute-resolution` | Dispute Resolution | 3 (Binding Arbitration, Mediation+Arbitration, Court) | Risk |
+
+**Parameters:** `jv-name` (text, req), `jv-purpose` (text, req), `party-a-contribution` (currency), `party-b-contribution` (currency), `ownership-split` (text, default "50/50"), `term-years` (num, default 5), `territory` (text)
+
+**Jurisdiction highlights:**
+- **California:** Cal. Corp. Code §§ 16100–16962 (RUPA) for partnerships, LLC formation under Cal. Corp. Code § 17701, FAA for arbitration clauses
+- **England & Wales:** Partnership Act 1890, LLP Act 2000, Competition Act 1998 for JV antitrust analysis, Arbitration Act 1996
+- **Spain:** Código Civil arts. 1665–1708 (sociedad civil), LSC for corporate JV vehicles, arts. 225–232 fiduciary duties, Ley 60/2003 de Arbitraje
+
+---
+
+#### Software Development Agreement (`SOFTWARE_DEVELOPMENT`)
+
+Custom software development agreement covering methodology, IP ownership, acceptance testing, payment structure, and source code delivery.
+
+**Clauses:**
+
+| # | ID | Title | Options | Category |
+|---|-----|-------|---------|----------|
+| 1 | `development-methodology` | Development Methodology | 4 (Agile, Waterfall, Hybrid, Time & Materials) | Process |
+| 2 | `ip-ownership` | IP Ownership | 3 (Client Owns All, Developer Retains+Licenses, Joint) | IP |
+| 3 | `payment-structure` | Payment Structure | 3 (Fixed Price, Time & Materials, Milestone-Based) | Economics |
+| 4 | `acceptance-testing` | Acceptance Testing | 3 (Formal UAT, Deemed Acceptance, Continuous) | Quality |
+| 5 | `warranty-period` | Warranty Period | 3 (90 Days, 6 Months, 12 Months) | Quality |
+| 6 | `source-code-delivery` | Source Code Delivery | 3 (Full Repo, Compiled Only, Escrow) | Delivery |
+| 7 | `change-management` | Change Management | 3 (Strict Change Order, Flexible Budget, Impact Assessment) | Process |
+| 8 | `confidentiality` | Confidentiality | 3 (Mutual NDA, One-Way, Mutual+Portfolio Carve-Out) | Protection |
+| 9 | `liability-and-indemnity` | Liability and Indemnity | 3 (Cap at Fees, Unlimited IP, Mutual Proportional) | Risk |
+| 10 | `termination-and-handover` | Termination and Handover | 3 (For Convenience, Cause Only, Milestone Gate) | Duration |
+
+**Parameters:** `project-name` (text, req), `project-description` (text, req), `total-budget` (currency), `daily-rate` (currency), `warranty-months` (num, default 6), `delivery-date` (date), `tech-stack` (text)
+
+**Jurisdiction highlights:**
+- **California:** Cal. Lab. Code §§ 2750.5–2784 for independent contractor classification (ABC test), Cal. Civ. Code § 2860 for IP work-for-hire, Cal. UCC § 2316 warranty disclaimers
+- **England & Wales:** CDPA 1988 § 11 (employer IP ownership), Supply of Goods and Services Act 1982, IR35 (off-payroll working rules) for contractor status
+- **Spain:** LPI art. 97 (employer owns employee software by default), art. 43 (license interpretation stricto sensu), LOPDGDD for data handling, Estatuto de los Trabajadores for contractor reclassification risk
+
+---
+
+#### Equity Incentive Plan (`EQUITY_INCENTIVE`)
+
+Equity incentive plan for startups and growth companies covering plan type (ISO/NSO/RSU/SAR), vesting, exercise pricing, and change of control provisions.
+
+**Clauses:**
+
+| # | ID | Title | Options | Category |
+|---|-----|-------|---------|----------|
+| 1 | `plan-type` | Plan Type | 4 (ISO, NSO, RSU, SAR) | Structure |
+| 2 | `share-pool-size` | Share Pool Size | 3 (Fixed Number, % of Diluted, Evergreen) | Economics |
+| 3 | `exercise-price` | Exercise Price | 3 (FMV/409A, Discount, Nominal) | Economics |
+| 4 | `vesting-schedule` | Vesting Schedule | 3 (4yr+1yr Cliff, 3yr Monthly, Milestone-Based) | Duration |
+| 5 | `acceleration-events` | Acceleration Events | 3 (Single Trigger, Double Trigger, None) | Events |
+| 6 | `exercise-window` | Post-Termination Exercise Window | 3 (90 Days, 1 Year, Extended Tenure) | Rights |
+| 7 | `transferability` | Transferability | 3 (Non-Transferable, Limited Family, Company ROFR) | Restrictions |
+| 8 | `clawback-provisions` | Clawback Provisions | 3 (None, Cause Termination, Good-Bad Leaver) | Protection |
+| 9 | `change-of-control` | Change of Control Treatment | 3 (Full Acceleration, Assumed by Acquirer, Board Discretion) | Events |
+| 10 | `plan-administration` | Plan Administration | 3 (Board, Compensation Committee, Delegated to CEO) | Governance |
+
+**Parameters:** `plan-name` (text, req), `total-shares` (num), `pool-percentage` (%, default 10), `exercise-price` (currency), `vesting-months` (num, default 48), `cliff-months` (num, default 12), `post-termination-days` (num, default 90)
+
+**Jurisdiction highlights:**
+- **California:** IRC § 422 ISOs ($100k annual vesting limit, 110% FMV for 10% shareholders), IRC § 409A valuation requirements, Cal. Corp. Code § 25102(o) securities exemption, IRC § 83(b) election
+- **England & Wales:** EMI scheme (ITEPA 2003) for tax-advantaged options, Companies Act 2006 §§ 551/561 allotment authority, HMRC 92-day notification, NIC joint election
+- **Spain:** Ley 28/2022 startup exemption (€50,000/year), LSC arts. 107–112 share transfer restrictions, art. 304 pre-emption rights disapplication, IRPF art. 17.2 in-kind employment income
 
 ---
 
