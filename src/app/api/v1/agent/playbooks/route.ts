@@ -128,6 +128,13 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    if (template.soloModeOnly) {
+      return NextResponse.json(
+        { error: "This contract type is solo-mode only and cannot be used for agent negotiation" },
+        { status: 400 }
+      );
+    }
+
     // Build a lookup of valid clauseId → option codes
     const clauseMap = new Map<string, Set<string>>();
     const requiredClauseIds = new Set<string>();

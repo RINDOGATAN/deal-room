@@ -36,9 +36,9 @@ export async function GET(req: NextRequest) {
       throw e;
     }
 
-    // Get all active templates
+    // Get all active templates (exclude solo-mode-only, e.g. board minutes)
     const templates = await prisma.contractTemplate.findMany({
-      where: { isActive: true },
+      where: { isActive: true, soloModeOnly: false },
       include: {
         skillPackage: true,
         clauses: {

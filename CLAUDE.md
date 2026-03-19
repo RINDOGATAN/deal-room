@@ -1,123 +1,78 @@
 # Dealroom
 
-Two-party async contract negotiation with weighted compromise algorithm.
+Contract negotiation platform with weighted compromise algorithm. Supports solo mode (single-party) and two-party negotiation.
 
 **Stack:** Next.js 14 | TypeScript | tRPC | PostgreSQL + Prisma | NextAuth
-**Deployment:** Two Vercel projects → same repo, `NEXT_PUBLIC_BRAND` env var selects brand
-**Build:** `prisma migrate deploy && prisma generate && next build` (migrations run automatically on deploy)
+**Build:** `prisma migrate deploy && prisma generate && next build`
 
 | Brand | Domain | Auth | UI |
 |-------|--------|------|----|
 | `todo` (default) | dealroom.todo.law | Magic-link + Google | Rounded blue (#53aecc) |
 | `northend` | dealroom.northend.law | Invite-code + Google | Brutalist teal (#13e9d1) |
 
-## Key Paths
-```
-src/config/brand.ts             # Brand router (reads NEXT_PUBLIC_BRAND)
-src/config/brands/todo.ts       # todo.law brand config
-src/config/brands/northend.ts   # northend.law brand config
-src/config/features.ts          # Feature flags (brand + env driven)
-skills/                         # Built-in free skills (e.g. DPA)
-prisma/schema.prisma            # Data model (includes InviteCode)
-prisma/seed.ts                  # Seeds built-in + external skills + supervisor
-src/server/routers/             # tRPC routers
-src/server/services/skills/     # Skill loading & i18n
-src/server/services/licensing/  # Entitlement checks
-src/lib/auth.ts                 # NextAuth config (conditional providers per brand)
-src/lib/email.ts                # Resend emails (brand-dynamic templates)
-src/lib/parameters.ts           # Deal parameter types + [token] interpolation
-docs/administration.md          # Full admin, skills, lifecycle & signing docs
-```
+## Deal Lifecycle
 
-## Administration
+**Statuses:** DRAFT → AWAITING_RESPONSE → NEGOTIATING → AGREED → SIGNING → COMPLETED (+ CANCELLED)
 
-| Portal | URL | Auth |
-|--------|-----|------|
-| **Platform Admin** | `/admin` | `auth-admin.ts` → `PlatformAdmin` table |
-| **Supervisor** | `/supervise` | `auth-supervisor.ts` → `Supervisor` table |
+**Modes:** `NEGOTIATION` (two-party, weighted compromise) | `SOLO` (single-party, direct clause selection)
 
-## Brand System
+**Compromise:** `stake = ((5-flexibility)/5 * 0.6) + (|bias| * 0.4)` — UI shows "firmness" (= 6 - flexibility).
 
-- `brand.ts` imports from `brands/todo.ts` or `brands/northend.ts` based on `NEXT_PUBLIC_BRAND`
-- `features.ts` gates features by brand: `lawyerInvolvement`, `marketplace`, `billing`, `agentApi`, `expertsApi`, `publicDocs`, `clientInvitations`
-- CSS theming via `data-brand` attribute on `<html>` — `[data-brand="northend"]` overrides variables + component classes
-- Northend: 0 radii, no shadows, no noise texture, headings use body font, amber destructive
-- Route-level feature gates via `layout.tsx` files that call `notFound()`
-- API v1 routes check `features.agentApi` and return 404 when disabled
+**Lawyer involvement:** Attorney review (tRPC `attorneyReview` router), joint counsel (`jointCounsel` router), supervisor vetting (`LawyerVetting` model). Lawyers discoverable via Expert directory.
+
+**Signing:** Three providers — type-to-sign (in-app), DocuSign, HelloSign. Managed via `SigningRequest` model.
 
 ## Skills (Open-Core Model)
 
-- **Free (5):** Skills in `skills/` (nda, msa, saas, dpa, privacy-notice) — available to all users, no `manifest.json`
-- **Premium (27):** Skills in the private [`RINDOGATAN/legalskills`](https://github.com/RINDOGATAN/legalskills) repo — requires `manifest.json` + `SkillEntitlement` + active Stripe license
-- Premium skills are loaded via `SKILLS_DIR` env var at seed time, or installed as `.skill` packages via marketplace
-- Auto-seed: `legalskills/.github/workflows/seed.yml` runs on push to `*/clauses.json`, `*/metadata.json`, `*/manifest.json`, `*/boilerplate.json`, `*/parameters.json` — checks out both repos, runs `prisma db push` + `prisma db seed`
-- Admin assigns entitlements at `/admin/customers`
-- **Never commit premium skills to this public repo** — they belong in `legalskills`
-- Seed defaults `biasPartyA`/`biasPartyB` to `0` when missing from clauses.json (MSA, NDA, SaaS don't define them)
+- **Free (5):** `skills/` dir — nda, msa, saas, dpa, privacy-notice
+- **Premium (27):** Private [`RINDOGATAN/legalskills`](https://github.com/RINDOGATAN/legalskills) repo — requires `manifest.json` + `SkillEntitlement` + Stripe license
+- **All 32 skills** are bilingual EN/ES, 3 jurisdictions (CALIFORNIA, ENGLAND_WALES, SPAIN). Spanish-only corporate docs (acta-consejo, acta-junta) by design.
+- Auto-seed: `legalskills/.github/workflows/seed.yml` runs on push to skill files
+- **Never commit premium skills to this repo**
+- Seed defaults `biasPartyA`/`biasPartyB` to `0` when missing from clauses.json
+
+## Key Paths
+```
+src/config/brand.ts             # Brand router (NEXT_PUBLIC_BRAND)
+src/config/features.ts          # Feature flags (12 flags, brand + env driven)
+skills/                         # Built-in free skills
+prisma/schema.prisma            # Data model
+prisma/seed.ts                  # Seeds skills + supervisor
+src/server/routers/             # tRPC routers
+src/server/services/skills/     # Skill loading & i18n
+src/server/services/licensing/  # Entitlement checks
+src/server/services/document/   # PDF generation
+src/lib/parameters.ts           # Deal parameters + [token] interpolation
+docs/administration.md          # Full admin, skills catalog, lifecycle & signing docs
+docs/agent-api.md               # Agent API documentation
+```
+
+## Parameters
+
+Two interpolation modes: `[bracket]` tokens in clause text, `{curly}` variables in boilerplate. The `boilerplateVariable` field in parameters.json bridges parameters to boilerplate variables. Built-in variables (no parameter needed): `{effectiveDate}`, `{partyAName}`, `{partyBName}`, `{partyAAddress}`, `{partyBAddress}`, `{partyASignatureBlock}`, `{partyBSignatureBlock}`.
+
+## APIs
+
+**Agent API:** 22 REST endpoints at `/api/v1/agent/` — playbooks, negotiation, deals, webhooks, credits, MCP/A2A discovery. Feature-gated: `features.agentApi`. Docs: `docs/agent-api.md`.
+
+**Experts API:** `/api/v1/experts/` — search, get-by-ID, contact requests. Auth: Bearer `drk_...` tokens with scopes. Feature-gated: `features.expertsApi`.
 
 ## Commands
 ```bash
-npx prisma db seed                                # Seed built-in skills only
+npx prisma db seed                                  # Seed built-in skills only
 SKILLS_DIR=/path/to/legalskills npx prisma db seed  # Seed built-in + premium
-npm run admin:create                              # Create platform admin
-npm run deal:simulate                             # Create demo deals (idempotent)
-npm run deal:simulate -- --clean                  # Recreate all demo deals from scratch
-SKILLS_DIR=/path/to/legalskills npm run skill:build             # Build .skill packages → dist/
-SKILLS_DIR=/path/to/legalskills npm run skill:build skill-name  # Build specific skill(s)
-npm run skill:upload                              # Upload dist/*.skill to Vercel Blob
+npm run admin:create                                # Create platform admin
+npm run deal:simulate                               # Create demo deals (idempotent)
+npm run deal:simulate -- --clean                    # Recreate all demo deals
+SKILLS_DIR=/path/to/legalskills npm run skill:build # Build .skill packages
+npm run skill:upload                                # Upload .skill to Vercel Blob
 ```
 
-## Cross-Product Experts Directory API
+## Conventions
 
-Exposes the lawyer/expert directory to other TodoLaw apps (DPO Central, VendorWatch, AI Sentinel).
-
-**Endpoints:**
-- `POST /api/v1/experts/search` — filtered search with pagination
-- `GET /api/v1/experts/:id` — single profile by user ID
-- `POST /api/v1/experts/:id/contact` — send contact request to expert (scope: `experts:contact`)
-- `GET /api/v1/experts/requests/:id` — poll request status (scope: `experts:contact`)
-
-**Auth:** Bearer token (`drk_...`) with scopes `experts:read` and/or `experts:contact`. Keys issued per customer via `/admin/customers/[id]`.
-
-**Base URL (production):** `https://dealroom.todo.law/api/v1/experts`
-
-**Feature flag:** `features.expertsApi` (brand-gated to `todo`)
-
-**Key files:**
-```
-src/app/api/v1/experts/search/route.ts        # Search endpoint
-src/app/api/v1/experts/[id]/route.ts          # Get-by-ID endpoint
-src/app/api/v1/experts/[id]/contact/route.ts  # Contact request endpoint
-src/app/api/v1/experts/requests/[id]/route.ts # Request status polling endpoint
-src/server/services/experts/taxonomy.ts       # Specializations, certifications, completeness score
-src/app/(admin)/admin/experts/page.tsx        # Admin UI for managing expert profiles
-```
-
-**LawyerProfile extended fields** (added via migration `20260305000000`, updated `20260311000000`):
-`title`, `expertTypes[]` (LEGAL/TECHNICAL/DEPLOYMENT, non-exclusive), `specializations[]`, `certifications[]`, `countryCode`, `city`, `jurisdictionsCovered[]`, `contactUrl`, `acceptingClients`
-
-**Taxonomy:** 16 specializations + 10 certifications defined as controlled vocabularies in `taxonomy.ts`, validated at app layer (not Prisma enums) for flexibility.
-
-**Admin onboarding flow:** `/admin` → Experts → New Expert → pick user → fill fields → save. Also editable from the lawyer self-service profile at `/lawyers/profile`.
-
-**Consumer caching guidance:** Search results cached 5 min, individual profiles 1 hour (consumer-side).
-
-## Quick Reference
-
-**Compromise:** `stake = ((5-flexibility)/5 * 0.6) + (|bias| * 0.4)` — priority param exists for backward compat but is ignored. UI shows "firmness" (= 6 - flexibility).
-
-**Enums:** `GoverningLaw`: CALIFORNIA, ENGLAND_WALES, SPAIN
-
-**Fonts:** Inter (fallback), Jost (body/metrics via `--font-display`), Archivo Black (headings via `--font-heading`), Dancing Script (signatures)
-
-**Mobile:** All grids use `grid-cols-1` base with `sm:` or `md:` breakpoints. Buttons use icon-only on mobile where text overflows. Dashboard header uses `backdrop-blur-sm` for mobile GPU performance.
-
-**Parameters:** Skills define parameters in `parameters.json`. Two interpolation modes: `[bracket]` tokens in clause legal text, `{curly}` variables in boilerplate. The `boilerplateVariable` field in parameters.json bridges a parameter to a `{variable}` in boilerplate — without it, user values don't reach the PDF. Token names are localized (e.g. `amount` → `importe` in Spanish). Values stored on `DealRoom.parameters` JSON field. Built-in boilerplate variables (no parameter needed): `{effectiveDate}`, `{partyAName}`, `{partyBName}`, `{partyAAddress}`, `{partyBAddress}`, `{partyASignatureBlock}`, `{partyBSignatureBlock}`.
-
-**i18n:** All Spanish text must be Castilian (Spain), never Latin American. Use "skills" as loanword (not "habilidades"). Use gender-inclusive forms ("abogado/a"). Token translations in `src/lib/parameters.ts` → `TOKEN_TRANSLATIONS`.
-
-**Simulate:** `npm run deal:simulate` runs full lifecycle for all contract types (DPA, NDA, MSA, SAAS, SEED_INVESTMENT, ADVERTISING_IO, AFFILIATE_PROGRAM) with 14 validation checks per deal including unresolved placeholder detection.
-
-**Boilerplate quality:** All 27 premium + 5 free skills have been audited (2026-03-10). No `[BRACKET]` placeholders remain in boilerplate files. All bilingual skills use `{"en": "...", "es": "..."}` objects. Spanish-only corporate docs (acta-consejo, acta-junta, etc.) remain Spanish-only by design. When adding new parameters, always add `boilerplateVariable` if the value needs to appear in the boilerplate PDF. Avoid duplicating negotiable clause topics in standardClauses (causes contradictory PDF output).
-
-**Skill Packages:** Premium skills are distributed as `.skill` ZIP files (manifest.json + content/clauses.json + content/boilerplate.json + parameters.json + signature.sig). Build with `npm run skill:build`, upload with `npm run skill:upload`.
+- **Brand name:** Always "Dealroom" (one word), never "Deal Room"
+- **i18n:** Spanish must be Castilian (Spain), never Latin American. Use "skills" as loanword. Gender-inclusive forms ("abogado/a").
+- **Fonts:** Jost (body), Archivo Black (headings), Dancing Script (signatures)
+- **Mobile:** `grid-cols-1` base with `sm:`/`md:` breakpoints
+- **Boilerplate:** No `[BRACKET]` placeholders in boilerplate files. Avoid duplicating negotiable clause topics in standardClauses.
+- **Skill packages:** `.skill` ZIP files (manifest.json + content/ + parameters.json + signature.sig)

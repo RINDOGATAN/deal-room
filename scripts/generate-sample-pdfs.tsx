@@ -128,6 +128,10 @@ const DEMO_PARAMETERS: Record<string, Record<string, string>> = {
     "court-city": "London",
     "court-county": "San Francisco",
     "arbitration-body": "ICC",
+    "company-name": "Acme Technologies Ltd.",
+    "company-jurisdiction": "England and Wales",
+    "company-number": "12345678",
+    "company-address": "200 High Holborn, London WC1V 7EX",
   },
   EMPLOYMENT: {
     "start-date": "March 1, 2026",
@@ -150,6 +154,124 @@ const DEMO_PARAMETERS: Record<string, Record<string, string>> = {
     "assignment-fee": "50,000",
     "royalty-years": "5",
     "royalty-pct": "5",
+  },
+  ADVERTISING_IO: {
+    "campaign-name": "Q2 Brand Awareness Campaign",
+    "total-budget": "$100,000",
+    "start-date": "April 1, 2026",
+    "end-date": "June 30, 2026",
+    "impressions-target": "5,000,000",
+    "base-cpm": "$12.50",
+  },
+  AFFILIATE_PROGRAM: {
+    "program-name": "Partner Referral Program",
+    "base-commission": "20",
+    "cookie-window": "30",
+    "disclosure-text": "This content contains affiliate links.",
+    "product-category": "legal technology software",
+  },
+  DATA_LICENSING: {
+    "data-categories": "anonymized user analytics and usage metrics",
+    "license-fee": "$50,000",
+    "license-term": "24 months",
+  },
+  INFLUENCER_MARKETING: {
+    "campaign-name": "Summer Product Launch",
+    "total-compensation": "$25,000",
+    "num-deliverables": "10",
+    "campaign-start": "June 1, 2026",
+    "campaign-end": "August 31, 2026",
+  },
+  WHITE_LABEL_RESELLER: {
+    "territory": "European Union",
+    "minimum-commitment": "$100,000",
+    "revenue-share-pct": "30",
+    "support-sla-hours": "24",
+  },
+  ADVISORY: {
+    "advisory-scope": "strategic market entry and product positioning",
+    "term-months": "12",
+    "monthly-retainer": "5,000",
+    "equity-pct": "0.5",
+    "meeting-frequency": "monthly",
+    "non-compete-months": "12",
+    "geographic-area": "United States and European Union",
+  },
+  TECHNOLOGY_LICENSE: {
+    "technology-description": "proprietary AI-powered document analysis engine",
+    "license-fee": "$150,000",
+    "royalty-pct": "5",
+    "term-years": "5",
+    "territory": "worldwide",
+    "support-hours": "40",
+  },
+  JOINT_VENTURE: {
+    "jv-purpose": "development and commercialization of AI-powered legal compliance tools",
+    "initial-contribution-a": "$500,000",
+    "initial-contribution-b": "$500,000",
+    "profit-split-pct": "50",
+    "term-years": "5",
+    "board-size": "4",
+    "exit-notice-months": "6",
+  },
+  SOFTWARE_DEVELOPMENT: {
+    "project-description": "custom enterprise resource planning system with mobile companion app",
+    "total-fee": "$350,000",
+    "milestone-count": "5",
+    "acceptance-days": "14",
+    "warranty-months": "12",
+    "change-order-hourly-rate": "$200",
+  },
+  EQUITY_INCENTIVE: {
+    "plan-name": "2026 Equity Incentive Plan",
+    "total-pool-shares": "1,000,000",
+    "pool-pct": "10",
+    "cliff-months": "12",
+    "vesting-months": "48",
+    "exercise-window-days": "90",
+    "strike-price": "$1.00",
+  },
+  ACTA_JUNTA_GENERAL: {
+    "company-name": "Acme Technologies, S.L.",
+    "cif": "B12345678",
+    "registered-address": "Calle Gran Vía 1, 28013 Madrid",
+    "meeting-date": "15 de marzo de 2026",
+    "meeting-type": "Ordinaria",
+    "quorum-percentage": "75%",
+    "secretary-name": "María García López",
+    "president-name": "Juan Martínez Ruiz",
+  },
+  ACTA_CONSEJO_ADMINISTRACION: {
+    "company-name": "Acme Technologies, S.L.",
+    "cif": "B12345678",
+    "registered-address": "Calle Gran Vía 1, 28013 Madrid",
+    "meeting-date": "15 de marzo de 2026",
+    "president-name": "Juan Martínez Ruiz",
+    "secretary-name": "María García López",
+  },
+  PHANTOM_SHARES_PLAN: {
+    "company-name": "Acme Technologies, S.L.",
+    "cif": "B12345678",
+    "total-pool-percentage": "10%",
+    "cliff-months": "12",
+    "vesting-months": "48",
+    "plan-effective-date": "1 de enero de 2026",
+    "city": "Madrid",
+  },
+  PHANTOM_SHARES_GRANT: {
+    "employee-name": "Ana López García",
+    "phantom-count": "1.000",
+    "grant-date": "15 de marzo de 2026",
+    "plan-date": "1 de enero de 2026",
+    "individual-vesting-months": "48",
+    "city": "Madrid",
+  },
+  PRIVACY_NOTICE: {
+    "jurisdictions": "CALIFORNIA,ENGLAND_WALES,SPAIN",
+    "company-name": "Acme Technologies Inc.",
+    "company-website": "https://acme.example.com",
+    "dpo-email": "privacy@acme.example.com",
+    "effective-date": "March 1, 2026",
   },
 };
 
@@ -209,7 +331,7 @@ function buildContractData(
     }
     return {
       title: getLabel(clause.title, language),
-      category: clause.category,
+      category: typeof clause.category === "string" ? clause.category : getLabel(clause.category, language),
       agreedOption: getLabel(chosen.label, language),
       legalText,
     };
@@ -260,6 +382,7 @@ function buildContractData(
 
     boilerplate = {
       ...boilerplate,
+      contractTitle: interpolate(boilerplate.contractTitle),
       preamble: interpolate(boilerplate.preamble),
       background: boilerplate.background ? interpolate(boilerplate.background) : undefined,
       definitions: boilerplate.definitions.map((d) => ({
@@ -342,65 +465,64 @@ function loadBoilerplate(skillDir: string, governingLaw: string, language: strin
 interface SkillSource {
   name: string;
   dir: string;
-  governingLaw: string;
-  language: string;
+  jurisdictions: string[];
+  languages: string[];
 }
 
 async function main() {
   // Ensure output directory
   fs.mkdirSync(OUTPUT_DIR, { recursive: true });
 
-  // Collect all skills
+  // Collect all skills with their full jurisdiction/language matrix
   const skills: SkillSource[] = [];
 
-  // Built-in skills (scan all subdirectories)
+  // Built-in skills
   if (fs.existsSync(BUILTIN_SKILLS_DIR)) {
     for (const entry of fs.readdirSync(BUILTIN_SKILLS_DIR)) {
       const skillDir = path.join(BUILTIN_SKILLS_DIR, entry);
       if (!fs.statSync(skillDir).isDirectory()) continue;
       if (!fs.existsSync(path.join(skillDir, "clauses.json"))) continue;
-      // Pick governing law and language from metadata or default
-      let governingLaw = "ENGLAND_WALES";
-      let language = "en";
-      const metaPath = path.join(skillDir, "metadata.json");
-      if (fs.existsSync(metaPath)) {
-        const meta = JSON.parse(fs.readFileSync(metaPath, "utf-8"));
-        if (meta.jurisdictions?.includes("CALIFORNIA")) governingLaw = "CALIFORNIA";
-        if (meta.languages?.[0]) language = meta.languages[0];
-      }
-      skills.push({ name: entry, dir: skillDir, governingLaw, language });
+      // Built-in skills support all jurisdictions and both languages
+      skills.push({
+        name: entry,
+        dir: skillDir,
+        jurisdictions: ["CALIFORNIA", "ENGLAND_WALES", "SPAIN"],
+        languages: ["en", "es"],
+      });
     }
   }
 
-  // Licensed skills
-  for (const entry of fs.readdirSync(LEGALSKILLS_DIR)) {
-    const skillDir = path.join(LEGALSKILLS_DIR, entry);
-    const clausesPath = path.join(skillDir, "clauses.json");
-    if (fs.existsSync(clausesPath) && entry !== "_template") {
-      // Detect governing law and language from manifest
-      let governingLaw = entry === "pacto-socios" ? "SPAIN" : "CALIFORNIA";
-      let language = "en";
+  // Licensed skills — read jurisdictions/languages from manifest
+  const legalDir = path.resolve(LEGALSKILLS_DIR);
+  if (fs.existsSync(legalDir)) {
+    for (const entry of fs.readdirSync(legalDir)) {
+      const skillDir = path.join(legalDir, entry);
+      if (!fs.statSync(skillDir).isDirectory()) continue;
+      if (entry.startsWith(".") || entry.startsWith("_") || entry === "node_modules" || entry === "dist") continue;
+      if (!fs.existsSync(path.join(skillDir, "clauses.json"))) continue;
+
+      let jurisdictions = ["CALIFORNIA"];
+      let languages = ["en"];
       const manifestPath = path.join(skillDir, "manifest.json");
       if (fs.existsSync(manifestPath)) {
         const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf-8"));
-        if (manifest.languages?.[0]) language = manifest.languages[0];
+        if (Array.isArray(manifest.jurisdictions)) jurisdictions = manifest.jurisdictions;
+        if (Array.isArray(manifest.languages)) languages = manifest.languages;
       }
-      skills.push({ name: entry, dir: skillDir, governingLaw, language });
+      skills.push({ name: entry, dir: skillDir, jurisdictions, languages });
     }
   }
 
-  console.log(`Found ${skills.length} skills: ${skills.map((s) => s.name).join(", ")}`);
+  console.log(`Found ${skills.length} skills\n`);
 
-  const variants: Variant[] = ["partyA", "partyB", "balanced"];
   let count = 0;
+  const errors: string[] = [];
 
   for (const skill of skills) {
     const clausesData: SkillData = JSON.parse(
       fs.readFileSync(path.join(skill.dir, "clauses.json"), "utf-8")
     );
-    const boilerplate = loadBoilerplate(skill.dir, skill.governingLaw, skill.language);
 
-    // Load parameters.json if present
     let paramSchema: ParameterSchema | null = null;
     const paramsPath = path.join(skill.dir, "parameters.json");
     if (fs.existsSync(paramsPath)) {
@@ -408,19 +530,68 @@ async function main() {
     }
     const paramValues = DEMO_PARAMETERS[clausesData.contractType] || {};
 
-    for (const variant of variants) {
-      const contractData = buildContractData(clausesData, variant, boilerplate, skill.governingLaw, skill.language, paramSchema, paramValues);
-      const filename = `${skill.name}_${variant}.pdf`;
-      const outPath = path.join(OUTPUT_DIR, filename);
+    // Generate balanced PDF for every jurisdiction × language combo
+    for (const jurisdiction of skill.jurisdictions) {
+      for (const language of skill.languages) {
+        const boilerplate = loadBoilerplate(skill.dir, jurisdiction, language);
+        const contractData = buildContractData(
+          clausesData, "balanced", boilerplate, jurisdiction, language, paramSchema, paramValues
+        );
 
-      console.log(`  Generating ${filename}...`);
-      const buffer = await renderToBuffer(ContractPDF({ data: contractData }));
-      fs.writeFileSync(outPath, buffer);
-      count++;
+        const jurisShort = jurisdiction === "ENGLAND_WALES" ? "EW" : jurisdiction === "CALIFORNIA" ? "CA" : "ES";
+        const filename = `${skill.name}_${jurisShort}_${language}.pdf`;
+        const outPath = path.join(OUTPUT_DIR, filename);
+
+        // Deep scan for unresolved i18n objects before rendering
+        const findUnresolved = (obj: unknown, p: string): string[] => {
+          const hits: string[] = [];
+          if (obj === null || obj === undefined || typeof obj !== "object") return hits;
+          if (!Array.isArray(obj) && "en" in (obj as Record<string, unknown>) && "es" in (obj as Record<string, unknown>)) {
+            hits.push(p);
+          } else if (Array.isArray(obj)) {
+            obj.forEach((item, i) => hits.push(...findUnresolved(item, `${p}[${i}]`)));
+          } else {
+            for (const [k, v] of Object.entries(obj as Record<string, unknown>)) {
+              if (typeof v === "object" && v !== null) hits.push(...findUnresolved(v, `${p}.${k}`));
+            }
+          }
+          return hits;
+        };
+        const leaks = findUnresolved(contractData, "data");
+        if (leaks.length > 0) {
+          console.log(`    ⚠ i18n leaks in ${filename}: ${leaks.join(", ")}`);
+        }
+
+        try {
+          const buffer = await renderToBuffer(ContractPDF({ data: contractData }));
+          fs.writeFileSync(outPath, buffer);
+          count++;
+
+          // Check for unresolved variables
+          const allText = JSON.stringify(contractData);
+          const unresolved = allText.match(/\{(\w[\w-]*)\}/g);
+          const unresolvedFiltered = unresolved?.filter(
+            (v) => !v.match(/^\{(partyA|partyB)(SignatureBlock|Name|Address|Id|ShortName)\}$/)
+          );
+          const warn = unresolvedFiltered?.length ? ` ⚠ unresolved: ${[...new Set(unresolvedFiltered)].join(", ")}` : "";
+
+          console.log(`  ✓ ${filename} (${contractData.clauses.length} clauses, ${(buffer.length / 1024).toFixed(0)}KB)${warn}`);
+        } catch (err: any) {
+          const msg = `${filename}: ${err.message}`;
+          errors.push(msg);
+          console.log(`  ✗ ${msg}`);
+        }
+      }
     }
   }
 
-  console.log(`\nDone! Generated ${count} PDFs in ${OUTPUT_DIR}`);
+  console.log(`\n${"═".repeat(70)}`);
+  console.log(`Generated ${count} PDFs in ${OUTPUT_DIR}`);
+  if (errors.length > 0) {
+    console.log(`\n${errors.length} errors:`);
+    for (const e of errors) console.log(`  - ${e}`);
+  }
+  console.log(`${"═".repeat(70)}\n`);
 }
 
 main().catch((err) => {

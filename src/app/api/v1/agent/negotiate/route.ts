@@ -111,6 +111,13 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    if (template.soloModeOnly) {
+      return NextResponse.json(
+        { error: "This contract type is solo-mode only and cannot be negotiated between parties" },
+        { status: 400 }
+      );
+    }
+
     // Check entitlement for premium templates
     const entitlementCheck = await checkDealCreationEntitlement(
       auth.customer.id,
