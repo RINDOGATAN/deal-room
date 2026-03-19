@@ -174,7 +174,7 @@ function processBoilerplate(
   const partyLabels = bp.partyLabels as Record<string, unknown> | undefined;
 
   return {
-    contractTitle: resolveLocalizedString(bp.contractTitle, language) || "",
+    contractTitle: resolve(bp.contractTitle) || "",
     preamble: resolve(bp.preamble),
     background: bp.background ? resolve(bp.background) : undefined,
     definitions,

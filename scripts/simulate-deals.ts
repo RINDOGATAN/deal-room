@@ -116,6 +116,10 @@ const DEMO_PARAMETERS: Record<string, Record<string, string>> = {
     "court-city": "London",
     "court-county": "San Francisco",
     "arbitration-body": "ICC",
+    "company-name": "Acme Technologies Ltd.",
+    "company-jurisdiction": "England and Wales",
+    "company-number": "12345678",
+    "company-address": "200 High Holborn, London WC1V 7EX",
   },
   EMPLOYMENT: {
     "start-date": "March 1, 2026",
@@ -162,6 +166,7 @@ const DEMO_PARAMETERS: Record<string, Record<string, string>> = {
     "meeting-type": "Ordinaria",
     "quorum-percentage": "75%",
     "secretary-name": "María García López",
+    "president-name": "Juan Martínez Ruiz",
   },
   ACTA_CONSEJO_ADMINISTRACION: {
     "company-name": "Acme Technologies, S.L.",
@@ -178,6 +183,7 @@ const DEMO_PARAMETERS: Record<string, Record<string, string>> = {
     "cliff-months": "12",
     "vesting-months": "48",
     "plan-effective-date": "1 de enero de 2026",
+    "city": "Madrid",
   },
   PHANTOM_SHARES_GRANT: {
     "employee-name": "Ana López García",
@@ -185,6 +191,7 @@ const DEMO_PARAMETERS: Record<string, Record<string, string>> = {
     "grant-date": "15 de marzo de 2026",
     "plan-date": "1 de enero de 2026",
     "individual-vesting-months": "48",
+    "city": "Madrid",
   },
   PRIVACY_NOTICE: {
     "jurisdictions": "CALIFORNIA,ENGLAND_WALES,SPAIN",

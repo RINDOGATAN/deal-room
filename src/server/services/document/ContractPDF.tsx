@@ -14,6 +14,7 @@ import {
   StyleSheet,
   Font,
 } from "@react-pdf/renderer";
+import type { Style } from "@react-pdf/types";
 import type { ContractData, CertificationData } from "./generator";
 import { brand } from "@/config/brand";
 
@@ -99,14 +100,13 @@ const styles = StyleSheet.create({
   },
   preambleText: {
     fontSize: 11,
-    textAlign: "justify",
+    textAlign: "left",
     lineHeight: 1.6,
     marginBottom: 15,
-    whiteSpace: "pre-wrap",
   },
   backgroundText: {
     fontSize: 11,
-    textAlign: "justify",
+    textAlign: "left",
     lineHeight: 1.6,
     marginBottom: 15,
   },
@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
   },
   definitionText: {
     fontSize: 10,
-    textAlign: "justify",
+    textAlign: "left",
     lineHeight: 1.5,
   },
   clauseContainer: {
@@ -141,17 +141,15 @@ const styles = StyleSheet.create({
   },
   clauseText: {
     fontSize: 10,
-    textAlign: "justify",
+    textAlign: "left",
     lineHeight: 1.6,
     paddingLeft: 20,
-    whiteSpace: "pre-wrap",
   },
   legalText: {
     fontSize: 10,
-    textAlign: "justify",
+    textAlign: "left",
     lineHeight: 1.6,
     paddingLeft: 20,
-    whiteSpace: "pre-wrap",
   },
   provisionContainer: {
     marginBottom: 12,
@@ -163,9 +161,9 @@ const styles = StyleSheet.create({
   },
   provisionText: {
     fontSize: 10,
-    textAlign: "justify",
+    textAlign: "left",
     lineHeight: 1.6,
-    whiteSpace: "pre-wrap",
+    paddingLeft: 20,
   },
   governingLawBox: {
     backgroundColor: "#f5f5f5",
@@ -188,7 +186,6 @@ const styles = StyleSheet.create({
   signatureText: {
     fontSize: 10,
     marginBottom: 20,
-    whiteSpace: "pre-wrap",
   },
   signatureGrid: {
     flexDirection: "row",
@@ -249,12 +246,8 @@ const styles = StyleSheet.create({
   negotiatedTermsHeader: {
     fontSize: 12,
     fontWeight: "bold",
-    marginBottom: 15,
+    marginBottom: 10,
     textTransform: "uppercase",
-    borderBottomWidth: 2,
-    borderBottomColor: "#000",
-    borderBottomStyle: "solid",
-    paddingBottom: 5,
   },
   certificationFooter: {
     position: "absolute",
@@ -273,14 +266,16 @@ const styles = StyleSheet.create({
     fontSize: 7,
     color: "#166534",
     backgroundColor: "#dcfce7",
-    padding: "2 6",
+    paddingVertical: 2,
+    paddingHorizontal: 6,
     borderRadius: 3,
   },
   uncertifiedBadge: {
     fontSize: 7,
     color: "#9a3412",
     backgroundColor: "#fff7ed",
-    padding: "2 6",
+    paddingVertical: 2,
+    paddingHorizontal: 6,
     borderRadius: 3,
   },
   auditPage: {
@@ -322,7 +317,8 @@ const styles = StyleSheet.create({
     fontFamily: "Courier",
     color: "#333",
     backgroundColor: "#f5f5f5",
-    padding: "4 8",
+    paddingVertical: 4,
+    paddingHorizontal: 8,
     marginTop: 4,
     marginBottom: 12,
   },
@@ -394,6 +390,27 @@ function formatDate(date: Date, language: string = "en"): string {
   });
 }
 
+/**
+ * Renders text that may contain newlines as separate paragraphs.
+ * Avoids react-pdf's `whiteSpace: "pre-wrap"` which overflows on large documents.
+ */
+function ParagraphText({ children, style }: { children: string; style: Style }) {
+  const paragraphs = children.split("\n").filter((p) => p.trim() !== "");
+  if (paragraphs.length <= 1) {
+    return <Text style={style}>{children}</Text>;
+  }
+  const withMargin: Style = { ...style, marginBottom: 6 };
+  return (
+    <>
+      {paragraphs.map((p, i) => (
+        <Text key={i} style={i < paragraphs.length - 1 ? withMargin : style}>
+          {p}
+        </Text>
+      ))}
+    </>
+  );
+}
+
 interface ContractPDFProps {
   data: ContractData;
 }
@@ -410,6 +427,7 @@ export function ContractPDF({ data }: ContractPDFProps) {
       author={brand.name}
       subject={data.contractType}
     >
+      {/* Page 1: Header, Preamble, Definitions, Standard Clauses */}
       <Page size="A4" style={styles.page}>
         {/* Header */}
         <View style={styles.header}>
@@ -429,9 +447,9 @@ export function ContractPDF({ data }: ContractPDFProps) {
           <>
             {/* Preamble */}
             <View style={styles.section}>
-              <Text style={styles.preambleText}>
+              <ParagraphText style={styles.preambleText}>
                 {data.boilerplate!.preamble}
-              </Text>
+              </ParagraphText>
             </View>
 
             {/* Background (if present) */}
@@ -455,12 +473,12 @@ export function ContractPDF({ data }: ContractPDFProps) {
                 </Text>
                 {data.boilerplate!.definitions.map((def, index) => (
                   <View key={index} style={styles.definitionContainer}>
-                    <Text style={styles.definitionText}>
-                      <Text style={styles.definitionTerm}>
-                        &quot;{def.term}&quot;
-                      </Text>{" "}
-                      {def.definition}
+                    <Text style={styles.definitionTerm}>
+                      &quot;{def.term}&quot;
                     </Text>
+                    <ParagraphText style={styles.definitionText}>
+                      {def.definition}
+                    </ParagraphText>
                   </View>
                 ))}
               </View>
@@ -468,149 +486,18 @@ export function ContractPDF({ data }: ContractPDFProps) {
 
             {/* Standard Clauses from Boilerplate */}
             {data.boilerplate!.standardClauses.map((clause, index) => (
-              <View key={`std-${index}`} style={styles.section} wrap={false}>
+              <View key={`std-${index}`} style={styles.section}>
                 <View style={styles.clauseHeader}>
                   <Text style={styles.clauseNumber}>{sectionNumber++}.</Text>
                   <Text style={styles.clauseTitle}>{clause.title}</Text>
                 </View>
-                <Text style={styles.clauseText}>{clause.text}</Text>
+                <ParagraphText style={styles.clauseText}>{clause.text}</ParagraphText>
               </View>
             ))}
-
-            {/* Negotiated Terms */}
-            {data.clauses.length > 0 && (
-              <View style={styles.section}>
-                <Text style={styles.negotiatedTermsHeader}>
-                  {sectionNumber++}. {labels.negotiatedTerms}
-                </Text>
-                {data.clauses.map((clause, index) => (
-                  <View
-                    key={`neg-${index}`}
-                    style={styles.clauseContainer}
-                    wrap={false}
-                  >
-                    <View style={styles.clauseHeader}>
-                      <Text style={styles.clauseNumber}>
-                        {sectionNumber - 1}.{index + 1}
-                      </Text>
-                      <Text style={styles.clauseTitle}>{clause.title}</Text>
-                    </View>
-                    <Text style={styles.legalText}>{clause.legalText}</Text>
-                  </View>
-                ))}
-              </View>
-            )}
-
-            {/* General Provisions */}
-            {data.boilerplate!.generalProvisions.length > 0 && (
-              <View style={styles.section}>
-                <Text style={styles.sectionTitle}>
-                  {sectionNumber++}. {labels.generalProvisions}
-                </Text>
-                {data.boilerplate!.generalProvisions.map((provision, index) => (
-                  <View
-                    key={`gen-${index}`}
-                    style={styles.provisionContainer}
-                    wrap={false}
-                  >
-                    <Text style={styles.provisionTitle}>
-                      {sectionNumber - 1}.{index + 1} {provision.title}
-                    </Text>
-                    <Text style={styles.provisionText}>{provision.text}</Text>
-                  </View>
-                ))}
-              </View>
-            )}
-
-            {/* Jurisdiction-Specific Provisions (multi or single) */}
-            {data.boilerplate!.jurisdictionProvisions?.length ? (
-              data.boilerplate!.jurisdictionProvisions.map((jp, i) => (
-                <View key={i} style={styles.section} wrap={false}>
-                  <Text style={styles.sectionTitle}>
-                    {sectionNumber++}. {jp.title}
-                  </Text>
-                  <Text style={styles.provisionText}>{jp.text}</Text>
-                </View>
-              ))
-            ) : data.boilerplate!.jurisdictionProvision ? (
-              <View style={styles.section} wrap={false}>
-                <Text style={styles.sectionTitle}>
-                  {sectionNumber++}.{" "}
-                  {data.boilerplate!.jurisdictionProvision.title}
-                </Text>
-                <Text style={styles.provisionText}>
-                  {data.boilerplate!.jurisdictionProvision.text}
-                </Text>
-              </View>
-            ) : null}
-
-            {/* Governing Law Box */}
-            <View style={styles.governingLawBox}>
-              <Text style={styles.governingLawLabel}>{labels.governingLaw}</Text>
-              <Text style={styles.governingLawText}>{data.governingLaw}</Text>
-            </View>
-
-            {/* Signature Section */}
-            {data.partyB !== null ? (
-              <View style={styles.signatureSection} wrap={false}>
-                <Text style={styles.sectionTitle}>{sectionNumber}. {labels.signatures}</Text>
-                <Text style={styles.signatureText}>
-                  {labels.inWitnessWhereof}
-                </Text>
-                <View style={styles.signatureGrid}>
-                  <View style={styles.signatureBox}>
-                    <Text style={styles.signatureLabel}>
-                      {data.boilerplate!.partyLabels?.partyA || labels.partyA}
-                    </Text>
-                    <View style={styles.signatureLine} />
-                    <Text style={styles.signaturePartyName}>
-                      {data.partyA.legalName || data.partyA.company || data.partyA.name}
-                    </Text>
-                    <Text style={{ fontSize: 9, color: "#666" }}>
-                      {data.partyA.signatoryName || data.partyA.name}
-                    </Text>
-                    {data.partyA.signatoryTitle && (
-                      <Text style={{ fontSize: 9, color: "#666" }}>
-                        {data.partyA.signatoryTitle}
-                      </Text>
-                    )}
-                    <Text style={styles.signatureDate}>{labels.date}</Text>
-                    <View style={styles.dateLine} />
-                  </View>
-                  <View style={styles.signatureBox}>
-                    <Text style={styles.signatureLabel}>
-                      {data.boilerplate!.partyLabels?.partyB || labels.partyB}
-                    </Text>
-                    <View style={styles.signatureLine} />
-                    <Text style={styles.signaturePartyName}>
-                      {data.partyB.legalName || data.partyB.company || data.partyB.name}
-                    </Text>
-                    <Text style={{ fontSize: 9, color: "#666" }}>
-                      {data.partyB.signatoryName || data.partyB.name}
-                    </Text>
-                    {data.partyB.signatoryTitle && (
-                      <Text style={{ fontSize: 9, color: "#666" }}>
-                        {data.partyB.signatoryTitle}
-                      </Text>
-                    )}
-                    <Text style={styles.signatureDate}>{labels.date}</Text>
-                    <View style={styles.dateLine} />
-                  </View>
-                </View>
-              </View>
-            ) : (
-              <View style={styles.signatureSection} wrap={false}>
-                <View style={styles.divider} />
-                <Text style={styles.signatureText}>
-                  {data.boilerplate!.signatureBlock}
-                </Text>
-              </View>
-            )}
           </>
         ) : (
           <>
             {/* Fallback: Simple format when no boilerplate */}
-            {/* Parties */}
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>{labels.parties}</Text>
               <View style={styles.partiesGrid}>
@@ -639,21 +526,15 @@ export function ContractPDF({ data }: ContractPDFProps) {
               </View>
             </View>
 
-            {/* Governing Law */}
             <View style={styles.governingLawBox}>
               <Text style={styles.governingLawLabel}>{labels.governingLaw}</Text>
               <Text style={styles.governingLawText}>{data.governingLaw}</Text>
             </View>
 
-            {/* Terms and Conditions */}
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>{labels.termsAndConditions}</Text>
               {data.clauses.map((clause, index) => (
-                <View
-                  key={index}
-                  style={styles.clauseContainer}
-                  wrap={false}
-                >
+                <View key={index} style={styles.clauseContainer}>
                   <View style={styles.clauseHeader}>
                     <Text style={styles.clauseNumber}>{index + 1}.</Text>
                     <Text style={styles.clauseTitle}>{clause.title}</Text>
@@ -663,7 +544,6 @@ export function ContractPDF({ data }: ContractPDFProps) {
               ))}
             </View>
 
-            {/* Signature Section */}
             <View style={styles.signatureSection} wrap={false}>
               <Text style={styles.sectionTitle}>{labels.signatures}</Text>
               <Text style={{ fontSize: 10, marginBottom: 20 }}>
@@ -732,6 +612,165 @@ export function ContractPDF({ data }: ContractPDFProps) {
           fixed
         />
       </Page>
+
+      {/* Page 2: Negotiated Terms, General Provisions, Jurisdiction, Signature (boilerplate contracts only) */}
+      {hasBoilerplate && (
+        <Page size="A4" style={styles.page}>
+          {/* Negotiated Terms */}
+          {data.clauses.length > 0 && (
+            <View style={styles.section}>
+              <Text style={styles.negotiatedTermsHeader}>
+                {sectionNumber++}. {labels.negotiatedTerms}
+              </Text>
+              {data.clauses.map((clause, index) => (
+                <View
+                  key={`neg-${index}`}
+                  style={styles.clauseContainer}
+                >
+                  <View style={styles.clauseHeader}>
+                    <Text style={styles.clauseNumber}>
+                      {sectionNumber - 1}.{index + 1}
+                    </Text>
+                    <Text style={styles.clauseTitle}>{clause.title}</Text>
+                  </View>
+                  <ParagraphText style={styles.legalText}>{clause.legalText}</ParagraphText>
+                </View>
+              ))}
+            </View>
+          )}
+
+          {/* General Provisions */}
+          {data.boilerplate!.generalProvisions.length > 0 && (
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>
+                {sectionNumber++}. {labels.generalProvisions}
+              </Text>
+              {data.boilerplate!.generalProvisions.map((provision, index) => (
+                <View
+                  key={`gen-${index}`}
+                  style={styles.clauseContainer}
+                >
+                  <View style={styles.clauseHeader}>
+                    <Text style={styles.clauseNumber}>
+                      {sectionNumber - 1}.{index + 1}
+                    </Text>
+                    <Text style={styles.clauseTitle}>{provision.title}</Text>
+                  </View>
+                  <ParagraphText style={styles.provisionText}>{provision.text}</ParagraphText>
+                </View>
+              ))}
+            </View>
+          )}
+
+          {/* Jurisdiction-Specific Provisions */}
+          {data.boilerplate!.jurisdictionProvisions?.length ? (
+            data.boilerplate!.jurisdictionProvisions.map((jp, i) => (
+              <View key={i} style={styles.section}>
+                <Text style={styles.sectionTitle}>
+                  {sectionNumber++}. {jp.title}
+                </Text>
+                <ParagraphText style={styles.provisionText}>{jp.text}</ParagraphText>
+              </View>
+            ))
+          ) : data.boilerplate!.jurisdictionProvision ? (
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>
+                {sectionNumber++}.{" "}
+                {data.boilerplate!.jurisdictionProvision.title}
+              </Text>
+              <ParagraphText style={styles.provisionText}>
+                {data.boilerplate!.jurisdictionProvision.text}
+              </ParagraphText>
+            </View>
+          ) : null}
+
+          {/* Governing Law Box */}
+          <View style={styles.governingLawBox}>
+            <Text style={styles.governingLawLabel}>{labels.governingLaw}</Text>
+            <Text style={styles.governingLawText}>{data.governingLaw}</Text>
+          </View>
+
+          {/* Signature Section */}
+          {data.partyB !== null ? (
+            <View style={styles.signatureSection} wrap={false}>
+              <Text style={styles.sectionTitle}>{sectionNumber}. {labels.signatures}</Text>
+              <Text style={styles.signatureText}>
+                {labels.inWitnessWhereof}
+              </Text>
+              <View style={styles.signatureGrid}>
+                <View style={styles.signatureBox}>
+                  <Text style={styles.signatureLabel}>
+                    {data.boilerplate!.partyLabels?.partyA || labels.partyA}
+                  </Text>
+                  <View style={styles.signatureLine} />
+                  <Text style={styles.signaturePartyName}>
+                    {data.partyA.legalName || data.partyA.company || data.partyA.name}
+                  </Text>
+                  <Text style={{ fontSize: 9, color: "#666" }}>
+                    {data.partyA.signatoryName || data.partyA.name}
+                  </Text>
+                  {data.partyA.signatoryTitle && (
+                    <Text style={{ fontSize: 9, color: "#666" }}>
+                      {data.partyA.signatoryTitle}
+                    </Text>
+                  )}
+                  <Text style={styles.signatureDate}>{labels.date}</Text>
+                  <View style={styles.dateLine} />
+                </View>
+                <View style={styles.signatureBox}>
+                  <Text style={styles.signatureLabel}>
+                    {data.boilerplate!.partyLabels?.partyB || labels.partyB}
+                  </Text>
+                  <View style={styles.signatureLine} />
+                  <Text style={styles.signaturePartyName}>
+                    {data.partyB.legalName || data.partyB.company || data.partyB.name}
+                  </Text>
+                  <Text style={{ fontSize: 9, color: "#666" }}>
+                    {data.partyB.signatoryName || data.partyB.name}
+                  </Text>
+                  {data.partyB.signatoryTitle && (
+                    <Text style={{ fontSize: 9, color: "#666" }}>
+                      {data.partyB.signatoryTitle}
+                    </Text>
+                  )}
+                  <Text style={styles.signatureDate}>{labels.date}</Text>
+                  <View style={styles.dateLine} />
+                </View>
+              </View>
+            </View>
+          ) : (
+            <View style={styles.signatureSection} wrap={false}>
+              <View style={styles.divider} />
+              <Text style={styles.signatureText}>
+                {data.boilerplate!.signatureBlock}
+              </Text>
+            </View>
+          )}
+
+          {/* Certification footer */}
+          <View style={styles.certificationFooter} fixed>
+            <Text
+              style={data.certification?.certified ? styles.certifiedBadge : styles.uncertifiedBadge}
+            >
+              {data.certification?.certified ? labels.certifiedBy : labels.uncertified}
+            </Text>
+            <Text style={{ fontSize: 7, color: "#999" }}>
+              {data.certification?.documentHash
+                ? `SHA-256: ${data.certification.documentHash.slice(0, 16)}...`
+                : ""}
+            </Text>
+          </View>
+
+          {/* Footer with page number */}
+          <Text
+            style={styles.footer}
+            render={({ pageNumber, totalPages }) =>
+              `${data.dealName} | ${labels.page} ${pageNumber} ${labels.of} ${totalPages}`
+            }
+            fixed
+          />
+        </Page>
+      )}
 
       {/* Audit Certificate Page (only when certified) */}
       {data.certification?.certified && (
