@@ -26,6 +26,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { useState } from "react";
+import { useSession } from "next-auth/react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { LawyerWarningModal } from "@/components/LawyerWarningModal";
@@ -95,6 +96,9 @@ function DealDetailContent({ dealId }: { dealId: string }) {
   const tCommon = useTranslations("common");
   const locale = useLocale();
 
+  const { data: session } = useSession();
+  const isLawyer = session?.user?.role === "LAWYER";
+
   const [inviteOpen, setInviteOpen] = useState(false);
   const [inviteEmail, setInviteEmail] = useState("");
   const [inviteName, setInviteName] = useState("");
@@ -163,9 +167,10 @@ function DealDetailContent({ dealId }: { dealId: string }) {
   const canInvite = !isSoloMode && isInitiator && !respondent && deal.status === "DRAFT";
   const canNegotiate = deal.status === "DRAFT" || deal.status === "AWAITING_RESPONSE" || deal.status === "NEGOTIATING";
 
-  // Lawyer warning modal
+  // Lawyer warning modal — hidden for users with LAWYER role
   const myParty = deal.parties.find((p) => p.id === deal.currentPartyId);
-  const showLawyerWarning = !deal.lawyerVettingId &&
+  const showLawyerWarning = !isLawyer &&
+    !deal.lawyerVettingId &&
     !(myParty as any)?.lawyerWarningDismissedAt &&
     ["DRAFT", "AWAITING_RESPONSE", "NEGOTIATING"].includes(deal.status);
 
