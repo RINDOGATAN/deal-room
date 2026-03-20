@@ -31,7 +31,7 @@ export function LanguageSwitcher() {
       title={`Switch to ${localeNames[nextLocale]}`}
     >
       <Globe className="w-4 h-4" />
-      <span className="font-medium">{locale.toUpperCase()}</span>
+      <span className="font-medium">{nextLocale.toUpperCase()}</span>
     </button>
   );
 }
