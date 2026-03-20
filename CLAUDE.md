@@ -71,7 +71,7 @@ npm run deal:simulate -- --clean                    # Recreate all demo deals
 - Steps: Contract Type → Jurisdiction → Language → Mode → Deal Details (+ Parameters)
 - `soloModeOnly` types (Privacy Notice) skip jurisdiction and mode selection
 - `soloModeSupported` / `soloModeDefault` flags control mode selector visibility
-- Lawyer hint hidden for users with `LAWYER` role
+- Lawyer hint and "proceed without lawyer" warning modal both hidden for `LAWYER` role users
 - Lawyer directory filters to `expertTypes: { has: "LEGAL" }` (excludes deployment specialists)
 - Create button text: "Continue" (EN) / "Continuar" (ES)
 
