@@ -562,7 +562,7 @@
     "allLanguages": "All Languages",
     "approvedVettings": "{count} approved vettings",
     "requestRecommendation": "Request Assistance",
-    "lawyerHint": "Would you like a lawyer to review this first?",
+    "lawyerHint": "Would you like a lawyer to pre-vet a contract template first?",
     "lawyerHintLink": "Find a Lawyer"
   },
   "lawyerProfile": {

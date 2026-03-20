@@ -562,7 +562,7 @@
     "allLanguages": "Todos los idiomas",
     "approvedVettings": "{count} revisiones aprobadas",
     "requestRecommendation": "Solicitar Asistencia",
-    "lawyerHint": "¿Te gustaría que un abogado/a lo revisase primero?",
+    "lawyerHint": "¿Prefieres que un abogado pre-apruebe una plantilla antes?",
     "lawyerHintLink": "Buscar Abogado/a"
   },
   "lawyerProfile": {
