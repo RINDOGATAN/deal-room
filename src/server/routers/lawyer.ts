@@ -532,7 +532,10 @@ export const lawyerRouter = createTRPCRouter({
       }).optional()
     )
     .query(async ({ ctx, input }) => {
-      const where: Record<string, unknown> = { isPublished: true };
+      const where: Record<string, unknown> = {
+        isPublished: true,
+        expertTypes: { has: "LEGAL" },
+      };
       if (input?.jurisdiction) {
         where.jurisdictions = { has: input.jurisdiction };
       }
