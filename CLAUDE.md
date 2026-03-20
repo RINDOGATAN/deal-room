@@ -58,6 +58,23 @@ npm run deal:simulate -- --clean                    # Recreate all demo deals
 - Schema changes: create migrations with `prisma migrate dev`, deploy via Vercel build
 - Skill data: seed via legalskills workflow or manually (see "Seeding Skills" above)
 
+## E2E Testing (Playwright)
+
+- Auth bypass: `e2e-credentials` provider gated by `E2E_CREDENTIALS_SECRET`
+- Helpers: `e2e/helpers/auth.ts` (login), `e2e/helpers/deal.ts`, `e2e/helpers/lifecycle.ts`
+- Smoke test: `e2e/smoke-new-deal.spec.ts` — 8 scenarios across all 5 free contract types × jurisdictions × languages × modes
+- Handles `soloModeOnly` types (Privacy Notice) which skip jurisdiction/mode steps and have required deal parameters
+- Run: `npx playwright test e2e/smoke-new-deal.spec.ts --project=desktop`
+
+## Deal Creation Flow
+
+- Steps: Contract Type → Jurisdiction → Language → Mode → Deal Details (+ Parameters)
+- `soloModeOnly` types (Privacy Notice) skip jurisdiction and mode selection
+- `soloModeSupported` / `soloModeDefault` flags control mode selector visibility
+- Lawyer hint hidden for users with `LAWYER` role
+- Lawyer directory filters to `expertTypes: { has: "LEGAL" }` (excludes deployment specialists)
+- Create button text: "Continue" (EN) / "Continuar" (ES)
+
 ## Conventions
 
 - **Brand name:** Always "Dealroom" (one word), never "Deal Room"
