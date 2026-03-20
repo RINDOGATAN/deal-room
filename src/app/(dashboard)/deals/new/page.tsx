@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useMemo } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 import { useTranslations, useLocale } from "next-intl";
@@ -159,6 +160,8 @@ const jurisdictionMeta = [
 export default function NewDealPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { data: session } = useSession();
+  const isLawyer = session?.user?.role === "LAWYER";
   const t = useTranslations("newDeal");
   const tCommon = useTranslations("common");
   const tLawyer = useTranslations("lawyer");
@@ -489,8 +492,8 @@ export default function NewDealPage() {
         </p>
       </div>
 
-      {/* Lawyer directory hint for business owners */}
-      {features.lawyerInvolvement && !isVettingFlow && (
+      {/* Lawyer directory hint — hidden for lawyers and vetting flows */}
+      {features.lawyerInvolvement && !isVettingFlow && !isLawyer && (
         <div className="flex items-center gap-3 px-4 py-3 bg-secondary/50 border border-border rounded-xl text-sm">
           <Scale className="w-4 h-4 text-muted-foreground shrink-0" />
           <span className="text-muted-foreground">{tDirectory("lawyerHint")}</span>
