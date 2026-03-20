@@ -2,6 +2,7 @@
 
 import { useParams, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 import { NextIntlClientProvider, useTranslations } from "next-intl";
@@ -88,6 +89,9 @@ function NegotiateContent({ dealId }: { dealId: string }) {
   const tCommon = useTranslations("common");
   const tLawyer = useTranslations("lawyer");
   const tNewDeal = useTranslations("newDeal");
+
+  const { data: session } = useSession();
+  const isLawyer = session?.user?.role === "LAWYER";
 
   const [currentClauseIndex, setCurrentClauseIndex] = useState(0);
   const [selections, setSelections] = useState<Map<string, Selection>>(new Map());
@@ -230,9 +234,10 @@ function NegotiateContent({ dealId }: { dealId: string }) {
   const governingLaw = deal.governingLaw as GoverningLaw;
   const contractLang = (deal as { contractLanguage?: string }).contractLanguage || "en";
 
-  // Lawyer warning modal
+  // Lawyer warning modal — hidden for users with LAWYER role
   const myNegotiateParty = deal.parties.find((p) => p.id === deal.currentPartyId);
-  const showLawyerWarning = !deal.lawyerVettingId &&
+  const showLawyerWarning = !isLawyer &&
+    !deal.lawyerVettingId &&
     !(myNegotiateParty as any)?.lawyerWarningDismissedAt &&
     ["DRAFT", "AWAITING_RESPONSE", "NEGOTIATING"].includes(deal.status);
 
