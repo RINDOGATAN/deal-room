@@ -1,0 +1,82 @@
+/**
+ * Experts Directory API — Available Filters
+ *
+ * GET /api/v1/experts/filters
+ * Returns distinct specializations, countries, languages, and expert types
+ * from all published expert profiles.
+ *
+ * Authenticated via API key (Bearer drk_...) with scope "experts:read".
+ */
+
+import { NextRequest, NextResponse } from "next/server";
+import prisma from "@/lib/prisma";
+import {
+  authenticateApiKey,
+  requireScope,
+  ApiScopeError,
+} from "@/server/middleware/apiKeyAuth";
+import { features } from "@/config/features";
+import {
+  SPECIALIZATION_LABELS,
+  type Specialization,
+} from "@/server/services/experts/taxonomy";
+
+export async function GET(req: NextRequest) {
+  try {
+    if (!features.expertsApi) {
+      return NextResponse.json({ error: "Not available" }, { status: 404 });
+    }
+
+    const auth = await authenticateApiKey(req);
+    if (!auth) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    try {
+      requireScope(auth, "experts:read");
+    } catch (e) {
+      if (e instanceof ApiScopeError) {
+        return NextResponse.json({ error: e.message }, { status: 403 });
+      }
+      throw e;
+    }
+
+    const profiles = await prisma.lawyerProfile.findMany({
+      where: { isPublished: true },
+      select: {
+        specializations: true,
+        countryCode: true,
+        languages: true,
+        expertTypes: true,
+      },
+    });
+
+    // Collect distinct values
+    const specSet = new Set<string>();
+    const countrySet = new Set<string>();
+    const langSet = new Set<string>();
+    const typeSet = new Set<string>();
+
+    for (const p of profiles) {
+      for (const s of p.specializations) {
+        specSet.add(SPECIALIZATION_LABELS[s as Specialization] ?? s);
+      }
+      if (p.countryCode) countrySet.add(p.countryCode);
+      for (const l of p.languages) langSet.add(l);
+      for (const t of p.expertTypes) typeSet.add(t.toLowerCase());
+    }
+
+    return NextResponse.json({
+      specializations: [...specSet].sort(),
+      countries: [...countrySet].sort(),
+      languages: [...langSet].sort(),
+      expertTypes: [...typeSet].sort(),
+    });
+  } catch (error) {
+    console.error("Error fetching expert filters:", error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
+  }
+}
