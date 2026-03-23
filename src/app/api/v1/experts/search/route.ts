@@ -115,7 +115,12 @@ export async function POST(req: NextRequest) {
     const where: Record<string, unknown> = { isPublished: true };
 
     if (specialization) {
-      where.specializations = { has: specialization };
+      // Accept both enum keys (SELF_HOSTING_DEPLOYMENT) and display labels (Self-Hosting / Deployment)
+      const key =
+        Object.entries(SPECIALIZATION_LABELS).find(
+          ([, label]) => label.toLowerCase() === specialization.toLowerCase()
+        )?.[0] ?? specialization;
+      where.specializations = { has: key };
     }
     if (country) {
       where.countryCode = country;
@@ -130,14 +135,27 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // Free-text search on name, company, or bio
+    // Free-text search on name, company, bio, and specialization labels
     if (query && query.trim().length > 0) {
       const q = query.trim();
-      where.OR = [
+      const qLower = q.toLowerCase();
+
+      // Find specialization keys whose display labels match the query
+      const matchingSpecKeys = Object.entries(SPECIALIZATION_LABELS)
+        .filter(([, label]) => label.toLowerCase().includes(qLower))
+        .map(([key]) => key);
+
+      const orClauses: Record<string, unknown>[] = [
         { user: { name: { contains: q, mode: "insensitive" } } },
         { user: { company: { contains: q, mode: "insensitive" } } },
         { bio: { contains: q, mode: "insensitive" } },
       ];
+
+      if (matchingSpecKeys.length > 0) {
+        orClauses.push({ specializations: { hasSome: matchingSpecKeys } });
+      }
+
+      where.OR = orClauses;
     }
 
     const [profiles, total] = await Promise.all([
