@@ -40,7 +40,7 @@ rm .env.prod
 ## APIs
 
 - **Agent:** `/api/v1/agent/` — playbooks, negotiation, deals, webhooks, credits, MCP/A2A. Docs: `docs/agent-api.md`
-- **Experts:** `/api/v1/experts/` — search, get-by-ID, contact. Auth: `drk_...` tokens with scopes
+- **Experts:** `/api/v1/experts/` — search, get-by-ID, filters, contact, verify. Auth: `drk_...` tokens with scopes (`experts:read`, `experts:contact`)
 
 ## Commands
 ```bash
@@ -74,6 +74,12 @@ npm run deal:simulate -- --clean                    # Recreate all demo deals
 - Lawyer hint and "proceed without lawyer" warning modal both hidden for `LAWYER` role users
 - Lawyer directory filters to `expertTypes: { has: "LEGAL" }` (excludes deployment specialists)
 - Create button text: "Continue" (EN) / "Continuar" (ES)
+
+## SEO / Indexing
+
+- Google Search Console verification: `src/app/google700a816d5db3f2da.html/route.ts` (inline, not static file)
+- `public/sitemap.xml` — public pages only (no auth-gated routes like `/marketplace`)
+- `public/robots.txt`, `public/llms.txt` — crawling/LLM guidance
 
 ## Conventions
 
