@@ -1,0 +1,40 @@
+# Dealroom — LLM Context
+
+> Dealroom is a two-party asynchronous contract negotiation platform built by TODO.LAW. It replaces emailing Word files back and forth with a secure, AI-powered workspace that finds the optimal compromise for both parties.
+
+## Public Pages
+
+- [Homepage](https://dealroom.todo.law): Platform overview, feature descriptions, how it works
+- [Documentation Hub](https://dealroom.todo.law/docs): Full platform documentation
+- [How It Works](https://dealroom.todo.law/docs/how-it-works): Step-by-step negotiation workflow
+- [Compromise Algorithm](https://dealroom.todo.law/docs/compromise): Weighted compromise methodology
+- [Contract Skills](https://dealroom.todo.law/docs/skills): Supported contract types and templates
+- [Supervision Mode](https://dealroom.todo.law/docs/supervision): Human oversight for AI-assisted negotiation
+- [Vetting](https://dealroom.todo.law/docs/vetting): Counterparty vetting and due diligence
+- [Agent API](https://dealroom.todo.law/docs/agent-api): A2A agent integration documentation
+- [Local Deployment](https://dealroom.todo.law/docs/local-deployment): Self-hosted deployment guide
+- [Marketplace](https://dealroom.todo.law/marketplace): Browse and subscribe to contract skills
+
+## What Dealroom Does
+
+- **Two-Party Negotiation**: Asynchronous contract negotiation between two parties on a shared, encrypted workspace
+- **AI-Powered Compromise**: Weighted algorithm that suggests optimal middle ground between competing positions
+- **End-to-End Encryption**: All contract data encrypted in transit and at rest
+- **Cross-Border Ready**: Supports California, England & Wales, and Spain jurisdictions
+- **Contract Types**: 32 contract skills including NDA, MSA, SaaS Agreement, DPA, Privacy Notice, Joint Venture, Employment, Consulting, and more
+- **Export & Sign**: Generate final documents for signing after negotiation completes
+- **A2A Agent Protocol**: Machine-readable agent card at /.well-known/agent.json for agent-to-agent negotiation
+
+## TODO.LAW Ecosystem
+
+Dealroom is part of the TODO.LAW platform for AI-native legal services:
+
+- **Dealroom** (dealroom.todo.law) — Contract negotiation
+- **DPO Central** (dpocentral.todo.law) — Privacy compliance management
+- **AI Sentinel** (aisentinel.todo.law) — AI governance and EU AI Act compliance
+- **Seneca** (seneca.todo.law) — Privacy litigation research
+- **Vendor.Watch** (vendor.watch) — SaaS vendor compliance database
+- **Clausemaster** (clausemaster.todo.law) — AI-powered contract analysis
+- **Gavel** (gavel.todo.law) — Digital arbitration protocol
+
+For full ecosystem context, see: https://todo.law/llms-full.txt

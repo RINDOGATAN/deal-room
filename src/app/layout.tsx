@@ -37,9 +37,31 @@ const spaceMono = Space_Mono({
   weight: ["400", "700"],
 });
 
+const siteUrl = `https://dealroom.${brand.domain}`;
+
 export const metadata: Metadata = {
   title: `DEALROOM - ${brand.tagline}`,
   description: brand.description,
+  metadataBase: new URL(siteUrl),
+  alternates: { canonical: "/" },
+  openGraph: {
+    title: `Dealroom — ${brand.tagline}`,
+    description: brand.description,
+    url: siteUrl,
+    siteName: "Dealroom",
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: `Dealroom — ${brand.tagline}`,
+    description: brand.description,
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true },
+  },
 };
 
 export default async function RootLayout({
