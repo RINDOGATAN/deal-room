@@ -622,7 +622,9 @@
     "selectJurisdiction": "Select Jurisdiction",
     "messagePlaceholder": "Optional: describe your needs or ask a question...",
     "submitRequest": "Send Request",
-    "submitting": "Sending..."
+    "submitting": "Sending...",
+    "sourceApp": "Source",
+    "jurisdictionNotSpecified": "Not specified"
   },
   "billing": {
     "title": "Billing",

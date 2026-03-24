@@ -35,6 +35,12 @@ const jurisdictionKeys: Record<string, string> = {
   SPAIN: "jurisdictionSpain",
 };
 
+const sourceAppLabels: Record<string, string> = {
+  "dpo-central": "DPO Central",
+  "ai-sentinel": "AI Sentinel",
+  "vendorwatch": "VendorWatch",
+};
+
 export default function RequestsPage() {
   const t = useTranslations("requests");
   const tCommon = useTranslations("common");
@@ -131,6 +137,11 @@ export default function RequestsPage() {
                         <StatusIcon className="w-3 h-3" />
                         {t(request.status.toLowerCase() as "pending" | "accepted" | "declined" | "completed")}
                       </span>
+                      {(request as { sourceApp?: string | null }).sourceApp && (
+                        <span className="inline-flex items-center text-xs px-2 py-0.5 rounded-full font-medium bg-blue-500/10 text-blue-600">
+                          {sourceAppLabels[(request as { sourceApp: string }).sourceApp] || (request as { sourceApp: string }).sourceApp}
+                        </span>
+                      )}
                     </div>
                     <div className="flex flex-wrap gap-3 text-sm text-muted-foreground">
                       <span>
