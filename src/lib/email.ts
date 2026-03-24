@@ -159,8 +159,9 @@ interface SendRecommendationRequestEmailParams {
   requesterName: string;
   requesterCompany?: string;
   contractType: string;
-  governingLaw: string;
+  governingLaw: string | null;
   message?: string;
+  sourceApp?: string;
 }
 
 export async function sendRecommendationRequestEmail({
@@ -170,11 +171,16 @@ export async function sendRecommendationRequestEmail({
   contractType,
   governingLaw,
   message,
+  sourceApp,
 }: SendRecommendationRequestEmailParams) {
   const requestsUrl = `${process.env.NEXTAUTH_URL}/lawyers/requests`;
   const requesterLabel = requesterCompany
     ? `${requesterName} (${requesterCompany})`
     : requesterName;
+
+  const jurisdictionText = governingLaw
+    ? ` (${governingLaw.replace("_", " & ")})`
+    : "";
 
   const messageBlock = message
     ? `<div style="background: ${brand.colors.card}; border-left: 3px solid ${brand.colors.primary}; padding: 12px 16px; margin: 0 0 24px; border-radius: 0 8px 8px 0;">
@@ -182,13 +188,17 @@ export async function sendRecommendationRequestEmail({
       </div>`
     : "";
 
+  const subject = sourceApp
+    ? `New assistance request: ${contractType}`
+    : `New recommendation request: ${contractType}`;
+
   try {
     await getResend().emails.send({
       from: emailFrom(),
       to,
-      subject: `New recommendation request: ${contractType}`,
+      subject,
       html: emailWrapper("Recommendation Request", `
-        ${emailParagraph(`<strong style="color: ${brand.colors.foreground};">${requesterLabel}</strong> has requested your recommendation for a <strong style="color: ${brand.colors.foreground};">${contractType}</strong> contract (${governingLaw.replace("_", " & ")}).`)}
+        ${emailParagraph(`<strong style="color: ${brand.colors.foreground};">${requesterLabel}</strong> has requested your recommendation for a <strong style="color: ${brand.colors.foreground};">${contractType}</strong> contract${jurisdictionText}.`)}
         ${messageBlock}
         ${emailButton(requestsUrl, "View Request")}
         ${emailMuted("You can accept or decline this request from your dashboard.")}

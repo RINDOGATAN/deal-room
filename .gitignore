@@ -30,6 +30,7 @@
 *.pem
 /sample-pdfs
 /e2e/output/
+/reference/
 
 # debug
 npm-debug.log*
