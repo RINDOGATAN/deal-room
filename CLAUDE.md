@@ -41,7 +41,9 @@ rm .env.prod
 ## APIs
 
 - **Agent:** `/api/v1/agent/` — playbooks, negotiation, deals, webhooks, credits, MCP/A2A. Docs: `docs/agent-api.md`
+- **A2A Rate Limits:** `A2A_` prefixed contract types have weekly limits — standard: 5/skill/week, premium (`premiumA2A` in Customer.metadata): 300/week
 - **Experts:** `/api/v1/experts/` — search, get-by-ID, filters, contact, verify. Auth: `drk_...` tokens with scopes (`experts:read`, `experts:contact`)
+- **Gavel:** Dispute escalation via `POST /api/v1/agent/deals/:id/dispute`. DRC protocol at `gavel.todo.law`
 
 ## Commands
 ```bash
@@ -75,6 +77,13 @@ npm run deal:simulate -- --clean                    # Recreate all demo deals
 - Lawyer hint and "proceed without lawyer" warning modal both hidden for `LAWYER` role users
 - Lawyer directory filters to `expertTypes: { has: "LEGAL" }` (excludes deployment specialists)
 - Create button text: "Continue" (EN) / "Continuar" (ES)
+
+## Public Docs (`/docs`)
+
+- Skills & Licensing, Compromise Algorithm, How It Works, Vetting, Supervision
+- Agent API reference, A2A Skills Catalog (dynamic, queries DB for `A2A_` templates)
+- **Agent Preparation Guide:** `/docs/agent-preparation/` — policy authoring, playbook builder (dynamic), dispute readiness with Gavel DRC
+- All docs pages bilingual EN/ES via `useTranslations()`. Layout: `src/app/(public)/docs/layout.tsx`
 
 ## SEO / Indexing
 
