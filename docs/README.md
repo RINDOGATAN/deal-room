@@ -9,6 +9,7 @@
 | [lawyer-involvement.md](./lawyer-involvement.md) | Dedicated guide to the three stages of lawyer involvement (EN) |
 | [intervencion-abogado.md](./intervencion-abogado.md) | Guía de las tres fases de intervención de abogado/a (ES) |
 | [agent-api.md](./agent-api.md) | Agent Negotiation REST API reference — authentication, playbooks, negotiation flow, endpoints |
+| [a2a-contracts.md](./a2a-contracts.md) | Agent-to-Agent contract skills — 12 A2A skills, Gavel dispute resolution, subscription model |
 | [skills-and-licensing.md](./skills-and-licensing.md) | Complete guide to skill packages, licensing, activation, and i18n |
 
 ## Architecture Overview
