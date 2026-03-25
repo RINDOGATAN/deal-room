@@ -14,6 +14,7 @@ import {
   requireScope,
   ApiScopeError,
   checkRateLimit,
+  checkA2aRateLimit,
 } from "@/server/middleware/apiKeyAuth";
 import { checkDealCreationEntitlement } from "@/server/services/licensing/entitlement";
 import { features } from "@/config/features";
@@ -133,6 +134,30 @@ export async function POST(req: NextRequest) {
         },
         { status: 403 }
       );
+    }
+
+    // A2A rate limit check for contract types with A2A_ prefix
+    if (playbook.contractType.startsWith("A2A_")) {
+      const isPremiumA2a = !!((auth.customer as Record<string, unknown>).metadata as Record<string, unknown> | null)?.premiumA2A;
+      const a2aLimit = checkA2aRateLimit(
+        auth.customer.id,
+        playbook.contractType,
+        isPremiumA2a,
+      );
+      if (!a2aLimit.allowed) {
+        return NextResponse.json(
+          {
+            error: isPremiumA2a
+              ? "A2A premium weekly limit reached (300 invocations/week)."
+              : "A2A contract invocation limit reached (5 per skill/week). Upgrade to premium tier for 300 calls/week.",
+            remaining: a2aLimit.remaining,
+          },
+          {
+            status: 429,
+            headers: { "Retry-After": String(a2aLimit.retryAfter) },
+          }
+        );
+      }
     }
 
     // Generate a unique negotiation token

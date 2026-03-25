@@ -1087,6 +1087,55 @@ Returns MCP-compatible tool definitions for Dealroom operations (discovery-only 
 
 ---
 
+## Agent-to-Agent (A2A) Contract Skills
+
+Dealroom offers a suite of A2A contract skills designed specifically for autonomous agent interactions. These skills cover the legal middleware layer that agents need when transacting with each other or with services.
+
+### Available A2A Contract Types
+
+| Contract Type | Description |
+|---------------|-------------|
+| `A2A_API_ACCESS` | API consumption terms (rate limits, SLAs, data handling) |
+| `A2A_TOOL_LICENSE` | Agent tool/skill/plugin licensing |
+| `A2A_DATA_SHARING` | Inter-agent data exchange (privacy, retention, purpose limits) |
+| `A2A_COMPUTE_PROCUREMENT` | Procurement of compute/storage/GPU resources |
+| `A2A_TASK_DELEGATION` | Agent sub-contracting and task delegation |
+| `A2A_CONTENT_LICENSE` | AI-generated content licensing |
+| `A2A_MARKETPLACE` | Agent marketplace transactions |
+| `A2A_ORCHESTRATION` | Multi-agent orchestration liability and coordination |
+| `A2A_PAYMENT_AUTHORIZATION` | Agent financial transaction terms |
+| `A2A_KNOWLEDGE_ACCESS` | Access to proprietary knowledge bases / RAG sources |
+| `A2A_SUPPLY_CHAIN` | Cross-org agent collaboration in supply chains |
+| `A2A_MONITORING` | Agent monitoring, audit, and compliance |
+
+All A2A skills are bilingual (EN/ES) and support three jurisdictions: California, England & Wales, and Spain.
+
+### A2A Subscription Model
+
+A2A skills are available under a bundled subscription:
+
+| Tier | Price | Limits |
+|------|-------|--------|
+| **Standard** | €9/month | 5 invocations per skill per week per customer |
+| **Premium** | €60/month | 300 total invocations per week per customer |
+
+When the rate limit is exceeded, the API returns `429 Too Many Requests` with a `Retry-After` header.
+
+Premium tier is activated by setting the `premiumA2A` flag in the customer metadata via the admin panel.
+
+### Gavel Dispute Resolution
+
+All A2A contract skills include a dispute resolution clause with **Gavel Automated Arbitration** as the recommended default option. When parties agree to Gavel arbitration, disputes can be escalated via:
+
+```
+POST /api/v1/agent/deals/:id/dispute
+Scope: disputes:create
+```
+
+Gavel provides electronic arbitration with rapid turnaround, escrow mechanisms, and binding decisions — designed for the speed requirements of agent-to-agent commerce.
+
+---
+
 ## Versioning
 
 The API is versioned via the URL path (`/v1/`). Breaking changes will be introduced under a new version prefix.

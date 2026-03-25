@@ -565,6 +565,22 @@ async function main() {
     "com.nel.skills.equity-incentive",
   ];
 
+  // A2A contract skills — bundled under the A2A subscription
+  const a2aSkillIds = [
+    "com.todolaw.skills.a2a.api-access",
+    "com.todolaw.skills.a2a.tool-license",
+    "com.todolaw.skills.a2a.data-sharing",
+    "com.todolaw.skills.a2a.compute-procurement",
+    "com.todolaw.skills.a2a.task-delegation",
+    "com.todolaw.skills.a2a.content-license",
+    "com.todolaw.skills.a2a.marketplace",
+    "com.todolaw.skills.a2a.orchestration",
+    "com.todolaw.skills.a2a.payment-authorization",
+    "com.todolaw.skills.a2a.knowledge-access",
+    "com.todolaw.skills.a2a.supply-chain",
+    "com.todolaw.skills.a2a.monitoring",
+  ];
+
   for (const skillId of premiumSkillIds) {
     const existing = await prisma.skillPackage.findUnique({ where: { skillId } });
     if (existing) {
@@ -578,6 +594,23 @@ async function main() {
         },
       });
       console.log(`  Marked ${skillId} as premium (€9/mo)`);
+    }
+  }
+
+  // Mark A2A skills as premium (bundled A2A subscription, same price)
+  for (const skillId of a2aSkillIds) {
+    const existing = await prisma.skillPackage.findUnique({ where: { skillId } });
+    if (existing) {
+      await prisma.skillPackage.update({
+        where: { skillId },
+        data: {
+          isPremium: true,
+          stripePriceId: STRIPE_PRICE_ID,
+          priceAmount: 900,
+          priceCurrency: "eur",
+        },
+      });
+      console.log(`  Marked ${skillId} as premium A2A skill (€9/mo)`);
     }
   }
 

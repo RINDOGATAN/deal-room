@@ -99,6 +99,46 @@ export interface RateLimitResult {
  * Check rate limit for a customer on a specific endpoint group.
  * Returns whether the request is allowed and remaining quota.
  */
+/**
+ * Check A2A-specific rate limits.
+ * Standard tier: 5 invocations per skill per week per customer.
+ * Premium tier (premiumA2A flag): 300 total invocations per week per customer.
+ */
+export function checkA2aRateLimit(
+  customerId: string,
+  contractType: string,
+  isPremiumA2a: boolean,
+): RateLimitResult {
+  const weekMs = 7 * 24 * 3600_000;
+  const now = Date.now();
+
+  if (isPremiumA2a) {
+    // Premium: 300 total A2A invocations per week
+    const key = `${customerId}:a2a:premium`;
+    let window = rateLimitStore.get(key);
+    if (!window) { window = { timestamps: [] }; rateLimitStore.set(key, window); }
+    window.timestamps = window.timestamps.filter((t) => now - t < weekMs);
+    if (window.timestamps.length >= 300) {
+      const retryAfter = Math.ceil((window.timestamps[0] + weekMs - now) / 1000);
+      return { allowed: false, remaining: 0, retryAfter };
+    }
+    window.timestamps.push(now);
+    return { allowed: true, remaining: 300 - window.timestamps.length };
+  }
+
+  // Standard: 5 invocations per skill per week
+  const key = `${customerId}:a2a:${contractType}`;
+  let window = rateLimitStore.get(key);
+  if (!window) { window = { timestamps: [] }; rateLimitStore.set(key, window); }
+  window.timestamps = window.timestamps.filter((t) => now - t < weekMs);
+  if (window.timestamps.length >= 5) {
+    const retryAfter = Math.ceil((window.timestamps[0] + weekMs - now) / 1000);
+    return { allowed: false, remaining: 0, retryAfter };
+  }
+  window.timestamps.push(now);
+  return { allowed: true, remaining: 5 - window.timestamps.length };
+}
+
 export function checkRateLimit(
   customerId: string,
   group: "negotiate" | "default",

@@ -252,6 +252,7 @@ model Customer {
   email            String       @unique
   type             CustomerType // SAAS | SELF_HOSTED
   stripeCustomerId String?
+  metadata         Json?
   createdAt        DateTime     @default(now())
   updatedAt        DateTime     @updatedAt
 
