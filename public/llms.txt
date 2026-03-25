@@ -12,6 +12,7 @@
 - [Supervision Mode](https://dealroom.todo.law/docs/supervision): Human oversight for AI-assisted negotiation
 - [Vetting](https://dealroom.todo.law/docs/vetting): Counterparty vetting and due diligence
 - [Agent API](https://dealroom.todo.law/docs/agent-api): A2A agent integration documentation
+- [Agent Preparation](https://dealroom.todo.law/docs/agent-preparation): Guide for preparing agents for contract negotiation and dispute resolution
 - [Local Deployment](https://dealroom.todo.law/docs/local-deployment): Self-hosted deployment guide
 - [Marketplace](https://dealroom.todo.law/marketplace): Browse and subscribe to contract skills
 
