@@ -729,7 +729,30 @@
     "agentApi": "Agent API",
     "negotiationApi": "Negotiation API",
     "administration": "Administration",
-    "supervision": "Supervision"
+    "supervision": "Supervision",
+    "a2aSkillsCatalog": "A2A Skills Catalog"
+  },
+  "a2aSkills": {
+    "title": "Agent-to-Agent Contract Skills",
+    "subtitle": "Browse the contract types available for autonomous agent negotiation. Each skill represents a legally-grounded contract that your agents can negotiate on behalf of your organization.",
+    "emptyState": "No A2A contract skills are currently available. Contact your administrator.",
+    "contractTypes": "contract types",
+    "negotiableTerms": "negotiable terms",
+    "optionVariants": "option variants",
+    "clauses": "clauses",
+    "options": "options",
+    "negotiableClauses": "Negotiable Clauses",
+    "gavelRecommended": "Recommended for agent-to-agent disputes — fast, electronic, binding",
+    "howItWorksTitle": "How Agent Negotiation Works",
+    "howItWorksDesc": "Your organization configures a playbook with preferred positions on each clause. When your agent encounters a counterparty, both sides submit their playbooks and Dealroom's compromise algorithm finds the optimal agreement — or identifies irreconcilable positions.",
+    "step1Title": "1. Review contract types",
+    "step1Desc": "Browse the skills below to understand what terms your agent will negotiate.",
+    "step2Title": "2. Set your playbook",
+    "step2Desc": "For each clause, choose your preferred option, set flexibility (1-5), and mark red lines.",
+    "step3Title": "3. Let your agent negotiate",
+    "step3Desc": "Your agent uses the playbook via the API. Agreed contracts are generated as binding PDFs.",
+    "catalogTitle": "Available Contract Types",
+    "catalogDesc": "Click any contract type to see its negotiable clauses and options. Each option shows which party it favors, so you can make informed choices when configuring your playbook."
   },
   "localDeployment": {
     "title": "Local Deployment",
