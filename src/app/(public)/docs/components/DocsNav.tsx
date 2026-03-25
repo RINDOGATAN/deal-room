@@ -12,6 +12,7 @@ import {
   ClipboardCheck,
   HardDrive,
   Bot,
+  Shield,
 } from "lucide-react";
 
 interface NavItem {
@@ -65,6 +66,17 @@ const navSectionsDef: NavSection[] = [
     items: [
       { href: "/docs/agent-api", labelKey: "negotiationApi" },
       { href: "/docs/a2a-skills", labelKey: "a2aSkillsCatalog" },
+    ],
+  },
+  {
+    id: "agent-prep",
+    labelKey: "agentPrep",
+    icon: Shield,
+    items: [
+      { href: "/docs/agent-preparation", labelKey: "prepOverview", exact: true },
+      { href: "/docs/agent-preparation/policy", labelKey: "prepPolicy" },
+      { href: "/docs/agent-preparation/playbook", labelKey: "prepPlaybook" },
+      { href: "/docs/agent-preparation/disputes", labelKey: "prepDisputes" },
     ],
   },
   {

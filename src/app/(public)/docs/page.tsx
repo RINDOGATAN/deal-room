@@ -9,6 +9,7 @@ import {
   Scale,
   ArrowRight,
   ClipboardCheck,
+  Shield,
 } from "lucide-react";
 
 const sectionDefs = [
@@ -41,6 +42,12 @@ const sectionDefs = [
     icon: Eye,
     titleKey: "sectionSupervisionTitle",
     descKey: "sectionSupervisionDesc",
+  },
+  {
+    href: "/docs/agent-preparation",
+    icon: Shield,
+    titleKey: "sectionAgentPrepTitle",
+    descKey: "sectionAgentPrepDesc",
   },
 ];
 
