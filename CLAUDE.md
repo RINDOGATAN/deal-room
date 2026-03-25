@@ -18,7 +18,8 @@ Contract negotiation platform with weighted compromise algorithm.
 
 - **Free (5):** `skills/` — nda, msa, saas, dpa, privacy-notice
 - **Premium (27):** Private `RINDOGATAN/legalskills` repo — **never commit premium skills to this repo**
-- All 32 bilingual EN/ES, 3 jurisdictions (CALIFORNIA, ENGLAND_WALES, SPAIN)
+- **A2A (12):** Agent-to-Agent skills in `RINDOGATAN/legalskills` — bundled subscription, Gavel dispute resolution
+- All 44 bilingual EN/ES, 3 jurisdictions (CALIFORNIA, ENGLAND_WALES, SPAIN)
 - Seed defaults `biasPartyA`/`biasPartyB` to `0` when missing
 
 ### Seeding Skills to Production

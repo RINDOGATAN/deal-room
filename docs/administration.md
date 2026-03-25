@@ -1085,7 +1085,7 @@ All emails follow the same dark-themed template as invitation emails.
 
 ## Skill Catalog
 
-Dealroom ships 32 contract skills: 5 free taster skills and 27 premium skills. All premium skills are bilingual (EN/ES), cover 3 jurisdictions, and include 10 negotiable clauses each.
+Dealroom ships 44 contract skills: 5 free taster skills, 27 premium skills, and 12 Agent-to-Agent (A2A) skills. All premium and A2A skills are bilingual (EN/ES) and cover 3 jurisdictions.
 
 ### Free Taster Skills
 
@@ -1296,6 +1296,29 @@ Equity incentive plan for startups and growth companies covering plan type (ISO/
 - **California:** IRC § 422 ISOs ($100k annual vesting limit, 110% FMV for 10% shareholders), IRC § 409A valuation requirements, Cal. Corp. Code § 25102(o) securities exemption, IRC § 83(b) election
 - **England & Wales:** EMI scheme (ITEPA 2003) for tax-advantaged options, Companies Act 2006 §§ 551/561 allotment authority, HMRC 92-day notification, NIC joint election
 - **Spain:** Ley 28/2022 startup exemption (€50,000/year), LSC arts. 107–112 share transfer restrictions, art. 304 pre-emption rights disapplication, IRPF art. 17.2 in-kind employment income
+
+---
+
+### Agent-to-Agent (A2A) Skills
+
+12 skills for autonomous agent interactions. Bundled under the A2A subscription (€9/mo standard, €60/mo premium). All bilingual EN/ES, 3 jurisdictions. Every skill includes Gavel automated arbitration as the default dispute resolution option.
+
+| Skill | Contract Type | Clauses | Party A / Party B |
+|-------|--------------|---------|-------------------|
+| API Access Agreement | A2A_API_ACCESS | 8 | Provider / Consumer |
+| Tool License Agreement | A2A_TOOL_LICENSE | 7 | Provider / Licensee |
+| Data Sharing Agreement | A2A_DATA_SHARING | 8 | Data Provider / Data Recipient |
+| Compute Procurement Agreement | A2A_COMPUTE_PROCUREMENT | 7 | Provider / Consumer |
+| Task Delegation Agreement | A2A_TASK_DELEGATION | 7 | Principal / Subcontractor |
+| Content License Agreement | A2A_CONTENT_LICENSE | 7 | Licensor / Licensee |
+| Marketplace Terms Agreement | A2A_MARKETPLACE | 7 | Operator / Participant |
+| Orchestration Agreement | A2A_ORCHESTRATION | 7 | Orchestrator / Participant |
+| Payment Authorization Agreement | A2A_PAYMENT_AUTHORIZATION | 7 | Payment Provider / Payer |
+| Knowledge Access Agreement | A2A_KNOWLEDGE_ACCESS | 7 | Knowledge Provider / Consumer |
+| Supply Chain Collaboration Agreement | A2A_SUPPLY_CHAIN | 7 | Coordinator / Partner |
+| Agent Monitoring Agreement | A2A_MONITORING | 7 | Principal / Monitor |
+
+See [a2a-contracts.md](./a2a-contracts.md) for full documentation including negotiation examples and technical implementation.
 
 ---
 
