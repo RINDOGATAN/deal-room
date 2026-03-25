@@ -62,7 +62,10 @@ const navSectionsDef: NavSection[] = [
     id: "agent-api",
     labelKey: "agentApi",
     icon: Bot,
-    items: [{ href: "/docs/agent-api", labelKey: "negotiationApi" }],
+    items: [
+      { href: "/docs/agent-api", labelKey: "negotiationApi" },
+      { href: "/docs/a2a-skills", labelKey: "a2aSkillsCatalog" },
+    ],
   },
   {
     id: "administration",

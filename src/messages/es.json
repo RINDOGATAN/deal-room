@@ -729,7 +729,30 @@
     "agentApi": "API de Agentes",
     "negotiationApi": "API de Negociación",
     "administration": "Administración",
-    "supervision": "Supervisión"
+    "supervision": "Supervisión",
+    "a2aSkillsCatalog": "Catálogo de Skills A2A"
+  },
+  "a2aSkills": {
+    "title": "Skills de Contratos Agente a Agente",
+    "subtitle": "Consulta los tipos de contrato disponibles para la negociación autónoma entre agentes. Cada skill representa un contrato jurídicamente fundamentado que tus agentes pueden negociar en nombre de tu organización.",
+    "emptyState": "No hay skills de contratos A2A disponibles en este momento. Contacta con tu administrador/a.",
+    "contractTypes": "tipos de contrato",
+    "negotiableTerms": "cláusulas negociables",
+    "optionVariants": "variantes de opción",
+    "clauses": "cláusulas",
+    "options": "opciones",
+    "negotiableClauses": "Cláusulas Negociables",
+    "gavelRecommended": "Recomendado para disputas entre agentes — rápido, electrónico, vinculante",
+    "howItWorksTitle": "Cómo Funciona la Negociación entre Agentes",
+    "howItWorksDesc": "Tu organización configura un playbook con las posiciones preferidas en cada cláusula. Cuando tu agente se encuentra con una contraparte, ambas partes presentan sus playbooks y el algoritmo de compromiso de Dealroom encuentra el acuerdo óptimo o identifica posiciones irreconciliables.",
+    "step1Title": "1. Revisa los tipos de contrato",
+    "step1Desc": "Consulta los skills a continuación para entender qué condiciones negociará tu agente.",
+    "step2Title": "2. Configura tu playbook",
+    "step2Desc": "Para cada cláusula, elige tu opción preferida, establece la flexibilidad (1-5) y marca líneas rojas.",
+    "step3Title": "3. Deja negociar a tu agente",
+    "step3Desc": "Tu agente utiliza el playbook a través de la API. Los contratos acordados se generan como PDF vinculantes.",
+    "catalogTitle": "Tipos de Contrato Disponibles",
+    "catalogDesc": "Haz clic en cualquier tipo de contrato para ver sus cláusulas negociables y opciones. Cada opción muestra a qué parte favorece, para que puedas tomar decisiones informadas al configurar tu playbook."
   },
   "localDeployment": {
     "title": "Despliegue Local",
