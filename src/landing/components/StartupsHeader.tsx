@@ -17,9 +17,7 @@ const StartupsHeader = ({ t, locale, onLocaleToggle, onSignup }: StartupsHeaderP
       <div className="nav-header px-6">
         <div className="flex items-center justify-between h-14">
           <a href="https://todo.law" className="flex items-center gap-3">
-            <span className="text-lg font-bold tracking-tight text-foreground">
-              TODO.LAW<sup className="text-xs align-super">&trade;</sup>
-            </span>
+            <img src="/logo-negative.svg" alt="TODO.LAW" style={{ height: "28px", width: "auto" }} />
             <span className="hidden sm:inline-flex items-center px-2.5 py-0.5 bg-accent/10 text-accent rounded-full text-xs font-medium uppercase tracking-wider font-body">
               {t("header.badge")}
             </span>

@@ -22,7 +22,7 @@ const dancingScript = Dancing_Script({
 const jost = Jost({
   subsets: ["latin"],
   variable: "--font-display",
-  weight: ["400", "500", "700"],
+  weight: ["400", "500", "600", "700"],
 });
 
 const archivoBlack = Archivo_Black({

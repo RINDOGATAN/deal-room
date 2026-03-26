@@ -82,9 +82,9 @@ export default function DashboardLayout({
       <header className="sticky top-0 z-20 px-4 pt-3">
         <div className="max-w-7xl mx-auto bg-card/80 backdrop-blur-sm border border-border rounded-xl md:rounded-full px-4 md:px-6 py-3">
           <div className="flex items-center justify-between">
-            <Link href="/deals" className="text-lg font-bold tracking-tight text-foreground">
-              {brand.company}<sup className="text-xs align-super">™</sup>{" "}
-              <span className="text-muted-foreground">DEALROOM</span>
+            <Link href="/deals" className="flex items-center gap-2">
+              <img src="/logo-negative.svg" alt="TODO.LAW" style={{ height: "28px", width: "auto" }} />
+              <span className="text-muted-foreground" style={{ fontFamily: "var(--font-display), 'Jost', sans-serif", fontWeight: 600 }}>DEALROOM</span>
             </Link>
 
             {/* Desktop nav */}
@@ -155,9 +155,9 @@ export default function DashboardLayout({
         <div className="fixed inset-0 bg-background/95 backdrop-blur-sm z-30 md:hidden">
           <div className="flex flex-col h-full p-6">
             <div className="flex items-center justify-between mb-8">
-              <Link href="/deals" className="text-lg font-bold tracking-tight text-foreground" onClick={() => setMobileMenuOpen(false)}>
-                TODO.LAW<sup className="text-xs align-super">™</sup>{" "}
-                <span className="text-muted-foreground">DEALROOM</span>
+              <Link href="/deals" className="flex items-center gap-2" onClick={() => setMobileMenuOpen(false)}>
+                <img src="/logo-negative.svg" alt="TODO.LAW" style={{ height: "28px", width: "auto" }} />
+                <span className="text-muted-foreground" style={{ fontFamily: "var(--font-display), 'Jost', sans-serif", fontWeight: 600 }}>DEALROOM</span>
               </Link>
               <button
                 onClick={() => setMobileMenuOpen(false)}
