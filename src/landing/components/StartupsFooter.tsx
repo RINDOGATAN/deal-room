@@ -8,9 +8,7 @@ const StartupsFooter = ({ t }: StartupsFooterProps) => {
       <div className="container px-6">
         <div className="flex flex-col items-center gap-6">
           <a href="https://todo.law" className="flex items-center gap-2">
-            <span className="text-lg font-bold tracking-tight text-foreground">
-              TODO.LAW<sup className="text-xs align-super">&trade;</sup>
-            </span>
+            <img src="/logo-negative.svg" alt="TODO.LAW" style={{ height: "30px", width: "auto" }} />
             <span className="text-xs text-muted-foreground font-body">
               {t("footer.tagline")}
             </span>

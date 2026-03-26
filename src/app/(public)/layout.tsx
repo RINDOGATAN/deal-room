@@ -21,12 +21,9 @@ export default function PublicLayout({
       <header className="sticky top-0 z-20 px-4 pt-3">
         <div className="max-w-7xl mx-auto bg-card/80 backdrop-blur-md border border-border rounded-xl md:rounded-full px-4 md:px-6 py-3">
           <div className="flex items-center justify-between">
-            <Link
-              href="/"
-              className="text-lg font-bold tracking-tight text-foreground"
-            >
-              {brand.company}<sup className="text-xs align-super">™</sup>{" "}
-              <span className="text-muted-foreground">DEALROOM</span>
+            <Link href="/" className="flex items-center gap-2">
+              <img src="/logo-negative.svg" alt="TODO.LAW" style={{ height: "28px", width: "auto" }} />
+              <span className="text-muted-foreground" style={{ fontFamily: "var(--font-display), 'Jost', sans-serif", fontWeight: 600 }}>DEALROOM</span>
             </Link>
 
             <nav className="flex items-center gap-1">

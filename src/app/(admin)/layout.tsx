@@ -22,9 +22,9 @@ export default function AdminLayout({
         {/* Header */}
         <header className="border-b border-border">
           <div className="container mx-auto px-6 py-4 flex items-center gap-3">
-            <Link href="/" className="text-lg font-bold tracking-tight text-foreground">
-              {brand.company}<sup className="text-xs align-super">™</sup>{" "}
-              <span className="text-muted-foreground">DEALROOM</span>
+            <Link href="/" className="flex items-center gap-2">
+              <img src="/logo-negative.svg" alt="TODO.LAW" style={{ height: "28px", width: "auto" }} />
+              <span className="text-muted-foreground" style={{ fontFamily: "var(--font-display), 'Jost', sans-serif", fontWeight: 600 }}>DEALROOM</span>
             </Link>
             <div className="h-6 w-px bg-border" />
             <span className="text-primary font-medium text-sm uppercase tracking-wide">Platform Admin</span>
@@ -64,9 +64,9 @@ export default function AdminLayout({
       <header className="border-b border-border">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <Link href="/admin" className="text-lg font-bold tracking-tight text-foreground">
-              {brand.company}<sup className="text-xs align-super">™</sup>{" "}
-              <span className="text-muted-foreground">DEALROOM</span>
+            <Link href="/admin" className="flex items-center gap-2">
+              <img src="/logo-negative.svg" alt="TODO.LAW" style={{ height: "28px", width: "auto" }} />
+              <span className="text-muted-foreground" style={{ fontFamily: "var(--font-display), 'Jost', sans-serif", fontWeight: 600 }}>DEALROOM</span>
             </Link>
             <div className="h-6 w-px bg-border" />
             <div className="flex items-center gap-2">

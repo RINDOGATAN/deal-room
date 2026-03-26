@@ -119,7 +119,7 @@ export default function SignInPage() {
     <div className="w-full max-w-md">
       <div className="card-brutal">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold mb-2 text-white uppercase tracking-wide">{t("dealroom")}</h1>
+          <h1 className="text-3xl mb-2 text-white uppercase tracking-wide" style={{ fontFamily: "var(--font-display), 'Jost', sans-serif", fontWeight: 600 }}>{t("dealroom")}</h1>
           <p className="text-muted-foreground mb-4">
             {t("poweredBy")}
           </p>
