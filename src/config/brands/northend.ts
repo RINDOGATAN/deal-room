@@ -53,7 +53,7 @@ export const northend: BrandConfig = {
 
   // Asset paths
   assets: {
-    logo: "/DEALROOM_NorthEnd.png",
+    logo: "/logo-negative.svg",
     favicon: "/favicon.ico",
   },
 

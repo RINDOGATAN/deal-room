@@ -57,7 +57,7 @@ export const todo: BrandConfig = {
 
   // Asset paths (relative to public directory)
   assets: {
-    logo: "/DEALROOM_TodoLaw.png",
+    logo: "/logo-negative.svg",
     favicon: "/favicon.ico",
   },
 
