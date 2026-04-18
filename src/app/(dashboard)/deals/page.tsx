@@ -14,8 +14,10 @@ import {
   ArrowRight,
   Users,
   Mail,
+  Rocket,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { features } from "@/config/features";
 
 const statusIcons = {
   DRAFT: FileText,
@@ -107,16 +109,38 @@ export default function DealsPage() {
       </div>
 
       {deals?.length === 0 ? (
-        <div className="card-brutal text-center py-12">
-          <FileText className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-          <h2 className="text-lg font-semibold mb-2">{t("noDealsYet")}</h2>
-          <p className="text-muted-foreground mb-6">
-            {t("createFirstDeal")}
-          </p>
-          <Link href="/deals/new" className="btn-brutal inline-flex items-center gap-2">
-            <Plus className="w-4 h-4" />
-            {t("createDealRoom")}
-          </Link>
+        <div className="space-y-4">
+          <div className="card-brutal text-center py-10">
+            <FileText className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+            <h2 className="text-lg font-semibold mb-2">{t("noDealsYet")}</h2>
+            <p className="text-muted-foreground mb-6">
+              {t("createFirstDeal")}
+            </p>
+            <Link href="/deals/new" className="btn-brutal inline-flex items-center gap-2">
+              <Plus className="w-4 h-4" />
+              {t("createDealRoom")}
+            </Link>
+          </div>
+
+          {features.startupJourney && (
+            <Link
+              href="/launch"
+              className="card-brutal group hover:border-primary transition-colors flex items-center gap-4"
+            >
+              <div className="flex-shrink-0 w-10 h-10 bg-primary/10 flex items-center justify-center rounded-full">
+                <Rocket className="w-5 h-5 text-primary" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="font-semibold group-hover:text-primary transition-colors">
+                  {t("startupLaunchTitle")}
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  {t("startupLaunchDescription")}
+                </p>
+              </div>
+              <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors flex-shrink-0" />
+            </Link>
+          )}
         </div>
       ) : (
         <div className="grid gap-4">

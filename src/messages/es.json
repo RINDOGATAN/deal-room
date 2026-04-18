@@ -75,6 +75,8 @@
     "createDealRoom": "Crear Sala de Negociación",
     "noDealsYet": "Aún no hay acuerdos",
     "createFirstDeal": "Crea tu primera sala de negociación para comenzar a negociar contratos",
+    "startupLaunchTitle": "¿Estás creando una empresa?",
+    "startupLaunchDescription": "Usa el flujo guiado de Launch para redactar tu Certificate of Incorporation, Pactos de Fundadores y Cesiones de PI en una sola sesión.",
     "clauses": "cláusulas",
     "updated": "Actualizado {date}",
     "created": "Creado {date}",
