@@ -3,13 +3,6 @@ import type { NextRequest } from "next/server";
 
 export function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
-  const host = request.headers.get("host") || "";
-
-  // Startup entry: startups.todo.law hits root → /launch
-  // Founders arriving from the marketing site skip the generic deal chooser.
-  if (host.startsWith("startups.") && (path === "/" || path === "")) {
-    return NextResponse.redirect(new URL("/launch", request.url));
-  }
 
   // Set currency cookie based on geo-IP (US → USD, else EUR)
   const hasCurrency = request.cookies.has("currency");
