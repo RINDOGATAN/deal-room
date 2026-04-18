@@ -168,10 +168,15 @@ function DealDetailContent({ dealId }: { dealId: string }) {
   const canInvite = !isSoloMode && isInitiator && !respondent && deal.status === "DRAFT";
   const canNegotiate = deal.status === "DRAFT" || deal.status === "AWAITING_RESPONSE" || deal.status === "NEGOTIATING";
 
-  // Lawyer warning modal — hidden for users with LAWYER role
+  // Lawyer warning modal — hidden for users with LAWYER role, users with a
+  // vetting already attached, and for deals generated from the /launch journey
+  // (that flow has its own lawyer-review surface at the journey level, so
+  // repeating the disclaimer per document is just noise).
   const myParty = deal.parties.find((p) => p.id === deal.currentPartyId);
+  const journeyGenerated = !!(deal as any).journeyId;
   const showLawyerWarning = !isLawyer &&
     !deal.lawyerVettingId &&
+    !journeyGenerated &&
     !(myParty as any)?.lawyerWarningDismissedAt &&
     ["DRAFT", "AWAITING_RESPONSE", "NEGOTIATING"].includes(deal.status);
 

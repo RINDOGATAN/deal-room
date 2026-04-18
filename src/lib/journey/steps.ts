@@ -87,7 +87,7 @@ function buildFoundationPlan(
     const equity = founder.equityPercent?.toString() ?? "";
 
     deals.push({
-      contractType: "FOUNDERS_AGREEMENT",
+      contractType: "FOUNDERS",
       name: `${companyName} — Founders' Agreement — ${founderLabel}`,
       parameters: {
         "company-name": companyName,
