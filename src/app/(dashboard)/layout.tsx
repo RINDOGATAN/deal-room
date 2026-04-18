@@ -53,7 +53,12 @@ export default function DashboardLayout({
   );
 
   const userRole = session?.user?.role ?? null;
-  const needsOnboarding = features.lawyerInvolvement && status === "authenticated" && !userRole;
+  // Founders arriving on /launch have self-identified as startup owners;
+  // don't block them with the business-vs-lawyer onboarding modal. They can
+  // pick a role later if they visit another part of the product.
+  const onLaunchRoute = pathname?.startsWith("/launch") ?? false;
+  const needsOnboarding =
+    features.lawyerInvolvement && status === "authenticated" && !userRole && !onLaunchRoute;
   const showOnboarding = needsOnboarding || showOnboardingOverride;
 
   if (status === "loading") {

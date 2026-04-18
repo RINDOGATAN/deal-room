@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
@@ -30,6 +31,7 @@ const emptyFounder = (): FounderDraft => ({ name: "", email: "", title: "", equi
 
 export default function NewJourneyPage() {
   const router = useRouter();
+  const { update: updateSession } = useSession();
   const [step, setStep] = useState<"company" | "founders" | "review">("company");
   const [companyName, setCompanyName] = useState("");
   const [companyAddress, setCompanyAddress] = useState("");
@@ -41,7 +43,11 @@ export default function NewJourneyPage() {
   }, 0);
 
   const createJourney = trpc.journey.create.useMutation({
-    onSuccess: (j) => {
+    onSuccess: async (j) => {
+      // Refresh the client session so the role set server-side (BUSINESS_OWNER)
+      // is reflected immediately — prevents the onboarding modal from firing
+      // when the founder navigates from /launch to /deals/[id].
+      await updateSession();
       toast.success("Your journey is ready to begin.");
       router.push(`/launch/${j.id}`);
     },

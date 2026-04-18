@@ -20,6 +20,7 @@ import {
   PartyRole,
   PartyStatus,
   StartupJourneyStatus,
+  UserRole,
 } from "@prisma/client";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { getStepPlan, type StepKey } from "@/lib/journey/steps";
@@ -81,6 +82,21 @@ export const journeyRouter = createTRPCRouter({
         },
         include: { founders: true, dealRooms: true },
       });
+
+      // Creating a journey is a strong self-identification as a startup owner.
+      // Set the user role now so downstream pages (e.g. /deals/[id] for a
+      // journey-generated deal) don't blindside the founder with the
+      // business-vs-lawyer onboarding modal.
+      const currentUser = await ctx.prisma.user.findUnique({
+        where: { id: userId },
+        select: { role: true },
+      });
+      if (!currentUser?.role) {
+        await ctx.prisma.user.update({
+          where: { id: userId },
+          data: { role: UserRole.BUSINESS_OWNER, onboardedAt: new Date() },
+        });
+      }
 
       return journey;
     }),
@@ -255,7 +271,12 @@ export const journeyRouter = createTRPCRouter({
       for (const d of plan.deals) {
         const template = await ctx.prisma.contractTemplate.findUnique({
           where: { contractType: d.contractType },
-          include: { clauses: { orderBy: { order: "asc" } } },
+          include: {
+            clauses: {
+              orderBy: { order: "asc" },
+              include: { options: { orderBy: { order: "asc" } } },
+            },
+          },
         });
         if (!template) {
           throw new TRPCError({
@@ -294,7 +315,51 @@ export const journeyRouter = createTRPCRouter({
               })),
             },
           },
+          include: { parties: true, clauses: true },
         });
+
+        // Auto-select clauses that have only one option (no real choice to make).
+        // Cert of Inc is fully single-option so this completes the whole deal;
+        // multi-option skills like founders-agreement still need user review.
+        const party = deal.parties[0];
+        const singleOptionClauses = template.clauses.filter((c) => c.options.length === 1);
+        if (party && singleOptionClauses.length > 0) {
+          for (const ct of singleOptionClauses) {
+            const dealClause = deal.clauses.find((c) => c.clauseTemplateId === ct.id);
+            if (!dealClause) continue;
+            await ctx.prisma.partySelection.create({
+              data: {
+                dealRoomClauseId: dealClause.id,
+                partyId: party.id,
+                optionId: ct.options[0].id,
+                priority: 3,
+                flexibility: 3,
+              },
+            });
+          }
+
+          // If every clause was single-option, auto-submit + auto-agree so the
+          // founder can download the PDF immediately. Matches the SOLO submit
+          // path in src/server/routers/deal.ts:submitSelections.
+          if (singleOptionClauses.length === template.clauses.length) {
+            await ctx.prisma.dealRoomParty.update({
+              where: { id: party.id },
+              data: { status: PartyStatus.SUBMITTED, submittedAt: new Date() },
+            });
+            for (const dealClause of deal.clauses) {
+              const ct = template.clauses.find((c) => c.id === dealClause.clauseTemplateId);
+              if (!ct) continue;
+              await ctx.prisma.dealRoomClause.update({
+                where: { id: dealClause.id },
+                data: { status: ClauseStatus.AGREED, agreedOptionId: ct.options[0].id },
+              });
+            }
+            await ctx.prisma.dealRoom.update({
+              where: { id: deal.id },
+              data: { status: DealRoomStatus.AGREED },
+            });
+          }
+        }
 
         await ctx.prisma.auditLog.create({
           data: {
@@ -305,6 +370,7 @@ export const journeyRouter = createTRPCRouter({
               journeyId: journey.id,
               stepKey: input.stepKey,
               contractType: d.contractType,
+              autoAgreed: singleOptionClauses.length === template.clauses.length,
             },
           },
         });
