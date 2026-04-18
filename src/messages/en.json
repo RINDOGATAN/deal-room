@@ -77,6 +77,11 @@
     "updated": "Updated {date}",
     "created": "Created {date}",
     "failedToLoad": "Failed to load deals: {error}",
+    "waitingDays": "Waiting {days, plural, one {# day} other {# days}} for response",
+    "invitationExpired": "Invitation expired",
+    "resendInvitation": "Resend invitation",
+    "invitationResent": "Invitation resent",
+    "resendFailed": "Could not resend invitation: {error}",
     "status": {
       "draft": "Draft",
       "awaitingResponse": "Awaiting Response",
@@ -235,6 +240,10 @@
     "soloDocumentGenerated": "Document generated",
     "submitting": "Submitting...",
     "saving": "Saving...",
+    "saveIndicator": {
+      "saving": "Saving…",
+      "saved": "Saved"
+    },
     "allClausesSelected": "All clauses pre-selected",
     "allClausesSelectedDescription": "You can review each clause individually or skip ahead to submit.",
     "skipToSubmit": "Skip to Submit",

@@ -139,7 +139,10 @@ function NegotiateContent({ dealId }: { dealId: string }) {
                                 initiatorParty?.status === "ACCEPTED";
   const canPrePopulate = isRespondent && hasInitiatorSubmitted;
 
-  const saveSelections = trpc.selections.bulkSave.useMutation();
+  const [lastSavedAt, setLastSavedAt] = useState<Date | null>(null);
+  const saveSelections = trpc.selections.bulkSave.useMutation({
+    onSuccess: () => setLastSavedAt(new Date()),
+  });
   const submitSelections = trpc.deal.submitSelections.useMutation({
     onSuccess: (result) => {
       if ((result as any).soloCompleted) {
@@ -396,6 +399,21 @@ function NegotiateContent({ dealId }: { dealId: string }) {
           </div>
         </div>
         <div className="flex items-center gap-4">
+          {(saveSelections.isPending || lastSavedAt) && (
+            <div className="flex items-center gap-1.5 text-xs text-muted-foreground" aria-live="polite">
+              {saveSelections.isPending ? (
+                <>
+                  <Loader2 className="w-3 h-3 animate-spin" />
+                  <span>{t("saveIndicator.saving")}</span>
+                </>
+              ) : (
+                <>
+                  <Check className="w-3 h-3 text-primary" />
+                  <span>{t("saveIndicator.saved")}</span>
+                </>
+              )}
+            </div>
+          )}
           <div className="text-right">
             <p className="text-sm text-muted-foreground">{t("progress")}</p>
             <p className="metric"><span className="text-primary">{selections.size}</span><span className="text-muted-foreground">/{clauses.length}</span></p>

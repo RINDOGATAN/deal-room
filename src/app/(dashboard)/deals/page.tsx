@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { trpc } from "@/lib/trpc";
+import { toast } from "sonner";
 import { useTranslations, useLocale } from "next-intl";
 import { formatDate } from "@/lib/date";
 import {
@@ -12,6 +13,7 @@ import {
   AlertCircle,
   ArrowRight,
   Users,
+  Mail,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
@@ -39,7 +41,15 @@ export default function DealsPage() {
   const t = useTranslations("deals");
   const tCommon = useTranslations("common");
   const locale = useLocale();
-  const { data: deals, isLoading, error } = trpc.deal.list.useQuery();
+  const { data: deals, isLoading, error, refetch } = trpc.deal.list.useQuery();
+
+  const resendInvitation = trpc.invitation.resend.useMutation({
+    onSuccess: () => {
+      toast.success(t("invitationResent"));
+      refetch();
+    },
+    onError: (err) => toast.error(t("resendFailed", { error: err.message })),
+  });
 
   // Map status keys to translation keys
   const statusLabels: Record<string, string> = {
@@ -117,6 +127,15 @@ export default function DealsPage() {
             const initiator = deal.parties.find((p) => p.role === "INITIATOR");
             const respondent = deal.parties.find((p) => p.role === "RESPONDENT");
 
+            const pendingInvitation = deal.status === "AWAITING_RESPONSE" ? deal.invitations?.[0] : undefined;
+            const now = Date.now();
+            const daysWaiting = pendingInvitation
+              ? Math.floor((now - new Date(pendingInvitation.sentAt).getTime()) / (1000 * 60 * 60 * 24))
+              : 0;
+            const invitationExpired = pendingInvitation ? new Date(pendingInvitation.expiresAt).getTime() < now : false;
+            const showResend = !!pendingInvitation && (invitationExpired || daysWaiting >= 7);
+            const isResendingThis = resendInvitation.isPending && resendInvitation.variables?.invitationId === pendingInvitation?.id;
+
             return (
               <Link
                 key={deal.id}
@@ -161,6 +180,38 @@ export default function DealsPage() {
                         </>
                       )}
                     </div>
+
+                    {pendingInvitation && (
+                      <div className="flex items-center gap-3 text-xs pt-1">
+                        <span
+                          className={`flex items-center gap-1.5 ${
+                            invitationExpired
+                              ? "text-orange-500"
+                              : daysWaiting >= 7
+                                ? "text-yellow-600"
+                                : "text-muted-foreground"
+                          }`}
+                        >
+                          <Clock className="w-3.5 h-3.5" />
+                          {invitationExpired ? t("invitationExpired") : t("waitingDays", { days: Math.max(daysWaiting, 0) })}
+                        </span>
+                        {showResend && (
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              resendInvitation.mutate({ invitationId: pendingInvitation.id });
+                            }}
+                            disabled={resendInvitation.isPending}
+                            className="inline-flex items-center gap-1.5 px-2 py-1 border border-border hover:border-primary hover:text-primary transition-colors disabled:opacity-50"
+                          >
+                            <Mail className="w-3 h-3" />
+                            {isResendingThis ? "…" : t("resendInvitation")}
+                          </button>
+                        )}
+                      </div>
+                    )}
                   </div>
 
                   <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors" />

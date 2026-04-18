@@ -77,6 +77,11 @@
     "updated": "Actualizado {date}",
     "created": "Creado {date}",
     "failedToLoad": "Error al cargar acuerdos: {error}",
+    "waitingDays": "Esperando respuesta desde hace {days, plural, one {# día} other {# días}}",
+    "invitationExpired": "Invitación caducada",
+    "resendInvitation": "Reenviar invitación",
+    "invitationResent": "Invitación reenviada",
+    "resendFailed": "No se pudo reenviar la invitación: {error}",
     "status": {
       "draft": "Borrador",
       "awaitingResponse": "Esperando Respuesta",
@@ -235,6 +240,10 @@
     "soloDocumentGenerated": "Documento generado",
     "submitting": "Enviando...",
     "saving": "Guardando...",
+    "saveIndicator": {
+      "saving": "Guardando…",
+      "saved": "Guardado"
+    },
     "allClausesSelected": "Todas las cláusulas preseleccionadas",
     "allClausesSelectedDescription": "Puedes revisar cada cláusula individualmente o ir directamente al envío.",
     "skipToSubmit": "Ir al Envío",

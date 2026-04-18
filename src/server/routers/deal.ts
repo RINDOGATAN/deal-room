@@ -118,6 +118,17 @@ export const dealRouter = createTRPCRouter({
             },
           },
         },
+        invitations: {
+          where: { status: InvitationStatus.PENDING },
+          orderBy: { sentAt: "desc" },
+          take: 1,
+          select: {
+            id: true,
+            email: true,
+            sentAt: true,
+            expiresAt: true,
+          },
+        },
         _count: {
           select: {
             clauses: true,
