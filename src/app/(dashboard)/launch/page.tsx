@@ -1,0 +1,91 @@
+"use client";
+
+import Link from "next/link";
+import { trpc } from "@/lib/trpc";
+import { Rocket, FileText, Users, Scale, ArrowRight } from "lucide-react";
+
+export default function LaunchLandingPage() {
+  const { data: journeys, isLoading } = trpc.journey.list.useQuery();
+
+  const hasExisting = (journeys?.length ?? 0) > 0;
+
+  return (
+    <div className="max-w-4xl mx-auto space-y-10">
+      <div className="space-y-4">
+        <div className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-primary bg-primary/10 px-3 py-1.5 rounded-full">
+          <Rocket className="w-3.5 h-3.5" />
+          <span>Startup Quick Start</span>
+        </div>
+        <h1 className="text-3xl md:text-4xl font-bold leading-tight">
+          Launch your Delaware C-Corp in an afternoon.
+        </h1>
+        <p className="text-lg text-muted-foreground max-w-2xl">
+          Pick a few business choices in plain English. We generate your Certificate of Incorporation, Founders' Agreements, and IP Assignments &mdash; ready to file with Delaware and share with a lawyer.
+        </p>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="card-brutal space-y-2">
+          <FileText className="w-5 h-5 text-primary" />
+          <p className="font-semibold">All the paperwork, pre-filled</p>
+          <p className="text-sm text-muted-foreground">
+            One company profile flows into every document. You enter the company name and your founders once.
+          </p>
+        </div>
+        <div className="card-brutal space-y-2">
+          <Users className="w-5 h-5 text-primary" />
+          <p className="font-semibold">Business decisions, not legal jargon</p>
+          <p className="text-sm text-muted-foreground">
+            "Should a founder keep their shares if they leave in year one?" &mdash; you answer; we translate.
+          </p>
+        </div>
+        <div className="card-brutal space-y-2">
+          <Scale className="w-5 h-5 text-primary" />
+          <p className="font-semibold">A lawyer at every stage</p>
+          <p className="text-sm text-muted-foreground">
+            Hand any step to a vetted attorney from our directory for review &mdash; or keep going on your own.
+          </p>
+        </div>
+      </div>
+
+      <div className="card-brutal bg-primary/5 border-primary/30 space-y-4">
+        <h2 className="text-lg font-semibold">Ready to start?</h2>
+        <p className="text-sm text-muted-foreground">
+          About 8 minutes for the Foundation step &mdash; longer if you want to think through each question.
+        </p>
+        <Link
+          href="/launch/new"
+          className="btn-brutal inline-flex items-center gap-2"
+        >
+          Start my company
+          <ArrowRight className="w-4 h-4" />
+        </Link>
+      </div>
+
+      {!isLoading && hasExisting && (
+        <div className="space-y-3">
+          <h2 className="text-xl font-semibold">Pick up where you left off</h2>
+          <div className="grid gap-3">
+            {journeys!.map((j) => (
+              <Link
+                key={j.id}
+                href={`/launch/${j.id}`}
+                className="card-brutal group hover:border-primary transition-colors flex items-center justify-between"
+              >
+                <div className="space-y-1">
+                  <p className="font-semibold group-hover:text-primary transition-colors">
+                    {j.companyName}
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    {j.state} {j.entityType.replace("_", "-")} &middot; {j.founders.length} founder{j.founders.length === 1 ? "" : "s"} &middot; {j._count.dealRooms} document{j._count.dealRooms === 1 ? "" : "s"}
+                  </p>
+                </div>
+                <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors" />
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}

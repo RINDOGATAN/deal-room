@@ -1,0 +1,59 @@
+{
+  "version": "1.0",
+  "parameters": [
+    {
+      "id": "company-name",
+      "token": "company-name",
+      "scope": "*",
+      "type": "text",
+      "required": true,
+      "label": { "en": "Corporate name" },
+      "hint": { "en": "Must contain a corporate designator such as Inc., Corporation, or Company." },
+      "placeholder": { "en": "e.g., Acme, Inc." },
+      "boilerplateVariable": "companyName"
+    },
+    {
+      "id": "registered-agent",
+      "token": "registered-agent",
+      "scope": "registered-office",
+      "type": "text",
+      "required": true,
+      "label": { "en": "Registered agent + Delaware address" },
+      "hint": { "en": "Name and Delaware street address of your registered agent. Commercial registered agents publish a standard block you can paste here." },
+      "placeholder": { "en": "e.g., Harvard Business Services, Inc., 16192 Coastal Highway, Lewes, DE 19958" },
+      "boilerplateVariable": "registeredAgent"
+    },
+    {
+      "id": "authorized-shares",
+      "token": "authorized-shares",
+      "scope": "authorized-shares",
+      "type": "number",
+      "required": true,
+      "label": { "en": "Total authorized shares of Common Stock" },
+      "hint": { "en": "10,000,000 is the standard default. Enough for founders, option pool, and future rounds." },
+      "placeholder": { "en": "10000000" },
+      "boilerplateVariable": "authorizedShares"
+    },
+    {
+      "id": "par-value",
+      "token": "par-value",
+      "scope": "authorized-shares",
+      "type": "text",
+      "required": true,
+      "label": { "en": "Par value per share (USD)" },
+      "hint": { "en": "$0.00001 is the standard low par value for Delaware franchise-tax optimization." },
+      "placeholder": { "en": "0.00001" },
+      "boilerplateVariable": "parValue"
+    },
+    {
+      "id": "incorporator",
+      "token": "incorporator",
+      "scope": "incorporator",
+      "type": "text",
+      "required": true,
+      "label": { "en": "Incorporator full name" },
+      "hint": { "en": "The person signing the certificate. Usually a founder." },
+      "boilerplateVariable": "incorporator"
+    }
+  ]
+}

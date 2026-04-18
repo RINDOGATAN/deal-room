@@ -21,6 +21,7 @@ import {
   MessageSquareWarning,
   Briefcase,
   ArrowRightLeft,
+  Rocket,
 } from "lucide-react";
 import { brand } from "@/config/brand";
 import { features } from "@/config/features";
@@ -70,6 +71,9 @@ export default function DashboardLayout({
   const navItems = [
     { href: "/deals", label: t("myDeals"), icon: FileText },
     { href: "/deals/new", label: t("newDeal"), icon: Plus },
+    ...(features.startupJourney && !lawyerProfile?.isLawyer
+      ? [{ href: "/launch", label: t("launch"), icon: Rocket }]
+      : []),
     ...(features.lawyerInvolvement && lawyerProfile?.isLawyer
       ? [{ href: "/lawyer/vettings", label: tLawyer("myVettings"), icon: ClipboardCheck }]
       : []),

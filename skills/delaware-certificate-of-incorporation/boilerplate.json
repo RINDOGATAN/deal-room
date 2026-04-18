@@ -1,0 +1,41 @@
+{
+  "contractTitle": {
+    "en": "CERTIFICATE OF INCORPORATION OF {companyName}"
+  },
+  "preamble": {
+    "en": "The undersigned, a natural person of the age of eighteen (18) years or older, acting as the incorporator of a corporation under the General Corporation Law of the State of Delaware (the \"DGCL\"), hereby certifies as follows:"
+  },
+  "background": {
+    "en": "This Certificate of Incorporation is filed pursuant to 8 Del. C. §§ 101 and 102 to form a corporation for profit."
+  },
+  "definitions": [],
+  "standardClauses": [],
+  "generalProvisions": [
+    {
+      "title": { "en": "Amendment" },
+      "text": {
+        "en": "SEVENTH: The corporation reserves the right to amend, alter, change or repeal any provision contained in this Certificate of Incorporation in the manner now or hereafter prescribed by the DGCL, and all rights conferred upon stockholders, directors or any other persons herein are granted subject to this reservation."
+      }
+    },
+    {
+      "title": { "en": "Bylaws" },
+      "text": {
+        "en": "EIGHTH: In furtherance of and not in limitation of powers conferred by statute, the board of directors of the corporation is expressly authorized to make, alter, amend or repeal the bylaws of the corporation, subject to any limitations in the bylaws as adopted or amended by the stockholders."
+      }
+    },
+    {
+      "title": { "en": "Execution" },
+      "text": {
+        "en": "IN WITNESS WHEREOF, the undersigned incorporator has executed this Certificate of Incorporation on the date set forth below.\n\nIncorporator: {incorporator}\n\n{partyASignatureBlock}"
+      }
+    }
+  ],
+  "jurisdictionProvisions": {},
+  "signatureBlock": {
+    "en": "{partyASignatureBlock}"
+  },
+  "partyLabels": {
+    "partyA": { "en": "Incorporator" },
+    "partyB": { "en": "" }
+  }
+}

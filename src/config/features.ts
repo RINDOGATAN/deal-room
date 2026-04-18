@@ -18,4 +18,6 @@ export const features = {
   certification: !!process.env.DEALROOM_CLOUD_API_KEY,
   /** Analytics Dashboard — negotiation benchmarks, counterparty intelligence */
   analytics: !!process.env.DEALROOM_CLOUD_API_KEY,
+  /** Startup Quick Start — guided US Delaware C-Corp launch journey */
+  startupJourney: brand.id === "todo",
 } as const;

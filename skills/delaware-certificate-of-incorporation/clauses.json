@@ -1,0 +1,229 @@
+{
+  "contractType": "DELAWARE_CERT_OF_INCORPORATION",
+  "displayName": {
+    "en": "Certificate of Incorporation (Delaware C-Corp)"
+  },
+  "description": {
+    "en": "Delaware C-Corp Certificate of Incorporation — the document filed with the Secretary of State to bring the company into existence under the Delaware General Corporation Law."
+  },
+  "version": "1.0",
+  "languages": ["en"],
+  "clauses": [
+    {
+      "id": "name",
+      "title": { "en": "Corporate name" },
+      "category": { "en": "Identity" },
+      "order": 1,
+      "plainDescription": {
+        "en": "The legal name under which the company will be incorporated in Delaware. Must end in a corporate indicator such as 'Inc.', 'Corporation', or 'Company'."
+      },
+      "legalContext": {
+        "en": "8 Del. C. § 102(a)(1) requires the certificate to set forth the name of the corporation. The name must be distinguishable from other entities registered in Delaware and must contain an approved corporate designator."
+      },
+      "isRequired": true,
+      "options": [
+        {
+          "id": "name-standard",
+          "code": "standard",
+          "label": { "en": "Use the company name as entered" },
+          "order": 1,
+          "plainDescription": {
+            "en": "Uses the company name exactly as you entered it when starting this journey."
+          },
+          "pros": {
+            "partyA": { "en": ["Matches your brand exactly"] },
+            "partyB": { "en": ["Matches your brand exactly"] }
+          },
+          "cons": {
+            "partyA": { "en": ["Confirm the Secretary of State's name availability before filing"] },
+            "partyB": { "en": ["Confirm the Secretary of State's name availability before filing"] }
+          },
+          "legalText": {
+            "en": "FIRST: The name of this corporation is [company-name]."
+          },
+          "bias": { "partyA": 0, "partyB": 0 }
+        }
+      ]
+    },
+    {
+      "id": "registered-office",
+      "title": { "en": "Registered office and agent" },
+      "category": { "en": "Identity" },
+      "order": 2,
+      "plainDescription": {
+        "en": "Every Delaware corporation must have a registered agent in Delaware to accept service of process. Most startups use a commercial registered agent service."
+      },
+      "legalContext": {
+        "en": "8 Del. C. § 102(a)(2) requires the certificate to set forth the address of the corporation's registered office in Delaware and the name of its registered agent at that address."
+      },
+      "isRequired": true,
+      "options": [
+        {
+          "id": "registered-standard",
+          "code": "standard",
+          "label": { "en": "Use the registered agent as entered" },
+          "order": 1,
+          "plainDescription": {
+            "en": "Uses the registered agent and address you provided. Common choices: Harvard Business Services, Corporation Service Company, CT Corporation."
+          },
+          "pros": {
+            "partyA": { "en": ["Standard commercial registered agent covers statutory requirements"] },
+            "partyB": { "en": ["Standard commercial registered agent covers statutory requirements"] }
+          },
+          "cons": {
+            "partyA": { "en": ["Annual registered-agent fee (~$50–$300)"] },
+            "partyB": { "en": ["Annual registered-agent fee (~$50–$300)"] }
+          },
+          "legalText": {
+            "en": "SECOND: The address of the corporation's registered office in the State of Delaware is [registered-agent]. The corporation's registered agent at that address is so designated in accordance with 8 Del. C. § 102(a)(2)."
+          },
+          "bias": { "partyA": 0, "partyB": 0 }
+        }
+      ]
+    },
+    {
+      "id": "purpose",
+      "title": { "en": "Corporate purpose" },
+      "category": { "en": "Governance" },
+      "order": 3,
+      "plainDescription": {
+        "en": "Most modern Delaware C-Corps use a broad, all-purpose statement so the corporation can engage in any lawful business without amending the certificate later."
+      },
+      "legalContext": {
+        "en": "8 Del. C. § 102(a)(3) permits a broad purpose statement. The all-purpose language below is standard for Delaware startups and preferred by YC, NVCA, and most institutional investors."
+      },
+      "isRequired": true,
+      "options": [
+        {
+          "id": "purpose-broad",
+          "code": "broad",
+          "label": { "en": "Any lawful business or activity (standard)" },
+          "order": 1,
+          "plainDescription": {
+            "en": "Engages in any lawful act or activity. Gives maximum flexibility without needing to amend the certificate as the business evolves."
+          },
+          "pros": {
+            "partyA": { "en": ["Maximum business flexibility", "Standard for venture-backed startups", "No need to amend when pivoting"] },
+            "partyB": { "en": ["Maximum business flexibility", "Standard for venture-backed startups", "No need to amend when pivoting"] }
+          },
+          "cons": {
+            "partyA": { "en": ["None — this is the default for modern Delaware C-Corps"] },
+            "partyB": { "en": ["None — this is the default for modern Delaware C-Corps"] }
+          },
+          "legalText": {
+            "en": "THIRD: The purpose of the corporation is to engage in any lawful act or activity for which corporations may be organized under the General Corporation Law of the State of Delaware."
+          },
+          "bias": { "partyA": 0, "partyB": 0 }
+        }
+      ]
+    },
+    {
+      "id": "authorized-shares",
+      "title": { "en": "Authorized shares" },
+      "category": { "en": "Capitalization" },
+      "order": 4,
+      "plainDescription": {
+        "en": "The total number of shares the corporation is authorized to issue, and their par value. 10,000,000 shares at $0.00001 par is the standard template used by most YC / NVCA startups."
+      },
+      "legalContext": {
+        "en": "8 Del. C. § 102(a)(4) requires the certificate to state the total authorized shares and, for par-value shares, the par value. A low par value combined with 10M authorized shares minimizes Delaware franchise tax under the assumed par value method."
+      },
+      "isRequired": true,
+      "options": [
+        {
+          "id": "shares-standard",
+          "code": "standard",
+          "label": { "en": "Use the authorized-share count as entered" },
+          "order": 1,
+          "plainDescription": {
+            "en": "Uses the number of authorized shares and par value you set for this journey. Default is 10,000,000 shares at $0.00001 par, optimized for Delaware franchise tax."
+          },
+          "pros": {
+            "partyA": { "en": ["Optimized for Delaware franchise tax assumed-par-value method", "Enough room for founders + option pool + future rounds"] },
+            "partyB": { "en": ["Optimized for Delaware franchise tax assumed-par-value method", "Enough room for founders + option pool + future rounds"] }
+          },
+          "cons": {
+            "partyA": { "en": ["Amend later if you need a different share class structure"] },
+            "partyB": { "en": ["Amend later if you need a different share class structure"] }
+          },
+          "legalText": {
+            "en": "FOURTH: The total number of shares of stock the corporation shall have authority to issue is [authorized-shares] shares of Common Stock, each having a par value of $[par-value] per share."
+          },
+          "bias": { "partyA": 0, "partyB": 0 }
+        }
+      ]
+    },
+    {
+      "id": "director-liability",
+      "title": { "en": "Director liability limitation" },
+      "category": { "en": "Governance" },
+      "order": 5,
+      "plainDescription": {
+        "en": "Delaware law allows the certificate to limit directors' personal liability for monetary damages arising from breaches of fiduciary duty, except for breaches of the duty of loyalty, intentional misconduct, or improper distributions."
+      },
+      "legalContext": {
+        "en": "8 Del. C. § 102(b)(7) authorizes this exculpation clause. Nearly all Delaware C-Corps include it to help attract qualified directors."
+      },
+      "isRequired": true,
+      "options": [
+        {
+          "id": "liability-standard",
+          "code": "standard",
+          "label": { "en": "Limit director liability to the fullest extent permitted by DGCL" },
+          "order": 1,
+          "plainDescription": {
+            "en": "Exculpates directors for monetary damages except in the narrow cases DGCL § 102(b)(7) disallows (duty of loyalty, intentional misconduct, etc.)."
+          },
+          "pros": {
+            "partyA": { "en": ["Standard for Delaware C-Corps", "Helps recruit independent directors"] },
+            "partyB": { "en": ["Standard for Delaware C-Corps", "Helps recruit independent directors"] }
+          },
+          "cons": {
+            "partyA": { "en": ["None — this is the market standard"] },
+            "partyB": { "en": ["None — this is the market standard"] }
+          },
+          "legalText": {
+            "en": "FIFTH: To the fullest extent permitted by the General Corporation Law of the State of Delaware as it now exists or as it may be amended, no director of this corporation shall be personally liable to the corporation or its stockholders for monetary damages arising from a breach of fiduciary duty as a director. Any repeal or modification of this provision shall be prospective only and shall not adversely affect any right or protection of a director existing at the time of such repeal or modification."
+          },
+          "bias": { "partyA": 0, "partyB": 0 }
+        }
+      ]
+    },
+    {
+      "id": "incorporator",
+      "title": { "en": "Incorporator" },
+      "category": { "en": "Identity" },
+      "order": 6,
+      "plainDescription": {
+        "en": "The person signing the certificate into existence. Usually a single founder or the company's outside counsel. The incorporator's job ends once the initial board is elected."
+      },
+      "legalContext": {
+        "en": "8 Del. C. § 102(a)(6) requires the name and mailing address of the incorporator. Under § 108 the incorporator has the power to adopt initial bylaws and elect the initial directors if those are not named in the certificate."
+      },
+      "isRequired": true,
+      "options": [
+        {
+          "id": "incorporator-standard",
+          "code": "standard",
+          "label": { "en": "Use the named incorporator" },
+          "order": 1,
+          "plainDescription": {
+            "en": "Uses the founder flagged as incorporator (or the primary founder by default)."
+          },
+          "pros": {
+            "partyA": { "en": ["Single-signer convenience; common pattern for early-stage formation"] },
+            "partyB": { "en": ["Single-signer convenience; common pattern for early-stage formation"] }
+          },
+          "cons": {
+            "partyA": { "en": ["Incorporator's role ends at initial board election — they don't retain special authority afterward"] },
+            "partyB": { "en": ["Incorporator's role ends at initial board election — they don't retain special authority afterward"] }
+          },
+          "legalText": {
+            "en": "SIXTH: The name and mailing address of the incorporator is [incorporator], c/o the registered office set forth in Article SECOND."
+          },
+          "bias": { "partyA": 0, "partyB": 0 }
+        }
+      ]
+    }
+  ]
+}

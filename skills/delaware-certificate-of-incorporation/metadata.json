@@ -1,0 +1,18 @@
+{
+  "contractType": "DELAWARE_CERT_OF_INCORPORATION",
+  "category": { "en": "Corporate Formation" },
+  "displayName": {
+    "en": "Certificate of Incorporation (Delaware C-Corp)"
+  },
+  "description": {
+    "en": "The Certificate of Incorporation filed with the Delaware Secretary of State to form a Delaware C-Corporation. Establishes corporate existence, name, registered agent, authorized shares, and basic governance defaults under the Delaware General Corporation Law (DGCL)."
+  },
+  "version": "1.0",
+  "clauseCount": 6,
+  "languages": ["en"],
+  "jurisdictions": ["CALIFORNIA"],
+  "soloModeSupported": true,
+  "soloModeDefault": true,
+  "soloModeOnly": true,
+  "templateFamily": "DELAWARE_CERT_OF_INCORPORATION"
+}

@@ -49,6 +49,9 @@ model User {
   // Invite code relation (northend.law auth)
   usedInviteCode InviteCode?
 
+  // Startup Journey (guided launch experience)
+  startupJourneys StartupJourney[]
+
   @@map("users")
 }
 
@@ -458,12 +461,16 @@ model DealRoom {
   jointCounselRequestedBy    String? // partyId of INITIATOR
   jointCounselAcknowledgedAt DateTime? // other party acknowledged
   jointCounselDeclinedAt     DateTime? // other party declined
+  // Startup Journey — optional link when this deal was generated as part of a guided journey
+  journeyId                  String?
+  journeyStepKey             String?
   createdAt                  DateTime       @default(now())
   updatedAt                  DateTime       @updatedAt
 
   contractTemplate       ContractTemplate       @relation(fields: [contractTemplateId], references: [id])
   lawyerVetting          LawyerVetting?         @relation(fields: [lawyerVettingId], references: [id])
   jointCounselSupervisor Supervisor?            @relation("JointCounsel", fields: [jointCounselSupervisorId], references: [id])
+  journey                StartupJourney?        @relation(fields: [journeyId], references: [id], onDelete: SetNull)
   parties                DealRoomParty[]
   clauses                DealRoomClause[]
   invitations            Invitation[]
@@ -474,6 +481,7 @@ model DealRoom {
   agentDealRoom          AgentDealRoom?
   parameterProposals     ParameterProposal[]
 
+  @@index([journeyId])
   @@map("deal_rooms")
 }
 
@@ -1118,4 +1126,65 @@ model AgentDispute {
   agentDealRoom AgentDealRoom @relation(fields: [agentDealRoomId], references: [id])
 
   @@map("agent_disputes")
+}
+
+// ============================================================
+// STARTUP JOURNEY (guided launch experience for US startups)
+// ============================================================
+
+enum StartupJourneyStatus {
+  IN_PROGRESS
+  COMPLETED
+  ABANDONED
+}
+
+model StartupJourney {
+  id              String               @id @default(cuid())
+  userId          String
+  status          StartupJourneyStatus @default(IN_PROGRESS)
+
+  // Company profile (shared across all deals in this journey)
+  companyName     String
+  companyAddress  String?
+  state           String               @default("DELAWARE") // US state, free-text for phase 2
+  entityType      String               @default("C_CORP") // C_CORP | LLC (future)
+
+  // Capitalization defaults
+  authorizedShares  Int      @default(10000000)
+  parValue          Decimal  @default(0.00001) @db.Decimal(12, 8)
+  optionPoolPercent Decimal? @db.Decimal(5, 2)
+
+  // Per-step state: { foundation: { status, completedAt, supervisorId?, ... }, equity: { ... }, ... }
+  stepStatuses Json @default("{}")
+
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  completedAt DateTime?
+
+  user      User             @relation(fields: [userId], references: [id])
+  founders  JourneyFounder[]
+  dealRooms DealRoom[]
+
+  @@index([userId])
+  @@map("startup_journeys")
+}
+
+model JourneyFounder {
+  id             String   @id @default(cuid())
+  journeyId      String
+  name           String
+  email          String
+  title          String?
+  sharesIssued   Int?
+  equityPercent  Decimal? @db.Decimal(5, 2)
+  vestingYears   Int?     @default(4)
+  cliffMonths    Int?     @default(12)
+  isIncorporator Boolean  @default(false)
+  isPrimary      Boolean  @default(false)
+  createdAt      DateTime @default(now())
+
+  journey StartupJourney @relation(fields: [journeyId], references: [id], onDelete: Cascade)
+
+  @@index([journeyId])
+  @@map("journey_founders")
 }
