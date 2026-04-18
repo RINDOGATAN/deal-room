@@ -57,6 +57,7 @@ export interface BrandConfig {
   // Asset paths (relative to public directory)
   assets: {
     logo: string;
+    icon: string;
     favicon: string;
   };
 

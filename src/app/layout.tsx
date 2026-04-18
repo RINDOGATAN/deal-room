@@ -22,7 +22,7 @@ const dancingScript = Dancing_Script({
 const jost = Jost({
   subsets: ["latin"],
   variable: "--font-display",
-  weight: ["400", "500", "600", "700"],
+  weight: ["400", "500", "700"],
 });
 
 const archivoBlack = Archivo_Black({
@@ -44,6 +44,16 @@ export const metadata: Metadata = {
   description: brand.description,
   metadataBase: new URL(siteUrl),
   alternates: { canonical: "/" },
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "48x48" },
+      { url: "/icon.svg", type: "image/svg+xml" },
+      { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/icon-512.png", sizes: "512x512", type: "image/png" },
+    ],
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
+  },
+  manifest: "/site.webmanifest",
   openGraph: {
     title: `Dealroom — ${brand.tagline}`,
     description: brand.description,
@@ -57,16 +67,6 @@ export const metadata: Metadata = {
     title: `Dealroom — ${brand.tagline}`,
     description: brand.description,
   },
-  icons: {
-    icon: [
-      { url: "/favicon.ico", sizes: "32x32" },
-      { url: "/favicon.svg", type: "image/svg+xml" },
-      { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
-      { url: "/icon-512.png", sizes: "512x512", type: "image/png" },
-    ],
-    apple: [{ url: "/apple-touch-icon.png" }],
-  },
-  manifest: "/site.webmanifest",
   robots: {
     index: true,
     follow: true,

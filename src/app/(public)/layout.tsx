@@ -22,7 +22,7 @@ export default function PublicLayout({
         <div className="max-w-7xl mx-auto bg-card/80 backdrop-blur-md border border-border rounded-xl md:rounded-full px-4 md:px-6 py-3">
           <div className="flex items-center justify-between">
             <Link href="/" className="flex items-center gap-2">
-              <img src="/logo-negative.svg" alt="TODO.LAW" style={{ height: "28px", width: "auto" }} />
+              <img src={brand.assets.logo} alt={brand.company} style={{ height: "28px", width: "auto" }} />
               <span className="text-muted-foreground" style={{ fontFamily: "var(--font-display), 'Jost', sans-serif", fontWeight: 600 }}>DEALROOM</span>
             </Link>
 

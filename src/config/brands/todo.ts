@@ -57,7 +57,8 @@ export const todo: BrandConfig = {
 
   // Asset paths (relative to public directory)
   assets: {
-    logo: "/logo-negative.svg",
+    logo: "/logo.svg",
+    icon: "/icon.svg",
     favicon: "/favicon.ico",
   },
 
