@@ -416,10 +416,12 @@
     "contractSummary": "Resumen del Contrato",
     "partyA": "Parte A",
     "partyB": "Parte B",
+    "signingParty": "Parte Firmante",
     "agreedTerms": "Términos Acordados ({count} cláusulas)",
     "signingStatus": "Estado de Firma",
     "partyASignature": "Firma Parte A",
     "partyBSignature": "Firma Parte B",
+    "signature": "Firma",
     "signed": "Firmado",
     "contractSigned": "¡Contrato Firmado!",
     "contractSignedDescription": "Ambas partes han firmado. El contrato ahora es legalmente vinculante.",
@@ -1585,5 +1587,13 @@
     "upgradeTitle": "Desbloquear Analíticas",
     "upgradeDescription": "Obtén indicadores de negociación, tendencias de acuerdos e información basada en inteligencia en la nube.",
     "learnMore": "Más Información"
+  },
+  "vettingBadge": {
+    "vettedBy": "Revisado por {lawyer}",
+    "draftBy": "Revisión en curso por {lawyer}",
+    "approvedOn": "Aprobado el {date}",
+    "draftDescription": "Tu abogado/a todavía está finalizando las selecciones recomendadas.",
+    "approvedTooltip": "Aprobado por {lawyer} el {date}",
+    "draftTooltip": "Revisión en borrador por {lawyer}"
   }
 }

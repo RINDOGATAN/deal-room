@@ -30,6 +30,7 @@ import { Slider } from "@/components/ui/slider";
 import { AlertTriangle } from "lucide-react";
 import { interpolateParameters, type ParameterSchema } from "@/lib/parameters";
 import { LawyerWarningModal } from "@/components/LawyerWarningModal";
+import { VettingBadge } from "@/components/VettingBadge";
 import enMessages from "@/messages/en.json";
 import esMessages from "@/messages/es.json";
 
@@ -397,6 +398,9 @@ function NegotiateContent({ dealId }: { dealId: string }) {
               {deal.contractTemplate.displayName} • {t("clause")} <span className="metric text-foreground">{currentClauseIndex + 1}</span> {t("of")} <span className="metric">{clauses.length}</span>
             </p>
           </div>
+          {(deal as any).lawyerVetting && (
+            <VettingBadge vetting={(deal as any).lawyerVetting} governingLaw={deal.governingLaw} compact />
+          )}
         </div>
         <div className="flex items-center gap-4">
           {(saveSelections.isPending || lastSavedAt) && (

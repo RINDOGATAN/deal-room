@@ -153,6 +153,20 @@ export const dealRouter = createTRPCRouter({
         where: { id: input.id },
         include: {
           contractTemplate: true,
+          lawyerVetting: {
+            select: {
+              id: true,
+              status: true,
+              approvedAt: true,
+              lawyer: {
+                select: {
+                  id: true,
+                  name: true,
+                  email: true,
+                },
+              },
+            },
+          },
           parties: {
             include: {
               user: {

@@ -159,6 +159,7 @@ function SigningContent({ dealId }: { dealId: string }) {
   const initiator = deal.parties.find((p) => p.role === "INITIATOR");
   const respondent = deal.parties.find((p) => p.role === "RESPONDENT");
   const isInitiator = deal.currentUserRole === "INITIATOR";
+  const isSoloMode = (deal as any)?.dealMode === "SOLO";
 
   // Check if all clauses are agreed
   const allAgreed = deal.clauses.every((c) => c.status === "AGREED");
@@ -314,10 +315,10 @@ function SigningContent({ dealId }: { dealId: string }) {
           <FileText className="w-5 h-5 text-muted-foreground" />
           {t("contractSummary")}
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div className={`grid grid-cols-1 ${isSoloMode ? "" : "md:grid-cols-2"} gap-6 mb-6`}>
           <div className="space-y-4">
             <div className="p-4 bg-muted/30 border border-border">
-              <p className="text-xs text-muted-foreground uppercase tracking-wider mb-2">{t("partyA")}</p>
+              <p className="text-xs text-muted-foreground uppercase tracking-wider mb-2">{isSoloMode ? t("signingParty") : t("partyA")}</p>
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-primary flex items-center justify-center text-primary-foreground font-semibold">
                   {(initiator?.name || initiator?.email || "?")[0].toUpperCase()}
@@ -331,22 +332,24 @@ function SigningContent({ dealId }: { dealId: string }) {
               </div>
             </div>
           </div>
-          <div className="space-y-4">
-            <div className="p-4 bg-muted/30 border border-border">
-              <p className="text-xs text-muted-foreground uppercase tracking-wider mb-2">{t("partyB")}</p>
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-muted flex items-center justify-center text-muted-foreground font-semibold">
-                  {(respondent?.name || respondent?.email || "?")[0].toUpperCase()}
-                </div>
-                <div>
-                  <p className="font-medium">{respondent?.name || respondent?.email}</p>
-                  {respondent?.company && (
-                    <p className="text-sm text-muted-foreground">{respondent.company}</p>
-                  )}
+          {!isSoloMode && (
+            <div className="space-y-4">
+              <div className="p-4 bg-muted/30 border border-border">
+                <p className="text-xs text-muted-foreground uppercase tracking-wider mb-2">{t("partyB")}</p>
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-muted flex items-center justify-center text-muted-foreground font-semibold">
+                    {(respondent?.name || respondent?.email || "?")[0].toUpperCase()}
+                  </div>
+                  <div>
+                    <p className="font-medium">{respondent?.name || respondent?.email}</p>
+                    {respondent?.company && (
+                      <p className="text-sm text-muted-foreground">{respondent.company}</p>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
 
         {/* Agreed Terms Summary */}
@@ -393,7 +396,7 @@ function SigningContent({ dealId }: { dealId: string }) {
           {t("signingDetails.description")}
         </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className={`grid grid-cols-1 ${isSoloMode ? "" : "md:grid-cols-2"} gap-6`}>
           {/* Own Details */}
           <div className="space-y-4">
             <div className="flex items-center justify-between">
@@ -560,74 +563,76 @@ function SigningContent({ dealId }: { dealId: string }) {
             )}
           </div>
 
-          {/* Other Party Details */}
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
-                {t("signingDetails.otherPartyDetails")}
-              </h3>
-              {otherDetailsConfirmed ? (
-                <Badge className="bg-primary/20 text-primary">
-                  <Check className="w-3 h-3 mr-1" />
-                  {t("signingDetails.confirmed")}
-                </Badge>
-              ) : (
-                <Badge variant="outline">
-                  <Clock className="w-3 h-3 mr-1" />
-                  {tCommon("pending")}
-                </Badge>
-              )}
-            </div>
+          {/* Other Party Details (hidden in SOLO mode) */}
+          {!isSoloMode && (
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+                  {t("signingDetails.otherPartyDetails")}
+                </h3>
+                {otherDetailsConfirmed ? (
+                  <Badge className="bg-primary/20 text-primary">
+                    <Check className="w-3 h-3 mr-1" />
+                    {t("signingDetails.confirmed")}
+                  </Badge>
+                ) : (
+                  <Badge variant="outline">
+                    <Clock className="w-3 h-3 mr-1" />
+                    {tCommon("pending")}
+                  </Badge>
+                )}
+              </div>
 
-            {otherDetailsConfirmed && otherDetails ? (
-              <div className="space-y-3 p-4 bg-muted/30 border border-border rounded-xl">
-                <div className="flex items-start gap-2">
-                  <Building className="w-4 h-4 text-muted-foreground mt-0.5" />
-                  <div>
-                    <p className="text-sm font-medium">{otherDetails.legalName}</p>
-                    <p className="text-xs text-muted-foreground">{t("signingDetails.legalName")}</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-2">
-                  <MapPin className="w-4 h-4 text-muted-foreground mt-0.5" />
-                  <div>
-                    <p className="text-sm">{otherDetails.address}</p>
-                    <p className="text-xs text-muted-foreground">{t("signingDetails.address")}</p>
-                  </div>
-                </div>
-                {otherDetails.taxId && (
+              {otherDetailsConfirmed && otherDetails ? (
+                <div className="space-y-3 p-4 bg-muted/30 border border-border rounded-xl">
                   <div className="flex items-start gap-2">
-                    <Hash className="w-4 h-4 text-muted-foreground mt-0.5" />
+                    <Building className="w-4 h-4 text-muted-foreground mt-0.5" />
                     <div>
-                      <p className="text-sm">{otherDetails.taxId}</p>
-                      <p className="text-xs text-muted-foreground">{t("signingDetails.taxId")}</p>
+                      <p className="text-sm font-medium">{otherDetails.legalName}</p>
+                      <p className="text-xs text-muted-foreground">{t("signingDetails.legalName")}</p>
                     </div>
                   </div>
-                )}
-                <div className="flex items-start gap-2">
-                  <User className="w-4 h-4 text-muted-foreground mt-0.5" />
-                  <div>
-                    <p className="text-sm">{otherDetails.signatoryName}</p>
-                    <p className="text-xs text-muted-foreground">{t("signingDetails.signatoryName")}</p>
+                  <div className="flex items-start gap-2">
+                    <MapPin className="w-4 h-4 text-muted-foreground mt-0.5" />
+                    <div>
+                      <p className="text-sm">{otherDetails.address}</p>
+                      <p className="text-xs text-muted-foreground">{t("signingDetails.address")}</p>
+                    </div>
+                  </div>
+                  {otherDetails.taxId && (
+                    <div className="flex items-start gap-2">
+                      <Hash className="w-4 h-4 text-muted-foreground mt-0.5" />
+                      <div>
+                        <p className="text-sm">{otherDetails.taxId}</p>
+                        <p className="text-xs text-muted-foreground">{t("signingDetails.taxId")}</p>
+                      </div>
+                    </div>
+                  )}
+                  <div className="flex items-start gap-2">
+                    <User className="w-4 h-4 text-muted-foreground mt-0.5" />
+                    <div>
+                      <p className="text-sm">{otherDetails.signatoryName}</p>
+                      <p className="text-xs text-muted-foreground">{t("signingDetails.signatoryName")}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <Briefcase className="w-4 h-4 text-muted-foreground mt-0.5" />
+                    <div>
+                      <p className="text-sm">{otherDetails.signatoryTitle}</p>
+                      <p className="text-xs text-muted-foreground">{t("signingDetails.signatoryTitle")}</p>
+                    </div>
                   </div>
                 </div>
-                <div className="flex items-start gap-2">
-                  <Briefcase className="w-4 h-4 text-muted-foreground mt-0.5" />
-                  <div>
-                    <p className="text-sm">{otherDetails.signatoryTitle}</p>
-                    <p className="text-xs text-muted-foreground">{t("signingDetails.signatoryTitle")}</p>
-                  </div>
+              ) : (
+                <div className="p-6 border border-dashed border-border rounded-xl text-center">
+                  <Clock className="w-8 h-8 text-muted-foreground mx-auto mb-3" />
+                  <p className="text-sm text-muted-foreground">
+                    {t("signingDetails.waitingForOtherParty")}
+                  </p>
                 </div>
-              </div>
-            ) : (
-              <div className="p-6 border border-dashed border-border rounded-xl text-center">
-                <Clock className="w-8 h-8 text-muted-foreground mx-auto mb-3" />
-                <p className="text-sm text-muted-foreground">
-                  {t("signingDetails.waitingForOtherParty")}
-                </p>
-              </div>
-            )}
-          </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
 
@@ -639,10 +644,10 @@ function SigningContent({ dealId }: { dealId: string }) {
             {t("signingStatus")}
           </h2>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+          <div className={`grid grid-cols-1 ${isSoloMode ? "" : "sm:grid-cols-2"} gap-4 mb-6`}>
             <div className="p-4 border border-border">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-sm text-muted-foreground">{t("partyASignature")}</span>
+                <span className="text-sm text-muted-foreground">{isSoloMode ? t("signature") : t("partyASignature")}</span>
                 {signingRequest.initiatorSignedAt ? (
                   <Badge className="bg-primary/20 text-primary">
                     <Check className="w-3 h-3 mr-1" />
@@ -669,35 +674,37 @@ function SigningContent({ dealId }: { dealId: string }) {
                 </p>
               )}
             </div>
-            <div className="p-4 border border-border">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm text-muted-foreground">{t("partyBSignature")}</span>
-                {signingRequest.respondentSignedAt ? (
-                  <Badge className="bg-primary/20 text-primary">
-                    <Check className="w-3 h-3 mr-1" />
-                    {t("signed")}
-                  </Badge>
-                ) : (
-                  <Badge variant="outline">
-                    <Clock className="w-3 h-3 mr-1" />
-                    {tCommon("pending")}
-                  </Badge>
+            {!isSoloMode && (
+              <div className="p-4 border border-border">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm text-muted-foreground">{t("partyBSignature")}</span>
+                  {signingRequest.respondentSignedAt ? (
+                    <Badge className="bg-primary/20 text-primary">
+                      <Check className="w-3 h-3 mr-1" />
+                      {t("signed")}
+                    </Badge>
+                  ) : (
+                    <Badge variant="outline">
+                      <Clock className="w-3 h-3 mr-1" />
+                      {tCommon("pending")}
+                    </Badge>
+                  )}
+                </div>
+                {signingRequest.respondentSignedAt && signingRequest.respondentSignature && (
+                  <p
+                    className="text-lg text-primary mt-2"
+                    style={{ fontFamily: "var(--font-signature), 'Brush Script MT', cursive" }}
+                  >
+                    {signingRequest.respondentSignature}
+                  </p>
+                )}
+                {signingRequest.respondentSignedAt && (
+                  <p className="text-xs text-muted-foreground mt-1">
+                    {formatDateTime(new Date(signingRequest.respondentSignedAt), { locale, governingLaw: deal?.governingLaw })}
+                  </p>
                 )}
               </div>
-              {signingRequest.respondentSignedAt && signingRequest.respondentSignature && (
-                <p
-                  className="text-lg text-primary mt-2"
-                  style={{ fontFamily: "var(--font-signature), 'Brush Script MT', cursive" }}
-                >
-                  {signingRequest.respondentSignature}
-                </p>
-              )}
-              {signingRequest.respondentSignedAt && (
-                <p className="text-xs text-muted-foreground mt-1">
-                  {formatDateTime(new Date(signingRequest.respondentSignedAt), { locale, governingLaw: deal?.governingLaw })}
-                </p>
-              )}
-            </div>
+            )}
           </div>
 
           {signingRequest.status === "COMPLETED" ? (
