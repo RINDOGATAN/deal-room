@@ -75,6 +75,8 @@
     "createDealRoom": "Create Dealroom",
     "noDealsYet": "No deals yet",
     "createFirstDeal": "Create your first deal room to start negotiating contracts",
+    "startupLaunchTitle": "Starting a company?",
+    "startupLaunchDescription": "Use the guided Launch flow to draft your Cert of Incorporation, Founders' Agreements, and IP Assignments in one sitting.",
     "clauses": "clauses",
     "updated": "Updated {date}",
     "created": "Created {date}",
