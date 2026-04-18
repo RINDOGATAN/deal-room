@@ -117,8 +117,9 @@ export default function DashboardLayout({
             <div className="hidden md:flex items-center gap-4">
               <button
                 onClick={() => setFeedbackOpen(true)}
-                className="p-2 text-muted-foreground hover:text-foreground rounded-full hover:bg-secondary transition-colors"
+                className="p-2.5 text-muted-foreground hover:text-foreground rounded-full hover:bg-secondary transition-colors"
                 title={tCommon("feedback")}
+                aria-label={tCommon("feedback")}
               >
                 <MessageSquareWarning className="w-4 h-4" />
               </button>
@@ -142,7 +143,7 @@ export default function DashboardLayout({
             <button
               onClick={() => setMobileMenuOpen(true)}
               aria-label={tCommon("openMenu")}
-              className="md:hidden p-2 text-muted-foreground hover:text-foreground"
+              className="md:hidden p-2.5 text-muted-foreground hover:text-foreground"
             >
               <Menu className="w-5 h-5" />
             </button>
@@ -161,7 +162,8 @@ export default function DashboardLayout({
               </Link>
               <button
                 onClick={() => setMobileMenuOpen(false)}
-                className="p-2 text-muted-foreground hover:text-foreground"
+                className="p-2.5 text-muted-foreground hover:text-foreground"
+                aria-label={tCommon("closeMenu")}
               >
                 <X className="w-5 h-5" />
               </button>

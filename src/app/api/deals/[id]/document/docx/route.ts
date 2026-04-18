@@ -13,6 +13,7 @@ import {
   validateDealAccess,
   isDealSignable,
   enrichWithCertification,
+  buildContractFilename,
 } from "@/server/services/document/generator";
 import { generateContractDocx } from "@/server/services/document/contractDocx";
 
@@ -57,10 +58,7 @@ export async function GET(
     const docxBuffer = await generateContractDocx(contractData);
     const uint8Array = new Uint8Array(docxBuffer);
 
-    const sanitizedName = contractData.dealName
-      .replace(/[^a-z0-9]/gi, "_")
-      .toLowerCase();
-    const filename = `${sanitizedName}_contract.docx`;
+    const filename = buildContractFilename(contractData, "docx");
 
     return new NextResponse(uint8Array, {
       status: 200,

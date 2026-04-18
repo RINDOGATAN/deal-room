@@ -14,6 +14,7 @@ import {
   validateDealAccess,
   isDealSignable,
   enrichWithCertification,
+  buildContractFilename,
 } from "@/server/services/document/generator";
 import { ContractPDF } from "@/server/services/document/ContractPDF";
 
@@ -65,11 +66,7 @@ export async function GET(
       ContractPDF({ data: contractData })
     );
 
-    // Create filename
-    const sanitizedName = contractData.dealName
-      .replace(/[^a-z0-9]/gi, "_")
-      .toLowerCase();
-    const filename = `${sanitizedName}_contract.pdf`;
+    const filename = buildContractFilename(contractData, "pdf");
 
     // Convert Buffer to Uint8Array for NextResponse compatibility
     const uint8Array = new Uint8Array(pdfBuffer);

@@ -165,15 +165,15 @@ export default function DealsPage() {
                       <span>{t("updated", { date: formatDate(new Date(deal.updatedAt), { locale, governingLaw: deal.governingLaw }) })}</span>
                     </div>
 
-                    <div className="flex items-center gap-4 text-sm">
-                      <span className="text-muted-foreground">
+                    <div className="flex items-center gap-2 sm:gap-4 text-sm min-w-0">
+                      <span className="text-muted-foreground truncate min-w-0">
                         <span className="text-foreground">{initiator?.name || initiator?.email}</span>
                         {initiator?.company && ` (${initiator.company})`}
                       </span>
                       {respondent && (
                         <>
-                          <ArrowRight className="w-4 h-4 text-muted-foreground" />
-                          <span className="text-muted-foreground">
+                          <ArrowRight className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+                          <span className="text-muted-foreground truncate min-w-0">
                             <span className="text-foreground">{respondent.name || respondent.email}</span>
                             {respondent.company && ` (${respondent.company})`}
                           </span>
@@ -204,9 +204,9 @@ export default function DealsPage() {
                               resendInvitation.mutate({ invitationId: pendingInvitation.id });
                             }}
                             disabled={resendInvitation.isPending}
-                            className="inline-flex items-center gap-1.5 px-2 py-1 border border-border hover:border-primary hover:text-primary transition-colors disabled:opacity-50"
+                            className="inline-flex items-center gap-1.5 px-3 py-2 border border-border hover:border-primary hover:text-primary transition-colors disabled:opacity-50 min-h-[36px]"
                           >
-                            <Mail className="w-3 h-3" />
+                            <Mail className="w-3.5 h-3.5" />
                             {isResendingThis ? "…" : t("resendInvitation")}
                           </button>
                         )}

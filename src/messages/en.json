@@ -20,6 +20,7 @@
     "change": "Change",
     "feedback": "Feedback",
     "openMenu": "Open menu",
+    "closeMenu": "Close menu",
     "jurisdictionCalifornia": "California, USA",
     "jurisdictionEnglandWales": "England & Wales, UK",
     "jurisdictionSpain": "Spain, EU",
@@ -244,6 +245,7 @@
       "saving": "Saving…",
       "saved": "Saved"
     },
+    "counterpartyAlreadySubmitted": "The other party has already submitted their selections. You're choosing independently — your picks will be compared to theirs once you submit.",
     "allClausesSelected": "All clauses pre-selected",
     "allClausesSelectedDescription": "You can review each clause individually or skip ahead to submit.",
     "skipToSubmit": "Skip to Submit",

@@ -501,6 +501,7 @@ function SigningContent({ dealId }: { dealId: string }) {
                     onChange={(e) => setDetailsForm((f) => ({ ...f, legalName: e.target.value }))}
                     placeholder={t("signingDetails.legalNamePlaceholder")}
                     className="input-brutal"
+                    autoComplete="organization"
                   />
                 </div>
                 <div>
@@ -510,6 +511,7 @@ function SigningContent({ dealId }: { dealId: string }) {
                     onChange={(e) => setDetailsForm((f) => ({ ...f, address: e.target.value }))}
                     placeholder={t("signingDetails.addressPlaceholder")}
                     className="input-brutal"
+                    autoComplete="street-address"
                   />
                 </div>
                 <div>
@@ -522,6 +524,7 @@ function SigningContent({ dealId }: { dealId: string }) {
                     onChange={(e) => setDetailsForm((f) => ({ ...f, taxId: e.target.value }))}
                     placeholder={t("signingDetails.taxIdPlaceholder")}
                     className="input-brutal"
+                    autoComplete="off"
                   />
                 </div>
                 <div>
@@ -531,6 +534,7 @@ function SigningContent({ dealId }: { dealId: string }) {
                     onChange={(e) => setDetailsForm((f) => ({ ...f, signatoryName: e.target.value }))}
                     placeholder={t("signingDetails.signatoryNamePlaceholder")}
                     className="input-brutal"
+                    autoComplete="name"
                   />
                 </div>
                 <div>
@@ -540,6 +544,7 @@ function SigningContent({ dealId }: { dealId: string }) {
                     onChange={(e) => setDetailsForm((f) => ({ ...f, signatoryTitle: e.target.value }))}
                     placeholder={t("signingDetails.signatoryTitlePlaceholder")}
                     className="input-brutal"
+                    autoComplete="organization-title"
                   />
                 </div>
                 <button
@@ -817,9 +822,9 @@ function SigningContent({ dealId }: { dealId: string }) {
                             <label className="block text-xs text-muted-foreground mb-2">
                               {t("signaturePreview")}
                             </label>
-                            <div className="p-6 border-2 border-dashed border-border bg-muted/20 text-center">
+                            <div className="p-6 border-2 border-dashed border-border bg-muted/20 text-center overflow-hidden">
                               <p
-                                className="text-3xl text-foreground"
+                                className="text-xl sm:text-2xl md:text-3xl text-foreground break-words"
                                 style={{ fontFamily: "var(--font-signature), 'Brush Script MT', cursive" }}
                               >
                                 {typedSignature}
