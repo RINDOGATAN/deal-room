@@ -416,10 +416,12 @@
     "contractSummary": "Contract Summary",
     "partyA": "Party A",
     "partyB": "Party B",
+    "signingParty": "Signing Party",
     "agreedTerms": "Agreed Terms ({count} clauses)",
     "signingStatus": "Signing Status",
     "partyASignature": "Party A Signature",
     "partyBSignature": "Party B Signature",
+    "signature": "Signature",
     "signed": "Signed",
     "contractSigned": "Contract Signed!",
     "contractSignedDescription": "Both parties have signed. The contract is now legally binding.",
@@ -1585,5 +1587,13 @@
     "upgradeTitle": "Unlock Analytics",
     "upgradeDescription": "Get negotiation benchmarks, deal trends, and insights powered by cloud intelligence.",
     "learnMore": "Learn More"
+  },
+  "vettingBadge": {
+    "vettedBy": "Vetted by {lawyer}",
+    "draftBy": "Vetting in progress by {lawyer}",
+    "approvedOn": "Approved on {date}",
+    "draftDescription": "Your lawyer is still finalizing the recommended selections.",
+    "approvedTooltip": "Approved by {lawyer} on {date}",
+    "draftTooltip": "Draft vetting by {lawyer}"
   }
 }

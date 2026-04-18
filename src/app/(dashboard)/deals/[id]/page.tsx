@@ -30,6 +30,7 @@ import { useSession } from "next-auth/react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { LawyerWarningModal } from "@/components/LawyerWarningModal";
+import { VettingBadge } from "@/components/VettingBadge";
 import {
   Dialog,
   DialogContent,
@@ -207,6 +208,9 @@ function DealDetailContent({ dealId }: { dealId: string }) {
             <span>•</span>
             <span>Created {formatDate(new Date(deal.createdAt), { locale, governingLaw: deal.governingLaw })}</span>
           </div>
+          {(deal as any).lawyerVetting && (
+            <VettingBadge vetting={(deal as any).lawyerVetting} governingLaw={deal.governingLaw} />
+          )}
         </div>
 
         <div className="flex items-center gap-3">

@@ -32,6 +32,7 @@ import {
 } from "lucide-react";
 import { resolveParamString } from "@/lib/parameters";
 import { Badge } from "@/components/ui/badge";
+import { VettingBadge } from "@/components/VettingBadge";
 import enMessages from "@/messages/en.json";
 import esMessages from "@/messages/es.json";
 
@@ -345,6 +346,9 @@ function ReviewContent({ dealId }: { dealId: string }) {
               {deal.currentRound > 0 && ` • ${t("round", { number: deal.currentRound })}`}
             </p>
           </div>
+          {(deal as any).lawyerVetting && (
+            <VettingBadge vetting={(deal as any).lawyerVetting} governingLaw={deal.governingLaw} compact />
+          )}
         </div>
 
         <div className="flex items-center gap-3">
