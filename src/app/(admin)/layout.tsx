@@ -23,7 +23,7 @@ export default function AdminLayout({
         <header className="border-b border-border">
           <div className="container mx-auto px-6 py-4 flex items-center gap-3">
             <Link href="/" className="flex items-center gap-2">
-              <img src="/logo-negative.svg" alt="TODO.LAW" style={{ height: "28px", width: "auto" }} />
+              <img src={brand.assets.logo} alt={brand.company} style={{ height: "28px", width: "auto" }} />
               <span className="text-muted-foreground" style={{ fontFamily: "var(--font-display), 'Jost', sans-serif", fontWeight: 600 }}>DEALROOM</span>
             </Link>
             <div className="h-6 w-px bg-border" />
@@ -65,7 +65,7 @@ export default function AdminLayout({
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <Link href="/admin" className="flex items-center gap-2">
-              <img src="/logo-negative.svg" alt="TODO.LAW" style={{ height: "28px", width: "auto" }} />
+              <img src={brand.assets.logo} alt={brand.company} style={{ height: "28px", width: "auto" }} />
               <span className="text-muted-foreground" style={{ fontFamily: "var(--font-display), 'Jost', sans-serif", fontWeight: 600 }}>DEALROOM</span>
             </Link>
             <div className="h-6 w-px bg-border" />

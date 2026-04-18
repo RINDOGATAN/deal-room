@@ -53,7 +53,8 @@ export const northend: BrandConfig = {
 
   // Asset paths
   assets: {
-    logo: "/logo-negative.svg",
+    logo: "/nel-logo.png",
+    icon: "/nel-icon.png",
     favicon: "/favicon.ico",
   },
 

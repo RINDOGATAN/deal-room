@@ -83,7 +83,7 @@ export default function DashboardLayout({
         <div className="max-w-7xl mx-auto bg-card/80 backdrop-blur-sm border border-border rounded-xl md:rounded-full px-4 md:px-6 py-3">
           <div className="flex items-center justify-between">
             <Link href="/deals" className="flex items-center gap-2">
-              <img src="/logo-negative.svg" alt="TODO.LAW" style={{ height: "28px", width: "auto" }} />
+              <img src={brand.assets.logo} alt={brand.company} style={{ height: "28px", width: "auto" }} />
               <span className="text-muted-foreground" style={{ fontFamily: "var(--font-display), 'Jost', sans-serif", fontWeight: 600 }}>DEALROOM</span>
             </Link>
 
@@ -156,7 +156,7 @@ export default function DashboardLayout({
           <div className="flex flex-col h-full p-6">
             <div className="flex items-center justify-between mb-8">
               <Link href="/deals" className="flex items-center gap-2" onClick={() => setMobileMenuOpen(false)}>
-                <img src="/logo-negative.svg" alt="TODO.LAW" style={{ height: "28px", width: "auto" }} />
+                <img src={brand.assets.logo} alt={brand.company} style={{ height: "28px", width: "auto" }} />
                 <span className="text-muted-foreground" style={{ fontFamily: "var(--font-display), 'Jost', sans-serif", fontWeight: 600 }}>DEALROOM</span>
               </Link>
               <button
