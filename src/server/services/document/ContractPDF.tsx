@@ -34,7 +34,8 @@ const styles = StyleSheet.create({
     fontSize: 11,
     paddingTop: 60,
     paddingBottom: 80,
-    paddingHorizontal: 60,
+    paddingLeft: 72,
+    paddingRight: 60,
     lineHeight: 1.5,
   },
   header: {
@@ -220,8 +221,8 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: "#000",
     borderBottomStyle: "solid",
-    height: 20,
-    width: 120,
+    height: 36,
+    width: 140,
     marginTop: 4,
   },
   footer: {
@@ -269,6 +270,9 @@ const styles = StyleSheet.create({
     paddingVertical: 2,
     paddingHorizontal: 6,
     borderRadius: 3,
+    borderWidth: 1,
+    borderStyle: "solid",
+    borderColor: "#166534",
   },
   uncertifiedBadge: {
     fontSize: 7,
@@ -277,6 +281,9 @@ const styles = StyleSheet.create({
     paddingVertical: 2,
     paddingHorizontal: 6,
     borderRadius: 3,
+    borderWidth: 1,
+    borderStyle: "dashed",
+    borderColor: "#9a3412",
   },
   auditPage: {
     fontFamily: "Times-Roman",
@@ -594,7 +601,7 @@ export function ContractPDF({ data }: ContractPDFProps) {
           <Text
             style={data.certification?.certified ? styles.certifiedBadge : styles.uncertifiedBadge}
           >
-            {data.certification?.certified ? labels.certifiedBy : labels.uncertified}
+            {data.certification?.certified ? `\u2713 ${labels.certifiedBy}` : `\u25CB ${labels.uncertified}`}
           </Text>
           <Text style={{ fontSize: 7, color: "#999" }}>
             {data.certification?.documentHash
@@ -752,7 +759,7 @@ export function ContractPDF({ data }: ContractPDFProps) {
             <Text
               style={data.certification?.certified ? styles.certifiedBadge : styles.uncertifiedBadge}
             >
-              {data.certification?.certified ? labels.certifiedBy : labels.uncertified}
+              {data.certification?.certified ? `\u2713 ${labels.certifiedBy}` : `\u25CB ${labels.uncertified}`}
             </Text>
             <Text style={{ fontSize: 7, color: "#999" }}>
               {data.certification?.documentHash

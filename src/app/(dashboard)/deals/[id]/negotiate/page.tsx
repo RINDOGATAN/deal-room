@@ -141,9 +141,19 @@ function NegotiateContent({ dealId }: { dealId: string }) {
   const canPrePopulate = isRespondent && hasInitiatorSubmitted;
 
   const [lastSavedAt, setLastSavedAt] = useState<Date | null>(null);
+  const [savedVisible, setSavedVisible] = useState(false);
   const saveSelections = trpc.selections.bulkSave.useMutation({
-    onSuccess: () => setLastSavedAt(new Date()),
+    onSuccess: () => {
+      setLastSavedAt(new Date());
+      setSavedVisible(true);
+    },
   });
+
+  useEffect(() => {
+    if (!savedVisible) return;
+    const timer = setTimeout(() => setSavedVisible(false), 3000);
+    return () => clearTimeout(timer);
+  }, [savedVisible, lastSavedAt]);
   const submitSelections = trpc.deal.submitSelections.useMutation({
     onSuccess: (result) => {
       if ((result as any).soloCompleted) {
@@ -403,8 +413,11 @@ function NegotiateContent({ dealId }: { dealId: string }) {
           )}
         </div>
         <div className="flex items-center gap-4">
-          {(saveSelections.isPending || lastSavedAt) && (
-            <div className="flex items-center gap-1.5 text-xs text-muted-foreground" aria-live="polite">
+          {(saveSelections.isPending || savedVisible) && (
+            <div
+              className="flex items-center gap-1.5 text-xs text-muted-foreground transition-opacity duration-500"
+              aria-live="polite"
+            >
               {saveSelections.isPending ? (
                 <>
                   <Loader2 className="w-3 h-3 animate-spin" />
@@ -425,6 +438,14 @@ function NegotiateContent({ dealId }: { dealId: string }) {
           <Progress value={progress} className="w-32 h-1.5" />
         </div>
       </div>
+
+      {/* Respondent context banner — counterparty already submitted, selections are made independently */}
+      {canPrePopulate && (
+        <div className="mb-4 flex items-start gap-2 text-sm text-muted-foreground" role="status">
+          <Info className="w-4 h-4 mt-0.5 flex-shrink-0 text-primary" />
+          <p>{t("counterpartyAlreadySubmitted")}</p>
+        </div>
+      )}
 
       {/* Pre-populate checkbox - only visible for respondents when initiator has submitted */}
       {canPrePopulate && selections.size === 0 && (
@@ -844,6 +865,8 @@ function NegotiateContent({ dealId }: { dealId: string }) {
                 max={5}
                 step={1}
                 className="w-full"
+                aria-label={t("firmness")}
+                aria-valuetext={`${6 - currentSelection.flexibility} ${t("of")} 5`}
               />
               <div className="flex justify-between text-xs text-muted-foreground">
                 <span>{t("openToAlternatives")}</span>

@@ -20,6 +20,7 @@
     "change": "Cambiar",
     "feedback": "Comentarios",
     "openMenu": "Abrir menú",
+    "closeMenu": "Cerrar menú",
     "jurisdictionCalifornia": "California, EE.UU.",
     "jurisdictionEnglandWales": "Inglaterra y Gales, Reino Unido",
     "jurisdictionSpain": "España, UE",
@@ -244,6 +245,7 @@
       "saving": "Guardando…",
       "saved": "Guardado"
     },
+    "counterpartyAlreadySubmitted": "La otra parte ya ha enviado sus selecciones. Tú eliges de forma independiente — tus elecciones se compararán con las suyas en cuanto envíes las tuyas.",
     "allClausesSelected": "Todas las cláusulas preseleccionadas",
     "allClausesSelectedDescription": "Puedes revisar cada cláusula individualmente o ir directamente al envío.",
     "skipToSubmit": "Ir al Envío",

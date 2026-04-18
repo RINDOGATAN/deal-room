@@ -37,7 +37,7 @@ export function LawyerWarningModal({
   return (
     <Dialog open={open} onOpenChange={() => {}}>
       <DialogContent
-        className="bg-card border-border max-w-lg w-full"
+        className="bg-card border-border w-full max-w-[calc(100%-2rem)] sm:max-w-lg"
         showCloseButton={false}
       >
         <DialogHeader>

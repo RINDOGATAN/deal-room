@@ -508,3 +508,23 @@ export async function enrichWithCertification(
     return data;
   }
 }
+
+/**
+ * Human-readable filename for a generated contract document.
+ * Format: Dealroom-{ContractType}-{DealName}-{YYYY-MM-DD}.{ext}
+ * Preserves readable case, collapses spaces + unsafe chars to single hyphens.
+ */
+export function buildContractFilename(data: ContractData, ext: "pdf" | "docx" | "txt"): string {
+  const slug = (s: string) =>
+    s
+      .trim()
+      .replace(/[\/\\?%*:|"<>]/g, "")
+      .replace(/[^\p{L}\p{N}\-]+/gu, "-")
+      .replace(/-+/g, "-")
+      .replace(/^-|-$/g, "")
+      .slice(0, 60);
+
+  const date = new Date().toISOString().slice(0, 10);
+  const parts = ["Dealroom", slug(data.contractType), slug(data.dealName), date].filter(Boolean);
+  return `${parts.join("-")}.${ext}`;
+}

@@ -12,6 +12,7 @@ import {
   generateContractData,
   validateDealAccess,
   isDealSignable,
+  buildContractFilename,
 } from "@/server/services/document/generator";
 import { generateContractTxt } from "@/server/services/document/contractTxt";
 
@@ -54,10 +55,7 @@ export async function GET(
     const txtContent = generateContractTxt(contractData);
     const buffer = Buffer.from(txtContent, "utf-8");
 
-    const sanitizedName = contractData.dealName
-      .replace(/[^a-z0-9]/gi, "_")
-      .toLowerCase();
-    const filename = `${sanitizedName}_contract.txt`;
+    const filename = buildContractFilename(contractData, "txt");
 
     return new NextResponse(buffer, {
       status: 200,
