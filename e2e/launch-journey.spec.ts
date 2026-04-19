@@ -109,6 +109,44 @@ test.describe("Launch journey — Foundation step smoke", () => {
     const startLinks = page.getByRole("link", { name: /^Start/i });
     await expect(startLinks).toHaveCount(1);
   });
+
+  test("founder can skip Formation with 'I have this already' and downstream steps unlock", async ({ page }) => {
+    const email = `e2e-launch-skip-${Date.now()}@dealroom.test`;
+    await loginAs(page, email);
+
+    await page.goto("/launch/new");
+    await page.getByLabel("Company name *").fill(`Already Formed ${Date.now()}`);
+    await page.getByRole("button", { name: /Next: founders/i }).click();
+    await page.getByLabel("Full name").fill("Seasoned Founder");
+    await page.getByLabel("Email").fill("seasoned@example.com");
+    await page.getByRole("button", { name: /Review/i }).click();
+    await page.getByRole("button", { name: /Create journey/i }).click();
+    await page.waitForURL(/\/launch\/[a-z0-9]+$/);
+
+    // Foundation card shows the "I have this already" escape hatch
+    const iHaveIt = page.getByRole("button", { name: /I have this already/i }).first();
+    await expect(iHaveIt).toBeVisible();
+
+    // Baseline: before skip, only Foundation has the link (equity/hiring/raise locked)
+    const iHaveItLinksBefore = page.getByRole("button", { name: /I have this already/i });
+    await expect(iHaveItLinksBefore).toHaveCount(1);
+
+    await iHaveIt.click();
+
+    // Dialog opens with the Foundation-specific copy
+    await expect(page.getByRole("heading", { name: /You've already formed your company/i })).toBeVisible();
+    await expect(page.getByText(/Certificate of Incorporation filed with Delaware/i)).toBeVisible();
+    await page.getByRole("button", { name: /I have everything — mark as done/i }).click();
+
+    // Foundation card flips to "Done elsewhere" and the reset link appears
+    await expect(page.getByText(/Done elsewhere/i).first()).toBeVisible();
+    await expect(page.getByRole("button", { name: /Actually, I still need this/i })).toBeVisible();
+
+    // Downstream steps that depend on Foundation are now unlocked —
+    // equity-pool and raise both show the "I have this already" option too
+    const iHaveItLinksAfter = page.getByRole("button", { name: /I have this already/i });
+    await expect(iHaveItLinksAfter).toHaveCount(2); // equity-pool + raise (both unlockedBy foundation)
+  });
 });
 
 // Matches the generated company-name pattern from the "locks" test

@@ -5,7 +5,15 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
-import { STEP_ORDER, STEP_META, type StepKey } from "@/lib/journey/steps";
+import {
+  STEP_ORDER,
+  STEP_META,
+  STEP_DONE_COPY,
+  isStepUnlocked,
+  type StepKey,
+  type StepStatus,
+  type StepStatusEntry,
+} from "@/lib/journey/steps";
 import {
   Rocket,
   ArrowRight,
@@ -17,6 +25,7 @@ import {
   Lock,
   ChevronRight,
   Scale,
+  CheckSquare,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -27,20 +36,21 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 
-type StepStatusEntry = {
-  status?: "NOT_STARTED" | "READY_FOR_REVIEW" | "AWAITING_REVIEW" | "REVIEWED" | "FILED";
-  completedAt?: string;
-  filedAt?: string;
-  supervisorId?: string;
-  dealIds?: string[];
-};
-
 export default function JourneyHubPage() {
   const params = useParams();
   const journeyId = params.id as string;
 
   const { data: journey, isLoading, refetch } = trpc.journey.get.useQuery({ id: journeyId });
   const [reviewDialogStep, setReviewDialogStep] = useState<StepKey | null>(null);
+  const [markDoneDialogStep, setMarkDoneDialogStep] = useState<StepKey | null>(null);
+
+  const resetStep = trpc.journey.resetStepStatus.useMutation({
+    onSuccess: () => {
+      toast.success("Step reset.");
+      refetch();
+    },
+    onError: (err) => toast.error(err.message),
+  });
 
   if (isLoading) {
     return (
@@ -66,13 +76,6 @@ export default function JourneyHubPage() {
 
   const stepStatuses = (journey.stepStatuses ?? {}) as Record<string, StepStatusEntry>;
 
-  const isStepUnlocked = (key: StepKey): boolean => {
-    const meta = STEP_META[key];
-    if (!meta.unlockedBy) return true;
-    const dep = stepStatuses[meta.unlockedBy];
-    return !!dep && dep.status !== "NOT_STARTED";
-  };
-
   return (
     <div className="max-w-3xl mx-auto space-y-8">
       <div className="space-y-2">
@@ -94,33 +97,37 @@ export default function JourneyHubPage() {
         {STEP_ORDER.map((key) => {
           const meta = STEP_META[key];
           const entry = stepStatuses[key];
-          const status = entry?.status ?? "NOT_STARTED";
-          const unlocked = isStepUnlocked(key);
+          const status = (entry?.status ?? "NOT_STARTED") as StepStatus;
+          const unlocked = isStepUnlocked(key, stepStatuses);
           const isFoundation = key === "foundation";
+          const isDoneElsewhere = status === "DONE_ELSEWHERE";
 
-          const statusLabel = {
+          const statusLabel = ({
             NOT_STARTED: "Not started",
             READY_FOR_REVIEW: "Ready",
             AWAITING_REVIEW: "Awaiting lawyer",
             REVIEWED: "Approved",
             FILED: "Filed",
-          }[status];
+            DONE_ELSEWHERE: "Done elsewhere",
+          } satisfies Record<StepStatus, string>)[status];
 
-          const StatusIcon = {
+          const StatusIcon = ({
             NOT_STARTED: Clock,
             READY_FOR_REVIEW: FileText,
             AWAITING_REVIEW: Loader2,
             REVIEWED: Shield,
             FILED: Check,
-          }[status];
+            DONE_ELSEWHERE: CheckSquare,
+          } satisfies Record<StepStatus, typeof Clock>)[status];
 
-          const badgeClass = {
+          const badgeClass = ({
             NOT_STARTED: "bg-muted text-muted-foreground",
             READY_FOR_REVIEW: "bg-blue-500/20 text-blue-500",
             AWAITING_REVIEW: "bg-yellow-500/20 text-yellow-500",
             REVIEWED: "bg-primary/20 text-primary",
             FILED: "bg-green-500/20 text-green-600",
-          }[status];
+            DONE_ELSEWHERE: "bg-slate-500/20 text-slate-400",
+          } satisfies Record<StepStatus, string>)[status];
 
           return (
             <div
@@ -141,7 +148,7 @@ export default function JourneyHubPage() {
                     ~{meta.estimatedMinutes} min
                   </p>
                 </div>
-                <div className="flex-shrink-0">
+                <div className="flex-shrink-0 flex flex-col items-end gap-2">
                   {!unlocked ? (
                     <div
                       className="inline-flex items-center gap-2 text-xs text-muted-foreground"
@@ -150,6 +157,16 @@ export default function JourneyHubPage() {
                       <Lock className="w-3.5 h-3.5" />
                       <span className="hidden sm:inline">Locked</span>
                     </div>
+                  ) : isDoneElsewhere ? (
+                    <button
+                      onClick={() =>
+                        resetStep.mutate({ journeyId: journey.id, stepKey: key })
+                      }
+                      disabled={resetStep.isPending}
+                      className="text-xs text-muted-foreground hover:text-foreground underline underline-offset-2 disabled:opacity-40"
+                    >
+                      Actually, I still need this
+                    </button>
                   ) : isFoundation ? (
                     <Link
                       href={`/launch/${journey.id}/step/${key}`}
@@ -165,6 +182,14 @@ export default function JourneyHubPage() {
                     >
                       <Clock className="w-3.5 h-3.5" /> Soon
                     </span>
+                  )}
+                  {unlocked && status === "NOT_STARTED" && (
+                    <button
+                      onClick={() => setMarkDoneDialogStep(key)}
+                      className="text-xs text-muted-foreground hover:text-foreground underline underline-offset-2"
+                    >
+                      I have this already
+                    </button>
                   )}
                 </div>
               </div>
@@ -223,7 +248,115 @@ export default function JourneyHubPage() {
           }}
         />
       )}
+
+      {markDoneDialogStep && (
+        <MarkStepDoneDialog
+          journeyId={journey.id}
+          stepKey={markDoneDialogStep}
+          onClose={() => setMarkDoneDialogStep(null)}
+          onSuccess={() => {
+            setMarkDoneDialogStep(null);
+            refetch();
+          }}
+        />
+      )}
     </div>
+  );
+}
+
+function MarkStepDoneDialog({
+  journeyId,
+  stepKey,
+  onClose,
+  onSuccess,
+}: {
+  journeyId: string;
+  stepKey: StepKey;
+  onClose: () => void;
+  onSuccess: () => void;
+}) {
+  const copy = STEP_DONE_COPY[stepKey];
+  const [note, setNote] = useState("");
+
+  const markDone = trpc.journey.markStepDoneElsewhere.useMutation({
+    onSuccess: () => {
+      toast.success("Marked as done.");
+      onSuccess();
+    },
+    onError: (err) => toast.error(err.message),
+  });
+
+  return (
+    <Dialog open onOpenChange={(o) => !o && onClose()}>
+      <DialogContent className="bg-card border-border w-full max-w-[calc(100%-2rem)] sm:max-w-lg">
+        <DialogHeader>
+          <DialogTitle>{copy.title}</DialogTitle>
+          <DialogDescription>{copy.explainer}</DialogDescription>
+        </DialogHeader>
+
+        <div className="space-y-4">
+          <div>
+            <p className="text-xs font-mono uppercase tracking-wider text-muted-foreground mb-2">
+              You should already have
+            </p>
+            <ul className="space-y-1.5 text-sm">
+              {copy.docsYouShouldHave.map((d, i) => (
+                <li key={i} className="flex items-start gap-2">
+                  <CheckSquare className="w-4 h-4 text-muted-foreground flex-shrink-0 mt-0.5" />
+                  <span>{d}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="space-y-2">
+            <label htmlFor="step-done-note" className="text-xs font-mono uppercase tracking-wider text-muted-foreground">
+              Note for yourself (optional)
+            </label>
+            <textarea
+              id="step-done-note"
+              value={note}
+              onChange={(e) => setNote(e.target.value)}
+              placeholder="e.g., Formed via Stripe Atlas, EIN issued 2026-03-12"
+              rows={2}
+              maxLength={500}
+              className="input-brutal w-full resize-none"
+            />
+          </div>
+        </div>
+
+        <div className="flex justify-end gap-3 pt-2">
+          <button
+            onClick={onClose}
+            className="px-4 py-2 text-sm text-muted-foreground hover:text-foreground"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={() =>
+              markDone.mutate({
+                journeyId,
+                stepKey,
+                note: note.trim() || undefined,
+              })
+            }
+            disabled={markDone.isPending}
+            className="btn-brutal inline-flex items-center gap-2 disabled:opacity-40"
+          >
+            {markDone.isPending ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin" /> Saving...
+              </>
+            ) : (
+              <>
+                <Check className="w-4 h-4" />
+                {copy.confirmCta}
+              </>
+            )}
+          </button>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }
 

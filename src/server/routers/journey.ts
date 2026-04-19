@@ -506,6 +506,109 @@ export const journeyRouter = createTRPCRouter({
       return { results };
     }),
 
+  /**
+   * Mark a step as already done outside Dealroom. Flips its status to
+   * DONE_ELSEWHERE so the hub stops offering to generate deals for it and
+   * the dependency-unlock logic treats it as advanced-enough to open later
+   * steps. Guards against overriding a step that already has generated deals.
+   */
+  markStepDoneElsewhere: protectedProcedure
+    .input(
+      z.object({
+        journeyId: z.string(),
+        stepKey: z.string(),
+        note: z.string().max(500).optional(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.session.user.id;
+      const journey = await ctx.prisma.startupJourney.findFirst({
+        where: { id: input.journeyId, userId },
+        include: {
+          dealRooms: {
+            where: { journeyStepKey: input.stepKey },
+            select: { id: true },
+          },
+        },
+      });
+      if (!journey) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Journey not found" });
+      }
+      if (journey.dealRooms.length > 0) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message:
+            "This step already has generated documents; cancel those first if you really meant to mark the step as done elsewhere.",
+        });
+      }
+
+      const currentSteps = (journey.stepStatuses as Record<string, any>) ?? {};
+      const updatedSteps = {
+        ...currentSteps,
+        [input.stepKey]: {
+          status: "DONE_ELSEWHERE",
+          markedDoneAt: new Date().toISOString(),
+          ...(input.note ? { note: input.note } : {}),
+        },
+      };
+      await ctx.prisma.startupJourney.update({
+        where: { id: journey.id },
+        data: { stepStatuses: updatedSteps as Prisma.InputJsonValue },
+      });
+
+      // Audit log — attached to the journey owner's earliest deal if any, otherwise
+      // captured without a dealRoomId (auditLog.dealRoomId is required, so for
+      // steps with no deals we skip the DB audit and log via console). Since
+      // we've already guarded that no deals exist, console is fine here.
+      console.log(
+        `[journey] JOURNEY_STEP_MARKED_DONE_ELSEWHERE journey=${journey.id} step=${input.stepKey} user=${userId}`,
+      );
+
+      return { success: true };
+    }),
+
+  /** Revert a DONE_ELSEWHERE step back to NOT_STARTED. */
+  resetStepStatus: protectedProcedure
+    .input(z.object({ journeyId: z.string(), stepKey: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.session.user.id;
+      const journey = await ctx.prisma.startupJourney.findFirst({
+        where: { id: input.journeyId, userId },
+        include: {
+          dealRooms: {
+            where: { journeyStepKey: input.stepKey },
+            select: { id: true },
+          },
+        },
+      });
+      if (!journey) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Journey not found" });
+      }
+      if (journey.dealRooms.length > 0) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "This step has generated documents; resetting is not allowed while they exist.",
+        });
+      }
+      const currentSteps = (journey.stepStatuses as Record<string, any>) ?? {};
+      const currentStatus = currentSteps[input.stepKey]?.status;
+      if (currentStatus !== "DONE_ELSEWHERE") {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Only steps marked done-elsewhere can be reset.",
+        });
+      }
+      const updatedSteps = {
+        ...currentSteps,
+        [input.stepKey]: { status: "NOT_STARTED" },
+      };
+      await ctx.prisma.startupJourney.update({
+        where: { id: journey.id },
+        data: { stepStatuses: updatedSteps as Prisma.InputJsonValue },
+      });
+      return { success: true };
+    }),
+
   // Mark a step as filed (e.g., Cert of Inc filed with Delaware)
   markStepFiled: protectedProcedure
     .input(z.object({ journeyId: z.string(), stepKey: z.string() }))
