@@ -147,6 +147,12 @@ export default function JourneyHubPage() {
                   <p className="text-xs text-muted-foreground font-mono">
                     ~{meta.estimatedMinutes} min
                   </p>
+                  {unlocked && status === "NOT_STARTED" && !isFoundation && meta.fallbackSkills && (
+                    <p className="text-xs text-muted-foreground pt-1">
+                      <span className="font-mono uppercase tracking-wider text-[10px]">Available now:</span>{" "}
+                      {meta.fallbackSkills.join(" · ")}
+                    </p>
+                  )}
                 </div>
                 <div className="flex-shrink-0 flex flex-col items-end gap-2">
                   {!unlocked ? (
@@ -173,6 +179,15 @@ export default function JourneyHubPage() {
                       className="btn-brutal inline-flex items-center gap-2"
                     >
                       {status === "NOT_STARTED" ? "Start" : "Open"}
+                      <ArrowRight className="w-4 h-4" />
+                    </Link>
+                  ) : meta.fallbackSearch ? (
+                    <Link
+                      href={`/deals/new?q=${encodeURIComponent(meta.fallbackSearch)}`}
+                      className="btn-brutal-outline inline-flex items-center gap-2"
+                      title="Guided flow coming soon — create individually for now"
+                    >
+                      Create individually
                       <ArrowRight className="w-4 h-4" />
                     </Link>
                   ) : (

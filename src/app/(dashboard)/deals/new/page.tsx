@@ -180,7 +180,7 @@ export default function NewDealPage() {
   const [parameterValues, setParameterValues] = useState<Record<string, string>>({});
   const [missingParams, setMissingParams] = useState<Set<string>>(new Set());
   const [dealMode, setDealMode] = useState<DealMode>("NEGOTIATION");
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState(searchParams.get("q") ?? "");
 
   // Lawyer vetting flow
   const vettingId = searchParams.get("vetting");
