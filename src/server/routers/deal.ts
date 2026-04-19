@@ -5,6 +5,7 @@ import { Prisma, DealRoomStatus, DealMode, PartyRole, PartyStatus, ClauseStatus,
 import { checkDealCreationEntitlement } from "../services/licensing/entitlement";
 import { resolveLocalizedString, resolveLocalizedArray } from "../services/skills/i18n";
 import { validateRequiredParameters, type ParameterSchema } from "@/lib/parameters";
+import { autoAgreeSingleOptionClauses } from "../services/deal/autoAgreeSingleOption";
 
 // Map GoverningLaw enum to jurisdiction strings for entitlement checking
 const GOVERNING_LAW_TO_JURISDICTION: Record<string, string> = {
@@ -307,6 +308,7 @@ export const dealRouter = createTRPCRouter({
         include: {
           clauses: {
             orderBy: { order: "asc" },
+            include: { options: { select: { id: true }, orderBy: { order: "asc" } } },
           },
           skillPackage: true,
         },
@@ -331,6 +333,7 @@ export const dealRouter = createTRPCRouter({
           include: {
             clauses: {
               orderBy: { order: "asc" },
+              include: { options: { select: { id: true }, orderBy: { order: "asc" } } },
             },
             skillPackage: true,
           },
@@ -433,6 +436,34 @@ export const dealRouter = createTRPCRouter({
           clauses: true,
         },
       });
+
+      // Auto-select + auto-agree any clauses with exactly one option. For
+      // solo deals where every clause is single-option (e.g. the Delaware
+      // Cert of Incorporation), this flips the deal to AGREED immediately
+      // so the PDF is ready without a pointless 6-click wizard.
+      const initiatorParty = dealRoom.parties[0];
+      if (initiatorParty) {
+        const { autoAgreed } = await autoAgreeSingleOptionClauses(ctx.prisma, {
+          dealRoomId: dealRoom.id,
+          dealMode: input.dealMode as DealMode,
+          partyId: initiatorParty.id,
+          templateClauses: template.clauses,
+          dealClauses: dealRoom.clauses,
+        });
+        if (autoAgreed) {
+          await ctx.prisma.auditLog.create({
+            data: {
+              dealRoomId: dealRoom.id,
+              userId,
+              action: "DEAL_ROOM_AUTO_AGREED",
+              details: {
+                reason: "all clauses are single-option in SOLO mode",
+                clauseCount: template.clauses.length,
+              },
+            },
+          });
+        }
+      }
 
       // Create audit log
       await ctx.prisma.auditLog.create({
