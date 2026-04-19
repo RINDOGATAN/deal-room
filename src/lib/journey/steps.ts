@@ -159,7 +159,20 @@ function buildFoundationPlan(
 /** Metadata for the journey hub — labels, estimated time, dependencies. */
 export const STEP_META: Record<
   StepKey,
-  { title: string; description: string; estimatedMinutes: number; unlockedBy: StepKey | null }
+  {
+    title: string;
+    description: string;
+    estimatedMinutes: number;
+    unlockedBy: StepKey | null;
+    /**
+     * Until a step's guided flow is built, its hub card offers a fallback:
+     * "Create individually" linking to /deals/new with this search query
+     * pre-filled. Keeps founders unblocked.
+     */
+    fallbackSearch?: string;
+    /** Short list of skill names shown next to the fallback link so the founder knows what's available. */
+    fallbackSkills?: string[];
+  }
 > = {
   foundation: {
     title: "Form your company",
@@ -173,12 +186,16 @@ export const STEP_META: Record<
     description: "Create the Equity Incentive Plan that governs all future option grants.",
     estimatedMinutes: 5,
     unlockedBy: "foundation",
+    fallbackSearch: "Equity Incentive",
+    fallbackSkills: ["Equity Incentive Plan"],
   },
   hiring: {
     title: "Hire your first people",
     description: "Offer letters, employment agreements, and option grants for your first hires.",
     estimatedMinutes: 6,
     unlockedBy: "equity-pool",
+    fallbackSearch: "employment",
+    fallbackSkills: ["Employment Agreement", "Advisory Agreement", "Consulting Agreement"],
   },
   raise: {
     title: "Raise your first round",
@@ -186,6 +203,8 @@ export const STEP_META: Record<
       "Generate a SAFE, convertible note, or term sheet — whichever fits the conversation.",
     estimatedMinutes: 6,
     unlockedBy: "foundation",
+    fallbackSearch: "SAFE",
+    fallbackSkills: ["SAFE", "Convertible Note", "Term Sheet", "Shareholders Agreement"],
   },
 };
 
