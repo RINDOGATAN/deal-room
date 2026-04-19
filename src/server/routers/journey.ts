@@ -24,6 +24,7 @@ import {
 } from "@prisma/client";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { getStepPlan, type StepKey } from "@/lib/journey/steps";
+import { autoAgreeSingleOptionClauses } from "../services/deal/autoAgreeSingleOption";
 
 const founderInput = z.object({
   name: z.string().min(1).max(120),
@@ -319,46 +320,19 @@ export const journeyRouter = createTRPCRouter({
         });
 
         // Auto-select clauses that have only one option (no real choice to make).
-        // Cert of Inc is fully single-option so this completes the whole deal;
-        // multi-option skills like founders-agreement still need user review.
+        // Shared helper with deal.create so the behavior is identical whether
+        // the deal arrives via /launch or via /deals/new.
         const party = deal.parties[0];
-        const singleOptionClauses = template.clauses.filter((c) => c.options.length === 1);
-        if (party && singleOptionClauses.length > 0) {
-          for (const ct of singleOptionClauses) {
-            const dealClause = deal.clauses.find((c) => c.clauseTemplateId === ct.id);
-            if (!dealClause) continue;
-            await ctx.prisma.partySelection.create({
-              data: {
-                dealRoomClauseId: dealClause.id,
-                partyId: party.id,
-                optionId: ct.options[0].id,
-                priority: 3,
-                flexibility: 3,
-              },
-            });
-          }
-
-          // If every clause was single-option, auto-submit + auto-agree so the
-          // founder can download the PDF immediately. Matches the SOLO submit
-          // path in src/server/routers/deal.ts:submitSelections.
-          if (singleOptionClauses.length === template.clauses.length) {
-            await ctx.prisma.dealRoomParty.update({
-              where: { id: party.id },
-              data: { status: PartyStatus.SUBMITTED, submittedAt: new Date() },
-            });
-            for (const dealClause of deal.clauses) {
-              const ct = template.clauses.find((c) => c.id === dealClause.clauseTemplateId);
-              if (!ct) continue;
-              await ctx.prisma.dealRoomClause.update({
-                where: { id: dealClause.id },
-                data: { status: ClauseStatus.AGREED, agreedOptionId: ct.options[0].id },
-              });
-            }
-            await ctx.prisma.dealRoom.update({
-              where: { id: deal.id },
-              data: { status: DealRoomStatus.AGREED },
-            });
-          }
+        let autoAgreed = false;
+        if (party) {
+          const res = await autoAgreeSingleOptionClauses(ctx.prisma, {
+            dealRoomId: deal.id,
+            dealMode: DealMode.SOLO,
+            partyId: party.id,
+            templateClauses: template.clauses,
+            dealClauses: deal.clauses,
+          });
+          autoAgreed = res.autoAgreed;
         }
 
         await ctx.prisma.auditLog.create({
@@ -370,7 +344,7 @@ export const journeyRouter = createTRPCRouter({
               journeyId: journey.id,
               stepKey: input.stepKey,
               contractType: d.contractType,
-              autoAgreed: singleOptionClauses.length === template.clauses.length,
+              autoAgreed,
             },
           },
         });
