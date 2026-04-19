@@ -15,6 +15,49 @@ export type StepKey = "foundation" | "equity-pool" | "hiring" | "raise";
 
 export const STEP_ORDER: StepKey[] = ["foundation", "equity-pool", "hiring", "raise"];
 
+/**
+ * Step statuses stored in StartupJourney.stepStatuses JSON blob.
+ * Keep this in sync with the UI render in /launch/[id]/page.tsx.
+ */
+export type StepStatus =
+  | "NOT_STARTED"
+  | "READY_FOR_REVIEW"
+  | "AWAITING_REVIEW"
+  | "REVIEWED"
+  | "FILED"
+  | "DONE_ELSEWHERE";
+
+/** Statuses that count a step as "advanced enough" to unlock its dependents. */
+export const UNLOCKING_STATUSES = new Set<StepStatus>([
+  "READY_FOR_REVIEW",
+  "AWAITING_REVIEW",
+  "REVIEWED",
+  "FILED",
+  "DONE_ELSEWHERE",
+]);
+
+export interface StepStatusEntry {
+  status?: StepStatus;
+  completedAt?: string;
+  filedAt?: string;
+  markedDoneAt?: string;
+  note?: string;
+  supervisorId?: string;
+  dealIds?: string[];
+  answers?: Record<string, string>;
+}
+
+/** Is a step unlocked? Either it has no dependency or its dependency is at an unlocking status. */
+export function isStepUnlocked(
+  key: StepKey,
+  statuses: Record<string, StepStatusEntry>,
+): boolean {
+  const dep = STEP_META[key].unlockedBy;
+  if (dep == null) return true;
+  const depStatus = (statuses[dep]?.status ?? "NOT_STARTED") as StepStatus;
+  return UNLOCKING_STATUSES.has(depStatus);
+}
+
 export interface StepPlan {
   stepKey: StepKey;
   deals: Array<{
@@ -143,5 +186,63 @@ export const STEP_META: Record<
       "Generate a SAFE, convertible note, or term sheet — whichever fits the conversation.",
     estimatedMinutes: 6,
     unlockedBy: "foundation",
+  },
+};
+
+/**
+ * Plain-language copy for the "I have this already" dialog. Each step speaks
+ * in its own terms so founders see exactly which docs we're taking on faith.
+ */
+export const STEP_DONE_COPY: Record<
+  StepKey,
+  {
+    title: string;
+    explainer: string;
+    docsYouShouldHave: string[];
+    confirmCta: string;
+  }
+> = {
+  foundation: {
+    title: "You've already formed your company",
+    explainer:
+      "We won't generate anything for this step — marking it as done just unlocks the later steps so you can keep moving.",
+    docsYouShouldHave: [
+      "Certificate of Incorporation filed with Delaware",
+      "A Founders' Agreement (or equivalent stock-purchase agreement) for each founder",
+      "An IP Assignment signed by each founder",
+    ],
+    confirmCta: "I have everything — mark as done",
+  },
+  "equity-pool": {
+    title: "You've already set up your option pool",
+    explainer:
+      "We'll skip generating the Equity Incentive Plan. You can still use the Hiring step to produce offer letters and individual option grants under your existing plan.",
+    docsYouShouldHave: [
+      "A board-adopted Equity Incentive Plan (or similar option-pool document)",
+      "Reserved shares set aside in your cap table for option grants",
+    ],
+    confirmCta: "I have a plan in place — mark as done",
+  },
+  hiring: {
+    title: "You've already hired your team",
+    explainer:
+      "We'll skip the Hiring step. If you add more hires later, you can always come back and generate fresh offer letters or option grants.",
+    docsYouShouldHave: [
+      "Signed offer letters or employment agreements for every hire",
+      "Signed IP assignment or PIIA from each employee",
+      "Option grant agreements for anyone with equity, referencing your plan",
+    ],
+    confirmCta: "My team's in place — mark as done",
+  },
+  raise: {
+    title: "You've already closed your first round",
+    explainer:
+      "We'll skip the Raise step. Coming back to raise again? Start a fresh journey or re-open this step to generate new SAFEs, notes, or a term sheet.",
+    docsYouShouldHave: [
+      "Signed SAFE, convertible note, or priced-round stock-purchase agreement with each investor",
+      "Updated cap table reflecting the round",
+      "Board / shareholder consents authorizing the issuance",
+    ],
+    confirmCta: "My round is closed — mark as done",
   },
 };
