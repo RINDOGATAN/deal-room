@@ -108,14 +108,15 @@ function buildFoundationPlan(
   const companyName = journey.companyName;
   const registeredAgent = journey.companyAddress ?? "[Registered agent TBD]";
 
-  // 1. Certificate of Incorporation (one per journey)
+  // 1. Certificate of Incorporation (one per journey).
+  // Authorized share count is now a clause choice (5M / 10M / 20M), not a
+  // parameter — the founder picks it at negotiate-time so they see the tradeoff.
   deals.push({
     contractType: "DELAWARE_CERT_OF_INCORPORATION",
     name: `${companyName} — Certificate of Incorporation`,
     parameters: {
       "company-name": companyName,
       "registered-agent": registeredAgent,
-      "authorized-shares": String(journey.authorizedShares),
       "par-value": journey.parValue.toString(),
       incorporator: journey.founders.find((f) => f.isIncorporator)?.name
         ?? journey.founders.find((f) => f.isPrimary)?.name
