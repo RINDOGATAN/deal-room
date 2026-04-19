@@ -24,17 +24,6 @@
       "boilerplateVariable": "registeredAgent"
     },
     {
-      "id": "authorized-shares",
-      "token": "authorized-shares",
-      "scope": "authorized-shares",
-      "type": "number",
-      "required": true,
-      "label": { "en": "Total authorized shares of Common Stock" },
-      "hint": { "en": "10,000,000 is the standard default. Enough for founders, option pool, and future rounds." },
-      "placeholder": { "en": "10000000" },
-      "boilerplateVariable": "authorizedShares"
-    },
-    {
       "id": "par-value",
       "token": "par-value",
       "scope": "authorized-shares",

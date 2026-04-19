@@ -123,31 +123,109 @@
       "category": { "en": "Capitalization" },
       "order": 4,
       "plainDescription": {
-        "en": "The total number of shares the corporation is authorized to issue, and their par value. 10,000,000 shares at $0.00001 par is the standard template used by most YC / NVCA startups."
+        "en": "How many shares of Common Stock can the corporation issue? This sets the ceiling — you can issue up to this number without amending the certificate, but amending later requires a board + shareholder vote."
       },
       "legalContext": {
-        "en": "8 Del. C. § 102(a)(4) requires the certificate to state the total authorized shares and, for par-value shares, the par value. A low par value combined with 10M authorized shares minimizes Delaware franchise tax under the assumed par value method."
+        "en": "8 Del. C. § 102(a)(4) requires the certificate to state the total authorized shares. Amending later means filing a Certificate of Amendment with the Delaware Secretary of State, plus board and stockholder approval. Franchise tax: Delaware uses the lower of two calculations — at the typical low par value ($0.00001) the 'assumed par value method' gives roughly the $85 minimum regardless of authorized count, so share count mainly affects headroom, not tax."
       },
       "isRequired": true,
       "options": [
         {
-          "id": "shares-standard",
-          "code": "standard",
-          "label": { "en": "Use the authorized-share count as entered" },
-          "order": 1,
+          "id": "shares-standard-10m",
+          "code": "10m",
+          "label": { "en": "10,000,000 shares (standard)" },
+          "order": 2,
           "plainDescription": {
-            "en": "Uses the number of authorized shares and par value you set for this journey. Default is 10,000,000 shares at $0.00001 par, optimized for Delaware franchise tax."
+            "en": "The YC / NVCA standard. Leaves room for founders (typically 5-7M), an option pool (typically 1-2M), a seed round, and a Series A without amending the certificate."
           },
           "pros": {
-            "partyA": { "en": ["Optimized for Delaware franchise tax assumed-par-value method", "Enough room for founders + option pool + future rounds"] },
-            "partyB": { "en": ["Optimized for Delaware franchise tax assumed-par-value method", "Enough room for founders + option pool + future rounds"] }
+            "partyA": {
+              "en": [
+                "Industry-standard ceiling that investors expect",
+                "Fits founders + 10-20% option pool + multiple priced rounds",
+                "No meaningful Delaware franchise tax impact at low par value"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Industry-standard ceiling that investors expect",
+                "Fits founders + 10-20% option pool + multiple priced rounds",
+                "No meaningful Delaware franchise tax impact at low par value"
+              ]
+            }
           },
           "cons": {
-            "partyA": { "en": ["Amend later if you need a different share class structure"] },
-            "partyB": { "en": ["Amend later if you need a different share class structure"] }
+            "partyA": { "en": ["Marginally larger-sounding cap table on day one (investors care about issued, not authorized)"] },
+            "partyB": { "en": ["Marginally larger-sounding cap table on day one (investors care about issued, not authorized)"] }
           },
           "legalText": {
-            "en": "FOURTH: The total number of shares of stock the corporation shall have authority to issue is [authorized-shares] shares of Common Stock, each having a par value of $[par-value] per share."
+            "en": "FOURTH: The total number of shares of stock the corporation shall have authority to issue is 10,000,000 shares of Common Stock, each having a par value of $[par-value] per share."
+          },
+          "bias": { "partyA": 0, "partyB": 0 }
+        },
+        {
+          "id": "shares-conservative-5m",
+          "code": "5m",
+          "label": { "en": "5,000,000 shares (conservative)" },
+          "order": 1,
+          "plainDescription": {
+            "en": "Tighter ceiling. Fine for a bootstrapped or lifestyle business, or a founder team that doesn't expect institutional rounds. If you later raise a priced round, you'll almost certainly need to amend the certificate."
+          },
+          "pros": {
+            "partyA": { "en": ["Simpler-looking cap table", "Less nominal dilution headroom on paper"] },
+            "partyB": { "en": ["Simpler-looking cap table", "Less nominal dilution headroom on paper"] }
+          },
+          "cons": {
+            "partyA": {
+              "en": [
+                "Amending the certificate later is extra paperwork + filing fees",
+                "Investors prefer seeing 10M as the default",
+                "Cramped if you need a reasonable option pool plus multiple rounds"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Amending the certificate later is extra paperwork + filing fees",
+                "Investors prefer seeing 10M as the default",
+                "Cramped if you need a reasonable option pool plus multiple rounds"
+              ]
+            }
+          },
+          "legalText": {
+            "en": "FOURTH: The total number of shares of stock the corporation shall have authority to issue is 5,000,000 shares of Common Stock, each having a par value of $[par-value] per share."
+          },
+          "bias": { "partyA": 0, "partyB": 0 }
+        },
+        {
+          "id": "shares-flexible-20m",
+          "code": "20m",
+          "label": { "en": "20,000,000 shares (flexible)" },
+          "order": 3,
+          "plainDescription": {
+            "en": "Extra headroom. Sensible if you expect several priced rounds over the first few years or want to avoid amending the certificate. No real downside at typical low par values."
+          },
+          "pros": {
+            "partyA": {
+              "en": [
+                "Room for many future rounds without certificate amendment",
+                "Simpler administration if you grow fast",
+                "Still well below where franchise-tax calculation methods diverge meaningfully"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Room for many future rounds without certificate amendment",
+                "Simpler administration if you grow fast",
+                "Still well below where franchise-tax calculation methods diverge meaningfully"
+              ]
+            }
+          },
+          "cons": {
+            "partyA": { "en": ["Non-standard — some investors will ask why you deviated from 10M"] },
+            "partyB": { "en": ["Non-standard — some investors will ask why you deviated from 10M"] }
+          },
+          "legalText": {
+            "en": "FOURTH: The total number of shares of stock the corporation shall have authority to issue is 20,000,000 shares of Common Stock, each having a par value of $[par-value] per share."
           },
           "bias": { "partyA": 0, "partyB": 0 }
         }
