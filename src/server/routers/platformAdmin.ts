@@ -500,7 +500,10 @@ export const platformAdminRouter = createTRPCRouter({
     await requireVerified2FA(ctx.adminSession.email, ctx.getCookie, ctx.prisma);
 
     return ctx.prisma.user.findMany({
-      orderBy: { createdAt: "desc" },
+      orderBy: [
+        { lastLoginAt: { sort: "desc", nulls: "last" } },
+        { createdAt: "desc" },
+      ],
       include: {
         accounts: true,
         _count: {

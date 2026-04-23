@@ -89,11 +89,12 @@ export default function UsersPage() {
         </div>
       ) : (
         <div className="border border-border">
-          <div className="grid grid-cols-5 gap-4 p-3 bg-muted/30 text-xs font-medium text-muted-foreground uppercase">
+          <div className="grid grid-cols-6 gap-4 p-3 bg-muted/30 text-xs font-medium text-muted-foreground uppercase">
             <div>User</div>
             <div>Company</div>
             <div>Auth Method</div>
             <div>Deals</div>
+            <div>Last sign-in</div>
             <div>Joined</div>
           </div>
           {filteredUsers?.map((user) => {
@@ -101,7 +102,7 @@ export default function UsersPage() {
             return (
               <div
                 key={user.id}
-                className="grid grid-cols-5 gap-4 p-3 border-t border-border items-center text-sm"
+                className="grid grid-cols-6 gap-4 p-3 border-t border-border items-center text-sm"
               >
                 <div>
                   <p className="font-medium">{user.name || "No name"}</p>
@@ -120,6 +121,11 @@ export default function UsersPage() {
                 <div className="flex items-center gap-2">
                   <FileText className="w-4 h-4 text-muted-foreground" />
                   <span>{user._count.dealRoomParties}</span>
+                </div>
+                <div className="text-muted-foreground">
+                  {user.lastLoginAt
+                    ? format(new Date(user.lastLoginAt), "MMM d, yyyy")
+                    : "—"}
                 </div>
                 <div className="text-muted-foreground">
                   {format(new Date(user.createdAt), "MMM d, yyyy")}
