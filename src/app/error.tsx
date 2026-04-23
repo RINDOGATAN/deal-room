@@ -3,7 +3,7 @@
 import { AlertCircle, RefreshCw } from "lucide-react";
 import { formatUserError } from "@/lib/format-error";
 
-export default function AdminError({
+export default function RootError({
   error,
   reset,
 }: {
