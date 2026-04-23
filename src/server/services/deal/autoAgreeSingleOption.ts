@@ -13,9 +13,9 @@
  */
 
 import { DealMode, PartyStatus, ClauseStatus, DealRoomStatus } from "@prisma/client";
-import type { PrismaClient } from "@prisma/client";
+import type { ExtendedPrismaClient } from "@/lib/prisma";
 
-type Prisma = PrismaClient | Omit<PrismaClient, `$${string}`>;
+type Prisma = ExtendedPrismaClient | Omit<ExtendedPrismaClient, `$${string}`>;
 
 export async function autoAgreeSingleOptionClauses(
   prisma: Prisma,

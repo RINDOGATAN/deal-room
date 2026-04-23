@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import type { ExtendedPrismaClient } from "@/lib/prisma";
 import * as fs from "fs";
 import * as path from "path";
 import { z } from "zod";
@@ -861,7 +862,7 @@ export function scanInstalledSkillsDirectory(): Map<string, SkillData> {
  * Sync skills to database (supports both legacy and i18n formats)
  */
 export async function syncSkillsToDatabase(
-  prisma: PrismaClient,
+  prisma: ExtendedPrismaClient,
   options: { language?: string } = {}
 ): Promise<{ results: SkillLoadResult[] }> {
   const language = options.language || DEFAULT_LANGUAGE;
