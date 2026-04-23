@@ -30,6 +30,7 @@ model User {
   isLawyer      Boolean   @default(false)
   role          UserRole?
   onboardedAt   DateTime?
+  lastLoginAt   DateTime?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
@@ -58,6 +59,7 @@ model User {
   // Startup Journey (guided launch experience)
   startupJourneys StartupJourney[]
 
+  @@index([lastLoginAt])
   @@map("users")
 }
 

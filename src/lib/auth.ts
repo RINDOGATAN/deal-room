@@ -172,6 +172,19 @@ export const authOptions: NextAuthOptions = {
       },
     },
   },
+  events: {
+    async signIn({ user }) {
+      if (!user?.id) return;
+      try {
+        await prisma.user.update({
+          where: { id: user.id },
+          data: { lastLoginAt: new Date() },
+        });
+      } catch (err) {
+        console.error("[auth] failed to update lastLoginAt", err);
+      }
+    },
+  },
   callbacks: {
     async session({ session, token }) {
       if (session.user && token.sub) {
