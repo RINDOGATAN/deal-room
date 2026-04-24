@@ -16,10 +16,10 @@ Contract negotiation platform with weighted compromise algorithm.
 
 ## Skills (Open-Core Model)
 
-- **Free (5):** `skills/` — nda, msa, saas, dpa, privacy-notice
+- **Free (6):** `skills/` — nda, msa, saas, dpa, privacy-notice, delaware-certificate-of-incorporation
 - **Premium (27):** Private `RINDOGATAN/legalskills` repo — **never commit premium skills to this repo**
 - **A2A (12):** Agent-to-Agent skills in `RINDOGATAN/legalskills` — bundled subscription, Gavel dispute resolution
-- All 44 bilingual EN/ES, 3 jurisdictions (CALIFORNIA, ENGLAND_WALES, SPAIN)
+- 44 of 45 bilingual EN/ES (Delaware Cert of Incorporation is English-only by design), 3 jurisdictions (CALIFORNIA, ENGLAND_WALES, SPAIN)
 - Seed defaults `biasPartyA`/`biasPartyB` to `0` when missing
 
 ### Seeding Skills to Production
@@ -51,6 +51,9 @@ npx prisma db seed                                  # Seed built-in skills only
 SKILLS_DIR=/path/to/legalskills npx prisma db seed  # Seed built-in + premium
 npm run deal:simulate                               # Create demo deals (idempotent)
 npm run deal:simulate -- --clean                    # Recreate all demo deals
+npm test                                            # Vitest watch mode (unit tests for lib/)
+npm run test:run                                    # Vitest single run (use in CI)
+npm run check:api                                   # Static guard: no raw errors leaked from /api/* routes
 ```
 
 ## Deployment
@@ -96,3 +99,5 @@ npm run deal:simulate -- --clean                    # Recreate all demo deals
 - **Brand name:** Always "Dealroom" (one word), never "Deal Room"
 - **i18n:** Castilian Spanish only, never Latin American. "skills" as loanword. Gender-inclusive ("abogado/a")
 - **Boilerplate:** No `[BRACKET]` placeholders. Don't duplicate negotiable topics in standardClauses
+- **Prisma client:** always import from `@/lib/prisma` (extended with Neon retry wrapper). Helpers accepting a client must type it as `ExtendedPrismaClient` from that module — not raw `PrismaClient`.
+- **API route error handling:** every `/api/*` handler that touches `prisma` must wrap its body in try/catch and return `apiError(error, "fallback message")` from `@/lib/api-response`. Never return raw `error.message` in a `NextResponse` — the `check:api` guard flags it. Transient Neon errors become 503 + "We're reconnecting..."; everything else becomes 500 + the fallback. tRPC procedures get this automatically via the `errorFormatter`.
