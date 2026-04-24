@@ -4,6 +4,7 @@ import { authOptions } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import { checkEntitlement } from "@/server/services/licensing";
 import { verifyDownloadToken } from "@/lib/crypto";
+import { apiError } from "@/lib/api-response";
 
 export async function GET(
   request: NextRequest,
@@ -87,10 +88,6 @@ export async function GET(
     // Redirect to the package URL (Vercel Blob signed URL or direct)
     return NextResponse.redirect(skillPackage.packageUrl);
   } catch (error) {
-    console.error("Download error:", error);
-    return NextResponse.json(
-      { error: "Download failed" },
-      { status: 500 }
-    );
+    return apiError(error, "Download failed");
   }
 }

@@ -17,6 +17,7 @@ import {
   buildContractFilename,
 } from "@/server/services/document/generator";
 import { ContractPDF } from "@/server/services/document/ContractPDF";
+import { apiError } from "@/lib/api-response";
 
 export async function GET(
   request: NextRequest,
@@ -81,10 +82,6 @@ export async function GET(
       },
     });
   } catch (error) {
-    console.error("Error generating contract PDF:", error);
-    return NextResponse.json(
-      { error: "Failed to generate PDF" },
-      { status: 500 }
-    );
+    return apiError(error, "Failed to generate PDF");
   }
 }

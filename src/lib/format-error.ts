@@ -16,8 +16,14 @@ const RAW_ORM_PATTERNS = [
   "Invalid `prisma.",
 ];
 
-const TRANSIENT_MESSAGE =
+export const TRANSIENT_MESSAGE =
   "We're reconnecting to the service. Please try again in a moment.";
+
+export function isTransientDbError(err: unknown): boolean {
+  if (!(err instanceof Error)) return false;
+  const msg = err.message ?? "";
+  return TRANSIENT_DB_PATTERNS.some((p) => msg.includes(p));
+}
 
 export function formatUserError(err: unknown, fallback: string): string {
   if (!(err instanceof Error)) return fallback;

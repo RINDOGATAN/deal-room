@@ -19,6 +19,7 @@ import {
   requireScope,
   ApiScopeError,
 } from "@/server/middleware/apiKeyAuth";
+import { apiError } from "@/lib/api-response";
 
 export async function POST(req: NextRequest) {
   try {
@@ -151,10 +152,6 @@ export async function POST(req: NextRequest) {
       })),
     });
   } catch (error) {
-    console.error("Error creating subscription checkout:", error);
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 }
-    );
+    return apiError(error, "Internal server error");
   }
 }
