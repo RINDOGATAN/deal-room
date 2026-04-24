@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import { createCheckoutSession, getOrCreateStripeCustomer } from "@/lib/stripe";
+import { apiError } from "@/lib/api-response";
 
 export async function POST(request: NextRequest) {
   try {
@@ -110,11 +111,6 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ url: checkoutSession.url });
   } catch (error) {
-    console.error("Checkout error:", error);
-    const message = error instanceof Error ? error.message : "Failed to create checkout session";
-    return NextResponse.json(
-      { error: message },
-      { status: 500 }
-    );
+    return apiError(error, "Failed to create checkout session");
   }
 }

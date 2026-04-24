@@ -14,6 +14,7 @@ import {
   isDealSignable,
 } from "@/server/services/document/generator";
 import { generateContractTxt } from "@/server/services/document/contractTxt";
+import { apiError } from "@/lib/api-response";
 
 export async function GET(
   request: NextRequest,
@@ -109,10 +110,6 @@ export async function GET(
       },
     });
   } catch (error) {
-    console.error("Error generating supervisor contract TXT:", error);
-    return NextResponse.json(
-      { error: "Failed to generate TXT" },
-      { status: 500 }
-    );
+    return apiError(error, "Failed to generate TXT");
   }
 }

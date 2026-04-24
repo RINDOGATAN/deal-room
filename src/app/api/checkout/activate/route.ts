@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import { getStripe, getSubscription } from "@/lib/stripe";
+import { apiError } from "@/lib/api-response";
 
 /**
  * Activates entitlements for a completed Stripe checkout session.
@@ -85,7 +86,6 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ activated: true, skillPackageIds });
   } catch (error) {
-    console.error("Activate checkout error:", error);
-    return NextResponse.json({ error: "Activation failed" }, { status: 500 });
+    return apiError(error, "Activation failed");
   }
 }
