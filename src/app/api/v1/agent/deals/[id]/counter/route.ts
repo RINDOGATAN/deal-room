@@ -11,6 +11,7 @@ import {
   authenticateApiKey,
   requireScope,
   ApiScopeError,
+  checkRateLimit,
 } from "@/server/middleware/apiKeyAuth";
 import { features } from "@/config/features";
 import { fireWebhook } from "@/server/services/agent/webhooks";
@@ -38,6 +39,19 @@ export async function POST(
       throw e;
     }
 
+    // Mirror the rate-limit posture of negotiate/route.ts. Without this,
+    // an agent could spam unlimited counter-rounds in a single negotiation.
+    const rateLimit = checkRateLimit(auth.customer.id, "negotiate");
+    if (!rateLimit.allowed) {
+      return NextResponse.json(
+        { error: "Rate limit exceeded" },
+        {
+          status: 429,
+          headers: { "Retry-After": String(rateLimit.retryAfter) },
+        }
+      );
+    }
+
     const { id } = await params;
     const body = await req.json();
     const { proposals } = body;
@@ -51,7 +65,10 @@ export async function POST(
 
     const agentDeal = await prisma.agentDealRoom.findUnique({
       where: { id },
-      include: { dealRoom: { include: { parties: true, clauses: true } } },
+      include: {
+        dealRoom: { include: { parties: true, clauses: true } },
+        dispute: true,
+      },
     });
 
     if (!agentDeal) {
@@ -63,6 +80,20 @@ export async function POST(
     const isRespondent = agentDeal.respondentCustomerId === auth.customer.id;
     if (!isInitiator && !isRespondent) {
       return NextResponse.json({ error: "Access denied" }, { status: 403 });
+    }
+
+    // Once a deal is at Gavel, further negotiation actions would create
+    // conflicting state — refuse and let the dispute play out.
+    if (agentDeal.dispute) {
+      return NextResponse.json(
+        {
+          error: "This deal is under dispute and is locked from further negotiation actions.",
+          disputeId: agentDeal.dispute.id,
+          gavelCaseId: agentDeal.dispute.gavelCaseId,
+          status: agentDeal.dispute.status,
+        },
+        { status: 409 }
+      );
     }
 
     if (!agentDeal.dealRoom) {
