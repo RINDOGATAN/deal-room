@@ -170,9 +170,9 @@ export default function BillingPage() {
           {addOnRows.map((row) => (
             <div
               key={row.id}
-              className="flex items-center justify-between py-4 first:pt-0 last:pb-0"
+              className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between py-4 first:pt-0 last:pb-0"
             >
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3 min-w-0">
                 {/* Checkbox for inactive items */}
                 {!row.isActive ? (
                   <button
