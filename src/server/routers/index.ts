@@ -5,8 +5,6 @@ import { compromiseRouter } from "./compromise";
 import { invitationRouter } from "./invitation";
 import { skillsRouter } from "./skills";
 import { signingRouter } from "./signing";
-import { adminRouter } from "./admin";
-import { twoFactorRouter } from "./twoFactor";
 import { skillManagerRouter } from "./skillManager";
 import { attorneyReviewRouter } from "./attorneyReview";
 import { supervisorRouter } from "./supervisor";
@@ -27,11 +25,11 @@ export const appRouter = createTRPCRouter({
   invitation: invitationRouter,
   skills: skillsRouter,
   signing: signingRouter,
-  admin: adminRouter, // Legacy admin router (for backward compatibility)
-  twoFactor: twoFactorRouter,
   skillManager: skillManagerRouter,
   attorneyReview: attorneyReviewRouter,
-  // New two-level admin system
+  // Two-level admin system: supervisors review specific deals,
+  // platform admins manage the platform globally. Each has its own
+  // session cookie + 2FA path.
   supervisor: supervisorRouter,
   supervisorTwoFactor: supervisorTwoFactorRouter,
   platformAdmin: platformAdminRouter,

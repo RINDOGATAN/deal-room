@@ -217,65 +217,6 @@ export const skillManagerRouter = createTRPCRouter({
   }),
 
   /**
-   * Install a skill package from a directory (development/admin).
-   */
-  installFromDirectory: protectedProcedure
-    .input(z.object({ directoryPath: z.string() }))
-    .mutation(async ({ ctx, input }) => {
-      // Admin check (simplified - in production use proper RBAC)
-      const adminEmail = process.env.ADMIN_EMAIL;
-      if (ctx.session.user.email !== adminEmail) {
-        throw new TRPCError({
-          code: "FORBIDDEN",
-          message: "Only administrators can install skill packages",
-        });
-      }
-
-      const result = await defaultInstaller.installFromDirectory(input.directoryPath);
-
-      if (!result.success) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: result.errors.join("; "),
-        });
-      }
-
-      return {
-        success: true,
-        skillPackageId: result.skillPackageId,
-        contractTemplateId: result.contractTemplateId,
-        warnings: result.warnings,
-      };
-    }),
-
-  /**
-   * Uninstall a skill package (admin only).
-   */
-  uninstall: protectedProcedure
-    .input(z.object({ skillId: z.string() }))
-    .mutation(async ({ ctx, input }) => {
-      // Admin check
-      const adminEmail = process.env.ADMIN_EMAIL;
-      if (ctx.session.user.email !== adminEmail) {
-        throw new TRPCError({
-          code: "FORBIDDEN",
-          message: "Only administrators can uninstall skill packages",
-        });
-      }
-
-      const result = await defaultInstaller.uninstall(input.skillId);
-
-      if (!result.success) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: result.error || "Uninstall failed",
-        });
-      }
-
-      return { success: true };
-    }),
-
-  /**
    * Activate a license key on this machine.
    */
   activate: protectedProcedure
