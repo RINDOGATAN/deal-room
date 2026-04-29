@@ -148,3 +148,16 @@ export async function checkRateLimit(
   const limit = group === "negotiate" ? 100 : 1000;
   return claimSlot(`${customerId}:${group}`, limit, 3600_000);
 }
+
+/**
+ * Per-(customer, expert) daily cap on Experts-API contact requests.
+ * Without this, a single customer can spam an expert by spreading
+ * requests across different contract types or via repeat calls — the
+ * existing 409 dedup only blocks IDENTICAL pending requests.
+ */
+export async function checkExpertContactRateLimit(
+  customerId: string,
+  expertId: string,
+): Promise<RateLimitResult> {
+  return claimSlot(`${customerId}:expert-contact:${expertId}`, 2, 24 * 3600_000);
+}

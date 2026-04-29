@@ -14,6 +14,7 @@ import {
   authenticateApiKey,
   requireScope,
   ApiScopeError,
+  checkExpertContactRateLimit,
 } from "@/server/middleware/apiKeyAuth";
 import { features } from "@/config/features";
 import { sendRecommendationRequestEmail } from "@/lib/email";
@@ -96,6 +97,23 @@ export async function POST(
 
     if (!profile) {
       return NextResponse.json({ error: "Expert not found" }, { status: 404 });
+    }
+
+    // Per-(customer, expert) daily cap. Refuse before doing any work
+    // (no DB write, no email) once exhausted so a sustained spam attempt
+    // costs the attacker rate-limit lookups only.
+    const rateLimit = await checkExpertContactRateLimit(auth.customer.id, id);
+    if (!rateLimit.allowed) {
+      return NextResponse.json(
+        {
+          error: "Daily contact limit for this expert reached (2/day per customer).",
+          remaining: 0,
+        },
+        {
+          status: 429,
+          headers: { "Retry-After": String(rateLimit.retryAfter) },
+        }
+      );
     }
 
     // Check for duplicate pending requests from same email + subject
