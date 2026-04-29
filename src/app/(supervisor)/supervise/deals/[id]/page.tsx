@@ -365,7 +365,8 @@ export default function SupervisorDealDetailPage() {
         <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-4">
           Clause-by-Clause Breakdown
         </h3>
-        <div className="border border-border">
+        <div className="border border-border overflow-x-auto">
+          <div className="min-w-[800px]">
           <div className="grid grid-cols-5 gap-4 p-3 bg-muted/30 text-xs font-medium text-muted-foreground uppercase">
             <div>Clause</div>
             <div>Party A Selection</div>
@@ -445,6 +446,7 @@ export default function SupervisorDealDetailPage() {
               </div>
             );
           })}
+          </div>
         </div>
       </div>
 

@@ -113,7 +113,7 @@ export default function SupervisorDashboard() {
       </div>
 
       {/* Summary Stats */}
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div className="card-brutal text-center">
           <p className="text-3xl font-bold">{stats.total}</p>
           <p className="text-sm text-muted-foreground">Assigned Deals</p>
@@ -282,7 +282,7 @@ export default function SupervisorDashboard() {
                       <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-3">
                         Clause Status
                       </h3>
-                      <div className="grid grid-cols-4 gap-2 text-center text-sm">
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-center text-sm">
                         <div className="p-3 bg-muted/30 border border-border">
                           <p className="text-lg font-bold text-muted-foreground">
                             {totalClauses - agreedClauses - suggestedClauses - divergentClauses}
@@ -309,7 +309,8 @@ export default function SupervisorDashboard() {
                       <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-3">
                         Clause Details
                       </h3>
-                      <div className="border border-border">
+                      <div className="border border-border overflow-x-auto">
+                        <div className="min-w-[560px]">
                         <div className="grid grid-cols-4 gap-4 p-3 bg-muted/30 text-xs font-medium text-muted-foreground uppercase">
                           <div>Clause</div>
                           <div>Party A Selection</div>
@@ -361,6 +362,7 @@ export default function SupervisorDashboard() {
                             </div>
                           );
                         })}
+                        </div>
                       </div>
                     </div>
 
