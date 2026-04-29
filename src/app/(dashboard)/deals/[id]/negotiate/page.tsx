@@ -220,6 +220,20 @@ function NegotiateContent({ dealId }: { dealId: string }) {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [currentClauseIndex]);
 
+  // Once a deal leaves the negotiable window, the only sensible
+  // place to be is the deal hub. Redirect rather than render stale
+  // negotiate UI that the user can no longer act on.
+  const dealStatus = deal?.status;
+  useEffect(() => {
+    if (
+      dealStatus === "SIGNING" ||
+      dealStatus === "COMPLETED" ||
+      dealStatus === "CANCELLED"
+    ) {
+      router.replace(`/deals/${dealId}`);
+    }
+  }, [dealStatus, dealId, router]);
+
   if (isLoading) {
     return (
       <div className="max-w-5xl mx-auto space-y-6">
@@ -236,6 +250,20 @@ function NegotiateContent({ dealId }: { dealId: string }) {
           <AlertCircle className="w-5 h-5" />
           <span>{t("failedToLoad", { error: error?.message || "Not found" })}</span>
         </div>
+      </div>
+    );
+  }
+
+  // Render guard paired with the redirect useEffect above — prevents
+  // a flash of stale negotiate UI while the route transition is pending.
+  if (
+    deal.status === "SIGNING" ||
+    deal.status === "COMPLETED" ||
+    deal.status === "CANCELLED"
+  ) {
+    return (
+      <div className="max-w-5xl mx-auto">
+        <div className="card-brutal animate-pulse h-16" />
       </div>
     );
   }
