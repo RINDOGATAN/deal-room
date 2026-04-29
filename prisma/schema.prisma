@@ -1099,6 +1099,19 @@ model RevenueEvent {
   @@map("revenue_events")
 }
 
+// Idempotency ledger for Stripe webhooks. The webhook handler
+// claims an event by inserting its event.id here; concurrent or
+// retried deliveries hit the unique constraint and short-circuit
+// without re-running the handler. If the handler errors, the row
+// is removed so Stripe's next retry can re-claim and re-process.
+model StripeWebhookEvent {
+  id          String   @id // Stripe event.id (e.g. evt_1A2B3C...)
+  eventType   String
+  processedAt DateTime @default(now())
+
+  @@map("stripe_webhook_events")
+}
+
 // ============================================================
 // WEBHOOKS (Phase 4)
 // ============================================================
