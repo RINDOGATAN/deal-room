@@ -2,6 +2,7 @@ import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
 import { DealRoomStatus, PartyRole, PartyStatus } from "@prisma/client";
+import { assertMutableStatus } from "../services/deal/mutability";
 
 export const selectionsRouter = createTRPCRouter({
   // Get counterparty's selections (option choices only, no priority/flexibility/notes)
@@ -171,6 +172,8 @@ export const selectionsRouter = createTRPCRouter({
         });
       }
 
+      assertMutableStatus(clause.dealRoom.status);
+
       const party = clause.dealRoom.parties.find((p) => p.userId === userId);
       if (!party) {
         throw new TRPCError({
@@ -320,6 +323,8 @@ export const selectionsRouter = createTRPCRouter({
           message: "Deal room not found",
         });
       }
+
+      assertMutableStatus(dealRoom.status);
 
       const party = dealRoom.parties.find((p) => p.userId === userId);
       if (!party) {

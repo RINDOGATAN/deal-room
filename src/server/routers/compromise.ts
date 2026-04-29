@@ -4,6 +4,7 @@ import { TRPCError } from "@trpc/server";
 import { PartyRole, PartyStatus, ClauseStatus, DealRoomStatus, RoundStatus, ProposalStatus } from "@prisma/client";
 import { calculateCompromise, globalFairnessPass, type CompromiseInput, type OptionInput, type DynamicBiasOverride } from "../services/compromise/engine";
 import { cloudApi, type BiasOverrides, type ValidationResult } from "@/lib/cloud-api";
+import { assertMutableStatus } from "../services/deal/mutability";
 
 export const compromiseRouter = createTRPCRouter({
   // Generate compromise suggestions for a deal room
@@ -44,6 +45,8 @@ export const compromiseRouter = createTRPCRouter({
           message: "Deal room not found",
         });
       }
+
+      assertMutableStatus(dealRoom.status);
 
       const party = dealRoom.parties.find((p) => p.userId === userId);
       if (!party) {
