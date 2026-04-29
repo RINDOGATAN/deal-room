@@ -3,8 +3,8 @@
  *
  * Abstract interfaces for signing, document storage, and CRM integration.
  * The AGPL repo ships only local/built-in implementations.
- * Proprietary connectors (DocuSign, Salesforce, SharePoint, etc.)
- * implement these interfaces as drop-in replacements.
+ * The interfaces are extensible: additional implementations can be added
+ * without changing call sites.
  */
 
 // ---------------------------------------------------------------------------
@@ -36,7 +36,7 @@ export interface SigningResult {
 }
 
 export interface ISigningProvider {
-  /** Unique identifier for this provider (e.g. "type-to-sign", "docusign", "adobe-sign") */
+  /** Unique identifier for this provider (e.g. "type-to-sign") */
   readonly id: string;
   /** Human-readable display name */
   readonly displayName: string;

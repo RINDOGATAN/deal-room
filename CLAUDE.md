@@ -11,7 +11,7 @@ Contract negotiation platform with weighted compromise algorithm.
 **Statuses:** DRAFT → AWAITING_RESPONSE → NEGOTIATING → AGREED → SIGNING → COMPLETED (+ CANCELLED)
 **Modes:** `NEGOTIATION` (two-party) | `SOLO` (single-party)
 **Compromise:** `stake = ((5-flexibility)/5 * 0.6) + (|bias| * 0.4)` — UI shows "firmness" (= 6 - flexibility)
-**Signing:** type-to-sign, DocuSign, HelloSign via `SigningRequest` model
+**Signing:** type-to-sign via `SigningRequest` model. The `ISigningProvider` interface is extensible — additional providers can be added without changing call sites.
 **Parameters:** `[bracket]` tokens in clause text, `{curly}` variables in boilerplate. `boilerplateVariable` in parameters.json bridges the two.
 
 ## Skills (Open-Core Model)
