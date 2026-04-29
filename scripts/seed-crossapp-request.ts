@@ -92,6 +92,7 @@ async function main() {
       sourceApp: "dpo-central",
       externalRequesterName: "María García",
       externalRequesterEmail: REQUESTER_EMAIL,
+      expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
     },
   });
   console.log("Created cross-app request:", request.id, "(sourceApp: dpo-central)");
@@ -107,6 +108,7 @@ async function main() {
       sourceApp: "ai-sentinel",
       externalRequesterName: "María García",
       externalRequesterEmail: REQUESTER_EMAIL,
+      expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
     },
   });
   console.log("Created cross-app request:", request2.id, "(sourceApp: ai-sentinel)");

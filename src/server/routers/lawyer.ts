@@ -620,6 +620,10 @@ export const lawyerRouter = createTRPCRouter({
           contractType: input.contractType,
           governingLaw: input.governingLaw as GoverningLaw,
           message: input.message ?? null,
+          // 30-day expiry. Without this, accepted-but-abandoned
+          // requests sat in ACCEPTED state forever; PENDING ones
+          // also lingered if the lawyer never responded.
+          expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
         },
       });
 
@@ -694,6 +698,12 @@ export const lawyerRouter = createTRPCRouter({
       if (!request) {
         throw new TRPCError({ code: "NOT_FOUND", message: "Pending request not found" });
       }
+      if (request.expiresAt < new Date()) {
+        throw new TRPCError({
+          code: "PRECONDITION_FAILED",
+          message: "This request has expired and can no longer be accepted or declined.",
+        });
+      }
 
       return ctx.prisma.recommendationRequest.update({
         where: { id: input.requestId },
@@ -701,6 +711,29 @@ export const lawyerRouter = createTRPCRouter({
           status: input.action,
           respondedAt: new Date(),
         },
+      });
+    }),
+
+  /** Requester cancels their own pending or accepted request */
+  cancelRequest: protectedProcedure
+    .input(z.object({ requestId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const request = await ctx.prisma.recommendationRequest.findFirst({
+        where: {
+          id: input.requestId,
+          requesterId: ctx.session.user.id,
+          status: { in: ["PENDING", "ACCEPTED"] },
+        },
+      });
+      if (!request) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Cancellable request not found",
+        });
+      }
+      return ctx.prisma.recommendationRequest.update({
+        where: { id: input.requestId },
+        data: { status: "CANCELLED" },
       });
     }),
 
@@ -718,6 +751,12 @@ export const lawyerRouter = createTRPCRouter({
       });
       if (!request) {
         throw new TRPCError({ code: "NOT_FOUND", message: "Accepted request not found" });
+      }
+      if (request.expiresAt < new Date()) {
+        throw new TRPCError({
+          code: "PRECONDITION_FAILED",
+          message: "This request has expired. Ask the requester to start a new one.",
+        });
       }
 
       // Verify the vetting exists and belongs to this lawyer

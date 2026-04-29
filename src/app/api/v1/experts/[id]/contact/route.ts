@@ -145,6 +145,8 @@ export async function POST(
         externalRequesterName: requesterName,
         externalRequesterEmail: requesterEmail,
         externalRequesterCompany: requesterCompany ?? null,
+        // 30-day expiry — same as in-app vetting requests.
+        expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
       },
     });
 
