@@ -4,7 +4,7 @@
   "displayName": { "en": "Non-Disclosure Agreement", "es": "Acuerdo de Confidencialidad" },
   "description": { "en": "Mutual or one-way confidentiality agreements for protecting sensitive business information during discussions, due diligence, partnerships, or other business relationships.", "es": "Acuerdos de confidencialidad mutuos o unilaterales para proteger información empresarial sensible durante conversaciones, procesos de diligencia debida, asociaciones u otras relaciones comerciales." },
   "version": "1.0",
-  "clauseCount": 10,
+  "clauseCount": 9,
   "languages": ["en", "es"],
   "jurisdictions": ["CALIFORNIA", "ENGLAND_WALES", "SPAIN"],
   "soloModeSupported": true,

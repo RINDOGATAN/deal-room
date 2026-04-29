@@ -54,6 +54,8 @@ npm run deal:simulate -- --clean                    # Recreate all demo deals
 npm test                                            # Vitest watch mode (unit tests for lib/)
 npm run test:run                                    # Vitest single run (use in CI)
 npm run check:api                                   # Static guard: no raw errors leaked from /api/* routes
+npm run check:skills                                # Static guard: skill JSON shape (i18n, [BRACKET] leaks, {curly} vars, biases)
+SKILLS_DIR=/path/to/legalskills npm run check:skills # Same guard on the premium repo
 ```
 
 ## Deployment
