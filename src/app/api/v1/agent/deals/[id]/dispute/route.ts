@@ -12,6 +12,7 @@ import {
   requireScope,
   ApiScopeError,
 } from "@/server/middleware/apiKeyAuth";
+import { withIdempotency } from "@/server/middleware/idempotency";
 import { features } from "@/config/features";
 
 const GAVEL_API_URL = process.env.GAVEL_API_URL || "https://gavel.todo.law/api/v1";
@@ -40,6 +41,7 @@ export async function POST(
       throw e;
     }
 
+    return await withIdempotency(req, auth.customer.id, async () => {
     const { id } = await params;
     const body = await req.json().catch(() => ({}));
     const { reason, escrowAmount } = body as {
@@ -179,6 +181,7 @@ export async function POST(
       },
       { status: 201 }
     );
+    });
   } catch (error) {
     console.error("Error creating dispute:", error);
     return NextResponse.json(

@@ -47,6 +47,19 @@ export async function GET() {
       streaming: false,
       pushNotifications: true,
       stateTransitionHistory: true,
+      idempotency: {
+        supported: true,
+        header: "Idempotency-Key",
+        ttlSeconds: 24 * 60 * 60,
+        appliesTo: [
+          "POST /api/v1/agent/negotiate",
+          "POST /api/v1/agent/playbooks",
+          "POST /api/v1/agent/subscribe",
+          "POST /api/v1/agent/deals/:id/dispute",
+        ],
+        description:
+          "Send Idempotency-Key on retries to receive the original response without re-executing the handler. Cached for 24h. Replays carry an Idempotent-Replay: true response header.",
+      },
     },
     authentication: {
       schemes: [
@@ -62,6 +75,7 @@ export async function GET() {
             { name: "deals:read", description: "View deals and download documents" },
             { name: "billing:read", description: "View credit balance" },
             { name: "webhooks:manage", description: "Manage webhook endpoints" },
+            { name: "disputes:create", description: "Escalate failed/agreed deals to Gavel ADR" },
           ],
         },
       ],

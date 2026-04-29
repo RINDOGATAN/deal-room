@@ -12,6 +12,7 @@ import {
   requireScope,
   ApiScopeError,
 } from "@/server/middleware/apiKeyAuth";
+import { withIdempotency } from "@/server/middleware/idempotency";
 import { features } from "@/config/features";
 
 export async function GET(req: NextRequest) {
@@ -84,6 +85,7 @@ export async function POST(req: NextRequest) {
       throw e;
     }
 
+    return await withIdempotency(req, auth.customer.id, async () => {
     const body = await req.json();
     const { name, contractType, governingLaw, contractLanguage, isDefault, metadata, entries } = body;
 
@@ -264,6 +266,7 @@ export async function POST(req: NextRequest) {
     });
 
     return NextResponse.json({ playbook }, { status: 201 });
+    });
   } catch (error) {
     console.error("Error creating playbook:", error);
     return NextResponse.json(
