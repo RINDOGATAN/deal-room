@@ -15,28 +15,37 @@ const GAVEL_WEBHOOK_SECRET = process.env.GAVEL_WEBHOOK_SECRET;
 
 function verifyGavelSignature(
   payload: string,
-  signature: string | null
+  signature: string | null,
+  secret: string,
 ): boolean {
-  if (!GAVEL_WEBHOOK_SECRET || !signature) return false;
-  const expected = createHmac("sha256", GAVEL_WEBHOOK_SECRET)
-    .update(payload)
-    .digest("hex");
+  if (!signature) return false;
+  const expected = createHmac("sha256", secret).update(payload).digest("hex");
   return signature === `sha256=${expected}`;
 }
 
 export async function POST(request: NextRequest) {
   try {
+    // Fail closed: refuse the webhook if the shared secret isn't configured.
+    // An unset secret would otherwise leave this endpoint open to anonymous
+    // dispute mutations.
+    if (!GAVEL_WEBHOOK_SECRET) {
+      console.error(
+        "GAVEL_WEBHOOK_SECRET is not set — refusing webhook. Configure on Vercel and redeploy.",
+      );
+      return NextResponse.json(
+        { error: "Webhook receiver is misconfigured" },
+        { status: 503 },
+      );
+    }
+
     const body = await request.text();
     const signature = request.headers.get("x-gavel-signature");
 
-    // Verify signature if secret is configured
-    if (GAVEL_WEBHOOK_SECRET) {
-      if (!verifyGavelSignature(body, signature)) {
-        return NextResponse.json(
-          { error: "Invalid signature" },
-          { status: 400 }
-        );
-      }
+    if (!verifyGavelSignature(body, signature, GAVEL_WEBHOOK_SECRET)) {
+      return NextResponse.json(
+        { error: "Invalid signature" },
+        { status: 401 },
+      );
     }
 
     const event = JSON.parse(body) as {
