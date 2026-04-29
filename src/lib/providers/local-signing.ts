@@ -3,8 +3,8 @@
  *
  * Built-in signing provider that ships with the AGPL core.
  * Uses typed signatures (no cryptographic e-signatures).
- * Proprietary providers (DocuSign, Adobe Sign) implement
- * ISigningProvider for qualified e-signatures.
+ * The ISigningProvider interface is extensible if a qualified
+ * e-signature provider is added in the future.
  */
 
 import type {

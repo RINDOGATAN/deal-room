@@ -189,7 +189,7 @@ Before recording, ensure:
 - Type signature in the type-to-sign field
 - Check confirmation box
 - Click **Sign**
-- *Callout:* "Type-to-sign for speed. DocuSign and HelloSign also available."
+- *Callout:* "Type-to-sign — your typed name is your legal electronic signature."
 
 ### Scene 6.2 — Bob Signs
 - Switch to Bob's browser

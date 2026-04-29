@@ -213,12 +213,6 @@ export const signingRouter = createTRPCRouter({
         });
       }
 
-      // In a real implementation, this would:
-      // 1. Generate the contract document from agreed terms
-      // 2. Send to DocuSign/HelloSign API
-      // 3. Store the external document ID
-      // For now, we create a placeholder signing request
-
       const initiator = party.dealRoom.parties.find((p) => p.role === "INITIATOR");
       const respondent = party.dealRoom.parties.find((p) => p.role === "RESPONDENT");
 

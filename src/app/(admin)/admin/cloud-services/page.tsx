@@ -63,7 +63,7 @@ const SERVICE_LAYERS = [
     persona: "Enterprise",
     depth: "Low",
     depthColor: "text-green-500",
-    description: "Phase 3 — DocuSign, CRM, DMS connectors",
+    description: "Phase 3 — CRM and DMS connectors",
   },
 ];
 
@@ -563,9 +563,9 @@ export default function CloudServicesPage() {
               <Badge variant="outline" className="text-xs">Phase 3</Badge>
             </div>
             <p className="text-sm text-muted-foreground">
-              DocuSign ceremony bridging, CRM deal sync (Salesforce, HubSpot), DMS
-              integration (SharePoint, Google Drive). Webhook-based event streaming
-              for signed contract delivery.
+              CRM deal sync (Salesforce, HubSpot), DMS integration (SharePoint,
+              Google Drive). Webhook-based event streaming for signed contract
+              delivery.
             </p>
           </div>
         </div>
