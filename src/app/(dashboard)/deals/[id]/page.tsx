@@ -234,6 +234,27 @@ function DealDetailContent({ dealId }: { dealId: string }) {
           {(deal as any).lawyerVetting && (
             <VettingBadge vetting={(deal as any).lawyerVetting} governingLaw={deal.governingLaw} />
           )}
+          {deal.status === "SIGNING" && signingRequest && (() => {
+            const now = Date.now();
+            const created = new Date(signingRequest.createdAt).getTime();
+            const expires = new Date(signingRequest.expiresAt).getTime();
+            const daysSinceStart = Math.max(0, Math.floor((now - created) / 86_400_000));
+            const daysUntilExpiry = Math.floor((expires - now) / 86_400_000);
+            const expired = daysUntilExpiry < 0;
+            const urgent = !expired && daysUntilExpiry <= 3;
+            return (
+              <div className={`flex items-center gap-2 text-xs ${urgent || expired ? "text-destructive" : "text-muted-foreground"}`}>
+                <Clock className="w-3.5 h-3.5" />
+                <span>{t("signingInitiatedAgo", { days: daysSinceStart })}</span>
+                <span>·</span>
+                <span>
+                  {expired
+                    ? t("signingExpired", { days: -daysUntilExpiry })
+                    : t("signingExpiresIn", { days: daysUntilExpiry })}
+                </span>
+              </div>
+            );
+          })()}
         </div>
 
         <div className="flex items-center gap-3">

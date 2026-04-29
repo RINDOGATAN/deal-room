@@ -203,7 +203,10 @@
       "dealCancelled": "Deal cancelled"
     },
     "resendInvitation": "Resend invitation",
-    "resending": "Resending..."
+    "resending": "Resending...",
+    "signingInitiatedAgo": "Signing initiated {days, plural, =0 {today} =1 {1 day ago} other {# days ago}}",
+    "signingExpiresIn": "Expires in {days, plural, =0 {less than a day} =1 {1 day} other {# days}}",
+    "signingExpired": "Signing expired {days, plural, =0 {today} =1 {1 day ago} other {# days ago}}"
   },
   "negotiate": {
     "clause": "Clause",

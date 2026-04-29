@@ -203,7 +203,10 @@
       "dealCancelled": "Acuerdo cancelado"
     },
     "resendInvitation": "Reenviar invitación",
-    "resending": "Reenviando..."
+    "resending": "Reenviando...",
+    "signingInitiatedAgo": "Firma iniciada {days, plural, =0 {hoy} =1 {hace 1 día} other {hace # días}}",
+    "signingExpiresIn": "Caduca en {days, plural, =0 {menos de un día} =1 {1 día} other {# días}}",
+    "signingExpired": "La firma caducó {days, plural, =0 {hoy} =1 {hace 1 día} other {hace # días}}"
   },
   "negotiate": {
     "clause": "Cláusula",
