@@ -16,6 +16,7 @@ import {
   checkRateLimit,
   checkA2aRateLimit,
 } from "@/server/middleware/apiKeyAuth";
+import { withIdempotency } from "@/server/middleware/idempotency";
 import { checkDealCreationEntitlement } from "@/server/services/licensing/entitlement";
 import { features } from "@/config/features";
 import { fireWebhook } from "@/server/services/agent/webhooks";
@@ -40,6 +41,7 @@ export async function POST(req: NextRequest) {
       throw e;
     }
 
+    return await withIdempotency(req, auth.customer.id, async () => {
     // Rate limit check
     const rateLimit = await checkRateLimit(auth.customer.id, "negotiate");
     if (!rateLimit.allowed) {
@@ -201,6 +203,7 @@ export async function POST(req: NextRequest) {
       },
       { status: 201 }
     );
+    });
   } catch (error) {
     console.error("Error initiating negotiation:", error);
     return NextResponse.json(

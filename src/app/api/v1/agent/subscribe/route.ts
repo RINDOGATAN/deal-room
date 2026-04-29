@@ -24,6 +24,7 @@ import {
   ApiScopeError,
   checkRateLimit,
 } from "@/server/middleware/apiKeyAuth";
+import { withIdempotency } from "@/server/middleware/idempotency";
 
 export async function POST(req: NextRequest) {
   try {
@@ -45,6 +46,7 @@ export async function POST(req: NextRequest) {
       throw e;
     }
 
+    return await withIdempotency(req, auth.customer.id, async () => {
     // Rate limit
     const rateLimit = await checkRateLimit(auth.customer.id, "default");
     if (!rateLimit.allowed) {
@@ -192,6 +194,7 @@ export async function POST(req: NextRequest) {
         priceAmount: p.priceAmount,
         priceCurrency: p.priceCurrency,
       })),
+    });
     });
   } catch (error) {
     console.error("Error creating subscription checkout:", error);

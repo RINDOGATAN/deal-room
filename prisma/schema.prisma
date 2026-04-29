@@ -1127,6 +1127,26 @@ model RateLimitCounter {
   @@map("rate_limit_counters")
 }
 
+// Cache for client-supplied Idempotency-Key headers on agent POST
+// endpoints. Same key + same customer within the TTL window replays
+// the original 2xx response instead of re-executing the handler —
+// matches Stripe's idempotency contract. Composite primary key on
+// (customerId, key) so different customers can reuse key values.
+model IdempotencyRecord {
+  customerId   String
+  key          String
+  method       String
+  path         String
+  status       Int
+  responseBody String   @db.Text
+  expiresAt    DateTime
+  createdAt    DateTime @default(now())
+
+  @@id([customerId, key])
+  @@index([expiresAt])
+  @@map("idempotency_records")
+}
+
 // ============================================================
 // WEBHOOKS (Phase 4)
 // ============================================================
