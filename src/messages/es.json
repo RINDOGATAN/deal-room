@@ -198,8 +198,12 @@
     "toastMessages": {
       "invitationSent": "Invitación enviada correctamente",
       "invitationFailed": "Error al enviar invitación: {error}",
+      "invitationResent": "Invitación reenviada",
+      "invitationResendFailed": "Error al reenviar: {error}",
       "dealCancelled": "Acuerdo cancelado"
-    }
+    },
+    "resendInvitation": "Reenviar invitación",
+    "resending": "Reenviando..."
   },
   "negotiate": {
     "clause": "Cláusula",
