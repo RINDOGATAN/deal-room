@@ -56,6 +56,7 @@ export async function POST(
             },
           },
         },
+        dispute: true,
       },
     });
 
@@ -67,6 +68,20 @@ export async function POST(
     const isRespondent = agentDeal.respondentCustomerId === auth.customer.id;
     if (!isInitiator && !isRespondent) {
       return NextResponse.json({ error: "Access denied" }, { status: 403 });
+    }
+
+    // Once a deal is at Gavel, accepting it would conflict with the
+    // arbitration — refuse and let the dispute resolve.
+    if (agentDeal.dispute) {
+      return NextResponse.json(
+        {
+          error: "This deal is under dispute and cannot be accepted until the dispute resolves.",
+          disputeId: agentDeal.dispute.id,
+          gavelCaseId: agentDeal.dispute.gavelCaseId,
+          status: agentDeal.dispute.status,
+        },
+        { status: 409 }
+      );
     }
 
     if (agentDeal.status === "FAILED") {
