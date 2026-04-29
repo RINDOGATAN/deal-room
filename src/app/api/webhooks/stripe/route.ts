@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { headers } from "next/headers";
 import Stripe from "stripe";
+import { Prisma } from "@prisma/client";
 import prisma from "@/lib/prisma";
 import { verifyWebhookSignature, getSubscription } from "@/lib/stripe";
 import { features } from "@/config/features";
@@ -47,30 +48,62 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    switch (event.type) {
-      case "checkout.session.completed":
-        await handleCheckoutCompleted(event.data.object as Stripe.Checkout.Session);
-        break;
+    // Claim this event.id atomically. Stripe's at-least-once delivery
+    // guarantee means the same event can land multiple times — sequential
+    // retries (after a transient 500), or near-concurrent if the first
+    // delivery is slow. The unique-constraint insert is the single
+    // serialization point: whichever request wins runs the handler;
+    // others see P2002 and short-circuit. If the handler errors, we
+    // delete the row so Stripe's next retry can re-claim and re-process.
+    try {
+      await prisma.stripeWebhookEvent.create({
+        data: { id: event.id, eventType: event.type },
+      });
+    } catch (e) {
+      if (
+        e instanceof Prisma.PrismaClientKnownRequestError &&
+        e.code === "P2002"
+      ) {
+        return NextResponse.json({ received: true, idempotent: true });
+      }
+      throw e;
+    }
 
-      case "customer.subscription.created":
-      case "customer.subscription.updated":
-        await handleSubscriptionChange(event.data.object as Stripe.Subscription);
-        break;
+    try {
+      switch (event.type) {
+        case "checkout.session.completed":
+          await handleCheckoutCompleted(event.data.object as Stripe.Checkout.Session);
+          break;
 
-      case "customer.subscription.deleted":
-        await handleSubscriptionDeleted(event.data.object as Stripe.Subscription);
-        break;
+        case "customer.subscription.created":
+        case "customer.subscription.updated":
+          await handleSubscriptionChange(event.data.object as Stripe.Subscription);
+          break;
 
-      case "invoice.payment_succeeded":
-        await handleInvoicePaymentSucceeded(event.data.object as Stripe.Invoice);
-        break;
+        case "customer.subscription.deleted":
+          await handleSubscriptionDeleted(event.data.object as Stripe.Subscription);
+          break;
 
-      case "invoice.payment_failed":
-        await handlePaymentFailed(event.data.object as Stripe.Invoice);
-        break;
+        case "invoice.payment_succeeded":
+          await handleInvoicePaymentSucceeded(event.data.object as Stripe.Invoice);
+          break;
 
-      default:
-        console.log(`Unhandled event type: ${event.type}`);
+        case "invoice.payment_failed":
+          await handlePaymentFailed(event.data.object as Stripe.Invoice);
+          break;
+
+        default:
+          console.log(`Unhandled event type: ${event.type}`);
+      }
+    } catch (handlerError) {
+      // Release the claim so Stripe's next retry can re-process.
+      // .catch() because the row should still be there, but if some
+      // other process removed it we don't want this cleanup to mask
+      // the original error.
+      await prisma.stripeWebhookEvent
+        .delete({ where: { id: event.id } })
+        .catch(() => undefined);
+      throw handlerError;
     }
 
     return NextResponse.json({ received: true });
