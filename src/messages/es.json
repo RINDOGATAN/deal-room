@@ -518,6 +518,111 @@
       "documentCountOne": "1 documento",
       "documentCountOther": "{count} documentos"
     },
+    "hub": {
+      "yourLaunch": "Tu lanzamiento",
+      "founderCountOne": "1 fundador/a",
+      "founderCountOther": "{count} fundadores/as",
+      "documentCountOne": "1 documento generado",
+      "documentCountOther": "{count} documentos generados",
+      "estimatedMinutes": "~{n} min",
+      "availableNow": "Disponible ahora:",
+      "locked": "Bloqueado",
+      "unlocksAfter": "Se desbloquea tras {step}",
+      "actuallyINeed": "Pensándolo bien, sí lo necesito",
+      "start": "Empezar",
+      "open": "Abrir",
+      "createIndividually": "Crear de forma individual",
+      "createIndividuallyHint": "El flujo guiado llegará pronto — por ahora créalo de forma individual",
+      "soon": "Próximamente",
+      "soonHint": "Disponible en la próxima versión",
+      "iHaveThis": "Ya lo tengo",
+      "requestLawyerReview": "Solicitar revisión de un/a abogado/a",
+      "waitingForLawyer": "Esperando que el/la abogado/a apruebe los {count} documentos",
+      "stepResetToast": "Paso reiniciado.",
+      "journeyNotFound": "Journey no encontrado.",
+      "backToLaunch": "Volver a Lanzamiento",
+      "statusNotStarted": "Sin empezar",
+      "statusReady": "Listo",
+      "statusAwaiting": "Esperando al abogado/a",
+      "statusReviewed": "Aprobado",
+      "statusFiled": "Presentado",
+      "statusDoneElsewhere": "Hecho por otra vía",
+      "reviewDialog": {
+        "title": "Solicitar revisión de un/a abogado/a",
+        "description": "Elige un/a abogado/a. Verá los {count} documentos del paso de {step} y podrá aprobar cada uno.",
+        "descriptionOne": "Elige un/a abogado/a. Verá este documento del paso de {step} y podrá aprobarlo.",
+        "noAttorneys": "Por ahora no hay abogados/as supervisores disponibles para tu jurisdicción.",
+        "browseDirectory": "Explorar el directorio de expertos",
+        "barNumber": "Núm. de colegiado/a {n}",
+        "cancel": "Cancelar",
+        "request": "Solicitar revisión",
+        "requesting": "Solicitando...",
+        "successOne": "Revisión solicitada en 1 documento.",
+        "successOther": "Revisión solicitada en {count} documentos."
+      },
+      "doneDialog": {
+        "youShouldHave": "Ya deberías tener",
+        "noteLabel": "Nota para ti (opcional)",
+        "notePlaceholder": "p. ej., Constituida vía Stripe Atlas, EIN expedido 2026-03-12",
+        "cancel": "Cancelar",
+        "saving": "Guardando...",
+        "successToast": "Marcado como hecho."
+      }
+    },
+    "steps": {
+      "foundation": {
+        "title": "Constituye tu empresa",
+        "description": "Genera tu Certificate of Incorporation, los Acuerdos de Fundadores/as y las Cesiones de Propiedad Intelectual."
+      },
+      "equity-pool": {
+        "title": "Configura tu pool de opciones",
+        "description": "Crea el Equity Incentive Plan que regulará todas las concesiones futuras de opciones.",
+        "fallbackSkills": "Equity Incentive Plan"
+      },
+      "hiring": {
+        "title": "Contrata a tu primer equipo",
+        "description": "Cartas de oferta, contratos de empleo y concesiones de opciones para tus primeras contrataciones.",
+        "fallbackSkills": "Contrato de Empleo · Contrato de Asesoramiento · Contrato de Consultoría"
+      },
+      "raise": {
+        "title": "Levanta tu primera ronda",
+        "description": "Genera un SAFE, una nota convertible o un term sheet — el que mejor encaje con la conversación.",
+        "fallbackSkills": "SAFE · Nota Convertible · Term Sheet · Pacto de Socios"
+      }
+    },
+    "stepDone": {
+      "foundation": {
+        "title": "Tu empresa ya está constituida",
+        "explainer": "No generaremos nada para este paso — marcarlo como hecho simplemente desbloquea los pasos posteriores para que puedas avanzar.",
+        "doc1": "Certificate of Incorporation presentado en Delaware",
+        "doc2": "Un Acuerdo de Fundadores/as (o equivalente de compra de acciones) para cada fundador/a",
+        "doc3": "Una Cesión de Propiedad Intelectual firmada por cada fundador/a",
+        "confirmCta": "Lo tengo todo — marcar como hecho"
+      },
+      "equity-pool": {
+        "title": "Tu pool de opciones ya está configurado",
+        "explainer": "Saltaremos la generación del Equity Incentive Plan. Aún puedes usar el paso de Contratación para producir cartas de oferta y concesiones individuales bajo tu plan existente.",
+        "doc1": "Un Equity Incentive Plan adoptado por el consejo (o documento equivalente del pool de opciones)",
+        "doc2": "Acciones reservadas en el cap table para concesiones de opciones",
+        "confirmCta": "Tengo un plan vigente — marcar como hecho"
+      },
+      "hiring": {
+        "title": "Ya has contratado a tu equipo",
+        "explainer": "Saltaremos el paso de Contratación. Si más adelante incorporas a más personas, siempre puedes volver y generar nuevas cartas de oferta o concesiones de opciones.",
+        "doc1": "Cartas de oferta o contratos de empleo firmados por cada contratación",
+        "doc2": "Cesión de PI o PIIA firmada por cada empleado/a",
+        "doc3": "Acuerdos de concesión de opciones para todo aquel que tenga equity, con referencia a tu plan",
+        "confirmCta": "Mi equipo ya está completo — marcar como hecho"
+      },
+      "raise": {
+        "title": "Ya has cerrado tu primera ronda",
+        "explainer": "Saltaremos el paso de Levantar Ronda. ¿Vuelves a levantar capital? Empieza un nuevo journey o reabre este paso para generar nuevos SAFEs, notas o un term sheet.",
+        "doc1": "SAFE, nota convertible o acuerdo de compra de acciones de ronda valorada firmado con cada inversor/a",
+        "doc2": "Cap table actualizado que refleje la ronda",
+        "doc3": "Acuerdos del consejo / socios autorizando la emisión",
+        "confirmCta": "Mi ronda está cerrada — marcar como hecho"
+      }
+    },
     "new": {
       "back": "Atrás",
       "stepOf": "Paso {n} de 3",
