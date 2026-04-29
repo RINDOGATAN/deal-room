@@ -41,7 +41,7 @@ export async function POST(
 
     // Mirror the rate-limit posture of negotiate/route.ts. Without this,
     // an agent could spam unlimited counter-rounds in a single negotiation.
-    const rateLimit = checkRateLimit(auth.customer.id, "negotiate");
+    const rateLimit = await checkRateLimit(auth.customer.id, "negotiate");
     if (!rateLimit.allowed) {
       return NextResponse.json(
         { error: "Rate limit exceeded" },

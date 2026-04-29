@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Rate limit check
-    const rateLimit = checkRateLimit(auth.customer.id, "negotiate");
+    const rateLimit = await checkRateLimit(auth.customer.id, "negotiate");
     if (!rateLimit.allowed) {
       return NextResponse.json(
         { error: "Rate limit exceeded" },
@@ -139,7 +139,7 @@ export async function POST(req: NextRequest) {
     // A2A rate limit check for contract types with A2A_ prefix
     if (playbook.contractType.startsWith("A2A_")) {
       const isPremiumA2a = !!((auth.customer as Record<string, unknown>).metadata as Record<string, unknown> | null)?.premiumA2A;
-      const a2aLimit = checkA2aRateLimit(
+      const a2aLimit = await checkA2aRateLimit(
         auth.customer.id,
         playbook.contractType,
         isPremiumA2a,

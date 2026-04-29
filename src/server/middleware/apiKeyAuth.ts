@@ -71,23 +71,17 @@ export class ApiScopeError extends Error {
 }
 
 // ────────────────────────────────────────────────────────────
-// Rate Limiting (in-memory sliding window)
+// Rate Limiting — DB-backed fixed-bucket counter
 // ────────────────────────────────────────────────────────────
-
-interface RateLimitWindow {
-  timestamps: number[];
-}
-
-const rateLimitStore = new Map<string, RateLimitWindow>();
-
-// Clean up stale entries every 5 minutes
-setInterval(() => {
-  const now = Date.now();
-  for (const [key, window] of rateLimitStore) {
-    window.timestamps = window.timestamps.filter((t) => now - t < 3600_000);
-    if (window.timestamps.length === 0) rateLimitStore.delete(key);
-  }
-}, 300_000);
+//
+// Each call atomically increments a per-window counter via
+// upsert. Concurrent requests serialize on the row's lock; the
+// limit check happens against the *post-increment* value so
+// races are impossible. Counters are durable across cold-starts
+// and shared between Vercel instances. Trade-off: fixed-bucket
+// (vs sliding) — at boundary you can theoretically burst into
+// the next window. For our limits (5–300/week, 100–1000/hour)
+// that's acceptable.
 
 export interface RateLimitResult {
   allowed: boolean;
@@ -95,74 +89,62 @@ export interface RateLimitResult {
   retryAfter?: number;
 }
 
-/**
- * Check rate limit for a customer on a specific endpoint group.
- * Returns whether the request is allowed and remaining quota.
- */
+/** Pure: rounds `now` down to the start of its window. */
+export function computeBucket(
+  now: number,
+  windowMs: number,
+): { windowStart: number; expiresAt: Date } {
+  const windowStart = Math.floor(now / windowMs) * windowMs;
+  return { windowStart, expiresAt: new Date(windowStart + windowMs) };
+}
+
+async function claimSlot(
+  key: string,
+  limit: number,
+  windowMs: number,
+): Promise<RateLimitResult> {
+  const now = Date.now();
+  const { windowStart, expiresAt } = computeBucket(now, windowMs);
+  const fullKey = `${key}:${windowStart}`;
+
+  const result = await prisma.rateLimitCounter.upsert({
+    where: { key: fullKey },
+    create: { key: fullKey, count: 1, expiresAt },
+    update: { count: { increment: 1 } },
+  });
+
+  if (result.count > limit) {
+    const retryAfter = Math.ceil((expiresAt.getTime() - now) / 1000);
+    return { allowed: false, remaining: 0, retryAfter };
+  }
+  return { allowed: true, remaining: Math.max(0, limit - result.count) };
+}
+
 /**
  * Check A2A-specific rate limits.
  * Standard tier: 5 invocations per skill per week per customer.
  * Premium tier (premiumA2A flag): 300 total invocations per week per customer.
  */
-export function checkA2aRateLimit(
+export async function checkA2aRateLimit(
   customerId: string,
   contractType: string,
   isPremiumA2a: boolean,
-): RateLimitResult {
+): Promise<RateLimitResult> {
   const weekMs = 7 * 24 * 3600_000;
-  const now = Date.now();
-
   if (isPremiumA2a) {
-    // Premium: 300 total A2A invocations per week
-    const key = `${customerId}:a2a:premium`;
-    let window = rateLimitStore.get(key);
-    if (!window) { window = { timestamps: [] }; rateLimitStore.set(key, window); }
-    window.timestamps = window.timestamps.filter((t) => now - t < weekMs);
-    if (window.timestamps.length >= 300) {
-      const retryAfter = Math.ceil((window.timestamps[0] + weekMs - now) / 1000);
-      return { allowed: false, remaining: 0, retryAfter };
-    }
-    window.timestamps.push(now);
-    return { allowed: true, remaining: 300 - window.timestamps.length };
+    return claimSlot(`${customerId}:a2a:premium`, 300, weekMs);
   }
-
-  // Standard: 5 invocations per skill per week
-  const key = `${customerId}:a2a:${contractType}`;
-  let window = rateLimitStore.get(key);
-  if (!window) { window = { timestamps: [] }; rateLimitStore.set(key, window); }
-  window.timestamps = window.timestamps.filter((t) => now - t < weekMs);
-  if (window.timestamps.length >= 5) {
-    const retryAfter = Math.ceil((window.timestamps[0] + weekMs - now) / 1000);
-    return { allowed: false, remaining: 0, retryAfter };
-  }
-  window.timestamps.push(now);
-  return { allowed: true, remaining: 5 - window.timestamps.length };
+  return claimSlot(`${customerId}:a2a:${contractType}`, 5, weekMs);
 }
 
-export function checkRateLimit(
+/**
+ * Check rate limit for a customer on a specific endpoint group.
+ * Returns whether the request is allowed and remaining quota.
+ */
+export async function checkRateLimit(
   customerId: string,
   group: "negotiate" | "default",
-): RateLimitResult {
+): Promise<RateLimitResult> {
   const limit = group === "negotiate" ? 100 : 1000;
-  const windowMs = 3600_000; // 1 hour
-  const now = Date.now();
-  const key = `${customerId}:${group}`;
-
-  let window = rateLimitStore.get(key);
-  if (!window) {
-    window = { timestamps: [] };
-    rateLimitStore.set(key, window);
-  }
-
-  // Remove timestamps outside the window
-  window.timestamps = window.timestamps.filter((t) => now - t < windowMs);
-
-  if (window.timestamps.length >= limit) {
-    const oldestInWindow = window.timestamps[0];
-    const retryAfter = Math.ceil((oldestInWindow + windowMs - now) / 1000);
-    return { allowed: false, remaining: 0, retryAfter };
-  }
-
-  window.timestamps.push(now);
-  return { allowed: true, remaining: limit - window.timestamps.length };
+  return claimSlot(`${customerId}:${group}`, limit, 3600_000);
 }

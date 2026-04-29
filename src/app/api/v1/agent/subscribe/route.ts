@@ -46,7 +46,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Rate limit
-    const rateLimit = checkRateLimit(auth.customer.id, "default");
+    const rateLimit = await checkRateLimit(auth.customer.id, "default");
     if (!rateLimit.allowed) {
       return NextResponse.json(
         { error: "Rate limit exceeded" },
