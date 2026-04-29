@@ -41,6 +41,19 @@ const foundersArrayInput = z
   .min(1)
   .max(6)
   .superRefine((founders, ctx) => {
+    const seen = new Set<string>();
+    for (let i = 0; i < founders.length; i++) {
+      const email = founders[i].email.trim().toLowerCase();
+      if (seen.has(email)) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: [i, "email"],
+          message: "Duplicate founder email",
+        });
+      }
+      seen.add(email);
+    }
+
     const equity = validateEquity(founders);
     if (!equity.valid) {
       ctx.addIssue({
