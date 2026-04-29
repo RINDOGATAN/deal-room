@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { validateEquity } from "@/lib/journey/equity";
 
 type FounderDraft = {
   name: string;
@@ -41,6 +42,13 @@ export default function NewJourneyPage() {
     const n = parseFloat(f.equityPercent);
     return sum + (isNaN(n) ? 0 : n);
   }, 0);
+
+  const equityCheck = validateEquity(founders);
+  const equityError = !equityCheck.valid
+    ? equityCheck.reason === "PARTIAL_EQUITY"
+      ? "Either every founder needs an equity %, or none do."
+      : `Equity must sum to 100% (currently ${equityCheck.total}%).`
+    : null;
 
   const createJourney = trpc.journey.create.useMutation({
     onSuccess: async (j) => {
@@ -67,9 +75,10 @@ export default function NewJourneyPage() {
   }
 
   const companyStepValid = companyName.trim().length > 0;
-  const foundersStepValid = founders.every(
-    (f) => f.name.trim().length > 0 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.email.trim()),
-  );
+  const foundersStepValid =
+    founders.every(
+      (f) => f.name.trim().length > 0 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.email.trim()),
+    ) && equityCheck.valid;
 
   function handleSubmit() {
     createJourney.mutate({
@@ -177,9 +186,17 @@ export default function NewJourneyPage() {
                 <Users className="w-5 h-5 text-primary" /> Founders
               </h2>
               <span className="text-xs text-muted-foreground">
-                Total: <span className="font-mono">{totalEquity.toFixed(1)}%</span>
+                Total:{" "}
+                <span
+                  className={`font-mono ${equityError ? "text-destructive" : ""}`}
+                >
+                  {totalEquity.toFixed(1)}%
+                </span>
               </span>
             </div>
+            {equityError && (
+              <p className="text-xs text-destructive">{equityError}</p>
+            )}
             <p className="text-sm text-muted-foreground">
               Add up to six founders. The first listed is the incorporator + primary contact.
             </p>

@@ -24,6 +24,7 @@ import {
 } from "@prisma/client";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { getStepPlan, type StepKey } from "@/lib/journey/steps";
+import { validateEquity } from "@/lib/journey/equity";
 import { autoAgreeSingleOptionClauses } from "../services/deal/autoAgreeSingleOption";
 
 const founderInput = z.object({
@@ -34,6 +35,24 @@ const founderInput = z.object({
   isIncorporator: z.boolean().default(false),
   isPrimary: z.boolean().default(false),
 });
+
+const foundersArrayInput = z
+  .array(founderInput)
+  .min(1)
+  .max(6)
+  .superRefine((founders, ctx) => {
+    const equity = validateEquity(founders);
+    if (!equity.valid) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["equityPercent"],
+        message:
+          equity.reason === "PARTIAL_EQUITY"
+            ? `Either every founder needs an equity %, or none do. Current total: ${equity.total}%`
+            : `Founder equity must sum to 100%. Current total: ${equity.total}%`,
+      });
+    }
+  });
 
 export const journeyRouter = createTRPCRouter({
   // Create a new journey with company profile + founders
@@ -46,7 +65,7 @@ export const journeyRouter = createTRPCRouter({
         entityType: z.string().default("C_CORP"),
         authorizedShares: z.number().int().positive().default(10_000_000),
         optionPoolPercent: z.number().min(0).max(50).optional(),
-        founders: z.array(founderInput).min(1).max(6),
+        founders: foundersArrayInput,
       })
     )
     .mutation(async ({ ctx, input }) => {
