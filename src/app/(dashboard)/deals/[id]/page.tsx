@@ -131,6 +131,24 @@ function DealDetailContent({ dealId }: { dealId: string }) {
     },
   });
 
+  const { data: pendingInvitation } = trpc.invitation.getPendingForDeal.useQuery(
+    { dealRoomId: dealId },
+    {
+      // Only worth fetching when the deal is plausibly waiting on the
+      // respondent and the current user is the initiator who can resend.
+      enabled:
+        !!deal &&
+        deal.status === "AWAITING_RESPONSE" &&
+        deal.currentUserRole === "INITIATOR",
+    },
+  );
+
+  const resendInvite = trpc.invitation.resend.useMutation({
+    onSuccess: () => toast.success(t("toastMessages.invitationResent")),
+    onError: (error) =>
+      toast.error(t("toastMessages.invitationResendFailed", { error: error.message })),
+  });
+
   const cancelDeal = trpc.deal.cancel.useMutation({
     onSuccess: () => {
       toast.success(t("toastMessages.dealCancelled"));
@@ -341,6 +359,21 @@ function DealDetailContent({ dealId }: { dealId: string }) {
                   <><Mail className="w-3 h-3 mr-1 inline" /><span className="hidden sm:inline">{t("invitationPending")}</span><span className="sm:hidden">{tCommon("pending")}</span></>
                 )}
               </Badge>
+              {/* Resend invitation: only meaningful while waiting on the
+                  respondent. The query is gated on deal.status above so
+                  pendingInvitation is null in every other case. */}
+              {!respondent.userId && pendingInvitation && isInitiator && (
+                <button
+                  onClick={() =>
+                    resendInvite.mutate({ invitationId: pendingInvitation.id })
+                  }
+                  disabled={resendInvite.isPending}
+                  className="btn-brutal-outline flex items-center gap-2 w-full justify-center text-sm disabled:opacity-40"
+                >
+                  <Mail className="w-4 h-4" />
+                  {resendInvite.isPending ? t("resending") : t("resendInvitation")}
+                </button>
+              )}
             </div>
           ) : canInvite ? (
             <div className="space-y-4">

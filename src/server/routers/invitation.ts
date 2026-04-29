@@ -323,6 +323,36 @@ export const invitationRouter = createTRPCRouter({
       return { dealRoomId: invitation.dealRoomId };
     }),
 
+  // Get the current PENDING invitation for a deal — used by the
+  // initiator's deal-detail surface to drive a "Resend invitation"
+  // action when the respondent hasn't accepted yet.
+  getPendingForDeal: protectedProcedure
+    .input(z.object({ dealRoomId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const userId = ctx.session.user.id;
+      const dealRoom = await ctx.prisma.dealRoom.findUnique({
+        where: { id: input.dealRoomId },
+        select: {
+          parties: { select: { userId: true, role: true } },
+        },
+      });
+      if (!dealRoom) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Deal room not found" });
+      }
+      const isInitiator = dealRoom.parties.some(
+        (p) => p.role === PartyRole.INITIATOR && p.userId === userId,
+      );
+      if (!isInitiator) return null;
+      return ctx.prisma.invitation.findFirst({
+        where: {
+          dealRoomId: input.dealRoomId,
+          status: InvitationStatus.PENDING,
+        },
+        select: { id: true, email: true, expiresAt: true, sentAt: true },
+        orderBy: { sentAt: "desc" },
+      });
+    }),
+
   // Resend invitation email
   resend: protectedProcedure
     .input(z.object({ invitationId: z.string() }))
