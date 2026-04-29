@@ -2,6 +2,7 @@
 
 import { useParams, useRouter } from "next/navigation";
 import { useSession, signIn } from "next-auth/react";
+import { useTranslations } from "next-intl";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 import {
@@ -20,6 +21,7 @@ export default function InvitationPage() {
   const router = useRouter();
   const token = params.token as string;
   const { data: session, status: sessionStatus } = useSession();
+  const t = useTranslations("invite");
 
   const { data: invitation, isLoading, error } = trpc.invitation.getByToken.useQuery(
     { token },
@@ -28,11 +30,11 @@ export default function InvitationPage() {
 
   const acceptInvitation = trpc.invitation.accept.useMutation({
     onSuccess: (result) => {
-      toast.success("Invitation accepted!");
+      toast.success(t("acceptedToast"));
       router.push(`/deals/${result.dealRoomId}/negotiate`);
     },
     onError: (error) => {
-      toast.error(`Failed to accept invitation: ${error.message}`);
+      toast.error(t("acceptFailedToast", { error: error.message }));
     },
   });
 
@@ -41,7 +43,7 @@ export default function InvitationPage() {
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="card-brutal text-center">
           <Loader2 className="w-8 h-8 text-primary animate-spin mx-auto mb-4" />
-          <p className="text-muted-foreground">Loading invitation...</p>
+          <p className="text-muted-foreground">{t("loading")}</p>
         </div>
       </div>
     );
@@ -54,12 +56,10 @@ export default function InvitationPage() {
           <div className="w-16 h-16 bg-yellow-500/20 flex items-center justify-center mx-auto mb-6">
             <AlertCircle className="w-8 h-8 text-yellow-600" />
           </div>
-          <h1 className="text-2xl font-bold mb-2">Invalid Invitation</h1>
-          <p className="text-muted-foreground mb-6">
-            This invitation link is invalid, has expired, or has already been used.
-          </p>
+          <h1 className="text-2xl font-bold mb-2">{t("invalid")}</h1>
+          <p className="text-muted-foreground mb-6">{t("invalidDescription")}</p>
           <Link href="/sign-in" className="btn-brutal inline-flex items-center gap-2">
-            Go to Sign In
+            {t("goToSignIn")}
             <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
@@ -74,12 +74,10 @@ export default function InvitationPage() {
           <div className="w-16 h-16 bg-primary/20 flex items-center justify-center mx-auto mb-6">
             <Check className="w-8 h-8 text-primary" />
           </div>
-          <h1 className="text-2xl font-bold mb-2">Already Accepted</h1>
-          <p className="text-muted-foreground mb-6">
-            This invitation has already been accepted.
-          </p>
+          <h1 className="text-2xl font-bold mb-2">{t("alreadyAccepted")}</h1>
+          <p className="text-muted-foreground mb-6">{t("alreadyAcceptedDescription")}</p>
           <Link href="/deals" className="btn-brutal inline-flex items-center gap-2">
-            View Your Deals
+            {t("viewYourDeals")}
             <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
@@ -94,12 +92,10 @@ export default function InvitationPage() {
           <div className="w-16 h-16 bg-yellow-500/20 flex items-center justify-center mx-auto mb-6">
             <AlertCircle className="w-8 h-8 text-yellow-500" />
           </div>
-          <h1 className="text-2xl font-bold mb-2">Invitation Expired</h1>
-          <p className="text-muted-foreground mb-6">
-            This invitation has expired. Please contact the sender to get a new invitation.
-          </p>
+          <h1 className="text-2xl font-bold mb-2">{t("expired")}</h1>
+          <p className="text-muted-foreground mb-6">{t("expiredDescription")}</p>
           <Link href="/sign-in" className="btn-brutal inline-flex items-center gap-2">
-            Go to Sign In
+            {t("goToSignIn")}
             <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
@@ -114,12 +110,10 @@ export default function InvitationPage() {
           <div className="w-16 h-16 bg-yellow-500/20 flex items-center justify-center mx-auto mb-6">
             <AlertCircle className="w-8 h-8 text-yellow-600" />
           </div>
-          <h1 className="text-2xl font-bold mb-2">Invitation Cancelled</h1>
-          <p className="text-muted-foreground mb-6">
-            This invitation has been cancelled by the sender.
-          </p>
+          <h1 className="text-2xl font-bold mb-2">{t("cancelled")}</h1>
+          <p className="text-muted-foreground mb-6">{t("cancelledDescription")}</p>
           <Link href="/sign-in" className="btn-brutal inline-flex items-center gap-2">
-            Go to Sign In
+            {t("goToSignIn")}
             <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
@@ -136,7 +130,7 @@ export default function InvitationPage() {
           <div className="card-brutal">
             <div className="flex items-center gap-2 mb-4">
               <Mail className="w-5 h-5 text-primary" />
-              <span className="text-sm text-muted-foreground">You've been invited</span>
+              <span className="text-sm text-muted-foreground">{t("youveBeenInvited")}</span>
             </div>
             <h1 className="text-2xl font-bold mb-2">{invitation.dealRoom.name}</h1>
             <div className="flex items-center gap-3 text-sm text-muted-foreground mb-4">
@@ -145,10 +139,10 @@ export default function InvitationPage() {
                 {invitation.dealRoom.contractTemplate.displayName}
               </span>
               <span>•</span>
-              <span>{invitation.dealRoom._count.clauses} clauses</span>
+              <span>{t("clauseCount", { count: invitation.dealRoom._count.clauses })}</span>
             </div>
             <div className="p-4 bg-muted/30 border border-border">
-              <p className="text-sm text-muted-foreground mb-1">Invited by</p>
+              <p className="text-sm text-muted-foreground mb-1">{t("invitedBy")}</p>
               <p className="font-medium">{invitation.invitedBy.name || invitation.invitedBy.email}</p>
               {invitation.invitedBy.company && (
                 <p className="text-sm text-muted-foreground">{invitation.invitedBy.company}</p>
@@ -158,16 +152,16 @@ export default function InvitationPage() {
 
           {/* Sign In to Accept */}
           <div className="card-brutal">
-            <h2 className="font-semibold mb-4">Sign in to accept</h2>
+            <h2 className="font-semibold mb-4">{t("signInToAccept")}</h2>
             <p className="text-muted-foreground text-sm mb-6">
-              Sign in with your email ({invitation.email}) to accept this invitation and start negotiating.
+              {t("signInDescription", { email: invitation.email })}
             </p>
             <button
               onClick={() => signIn("email", { email: invitation.email, callbackUrl: `/invite/${token}` })}
               className="btn-brutal w-full flex items-center justify-center gap-2"
             >
               <Mail className="w-4 h-4" />
-              Sign in with {invitation.email}
+              {t("signInWith", { email: invitation.email })}
             </button>
           </div>
         </div>
@@ -185,7 +179,7 @@ export default function InvitationPage() {
         <div className="card-brutal">
           <div className="flex items-center gap-2 mb-4">
             <Users className="w-5 h-5 text-primary" />
-            <span className="text-sm text-muted-foreground">Contract Negotiation Invitation</span>
+            <span className="text-sm text-muted-foreground">{t("contractNegotiationInvitation")}</span>
           </div>
           <h1 className="text-2xl font-bold mb-2">{invitation.dealRoom.name}</h1>
           <div className="flex items-center gap-3 text-sm text-muted-foreground mb-4">
@@ -194,12 +188,12 @@ export default function InvitationPage() {
               {invitation.dealRoom.contractTemplate.displayName}
             </span>
             <span>•</span>
-            <span>{invitation.dealRoom._count.clauses} clauses</span>
+            <span>{t("clauseCount", { count: invitation.dealRoom._count.clauses })}</span>
           </div>
 
           <div className="space-y-4">
             <div className="p-4 bg-muted/30 border border-border">
-              <p className="text-sm text-muted-foreground mb-1">Invited by</p>
+              <p className="text-sm text-muted-foreground mb-1">{t("invitedBy")}</p>
               <p className="font-medium">{invitation.invitedBy.name || invitation.invitedBy.email}</p>
               {invitation.invitedBy.company && (
                 <p className="text-sm text-muted-foreground">{invitation.invitedBy.company}</p>
@@ -208,7 +202,7 @@ export default function InvitationPage() {
 
             {invitation.name && (
               <div className="p-4 bg-muted/30 border border-border">
-                <p className="text-sm text-muted-foreground mb-1">Your role</p>
+                <p className="text-sm text-muted-foreground mb-1">{t("yourRole")}</p>
                 <p className="font-medium">{invitation.name}</p>
                 {invitation.company && (
                   <p className="text-sm text-muted-foreground">{invitation.company}</p>
@@ -224,13 +218,15 @@ export default function InvitationPage() {
             <div className="flex items-start gap-3">
               <AlertCircle className="w-5 h-5 text-yellow-500 flex-shrink-0 mt-0.5" />
               <div>
-                <p className="font-medium text-yellow-500">Email Mismatch</p>
+                <p className="font-medium text-yellow-500">{t("emailMismatch")}</p>
                 <p className="text-sm text-muted-foreground mt-1">
-                  This invitation was sent to <span className="text-foreground">{invitation.email}</span>,
-                  but you're signed in as <span className="text-foreground">{session.user?.email}</span>.
+                  {t.rich("emailMismatchDescription", {
+                    invited: () => <span className="text-foreground">{invitation.email}</span>,
+                    current: () => <span className="text-foreground">{session.user?.email}</span>,
+                  })}
                 </p>
                 <p className="text-sm text-muted-foreground mt-2">
-                  You can still accept if you have access to both emails.
+                  {t("emailMismatchHint")}
                 </p>
               </div>
             </div>
@@ -239,9 +235,9 @@ export default function InvitationPage() {
 
         {/* Accept Button */}
         <div className="card-brutal">
-          <h2 className="font-semibold mb-4">Ready to negotiate?</h2>
+          <h2 className="font-semibold mb-4">{t("readyToNegotiate")}</h2>
           <p className="text-muted-foreground text-sm mb-6">
-            By accepting this invitation, you'll be able to review the contract terms and submit your preferred options.
+            {t("acceptDescription")}
           </p>
           <button
             onClick={() => acceptInvitation.mutate({ token })}
@@ -251,11 +247,11 @@ export default function InvitationPage() {
             {acceptInvitation.isPending ? (
               <>
                 <Loader2 className="w-4 h-4 animate-spin" />
-                Accepting...
+                {t("accepting")}
               </>
             ) : (
               <>
-                Accept & Start Negotiating
+                {t("acceptAndStart")}
                 <ArrowRight className="w-4 h-4" />
               </>
             )}

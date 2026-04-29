@@ -23,6 +23,7 @@ export default function ClientInvitePage() {
   const token = params.token as string;
   const { data: session, status: sessionStatus } = useSession();
   const t = useTranslations("lawyer");
+  const tInvite = useTranslations("invite");
 
   const { data: invitation, isLoading, error } = trpc.lawyer.getClientInvitation.useQuery(
     { token },
@@ -68,7 +69,7 @@ export default function ClientInvitePage() {
               className="btn-brutal w-full flex items-center justify-center gap-2"
             >
               <Mail className="w-4 h-4" />
-              Sign in to continue
+              {tInvite("signInToContinue")}
             </button>
           </div>
         </div>
@@ -87,7 +88,7 @@ export default function ClientInvitePage() {
           <h1 className="text-2xl font-bold mb-2">{t("invalidInvitation")}</h1>
           <p className="text-muted-foreground mb-6">{t("invalidInvitationDescription")}</p>
           <Link href="/sign-in" className="btn-brutal inline-flex items-center gap-2">
-            Go to Sign In
+            {tInvite("goToSignIn")}
             <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
@@ -106,7 +107,7 @@ export default function ClientInvitePage() {
           <h1 className="text-2xl font-bold mb-2">{t("alreadyAccepted")}</h1>
           <p className="text-muted-foreground mb-6">{t("alreadyAcceptedDescription")}</p>
           <Link href="/deals" className="btn-brutal inline-flex items-center gap-2">
-            View Your Deals
+            {tInvite("viewYourDeals")}
             <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
