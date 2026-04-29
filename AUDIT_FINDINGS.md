@@ -83,10 +83,11 @@ When deal hits COMPLETED, the only thing stopping further mutations is UI guards
 Webhook handlers `upsert` so corruption is bounded, but rapid Stripe redeliveries can race and produce duplicate audit-log events. Worse on multi-instance deployments.
 **Fix shape:** Track `event.id` in a `StripeWebhookEvent` table with a unique constraint; ignore re-deliveries.
 
-### [M] `/api/billing/portal` resolves customer by session email only — `src/app/api/billing/portal/route.ts:23-32`
+### ~~[M] `/api/billing/portal` resolves customer by session email only~~ — **NOT APPLICABLE (verified 2026-04-29)**
 
-Relies on email uniqueness for ownership. Belt-and-braces would cross-check `customer.userId === session.user.id`.
-**Fix shape:** Add `where: { userId: session.user.id }` to the lookup.
+Audit's fix shape assumed `Customer.userId` exists. It doesn't. The Customer table has `email @unique` and no direct relationship to `User`. Ownership is already enforced by the chain: NextAuth verifies the email at sign-in → session carries that email → `Customer.findFirst({ where: { email } })` resolves by unique email. There is no spoofing window short of full account takeover, which compromises everything else too.
+
+A real improvement here would be a schema change adding `Customer.userId` and backfilling — but that's beyond an [M] fix and out of scope.
 
 ### [M] API key compare is not constant-time — `src/server/middleware/apiKeyAuth.ts:30-35`
 
