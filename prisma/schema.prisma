@@ -1112,6 +1112,21 @@ model StripeWebhookEvent {
   @@map("stripe_webhook_events")
 }
 
+// Fixed-bucket rate-limit counter. Replaces the in-memory Map
+// store, which was per-process (broken across Vercel cold-starts
+// and concurrent instances) and non-atomic (concurrent requests
+// could both pass a length-check and both push). The key encodes
+// (customerId, bucket-name, window-start-ms); atomic upsert with
+// `count: { increment: 1 }` is durable and race-free at the DB.
+model RateLimitCounter {
+  key       String   @id // e.g. "{customerId}:a2a:premium:1714377600000"
+  count     Int      @default(0)
+  expiresAt DateTime
+
+  @@index([expiresAt])
+  @@map("rate_limit_counters")
+}
+
 // ============================================================
 // WEBHOOKS (Phase 4)
 // ============================================================
