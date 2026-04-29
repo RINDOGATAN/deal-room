@@ -210,7 +210,7 @@ export default function NewJourneyPage() {
                     {founders.length > 1 && i > 0 && (
                       <button
                         onClick={() => removeFounder(i)}
-                        className="text-muted-foreground hover:text-destructive p-1"
+                        className="text-muted-foreground hover:text-destructive p-2.5 -mr-2 -my-1"
                         aria-label="Remove founder"
                       >
                         <X className="w-4 h-4" />
