@@ -1015,6 +1015,7 @@ enum RecommendationRequestStatus {
   ACCEPTED
   DECLINED
   COMPLETED
+  CANCELLED
 }
 
 model RecommendationRequest {
@@ -1027,6 +1028,7 @@ model RecommendationRequest {
   status       RecommendationRequestStatus @default(PENDING)
   vettingId    String?
   respondedAt  DateTime?
+  expiresAt    DateTime // Set at creation. PENDING + past expiresAt = stale; mutations refuse.
   createdAt    DateTime                    @default(now())
   updatedAt    DateTime                    @updatedAt
 

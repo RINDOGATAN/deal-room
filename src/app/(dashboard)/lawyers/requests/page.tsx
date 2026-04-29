@@ -20,6 +20,7 @@ const statusIcons: Record<string, typeof Clock> = {
   ACCEPTED: CheckCircle2,
   DECLINED: XCircle,
   COMPLETED: CheckCircle2,
+  CANCELLED: XCircle,
 };
 
 const statusColors: Record<string, string> = {
@@ -27,6 +28,7 @@ const statusColors: Record<string, string> = {
   ACCEPTED: "bg-primary/10 text-primary",
   DECLINED: "bg-destructive/10 text-destructive",
   COMPLETED: "bg-green-500/10 text-green-600",
+  CANCELLED: "bg-muted text-muted-foreground",
 };
 
 const jurisdictionKeys: Record<string, string> = {
@@ -65,8 +67,23 @@ export default function RequestsPage() {
     },
   });
 
+  const cancelMutation = trpc.lawyer.cancelRequest.useMutation({
+    onSuccess: () => {
+      toast.success(t("cancelledToast"));
+      utils.lawyer.listSentRequests.invalidate();
+    },
+    onError: (error) => {
+      toast.error(t("cancelFailed", { error: error.message }));
+    },
+  });
+
   const handleRespond = (requestId: string, action: "ACCEPTED" | "DECLINED") => {
     respondMutation.mutate({ requestId, action });
+  };
+
+  const handleCancel = (requestId: string) => {
+    if (!window.confirm(t("cancelConfirm"))) return;
+    cancelMutation.mutate({ requestId });
   };
 
   if (roleLoading) {
@@ -135,8 +152,30 @@ export default function RequestsPage() {
                       </h3>
                       <span className={`inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full font-medium ${statusColors[request.status]}`}>
                         <StatusIcon className="w-3 h-3" />
-                        {t(request.status.toLowerCase() as "pending" | "accepted" | "declined" | "completed")}
+                        {t(request.status.toLowerCase() as "pending" | "accepted" | "declined" | "completed" | "cancelled")}
                       </span>
+                      {/* Expiry hint for live requests on either side. After
+                          a request is COMPLETED/DECLINED/CANCELLED the expiry
+                          stops mattering — don't add visual noise. */}
+                      {(request.status === "PENDING" || request.status === "ACCEPTED") && (() => {
+                        const now = Date.now();
+                        const expires = new Date(request.expiresAt).getTime();
+                        const daysUntilExpiry = Math.floor((expires - now) / 86_400_000);
+                        const expired = daysUntilExpiry < 0;
+                        const urgent = !expired && daysUntilExpiry <= 5;
+                        if (!expired && !urgent) return null;
+                        return (
+                          <span
+                            className={`inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full font-medium ${
+                              expired ? "bg-destructive/10 text-destructive" : "bg-yellow-500/10 text-yellow-600"
+                            }`}
+                          >
+                            {expired
+                              ? t("expired", { days: -daysUntilExpiry })
+                              : t("expiresIn", { days: daysUntilExpiry })}
+                          </span>
+                        );
+                      })()}
                       {(request as { sourceApp?: string | null }).sourceApp && (
                         <span className="inline-flex items-center text-xs px-2 py-0.5 rounded-full font-medium bg-blue-500/10 text-blue-600">
                           {sourceAppLabels[(request as { sourceApp: string }).sourceApp] || (request as { sourceApp: string }).sourceApp}
@@ -192,6 +231,15 @@ export default function RequestsPage() {
                       <Plus className="w-3 h-3" />
                       {t("createVetting")}
                     </Link>
+                  )}
+                  {!isLawyer && (request.status === "PENDING" || request.status === "ACCEPTED") && (
+                    <button
+                      onClick={() => handleCancel(request.id)}
+                      disabled={cancelMutation.isPending}
+                      className="px-3 py-1.5 text-xs border border-border rounded-full hover:bg-secondary transition-colors shrink-0 disabled:opacity-40"
+                    >
+                      {cancelMutation.isPending ? t("cancelling") : t("cancel")}
+                    </button>
                   )}
                 </div>
               </div>
