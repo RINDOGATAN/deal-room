@@ -518,6 +518,111 @@
       "documentCountOne": "1 document",
       "documentCountOther": "{count} documents"
     },
+    "hub": {
+      "yourLaunch": "Your launch",
+      "founderCountOne": "1 founder",
+      "founderCountOther": "{count} founders",
+      "documentCountOne": "1 document generated",
+      "documentCountOther": "{count} documents generated",
+      "estimatedMinutes": "~{n} min",
+      "availableNow": "Available now:",
+      "locked": "Locked",
+      "unlocksAfter": "Unlocks after {step}",
+      "actuallyINeed": "Actually, I still need this",
+      "start": "Start",
+      "open": "Open",
+      "createIndividually": "Create individually",
+      "createIndividuallyHint": "Guided flow coming soon — create individually for now",
+      "soon": "Soon",
+      "soonHint": "Coming in the next release",
+      "iHaveThis": "I have this already",
+      "requestLawyerReview": "Request lawyer review",
+      "waitingForLawyer": "Waiting for lawyer to approve all {count} documents",
+      "stepResetToast": "Step reset.",
+      "journeyNotFound": "Journey not found.",
+      "backToLaunch": "Back to Launch",
+      "statusNotStarted": "Not started",
+      "statusReady": "Ready",
+      "statusAwaiting": "Awaiting lawyer",
+      "statusReviewed": "Approved",
+      "statusFiled": "Filed",
+      "statusDoneElsewhere": "Done elsewhere",
+      "reviewDialog": {
+        "title": "Request lawyer review",
+        "description": "Pick a lawyer. They'll see all {count} documents in the {step} step and can approve each one.",
+        "descriptionOne": "Pick a lawyer. They'll see this document in the {step} step and can approve it.",
+        "noAttorneys": "No supervising attorneys are currently available for your jurisdiction.",
+        "browseDirectory": "Browse the Experts Directory",
+        "barNumber": "Bar #{n}",
+        "cancel": "Cancel",
+        "request": "Request review",
+        "requesting": "Requesting...",
+        "successOne": "Review requested on 1 document.",
+        "successOther": "Review requested on {count} documents."
+      },
+      "doneDialog": {
+        "youShouldHave": "You should already have",
+        "noteLabel": "Note for yourself (optional)",
+        "notePlaceholder": "e.g., Formed via Stripe Atlas, EIN issued 2026-03-12",
+        "cancel": "Cancel",
+        "saving": "Saving...",
+        "successToast": "Marked as done."
+      }
+    },
+    "steps": {
+      "foundation": {
+        "title": "Form your company",
+        "description": "Generate your Certificate of Incorporation, Founders' Agreements, and IP Assignments."
+      },
+      "equity-pool": {
+        "title": "Set up your option pool",
+        "description": "Create the Equity Incentive Plan that governs all future option grants.",
+        "fallbackSkills": "Equity Incentive Plan"
+      },
+      "hiring": {
+        "title": "Hire your first people",
+        "description": "Offer letters, employment agreements, and option grants for your first hires.",
+        "fallbackSkills": "Employment Agreement · Advisory Agreement · Consulting Agreement"
+      },
+      "raise": {
+        "title": "Raise your first round",
+        "description": "Generate a SAFE, convertible note, or term sheet — whichever fits the conversation.",
+        "fallbackSkills": "SAFE · Convertible Note · Term Sheet · Shareholders Agreement"
+      }
+    },
+    "stepDone": {
+      "foundation": {
+        "title": "You've already formed your company",
+        "explainer": "We won't generate anything for this step — marking it as done just unlocks the later steps so you can keep moving.",
+        "doc1": "Certificate of Incorporation filed with Delaware",
+        "doc2": "A Founders' Agreement (or equivalent stock-purchase agreement) for each founder",
+        "doc3": "An IP Assignment signed by each founder",
+        "confirmCta": "I have everything — mark as done"
+      },
+      "equity-pool": {
+        "title": "You've already set up your option pool",
+        "explainer": "We'll skip generating the Equity Incentive Plan. You can still use the Hiring step to produce offer letters and individual option grants under your existing plan.",
+        "doc1": "A board-adopted Equity Incentive Plan (or similar option-pool document)",
+        "doc2": "Reserved shares set aside in your cap table for option grants",
+        "confirmCta": "I have a plan in place — mark as done"
+      },
+      "hiring": {
+        "title": "You've already hired your team",
+        "explainer": "We'll skip the Hiring step. If you add more hires later, you can always come back and generate fresh offer letters or option grants.",
+        "doc1": "Signed offer letters or employment agreements for every hire",
+        "doc2": "Signed IP assignment or PIIA from each employee",
+        "doc3": "Option grant agreements for anyone with equity, referencing your plan",
+        "confirmCta": "My team's in place — mark as done"
+      },
+      "raise": {
+        "title": "You've already closed your first round",
+        "explainer": "We'll skip the Raise step. Coming back to raise again? Start a fresh journey or re-open this step to generate new SAFEs, notes, or a term sheet.",
+        "doc1": "Signed SAFE, convertible note, or priced-round stock-purchase agreement with each investor",
+        "doc2": "Updated cap table reflecting the round",
+        "doc3": "Board / shareholder consents authorizing the issuance",
+        "confirmCta": "My round is closed — mark as done"
+      }
+    },
     "new": {
       "back": "Back",
       "stepOf": "Step {n} of 3",

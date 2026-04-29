@@ -4,11 +4,11 @@ import { useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 import { trpc } from "@/lib/trpc";
 import {
   STEP_ORDER,
   STEP_META,
-  STEP_DONE_COPY,
   isStepUnlocked,
   type StepKey,
   type StepStatus,
@@ -36,9 +36,21 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 
+// docsYouShouldHave is variable-length per step. Keep the count
+// here so the component can iterate t() lookups without trying
+// to read non-existent keys.
+const STEP_DONE_DOC_COUNT: Record<StepKey, number> = {
+  foundation: 3,
+  "equity-pool": 2,
+  hiring: 3,
+  raise: 3,
+};
+
 export default function JourneyHubPage() {
   const params = useParams();
   const journeyId = params.id as string;
+  const t = useTranslations("launch.hub");
+  const tSteps = useTranslations("launch.steps");
 
   const { data: journey, isLoading, refetch } = trpc.journey.get.useQuery({ id: journeyId });
   const [reviewDialogStep, setReviewDialogStep] = useState<StepKey | null>(null);
@@ -46,7 +58,7 @@ export default function JourneyHubPage() {
 
   const resetStep = trpc.journey.resetStepStatus.useMutation({
     onSuccess: () => {
-      toast.success("Step reset.");
+      toast.success(t("stepResetToast"));
       refetch();
     },
     onError: (err) => toast.error(err.message),
@@ -65,9 +77,9 @@ export default function JourneyHubPage() {
     return (
       <div className="max-w-3xl mx-auto">
         <div className="card-brutal border-yellow-500 text-center py-10">
-          <p className="text-yellow-600">Journey not found.</p>
+          <p className="text-yellow-600">{t("journeyNotFound")}</p>
           <Link href="/launch" className="text-primary underline mt-4 inline-block">
-            Back to Launch
+            {t("backToLaunch")}
           </Link>
         </div>
       </div>
@@ -81,15 +93,19 @@ export default function JourneyHubPage() {
       <div className="space-y-2">
         <div className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-primary">
           <Rocket className="w-3.5 h-3.5" />
-          <span>Your launch</span>
+          <span>{t("yourLaunch")}</span>
         </div>
         <h1 className="text-2xl md:text-3xl font-bold">{journey.companyName}</h1>
         <p className="text-sm text-muted-foreground">
           {journey.state} {journey.entityType.replace("_", "-")}
-          {" \u00b7 "}
-          {journey.founders.length} founder{journey.founders.length === 1 ? "" : "s"}
-          {" \u00b7 "}
-          {journey.dealRooms.length} document{journey.dealRooms.length === 1 ? "" : "s"} generated
+          {" · "}
+          {journey.founders.length === 1
+            ? t("founderCountOne")
+            : t("founderCountOther", { count: journey.founders.length })}
+          {" · "}
+          {journey.dealRooms.length === 1
+            ? t("documentCountOne")
+            : t("documentCountOther", { count: journey.dealRooms.length })}
         </p>
       </div>
 
@@ -103,12 +119,12 @@ export default function JourneyHubPage() {
           const isDoneElsewhere = status === "DONE_ELSEWHERE";
 
           const statusLabel = ({
-            NOT_STARTED: "Not started",
-            READY_FOR_REVIEW: "Ready",
-            AWAITING_REVIEW: "Awaiting lawyer",
-            REVIEWED: "Approved",
-            FILED: "Filed",
-            DONE_ELSEWHERE: "Done elsewhere",
+            NOT_STARTED: t("statusNotStarted"),
+            READY_FOR_REVIEW: t("statusReady"),
+            AWAITING_REVIEW: t("statusAwaiting"),
+            REVIEWED: t("statusReviewed"),
+            FILED: t("statusFiled"),
+            DONE_ELSEWHERE: t("statusDoneElsewhere"),
           } satisfies Record<StepStatus, string>)[status];
 
           const StatusIcon = ({
@@ -129,6 +145,13 @@ export default function JourneyHubPage() {
             DONE_ELSEWHERE: "bg-slate-500/20 text-slate-400",
           } satisfies Record<StepStatus, string>)[status];
 
+          const stepTitle = tSteps(`${key}.title`);
+          const stepDescription = tSteps(`${key}.description`);
+          const fallbackSkillsLabel =
+            meta.fallbackSkills && meta.fallbackSkills.length > 0
+              ? tSteps(`${key}.fallbackSkills`)
+              : null;
+
           return (
             <div
               key={key}
@@ -137,20 +160,20 @@ export default function JourneyHubPage() {
               <div className="flex items-start justify-between gap-4">
                 <div className="space-y-2 min-w-0">
                   <div className="flex items-center gap-3 flex-wrap">
-                    <h2 className="text-lg font-semibold">{meta.title}</h2>
+                    <h2 className="text-lg font-semibold">{stepTitle}</h2>
                     <Badge className={badgeClass}>
                       <StatusIcon className={`w-3 h-3 mr-1 ${status === "AWAITING_REVIEW" ? "animate-spin" : ""}`} />
                       {statusLabel}
                     </Badge>
                   </div>
-                  <p className="text-sm text-muted-foreground">{meta.description}</p>
+                  <p className="text-sm text-muted-foreground">{stepDescription}</p>
                   <p className="text-xs text-muted-foreground font-mono">
-                    ~{meta.estimatedMinutes} min
+                    {t("estimatedMinutes", { n: meta.estimatedMinutes })}
                   </p>
-                  {unlocked && status === "NOT_STARTED" && !isFoundation && meta.fallbackSkills && (
+                  {unlocked && status === "NOT_STARTED" && !isFoundation && fallbackSkillsLabel && (
                     <p className="text-xs text-muted-foreground pt-1">
-                      <span className="font-mono uppercase tracking-wider text-[10px]">Available now:</span>{" "}
-                      {meta.fallbackSkills.join(" · ")}
+                      <span className="font-mono uppercase tracking-wider text-[10px]">{t("availableNow")}</span>{" "}
+                      {fallbackSkillsLabel}
                     </p>
                   )}
                 </div>
@@ -158,10 +181,10 @@ export default function JourneyHubPage() {
                   {!unlocked ? (
                     <div
                       className="inline-flex items-center gap-2 text-xs text-muted-foreground"
-                      title={`Unlocks after ${STEP_META[meta.unlockedBy!].title}`}
+                      title={t("unlocksAfter", { step: tSteps(`${meta.unlockedBy!}.title`) })}
                     >
                       <Lock className="w-3.5 h-3.5" />
-                      <span className="hidden sm:inline">Locked</span>
+                      <span className="hidden sm:inline">{t("locked")}</span>
                     </div>
                   ) : isDoneElsewhere ? (
                     <button
@@ -171,31 +194,31 @@ export default function JourneyHubPage() {
                       disabled={resetStep.isPending}
                       className="text-xs text-muted-foreground hover:text-foreground underline underline-offset-2 disabled:opacity-40"
                     >
-                      Actually, I still need this
+                      {t("actuallyINeed")}
                     </button>
                   ) : isFoundation ? (
                     <Link
                       href={`/launch/${journey.id}/step/${key}`}
                       className="btn-brutal inline-flex items-center gap-2"
                     >
-                      {status === "NOT_STARTED" ? "Start" : "Open"}
+                      {status === "NOT_STARTED" ? t("start") : t("open")}
                       <ArrowRight className="w-4 h-4" />
                     </Link>
                   ) : meta.fallbackSearch ? (
                     <Link
                       href={`/deals/new?q=${encodeURIComponent(meta.fallbackSearch)}`}
                       className="btn-brutal-outline inline-flex items-center gap-2"
-                      title="Guided flow coming soon — create individually for now"
+                      title={t("createIndividuallyHint")}
                     >
-                      Create individually
+                      {t("createIndividually")}
                       <ArrowRight className="w-4 h-4" />
                     </Link>
                   ) : (
                     <span
                       className="inline-flex items-center gap-2 text-xs text-muted-foreground"
-                      title="Coming in the next release"
+                      title={t("soonHint")}
                     >
-                      <Clock className="w-3.5 h-3.5" /> Soon
+                      <Clock className="w-3.5 h-3.5" /> {t("soon")}
                     </span>
                   )}
                   {unlocked && status === "NOT_STARTED" && (
@@ -203,7 +226,7 @@ export default function JourneyHubPage() {
                       onClick={() => setMarkDoneDialogStep(key)}
                       className="text-xs text-muted-foreground hover:text-foreground underline underline-offset-2"
                     >
-                      I have this already
+                      {t("iHaveThis")}
                     </button>
                   )}
                 </div>
@@ -231,13 +254,13 @@ export default function JourneyHubPage() {
                       onClick={() => setReviewDialogStep(key)}
                       className="btn-brutal-outline inline-flex items-center gap-2 w-full sm:w-auto justify-center"
                     >
-                      <Scale className="w-4 h-4" /> Request lawyer review
+                      <Scale className="w-4 h-4" /> {t("requestLawyerReview")}
                     </button>
                   )}
                   {status === "AWAITING_REVIEW" && (
                     <p className="text-xs text-muted-foreground inline-flex items-center gap-2">
                       <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                      Waiting for lawyer to approve all {entry.dealIds.length} documents
+                      {t("waitingForLawyer", { count: entry.dealIds.length })}
                     </p>
                   )}
                 </div>
@@ -290,12 +313,18 @@ function MarkStepDoneDialog({
   onClose: () => void;
   onSuccess: () => void;
 }) {
-  const copy = STEP_DONE_COPY[stepKey];
+  const tDoneDialog = useTranslations("launch.hub.doneDialog");
+  const tStepDone = useTranslations("launch.stepDone");
   const [note, setNote] = useState("");
+
+  const docCount = STEP_DONE_DOC_COUNT[stepKey];
+  const docs = Array.from({ length: docCount }, (_, i) =>
+    tStepDone(`${stepKey}.doc${i + 1}`),
+  );
 
   const markDone = trpc.journey.markStepDoneElsewhere.useMutation({
     onSuccess: () => {
-      toast.success("Marked as done.");
+      toast.success(tDoneDialog("successToast"));
       onSuccess();
     },
     onError: (err) => toast.error(err.message),
@@ -305,17 +334,17 @@ function MarkStepDoneDialog({
     <Dialog open onOpenChange={(o) => !o && onClose()}>
       <DialogContent className="bg-card border-border w-full max-w-[calc(100%-2rem)] sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle>{copy.title}</DialogTitle>
-          <DialogDescription>{copy.explainer}</DialogDescription>
+          <DialogTitle>{tStepDone(`${stepKey}.title`)}</DialogTitle>
+          <DialogDescription>{tStepDone(`${stepKey}.explainer`)}</DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4">
           <div>
             <p className="text-xs font-mono uppercase tracking-wider text-muted-foreground mb-2">
-              You should already have
+              {tDoneDialog("youShouldHave")}
             </p>
             <ul className="space-y-1.5 text-sm">
-              {copy.docsYouShouldHave.map((d, i) => (
+              {docs.map((d, i) => (
                 <li key={i} className="flex items-start gap-2">
                   <CheckSquare className="w-4 h-4 text-muted-foreground flex-shrink-0 mt-0.5" />
                   <span>{d}</span>
@@ -326,13 +355,13 @@ function MarkStepDoneDialog({
 
           <div className="space-y-2">
             <label htmlFor="step-done-note" className="text-xs font-mono uppercase tracking-wider text-muted-foreground">
-              Note for yourself (optional)
+              {tDoneDialog("noteLabel")}
             </label>
             <textarea
               id="step-done-note"
               value={note}
               onChange={(e) => setNote(e.target.value)}
-              placeholder="e.g., Formed via Stripe Atlas, EIN issued 2026-03-12"
+              placeholder={tDoneDialog("notePlaceholder")}
               rows={2}
               maxLength={500}
               className="input-brutal w-full resize-none"
@@ -345,7 +374,7 @@ function MarkStepDoneDialog({
             onClick={onClose}
             className="px-4 py-2 text-sm text-muted-foreground hover:text-foreground"
           >
-            Cancel
+            {tDoneDialog("cancel")}
           </button>
           <button
             onClick={() =>
@@ -360,12 +389,12 @@ function MarkStepDoneDialog({
           >
             {markDone.isPending ? (
               <>
-                <Loader2 className="w-4 h-4 animate-spin" /> Saving...
+                <Loader2 className="w-4 h-4 animate-spin" /> {tDoneDialog("saving")}
               </>
             ) : (
               <>
                 <Check className="w-4 h-4" />
-                {copy.confirmCta}
+                {tStepDone(`${stepKey}.confirmCta`)}
               </>
             )}
           </button>
@@ -388,6 +417,8 @@ function RequestReviewDialog({
   onClose: () => void;
   onSuccess: () => void;
 }) {
+  const tReview = useTranslations("launch.hub.reviewDialog");
+  const tSteps = useTranslations("launch.steps");
   const [supervisorId, setSupervisorId] = useState<string | null>(null);
   const firstDealId = dealIdsInStep[0];
   const { data: attorneys, isLoading } = trpc.attorneyReview.listAvailableAttorneys.useQuery(
@@ -398,20 +429,27 @@ function RequestReviewDialog({
   const request = trpc.journey.requestStepReview.useMutation({
     onSuccess: (res) => {
       const assigned = res.results.filter((r) => r.status === "assigned").length;
-      toast.success(`Review requested on ${assigned} document${assigned === 1 ? "" : "s"}.`);
+      toast.success(
+        assigned === 1
+          ? tReview("successOne")
+          : tReview("successOther", { count: assigned }),
+      );
       onSuccess();
     },
     onError: (err) => toast.error(err.message),
   });
 
+  const stepLabel = tSteps(`${stepKey}.title`);
+
   return (
     <Dialog open onOpenChange={(o) => !o && onClose()}>
       <DialogContent className="bg-card border-border w-full max-w-[calc(100%-2rem)] sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle>Request lawyer review</DialogTitle>
+          <DialogTitle>{tReview("title")}</DialogTitle>
           <DialogDescription>
-            Pick a lawyer. They'll see all {dealIdsInStep.length} document
-            {dealIdsInStep.length === 1 ? "" : "s"} in the {STEP_META[stepKey].title.toLowerCase()} step and can approve each one.
+            {dealIdsInStep.length === 1
+              ? tReview("descriptionOne", { step: stepLabel })
+              : tReview("description", { count: dealIdsInStep.length, step: stepLabel })}
           </DialogDescription>
         </DialogHeader>
 
@@ -422,10 +460,10 @@ function RequestReviewDialog({
         ) : !attorneys?.length ? (
           <div className="py-6 text-center space-y-2">
             <p className="text-sm text-muted-foreground">
-              No supervising attorneys are currently available for your jurisdiction.
+              {tReview("noAttorneys")}
             </p>
             <Link href="/lawyers" className="text-sm text-primary underline">
-              Browse the Experts Directory
+              {tReview("browseDirectory")}
             </Link>
           </div>
         ) : (
@@ -448,7 +486,7 @@ function RequestReviewDialog({
                     <p className="font-medium">{a.name}</p>
                     <p className="text-xs text-muted-foreground">
                       {a.email}
-                      {a.barNumber ? ` · Bar #${a.barNumber}` : ""}
+                      {a.barNumber ? ` · ${tReview("barNumber", { n: a.barNumber })}` : ""}
                     </p>
                     {a.unavailable && (
                       <p className="text-xs text-orange-500 mt-1">
@@ -468,7 +506,7 @@ function RequestReviewDialog({
             onClick={onClose}
             className="px-4 py-2 text-sm text-muted-foreground hover:text-foreground"
           >
-            Cancel
+            {tReview("cancel")}
           </button>
           <button
             disabled={!supervisorId || request.isPending}
@@ -480,10 +518,10 @@ function RequestReviewDialog({
           >
             {request.isPending ? (
               <>
-                <Loader2 className="w-4 h-4 animate-spin" /> Requesting...
+                <Loader2 className="w-4 h-4 animate-spin" /> {tReview("requesting")}
               </>
             ) : (
-              <>Request review</>
+              <>{tReview("request")}</>
             )}
           </button>
         </div>
