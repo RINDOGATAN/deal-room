@@ -235,22 +235,32 @@ export const signingRouter = createTRPCRouter({
         console.error("Certification ceremony failed (continuing uncertified):", error);
       }
 
-      const signingRequest = await ctx.prisma.signingRequest.create({
-        data: {
-          dealRoomId: input.dealRoomId,
-          provider: "type-to-sign",
-          status: "PENDING",
-          externalId: `sign_${Date.now()}`,
-          documentUrl: null,
-          ceremonyId,
-          documentHash,
-        },
-      });
-
-      // Update deal status to SIGNING
-      await ctx.prisma.dealRoom.update({
-        where: { id: input.dealRoomId },
-        data: { status: "SIGNING" },
+      // Atomic AGREED → SIGNING transition. If two parties click "Initiate
+      // Signing" concurrently, both pass the existingRequest check above,
+      // but only the writer that finds the deal in AGREED state wins this
+      // transaction. The loser sees CONFLICT and the user can refresh.
+      const signingRequest = await ctx.prisma.$transaction(async (tx) => {
+        const claimed = await tx.dealRoom.updateMany({
+          where: { id: input.dealRoomId, status: "AGREED" },
+          data: { status: "SIGNING" },
+        });
+        if (claimed.count === 0) {
+          throw new TRPCError({
+            code: "CONFLICT",
+            message: "Another party already initiated signing for this deal",
+          });
+        }
+        return tx.signingRequest.create({
+          data: {
+            dealRoomId: input.dealRoomId,
+            provider: "type-to-sign",
+            status: "PENDING",
+            externalId: `sign_${Date.now()}`,
+            documentUrl: null,
+            ceremonyId,
+            documentHash,
+          },
+        });
       });
 
       // Create audit log
