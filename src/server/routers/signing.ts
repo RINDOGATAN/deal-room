@@ -259,6 +259,10 @@ export const signingRouter = createTRPCRouter({
             documentUrl: null,
             ceremonyId,
             documentHash,
+            // 14-day expiry. Used by the deal-detail surface to warn
+            // when a signing has stalled — neither auto-cancellation
+            // nor reminder emails are wired yet (deliberate scope cap).
+            expiresAt: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
           },
         });
       });

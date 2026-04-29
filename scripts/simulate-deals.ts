@@ -741,6 +741,7 @@ async function simulateDeal(
       initiatorSignature: userA.name || "Alice Johnson",
       respondentSignature: userB.name || "Bob Smith",
       completedAt: new Date(),
+      expiresAt: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
     },
   });
 
@@ -950,6 +951,7 @@ async function simulateSoloDeal(
       initiatorSignedAt: new Date(),
       initiatorSignature: userA.name || "Alice Johnson",
       completedAt: new Date(),
+      expiresAt: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
     },
   });
 

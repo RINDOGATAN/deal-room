@@ -717,11 +717,13 @@ model SigningRequest {
   signedDocumentUrl   String? // URL to signed document
   ceremonyId          String? // Cloud API certification ceremony ID
   documentHash        String? // SHA-256 hash of contract data at signing time
+  expiresAt           DateTime // Set at creation to createdAt + 14 days. Used to surface stall warnings.
   createdAt           DateTime      @default(now())
   updatedAt           DateTime      @updatedAt
 
   dealRoom DealRoom @relation(fields: [dealRoomId], references: [id], onDelete: Cascade)
 
+  @@index([expiresAt])
   @@map("signing_requests")
 }
 
