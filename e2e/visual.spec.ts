@@ -38,9 +38,10 @@ test.describe("Design System Verification", () => {
     const glassContainer = header.locator(".backdrop-blur-md");
     await expect(glassContainer).toBeVisible();
 
-    const backdropFilter = await glassContainer.evaluate(
-      (el) => getComputedStyle(el).backdropFilter || getComputedStyle(el).webkitBackdropFilter
-    );
+    const backdropFilter = await glassContainer.evaluate((el) => {
+      const cs = getComputedStyle(el) as CSSStyleDeclaration & { webkitBackdropFilter?: string };
+      return cs.backdropFilter || cs.webkitBackdropFilter || "";
+    });
     expect(backdropFilter).toContain("blur");
   });
 
