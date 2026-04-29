@@ -590,6 +590,51 @@
         "fallbackSkills": "SAFE · Nota Convertible · Term Sheet · Pacto de Socios"
       }
     },
+    "step": {
+      "backToLaunch": "Volver a tu lanzamiento",
+      "comingSoon": "Próximamente",
+      "comingSoonBody": "Este paso estará disponible en la próxima versión. La versión de hoy solo cubre la Constitución.",
+      "back": "Atrás",
+      "backAria": "Atrás",
+      "questionOf": "Pregunta {n} de {total}",
+      "reviewAndGenerate": "Revisar y generar",
+      "whatDoesThisMean": "¿Qué significa esto en términos legales?",
+      "recommended": "Recomendado",
+      "readyToGenerate": "Listo para generar",
+      "willCreateOne": "Crearemos 1 documento para {company}. Se prerellenará a partir del perfil de tu empresa y las respuestas que has dado arriba.",
+      "willCreateOther": "Crearemos {count} documentos para {company}. Cada uno se prerellenará a partir del perfil de tu empresa y las respuestas que has dado arriba.",
+      "certificateOfIncorporation": "Certificate of Incorporation",
+      "foundersAgreement": "Acuerdo de Fundadores/as",
+      "ipAssignment": "Cesión de Propiedad Intelectual",
+      "registeredAgentLabel": "Agente registrado en Delaware (opcional)",
+      "registeredAgentPlaceholder": "p. ej., Harvard Business Services, 16192 Coastal Hwy, Lewes, DE 19958",
+      "registeredAgentHint": "También puedes rellenarlo más tarde, cuando estés listo/a para presentarlo en Delaware.",
+      "generating": "Generando...",
+      "generateOne": "Generar 1 documento",
+      "generateOther": "Generar {count} documentos",
+      "generatedToastOne": "Generado 1 documento.",
+      "generatedToastOther": "Generados {count} documentos.",
+      "questions": {
+        "vesting": {
+          "question": "Si un/a fundador/a se va en el primer año, ¿debería conservar las acciones que aún no se han devengado?",
+          "advancedDisclosure": "Se traduce en el calendario de devengo (vesting) y el cliff del Acuerdo de Fundadores/as. \"Estándar\" = devengo a 4 años con cliff de 1 año, lo habitual para la mayoría de los VC.",
+          "standardLabel": "No — devengo en 4 años con cliff de 1 año",
+          "standardDescription": "Los fundadores/as devengan sus acciones en cuatro años; irse en el primer año significa quedarse con ninguna. Estándar para startups con respaldo de venture capital.",
+          "founderFriendlyLabel": "En parte — devengo en 2 años sin cliff",
+          "founderFriendlyDescription": "Devengo más rápido, sin un primer año a todo o nada. Algunos equipos en fase inicial lo prefieren cuando los cofundadores ya tienen una relación consolidada.",
+          "noneLabel": "Sin devengo — conservan lo que se les emita",
+          "noneDescription": "La opción más arriesgada. Si un/a fundador/a se va al segundo día, las acciones se quedan con él/ella. Hace difícil levantar luego una ronda valorada."
+        },
+        "ipScope": {
+          "question": "¿Deberían los fundadores/as ceder todas las invenciones — pasadas y futuras — relacionadas con la empresa?",
+          "advancedDisclosure": "Se traduce en la cláusula de alcance de la Cesión de Propiedad Intelectual de cada fundador/a. \"Amplio\" cubre invenciones previas relacionadas con el negocio; \"limitado\" solo cubre invenciones creadas durante el trabajo en la empresa.",
+          "broadLabel": "Sí — ceder todo lo relevante para la empresa, pasado y futuro",
+          "broadDescription": "Lo habitual en startups orientadas a inversores/as. Protege la base de propiedad intelectual de la empresa.",
+          "narrowLabel": "Solo las invenciones creadas durante el trabajo en la empresa",
+          "narrowDescription": "Menos habitual; puede dejar ambigüedad sobre invenciones creadas antes de la constitución."
+        }
+      }
+    },
     "stepDone": {
       "foundation": {
         "title": "Tu empresa ya está constituida",

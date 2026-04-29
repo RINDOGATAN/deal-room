@@ -590,6 +590,51 @@
         "fallbackSkills": "SAFE · Convertible Note · Term Sheet · Shareholders Agreement"
       }
     },
+    "step": {
+      "backToLaunch": "Back to your launch",
+      "comingSoon": "Coming soon",
+      "comingSoonBody": "This step will be available in the next release. Today's release covers Formation only.",
+      "back": "Back",
+      "backAria": "Back",
+      "questionOf": "Question {n} of {total}",
+      "reviewAndGenerate": "Review and generate",
+      "whatDoesThisMean": "What does this mean legally?",
+      "recommended": "Recommended",
+      "readyToGenerate": "Ready to generate",
+      "willCreateOne": "We'll create 1 document for {company}. It will be pre-filled from your company profile and your answers to the questions above.",
+      "willCreateOther": "We'll create {count} documents for {company}. Each one will be pre-filled from your company profile and your answers to the questions above.",
+      "certificateOfIncorporation": "Certificate of Incorporation",
+      "foundersAgreement": "Founders' Agreement",
+      "ipAssignment": "IP Assignment",
+      "registeredAgentLabel": "Delaware registered agent (optional)",
+      "registeredAgentPlaceholder": "e.g., Harvard Business Services, 16192 Coastal Hwy, Lewes, DE 19958",
+      "registeredAgentHint": "You can also fill this in later when you're ready to file with Delaware.",
+      "generating": "Generating...",
+      "generateOne": "Generate 1 document",
+      "generateOther": "Generate {count} documents",
+      "generatedToastOne": "Generated 1 document.",
+      "generatedToastOther": "Generated {count} documents.",
+      "questions": {
+        "vesting": {
+          "question": "If a founder leaves in the first year, should they keep the shares they haven't earned?",
+          "advancedDisclosure": "Translates to vesting schedule and cliff in the Founders' Agreement. 'Standard' = four-year vesting with a one-year cliff, the default expectation of most VCs.",
+          "standardLabel": "No — vest over 4 years with a 1-year cliff",
+          "standardDescription": "Founders earn their shares over four years; leaving in year one means they walk away with none. Standard for venture-backed startups.",
+          "founderFriendlyLabel": "Partly — 2-year vesting with no cliff",
+          "founderFriendlyDescription": "Faster vesting, no all-or-nothing first year. Some early-stage teams prefer this when co-founders have an established relationship.",
+          "noneLabel": "No vesting — they keep whatever they're issued",
+          "noneDescription": "Riskiest option. If a founder leaves on day two, the cap table stays with them. Hard to raise a priced round later."
+        },
+        "ipScope": {
+          "question": "Should founders assign every invention — past and future — that relates to the company?",
+          "advancedDisclosure": "Translates to the scope clause in each founder's IP Assignment. 'Broad' captures prior inventions relating to the business; 'narrow' only captures inventions made on company time.",
+          "broadLabel": "Yes — assign everything relevant to the company, past and future",
+          "broadDescription": "Standard for investor-friendly startups. Protects the company's IP foundation.",
+          "narrowLabel": "Only inventions made during company work",
+          "narrowDescription": "Less common; may leave ambiguity over inventions created before formation."
+        }
+      }
+    },
     "stepDone": {
       "foundation": {
         "title": "You've already formed your company",
