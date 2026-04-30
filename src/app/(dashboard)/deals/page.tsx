@@ -131,14 +131,14 @@ export default function DealsPage() {
                 <Rocket className="w-5 h-5 text-primary" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="font-semibold group-hover:text-primary transition-colors">
+                <p className="font-semibold group-hover:text-primary group-active:text-primary group-focus-visible:text-primary transition-colors">
                   {t("startupLaunchTitle")}
                 </p>
                 <p className="text-sm text-muted-foreground">
                   {t("startupLaunchDescription")}
                 </p>
               </div>
-              <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors flex-shrink-0" />
+              <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-primary group-active:text-primary group-focus-visible:text-primary transition-colors flex-shrink-0" />
             </Link>
           )}
         </div>
@@ -169,7 +169,7 @@ export default function DealsPage() {
                 <div className="flex items-start justify-between">
                   <div className="space-y-2">
                     <div className="flex items-center gap-3">
-                      <h2 className="text-lg font-semibold group-hover:text-primary transition-colors">
+                      <h2 className="text-lg font-semibold group-hover:text-primary group-active:text-primary group-focus-visible:text-primary transition-colors">
                         {deal.name}
                       </h2>
                       <Badge className={statusColor}>
@@ -238,7 +238,7 @@ export default function DealsPage() {
                     )}
                   </div>
 
-                  <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors" />
+                  <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-primary group-active:text-primary group-focus-visible:text-primary transition-colors" />
                 </div>
               </Link>
             );
