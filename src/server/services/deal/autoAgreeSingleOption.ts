@@ -32,7 +32,10 @@ export async function autoAgreeSingleOptionClauses(
     return { autoAgreed: false, singleOptionCount: 0 };
   }
 
-  // Create a selection for each single-option clause
+  // Create a selection for each single-option clause. priority and
+  // flexibility default to 3 in the schema and are unused in SOLO
+  // mode — letting the default fire keeps the auto-agree path from
+  // pretending the user expressed a firmness preference.
   for (const ct of singleOption) {
     const dealClause = opts.dealClauses.find((c) => c.clauseTemplateId === ct.id);
     if (!dealClause) continue;
@@ -41,8 +44,6 @@ export async function autoAgreeSingleOptionClauses(
         dealRoomClauseId: dealClause.id,
         partyId: opts.partyId,
         optionId: ct.options[0].id,
-        priority: 3,
-        flexibility: 3,
       },
     });
   }
