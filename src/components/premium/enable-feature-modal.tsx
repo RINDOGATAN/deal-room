@@ -17,7 +17,27 @@ interface EnableFeatureModalProps {
   onClose: () => void;
   skillPackageId: string;
   skillName: string;
+  /**
+   * Skill price in minor units (cents). Optional — if omitted the
+   * modal falls back to "€9/month" for backwards compatibility with
+   * call sites that don't yet pass per-skill pricing through.
+   */
+  priceAmount?: number;
+  /** ISO currency code, e.g. "eur" or "usd". Optional, see priceAmount. */
+  priceCurrency?: string;
   returnUrl?: string;
+}
+
+function formatSkillPrice(amount?: number, currency?: string): string {
+  // Legacy call sites: stay at €9/month so behavior doesn't change.
+  if (amount == null) return `${formatPrice(9)}/month`;
+
+  const major = amount / 100;
+  const code = (currency ?? "eur").toLowerCase();
+  const symbol = code === "usd" ? "$" : code === "gbp" ? "£" : "€";
+  // Strip trailing .00 for whole amounts so "$9" not "$9.00".
+  const display = Number.isInteger(major) ? major.toString() : major.toFixed(2);
+  return `${symbol}${display}/month`;
 }
 
 export function EnableFeatureModal({
@@ -25,10 +45,13 @@ export function EnableFeatureModal({
   onClose,
   skillPackageId,
   skillName,
+  priceAmount,
+  priceCurrency,
   returnUrl,
 }: EnableFeatureModalProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const priceLabel = formatSkillPrice(priceAmount, priceCurrency);
 
   const handleEnable = async () => {
     setLoading(true);
@@ -58,7 +81,7 @@ export function EnableFeatureModal({
         <DialogHeader>
           <DialogTitle>Enable {skillName}</DialogTitle>
           <DialogDescription>
-            Add this feature to your account for {formatPrice(9)}/month. You can cancel
+            Add this feature to your account for {priceLabel}. You can cancel
             anytime from the billing portal.
           </DialogDescription>
         </DialogHeader>
@@ -83,7 +106,7 @@ export function EnableFeatureModal({
                 Redirecting...
               </span>
             ) : (
-              `Subscribe — ${formatPrice(9)}/month`
+              `Subscribe — ${priceLabel}`
             )}
           </button>
         </DialogFooter>
