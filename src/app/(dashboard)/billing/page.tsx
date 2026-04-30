@@ -18,6 +18,8 @@ import {
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 
+type ActivationState = "idle" | "activating" | "failed";
+
 export default function BillingPage() {
   const t = useTranslations("billing");
   const router = useRouter();
@@ -34,6 +36,19 @@ export default function BillingPage() {
     entitlementId: string;
     name: string;
   } | null>(null);
+
+  // Initialise to "activating" synchronously when we land with
+  // ?success=true so the very first render is the loading overlay
+  // — not the stale "no subscription" view that the entitlement
+  // query returns until our /api/checkout/activate call completes.
+  const [activationState, setActivationState] = useState<ActivationState>(
+    () =>
+      typeof window !== "undefined" &&
+      new URLSearchParams(window.location.search).get("success") === "true" &&
+      new URLSearchParams(window.location.search).get("session_id")
+        ? "activating"
+        : "idle",
+  );
 
   const utils = trpc.useUtils();
 
@@ -55,48 +70,84 @@ export default function BillingPage() {
     },
   });
 
-  // After Stripe checkout, activate entitlements synchronously then redirect
+  // After Stripe checkout, activate entitlements before letting the
+  // user see anything. The overlay rendered while activationState is
+  // "activating" hides the underlying page so the user never sees the
+  // pre-purchase state for the brief window where the activate call
+  // is in flight.
   useEffect(() => {
     if (searchParams.get("success") === "true") {
       const sessionId = searchParams.get("session_id");
       const returnUrl = searchParams.get("returnUrl");
 
+      const cleanUrl = () => {
+        // Strip the success/session_id/returnUrl params so a refresh
+        // doesn't re-run activation and the URL bar reads cleanly.
+        router.replace("/billing", { scroll: false });
+      };
+
       if (sessionId) {
-        // Activate entitlements before redirect (don't rely on async webhook)
         fetch("/api/checkout/activate", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ sessionId }),
         })
           .then(async (res) => {
-            if (!res.ok) {
+            const ok = res.ok;
+            if (!ok) {
               const data = await res.json().catch(() => ({}));
               console.error("Activate failed:", res.status, data);
             }
-            toast.success(t("checkoutSuccess"));
-            // Invalidate queries so the UI reflects the new entitlement
+            // Invalidate queries first so when we drop the overlay
+            // the UI already has fresh entitlement data.
             await utils.billing.getSubscriptionStatus.invalidate();
             await utils.billing.getAvailablePlans.invalidate();
-            if (returnUrl) {
-              router.push(returnUrl);
+            if (ok) {
+              toast.success(t("checkoutSuccess"));
+              setActivationState("idle");
+              cleanUrl();
+              if (returnUrl) router.push(returnUrl);
+            } else {
+              // Webhook is the backup. Surface a non-blocking message
+              // and let the user see the page; the entitlement may
+              // still appear in a few seconds.
+              setActivationState("failed");
+              toast(t("confirmingFailed"));
+              cleanUrl();
             }
           })
           .catch((err) => {
             console.error("Activate network error:", err);
-            // Fallback: webhook will handle it eventually
-            toast.success(t("checkoutSuccess"));
+            setActivationState("failed");
+            toast(t("confirmingFailed"));
+            cleanUrl();
             if (returnUrl) {
               setTimeout(() => router.push(returnUrl), 3000);
             }
           });
       } else {
+        // Success without a session id — fall back to the simple toast
+        // path. Nothing to activate, so don't block the UI.
         toast.success(t("checkoutSuccess"));
+        setActivationState("idle");
       }
     } else if (searchParams.get("cancelled") === "true") {
       toast(t("checkoutCancelled"));
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  if (activationState === "activating") {
+    return (
+      <div className="min-h-[60vh] flex items-center justify-center px-4">
+        <div className="card-brutal max-w-md w-full text-center space-y-4 py-10">
+          <Loader2 className="h-8 w-8 animate-spin text-primary mx-auto" />
+          <h1 className="text-xl font-semibold">{t("confirmingTitle")}</h1>
+          <p className="text-sm text-muted-foreground">{t("confirmingBody")}</p>
+        </div>
+      </div>
+    );
+  }
 
   if (statusLoading || plansLoading) {
     return (
