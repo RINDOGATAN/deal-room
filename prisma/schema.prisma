@@ -700,6 +700,13 @@ model SigningRequest {
   respondentSignedAt  DateTime?
   initiatorSignature  String? // Typed signature for initiator
   respondentSignature String? // Typed signature for respondent
+  // Forensic envelope captured at signing time. Nullable because
+  // historical rows pre-date this column and because some hosting
+  // configurations strip the originating IP. Populated best-effort.
+  initiatorSignatureIp  String?
+  initiatorSignatureUa  String? @db.Text
+  respondentSignatureIp String?
+  respondentSignatureUa String? @db.Text
   completedAt         DateTime?
   signedDocumentUrl   String? // URL to signed document
   ceremonyId          String? // Cloud API certification ceremony ID

@@ -1,9 +1,35 @@
 import { z } from "zod";
+import { headers } from "next/headers";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
 import { sendSigningInitiatedEmail, sendCounterpartySignedEmail } from "@/lib/email";
 import { certificationService } from "@/lib/certification-client";
 import { generateContractData } from "@/server/services/document/generator";
+
+/**
+ * Best-effort capture of who and where a signature came from.
+ * Reads from x-forwarded-for (set by Vercel for the original
+ * client IP) and falls back to x-real-ip; user-agent is read
+ * straight off the header. Truncates the UA so a malicious or
+ * runaway client can't blow up the column. Returns null fields
+ * if the headers are missing — better honest gaps than fake
+ * "127.0.0.1" data in audit trails.
+ */
+async function captureSignatureForensics(): Promise<{
+  ip: string | null;
+  ua: string | null;
+}> {
+  try {
+    const h = await headers();
+    const xff = h.get("x-forwarded-for");
+    const ip = xff?.split(",")[0]?.trim() || h.get("x-real-ip") || null;
+    const uaRaw = h.get("user-agent");
+    const ua = uaRaw ? uaRaw.slice(0, 500) : null;
+    return { ip, ua };
+  } catch {
+    return { ip: null, ua: null };
+  }
+}
 
 const signingDetailsSchema = z.object({
   legalName: z.string().min(1),
@@ -378,7 +404,8 @@ export const signingRouter = createTRPCRouter({
       }
 
       const now = new Date();
-      const updateData: Record<string, Date | string> = {};
+      const forensics = await captureSignatureForensics();
+      const updateData: Record<string, Date | string | null> = {};
 
       if (input.partyRole === "INITIATOR") {
         if (signingRequest.initiatorSignedAt) {
@@ -389,6 +416,8 @@ export const signingRouter = createTRPCRouter({
         }
         updateData.initiatorSignedAt = now;
         updateData.initiatorSignature = input.signature;
+        updateData.initiatorSignatureIp = forensics.ip;
+        updateData.initiatorSignatureUa = forensics.ua;
       } else {
         if (signingRequest.respondentSignedAt) {
           throw new TRPCError({
@@ -398,6 +427,8 @@ export const signingRouter = createTRPCRouter({
         }
         updateData.respondentSignedAt = now;
         updateData.respondentSignature = input.signature;
+        updateData.respondentSignatureIp = forensics.ip;
+        updateData.respondentSignatureUa = forensics.ua;
       }
 
       // Check if both parties have now signed
