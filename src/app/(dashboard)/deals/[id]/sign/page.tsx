@@ -919,9 +919,12 @@ function SigningContent({ dealId }: { dealId: string }) {
       )}
 
       {/* Legal Notice */}
-      <div className="card-brutal bg-muted/30">
+      <div className="card-brutal bg-muted/30 space-y-2">
         <p className="text-xs text-muted-foreground">
           <strong>{t("legalNotice")}</strong> {t("legalNoticeText")}
+        </p>
+        <p className="text-xs text-muted-foreground">
+          <strong>{t("simpleSignatureNotice")}</strong> {t("simpleSignatureNoticeText")}
         </p>
       </div>
     </div>

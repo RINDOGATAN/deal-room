@@ -129,6 +129,7 @@
     "dealRoomCreated": "Sala de negociación creada",
     "createFailed": "Error al crear el acuerdo: {error}",
     "completeAllFields": "Completa todos los campos obligatorios",
+    "selectJurisdictionParam": "Selecciona al menos una jurisdicción en los parámetros de arriba.",
     "jurisdictionVariants": "{count} variantes jurisdiccionales",
     "nativeTemplateAvailable": "Plantilla de legislación nativa disponible",
     "nativeTemplate": "Plantilla nativa de {jurisdiction}",
@@ -182,6 +183,7 @@
     "downloadDocx": "Descargar DOCX",
     "downloadPdf": "Descargar PDF",
     "downloadTxt": "Descargar TXT",
+    "autoAgreedNotice": "Este contrato no tenía opciones negociables — todas las cláusulas se confirmaron automáticamente al crear el acuerdo.",
     "inviteDialog": {
       "title": "Invitar Contraparte",
       "description": "Envía una invitación a la otra parte para comenzar la negociación.",
@@ -469,6 +471,8 @@
     "uncertifiedSigningDescription": "Certificación de documentos no disponible. Las firmas no tendrán sello de tiempo independiente.",
     "legalNotice": "Aviso Legal:",
     "legalNoticeText": "Al firmar este documento electrónicamente, aceptas que tu firma electrónica es el equivalente legal de tu firma manuscrita en este acuerdo. Este contrato será legalmente vinculante una vez que ambas partes hayan firmado.",
+    "simpleSignatureNotice": "Tipo de firma:",
+    "simpleSignatureNoticeText": "Esta es una firma electrónica simple (nombre escrito). Es exigible para la mayoría de contratos según el Reglamento eIDAS de la UE y la ESIGN Act de EE. UU. Algunos actos legales (escrituras notariales, ciertas transmisiones inmobiliarias) requieren una firma electrónica cualificada, que este producto no ofrece.",
     "toastMessages": {
       "signingStarted": "Proceso de firma iniciado. Ahora puedes firmar abajo.",
       "initiationFailed": "Error al iniciar la firma: {error}",
@@ -682,7 +686,7 @@
       "companyBasics": "Datos de la empresa",
       "companyNameLabel": "Nombre de la empresa *",
       "companyNamePlaceholder": "p. ej., Acme, Inc.",
-      "companyNameHint": "Debe terminar en un identificador corporativo como \"Inc.\", \"Corporation\" o \"Company\".",
+      "companyNameHint": "Incluye un identificador corporativo al final — \"Inc.\", \"Corporation\" o \"Company\". El Certificate of Incorporation usará el nombre exactamente como lo escribas aquí.",
       "addressLabel": "Domicilio social",
       "addressPlaceholder": "p. ej., 548 Market St #1234, San Francisco, CA 94104",
       "addressHint": "Opcional — te pediremos el agente registrado en Delaware por separado cuando ejecutes el paso de Formación.",
@@ -858,7 +862,32 @@
     "jurisdictionsCoveredHint": "Regímenes regulatorios en los que asesoras (ej. EU, UK, US, CA)",
     "contactUrl": "URL de Contacto / Reserva",
     "contactUrlPlaceholder": "https://...",
-    "acceptingClients": "Aceptando Nuevos Clientes"
+    "acceptingClients": "Aceptando Nuevos Clientes",
+    "expertTypes": {
+      "LEGAL": "Legal",
+      "TECHNICAL": "Técnico",
+      "DEPLOYMENT": "Implementación"
+    },
+    "specializationLabels": {
+      "GDPR": "GDPR",
+      "CCPA_US_STATE_PRIVACY": "CCPA / Privacidad estatal de EE. UU.",
+      "DPIA_IMPACT_ASSESSMENTS": "DPIA / Evaluaciones de impacto",
+      "DSAR_DATA_SUBJECT_RIGHTS": "DSAR / Derechos de los interesados",
+      "CROSS_BORDER_TRANSFERS": "Transferencias internacionales / SCCs / TIA",
+      "DPA_VENDOR_CONTRACTS": "DPA / Contratos con proveedores",
+      "VENDOR_RISK_MANAGEMENT": "Gestión de riesgos de proveedores",
+      "INCIDENT_RESPONSE_BREACH_NOTIFICATION": "Respuesta a incidentes / Notificación de brechas",
+      "PRIVACY_BY_DESIGN": "Privacidad por diseño",
+      "AI_GOVERNANCE_EU_AI_ACT": "Gobernanza de IA / EU AI Act",
+      "EPRIVACY_COOKIE_COMPLIANCE": "ePrivacy / Cumplimiento de cookies",
+      "HEALTHCARE_HIPAA": "Sanitario / HIPAA",
+      "FINANCIAL_SERVICES_PSD2": "Servicios financieros / PSD2",
+      "CHILDRENS_PRIVACY_AADC": "Privacidad infantil / AADC",
+      "ISO_27001_SOC2_AUDITING": "Auditoría ISO 27001 / SOC 2",
+      "COMPLIANCE_FRAMEWORKS_ROPA": "Marcos de cumplimiento / ROPA",
+      "COPYRIGHT_IP": "Derechos de autor / PI",
+      "SELF_HOSTING_DEPLOYMENT": "Auto-alojamiento / Implementación"
+    }
   },
   "requests": {
     "title": "Solicitudes de Recomendación",

@@ -161,7 +161,7 @@ Admin flow uses an explicit "Generate QR Code" button (per memory, fixed previou
 - **[L] Type-to-sign forensic data is minimal** — only typed name + timestamp; no IP, no UA.
 - **[L] No qualified-signature warning** — UI doesn't disclose that type-to-sign isn't eIDAS/ESIGN-qualified.
 - **[L] Concurrent signing not row-locked** — checks-then-write pattern; corruption bounded by `alreadySigned` check, but no optimistic lock.
-- **[L] LawyerWarningModal not applied on /launch + /marketplace** — non-lawyer users get the disclaimer on deals but not on these surfaces.
+- ~~**[L] LawyerWarningModal not applied on /launch + /marketplace**~~ — **NOT APPLICABLE (verified 2026-04-29)**. /launch intentionally suppresses the modal because it has its own per-step lawyer-engagement surface ("Request lawyer review" dialog on each journey step). /marketplace is browsing, not committing — surfacing a warning there would be noise without a corresponding action. Existing design wins.
 - **[L] Lawyer profile expert-type/specialization labels hardcoded English** — `lawyers/profile/page.tsx`.
 - **[L] Company-name help text vs. validation mismatch** — /launch tells user "Inc., Corporation, or Company" but neither client nor server enforces it.
 - **[L] MCP endpoint anonymous** — by design; same info exposed via `.well-known/agent.json`. Not a security issue, noted for completeness.
