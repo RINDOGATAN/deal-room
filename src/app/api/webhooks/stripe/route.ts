@@ -96,6 +96,24 @@ export async function POST(request: NextRequest) {
           console.log(`Unhandled event type: ${event.type}`);
       }
     } catch (handlerError) {
+      // Structured log so the offending event is searchable in
+      // Vercel logs without spelunking through 500-trace context.
+      console.error(
+        "[stripe-webhook] handler failed",
+        JSON.stringify({
+          eventId: event.id,
+          eventType: event.type,
+          // event.data.object shapes vary; the customer id is on most
+          // of the ones we actually handle, so this is best-effort.
+          stripeCustomerId:
+            (event.data.object as { customer?: string | { id?: string } }).customer
+              ? typeof (event.data.object as { customer?: string | { id?: string } }).customer === "string"
+                ? (event.data.object as { customer: string }).customer
+                : ((event.data.object as { customer: { id?: string } }).customer)?.id
+              : undefined,
+          error: handlerError instanceof Error ? handlerError.message : String(handlerError),
+        }),
+      );
       // Release the claim so Stripe's next retry can re-process.
       // .catch() because the row should still be there, but if some
       // other process removed it we don't want this cleanup to mask
@@ -108,7 +126,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ received: true });
   } catch (error) {
-    console.error("Webhook error:", error);
+    console.error("[stripe-webhook] outer failure:", error);
     return NextResponse.json(
       { error: "Webhook handler failed" },
       { status: 500 }

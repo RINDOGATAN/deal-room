@@ -39,6 +39,8 @@ export default function MarketplacePage() {
   const [enableSkill, setEnableSkill] = useState<{
     id: string;
     name: string;
+    priceAmount?: number;
+    priceCurrency?: string;
   } | null>(null);
 
   const { data: skills, isLoading } =
@@ -260,7 +262,12 @@ export default function MarketplacePage() {
                 ) : (
                   <button
                     onClick={() =>
-                      setEnableSkill({ id: skill.id, name: skill.displayName })
+                      setEnableSkill({
+                        id: skill.id,
+                        name: skill.displayName,
+                        priceAmount: skill.priceAmount ?? undefined,
+                        priceCurrency: skill.priceCurrency ?? undefined,
+                      })
                     }
                     className="btn-brutal text-xs px-4 py-2 flex-1 flex items-center justify-center gap-2"
                   >
@@ -281,6 +288,8 @@ export default function MarketplacePage() {
           onClose={() => setEnableSkill(null)}
           skillPackageId={enableSkill.id}
           skillName={enableSkill.name}
+          priceAmount={enableSkill.priceAmount}
+          priceCurrency={enableSkill.priceCurrency}
           returnUrl="/marketplace"
         />
       )}
