@@ -250,6 +250,16 @@ export const signingRouter = createTRPCRouter({
             message: "Another party already initiated signing for this deal",
           });
         }
+        // The dealRoomId column on signing_requests has a unique
+        // constraint, so any old EXPIRED / DECLINED row from a
+        // previous attempt has to be cleared before we insert the
+        // new one. The historical record is preserved in the audit log.
+        await tx.signingRequest.deleteMany({
+          where: {
+            dealRoomId: input.dealRoomId,
+            status: { in: ["EXPIRED", "DECLINED"] },
+          },
+        });
         return tx.signingRequest.create({
           data: {
             dealRoomId: input.dealRoomId,

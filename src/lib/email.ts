@@ -308,6 +308,72 @@ export async function sendSigningInitiatedEmail({
   }
 }
 
+interface SendSigningExpiringSoonEmailParams {
+  to: string;
+  partyName: string;
+  dealName: string;
+  daysRemaining: number;
+  dealRoomId: string;
+}
+
+export async function sendSigningExpiringSoonEmail({
+  to,
+  partyName,
+  dealName,
+  daysRemaining,
+  dealRoomId,
+}: SendSigningExpiringSoonEmailParams) {
+  const dealUrl = `${process.env.NEXTAUTH_URL}/deals/${dealRoomId}/sign`;
+  const dayWord = daysRemaining === 1 ? "day" : "days";
+
+  try {
+    await getResend().emails.send({
+      from: emailFrom(),
+      to,
+      subject: `Reminder: signing expires in ${daysRemaining} ${dayWord} — ${dealName}`,
+      html: emailWrapper("Contract Signing", `
+        <p style="color: #e5e5e5; font-size: 15px; line-height: 1.6; margin: 0 0 16px;">Dear <strong style="color: ${brand.colors.foreground};">${partyName}</strong>,</p>
+        ${emailParagraph(`The signing for <strong style="color: ${brand.colors.foreground};">${dealName}</strong> expires in <strong style="color: ${brand.colors.foreground};">${daysRemaining} ${dayWord}</strong>. After that, the parties will need to start a new signing.`)}
+        ${emailButton(dealUrl, "Sign Now")}
+        ${emailMuted("If you have already signed, no action is needed — this reminder will stop once the other party signs too.")}
+      `),
+    });
+  } catch (error) {
+    console.error("Failed to send signing-expiring email:", error);
+  }
+}
+
+interface SendSigningExpiredEmailParams {
+  to: string;
+  partyName: string;
+  dealName: string;
+  dealRoomId: string;
+}
+
+export async function sendSigningExpiredEmail({
+  to,
+  partyName,
+  dealName,
+  dealRoomId,
+}: SendSigningExpiredEmailParams) {
+  const dealUrl = `${process.env.NEXTAUTH_URL}/deals/${dealRoomId}`;
+
+  try {
+    await getResend().emails.send({
+      from: emailFrom(),
+      to,
+      subject: `Signing expired: ${dealName}`,
+      html: emailWrapper("Contract Signing", `
+        <p style="color: #e5e5e5; font-size: 15px; line-height: 1.6; margin: 0 0 16px;">Dear <strong style="color: ${brand.colors.foreground};">${partyName}</strong>,</p>
+        ${emailParagraph(`The signing for <strong style="color: ${brand.colors.foreground};">${dealName}</strong> has expired without both parties signing. The deal has been returned to the agreed state, so you can start a new signing whenever you are ready.`)}
+        ${emailButton(dealUrl, "Open Deal")}
+      `),
+    });
+  } catch (error) {
+    console.error("Failed to send signing-expired email:", error);
+  }
+}
+
 interface SendCounterpartySignedEmailParams {
   to: string;
   partyName: string;
