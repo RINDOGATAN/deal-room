@@ -92,7 +92,7 @@ export default function SupervisorVerifyPage() {
                   <img
                     src={setupMutation.data.qrCode}
                     alt="2FA QR Code"
-                    className="w-48 h-48"
+                    className="w-40 h-40 sm:w-48 sm:h-48"
                   />
                 </div>
               </div>

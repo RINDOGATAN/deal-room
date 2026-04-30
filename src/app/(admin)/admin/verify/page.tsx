@@ -140,7 +140,7 @@ export default function AdminVerifyPage() {
                   <img
                     src={setupData.qrCode}
                     alt="2FA QR Code"
-                    className="w-48 h-48"
+                    className="w-40 h-40 sm:w-48 sm:h-48"
                   />
                 </div>
               </div>

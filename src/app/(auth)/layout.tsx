@@ -16,7 +16,7 @@ export default function AuthLayout({
         <div className="container mx-auto px-6 py-4 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
             <img src={brand.assets.logo} alt={brand.company} style={{ height: "28px", width: "auto" }} />
-            <span className="text-muted-foreground" style={{ fontFamily: "var(--font-display), 'Jost', sans-serif", fontWeight: 600 }}>DEALROOM</span>
+            <span className="text-muted-foreground hidden sm:inline whitespace-nowrap" style={{ fontFamily: "var(--font-display), 'Jost', sans-serif", fontWeight: 600 }}>DEALROOM</span>
           </Link>
           <LanguageSwitcher />
         </div>

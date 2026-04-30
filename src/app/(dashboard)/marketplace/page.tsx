@@ -208,7 +208,7 @@ export default function MarketplacePage() {
                       {t("active")}
                     </span>
                   ) : (
-                    <span className="inline-block px-2.5 py-1 text-xs font-semibold text-foreground">
+                    <span className="inline-block px-2.5 py-1 text-sm sm:text-xs font-bold text-primary bg-primary/5 border border-primary/20 rounded-full">
                       {skill.priceAmount
                         ? `${formatPrice(skill.priceAmount / 100)}/${t("month")}`
                         : t("contactUs")}
