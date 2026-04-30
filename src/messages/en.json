@@ -129,6 +129,7 @@
     "dealRoomCreated": "Deal room created",
     "createFailed": "Failed to create deal: {error}",
     "completeAllFields": "Please complete all required fields",
+    "selectJurisdictionParam": "Please select at least one jurisdiction in the parameters above.",
     "jurisdictionVariants": "{count} jurisdiction variants",
     "nativeTemplateAvailable": "Native law template available",
     "nativeTemplate": "Native {jurisdiction} template",
@@ -469,6 +470,8 @@
     "uncertifiedSigningDescription": "Document certification unavailable. Signatures will not be independently timestamped.",
     "legalNotice": "Legal Notice:",
     "legalNoticeText": "By signing this document electronically, you agree that your electronic signature is the legal equivalent of your manual signature on this agreement. This contract will become legally binding once both parties have signed.",
+    "simpleSignatureNotice": "Signature type:",
+    "simpleSignatureNoticeText": "This is a simple electronic signature (typed name). It is enforceable for most contracts under the U.S. ESIGN Act and EU eIDAS Regulation. Some legal acts (notarial deeds, certain real-estate transfers) require a qualified electronic signature, which this product does not provide.",
     "toastMessages": {
       "signingStarted": "Signing process started. You can now sign below.",
       "initiationFailed": "Failed to initiate signing: {error}",
@@ -682,7 +685,7 @@
       "companyBasics": "Company basics",
       "companyNameLabel": "Company name *",
       "companyNamePlaceholder": "e.g., Acme, Inc.",
-      "companyNameHint": "Must end in a corporate designator like \"Inc.\", \"Corporation\", or \"Company\".",
+      "companyNameHint": "Include a corporate designator at the end — \"Inc.\", \"Corporation\", or \"Company\". The Certificate of Incorporation will use the name exactly as you type it here.",
       "addressLabel": "Principal business address",
       "addressPlaceholder": "e.g., 548 Market St #1234, San Francisco, CA 94104",
       "addressHint": "Optional — we'll ask for your Delaware registered agent separately when you run the Formation step.",
@@ -858,7 +861,32 @@
     "jurisdictionsCoveredHint": "Regulatory regimes you advise on (e.g. EU, UK, US, CA)",
     "contactUrl": "Contact / Booking URL",
     "contactUrlPlaceholder": "https://...",
-    "acceptingClients": "Accepting New Clients"
+    "acceptingClients": "Accepting New Clients",
+    "expertTypes": {
+      "LEGAL": "Legal",
+      "TECHNICAL": "Technical",
+      "DEPLOYMENT": "Deployment"
+    },
+    "specializationLabels": {
+      "GDPR": "GDPR",
+      "CCPA_US_STATE_PRIVACY": "CCPA / US State Privacy",
+      "DPIA_IMPACT_ASSESSMENTS": "DPIA / Impact Assessments",
+      "DSAR_DATA_SUBJECT_RIGHTS": "DSAR / Data Subject Rights",
+      "CROSS_BORDER_TRANSFERS": "Cross-Border Transfers / SCCs / TIA",
+      "DPA_VENDOR_CONTRACTS": "DPA / Vendor Contracts",
+      "VENDOR_RISK_MANAGEMENT": "Vendor Risk Management",
+      "INCIDENT_RESPONSE_BREACH_NOTIFICATION": "Incident Response / Breach Notification",
+      "PRIVACY_BY_DESIGN": "Privacy by Design",
+      "AI_GOVERNANCE_EU_AI_ACT": "AI Governance / EU AI Act",
+      "EPRIVACY_COOKIE_COMPLIANCE": "ePrivacy / Cookie Compliance",
+      "HEALTHCARE_HIPAA": "Healthcare / HIPAA",
+      "FINANCIAL_SERVICES_PSD2": "Financial Services / PSD2",
+      "CHILDRENS_PRIVACY_AADC": "Children's Privacy / AADC",
+      "ISO_27001_SOC2_AUDITING": "ISO 27001 / SOC 2 Auditing",
+      "COMPLIANCE_FRAMEWORKS_ROPA": "Compliance Frameworks / ROPA",
+      "COPYRIGHT_IP": "Copyright / IP",
+      "SELF_HOSTING_DEPLOYMENT": "Self-Hosting / Deployment"
+    }
   },
   "requests": {
     "title": "Recommendation Requests",

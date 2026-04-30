@@ -424,6 +424,17 @@ function DealDetailContent({ dealId }: { dealId: string }) {
           <h2 className="font-semibold">{tDeals("clauses")}</h2>
           <span className="metric text-primary">{deal.clauses.length}</span>
         </div>
+        {/* If every clause template has exactly one option, the deal
+            was auto-confirmed at creation rather than negotiated. Make
+            that visible so the user isn't confused why a SOLO deal
+            shows AGREED with no decisions on screen. */}
+        {isSoloMode &&
+          deal.clauses.length > 0 &&
+          deal.clauses.every((c) => c.clauseTemplate.options.length === 1) && (
+            <p className="text-xs text-muted-foreground mb-3 -mt-2">
+              {t("autoAgreedNotice")}
+            </p>
+          )}
         <div className="-mx-6">
           {deal.clauses.map((clause, index) => {
             const clauseStatus = clause.status;

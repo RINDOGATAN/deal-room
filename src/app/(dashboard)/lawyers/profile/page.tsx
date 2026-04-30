@@ -10,7 +10,6 @@ import { redirect } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import {
   SPECIALIZATIONS,
-  SPECIALIZATION_LABELS,
   CERTIFICATIONS,
   CERTIFICATION_LABELS,
   EXPERT_TYPES,
@@ -32,12 +31,6 @@ const languageValues = ["en", "es"] as const;
 const languageKeys: Record<string, string> = {
   en: "languageEnglish",
   es: "languageSpanish",
-};
-
-const expertTypeLabels: Record<ExpertType, string> = {
-  LEGAL: "Legal",
-  TECHNICAL: "Technical",
-  DEPLOYMENT: "Deployment",
 };
 
 const jurisdictionsCoveredOptions = ["EU", "UK", "US", "CA", "LATAM", "APAC"] as const;
@@ -237,7 +230,7 @@ export default function LawyerProfilePage() {
                     : "border-border text-muted-foreground hover:border-foreground"
                 }`}
               >
-                {expertTypeLabels[et]}
+                {t(`expertTypes.${et}`)}
               </button>
             ))}
           </div>
@@ -261,7 +254,7 @@ export default function LawyerProfilePage() {
                     : "border-border text-muted-foreground hover:border-foreground"
                 }`}
               >
-                {SPECIALIZATION_LABELS[s]}
+                {t(`specializationLabels.${s}`)}
               </button>
             ))}
           </div>

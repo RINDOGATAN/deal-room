@@ -342,6 +342,15 @@ export default function NewDealPage() {
       }
     }
 
+    // Specific error before the generic "complete all fields" toast.
+    // soloModeOnly types like Privacy Notice expect their jurisdiction
+    // to come from a parameter, not the picker, so the user needs to
+    // know which control to look at.
+    if (currentTemplate?.soloModeOnly && !effectiveJurisdiction) {
+      toast.error(t("selectJurisdictionParam"));
+      return;
+    }
+
     if (!selectedType || !effectiveJurisdiction || !dealName.trim()) {
       toast.error(t("completeAllFields"));
       return;
