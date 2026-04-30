@@ -705,6 +705,10 @@ model SigningRequest {
   ceremonyId          String? // Cloud API certification ceremony ID
   documentHash        String? // SHA-256 hash of contract data at signing time
   expiresAt           DateTime // Set at creation to createdAt + 14 days. Used to surface stall warnings.
+  // Stamp set by the daily cron after it sends the "expiring soon"
+  // reminder email. Prevents a duplicate reminder if the cron runs
+  // slightly off schedule.
+  expiryReminderSentAt DateTime?
   createdAt           DateTime      @default(now())
   updatedAt           DateTime      @updatedAt
 
