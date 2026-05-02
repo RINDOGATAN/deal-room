@@ -754,6 +754,8 @@ export const compromiseRouter = createTRPCRouter({
         });
       }
 
+      assertMutableStatus(clause.dealRoom.status);
+
       const party = clause.dealRoom.parties.find((p) => p.userId === userId);
       if (!party) {
         throw new TRPCError({
@@ -979,6 +981,8 @@ export const compromiseRouter = createTRPCRouter({
         });
       }
 
+      assertMutableStatus(clause.dealRoom.status);
+
       const party = clause.dealRoom.parties.find((p) => p.userId === userId);
       if (!party) {
         throw new TRPCError({
@@ -1094,6 +1098,8 @@ export const compromiseRouter = createTRPCRouter({
           message: "Counter-proposal not found",
         });
       }
+
+      assertMutableStatus(counterProposal.dealRoomClause.dealRoom.status);
 
       const dealRoom = counterProposal.dealRoomClause.dealRoom;
       const respondingParty = dealRoom.parties.find((p) => p.userId === userId);
@@ -1296,6 +1302,8 @@ export const compromiseRouter = createTRPCRouter({
           message: "Deal room not found",
         });
       }
+
+      assertMutableStatus(dealRoom.status);
 
       const party = dealRoom.parties.find((p) => p.userId === userId);
       if (!party) {
@@ -1567,6 +1575,8 @@ export const compromiseRouter = createTRPCRouter({
         throw new TRPCError({ code: "NOT_FOUND", message: "Deal room not found" });
       }
 
+      assertMutableStatus(dealRoom.status);
+
       const party = dealRoom.parties.find((p) => p.userId === userId);
       if (!party) {
         throw new TRPCError({ code: "FORBIDDEN", message: "Access denied" });
@@ -1659,6 +1669,8 @@ export const compromiseRouter = createTRPCRouter({
       if (!proposal) {
         throw new TRPCError({ code: "NOT_FOUND", message: "Proposal not found" });
       }
+
+      assertMutableStatus(proposal.dealRoom.status);
 
       const myParty = proposal.dealRoom.parties.find((p) => p.userId === userId);
       if (!myParty) {
