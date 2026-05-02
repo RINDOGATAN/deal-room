@@ -4,7 +4,7 @@ Contract negotiation platform with weighted compromise algorithm.
 
 **Stack:** Next.js 14 | TypeScript | tRPC | PostgreSQL + Prisma | NextAuth
 **Build:** `prisma migrate deploy && prisma generate && next build`
-**Brands:** `todo` (dealroom.todo.law) | `northend` (dealroom.northend.law) — set via `NEXT_PUBLIC_BRAND`
+**Brand:** Single brand — `todo` (dealroom.todo.law). The dual-brand NEL deployment was retired on 2026-05-02 (no clients on the second skin, maintenance cost was real). The brand-config plumbing in `src/config/brand.ts` is retained as a single-brand passthrough so a future second skin can be re-introduced without restructuring everything.
 
 ## Core Concepts
 

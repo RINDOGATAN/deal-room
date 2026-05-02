@@ -1,18 +1,19 @@
 /**
  * Brand Configuration
  *
- * Environment-driven brand switching for multi-brand deployment.
- * Set NEXT_PUBLIC_BRAND=todo|northend to select brand.
- *
- * Deployment model: Two Vercel projects → same repo, different env vars.
+ * Single-brand deployment (todo.law). The previous dual-brand system
+ * with northend.law was retired on 2026-05-02 — the white-label NEL
+ * deployment had no clients and the maintenance cost was real (two
+ * Vercel projects, two sets of secrets, ~15 brand-aware code paths).
+ * If a second brand is ever needed in the future, restore the union
+ * type on `id` and the env-var switch at the bottom of this file.
  */
 
 import { todo } from "./brands/todo";
-import { northend } from "./brands/northend";
 
 // Brand config interface
 export interface BrandConfig {
-  id: "todo" | "northend";
+  id: "todo";
 
   // Product identity
   name: string;
@@ -79,8 +80,7 @@ export interface BrandConfig {
   } | null;
 }
 
-const brandId = (process.env.NEXT_PUBLIC_BRAND || "todo") as BrandConfig["id"];
-export const brand: BrandConfig = brandId === "northend" ? northend : todo;
+export const brand: BrandConfig = todo;
 
 // Helper to get full contact mailto link
 export function getContactMailto(subject?: string): string {
