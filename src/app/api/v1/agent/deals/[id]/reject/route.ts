@@ -12,6 +12,7 @@ import {
   requireScope,
   ApiScopeError,
 } from "@/server/middleware/apiKeyAuth";
+import { withIdempotency } from "@/server/middleware/idempotency";
 import { features } from "@/config/features";
 import { fireWebhook } from "@/server/services/agent/webhooks";
 
@@ -38,6 +39,7 @@ export async function POST(
       throw e;
     }
 
+    return await withIdempotency(req, auth.customer.id, async () => {
     const { id } = await params;
     const body = await req.json().catch(() => ({}));
     const { reason } = body as { reason?: string };
@@ -108,6 +110,7 @@ export async function POST(
     }
 
     return NextResponse.json({ rejected: true, reason: rejectReason });
+    });
   } catch (error) {
     console.error("Error rejecting deal:", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });

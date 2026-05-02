@@ -14,6 +14,7 @@ import {
   ApiScopeError,
   checkRateLimit,
 } from "@/server/middleware/apiKeyAuth";
+import { withIdempotency } from "@/server/middleware/idempotency";
 import { runNegotiation } from "@/server/services/agent/negotiator";
 import { features } from "@/config/features";
 
@@ -49,6 +50,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    return await withIdempotency(req, auth.customer.id, async () => {
     const body = await req.json();
     const {
       negotiationToken,
@@ -146,6 +148,7 @@ export async function POST(req: NextRequest) {
     const result = await runNegotiation(updatedDeal);
 
     return NextResponse.json(result);
+    });
   } catch (error) {
     console.error("Error joining negotiation:", error);
 

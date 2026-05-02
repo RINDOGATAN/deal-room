@@ -53,8 +53,13 @@ export async function GET() {
         ttlSeconds: 24 * 60 * 60,
         appliesTo: [
           "POST /api/v1/agent/negotiate",
+          "POST /api/v1/agent/negotiate/join",
           "POST /api/v1/agent/playbooks",
           "POST /api/v1/agent/subscribe",
+          "POST /api/v1/agent/webhooks",
+          "POST /api/v1/agent/deals/:id/accept",
+          "POST /api/v1/agent/deals/:id/reject",
+          "POST /api/v1/agent/deals/:id/counter",
           "POST /api/v1/agent/deals/:id/dispute",
         ],
         description:
