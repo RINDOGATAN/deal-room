@@ -13,6 +13,7 @@ import {
   ApiScopeError,
   checkRateLimit,
 } from "@/server/middleware/apiKeyAuth";
+import { withIdempotency } from "@/server/middleware/idempotency";
 import { features } from "@/config/features";
 import { fireWebhook } from "@/server/services/agent/webhooks";
 
@@ -52,6 +53,7 @@ export async function POST(
       );
     }
 
+    return await withIdempotency(req, auth.customer.id, async () => {
     const { id } = await params;
     const body = await req.json();
     const { proposals } = body;
@@ -183,6 +185,7 @@ export async function POST(
     return NextResponse.json({
       roundNumber: currentRound,
       proposals: created,
+    });
     });
   } catch (error) {
     console.error("Error creating counter-proposals:", error);

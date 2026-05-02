@@ -13,6 +13,7 @@ import {
   requireScope,
   ApiScopeError,
 } from "@/server/middleware/apiKeyAuth";
+import { withIdempotency } from "@/server/middleware/idempotency";
 import { features } from "@/config/features";
 
 const VALID_EVENTS = [
@@ -43,6 +44,7 @@ export async function POST(req: NextRequest) {
       throw e;
     }
 
+    return await withIdempotency(req, auth.customer.id, async () => {
     const body = await req.json();
     const { url, events } = body;
 
@@ -93,6 +95,7 @@ export async function POST(req: NextRequest) {
       },
       { status: 201 }
     );
+    });
   } catch (error) {
     console.error("Error creating webhook:", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });

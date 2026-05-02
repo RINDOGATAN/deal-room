@@ -12,6 +12,7 @@ import {
   requireScope,
   ApiScopeError,
 } from "@/server/middleware/apiKeyAuth";
+import { withIdempotency } from "@/server/middleware/idempotency";
 import { features } from "@/config/features";
 import { fireWebhook } from "@/server/services/agent/webhooks";
 
@@ -38,6 +39,7 @@ export async function POST(
       throw e;
     }
 
+    return await withIdempotency(req, auth.customer.id, async () => {
     const { id } = await params;
 
     const agentDeal = await prisma.agentDealRoom.findUnique({
@@ -142,6 +144,7 @@ export async function POST(
       accepted: true,
       bothAccepted,
       status: bothAccepted ? "AGREED" : "PENDING_ACCEPTANCE",
+    });
     });
   } catch (error) {
     console.error("Error accepting deal:", error);
