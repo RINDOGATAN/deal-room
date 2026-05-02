@@ -42,8 +42,15 @@ rm .env.prod
 
 - **Agent:** `/api/v1/agent/` — playbooks, negotiation, deals, webhooks, credits, MCP/A2A. Docs: `docs/agent-api.md`
 - **A2A Rate Limits:** `A2A_` prefixed contract types have weekly limits — standard: 5/skill/week, premium (`premiumA2A` in Customer.metadata): 300/week
-- **Experts:** `/api/v1/experts/` — search, get-by-ID, filters, contact, verify. Auth: `drk_...` tokens with scopes (`experts:read`, `experts:contact`)
-- **Gavel:** Dispute escalation via `POST /api/v1/agent/deals/:id/dispute`. DRC protocol at `gavel.todo.law`
+- **Idempotency:** All 9 mutating agent POST endpoints honor an optional `Idempotency-Key` header (24h TTL, table `idempotency_records`). Replays return the cached 2xx response with an `Idempotent-Replay: true` header — described on `.well-known/agent.json` for federated discovery. Helper at `src/server/middleware/idempotency.ts`.
+- **Experts:** `/api/v1/experts/` — search, get-by-ID, filters, contact, verify. Auth: `drk_...` tokens with scopes (`experts:read`, `experts:contact`). Contact endpoint capped at 2-per-(customer, expert)-per-day; resulting `RecommendationRequest` rows expire after 30 days
+- **Gavel:** Dispute escalation via `POST /api/v1/agent/deals/:id/dispute`. DRC protocol at `gavel.todo.law`. Inbound webhook at `/api/webhooks/gavel` fails closed (503) when `GAVEL_WEBHOOK_SECRET` is unset; 401 on bad signature
+- **Stripe:** Inbound webhook at `/api/webhooks/stripe` is idempotent — claims `event.id` via `stripe_webhook_events` table on first delivery, subsequent redeliveries return 200 with `{ idempotent: true }` and skip the handler
+
+## Operations
+
+- **Health check:** `GET /api/health` — public endpoint, no auth. Returns `{ ok, time, commit, version, services: { database, databaseLatencyMs } }`. HTTP 200 when healthy, 503 when the database probe fails. `Cache-Control: no-store` so any uptime monitor reads fresh. Useful for UptimeRobot / BetterStack / a quick `curl` smoke test after deploy.
+- **Daily cron:** `GET /api/cron/daily` — scheduled in `vercel.json` for 09:00 UTC every day. Runs three jobs: signing reminder (3 days before expiry), signing expiry (mark `EXPIRED` + revert deal to AGREED + email both parties), recommendation-request expiry (mark `CANCELLED`). Protected by `CRON_SECRET` env var — fails closed with 503 if unset.
 
 ## Commands
 ```bash
