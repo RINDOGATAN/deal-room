@@ -39,20 +39,32 @@ const spaceMono = Space_Mono({
 
 const siteUrl = `https://dealroom.${brand.domain}`;
 
+// Browser tab + iOS app icons. The TODO build has a full PNG/SVG set
+// (favicon.ico, icon.svg, icon-192, icon-512, apple-touch-icon); the
+// NEL build ships a single PNG (/nel-icon.png) and uses it for every
+// slot. Single-source PNGs work everywhere modern browsers render.
+const brandIcons: Metadata["icons"] =
+  brand.id === "northend"
+    ? {
+        icon: [{ url: brand.assets.icon, type: "image/png" }],
+        apple: [{ url: brand.assets.icon, type: "image/png" }],
+      }
+    : {
+        icon: [
+          { url: "/favicon.ico", sizes: "48x48" },
+          { url: "/icon.svg", type: "image/svg+xml" },
+          { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
+          { url: "/icon-512.png", sizes: "512x512", type: "image/png" },
+        ],
+        apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
+      };
+
 export const metadata: Metadata = {
   title: `DEALROOM - ${brand.tagline}`,
   description: brand.description,
   metadataBase: new URL(siteUrl),
   alternates: { canonical: "/" },
-  icons: {
-    icon: [
-      { url: "/favicon.ico", sizes: "48x48" },
-      { url: "/icon.svg", type: "image/svg+xml" },
-      { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
-      { url: "/icon-512.png", sizes: "512x512", type: "image/png" },
-    ],
-    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
-  },
+  icons: brandIcons,
   manifest: "/site.webmanifest",
   openGraph: {
     title: `Dealroom — ${brand.tagline}`,
@@ -82,11 +94,20 @@ export default async function RootLayout({
   const locale = await getLocale();
   const messages = await getMessages();
 
+  // The TODO deployment uses Sealmetrics (privacy-friendly analytics);
+  // NEL clients should not be tracked into a TodoLaw property. If NEL
+  // ever adds its own tracker we can branch the script src here.
+  const isTodoBrand = brand.id === "todo";
+
   return (
     <html lang={locale} data-brand={brand.id}>
       <head>
-        <link rel="dns-prefetch" href="https://t.sealmetrics.com" />
-        <script async src="https://t.sealmetrics.com/t.js?id=todolaw" />
+        {isTodoBrand && (
+          <>
+            <link rel="dns-prefetch" href="https://t.sealmetrics.com" />
+            <script async src="https://t.sealmetrics.com/t.js?id=todolaw" />
+          </>
+        )}
       </head>
       <body className={`${inter.variable} ${dancingScript.variable} ${jost.variable} ${archivoBlack.variable} ${spaceMono.variable} font-sans antialiased min-h-screen flex flex-col`}>
         <NextIntlClientProvider messages={messages}>
