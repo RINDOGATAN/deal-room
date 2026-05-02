@@ -1,5 +1,6 @@
 import { Globe, Menu, X } from "lucide-react";
 import { useState } from "react";
+import { brand } from "@/config/brand";
 
 interface StartupsHeaderProps {
   t: (key: string) => string;
@@ -7,6 +8,12 @@ interface StartupsHeaderProps {
   onLocaleToggle: () => void;
   onSignup: () => void;
 }
+
+// TODO uses an SVG wordmark; NEL ships a PNG. Render whichever the
+// active brand actually has, with the right alt text. brand.links.website
+// is the company's marketing home, not the dealroom subdomain.
+const isNelBrand = brand.id === "northend";
+const headerLogoSrc = isNelBrand ? brand.assets.logo : "/logo-negative.svg";
 
 const StartupsHeader = ({ t, locale, onLocaleToggle, onSignup }: StartupsHeaderProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -16,8 +23,8 @@ const StartupsHeader = ({ t, locale, onLocaleToggle, onSignup }: StartupsHeaderP
     <header className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-2rem)] max-w-5xl">
       <div className="nav-header px-6">
         <div className="flex items-center justify-between h-14">
-          <a href="https://todo.law" className="flex items-center gap-3">
-            <img src="/logo-negative.svg" alt="TODO.LAW" style={{ height: "28px", width: "auto" }} />
+          <a href={brand.links.website} className="flex items-center gap-3">
+            <img src={headerLogoSrc} alt={brand.company} style={{ height: "28px", width: "auto" }} />
             <span className="hidden sm:inline-flex items-center px-2.5 py-0.5 bg-accent/10 text-accent rounded-full text-xs font-medium uppercase tracking-wider font-body">
               {t("header.badge")}
             </span>

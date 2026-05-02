@@ -1,14 +1,20 @@
+import { brand } from "@/config/brand";
+
 interface StartupsFooterProps {
   t: (key: string) => string;
 }
+
+// Same pattern as StartupsHeader — use the brand-correct logo file.
+const isNelBrand = brand.id === "northend";
+const footerLogoSrc = isNelBrand ? brand.assets.logo : "/logo-negative.svg";
 
 const StartupsFooter = ({ t }: StartupsFooterProps) => {
   return (
     <footer className="py-12 border-t border-border">
       <div className="container px-6">
         <div className="flex flex-col items-center gap-6">
-          <a href="https://todo.law" className="flex items-center gap-2">
-            <img src="/logo-negative.svg" alt="TODO.LAW" style={{ height: "30px", width: "auto" }} />
+          <a href={brand.links.website} className="flex items-center gap-2">
+            <img src={footerLogoSrc} alt={brand.company} style={{ height: "30px", width: "auto" }} />
             <span className="text-xs text-muted-foreground font-body">
               {t("footer.tagline")}
             </span>
@@ -16,23 +22,27 @@ const StartupsFooter = ({ t }: StartupsFooterProps) => {
 
           <nav className="flex items-center gap-6">
             <a
-              href="https://todo.law/privacy"
+              href={brand.links.privacy}
               className="text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
               {t("footer.privacy")}
             </a>
             <a
-              href="https://todo.law/terms"
+              href={brand.links.terms}
               className="text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
               {t("footer.terms")}
             </a>
-            <a
-              href="https://todo.law/home"
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-            >
-              {t("footer.forLawFirms")} &rarr;
-            </a>
+            {/* "For law firms" is a TodoLaw-only marketing CTA — NEL
+                already is a law firm, so the link is hidden there. */}
+            {!isNelBrand && (
+              <a
+                href={`${brand.links.website}/home`}
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+              >
+                {t("footer.forLawFirms")} &rarr;
+              </a>
+            )}
           </nav>
 
           <p className="text-xs text-muted-foreground flex items-center gap-2">
