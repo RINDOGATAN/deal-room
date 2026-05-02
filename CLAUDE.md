@@ -106,6 +106,7 @@ SKILLS_DIR=/path/to/legalskills npm run check:skills # Same guard on the premium
 ## Conventions
 
 - **Brand name:** Always "Dealroom" (one word), never "Deal Room"
+- **Skill ID namespace:** Skill packages use the reverse-DNS namespace `com.nel.skills.<name>` (regex enforced in `src/server/services/skills/validator.ts:27`). The `nel` here is a **stable namespace identifier**, not a brand reference — it predates the NEL deployment and survives the 2026-05-02 brand consolidation. Every `SkillPackage.skillId` row in production matches this pattern. Do not rename it during future cleanups.
 - **i18n:** Castilian Spanish only, never Latin American. "skills" as loanword. Gender-inclusive ("abogado/a")
 - **Boilerplate:** No `[BRACKET]` placeholders. Don't duplicate negotiable topics in standardClauses
 - **Prisma client:** always import from `@/lib/prisma` (extended with Neon retry wrapper). Helpers accepting a client must type it as `ExtendedPrismaClient` from that module — not raw `PrismaClient`.

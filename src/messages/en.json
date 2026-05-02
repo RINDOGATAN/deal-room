@@ -1293,7 +1293,7 @@
     "verifySignature": "Ed25519 signature valid",
     "verifyContent": "Content schema valid (12 clauses, 36 options)",
     "installToDb": "Install to database",
-    "installProgress": "Installing: com.todo.skills.founders v1.0.0",
+    "installProgress": "Installing: com.nel.skills.founders v1.0.0",
     "installVerified": "Package verified",
     "installTemplate": "Contract template created",
     "installClauses": "12 clause templates installed",
