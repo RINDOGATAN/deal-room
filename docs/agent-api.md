@@ -45,7 +45,71 @@ All endpoints return errors in a consistent format:
 | `403` | Forbidden — valid key but missing scope or access |
 | `404` | Not found |
 | `409` | Conflict — duplicate name, already joined, etc. |
+| `429` | Rate limit exceeded — retry after the seconds in the `Retry-After` header |
 | `500` | Internal server error |
+| `503` | Service unavailable — typically a downstream dependency (Gavel, Stripe) is misconfigured or unreachable |
+
+---
+
+## Idempotency
+
+All mutating POST endpoints accept an optional `Idempotency-Key` header. Send it on retries to receive the original response without re-executing the handler — the same dealId, the same playbookId, the same checkout URL, etc.
+
+```
+POST /api/v1/agent/negotiate
+Authorization: Bearer drk_...
+Idempotency-Key: 9f7e3b1c-2a4d-4e6f-8c1a-b3d5e7f9a0c2
+Content-Type: application/json
+```
+
+**Behavior:**
+- The first request with a given key runs the handler normally and caches the 2xx response.
+- Subsequent requests within 24 hours that send the same key return the cached response with an extra header: `Idempotent-Replay: true`.
+- Non-2xx responses (4xx and 5xx) are not cached — a retry with the same key after a failure runs the handler fresh.
+- Keys are scoped per customer, so different customers can use the same key value without conflict.
+
+**Format constraints:**
+- Maximum 200 characters.
+- Allowed characters: letters, digits, underscore (`_`), dash (`-`). Anything else returns 400.
+
+**Endpoints that support the header:**
+
+| Method | Path |
+|--------|------|
+| POST | `/api/v1/agent/negotiate` |
+| POST | `/api/v1/agent/negotiate/join` |
+| POST | `/api/v1/agent/playbooks` |
+| POST | `/api/v1/agent/subscribe` |
+| POST | `/api/v1/agent/webhooks` |
+| POST | `/api/v1/agent/deals/:id/accept` |
+| POST | `/api/v1/agent/deals/:id/reject` |
+| POST | `/api/v1/agent/deals/:id/counter` |
+| POST | `/api/v1/agent/deals/:id/dispute` |
+
+The `.well-known/agent.json` discovery document advertises this same list under `capabilities.idempotency.appliesTo` so federated agents can discover what is safe to retry.
+
+**Recommended pattern:** generate a fresh key for each logical action your agent attempts (e.g. one per deal-creation intent), store it locally, and re-send the same key for any retry of that intent. This way a network blip or a transient 5xx never causes a duplicate deal, playbook, or counter-round.
+
+---
+
+## Health Check
+
+`GET /api/health` — public, no auth, no rate limit. Returns a JSON snapshot suitable for any uptime probe.
+
+```json
+{
+  "ok": true,
+  "time": "2026-05-02T10:00:00.000Z",
+  "commit": "862978e",
+  "version": "0.1.0",
+  "services": {
+    "database": "ok",
+    "databaseLatencyMs": 14
+  }
+}
+```
+
+HTTP 200 when everything works, HTTP 503 with the same shape (with `ok: false` and `database: "unreachable"`) when the database probe fails. `Cache-Control: no-store` defeats CDN caching so a monitor always sees a fresh reading.
 
 ---
 
