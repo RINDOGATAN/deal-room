@@ -9,12 +9,6 @@ interface StartupsHeaderProps {
   onSignup: () => void;
 }
 
-// TODO uses an SVG wordmark; NEL ships a PNG. Render whichever the
-// active brand actually has, with the right alt text. brand.links.website
-// is the company's marketing home, not the dealroom subdomain.
-const isNelBrand = brand.id === "northend";
-const headerLogoSrc = isNelBrand ? brand.assets.logo : "/logo-negative.svg";
-
 const StartupsHeader = ({ t, locale, onLocaleToggle, onSignup }: StartupsHeaderProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const closeMenu = () => setIsMenuOpen(false);
@@ -24,7 +18,7 @@ const StartupsHeader = ({ t, locale, onLocaleToggle, onSignup }: StartupsHeaderP
       <div className="nav-header px-6">
         <div className="flex items-center justify-between h-14">
           <a href={brand.links.website} className="flex items-center gap-3">
-            <img src={headerLogoSrc} alt={brand.company} style={{ height: "28px", width: "auto" }} />
+            <img src="/logo-negative.svg" alt={brand.company} style={{ height: "28px", width: "auto" }} />
             <span className="hidden sm:inline-flex items-center px-2.5 py-0.5 bg-accent/10 text-accent rounded-full text-xs font-medium uppercase tracking-wider font-body">
               {t("header.badge")}
             </span>

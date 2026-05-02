@@ -1294,7 +1294,7 @@
     "verifySignature": "Firma Ed25519 válida",
     "verifyContent": "Esquema de contenido válido (12 cláusulas, 36 opciones)",
     "installToDb": "Instalar en base de datos",
-    "installProgress": "Instalando: com.nel.skills.founders v1.0.0",
+    "installProgress": "Instalando: com.todo.skills.founders v1.0.0",
     "installVerified": "Paquete verificado",
     "installTemplate": "Plantilla de contrato creada",
     "installClauses": "12 plantillas de cláusula instaladas",
