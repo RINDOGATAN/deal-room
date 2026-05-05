@@ -235,6 +235,10 @@ function listSkills(dir) {
   }
   return readdirSync(dir)
     .filter((entry) => {
+      // Skip scaffolding/hidden dirs (e.g. `_template`, `.git`). The
+      // seed loader applies the same filter, so the static guard
+      // matches its scope.
+      if (entry.startsWith("_") || entry.startsWith(".")) return false;
       const full = join(dir, entry);
       if (!statSync(full).isDirectory()) return false;
       // Heuristic: a skill dir contains at least one of the required files.
