@@ -64,6 +64,13 @@
     "signInWithCode": "Sign In with Invite Code",
     "unexpectedError": "An unexpected error occurred.",
     "googleSignInFailed": "Google sign-in failed.",
+    "errorTitle": "Sign-in problem",
+    "errorVerification": "The magic link has expired or has already been used. Request a new one.",
+    "errorAccessDenied": "Access denied. You don't have permission to sign in.",
+    "errorConfiguration": "Sign-in is misconfigured. Please contact support.",
+    "errorOAuth": "Sign-in via Google didn't go through. Please try again.",
+    "errorDefault": "Something went wrong while signing you in. Please try again.",
+    "backToSignIn": "Back to sign in",
     "dealroom": "Dealroom",
     "poweredBy": "Contract Negotiation Platform",
     "secureContract": "Secure contract negotiation platform"
@@ -155,6 +162,7 @@
     },
     "dealParameters": "Deal Parameters",
     "dealParametersDescription": "Fill in the deal-specific values below. These will appear in the contract text.",
+    "requiredFieldsLegend": "indicates a required field",
     "parameterRequired": "Please fill in all required parameters",
     "searchContracts": "Search contracts...",
     "noContractsFound": "No contracts match your search."
@@ -207,7 +215,9 @@
     "resending": "Resending...",
     "signingInitiatedAgo": "Signing initiated {days, plural, =0 {today} =1 {1 day ago} other {# days ago}}",
     "signingExpiresIn": "Expires in {days, plural, =0 {less than a day} =1 {1 day} other {# days}}",
-    "signingExpired": "Signing expired {days, plural, =0 {today} =1 {1 day ago} other {# days ago}}"
+    "signingExpired": "Signing expired {days, plural, =0 {today} =1 {1 day ago} other {# days ago}}",
+    "respondentAcceptedTitle": "{name} has joined this deal",
+    "respondentAcceptedDescription": "Your counterparty can now make their selections. You'll be able to review the compromise once they submit."
   },
   "negotiate": {
     "clause": "Clause",

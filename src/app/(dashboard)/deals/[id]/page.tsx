@@ -257,6 +257,28 @@ function DealDetailContent({ dealId }: { dealId: string }) {
           })()}
         </div>
 
+        {/* Initiator-side notice when respondent has accepted but not yet submitted —
+            this is the moment users miss most: the deal silently moves from
+            AWAITING_RESPONSE → NEGOTIATING with no email or in-app prompt. */}
+        {isInitiator &&
+          !isSoloMode &&
+          respondent?.userId &&
+          respondent?.status === "PENDING" && (
+            <div className="card-brutal border-primary/40 bg-primary/5 flex items-center gap-3 py-3">
+              <CheckCircle className="w-5 h-5 text-primary flex-shrink-0" />
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium">
+                  {t("respondentAcceptedTitle", {
+                    name: respondent.name || respondent.email || "",
+                  })}
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  {t("respondentAcceptedDescription")}
+                </p>
+              </div>
+            </div>
+          )}
+
         <div className="flex items-center gap-3">
           {canNegotiate && (
             <Link

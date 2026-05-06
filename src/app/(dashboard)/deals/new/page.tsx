@@ -1107,9 +1107,16 @@ export default function NewDealPage() {
               </div>
 
               <div className="card-brutal space-y-5">
-                <p className="text-sm text-muted-foreground">
-                  {t("dealParametersDescription")}
-                </p>
+                <div className="flex items-baseline justify-between gap-3">
+                  <p className="text-sm text-muted-foreground">
+                    {t("dealParametersDescription")}
+                  </p>
+                  {(parameterSchema as ParameterSchema)?.parameters.some((p) => p.required) && (
+                    <p className="text-xs text-muted-foreground shrink-0">
+                      <span className="text-destructive">*</span> {t("requiredFieldsLegend")}
+                    </p>
+                  )}
+                </div>
                 {(parameterSchema as ParameterSchema)?.parameters.map((param) => (
                   <ParameterField
                     key={param.id}
