@@ -90,6 +90,17 @@ SKILLS_DIR=/path/to/legalskills npm run check:skills # Same guard on the premium
 - Lawyer directory filters to `expertTypes: { has: "LEGAL" }` (excludes deployment specialists)
 - Create button text: "Continue" (EN) / "Continuar" (ES)
 
+## Jurisdiction-specific flows
+
+Some flows only make sense in a single jurisdiction. Gate them on **`useLocale()`** (the user's chosen UI language), not on geo-IP. Locale is a cleaner intent signal: a Spanish-locale user in the US still wants Spanish-relevant flows; an English-locale user in Spain is fine seeing US-only flows.
+
+Three places to close every entry point:
+1. **Dashboard nav** — wrap the nav item declaration in `locale !== "es"` (or whatever inverse condition fits)
+2. **Empty-state cards** that surface the feature on `/deals` (and elsewhere)
+3. **A route-level `layout.tsx`** that redirects to `/deals` when the locale doesn't match — closes bookmarks, shared links, and mid-flow locale switches
+
+Current example: `/launch` (Delaware C-Corp formation) is hidden from `locale === "es"`. See commit `86b228d` and the `(dashboard)/launch/layout.tsx` redirect. If a Spanish-jurisdiction founder journey ships later (e.g., S.L. constitution), it goes alongside as a separate `templateFamily` with its own locale gate — don't try to multiplex one flow across jurisdictions.
+
 ## Public Docs (`/docs`)
 
 - Skills & Licensing, Compromise Algorithm, How It Works, Vetting, Supervision
