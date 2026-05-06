@@ -1,8 +1,12 @@
 import { PrismaClient } from "@prisma/client";
 
-const MAX_RETRIES = 5;
+// Neon's compute can take longer to wake when the control plane is busy.
+// 7 retries with a 3000 ms cap give us up to ~13 s of backoff (well under
+// Vercel's 60 s function ceiling on Pro). Most cold-starts resolve in
+// ≤ 3 s — this only kicks in for the slow tail.
+const MAX_RETRIES = 7;
 const RETRY_BASE_MS = 300;
-const RETRY_CAP_MS = 2000;
+const RETRY_CAP_MS = 3000;
 
 function isRetryableError(error: unknown): boolean {
   if (!(error instanceof Error)) return false;
