@@ -43,12 +43,12 @@
   "auth": {
     "signIn": "Iniciar Sesión",
     "signOut": "Cerrar Sesión",
-    "checkEmail": "Revisa tu correo",
+    "checkEmail": "Revisa tu correo electrónico",
     "magicLinkSent": "Hemos enviado un enlace de acceso a <email></email>. Haz clic en el enlace del correo para iniciar sesión.",
     "didntReceive": "¿No lo recibiste?",
     "tryAgain": "Intentar de nuevo",
     "emailAddress": "Correo electrónico",
-    "enterEmail": "Introduce tu correo para recibir un enlace de acceso",
+    "enterEmail": "Introduce tu correo electrónico para recibir un enlace de acceso",
     "continueWithEmail": "Continuar con email",
     "sending": "Enviando...",
     "noPasswordNeeded": "No se necesita contraseña. Te enviaremos un enlace seguro.",
@@ -64,6 +64,13 @@
     "signInWithCode": "Iniciar sesión con código",
     "unexpectedError": "Ha ocurrido un error inesperado.",
     "googleSignInFailed": "Error al iniciar sesión con Google.",
+    "errorTitle": "No se pudo iniciar sesión",
+    "errorVerification": "El enlace mágico ha caducado o ya se ha usado. Solicita uno nuevo.",
+    "errorAccessDenied": "Acceso denegado. No tienes permiso para iniciar sesión.",
+    "errorConfiguration": "El inicio de sesión está mal configurado. Contacta con soporte.",
+    "errorOAuth": "El inicio de sesión con Google no se completó. Vuelve a intentarlo.",
+    "errorDefault": "Ha ocurrido un problema al iniciar sesión. Vuelve a intentarlo.",
+    "backToSignIn": "Volver al inicio de sesión",
     "dealroom": "Dealroom",
     "poweredBy": "Plataforma de Negociación de Contratos",
     "secureContract": "Plataforma segura de negociación de contratos"
@@ -155,6 +162,7 @@
     },
     "dealParameters": "Datos del Acuerdo",
     "dealParametersDescription": "Introduce los valores específicos del acuerdo. Aparecerán en el texto del contrato.",
+    "requiredFieldsLegend": "indica un campo obligatorio",
     "parameterRequired": "Por favor, completa todos los datos obligatorios",
     "searchContracts": "Buscar contratos...",
     "noContractsFound": "No se encontraron contratos."
@@ -195,7 +203,7 @@
       "companyPlaceholder": "Acme Corp",
       "sendInvitation": "Enviar Invitación",
       "sending": "Enviando...",
-      "emailRequired": "El correo es obligatorio"
+      "emailRequired": "El correo electrónico es obligatorio"
     },
     "toastMessages": {
       "invitationSent": "Invitación enviada correctamente",
@@ -208,7 +216,9 @@
     "resending": "Reenviando...",
     "signingInitiatedAgo": "Firma iniciada {days, plural, =0 {hoy} =1 {hace 1 día} other {hace # días}}",
     "signingExpiresIn": "Caduca en {days, plural, =0 {menos de un día} =1 {1 día} other {# días}}",
-    "signingExpired": "La firma caducó {days, plural, =0 {hoy} =1 {hace 1 día} other {hace # días}}"
+    "signingExpired": "La firma caducó {days, plural, =0 {hoy} =1 {hace 1 día} other {hace # días}}",
+    "respondentAcceptedTitle": "{name} se ha unido a este acuerdo",
+    "respondentAcceptedDescription": "Tu contraparte ya puede hacer sus selecciones. Podrás revisar el compromiso cuando las envíe."
   },
   "negotiate": {
     "clause": "Cláusula",
@@ -739,13 +749,13 @@
     "clauseCount": "{count} cláusulas",
     "invitedBy": "Invitado por",
     "signInToAccept": "Inicia sesión para aceptar",
-    "signInDescription": "Inicia sesión con tu correo ({email}) para aceptar esta invitación y empezar a negociar.",
+    "signInDescription": "Inicia sesión con tu correo electrónico ({email}) para aceptar esta invitación y empezar a negociar.",
     "signInWith": "Iniciar sesión con {email}",
     "contractNegotiationInvitation": "Invitación a negociar un contrato",
     "yourRole": "Tu papel",
-    "emailMismatch": "Los correos no coinciden",
+    "emailMismatch": "Los correos electrónicos no coinciden",
     "emailMismatchDescription": "Esta invitación se envió a {invited}, pero has iniciado sesión como {current}.",
-    "emailMismatchHint": "Aún puedes aceptarla si tienes acceso a ambos correos.",
+    "emailMismatchHint": "Aún puedes aceptarla si tienes acceso a ambos correos electrónicos.",
     "readyToNegotiate": "¿Listo para negociar?",
     "acceptDescription": "Al aceptar esta invitación podrás revisar los términos del contrato y enviar tus opciones preferidas.",
     "accepting": "Aceptando...",

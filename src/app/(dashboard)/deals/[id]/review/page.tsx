@@ -709,7 +709,7 @@ function ReviewContent({ dealId }: { dealId: string }) {
                   setSelectedOptionId("");
                   setRationale("");
                 }}
-                className="p-1 text-muted-foreground hover:text-foreground"
+                className="p-2.5 text-muted-foreground hover:text-foreground rounded-full hover:bg-secondary transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -826,7 +826,7 @@ function ReviewContent({ dealId }: { dealId: string }) {
                   </div>
                   <button
                     onClick={() => setExpandedClause(isExpanded ? null : item.clauseId)}
-                    className="p-1 text-muted-foreground hover:text-foreground"
+                    className="p-2.5 text-muted-foreground hover:text-foreground rounded-full hover:bg-secondary transition-colors"
                   >
                     {isExpanded ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
                   </button>
@@ -1202,7 +1202,7 @@ function ReviewContent({ dealId }: { dealId: string }) {
       {/* Attorney Selection Modal */}
       {showAttorneyModal && (
         <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
-          <div className="card-brutal max-w-lg w-full">
+          <div className="card-brutal max-w-lg w-full max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-lg font-bold">{t("selectReviewingAttorney")}</h2>
               <button
@@ -1210,7 +1210,7 @@ function ReviewContent({ dealId }: { dealId: string }) {
                   setShowAttorneyModal(false);
                   setSelectedAttorneyId("");
                 }}
-                className="p-1 text-muted-foreground hover:text-foreground"
+                className="p-2.5 text-muted-foreground hover:text-foreground rounded-full hover:bg-secondary transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -1498,7 +1498,7 @@ function ReviewContent({ dealId }: { dealId: string }) {
           {/* Joint Counsel Selection Modal */}
           {showJointCounselModal && (
             <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
-              <div className="card-brutal max-w-lg w-full">
+              <div className="card-brutal max-w-lg w-full max-h-[90vh] overflow-y-auto">
                 <div className="flex items-center justify-between mb-6">
                   <h2 className="text-lg font-bold">{tJointCounsel("selectCounsel")}</h2>
                   <button
@@ -1506,7 +1506,7 @@ function ReviewContent({ dealId }: { dealId: string }) {
                       setShowJointCounselModal(false);
                       setSelectedJointCounselId("");
                     }}
-                    className="p-1 text-muted-foreground hover:text-foreground"
+                    className="p-2.5 text-muted-foreground hover:text-foreground rounded-full hover:bg-secondary transition-colors"
                   >
                     <X className="w-5 h-5" />
                   </button>
