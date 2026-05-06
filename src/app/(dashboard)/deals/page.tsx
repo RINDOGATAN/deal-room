@@ -122,7 +122,7 @@ export default function DealsPage() {
             </Link>
           </div>
 
-          {features.startupJourney && (
+          {features.startupJourney && locale !== "es" && (
             <Link
               href="/launch"
               className="card-brutal group hover:border-primary transition-colors flex items-center gap-4"
