@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import {
   FileText,
   Plus,
@@ -43,6 +43,7 @@ export default function DashboardLayout({
   const tLawyer = useTranslations("lawyer");
   const tFooter = useTranslations("footer");
   const tOnboarding = useTranslations("onboarding");
+  const locale = useLocale();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [showOnboardingOverride, setShowOnboardingOverride] = useState(false);
   const [feedbackOpen, setFeedbackOpen] = useState(false);
@@ -76,7 +77,9 @@ export default function DashboardLayout({
   const navItems = [
     { href: "/deals", label: t("myDeals"), icon: FileText },
     { href: "/deals/new", label: t("newDeal"), icon: Plus },
-    ...(features.startupJourney && !lawyerProfile?.isLawyer
+    // The /launch journey is Delaware C-Corp formation — US-only.
+    // Hide it for Spanish-locale users to avoid the misleading entry point.
+    ...(features.startupJourney && !lawyerProfile?.isLawyer && locale !== "es"
       ? [{ href: "/launch", label: t("launch"), icon: Rocket }]
       : []),
     ...(features.lawyerInvolvement && lawyerProfile?.isLawyer
