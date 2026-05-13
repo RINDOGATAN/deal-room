@@ -75,6 +75,10 @@
     "poweredBy": "Contract Negotiation Platform",
     "secureContract": "Secure contract negotiation platform"
   },
+  "promo": {
+    "allSkillsFreeTitle": "Every premium skill is free right now",
+    "allSkillsFreeDescription": "We've unlocked the entire catalog so you can try any contract type. No subscription needed during this period."
+  },
   "deals": {
     "myDeals": "My Deals",
     "manageNegotiations": "Manage your contract negotiations",

@@ -75,6 +75,10 @@
     "poweredBy": "Plataforma de Negociación de Contratos",
     "secureContract": "Plataforma segura de negociación de contratos"
   },
+  "promo": {
+    "allSkillsFreeTitle": "Todas las skills premium están gratis ahora mismo",
+    "allSkillsFreeDescription": "Hemos desbloqueado el catálogo completo para que puedas probar cualquier tipo de contrato. No hace falta suscripción durante este periodo."
+  },
   "deals": {
     "myDeals": "Mis Acuerdos",
     "manageNegotiations": "Gestiona tus negociaciones de contratos",

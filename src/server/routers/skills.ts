@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
+import { features } from "@/config/features";
 
 export const skillsRouter = createTRPCRouter({
   // List all available contract templates with licensing info
@@ -44,7 +45,9 @@ export const skillsRouter = createTRPCRouter({
       nativeJurisdiction: t.nativeJurisdiction,
       jurisdictions: t.jurisdictions,
       languages: t.languages,
-      requiresLicense: !!t.skillPackageId, // true = paid skill, false = free
+      // During the promo, treat every template as free. Stripe + the
+      // SkillPackage records stay in place — only the UI flag flips.
+      requiresLicense: features.allSkillsFree ? false : !!t.skillPackageId,
     }));
   }),
 
@@ -117,7 +120,10 @@ export const skillsRouter = createTRPCRouter({
     );
 
     return templates.map((t) => {
-      const requiresLicense = !!t.skillPackageId;
+      // Promo mode flips the lock off but keeps the rest of the row
+      // intact, so the UI's "free during launch" banner shows up but
+      // category / family / soloMode flags still drive the wizard.
+      const requiresLicense = features.allSkillsFree ? false : !!t.skillPackageId;
       const entitlement = t.skillPackageId
         ? entitlementMap.get(t.skillPackageId)
         : null;
@@ -153,7 +159,7 @@ export const skillsRouter = createTRPCRouter({
         soloModeDefault: t.soloModeDefault,
         soloModeOnly: t.soloModeOnly,
         // Access info for licensed skills
-        hasAccess: !requiresLicense || !!entitlement,
+        hasAccess: features.allSkillsFree ? true : !requiresLicense || !!entitlement,
         entitledJurisdictions: entitlement?.jurisdictions || [],
         expiresAt: entitlement?.expiresAt || null,
       };

@@ -18,6 +18,19 @@ import {
   isValidLicenseKeyFormat,
 } from "@/lib/crypto";
 import { getMachineInfo } from "./fingerprint";
+import { features } from "@/config/features";
+
+/**
+ * Promotional unlock — when `features.allSkillsFree` is on, both
+ * `checkEntitlement` and `checkDealCreationEntitlement` short-circuit
+ * to `{ entitled: true }`. Driven by the `FREE_TRIAL_ALL_SKILLS` env
+ * var. Stripe paths are untouched; customers who pay during the promo
+ * keep their entitlement records when the flag flips back off.
+ */
+const PROMO_RESULT: EntitlementCheckResult = {
+  entitled: true,
+  reason: "Free during launch promotion",
+};
 
 export interface EntitlementCheckResult {
   entitled: boolean;
@@ -48,6 +61,8 @@ export async function checkEntitlement(
   skillId: string,
   jurisdiction?: string
 ): Promise<EntitlementCheckResult> {
+  if (features.allSkillsFree) return PROMO_RESULT;
+
   // Find the skill package
   const skillPackage = await prisma.skillPackage.findUnique({
     where: { skillId },
@@ -332,6 +347,8 @@ export async function checkDealCreationEntitlement(
   contractType: string,
   jurisdiction: string
 ): Promise<EntitlementCheckResult> {
+  if (features.allSkillsFree) return PROMO_RESULT;
+
   // Find the contract template
   const template = await prisma.contractTemplate.findUnique({
     where: { contractType },

@@ -51,6 +51,7 @@ rm .env.prod
 
 - **Health check:** `GET /api/health` — public endpoint, no auth. Returns `{ ok, time, commit, version, services: { database, databaseLatencyMs } }`. HTTP 200 when healthy, 503 when the database probe fails. `Cache-Control: no-store` so any uptime monitor reads fresh. Useful for UptimeRobot / BetterStack / a quick `curl` smoke test after deploy.
 - **Daily cron:** `GET /api/cron/daily` — scheduled in `vercel.json` for 09:00 UTC every day. Runs three jobs: signing reminder (3 days before expiry), signing expiry (mark `EXPIRED` + revert deal to AGREED + email both parties), recommendation-request expiry (mark `CANCELLED`). Protected by `CRON_SECRET` env var — fails closed with 503 if unset.
+- **Promotional "all skills free" mode:** set env var `FREE_TRIAL_ALL_SKILLS=true` on Vercel to unlock every premium skill platform-wide. Flips `features.allSkillsFree`, which short-circuits `checkEntitlement` + `checkDealCreationEntitlement` to `{ entitled: true }` and reports `requiresLicense: false` from `skills.listTemplatesWithAccess`. The `PromoBanner` component renders on `/deals/new` and `/marketplace` while the flag is on. Stripe checkout still works throughout — anyone who pre-subscribes keeps their `SkillEntitlement` records when the flag flips back off. Revert by unsetting the env var and redeploying.
 
 ## Commands
 ```bash
