@@ -24,4 +24,11 @@ export const features = {
   analytics: !!process.env.DEALROOM_CLOUD_API_KEY,
   /** Startup Quick Start — guided US Delaware C-Corp launch journey */
   startupJourney: true,
+  /**
+   * Promotional unlock: all premium skills available without an entitlement.
+   * Drives usage during a launch / awareness window. Toggle off by unsetting
+   * the env var — Stripe checkout still functions throughout, so customers
+   * who subscribe early keep their entitlements when the promo ends.
+   */
+  allSkillsFree: process.env.FREE_TRIAL_ALL_SKILLS === "true",
 } as const;

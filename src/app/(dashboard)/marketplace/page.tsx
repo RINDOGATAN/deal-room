@@ -16,6 +16,7 @@ import {
 import { trpc } from "@/lib/trpc";
 import { Input } from "@/components/ui/input";
 import { EnableFeatureModal } from "@/components/premium/enable-feature-modal";
+import { PromoBanner } from "@/components/PromoBanner";
 import { formatPrice } from "@/lib/currency";
 import { useTranslations } from "next-intl";
 
@@ -93,6 +94,8 @@ export default function MarketplacePage() {
         <h1 className="text-2xl font-bold">{t("title")}</h1>
         <p className="text-muted-foreground">{t("subtitle")}</p>
       </div>
+
+      <PromoBanner />
 
       {/* Search + filter bar */}
       <div className="space-y-3">

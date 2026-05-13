@@ -42,6 +42,7 @@ import {
 } from "@/components/ui/dialog";
 import { getContactMailto } from "@/config/brand";
 import { features } from "@/config/features";
+import { PromoBanner } from "@/components/PromoBanner";
 import { EnableFeatureModal } from "@/components/premium/enable-feature-modal";
 
 const contractIcons: Record<string, typeof FileText> = {
@@ -500,6 +501,8 @@ export default function NewDealPage() {
           {t("selectContractType")}
         </p>
       </div>
+
+      <PromoBanner />
 
       {/* Lawyer directory hint — hidden for lawyers and vetting flows */}
       {features.lawyerInvolvement && !isVettingFlow && !isLawyer && (
