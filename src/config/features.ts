@@ -26,9 +26,18 @@ export const features = {
   startupJourney: true,
   /**
    * Promotional unlock: all premium skills available without an entitlement.
-   * Drives usage during a launch / awareness window. Toggle off by unsetting
-   * the env var — Stripe checkout still functions throughout, so customers
-   * who subscribe early keep their entitlements when the promo ends.
+   * Drives usage during a launch / awareness window.
+   *
+   * Reads BOTH `FREE_TRIAL_ALL_SKILLS` (server-only) and
+   * `NEXT_PUBLIC_FREE_TRIAL_ALL_SKILLS` (server + client). The public-prefixed
+   * variant is required for the `<PromoBanner>` to render — Next.js only
+   * inlines `NEXT_PUBLIC_*` env vars into client bundles. Set both to `true`
+   * on Vercel for the banner and server gating to be consistent.
+   *
+   * Stripe checkout still functions throughout, so customers who subscribe
+   * early keep their entitlements when the promo ends.
    */
-  allSkillsFree: process.env.FREE_TRIAL_ALL_SKILLS === "true",
+  allSkillsFree:
+    process.env.NEXT_PUBLIC_FREE_TRIAL_ALL_SKILLS === "true" ||
+    process.env.FREE_TRIAL_ALL_SKILLS === "true",
 } as const;
