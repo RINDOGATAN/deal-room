@@ -320,6 +320,12 @@
   },
   "review": {
     "reviewCompromises": "Revisar Compromisos",
+    "otherParty": "la otra parte",
+    "waitingForOtherTitle": "Esperando a que {name} revise el compromiso",
+    "waitingForOtherDescription": "Has hecho tu parte. No tienes que hacer nada más por ahora — recibirás un aviso cuando la otra parte acepte y el acuerdo pase a la firma. Mientras tanto, puedes añadir tus datos de firma abajo para que la firma pueda empezar en cuanto la otra parte termine.",
+    "missingSigningDetailsTitle": "Añade tus datos de firma para que el contrato esté completo",
+    "missingSigningDetailsDescription": "Tu contraparte no podrá terminar de firmar hasta que tus datos de contacto y de la parte estén en el contrato. Es el siguiente paso.",
+    "addSigningDetails": "Añadir datos de firma",
     "round": "Ronda {number}",
     "newRound": "Nueva Ronda",
     "generating": "Generando...",

@@ -18,6 +18,7 @@ import {
   FileSignature,
   MessageSquare,
   RefreshCw,
+  Clock,
   ChevronDown,
   ChevronUp,
   Shield,
@@ -298,6 +299,7 @@ function ReviewContent({ dealId }: { dealId: string }) {
   const allAgreed = suggestions.length > 0 && agreedCount === suggestions.length;
 
   const isInitiator = deal.currentUserRole === "INITIATOR";
+  const isSoloMode = (deal as { dealMode?: string }).dealMode === "SOLO";
   const pendingCounterProposalsForMe = counterProposals?.pendingForMe || [];
 
   // Check if there are rejections that need new suggestions
@@ -308,6 +310,35 @@ function ReviewContent({ dealId }: { dealId: string }) {
     const otherAccepted = isInitiator ? suggestion.partyBAccepted : suggestion.partyAAccepted;
     return myAccepted === false || otherAccepted === false;
   });
+
+  // Hand-off state: current user has finished their part of the back-and-forth
+  // (accepted everything that needs accepting) and the other party still has
+  // open decisions. Surface a "sit tight" banner so users aren't left wondering
+  // what to do next.
+  const myDecisionsMade = !needsGeneration && suggestions.every((item) => {
+    if (item.status === "AGREED") return true;
+    const suggestion = item.suggestion;
+    if (!suggestion) return true;
+    const myAccepted = isInitiator ? suggestion.partyAAccepted : suggestion.partyBAccepted;
+    return myAccepted === true;
+  });
+  const otherStillPending = suggestions.some((item) => {
+    if (item.status === "AGREED") return false;
+    const suggestion = item.suggestion;
+    if (!suggestion) return false;
+    const otherAccepted = isInitiator ? suggestion.partyBAccepted : suggestion.partyAAccepted;
+    return otherAccepted !== true;
+  });
+  const otherPartyName = (isInitiator
+    ? deal.parties.find((p) => p.role === "RESPONDENT")?.name
+    : deal.parties.find((p) => p.role === "INITIATOR")?.name) || t("otherParty");
+  const waitingForOther =
+    !isSoloMode &&
+    !allAgreed &&
+    !hasRejections &&
+    pendingCounterProposalsForMe.length === 0 &&
+    myDecisionsMade &&
+    otherStillPending;
 
   const handleRejectWithCounter = (clauseId: string, clauseTitle: string, options: CounterProposalForm["options"], suggestionId: string) => {
     setCounterProposalForm({
@@ -375,6 +406,25 @@ function ReviewContent({ dealId }: { dealId: string }) {
         </div>
       </div>
 
+      {/* Waiting-for-other-party banner — closes the silent "now what?"
+          moment after a party has accepted the compromise but the other
+          hasn't responded yet. */}
+      {waitingForOther && (
+        <div className="card-brutal border-primary/40 bg-primary/5">
+          <div className="flex items-start gap-3">
+            <Clock className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+            <div className="flex-1 min-w-0">
+              <p className="font-semibold">
+                {t("waitingForOtherTitle", { name: otherPartyName })}
+              </p>
+              <p className="text-sm text-muted-foreground mt-1">
+                {t("waitingForOtherDescription")}
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Pending Counter-Proposals Alert */}
       {pendingCounterProposalsForMe.length > 0 && (
         <div className="card-brutal border-yellow-500/50 bg-yellow-500/10">
@@ -395,7 +445,10 @@ function ReviewContent({ dealId }: { dealId: string }) {
       {/* Negotiation Outcome */}
       {satisfactionScores && !needsGeneration && (() => {
         const getLabel = (s: number) => s >= 85 ? t("satisfactionCloseToPreference") : s >= 65 ? t("satisfactionFavorable") : s >= 45 ? t("satisfactionBalanced") : s >= 25 ? t("satisfactionAccommodated") : t("satisfactionSignificantConcession");
-        const getColor = (s: number) => s >= 85 ? "text-green-600 bg-green-50 border-green-200" : s >= 65 ? "text-primary bg-primary/5 border-primary/20" : s >= 45 ? "text-foreground bg-muted/50 border-border" : s >= 25 ? "text-amber-600 bg-amber-50 border-amber-200" : "text-red-600 bg-red-50 border-red-200";
+        // Brand-aligned dark-theme palette — the previous cream/light
+        // tokens (`bg-green-50` etc.) inverted poorly against the rest
+        // of the app and stood out as off-brand.
+        const getColor = (s: number) => s >= 85 ? "text-green-400 bg-green-500/10 border-green-500/30" : s >= 65 ? "text-primary bg-primary/10 border-primary/30" : s >= 45 ? "text-foreground bg-muted/50 border-border" : s >= 25 ? "text-yellow-400 bg-yellow-500/10 border-yellow-500/30" : "text-destructive bg-destructive/10 border-destructive/30";
 
         const myScores = isInitiator ? satisfactionScores.partyA : satisfactionScores.partyB;
         const theirScores = isInitiator ? satisfactionScores.partyB : satisfactionScores.partyA;
@@ -824,12 +877,18 @@ function ReviewContent({ dealId }: { dealId: string }) {
                     </div>
                     <p className="text-sm text-muted-foreground mt-1">{item.category}</p>
                   </div>
-                  <button
-                    onClick={() => setExpandedClause(isExpanded ? null : item.clauseId)}
-                    className="p-2.5 text-muted-foreground hover:text-foreground rounded-full hover:bg-secondary transition-colors"
-                  >
-                    {isExpanded ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
-                  </button>
+                  {/* Only render the collapse toggle when there's actually
+                      something extra to show — the expanded block at the
+                      bottom is gated on `suggestion`, so without one the
+                      chevron does nothing visible. */}
+                  {suggestion && (
+                    <button
+                      onClick={() => setExpandedClause(isExpanded ? null : item.clauseId)}
+                      className="p-2.5 text-muted-foreground hover:text-foreground rounded-full hover:bg-secondary transition-colors"
+                    >
+                      {isExpanded ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+                    </button>
+                  )}
                 </div>
 
                 {/* Counter-Proposal Alert */}
@@ -949,7 +1008,7 @@ function ReviewContent({ dealId }: { dealId: string }) {
                       const yourScore = isInitiator ? suggestion.satisfactionPartyA : suggestion.satisfactionPartyB;
                       const theirScore = isInitiator ? suggestion.satisfactionPartyB : suggestion.satisfactionPartyA;
                       const getLabel = (s: number) => s >= 85 ? t("satisfactionCloseToPreference") : s >= 65 ? t("satisfactionFavorable") : s >= 45 ? t("satisfactionBalanced") : s >= 25 ? t("satisfactionAccommodated") : t("satisfactionSignificantConcession");
-                      const getColor = (s: number) => s >= 85 ? "bg-green-100 text-green-700" : s >= 65 ? "bg-primary/10 text-primary" : s >= 45 ? "bg-muted text-foreground" : s >= 25 ? "bg-amber-100 text-amber-700" : "bg-red-100 text-red-700";
+                      const getColor = (s: number) => s >= 85 ? "bg-green-500/10 text-green-400" : s >= 65 ? "bg-primary/10 text-primary" : s >= 45 ? "bg-muted text-foreground" : s >= 25 ? "bg-yellow-500/10 text-yellow-400" : "bg-destructive/10 text-destructive";
                       return (
                         <div className="flex flex-wrap gap-2 mb-4">
                           <span className={`text-xs px-2.5 py-1 rounded-full font-medium ${getColor(yourScore)}`}>

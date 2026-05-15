@@ -319,6 +319,12 @@
   },
   "review": {
     "reviewCompromises": "Review Compromises",
+    "otherParty": "the other party",
+    "waitingForOtherTitle": "Waiting for {name} to review the compromise",
+    "waitingForOtherDescription": "You've done your part. Sit tight — you'll be notified once they accept and the deal moves to signing. While you wait, you can add your signing details below so signing can start as soon as they're done.",
+    "missingSigningDetailsTitle": "Add your signing details so the contract is complete",
+    "missingSigningDetailsDescription": "Your counterparty cannot finish signing until your contact and party information are on the contract. This is the next step.",
+    "addSigningDetails": "Add signing details",
     "round": "Round {number}",
     "newRound": "New Round",
     "generating": "Generating...",
