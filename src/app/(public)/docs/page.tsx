@@ -5,7 +5,6 @@ import { useTranslations } from "next-intl";
 import {
   Workflow,
   Package,
-  Eye,
   Scale,
   ArrowRight,
   ClipboardCheck,
@@ -36,12 +35,6 @@ const sectionDefs = [
     icon: ClipboardCheck,
     titleKey: "sectionVettingTitle",
     descKey: "sectionVettingDesc",
-  },
-  {
-    href: "/docs/supervision",
-    icon: Eye,
-    titleKey: "sectionSupervisionTitle",
-    descKey: "sectionSupervisionDesc",
   },
   {
     href: "/docs/agent-preparation",
