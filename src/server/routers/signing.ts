@@ -381,11 +381,24 @@ export const signingRouter = createTRPCRouter({
         });
       }
 
-      // Require signing details before signing
+      // Require signing details before signing — both your own and
+      // every counterparty's. Without all parties' details the rendered
+      // contract has "—" placeholders where their name / address /
+      // signatory belong, which makes any resulting signed document
+      // incomplete.
       if (!party.signingDetails) {
         throw new TRPCError({
           code: "BAD_REQUEST",
           message: "You must submit your execution details before signing",
+        });
+      }
+      const missingDetailsParty = signingRequest.dealRoom.parties.find(
+        (p) => p.id !== party.id && !p.signingDetails,
+      );
+      if (missingDetailsParty) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: `Cannot sign yet — ${missingDetailsParty.name || "the other party"} has not added their signing details. The contract would be missing their information.`,
         });
       }
 
