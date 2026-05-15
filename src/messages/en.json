@@ -71,6 +71,12 @@
     "errorOAuth": "Sign-in via Google didn't go through. Please try again.",
     "errorDefault": "Something went wrong while signing you in. Please try again.",
     "backToSignIn": "Back to sign in",
+    "testerSectionLabel": "Tester quick access",
+    "testerSectionDescription": "Sign in directly as a fictitious user to test journeys end-to-end. No magic link required.",
+    "testerStartup": "Sign in as Startup Founder",
+    "testerLawyer": "Sign in as Lawyer",
+    "testerBusiness": "Sign in as Business Owner",
+    "testerSignInFailed": "Tester sign-in failed. Make sure tester mode is enabled on the server.",
     "dealroom": "Dealroom",
     "poweredBy": "Contract Negotiation Platform",
     "secureContract": "Secure contract negotiation platform"
@@ -78,6 +84,18 @@
   "promo": {
     "allSkillsFreeTitle": "Every premium skill is free right now",
     "allSkillsFreeDescription": "We've unlocked the entire catalog so you can try any contract type. No subscription needed during this period."
+  },
+  "tester": {
+    "modeLabel": "Tester mode",
+    "personaStartup": "Startup Founder",
+    "personaLawyer": "Lawyer",
+    "personaBusiness": "Business Owner",
+    "reset": "Reset my data",
+    "resetting": "Resetting...",
+    "resetTitle": "Wipe all deals, invitations and signing artefacts for this tester user",
+    "resetConfirm": "Delete every deal, invitation and signing request linked to this tester user? This cannot be undone.",
+    "resetSuccess": "Tester data reset.",
+    "resetFailed": "Reset failed. Try again."
   },
   "deals": {
     "myDeals": "My Deals",

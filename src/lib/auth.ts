@@ -7,6 +7,7 @@ import prisma from "@/lib/prisma";
 import { getResend } from "@/lib/email";
 import { brand } from "@/config/brand";
 import { features } from "@/config/features";
+import { isTesterEmail } from "@/lib/tester";
 
 const isProduction =
   process.env.NODE_ENV === "production" &&
@@ -94,6 +95,43 @@ if (features.inviteCodeAuth) {
           data: { usedByUserId: user.id },
         });
 
+        return { id: user.id, email: user.email, name: user.name };
+      },
+    })
+  );
+}
+
+// Tester quick-access — production-safe fictitious users for journey testing.
+// Only the emails in TESTER_EMAILS are accepted; the env var is the activation
+// switch. No password needed; the allowlist is the gate. Set
+// `TESTER_MODE_ENABLED=true` (server) and `NEXT_PUBLIC_TESTER_MODE=true`
+// (client) on Vercel to enable, unset to disable.
+if (process.env.TESTER_MODE_ENABLED === "true") {
+  providers.push(
+    CredentialsProvider({
+      id: "tester",
+      name: "Tester Quick Access",
+      credentials: {
+        email: { type: "email" },
+      },
+      async authorize(credentials) {
+        const email = credentials?.email?.toLowerCase().trim();
+        if (!email || !isTesterEmail(email)) {
+          return null;
+        }
+        let user = await prisma.user.findUnique({ where: { email } });
+        if (!user) {
+          // Auto-create with a recognisable display name per persona so the
+          // dashboard greeting is meaningful even before any deals are made.
+          const name = email.startsWith("tester-startup")
+            ? "Tester Startup Founder"
+            : email.startsWith("tester-lawyer")
+              ? "Tester Lawyer"
+              : "Tester Business Owner";
+          user = await prisma.user.create({
+            data: { email, name, emailVerified: new Date() },
+          });
+        }
         return { id: user.id, email: user.email, name: user.name };
       },
     })

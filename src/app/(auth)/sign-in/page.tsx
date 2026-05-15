@@ -3,11 +3,24 @@
 import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useTranslations } from "next-intl";
-import { Loader2, Mail, KeyRound } from "lucide-react";
+import { Loader2, Mail, KeyRound, Rocket, Scale, Briefcase } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { brand } from "@/config/brand";
 import { features } from "@/config/features";
+import { TESTER_EMAILS } from "@/lib/tester";
+
+const TESTER_MODE_ON = process.env.NEXT_PUBLIC_TESTER_MODE === "true";
+
+const TESTER_PERSONAS: Array<{
+  email: (typeof TESTER_EMAILS)[number];
+  labelKey: "testerStartup" | "testerLawyer" | "testerBusiness";
+  icon: typeof Rocket;
+}> = [
+  { email: "tester-startup@todo.law", labelKey: "testerStartup", icon: Rocket },
+  { email: "tester-lawyer@todo.law", labelKey: "testerLawyer", icon: Scale },
+  { email: "tester-business@todo.law", labelKey: "testerBusiness", icon: Briefcase },
+];
 
 export default function SignInPage() {
   const t = useTranslations("auth");
@@ -259,6 +272,54 @@ export default function SignInPage() {
             </span>
           </button>
         </div>
+
+        {TESTER_MODE_ON && (
+          <div className="mt-8 pt-6 border-t border-dashed border-primary/30">
+            <p className="text-xs text-muted-foreground text-center mb-3 uppercase tracking-wider">
+              {t("testerSectionLabel")}
+            </p>
+            <p className="text-xs text-muted-foreground text-center mb-4">
+              {t("testerSectionDescription")}
+            </p>
+            <div className="space-y-2">
+              {TESTER_PERSONAS.map((persona) => {
+                const Icon = persona.icon;
+                return (
+                  <button
+                    key={persona.email}
+                    type="button"
+                    onClick={async () => {
+                      setIsEmailLoading(true);
+                      setError(null);
+                      try {
+                        const result = await signIn("tester", {
+                          email: persona.email,
+                          redirect: false,
+                          callbackUrl: "/deals",
+                        });
+                        if (result?.error) {
+                          setError(t("testerSignInFailed"));
+                          setIsEmailLoading(false);
+                        } else {
+                          window.location.href = "/deals";
+                        }
+                      } catch {
+                        setError(t("unexpectedError"));
+                        setIsEmailLoading(false);
+                      }
+                    }}
+                    disabled={isEmailLoading}
+                    className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-full border border-border text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors disabled:opacity-50"
+                  >
+                    <Icon className="w-4 h-4" />
+                    <span>{t(persona.labelKey)}</span>
+                    <span className="text-xs text-muted-foreground/70">{persona.email}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
 
         <div className="mt-6 pt-6 border-t border-border text-center">
           <p className="text-xs text-muted-foreground">

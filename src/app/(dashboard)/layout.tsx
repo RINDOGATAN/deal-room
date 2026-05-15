@@ -29,6 +29,7 @@ import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { trpc } from "@/lib/trpc";
 import { FeedbackDialog } from "@/components/FeedbackDialog";
 import { OnboardingModal } from "@/components/OnboardingModal";
+import { TesterBar } from "@/components/TesterBar";
 import { UserRoleProvider } from "@/contexts/UserRoleContext";
 
 export default function DashboardLayout({
@@ -410,6 +411,7 @@ export default function DashboardLayout({
       )}
 
       <FeedbackDialog open={feedbackOpen} onOpenChange={setFeedbackOpen} />
+      <TesterBar />
     </div>
     </UserRoleProvider>
   );

@@ -71,6 +71,12 @@
     "errorOAuth": "El inicio de sesión con Google no se completó. Vuelve a intentarlo.",
     "errorDefault": "Ha ocurrido un problema al iniciar sesión. Vuelve a intentarlo.",
     "backToSignIn": "Volver al inicio de sesión",
+    "testerSectionLabel": "Acceso rápido para pruebas",
+    "testerSectionDescription": "Inicia sesión directamente como un usuario ficticio para probar los flujos de principio a fin. No hace falta enlace mágico.",
+    "testerStartup": "Acceder como Fundador/a de Startup",
+    "testerLawyer": "Acceder como Abogado/a",
+    "testerBusiness": "Acceder como Propietario/a de Empresa",
+    "testerSignInFailed": "Acceso de prueba fallido. Asegúrate de que el modo de pruebas está activo en el servidor.",
     "dealroom": "Dealroom",
     "poweredBy": "Plataforma de Negociación de Contratos",
     "secureContract": "Plataforma segura de negociación de contratos"
@@ -78,6 +84,18 @@
   "promo": {
     "allSkillsFreeTitle": "Todas las skills premium están gratis ahora mismo",
     "allSkillsFreeDescription": "Hemos desbloqueado el catálogo completo para que puedas probar cualquier tipo de contrato. No hace falta suscripción durante este periodo."
+  },
+  "tester": {
+    "modeLabel": "Modo de pruebas",
+    "personaStartup": "Fundador/a de Startup",
+    "personaLawyer": "Abogado/a",
+    "personaBusiness": "Propietario/a de Empresa",
+    "reset": "Reiniciar mis datos",
+    "resetting": "Reiniciando...",
+    "resetTitle": "Borrar todos los acuerdos, invitaciones y artefactos de firma de este usuario de pruebas",
+    "resetConfirm": "¿Eliminar todos los acuerdos, invitaciones y firmas vinculados a este usuario de pruebas? No se puede deshacer.",
+    "resetSuccess": "Datos de prueba reiniciados.",
+    "resetFailed": "No se pudo reiniciar. Inténtalo de nuevo."
   },
   "deals": {
     "myDeals": "Mis Acuerdos",
