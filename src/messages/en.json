@@ -922,6 +922,7 @@
   },
   "requests": {
     "title": "Recommendation Requests",
+    "replyEmailNotice": "The lawyer will receive your request along with your email <email></email> so they can reply to you directly.",
     "incoming": "Incoming Requests",
     "sent": "Sent Requests",
     "noIncoming": "No incoming requests",

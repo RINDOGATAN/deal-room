@@ -923,6 +923,7 @@
   },
   "requests": {
     "title": "Solicitudes de Recomendación",
+    "replyEmailNotice": "El abogado/a recibirá tu solicitud junto con tu correo electrónico <email></email> para poder responderte directamente.",
     "incoming": "Solicitudes Recibidas",
     "sent": "Solicitudes Enviadas",
     "noIncoming": "No hay solicitudes recibidas",

@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { useSession } from "next-auth/react";
+import { Mail } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
@@ -37,6 +39,8 @@ export function RequestRecommendationDialog({
 }: Props) {
   const t = useTranslations("requests");
   const tCommon = useTranslations("common");
+  const { data: session } = useSession();
+  const requesterEmail = session?.user?.email ?? "";
 
   const [contractType, setContractType] = useState("");
   const [governingLaw, setGoverningLaw] = useState<GoverningLaw | "">("");
@@ -126,6 +130,20 @@ export function RequestRecommendationDialog({
               className="w-full px-3 py-2 text-sm border border-border rounded-lg bg-background text-foreground resize-none focus:outline-none focus:ring-1 focus:ring-primary"
             />
           </div>
+
+          {/* Reply-to address — what the lawyer will see and use to reach
+              the requester back. Pulled from the session so the user can't
+              get this wrong by accident. */}
+          {requesterEmail && (
+            <div className="flex items-start gap-2 px-3 py-2 bg-secondary/40 border border-border rounded-lg text-xs text-muted-foreground">
+              <Mail className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" />
+              <p>
+                {t.rich("replyEmailNotice", {
+                  email: () => <strong className="text-foreground">{requesterEmail}</strong>,
+                })}
+              </p>
+            </div>
+          )}
         </div>
 
         <div className="flex justify-end gap-2 pt-4">
