@@ -2,7 +2,9 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BookOpen } from "lucide-react";
+import { useSession } from "next-auth/react";
+import { useTranslations } from "next-intl";
+import { BookOpen, FileText } from "lucide-react";
 import { brand } from "@/config/brand";
 import { features } from "@/config/features";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
@@ -13,7 +15,12 @@ export default function PublicLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const { status } = useSession();
+  const tFooter = useTranslations("footer");
+  const tAuth = useTranslations("auth");
+  const tNav = useTranslations("nav");
   const isDocsActive = pathname.startsWith("/docs");
+  const isAuthenticated = status === "authenticated";
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -41,15 +48,25 @@ export default function PublicLayout({
                   `}
                 >
                   <BookOpen className="w-4 h-4" />
-                  <span className="hidden sm:inline">User Guide</span>
+                  <span className="hidden sm:inline">{tFooter("userGuide")}</span>
                 </Link>
               )}
-              <Link
-                href="/sign-in"
-                className="px-4 py-1.5 text-sm font-medium text-primary border border-primary rounded-full hover:bg-secondary transition-colors"
-              >
-                Sign In
-              </Link>
+              {isAuthenticated ? (
+                <Link
+                  href="/deals"
+                  className="flex items-center gap-2 px-4 py-1.5 text-sm font-medium text-primary border border-primary rounded-full hover:bg-secondary transition-colors"
+                >
+                  <FileText className="w-4 h-4" />
+                  <span>{tNav("myDeals")}</span>
+                </Link>
+              ) : (
+                <Link
+                  href="/sign-in"
+                  className="px-4 py-1.5 text-sm font-medium text-primary border border-primary rounded-full hover:bg-secondary transition-colors"
+                >
+                  {tAuth("signIn")}
+                </Link>
+              )}
             </nav>
           </div>
         </div>
@@ -83,7 +100,7 @@ export default function PublicLayout({
           )}
 
           {/* Standard footer links */}
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1">
             {features.publicDocs && (
               <>
                 <Link
@@ -91,7 +108,7 @@ export default function PublicLayout({
                   className="flex items-center gap-1.5 hover:text-foreground transition-colors"
                 >
                   <BookOpen className="w-3.5 h-3.5" />
-                  User Guide
+                  {tFooter("userGuide")}
                 </Link>
                 <span className="text-border">&middot;</span>
               </>
@@ -102,7 +119,7 @@ export default function PublicLayout({
               rel="noopener noreferrer"
               className="hover:text-foreground transition-colors"
             >
-              Terms of Use
+              {tFooter("termsOfUse")}
             </a>
             <span className="text-border">&middot;</span>
             <a
@@ -111,7 +128,7 @@ export default function PublicLayout({
               rel="noopener noreferrer"
               className="hover:text-foreground transition-colors"
             >
-              Privacy Notice
+              {tFooter("privacyNotice")}
             </a>
             <span className="text-border">&middot;</span>
             <LanguageSwitcher />
