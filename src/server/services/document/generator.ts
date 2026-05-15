@@ -22,6 +22,10 @@ export interface PartyData {
   taxId?: string;
   signatoryName?: string;
   signatoryTitle?: string;
+  /** Typed signature string (the name the party typed at signing). */
+  signature?: string;
+  /** Wall-clock timestamp the signature was recorded. */
+  signedAt?: Date;
 }
 
 export interface ClauseData {
@@ -203,6 +207,7 @@ export async function generateContractData(
     include: {
       contractTemplate: true,
       parties: true,
+      signingRequest: true,
       clauses: {
         include: {
           clauseTemplate: {
@@ -423,6 +428,8 @@ export async function generateContractData(
       taxId: sdA?.taxId,
       signatoryName: sdA?.signatoryName,
       signatoryTitle: sdA?.signatoryTitle,
+      signature: deal.signingRequest?.initiatorSignature || undefined,
+      signedAt: deal.signingRequest?.initiatorSignedAt || undefined,
     },
     partyB: respondent
       ? {
@@ -434,6 +441,8 @@ export async function generateContractData(
           taxId: sdB?.taxId,
           signatoryName: sdB?.signatoryName,
           signatoryTitle: sdB?.signatoryTitle,
+          signature: deal.signingRequest?.respondentSignature || undefined,
+          signedAt: deal.signingRequest?.respondentSignedAt || undefined,
         }
       : null,
     clauses,
