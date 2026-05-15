@@ -6,6 +6,7 @@ import { checkDealCreationEntitlement } from "../services/licensing/entitlement"
 import { resolveLocalizedString, resolveLocalizedArray } from "../services/skills/i18n";
 import { validateRequiredParameters, type ParameterSchema } from "@/lib/parameters";
 import { autoAgreeSingleOptionClauses } from "../services/deal/autoAgreeSingleOption";
+import { features } from "@/config/features";
 
 // Map GoverningLaw enum to jurisdiction strings for entitlement checking
 const GOVERNING_LAW_TO_JURISDICTION: Record<string, string> = {
@@ -358,8 +359,9 @@ export const dealRouter = createTRPCRouter({
         });
       }
 
-      // Check entitlement if this is a licensed skill
-      if (template.skillPackageId) {
+      // Check entitlement if this is a licensed skill (skipped during the
+      // all-skills-free promo — unlocks every premium skill platform-wide).
+      if (template.skillPackageId && !features.allSkillsFree) {
         // Find customer by email
         const customer = await ctx.prisma.customer.findFirst({
           where: { email: { equals: userEmail, mode: "insensitive" } },
