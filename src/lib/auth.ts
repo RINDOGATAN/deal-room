@@ -119,19 +119,31 @@ if (process.env.TESTER_MODE_ENABLED === "true") {
         if (!email || !isTesterEmail(email)) {
           return null;
         }
-        let user = await prisma.user.findUnique({ where: { email } });
-        if (!user) {
-          // Auto-create with a recognisable display name per persona so the
-          // dashboard greeting is meaningful even before any deals are made.
-          const name = email.startsWith("tester-startup")
-            ? "Tester Startup Founder"
-            : email.startsWith("tester-lawyer")
-              ? "Tester Lawyer"
-              : "Tester Business Owner";
-          user = await prisma.user.create({
-            data: { email, name, emailVerified: new Date() },
-          });
-        }
+        // Persona-specific defaults so the dashboard chrome matches the
+        // intent of each tester (the third nav slot is different for
+        // lawyers vs founders/business owners).
+        const isLawyer = email.startsWith("tester-lawyer");
+        const name = email.startsWith("tester-startup")
+          ? "Tester Startup Founder"
+          : isLawyer
+            ? "Tester Lawyer"
+            : "Tester Business Owner";
+        const role = isLawyer ? "LAWYER" : "BUSINESS_OWNER";
+
+        // Upsert each sign-in: existing tester rows may pre-date this
+        // logic and miss the isLawyer / role flags, which leaves the
+        // lawyer-tester looking like a business owner in the nav.
+        const user = await prisma.user.upsert({
+          where: { email },
+          create: {
+            email,
+            name,
+            emailVerified: new Date(),
+            isLawyer,
+            role,
+          },
+          update: { isLawyer, role },
+        });
         return { id: user.id, email: user.email, name: user.name };
       },
     })
