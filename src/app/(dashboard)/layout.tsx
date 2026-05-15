@@ -300,7 +300,7 @@ export default function DashboardLayout({
                 {tFooter("userGuide")}
               </Link>
             )}
-            {features.marketplace && (
+            {features.marketplace && !features.allSkillsFree && (
               <Link
                 href="/marketplace"
                 className="flex items-center justify-center gap-1.5 hover:text-foreground transition-colors"
@@ -353,7 +353,7 @@ export default function DashboardLayout({
                 <span className="text-border">&middot;</span>
               </>
             )}
-            {features.marketplace && (
+            {features.marketplace && !features.allSkillsFree && (
               <>
                 <Link
                   href="/marketplace"
