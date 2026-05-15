@@ -11,7 +11,10 @@ export const features = {
   magicLinkAuth: brand.auth.mode === "magic-link",
   lawyerInvolvement: true,
   billing: !!process.env.STRIPE_SECRET_KEY,
-  marketplace: true,
+  // Disabled while every premium skill is free — a /marketplace listing of
+  // priced skills contradicts the "everything's free right now" banner. Flip
+  // back to `true` to restore the footer link + the page itself.
+  marketplace: false,
   clientInvitations: true,
   agentApi: true,
   expertsApi: true,
