@@ -50,6 +50,11 @@ export const billingRouter = createTRPCRouter({
   }),
 
   hasVettedContracts: protectedProcedure.query(async ({ ctx }) => {
+    // Promo: every skill (including the Vetted Contracts feature pack)
+    // is unlocked — report active so the UI doesn't surface a paywall.
+    if (features.allSkillsFree) {
+      return { active: true, selfServiceUpgrade: features.selfServiceUpgrade, skillPackageId: null };
+    }
     const email = ctx.session.user.email;
     if (!email) return { active: false, selfServiceUpgrade: features.selfServiceUpgrade, skillPackageId: null };
 

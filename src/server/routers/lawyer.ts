@@ -5,6 +5,7 @@ import { GoverningLaw } from "@prisma/client";
 import { sendClientInvitationEmail, sendRecommendationRequestEmail } from "@/lib/email";
 import { checkDealCreationEntitlement } from "../services/licensing/entitlement";
 import { SPECIALIZATIONS, CERTIFICATIONS, EXPERT_TYPES } from "../services/experts/taxonomy";
+import { features } from "@/config/features";
 
 const GOVERNING_LAW_TO_JURISDICTION: Record<string, string> = {
   CALIFORNIA: "CALIFORNIA",
@@ -64,8 +65,9 @@ export const lawyerRouter = createTRPCRouter({
         throw new TRPCError({ code: "NOT_FOUND", message: "Template not found" });
       }
 
-      // Check entitlement for licensed skills
-      if (template.skillPackageId) {
+      // Check entitlement for licensed skills (skipped during the promo —
+      // `features.allSkillsFree` unlocks every skill for everyone).
+      if (template.skillPackageId && !features.allSkillsFree) {
         const userEmail = ctx.session.user.email!;
         const customer = await ctx.prisma.customer.findFirst({
           where: { email: { equals: userEmail, mode: "insensitive" } },
@@ -259,9 +261,9 @@ export const lawyerRouter = createTRPCRouter({
         throw new TRPCError({ code: "BAD_REQUEST", message: "Vetting must be approved before sending invitations" });
       }
 
-      // Check "Vetted Contracts" entitlement
+      // Check "Vetted Contracts" entitlement — skipped during the promo.
       const lawyerEmail = ctx.session.user.email;
-      if (lawyerEmail) {
+      if (lawyerEmail && !features.allSkillsFree) {
         const customer = await ctx.prisma.customer.findFirst({
           where: { email: { equals: lawyerEmail, mode: "insensitive" } },
         });
