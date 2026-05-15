@@ -588,36 +588,39 @@ export async function generateContractDocx(
     addSignatureBlocks(children, data, labels);
   }
 
-  // Certification footer
-  children.push(new Paragraph({ spacing: { before: 600 }, children: [] }));
-  children.push(
-    new Paragraph({
-      border: {
-        top: { style: BorderStyle.SINGLE, size: 1, color: "CCCCCC" },
-      },
-      spacing: { before: 100, after: 100 },
-      children: [
-        new TextRun({
-          text: data.certification?.certified
-            ? labels.certifiedBy
-            : labels.uncertified,
-          size: 14,
-          color: data.certification?.certified ? "166534" : "9A3412",
-          font: "Times New Roman",
-        }),
-        ...(data.certification?.documentHash
-          ? [
-              new TextRun({
-                text: `    SHA-256: ${data.certification.documentHash.slice(0, 16)}...`,
-                size: 12,
-                color: "999999",
-                font: "Times New Roman",
-              }),
-            ]
-          : []),
-      ],
-    })
-  );
+  // Certification footer — only rendered when the document is actually
+  // certified. Until the Firmas integration lands, the previous
+  // "UNVERIFIED — This document has not been certified" banner read as
+  // accusatory; better to print nothing.
+  if (data.certification?.certified) {
+    children.push(new Paragraph({ spacing: { before: 600 }, children: [] }));
+    children.push(
+      new Paragraph({
+        border: {
+          top: { style: BorderStyle.SINGLE, size: 1, color: "CCCCCC" },
+        },
+        spacing: { before: 100, after: 100 },
+        children: [
+          new TextRun({
+            text: labels.certifiedBy,
+            size: 14,
+            color: "166534",
+            font: "Times New Roman",
+          }),
+          ...(data.certification?.documentHash
+            ? [
+                new TextRun({
+                  text: `    SHA-256: ${data.certification.documentHash.slice(0, 16)}...`,
+                  size: 12,
+                  color: "999999",
+                  font: "Times New Roman",
+                }),
+              ]
+            : []),
+        ],
+      })
+    );
+  }
 
   // Build sections array
   const sections = [
@@ -812,8 +815,14 @@ function addSignatureBlocks(
       },
       children: [
         new TextRun({
-          text: "",
-          size: 20,
+          // Typed signature rendered graphically on the signature line.
+          // Italic Times New Roman is the closest stock-font approximation
+          // of a typed-to-sign mark; the rest of the contract is in the
+          // same family so the line keeps a consistent feel.
+          text: data.partyA.signature || "",
+          italics: true,
+          size: 36,
+          color: "1A3A5C",
           font: "Times New Roman",
         }),
       ],
@@ -880,7 +889,9 @@ function addSignatureBlocks(
       },
       children: [
         new TextRun({
-          text: "                              ",
+          text: data.partyA.signedAt
+            ? data.partyA.signedAt.toLocaleDateString(data.language === "es" ? "es-ES" : "en-US", { year: "numeric", month: "long", day: "numeric" })
+            : "                              ",
           size: 20,
           font: "Times New Roman",
         }),
@@ -913,8 +924,10 @@ function addSignatureBlocks(
       },
       children: [
         new TextRun({
-          text: "",
-          size: 20,
+          text: data.partyB?.signature || "",
+          italics: true,
+          size: 36,
+          color: "1A3A5C",
           font: "Times New Roman",
         }),
       ],
@@ -1009,7 +1022,9 @@ function addSignatureBlocks(
       },
       children: [
         new TextRun({
-          text: "                              ",
+          text: data.partyB?.signedAt
+            ? data.partyB.signedAt.toLocaleDateString(data.language === "es" ? "es-ES" : "en-US", { year: "numeric", month: "long", day: "numeric" })
+            : "                              ",
           size: 20,
           font: "Times New Roman",
         }),

@@ -202,6 +202,28 @@ const styles = StyleSheet.create({
     borderBottomStyle: "solid",
     marginBottom: 6,
     height: 40,
+    justifyContent: "flex-end",
+  },
+  signatureScript: {
+    fontFamily: "Times-Italic",
+    fontStyle: "italic",
+    fontSize: 22,
+    color: "#1a3a5c",
+    marginBottom: 2,
+  },
+  dateLineSigned: {
+    flexDirection: "row",
+    alignItems: "flex-end",
+    borderBottomWidth: 1,
+    borderBottomColor: "#000",
+    borderBottomStyle: "solid",
+    height: 36,
+    width: 140,
+    marginTop: 4,
+    paddingBottom: 4,
+  },
+  dateText: {
+    fontSize: 10,
   },
   signatureLabel: {
     fontSize: 9,
@@ -559,7 +581,11 @@ export function ContractPDF({ data }: ContractPDFProps) {
               <View style={styles.signatureGrid}>
                 <View style={styles.signatureBox}>
                   <Text style={styles.signatureLabel}>{labels.partyA}</Text>
-                  <View style={styles.signatureLine} />
+                  <View style={styles.signatureLine}>
+                    {data.partyA.signature && (
+                      <Text style={styles.signatureScript}>{data.partyA.signature}</Text>
+                    )}
+                  </View>
                   <Text style={styles.signaturePartyName}>
                     {data.partyA.legalName || data.partyA.company || data.partyA.name}
                   </Text>
@@ -572,11 +598,23 @@ export function ContractPDF({ data }: ContractPDFProps) {
                     </Text>
                   )}
                   <Text style={styles.signatureDate}>{labels.date}</Text>
-                  <View style={styles.dateLine} />
+                  {data.partyA.signedAt ? (
+                    <View style={styles.dateLineSigned}>
+                      <Text style={styles.dateText}>
+                        {data.partyA.signedAt.toLocaleDateString(data.language === "es" ? "es-ES" : "en-US", { year: "numeric", month: "long", day: "numeric" })}
+                      </Text>
+                    </View>
+                  ) : (
+                    <View style={styles.dateLine} />
+                  )}
                 </View>
                 <View style={styles.signatureBox}>
                   <Text style={styles.signatureLabel}>{labels.partyB}</Text>
-                  <View style={styles.signatureLine} />
+                  <View style={styles.signatureLine}>
+                    {data.partyB?.signature && (
+                      <Text style={styles.signatureScript}>{data.partyB.signature}</Text>
+                    )}
+                  </View>
                   <Text style={styles.signaturePartyName}>
                     {data.partyB ? (data.partyB.legalName || data.partyB.company || data.partyB.name) : "[_________________]"}
                   </Text>
@@ -589,26 +627,38 @@ export function ContractPDF({ data }: ContractPDFProps) {
                     </Text>
                   )}
                   <Text style={styles.signatureDate}>{labels.date}</Text>
-                  <View style={styles.dateLine} />
+                  {data.partyB?.signedAt ? (
+                    <View style={styles.dateLineSigned}>
+                      <Text style={styles.dateText}>
+                        {data.partyB.signedAt.toLocaleDateString(data.language === "es" ? "es-ES" : "en-US", { year: "numeric", month: "long", day: "numeric" })}
+                      </Text>
+                    </View>
+                  ) : (
+                    <View style={styles.dateLine} />
+                  )}
                 </View>
               </View>
             </View>
           </>
         )}
 
-        {/* Certification footer */}
-        <View style={styles.certificationFooter} fixed>
-          <Text
-            style={data.certification?.certified ? styles.certifiedBadge : styles.uncertifiedBadge}
-          >
-            {data.certification?.certified ? `\u2713 ${labels.certifiedBy}` : `\u25CB ${labels.uncertified}`}
-          </Text>
-          <Text style={{ fontSize: 7, color: "#999" }}>
-            {data.certification?.documentHash
-              ? `SHA-256: ${data.certification.documentHash.slice(0, 16)}...`
-              : ""}
-          </Text>
-        </View>
+        {/* Certification footer \u2014 rendered only when the document was
+            actually certified by the cryptographic-timestamping pipeline.
+            Without a real certificate we used to print a red "UNVERIFIED"
+            badge, which felt accusatory; better to print nothing while
+            we wait for the Firmas integration. */}
+        {data.certification?.certified && (
+          <View style={styles.certificationFooter} fixed>
+            <Text style={styles.certifiedBadge}>
+              {`\u2713 ${labels.certifiedBy}`}
+            </Text>
+            <Text style={{ fontSize: 7, color: "#999" }}>
+              {data.certification?.documentHash
+                ? `SHA-256: ${data.certification.documentHash.slice(0, 16)}...`
+                : ""}
+            </Text>
+          </View>
+        )}
 
         {/* Footer with page number */}
         <Text
@@ -754,19 +804,19 @@ export function ContractPDF({ data }: ContractPDFProps) {
             </View>
           )}
 
-          {/* Certification footer */}
-          <View style={styles.certificationFooter} fixed>
-            <Text
-              style={data.certification?.certified ? styles.certifiedBadge : styles.uncertifiedBadge}
-            >
-              {data.certification?.certified ? `\u2713 ${labels.certifiedBy}` : `\u25CB ${labels.uncertified}`}
-            </Text>
-            <Text style={{ fontSize: 7, color: "#999" }}>
-              {data.certification?.documentHash
-                ? `SHA-256: ${data.certification.documentHash.slice(0, 16)}...`
-                : ""}
-            </Text>
-          </View>
+          {/* Certification footer \u2014 only when actually certified. */}
+          {data.certification?.certified && (
+            <View style={styles.certificationFooter} fixed>
+              <Text style={styles.certifiedBadge}>
+                {`\u2713 ${labels.certifiedBy}`}
+              </Text>
+              <Text style={{ fontSize: 7, color: "#999" }}>
+                {data.certification?.documentHash
+                  ? `SHA-256: ${data.certification.documentHash.slice(0, 16)}...`
+                  : ""}
+              </Text>
+            </View>
+          )}
 
           {/* Footer with page number */}
           <Text
