@@ -634,12 +634,14 @@ export const lawyerRouter = createTRPCRouter({
         where: { id: ctx.session.user.id },
         select: { name: true, email: true, company: true },
       });
-      const requesterName = requester?.name || requester?.email || "A business owner";
+      const requesterEmail = requester?.email || ctx.session.user.email || "";
+      const requesterName = requester?.name || requesterEmail || "A business owner";
       const requesterCompany = requester?.company || undefined;
       try {
         await sendRecommendationRequestEmail({
           to: lawyerProfile.user.email!,
           requesterName,
+          requesterEmail,
           requesterCompany,
           contractType: input.contractType,
           governingLaw: input.governingLaw,

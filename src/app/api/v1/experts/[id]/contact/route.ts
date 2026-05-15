@@ -155,10 +155,12 @@ export async function POST(
       await sendRecommendationRequestEmail({
         to: profile.user.email,
         requesterName,
+        requesterEmail,
         requesterCompany,
         contractType: subject,
         governingLaw: governingLaw ?? "Cross-jurisdiction",
         message,
+        sourceApp: auth.customer.name,
       });
     } catch {
       console.error("Failed to send contact request email");

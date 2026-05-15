@@ -157,6 +157,7 @@ export async function sendClientInvitationEmail({
 interface SendRecommendationRequestEmailParams {
   to: string;
   requesterName: string;
+  requesterEmail: string;
   requesterCompany?: string;
   contractType: string;
   governingLaw: string | null;
@@ -167,6 +168,7 @@ interface SendRecommendationRequestEmailParams {
 export async function sendRecommendationRequestEmail({
   to,
   requesterName,
+  requesterEmail,
   requesterCompany,
   contractType,
   governingLaw,
@@ -188,6 +190,8 @@ export async function sendRecommendationRequestEmail({
       </div>`
     : "";
 
+  const replyBlock = `<p style="color: ${brand.colors.muted}; font-size: 13px; margin: 0 0 24px;">Reply to the requester directly: <a href="mailto:${requesterEmail}" style="color: ${brand.colors.primary};">${requesterEmail}</a></p>`;
+
   const subject = sourceApp
     ? `New assistance request: ${contractType}`
     : `New recommendation request: ${contractType}`;
@@ -196,12 +200,14 @@ export async function sendRecommendationRequestEmail({
     await getResend().emails.send({
       from: emailFrom(),
       to,
+      replyTo: requesterEmail,
       subject,
       html: emailWrapper("Recommendation Request", `
         ${emailParagraph(`<strong style="color: ${brand.colors.foreground};">${requesterLabel}</strong> has requested your recommendation for a <strong style="color: ${brand.colors.foreground};">${contractType}</strong> contract${jurisdictionText}.`)}
         ${messageBlock}
+        ${replyBlock}
         ${emailButton(requestsUrl, "View Request")}
-        ${emailMuted("You can accept or decline this request from your dashboard.")}
+        ${emailMuted("You can also accept or decline this request from your dashboard.")}
       `),
     });
   } catch (error) {
