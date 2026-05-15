@@ -6,7 +6,6 @@ import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 import {
   BookOpen,
-  Eye,
   Scale,
   ChevronDown,
   ClipboardCheck,
@@ -79,12 +78,12 @@ const navSectionsDef: NavSection[] = [
       { href: "/docs/agent-preparation/disputes", labelKey: "prepDisputes" },
     ],
   },
-  {
-    id: "administration",
-    labelKey: "administration",
-    icon: Eye,
-    items: [{ href: "/docs/supervision", labelKey: "supervision" }],
-  },
+  // The Administration section (/docs/supervision) is intentionally
+  // omitted — that content covers platform-admin and supervisor 2FA
+  // flows, which are only relevant to our internal team and to
+  // self-hosters of the OSS build. Restore the block (and remove the
+  // notFound() in /docs/supervision/page.tsx) if it ever needs to be
+  // public again.
 ];
 
 function getSectionForPath(pathname: string): string | null {
