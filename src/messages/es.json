@@ -320,6 +320,7 @@
   },
   "review": {
     "reviewCompromises": "Revisar Compromisos",
+    "notReadyForReview": "Este acuerdo aún no está listo para revisar — ambas partes deben enviar primero sus selecciones.",
     "otherParty": "la otra parte",
     "waitingForOtherTitle": "Esperando a que {name} revise el compromiso",
     "waitingForOtherDescription": "Has hecho tu parte. No tienes que hacer nada más por ahora — recibirás un aviso cuando la otra parte acepte y el acuerdo pase a la firma. Mientras tanto, puedes añadir tus datos de firma abajo para que la firma pueda empezar en cuanto la otra parte termine.",

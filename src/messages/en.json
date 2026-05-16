@@ -319,6 +319,7 @@
   },
   "review": {
     "reviewCompromises": "Review Compromises",
+    "notReadyForReview": "This deal isn't ready for review yet — both parties need to submit their selections first.",
     "otherParty": "the other party",
     "waitingForOtherTitle": "Waiting for {name} to review the compromise",
     "waitingForOtherDescription": "You've done your part. Sit tight — you'll be notified once they accept and the deal moves to signing. While you wait, you can add your signing details below so signing can start as soon as they're done.",
