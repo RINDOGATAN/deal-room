@@ -10,7 +10,8 @@
  *      option. Named "Firmas Phase B Test {timestamp}" so it's
  *      identifiable in admin views and easy to clean up.
  *   3. Creates a SigningRequest in PENDING.
- *   4. Mints a UUID v4 firmasToken (mirrors signing.sendToFirmas).
+ *   4. Mints a UUID v4 initiatorFirmasToken (the tester is the
+ *      INITIATOR of the deal). Mirrors signing.requestFirmasHandoff.
  *   5. Prints the firmas.io/sign/<token> URL and the bundle curl
  *      command for preflighting.
  *
@@ -99,6 +100,10 @@ async function main() {
       include: { parties: true, clauses: true },
     });
 
+    // The tester is the INITIATOR of this deal (SOLO mode has no
+    // respondent), so the token is minted into initiatorFirmasToken.
+    // The callback / bundle endpoints both look up by either token
+    // and route the signing to the matching role.
     const token = randomUUID();
     const signingRequest = await tx.signingRequest.create({
       data: {
@@ -107,8 +112,8 @@ async function main() {
         status: "SENT",
         externalId: `sign_${Date.now()}`,
         documentUrl: null,
-        firmasToken: token,
-        firmasSentAt: new Date(),
+        initiatorFirmasToken: token,
+        initiatorFirmasSentAt: new Date(),
         expiresAt: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
       },
     });

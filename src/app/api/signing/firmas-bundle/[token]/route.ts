@@ -38,8 +38,13 @@ export async function GET(_request: NextRequest, ctx: RouteContext) {
       return NextResponse.json({ error: "missing_token" }, { status: 400 });
     }
 
-    const signingRequest = await prisma.signingRequest.findUnique({
-      where: { firmasToken: token },
+    const signingRequest = await prisma.signingRequest.findFirst({
+      where: {
+        OR: [
+          { initiatorFirmasToken: token },
+          { respondentFirmasToken: token },
+        ],
+      },
       include: {
         dealRoom: {
           include: {
@@ -57,6 +62,12 @@ export async function GET(_request: NextRequest, ctx: RouteContext) {
       return NextResponse.json({ error: "not_found" }, { status: 404 });
     }
 
+    // Which role this token belongs to. Tells the Firmas mobile UI
+    // which party's identity attestation to collect ("sign as [Acme
+    // Corp]" vs "sign as [Widget Inc]").
+    const signingAs: "INITIATOR" | "RESPONDENT" =
+      signingRequest.initiatorFirmasToken === token ? "INITIATOR" : "RESPONDENT";
+
     if (signingRequest.status === "COMPLETED" || signingRequest.status === "DECLINED" || signingRequest.status === "EXPIRED") {
       return NextResponse.json(
         {
@@ -64,6 +75,21 @@ export async function GET(_request: NextRequest, ctx: RouteContext) {
           status: signingRequest.status,
           completedAt: signingRequest.completedAt,
         },
+        { status: 410 },
+      );
+    }
+
+    // This-party-already-signed guard. If the matched role has a
+    // signedAt timestamp, the token has been consumed and we don't
+    // want to surface the bundle for re-signing — same 410 semantics
+    // as a fully-settled request, just scoped to this party.
+    const partyAlreadySigned =
+      signingAs === "INITIATOR"
+        ? !!signingRequest.initiatorSignedAt
+        : !!signingRequest.respondentSignedAt;
+    if (partyAlreadySigned) {
+      return NextResponse.json(
+        { error: "party_already_signed", signingAs },
         { status: 410 },
       );
     }
@@ -96,9 +122,19 @@ export async function GET(_request: NextRequest, ctx: RouteContext) {
     const initiatorParty = signingRequest.dealRoom.parties.find((p) => p.role === "INITIATOR");
     const respondentParty = signingRequest.dealRoom.parties.find((p) => p.role === "RESPONDENT");
 
+    // Per-role sentAt — the Firmas mobile UI uses it for "sent {ago}"
+    // copy and doesn't need to know about the other party's token.
+    const sentAt =
+      signingAs === "INITIATOR"
+        ? signingRequest.initiatorFirmasSentAt
+        : signingRequest.respondentFirmasSentAt;
+
     return NextResponse.json({
       schemaVersion: 1,
       dealRoomId: signingRequest.dealRoomId,
+      // Tell the Firmas mobile UI which party's identity attestation
+      // to collect. "Sign as [Acme Corp]" framing depends on this.
+      signingAs,
       documentHash,
       contractType: contractData.contractType,
       contractTitle: contractData.dealName,
@@ -129,7 +165,7 @@ export async function GET(_request: NextRequest, ctx: RouteContext) {
         legalText: c.legalText,
       })),
       boilerplate: contractData.boilerplate,
-      sentAt: signingRequest.firmasSentAt,
+      sentAt,
       expiresAt: signingRequest.expiresAt,
     });
   } catch (error) {

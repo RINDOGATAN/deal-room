@@ -248,9 +248,17 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  // 1. Look up the SigningRequest by token. Single index hit.
-  const signingRequest = await prisma.signingRequest.findUnique({
-    where: { firmasToken: body.token },
+  // 1. Look up the SigningRequest by EITHER role's token. Both
+  //    columns are indexed; the OR fans out to two index probes and
+  //    Postgres picks whichever hits. Whichever column matched tells
+  //    us which party is signing.
+  const signingRequest = await prisma.signingRequest.findFirst({
+    where: {
+      OR: [
+        { initiatorFirmasToken: body.token },
+        { respondentFirmasToken: body.token },
+      ],
+    },
     include: {
       dealRoom: {
         include: { parties: true },
@@ -260,9 +268,27 @@ export async function POST(request: NextRequest) {
   if (!signingRequest) {
     return corsJson({ error: "unknown_token" }, { status: 404 });
   }
+  const signingAs: "INITIATOR" | "RESPONDENT" =
+    signingRequest.initiatorFirmasToken === body.token ? "INITIATOR" : "RESPONDENT";
+
   if (signingRequest.status === "COMPLETED" || signingRequest.status === "DECLINED" || signingRequest.status === "EXPIRED") {
     return corsJson(
       { error: "request_already_settled", status: signingRequest.status },
+      { status: 409 },
+    );
+  }
+
+  // Idempotency / already-signed guard for this specific party. If
+  // the matched role already has a signedAt timestamp, we don't want
+  // to overwrite their bundle on a Firmas retry — return 409 so the
+  // Firmas client knows this token has already been consumed.
+  const alreadySigned =
+    signingAs === "INITIATOR"
+      ? !!signingRequest.initiatorSignedAt
+      : !!signingRequest.respondentSignedAt;
+  if (alreadySigned) {
+    return corsJson(
+      { error: "party_already_signed", signingAs },
       { status: 409 },
     );
   }
@@ -291,10 +317,10 @@ export async function POST(request: NextRequest) {
     return corsJson({ error: "signature_mismatch" }, { status: 401 });
   }
 
-  // 5. Persist the signed bundle + flip the request forward. The
-  //    respondent is the party that signed via Firmas (the initiator
-  //    is whoever pressed "Send to Firmas" in step B.1, so they're
-  //    out of the loop here by design).
+  // 5. Persist the signed bundle + flip the request forward. We
+  //    update the matching role's columns based on which token Firmas
+  //    sent us in step 1. The "both signed" check fires regardless of
+  //    which party signed first.
   const now = new Date();
   const signedBundle = {
     schemaVersion: 1,
@@ -311,23 +337,36 @@ export async function POST(request: NextRequest) {
     attestedIdNumberSha256: decoded.id_number_sha256 ?? null,
   };
 
-  const bothSigned =
-    signingRequest.initiatorSignedAt !== null && signingRequest.respondentSignedAt === null
-      // initiator already signed via the type-to-sign path; we're
-      // adding the respondent now → both will be signed after this update
-      ? true
-      : signingRequest.initiatorSignedAt !== null && signingRequest.respondentSignedAt !== null;
+  // Project the "this party just signed" plus "other party already
+  // signed" booleans so the bothSigned check is symmetrical regardless
+  // of which side this callback fires on.
+  const otherSigned =
+    signingAs === "INITIATOR"
+      ? !!signingRequest.respondentSignedAt
+      : !!signingRequest.initiatorSignedAt;
+  const bothSigned = otherSigned; // this party signs in THIS request → both will be signed iff the other side was already done
 
   const newStatus = bothSigned ? "COMPLETED" : "PARTIALLY_SIGNED";
+
+  // Build the role-specific update payload.
+  const roleUpdate =
+    signingAs === "INITIATOR"
+      ? {
+          initiatorSignedAt: now,
+          initiatorSignedBundle: signedBundle as never, // Prisma Json field
+        }
+      : {
+          respondentSignedAt: now,
+          respondentSignedBundle: signedBundle as never,
+        };
 
   await prisma.$transaction(async (tx) => {
     await tx.signingRequest.update({
       where: { id: signingRequest.id },
       data: {
-        respondentSignedAt: now,
+        ...roleUpdate,
         status: newStatus,
         completedAt: bothSigned ? now : null,
-        signedBundle: signedBundle as never, // Prisma Json field
       },
     });
     if (bothSigned) {
@@ -341,6 +380,7 @@ export async function POST(request: NextRequest) {
   return corsJson({
     ok: true,
     status: newStatus,
+    signingAs,
     attestedName: [decoded.given_name, decoded.family_name].filter(Boolean).join(" ") || null,
     attestedRegion: decoded.id_region ?? null,
   });

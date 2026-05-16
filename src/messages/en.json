@@ -239,7 +239,21 @@
     "signingExpiresIn": "Expires in {days, plural, =0 {less than a day} =1 {1 day} other {# days}}",
     "signingExpired": "Signing expired {days, plural, =0 {today} =1 {1 day ago} other {# days ago}}",
     "respondentAcceptedTitle": "{name} has joined this deal",
-    "respondentAcceptedDescription": "Your counterparty can now make their selections. You'll be able to review the compromise once they submit."
+    "respondentAcceptedDescription": "Your counterparty can now make their selections. You'll be able to review the compromise once they submit.",
+    "theOtherParty": "the other party",
+    "readiness": {
+      "yourDetailsMissing": "Add your execution details",
+      "yourDetailsMissingDescription": "Provide your legal name, address, tax ID, and signatory before either party can start signing.",
+      "addDetails": "Add details",
+      "theirDetailsMissing": "Waiting for {name} to add execution details",
+      "theirDetailsMissingDescription": "They need to provide their legal name, address, tax ID, and signatory before either party can start signing.",
+      "yourTurn": "Your turn to sign",
+      "readyToSign": "Both parties' execution details are complete. You can sign now.",
+      "theyAlreadySigned": "{name} has signed. You can sign now to finalize the contract.",
+      "signNow": "Sign contract",
+      "waitingForThemToSign": "Waiting for {name} to sign",
+      "youAlreadySigned": "You've signed. The contract will be finalized once they sign too."
+    }
   },
   "negotiate": {
     "clause": "Clause",
@@ -482,6 +496,8 @@
     "downloadTxt": "Download TXT",
     "youHaveSigned": "You Have Signed",
     "waitingForDocument": "Waiting for the document to be finalized...",
+    "undoSignature": "Undo my signature",
+    "undoingSignature": "Undoing…",
     "waitingForOtherParty": "Waiting for the other party to sign...",
     "yourSignature": "Your signature:",
     "downloadContractPdf": "Download Contract PDF",
@@ -516,20 +532,39 @@
       "initiationFailed": "Failed to initiate signing: {error}",
       "signatureRecorded": "Signature recorded successfully!",
       "signatureFailed": "Failed to record signature: {error}",
-      "firmasSent": "Sent. The respondent will get a link to sign on their phone.",
-      "firmasSendFailed": "Couldn't send to Firmas: {error}",
-      "firmasLinkCopied": "Link copied to clipboard"
+      "firmasSent": "Sent. They will get a link to sign on their phone.",
+      "firmasMinted": "Ready. Open the link on your phone to sign.",
+      "firmasSendFailed": "Couldn't request Firmas signing: {error}",
+      "firmasLinkCopied": "Link copied to clipboard",
+      "firmasCancelled": "Firmas signing cancelled — you can sign by typing now.",
+      "signatureUndone": "Signature undone — you can sign again."
     },
     "firmas": {
       "sendButton": "Send to Firmas (mobile signature)",
+      "signWithFirmas": "Sign with Firmas on my phone",
+      "signWithFirmasDescription": "Certified electronic signature with biometric identity attestation. Opens the Firmas app on your phone — or a mobile web page if you don't have the app.",
+      "orInsteadHeader": "Or sign more securely",
       "sending": "Sending…",
-      "waitingTitle": "Waiting for signature on phone…",
-      "waitingDescription": "We emailed {email} a link that opens the Firmas app on their phone.",
+      "openOnPhoneTitle": "Open this link on your phone to sign",
+      "openOnPhoneDescription": "Tap the link on your phone — it will open the Firmas app where you can sign with one tap. Without the app, it opens a mobile web page that walks you through signing.",
+      "waitingForOtherTitle": "Waiting for {name} to sign on their phone",
+      "waitingForOtherDescription": "{name} is signing through the Firmas app. This page will update automatically once they're done.",
+      "usingFirmas": "You're signing with Firmas",
+      "usingFirmasDescription": "Open the link on your phone (see the panel at the top of this page). The desktop view will update once you've signed.",
+      "cancelAndType": "Switch back to signing by typing instead",
+      "cancelling": "Cancelling…",
       "copyLink": "Copy link",
       "signedTitle": "Signed by {name}",
       "signedFromRegion": "from {region}",
       "signedAt": "at {time}",
       "downloadBundle": "Download signed bundle"
+    },
+    "partyA": "the initiator",
+    "partyB": "the respondent",
+    "theOtherParty": "the other party",
+    "blocked": {
+      "yourDetails": "Add your execution details first.",
+      "theirDetails": "Waiting for {name} to add execution details."
     },
     "signingDetails": {
       "title": "Execution Details",
