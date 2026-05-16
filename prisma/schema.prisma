@@ -716,12 +716,34 @@ model SigningRequest {
   // reminder email. Prevents a duplicate reminder if the cron runs
   // slightly off schedule.
   expiryReminderSentAt DateTime?
+
+  // ── Firmas hand-off (added 2026-05-15) ─────────────────────────
+  // Dealroom can route the respondent's signature ceremony through
+  // the Firmas wallet so the signer's identity is cryptographically
+  // attested (SD-JWT VC carrying given_name + family_name +
+  // id_number_sha256) before the signature is recorded. Population
+  // is opt-in per-deal via signing.sendToFirmas().
+  //
+  // firmasToken — opaque CUID minted at hand-off time. Embedded in
+  //   the firmas.io/sign/<token> link; the firmas-callback receiver
+  //   uses it to look up THIS request and reject anything else.
+  // firmasSentAt — first time the link was minted. Lets us show
+  //   "sent to Firmas <ago>" copy in the SigningRequest dashboard.
+  // signedBundle — the SignedReceipt envelope Firmas POSTs back
+  //   after the user signs: { sdJwtVc, signatureBase64url,
+  //   contractHash, signedAt }. Stored verbatim as JSON so the
+  //   audit trail keeps the original attestation forever.
+  firmasToken         String?       @unique
+  firmasSentAt        DateTime?
+  signedBundle        Json?
+
   createdAt           DateTime      @default(now())
   updatedAt           DateTime      @updatedAt
 
   dealRoom DealRoom @relation(fields: [dealRoomId], references: [id], onDelete: Cascade)
 
   @@index([expiresAt])
+  @@index([firmasToken])
   @@map("signing_requests")
 }
 
