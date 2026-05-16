@@ -22,6 +22,8 @@ import {
   Briefcase,
   ShieldCheck,
   ShieldAlert,
+  Smartphone,
+  Copy,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -133,6 +135,40 @@ function SigningContent({ dealId }: { dealId: string }) {
       toast.error(t("toastMessages.signatureFailed", { error: error.message }));
     },
   });
+
+  // Firmas hand-off: a single click that (a) initiates signing if it
+  // hasn't been already, (b) emails the respondent a phone-signing
+  // link, (c) puts the desktop UI into a polling-for-signature state.
+  const sendToFirmas = trpc.signing.sendToFirmas.useMutation({
+    onSuccess: () => {
+      toast.success(t("toastMessages.firmasSent"));
+      refetch();
+    },
+    onError: (error) => {
+      toast.error(t("toastMessages.firmasSendFailed", { error: error.message }));
+    },
+  });
+
+  // Desktop poller: only active for the initiator while the
+  // hand-off is in flight. The query disables itself the moment
+  // status leaves SENT/PARTIALLY_SIGNED, so it stops on its own
+  // when the respondent signs (or the request gets DECLINED).
+  const firmasPollEnabled =
+    !!signingRequest?.firmasToken &&
+    (signingRequest.status === "SENT" || signingRequest.status === "PARTIALLY_SIGNED");
+  const { data: firmasStatusData } = trpc.signing.firmasStatus.useQuery(
+    { dealRoomId: dealId },
+    { refetchInterval: 3000, enabled: firmasPollEnabled },
+  );
+
+  // When the poll observes a respondentSignedAt, refresh the main
+  // signingRequest snapshot so the existing party-by-party signature
+  // cards repaint with the new state.
+  useEffect(() => {
+    if (firmasStatusData?.respondentSignedAt) {
+      refetch();
+    }
+  }, [firmasStatusData?.respondentSignedAt, refetch]);
 
   const isLoading = dealLoading || signingLoading || detailsLoading;
 
@@ -641,6 +677,23 @@ function SigningContent({ dealId }: { dealId: string }) {
         </div>
       </div>
 
+      {/* Firmas hand-off card — only rendered for the initiator while a
+          phone-signing flow is in flight (or has just completed via
+          Firmas). Sits above the existing signature-status grid so the
+          initiator sees the live "waiting → signed" transition without
+          scrolling. */}
+      {isInitiator && !isSoloMode && signingRequest?.firmasToken && (
+        <FirmasHandoffCard
+          token={signingRequest.firmasToken}
+          respondentEmail={respondent?.email ?? null}
+          firmasStatusData={firmasStatusData ?? null}
+          firmasSentAt={signingRequest.firmasSentAt ?? null}
+          dealId={dealId}
+          locale={locale}
+          governingLaw={(deal as { governingLaw?: string | null })?.governingLaw ?? null}
+        />
+      )}
+
       {/* Signing Status */}
       {signingRequest ? (
         <div className="card-brutal">
@@ -892,7 +945,7 @@ function SigningContent({ dealId }: { dealId: string }) {
           <p className="text-sm text-muted-foreground mb-4 max-w-md mx-auto">
             {t("readyForSignaturesDescription")}
           </p>
-          <div className="flex items-center justify-center gap-3 mb-4">
+          <div className="flex items-center justify-center gap-3 mb-4 flex-wrap">
             <button
               onClick={() => initiateSigning.mutate({ dealRoomId: dealId })}
               disabled={initiateSigning.isPending}
@@ -910,6 +963,25 @@ function SigningContent({ dealId }: { dealId: string }) {
                 </>
               )}
             </button>
+            {isInitiator && !isSoloMode && (
+              <button
+                onClick={() => sendToFirmas.mutate({ dealRoomId: dealId })}
+                disabled={sendToFirmas.isPending}
+                className="btn-brutal-outline flex items-center gap-2"
+              >
+                {sendToFirmas.isPending ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    {t("firmas.sending")}
+                  </>
+                ) : (
+                  <>
+                    <Smartphone className="w-4 h-4" />
+                    {t("firmas.sendButton")}
+                  </>
+                )}
+              </button>
+            )}
           </div>
           <DownloadLinks dealId={dealId} className="mb-4" />
           <p className="text-xs text-muted-foreground">
@@ -926,6 +998,144 @@ function SigningContent({ dealId }: { dealId: string }) {
         <p className="text-xs text-muted-foreground">
           <strong>{t("simpleSignatureNotice")}</strong> {t("simpleSignatureNoticeText")}
         </p>
+      </div>
+    </div>
+  );
+}
+
+interface FirmasStatusData {
+  status: string;
+  firmasSentAt: Date | null;
+  respondentSignedAt: Date | null;
+  completedAt: Date | null;
+  attestedName: string | null;
+  attestedRegion: string | null;
+}
+
+interface FirmasHandoffCardProps {
+  token: string;
+  respondentEmail: string | null;
+  firmasStatusData: FirmasStatusData | null;
+  firmasSentAt: Date | null;
+  dealId: string;
+  locale: string;
+  governingLaw: string | null;
+}
+
+/**
+ * Desktop-side status card the initiator sees after pressing
+ * "Send to Firmas". Two display states:
+ *   - "Waiting for signature on phone…" with spinner + copy-link
+ *     fallback in case the email never lands.
+ *   - "Signed by {attestedName}…" with download link for the signed
+ *     bundle once the Firmas callback has fired.
+ *
+ * The parent passes `firmasStatusData` from the 3-second poll so this
+ * component stays a pure renderer — it doesn't own the polling.
+ */
+function FirmasHandoffCard({
+  token,
+  respondentEmail,
+  firmasStatusData,
+  firmasSentAt,
+  dealId,
+  locale,
+  governingLaw,
+}: FirmasHandoffCardProps) {
+  const t = useTranslations("signing");
+  const firmasBase =
+    process.env.NEXT_PUBLIC_FIRMAS_BASE_URL ?? "https://www.firmas.io";
+  const signUrl = `${firmasBase}/sign/${token}`;
+
+  const hasSigned = !!firmasStatusData?.respondentSignedAt;
+
+  async function copyLink() {
+    try {
+      await navigator.clipboard.writeText(signUrl);
+      toast.success(t("toastMessages.firmasLinkCopied"));
+    } catch {
+      // Clipboard API can fail in iframes / older browsers — silent
+      // fallback: the link is on screen and still selectable.
+    }
+  }
+
+  if (hasSigned) {
+    const signedAt = firmasStatusData?.respondentSignedAt
+      ? new Date(firmasStatusData.respondentSignedAt)
+      : null;
+    return (
+      <div className="card-brutal border-primary/40 bg-primary/5">
+        <div className="flex items-start gap-3">
+          <div className="w-10 h-10 rounded-full bg-primary/15 flex items-center justify-center flex-shrink-0">
+            <Check className="w-5 h-5 text-primary" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="font-semibold">
+              {t("firmas.signedTitle", {
+                name: firmasStatusData?.attestedName ?? "—",
+              })}
+            </p>
+            <p className="text-sm text-muted-foreground mt-1">
+              {firmasStatusData?.attestedRegion ? (
+                <>
+                  {t("firmas.signedFromRegion", {
+                    region: firmasStatusData.attestedRegion,
+                  })}
+                  {signedAt ? " · " : null}
+                </>
+              ) : null}
+              {signedAt
+                ? t("firmas.signedAt", {
+                    time: formatDateTime(signedAt, { locale, governingLaw: governingLaw ?? undefined }),
+                  })
+                : null}
+            </p>
+            <div className="mt-3">
+              <a
+                href={`/api/deals/${dealId}/document`}
+                className="text-sm inline-flex items-center gap-1.5 text-primary hover:underline"
+              >
+                <Download className="w-4 h-4" />
+                {t("firmas.downloadBundle")}
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="card-brutal border-primary/30 bg-primary/5">
+      <div className="flex items-start gap-3">
+        <div className="w-10 h-10 rounded-full bg-primary/15 flex items-center justify-center flex-shrink-0">
+          <Loader2 className="w-5 h-5 text-primary animate-spin" />
+        </div>
+        <div className="flex-1 min-w-0">
+          <p className="font-semibold">{t("firmas.waitingTitle")}</p>
+          <p className="text-sm text-muted-foreground mt-1">
+            {t("firmas.waitingDescription", {
+              email: respondentEmail ?? "—",
+            })}
+          </p>
+          {firmasSentAt ? (
+            <p className="text-xs text-muted-foreground mt-1">
+              {formatDateTime(new Date(firmasSentAt), { locale, governingLaw: governingLaw ?? undefined })}
+            </p>
+          ) : null}
+          <div className="mt-3 flex items-center gap-2 flex-wrap">
+            <button
+              onClick={copyLink}
+              className="text-sm inline-flex items-center gap-1.5 px-3 py-1.5 border border-border rounded hover:bg-muted/50"
+            >
+              <Copy className="w-3.5 h-3.5" />
+              {t("firmas.copyLink")}
+            </button>
+            <code className="text-xs text-muted-foreground truncate max-w-full">
+              {signUrl}
+            </code>
+          </div>
+        </div>
       </div>
     </div>
   );
