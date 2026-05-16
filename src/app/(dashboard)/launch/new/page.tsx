@@ -77,10 +77,30 @@ export default function NewJourneyPage() {
   }
 
   const companyStepValid = companyName.trim().length > 0;
+
+  // Per-founder validation flags so we can highlight specific rows + fields,
+  // not just disable the Review button with no explanation.
+  const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const founderIssues = founders.map((f) => ({
+    missingName: f.name.trim().length === 0,
+    invalidEmail: !EMAIL_RE.test(f.email.trim()),
+  }));
+  const missingNameCount = founderIssues.filter((x) => x.missingName).length;
+  const invalidEmailCount = founderIssues.filter((x) => x.invalidEmail).length;
   const foundersStepValid =
-    founders.every(
-      (f) => f.name.trim().length > 0 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.email.trim()),
-    ) && equityCheck.valid;
+    missingNameCount === 0 && invalidEmailCount === 0 && equityCheck.valid;
+
+  // Human-readable list of what's still blocking the Review button. Helps
+  // founders who see "Total: 100%" and assume everything's fine when
+  // really a co-founder email is missing or the partial-equity rule fires.
+  const blockReasons: string[] = [];
+  if (missingNameCount > 0) {
+    blockReasons.push(t("missingNamesIssue", { count: missingNameCount }));
+  }
+  if (invalidEmailCount > 0) {
+    blockReasons.push(t("missingEmailsIssue", { count: invalidEmailCount }));
+  }
+  if (equityError) blockReasons.push(equityError);
 
   function handleSubmit() {
     createJourney.mutate({
@@ -204,7 +224,14 @@ export default function NewJourneyPage() {
             </p>
             <div className="space-y-4">
               {founders.map((f, i) => (
-                <div key={i} className="p-4 border border-border rounded-md space-y-3 bg-muted/10">
+                <div
+                  key={i}
+                  className={`p-4 border rounded-md space-y-3 bg-muted/10 ${
+                    founderIssues[i].missingName || founderIssues[i].invalidEmail
+                      ? "border-destructive/40"
+                      : "border-border"
+                  }`}
+                >
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-mono uppercase tracking-wider text-muted-foreground">
                       {i === 0 ? t("primaryIncorporator") : t("coFounderN", { n: i })}
@@ -228,7 +255,8 @@ export default function NewJourneyPage() {
                         onChange={(e) => updateFounder(i, { name: e.target.value })}
                         placeholder={t("fullNamePlaceholder")}
                         autoComplete="name"
-                        className="input-brutal"
+                        aria-invalid={founderIssues[i].missingName}
+                        className={`input-brutal ${founderIssues[i].missingName ? "border-destructive" : ""}`}
                       />
                     </div>
                     <div className="space-y-1">
@@ -240,8 +268,12 @@ export default function NewJourneyPage() {
                         onChange={(e) => updateFounder(i, { email: e.target.value })}
                         placeholder={t("emailPlaceholder")}
                         autoComplete="email"
-                        className="input-brutal"
+                        aria-invalid={founderIssues[i].invalidEmail && f.email.length > 0}
+                        className={`input-brutal ${founderIssues[i].invalidEmail && f.email.length > 0 ? "border-destructive" : ""}`}
                       />
+                      {founderIssues[i].invalidEmail && f.email.length > 0 && (
+                        <p className="text-xs text-destructive">{t("emailInvalidHint")}</p>
+                      )}
                     </div>
                     <div className="space-y-1">
                       <Label htmlFor={`f-${i}-title`} className="text-xs">{t("titleOptional")}</Label>
@@ -282,6 +314,20 @@ export default function NewJourneyPage() {
               )}
             </div>
           </div>
+          {/* Explain why the Review button is disabled — the most common
+              cause of being stuck on this step is a co-founder with no email
+              or the partial-equity rule, neither of which is obvious from
+              the disabled button alone. */}
+          {!foundersStepValid && blockReasons.length > 0 && (
+            <div className="card-brutal border-destructive/40 bg-destructive/5 py-3">
+              <p className="text-sm font-medium mb-1">{t("cannotProceedTitle")}</p>
+              <ul className="text-sm text-muted-foreground list-disc list-inside space-y-0.5">
+                {blockReasons.map((reason, i) => (
+                  <li key={i}>{reason}</li>
+                ))}
+              </ul>
+            </div>
+          )}
           <div className="flex justify-between items-center gap-3">
             <button
               onClick={() => setStep("company")}
