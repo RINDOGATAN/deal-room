@@ -48,7 +48,19 @@ function emailMuted(text: string): string {
 }
 
 function emailFrom(): string {
-  return `DEALROOM <${process.env.EMAIL_FROM || "noreply@todo.law"}>`;
+  // Display name "DEALROOM by TODO.LAW" — explicit so recipients can
+  // tell this apart from sibling todo.law properties (DPO Central,
+  // AISentinel) that share the same noreply@ mailbox. Gmail caches a
+  // contact's display name aggressively, so recipients who have
+  // previously seen DPO Central mail from this address may still see
+  // the stale name in their inbox; the wire-side From header is now
+  // unambiguous and will surface correctly for new recipients.
+  const raw = process.env.EMAIL_FROM || "noreply@todo.law";
+  // Tolerate EMAIL_FROM being set either bare ("noreply@todo.law")
+  // or already formatted ("Whatever <noreply@todo.law>"); we always
+  // overwrite the display-name half.
+  const emailAddr = raw.includes("<") ? raw.match(/<(.+)>/)?.[1] ?? raw : raw;
+  return `DEALROOM by TODO.LAW <${emailAddr}>`;
 }
 
 // ────────────────────────────────────────────────────────────
