@@ -609,4 +609,91 @@ export const signingRouter = createTRPCRouter({
 
       return { success: true };
     }),
+
+  /**
+   * Hand the signing ceremony off to the Firmas wallet so the
+   * respondent's identity is cryptographically attested (SD-JWT VC
+   * carrying given_name + family_name + id_number_sha256) before the
+   * signature is recorded.
+   *
+   * Returns a `firmas.io/sign/<token>` URL the caller can paste into
+   * the respondent's email or copy to their clipboard. The Firmas
+   * callback receiver at `/api/signing/firmas-callback` looks up the
+   * SigningRequest by token, verifies the signed bundle Firmas posts
+   * back, marks `respondentSignedAt`, and transitions the DealRoom
+   * to COMPLETED when both parties have signed.
+   *
+   * Idempotent: calling twice on the same SigningRequest returns the
+   * same token (we don't churn link URLs if the user re-presses the
+   * button) but bumps `firmasSentAt` so the dashboard shows the
+   * most recent send.
+   */
+  sendToFirmas: protectedProcedure
+    .input(z.object({ dealRoomId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      // Auth: caller must be a party on the deal. We only let the
+      // INITIATOR drive this (mirrors the rest of signing.* which
+      // currently treats signing as initiator-driven), so a hostile
+      // respondent can't fork the hand-off mid-flight.
+      const party = await ctx.prisma.dealRoomParty.findFirst({
+        where: {
+          dealRoomId: input.dealRoomId,
+          userId: ctx.session.user.id,
+          role: "INITIATOR",
+        },
+      });
+      if (!party) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Only the deal initiator can hand off signing to Firmas",
+        });
+      }
+
+      const signingRequest = await ctx.prisma.signingRequest.findUnique({
+        where: { dealRoomId: input.dealRoomId },
+      });
+      if (!signingRequest) {
+        throw new TRPCError({
+          code: "PRECONDITION_FAILED",
+          message: "Initiate signing before sending to Firmas",
+        });
+      }
+      if (signingRequest.status === "COMPLETED" || signingRequest.status === "DECLINED" || signingRequest.status === "EXPIRED") {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: `Cannot send a ${signingRequest.status.toLowerCase()} signing request to Firmas`,
+        });
+      }
+
+      // Mint token once, reuse on subsequent calls. UUID v4 — opaque,
+      // unguessable, indexed. We don't reuse Prisma's @default(cuid())
+      // because the column is nullable: most SigningRequests will
+      // never get a Firmas token, and we'd rather allocate it on
+      // demand than litter the table with unused IDs.
+      const token = signingRequest.firmasToken ?? crypto.randomUUID();
+
+      const updated = await ctx.prisma.signingRequest.update({
+        where: { id: signingRequest.id },
+        data: {
+          firmasToken: token,
+          firmasSentAt: new Date(),
+          status: signingRequest.status === "PENDING" ? "SENT" : signingRequest.status,
+        },
+      });
+
+      // Build the URL. The dealKey fragment is the AES-256-GCM key
+      // that Firmas uses to decrypt the contract bundle it fetches.
+      // For this first iteration we transmit the bundle over a
+      // protected GET endpoint and the fragment is left empty —
+      // future hardening can add fragment-based E2E encryption to
+      // mirror Firmas's own invite-link pattern.
+      const firmasBase = process.env.FIRMAS_BASE_URL ?? "https://www.firmas.io";
+      const url = `${firmasBase}/sign/${token}`;
+
+      return {
+        token: updated.firmasToken!,
+        sentAt: updated.firmasSentAt,
+        url,
+      };
+    }),
 });
