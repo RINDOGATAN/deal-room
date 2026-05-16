@@ -516,7 +516,21 @@
       "signingStarted": "Proceso de firma iniciado. Ahora puedes firmar abajo.",
       "initiationFailed": "Error al iniciar la firma: {error}",
       "signatureRecorded": "¡Firma registrada correctamente!",
-      "signatureFailed": "Error al registrar firma: {error}"
+      "signatureFailed": "Error al registrar firma: {error}",
+      "firmasSent": "Enviado. La otra parte recibirá un enlace para firmar desde el móvil.",
+      "firmasSendFailed": "No se pudo enviar a Firmas: {error}",
+      "firmasLinkCopied": "Enlace copiado al portapapeles"
+    },
+    "firmas": {
+      "sendButton": "Enviar a Firmas (firma móvil)",
+      "sending": "Enviando…",
+      "waitingTitle": "Esperando la firma en el móvil…",
+      "waitingDescription": "Hemos enviado un enlace a {email} que abre la app de Firmas en su teléfono.",
+      "copyLink": "Copiar enlace",
+      "signedTitle": "Firmado por {name}",
+      "signedFromRegion": "desde {region}",
+      "signedAt": "el {time}",
+      "downloadBundle": "Descargar paquete firmado"
     },
     "signingDetails": {
       "title": "Datos de Ejecución",

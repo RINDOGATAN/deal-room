@@ -37,6 +37,34 @@ import { z } from "zod";
 import prisma from "@/lib/prisma";
 
 const FIRMAS_ISSUER = process.env.FIRMAS_ISSUER ?? "https://www.firmas.io";
+const FIRMAS_WEB_ORIGIN = process.env.FIRMAS_BASE_URL ?? "https://www.firmas.io";
+
+// Native iOS/Android apps POST directly without a browser Origin
+// header, so they bypass CORS entirely. The mobile-web fallback is
+// served from `https://www.firmas.io` and IS browser-origin-bound,
+// so we whitelist that single origin. Anything else is rejected by
+// the browser's preflight check before our handler even runs.
+const corsHeaders = {
+  "Access-Control-Allow-Origin": FIRMAS_WEB_ORIGIN,
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type",
+  "Access-Control-Max-Age": "3600",
+  // Cache miss vs. hit for a preflight depends on Origin, so make
+  // sure shared caches (e.g., Vercel's edge) vary on it.
+  "Vary": "Origin",
+};
+
+export async function OPTIONS() {
+  return new NextResponse(null, { status: 204, headers: corsHeaders });
+}
+
+// Small helper: like NextResponse.json but always attaches the CORS
+// headers. The native apps don't strictly need them, but the
+// mobile-web fallback does, and there's no cost to including them
+// unconditionally.
+function corsJson(body: unknown, init?: { status?: number }): NextResponse {
+  return NextResponse.json(body, { ...init, headers: corsHeaders });
+}
 
 const callbackBodySchema = z.object({
   token: z.string().min(1),
@@ -214,7 +242,7 @@ export async function POST(request: NextRequest) {
   try {
     body = callbackBodySchema.parse(await request.json());
   } catch (err) {
-    return NextResponse.json(
+    return corsJson(
       { error: "invalid_payload", detail: err instanceof Error ? err.message : "parse failed" },
       { status: 400 },
     );
@@ -230,10 +258,10 @@ export async function POST(request: NextRequest) {
     },
   });
   if (!signingRequest) {
-    return NextResponse.json({ error: "unknown_token" }, { status: 404 });
+    return corsJson({ error: "unknown_token" }, { status: 404 });
   }
   if (signingRequest.status === "COMPLETED" || signingRequest.status === "DECLINED" || signingRequest.status === "EXPIRED") {
-    return NextResponse.json(
+    return corsJson(
       { error: "request_already_settled", status: signingRequest.status },
       { status: 409 },
     );
@@ -242,12 +270,12 @@ export async function POST(request: NextRequest) {
   // 2. Verify the Firmas identity credential.
   const decoded = await verifyFirmasCredential(body.identityCredential);
   if (!decoded) {
-    return NextResponse.json({ error: "credential_invalid" }, { status: 401 });
+    return corsJson({ error: "credential_invalid" }, { status: 401 });
   }
 
   // 3. Confirm the contract hash matches what we recorded at signing.initiate.
   if (signingRequest.documentHash && signingRequest.documentHash !== body.contractHash) {
-    return NextResponse.json(
+    return corsJson(
       { error: "contract_hash_mismatch", expected: signingRequest.documentHash },
       { status: 409 },
     );
@@ -260,7 +288,7 @@ export async function POST(request: NextRequest) {
     body.signatureBase64url,
   );
   if (!sigOk) {
-    return NextResponse.json({ error: "signature_mismatch" }, { status: 401 });
+    return corsJson({ error: "signature_mismatch" }, { status: 401 });
   }
 
   // 5. Persist the signed bundle + flip the request forward. The
@@ -310,7 +338,7 @@ export async function POST(request: NextRequest) {
     }
   });
 
-  return NextResponse.json({
+  return corsJson({
     ok: true,
     status: newStatus,
     attestedName: [decoded.given_name, decoded.family_name].filter(Boolean).join(" ") || null,

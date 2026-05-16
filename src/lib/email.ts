@@ -412,3 +412,40 @@ export async function sendCounterpartySignedEmail({
     console.error("Failed to send counterparty signed email:", error);
   }
 }
+
+interface SendFirmasSigningEmailParams {
+  to: string;
+  initiatorName: string;
+  contractType: string;
+  signUrl: string;
+}
+
+/**
+ * Mobile-signing invitation. Plain-language ("80-yo-test") body — the
+ * link opens the Firmas app via Universal Link on iOS/Android, or
+ * falls back to firmas.io/sign/<token> in mobile Safari if the app
+ * isn't installed.
+ */
+export async function sendFirmasSigningEmail({
+  to,
+  initiatorName,
+  contractType,
+  signUrl,
+}: SendFirmasSigningEmailParams) {
+  try {
+    await getResend().emails.send({
+      from: emailFrom(),
+      to,
+      subject: `${initiatorName} asked you to sign a ${contractType}`,
+      html: emailWrapper("Sign on your phone", `
+        ${emailParagraph(`<strong style="color: ${brand.colors.foreground};">${initiatorName}</strong> sent you a <strong style="color: ${brand.colors.foreground};">${contractType}</strong> to sign.`)}
+        ${emailParagraph(`Open this link <strong style="color: ${brand.colors.foreground};">on your phone</strong> — it will open the Firmas app where you can read it and sign with one tap.`)}
+        ${emailButton(signUrl, "Open in Firmas")}
+        ${emailMuted(`If you don't have Firmas yet, the same link opens a web page on your phone that walks you through signing. Either way works.`)}
+        ${emailMuted(`Link: <a href="${signUrl}" style="color: ${brand.colors.primary};">${signUrl}</a>`)}
+      `),
+    });
+  } catch (error) {
+    console.error("Failed to send Firmas signing email:", error);
+  }
+}

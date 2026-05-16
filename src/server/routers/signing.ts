@@ -2,7 +2,11 @@ import { z } from "zod";
 import { headers } from "next/headers";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
-import { sendSigningInitiatedEmail, sendCounterpartySignedEmail } from "@/lib/email";
+import {
+  sendSigningInitiatedEmail,
+  sendCounterpartySignedEmail,
+  sendFirmasSigningEmail,
+} from "@/lib/email";
 import { certificationService } from "@/lib/certification-client";
 import { generateContractData } from "@/server/services/document/generator";
 
@@ -631,15 +635,23 @@ export const signingRouter = createTRPCRouter({
   sendToFirmas: protectedProcedure
     .input(z.object({ dealRoomId: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      // Auth: caller must be a party on the deal. We only let the
-      // INITIATOR drive this (mirrors the rest of signing.* which
-      // currently treats signing as initiator-driven), so a hostile
-      // respondent can't fork the hand-off mid-flight.
+      // Auth: caller must be the INITIATOR on the deal. Mirrors the
+      // rest of signing.* which treats signing as initiator-driven,
+      // so a hostile respondent can't fork the hand-off mid-flight.
       const party = await ctx.prisma.dealRoomParty.findFirst({
         where: {
           dealRoomId: input.dealRoomId,
           userId: ctx.session.user.id,
           role: "INITIATOR",
+        },
+        include: {
+          dealRoom: {
+            include: {
+              clauses: true,
+              parties: { include: { user: true } },
+              contractTemplate: true,
+            },
+          },
         },
       });
       if (!party) {
@@ -649,16 +661,121 @@ export const signingRouter = createTRPCRouter({
         });
       }
 
-      const signingRequest = await ctx.prisma.signingRequest.findUnique({
-        where: { dealRoomId: input.dealRoomId },
-      });
-      if (!signingRequest) {
+      const deal = party.dealRoom;
+      const respondent = deal.parties.find((p) => p.role === "RESPONDENT");
+      const respondentEmail = respondent?.user?.email ?? respondent?.email ?? null;
+      if (!respondentEmail) {
         throw new TRPCError({
           code: "PRECONDITION_FAILED",
-          message: "Initiate signing before sending to Firmas",
+          message: "The respondent has no email on file; invite them first",
         });
       }
-      if (signingRequest.status === "COMPLETED" || signingRequest.status === "DECLINED" || signingRequest.status === "EXPIRED") {
+
+      // Load (or create) the SigningRequest. The button is positioned
+      // as a peer of "Start Signing Process" — so if the user clicks
+      // this one first, we need to perform the same atomic AGREED →
+      // SIGNING transition that signing.initiate does. Safety checks
+      // mirror signing.initiate to keep the two paths interchangeable.
+      let signingRequest = await ctx.prisma.signingRequest.findUnique({
+        where: { dealRoomId: input.dealRoomId },
+      });
+
+      if (!signingRequest) {
+        const allAgreed = deal.clauses.every((c) => c.status === "AGREED");
+        if (!allAgreed) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "All clauses must be agreed upon before signing",
+          });
+        }
+        const activeReviews = deal.parties.filter(
+          (p) => p.attorneyReviewRequested && !p.attorneyReviewApprovedAt,
+        );
+        if (activeReviews.length > 0) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "Cannot initiate signing while attorney review is in progress",
+          });
+        }
+        if (
+          deal.jointCounselRequestedAt &&
+          !deal.jointCounselAcknowledgedAt &&
+          !deal.jointCounselDeclinedAt
+        ) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "Cannot initiate signing while joint counsel request is pending",
+          });
+        }
+
+        let ceremonyId: string | null = null;
+        let documentHash: string | null = null;
+        try {
+          const contractData = await generateContractData(input.dealRoomId);
+          if (contractData) {
+            const ceremony = await certificationService.beginCeremony(
+              input.dealRoomId,
+              contractData,
+            );
+            if (ceremony.certified) {
+              ceremonyId = ceremony.ceremonyId;
+              documentHash = ceremony.documentHash;
+            }
+          }
+        } catch (error) {
+          console.error("Certification ceremony failed (continuing uncertified):", error);
+        }
+
+        signingRequest = await ctx.prisma.$transaction(async (tx) => {
+          const claimed = await tx.dealRoom.updateMany({
+            where: { id: input.dealRoomId, status: "AGREED" },
+            data: { status: "SIGNING" },
+          });
+          if (claimed.count === 0) {
+            throw new TRPCError({
+              code: "CONFLICT",
+              message: "Another party already initiated signing for this deal",
+            });
+          }
+          await tx.signingRequest.deleteMany({
+            where: {
+              dealRoomId: input.dealRoomId,
+              status: { in: ["EXPIRED", "DECLINED"] },
+            },
+          });
+          return tx.signingRequest.create({
+            data: {
+              dealRoomId: input.dealRoomId,
+              provider: "firmas",
+              status: "PENDING",
+              externalId: `sign_${Date.now()}`,
+              documentUrl: null,
+              ceremonyId,
+              documentHash,
+              expiresAt: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
+            },
+          });
+        });
+
+        await ctx.prisma.auditLog.create({
+          data: {
+            dealRoomId: input.dealRoomId,
+            userId: ctx.session.user.id,
+            action: "SIGNING_INITIATED",
+            details: {
+              initiatedBy: ctx.session.user.email,
+              documentId: signingRequest.externalId,
+              via: "firmas",
+            },
+          },
+        });
+      }
+
+      if (
+        signingRequest.status === "COMPLETED" ||
+        signingRequest.status === "DECLINED" ||
+        signingRequest.status === "EXPIRED"
+      ) {
         throw new TRPCError({
           code: "BAD_REQUEST",
           message: `Cannot send a ${signingRequest.status.toLowerCase()} signing request to Firmas`,
@@ -666,10 +783,8 @@ export const signingRouter = createTRPCRouter({
       }
 
       // Mint token once, reuse on subsequent calls. UUID v4 — opaque,
-      // unguessable, indexed. We don't reuse Prisma's @default(cuid())
-      // because the column is nullable: most SigningRequests will
-      // never get a Firmas token, and we'd rather allocate it on
-      // demand than litter the table with unused IDs.
+      // unguessable, indexed. The column is nullable, so we allocate
+      // on demand rather than littering the table with unused IDs.
       const token = signingRequest.firmasToken ?? crypto.randomUUID();
 
       const updated = await ctx.prisma.signingRequest.update({
@@ -681,19 +796,83 @@ export const signingRouter = createTRPCRouter({
         },
       });
 
-      // Build the URL. The dealKey fragment is the AES-256-GCM key
-      // that Firmas uses to decrypt the contract bundle it fetches.
-      // For this first iteration we transmit the bundle over a
-      // protected GET endpoint and the fragment is left empty —
-      // future hardening can add fragment-based E2E encryption to
-      // mirror Firmas's own invite-link pattern.
+      // The path is a Universal Link on iOS/Android (opens the Firmas
+      // app if installed), and falls back to the mobile-web signer in
+      // Safari/Chrome otherwise. The dealKey fragment is reserved for
+      // a future fragment-based E2E-encryption hardening pass.
       const firmasBase = process.env.FIRMAS_BASE_URL ?? "https://www.firmas.io";
       const url = `${firmasBase}/sign/${token}`;
+
+      const dealName = deal.contractTemplate?.displayName || "contract";
+      const initiatorName = party.name || ctx.session.user.email || "Your counterparty";
+      try {
+        await sendFirmasSigningEmail({
+          to: respondentEmail,
+          initiatorName,
+          contractType: dealName,
+          signUrl: url,
+        });
+      } catch (error) {
+        console.error("Failed to send Firmas signing email:", error);
+      }
 
       return {
         token: updated.firmasToken!,
         sentAt: updated.firmasSentAt,
         url,
+        respondentEmail,
+      };
+    }),
+
+  /**
+   * Lightweight poller used by the initiator's desktop UI while
+   * waiting for the respondent to sign in the Firmas app. Surfaces
+   * only the attested fields the card renders — we deliberately
+   * avoid leaking the full SignedReceipt on every 3-second tick.
+   */
+  firmasStatus: protectedProcedure
+    .input(z.object({ dealRoomId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const party = await ctx.prisma.dealRoomParty.findFirst({
+        where: { dealRoomId: input.dealRoomId, userId: ctx.session.user.id },
+        select: { id: true },
+      });
+      if (!party) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "You do not have access to this deal",
+        });
+      }
+
+      const sr = await ctx.prisma.signingRequest.findUnique({
+        where: { dealRoomId: input.dealRoomId },
+        select: {
+          status: true,
+          firmasSentAt: true,
+          respondentSignedAt: true,
+          completedAt: true,
+          signedBundle: true,
+        },
+      });
+      if (!sr) return null;
+
+      const bundle = sr.signedBundle as null | {
+        attestedGivenName?: string | null;
+        attestedFamilyName?: string | null;
+        attestedIdRegion?: string | null;
+      };
+
+      const attestedName = bundle
+        ? [bundle.attestedGivenName, bundle.attestedFamilyName].filter(Boolean).join(" ") || null
+        : null;
+
+      return {
+        status: sr.status,
+        firmasSentAt: sr.firmasSentAt,
+        respondentSignedAt: sr.respondentSignedAt,
+        completedAt: sr.completedAt,
+        attestedName,
+        attestedRegion: bundle?.attestedIdRegion ?? null,
       };
     }),
 });

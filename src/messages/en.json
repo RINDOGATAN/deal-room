@@ -515,7 +515,21 @@
       "signingStarted": "Signing process started. You can now sign below.",
       "initiationFailed": "Failed to initiate signing: {error}",
       "signatureRecorded": "Signature recorded successfully!",
-      "signatureFailed": "Failed to record signature: {error}"
+      "signatureFailed": "Failed to record signature: {error}",
+      "firmasSent": "Sent. The respondent will get a link to sign on their phone.",
+      "firmasSendFailed": "Couldn't send to Firmas: {error}",
+      "firmasLinkCopied": "Link copied to clipboard"
+    },
+    "firmas": {
+      "sendButton": "Send to Firmas (mobile signature)",
+      "sending": "Sending…",
+      "waitingTitle": "Waiting for signature on phone…",
+      "waitingDescription": "We emailed {email} a link that opens the Firmas app on their phone.",
+      "copyLink": "Copy link",
+      "signedTitle": "Signed by {name}",
+      "signedFromRegion": "from {region}",
+      "signedAt": "at {time}",
+      "downloadBundle": "Download signed bundle"
     },
     "signingDetails": {
       "title": "Execution Details",
