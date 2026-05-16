@@ -22,6 +22,8 @@ import {
   Download,
   ShieldCheck,
   ShieldAlert,
+  PenTool,
+  Hourglass,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
@@ -325,6 +327,102 @@ function DealDetailContent({ dealId }: { dealId: string }) {
           )}
         </div>
       </div>
+
+      {/* Signing readiness — the visible next-step for any two-party deal
+          past negotiation. Tells each party exactly what's blocking and
+          what their action is. Replaces the previously silent area that
+          left users staring at an AGREED badge with no CTA. */}
+      {!isSoloMode &&
+        (deal.status === "AGREED" || deal.status === "SIGNING") &&
+        (() => {
+          const myParty = isInitiator ? initiator : respondent;
+          const otherParty = isInitiator ? respondent : initiator;
+          const myDetailsFilled = !!myParty?.signingDetails;
+          const theirDetailsFilled = !!otherParty?.signingDetails;
+          const mySignedAt = isInitiator
+            ? signingRequest?.initiatorSignedAt
+            : signingRequest?.respondentSignedAt;
+          const theirSignedAt = isInitiator
+            ? signingRequest?.respondentSignedAt
+            : signingRequest?.initiatorSignedAt;
+          const otherName = otherParty?.user?.name || otherParty?.name || otherParty?.email || t("theOtherParty");
+          const signUrl = `/deals/${deal.id}/sign`;
+
+          // State machine: each branch renders one card. Order matters —
+          // earlier branches are higher-priority blockers.
+          if (!myDetailsFilled) {
+            return (
+              <div className="card-brutal border-primary/40 bg-primary/5 flex items-start gap-3">
+                <PenTool className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+                <div className="flex-1 min-w-0">
+                  <p className="font-semibold">{t("readiness.yourDetailsMissing")}</p>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    {t("readiness.yourDetailsMissingDescription")}
+                  </p>
+                  <Link
+                    href={signUrl}
+                    className="btn-brutal inline-flex items-center gap-2 mt-3"
+                  >
+                    <Edit className="w-4 h-4" />
+                    {t("readiness.addDetails")}
+                  </Link>
+                </div>
+              </div>
+            );
+          }
+          if (!theirDetailsFilled) {
+            return (
+              <div className="card-brutal border-border bg-muted/30 flex items-start gap-3">
+                <Hourglass className="w-5 h-5 text-muted-foreground flex-shrink-0 mt-0.5" />
+                <div className="flex-1 min-w-0">
+                  <p className="font-semibold">
+                    {t("readiness.theirDetailsMissing", { name: otherName })}
+                  </p>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    {t("readiness.theirDetailsMissingDescription")}
+                  </p>
+                </div>
+              </div>
+            );
+          }
+          if (!mySignedAt) {
+            return (
+              <div className="card-brutal border-primary/40 bg-primary/5 flex items-start gap-3">
+                <PenTool className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+                <div className="flex-1 min-w-0">
+                  <p className="font-semibold">{t("readiness.yourTurn")}</p>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    {theirSignedAt
+                      ? t("readiness.theyAlreadySigned", { name: otherName })
+                      : t("readiness.readyToSign")}
+                  </p>
+                  <Link
+                    href={signUrl}
+                    className="btn-brutal inline-flex items-center gap-2 mt-3"
+                  >
+                    <PenTool className="w-4 h-4" />
+                    {t("readiness.signNow")}
+                  </Link>
+                </div>
+              </div>
+            );
+          }
+          // I've signed, they haven't. We never hit "both signed" here —
+          // the deal would be COMPLETED instead of AGREED/SIGNING.
+          return (
+            <div className="card-brutal border-border bg-muted/30 flex items-start gap-3">
+              <Hourglass className="w-5 h-5 text-muted-foreground flex-shrink-0 mt-0.5" />
+              <div className="flex-1 min-w-0">
+                <p className="font-semibold">
+                  {t("readiness.waitingForThemToSign", { name: otherName })}
+                </p>
+                <p className="text-sm text-muted-foreground mt-1">
+                  {t("readiness.youAlreadySigned")}
+                </p>
+              </div>
+            </div>
+          );
+        })()}
 
       {/* Progress */}
       {progress && (

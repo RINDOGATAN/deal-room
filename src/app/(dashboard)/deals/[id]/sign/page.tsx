@@ -136,12 +136,14 @@ function SigningContent({ dealId }: { dealId: string }) {
     },
   });
 
-  // Firmas hand-off: a single click that (a) initiates signing if it
-  // hasn't been already, (b) emails the respondent a phone-signing
-  // link, (c) puts the desktop UI into a polling-for-signature state.
-  const sendToFirmas = trpc.signing.sendToFirmas.useMutation({
-    onSuccess: () => {
-      toast.success(t("toastMessages.firmasSent"));
+  // Firmas hand-off: each party can self-mint a hand-off (default),
+  // and the initiator can additionally mint on the respondent's
+  // behalf (the "send the link by email" case).
+  const requestFirmasHandoff = trpc.signing.requestFirmasHandoff.useMutation({
+    onSuccess: (data) => {
+      toast.success(
+        data.emailedTo ? t("toastMessages.firmasSent") : t("toastMessages.firmasMinted"),
+      );
       refetch();
     },
     onError: (error) => {
@@ -149,26 +151,52 @@ function SigningContent({ dealId }: { dealId: string }) {
     },
   });
 
-  // Desktop poller: only active for the initiator while the
-  // hand-off is in flight. The query disables itself the moment
-  // status leaves SENT/PARTIALLY_SIGNED, so it stops on its own
-  // when the respondent signs (or the request gets DECLINED).
+  // Cancel: clear my own Firmas token before I've signed, so I can
+  // switch back to type-to-sign. Undo: clear my recorded signature
+  // entirely; only allowed when the counterparty hasn't yet signed.
+  const cancelFirmasHandoff = trpc.signing.cancelFirmasHandoff.useMutation({
+    onSuccess: () => {
+      toast.success(t("toastMessages.firmasCancelled"));
+      refetch();
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+  const undoSignature = trpc.signing.undoSignature.useMutation({
+    onSuccess: () => {
+      toast.success(t("toastMessages.signatureUndone"));
+      refetch();
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+
+  // Desktop poller: active while EITHER party's hand-off is in
+  // flight. The query disables itself the moment status leaves
+  // SENT/PARTIALLY_SIGNED, so it stops on its own when both parties
+  // have settled (or the request gets DECLINED).
   const firmasPollEnabled =
-    !!signingRequest?.firmasToken &&
-    (signingRequest.status === "SENT" || signingRequest.status === "PARTIALLY_SIGNED");
+    (!!signingRequest?.initiatorFirmasToken ||
+      !!signingRequest?.respondentFirmasToken) &&
+    (signingRequest?.status === "SENT" ||
+      signingRequest?.status === "PARTIALLY_SIGNED");
   const { data: firmasStatusData } = trpc.signing.firmasStatus.useQuery(
     { dealRoomId: dealId },
     { refetchInterval: 3000, enabled: firmasPollEnabled },
   );
 
-  // When the poll observes a respondentSignedAt, refresh the main
+  // When the poll observes either party's signature, refresh the main
   // signingRequest snapshot so the existing party-by-party signature
   // cards repaint with the new state.
+  const initiatorFirmasSignedAt = firmasStatusData?.initiator?.signedAt ?? null;
+  const respondentFirmasSignedAt = firmasStatusData?.respondent?.signedAt ?? null;
   useEffect(() => {
-    if (firmasStatusData?.respondentSignedAt) {
+    if (initiatorFirmasSignedAt || respondentFirmasSignedAt) {
       refetch();
     }
-  }, [firmasStatusData?.respondentSignedAt, refetch]);
+  }, [initiatorFirmasSignedAt, respondentFirmasSignedAt, refetch]);
 
   const isLoading = dealLoading || signingLoading || detailsLoading;
 
@@ -677,21 +705,78 @@ function SigningContent({ dealId }: { dealId: string }) {
         </div>
       </div>
 
-      {/* Firmas hand-off card — only rendered for the initiator while a
-          phone-signing flow is in flight (or has just completed via
-          Firmas). Sits above the existing signature-status grid so the
-          initiator sees the live "waiting → signed" transition without
-          scrolling. */}
-      {isInitiator && !isSoloMode && signingRequest?.firmasToken && (
-        <FirmasHandoffCard
-          token={signingRequest.firmasToken}
-          respondentEmail={respondent?.email ?? null}
-          firmasStatusData={firmasStatusData ?? null}
-          firmasSentAt={signingRequest.firmasSentAt ?? null}
-          dealId={dealId}
-          locale={locale}
-          governingLaw={(deal as { governingLaw?: string | null })?.governingLaw ?? null}
-        />
+      {/* Per-party Firmas hand-off cards. Each party with an active
+          hand-off (token minted, not yet signed) OR a completed
+          Firmas signature gets a card. The current user sees "open
+          on phone" framing for their own card and "waiting for them"
+          framing for the counterparty's. */}
+      {!isSoloMode && (
+        <>
+          {(() => {
+            const initiatorToken =
+              firmasStatusData?.initiator?.firmasToken ??
+              signingRequest?.initiatorFirmasToken ??
+              null;
+            const respondentToken =
+              firmasStatusData?.respondent?.firmasToken ??
+              signingRequest?.respondentFirmasToken ??
+              null;
+            const initiatorName =
+              initiator?.user?.name || initiator?.name || initiator?.email || t("partyA");
+            const respondentName =
+              respondent?.user?.name || respondent?.name || respondent?.email || t("partyB");
+            const governingLaw =
+              (deal as { governingLaw?: string | null })?.governingLaw ?? null;
+            return (
+              <>
+                {initiatorToken && (
+                  <FirmasHandoffCard
+                    isSelf={isInitiator}
+                    partyName={initiatorName}
+                    token={initiatorToken}
+                    firmasSentAt={
+                      firmasStatusData?.initiator?.firmasSentAt ??
+                      signingRequest?.initiatorFirmasSentAt ??
+                      null
+                    }
+                    signedAt={
+                      firmasStatusData?.initiator?.signedAt ??
+                      signingRequest?.initiatorSignedAt ??
+                      null
+                    }
+                    attestedName={firmasStatusData?.initiator?.attestedName ?? null}
+                    attestedRegion={firmasStatusData?.initiator?.attestedRegion ?? null}
+                    dealId={dealId}
+                    locale={locale}
+                    governingLaw={governingLaw}
+                  />
+                )}
+                {respondentToken && (
+                  <FirmasHandoffCard
+                    isSelf={!isInitiator}
+                    partyName={respondentName}
+                    token={respondentToken}
+                    firmasSentAt={
+                      firmasStatusData?.respondent?.firmasSentAt ??
+                      signingRequest?.respondentFirmasSentAt ??
+                      null
+                    }
+                    signedAt={
+                      firmasStatusData?.respondent?.signedAt ??
+                      signingRequest?.respondentSignedAt ??
+                      null
+                    }
+                    attestedName={firmasStatusData?.respondent?.attestedName ?? null}
+                    attestedRegion={firmasStatusData?.respondent?.attestedRegion ?? null}
+                    dealId={dealId}
+                    locale={locale}
+                    governingLaw={governingLaw}
+                  />
+                )}
+              </>
+            );
+          })()}
+        </>
       )}
 
       {/* Signing Status */}
@@ -802,6 +887,10 @@ function SigningContent({ dealId }: { dealId: string }) {
                   : signingRequest.initiatorSignedAt;
 
                 if (currentPartyHasSigned) {
+                  // Undo is only available while the other party
+                  // hasn't yet committed. After both signatures, the
+                  // contract is COMPLETED and locked in.
+                  const canUndo = !otherPartyHasSigned;
                   return (
                     <div className="py-6 border-t border-border">
                       <div className="text-center mb-4">
@@ -826,6 +915,21 @@ function SigningContent({ dealId }: { dealId: string }) {
                           </div>
                         </div>
                       )}
+                      {canUndo && (
+                        <div className="text-center mt-4">
+                          <button
+                            onClick={() =>
+                              undoSignature.mutate({ dealRoomId: dealId })
+                            }
+                            disabled={undoSignature.isPending}
+                            className="text-sm text-muted-foreground hover:text-foreground underline underline-offset-2 disabled:opacity-50"
+                          >
+                            {undoSignature.isPending
+                              ? t("undoingSignature")
+                              : t("undoSignature")}
+                          </button>
+                        </div>
+                      )}
                       <DownloadLinks dealId={dealId} className="mt-6" />
                     </div>
                   );
@@ -839,6 +943,39 @@ function SigningContent({ dealId }: { dealId: string }) {
                       <p className="text-sm text-muted-foreground">
                         {t("signingDetails.requiredBeforeSigning")}
                       </p>
+                    </div>
+                  );
+                }
+
+                // If this party already requested a Firmas hand-off,
+                // the FirmasHandoffCard at the top of the page is
+                // doing the work. Replace the type-to-sign UI with a
+                // pointer so the user doesn't accidentally do both.
+                // "Switch back" lets them abandon Firmas in favour of
+                // type-to-sign, since they may have picked it by
+                // mistake or changed their mind.
+                const myFirmasToken = deal.currentUserRole === "INITIATOR"
+                  ? signingRequest.initiatorFirmasToken
+                  : signingRequest.respondentFirmasToken;
+                if (myFirmasToken) {
+                  return (
+                    <div className="py-6 border-t border-border text-center">
+                      <Smartphone className="w-8 h-8 text-primary mx-auto mb-3" />
+                      <p className="font-semibold mb-1">{t("firmas.usingFirmas")}</p>
+                      <p className="text-sm text-muted-foreground mb-3">
+                        {t("firmas.usingFirmasDescription")}
+                      </p>
+                      <button
+                        onClick={() =>
+                          cancelFirmasHandoff.mutate({ dealRoomId: dealId })
+                        }
+                        disabled={cancelFirmasHandoff.isPending}
+                        className="text-sm text-muted-foreground hover:text-foreground underline underline-offset-2 disabled:opacity-50"
+                      >
+                        {cancelFirmasHandoff.isPending
+                          ? t("firmas.cancelling")
+                          : t("firmas.cancelAndType")}
+                      </button>
                     </div>
                   );
                 }
@@ -929,6 +1066,40 @@ function SigningContent({ dealId }: { dealId: string }) {
                           )}
                         </button>
                       </div>
+
+                      {/* Alternate signing method — Firmas on phone.
+                          Mints a token for the current user's role
+                          and pivots the UI into the hand-off panel
+                          above. Available to either party. */}
+                      {!isSoloMode && (
+                        <div className="mt-6 pt-6 border-t border-border text-center">
+                          <p className="text-xs text-muted-foreground mb-3 uppercase tracking-wider">
+                            {t("firmas.orInsteadHeader")}
+                          </p>
+                          <button
+                            onClick={() =>
+                              requestFirmasHandoff.mutate({ dealRoomId: dealId })
+                            }
+                            disabled={requestFirmasHandoff.isPending}
+                            className="btn-brutal-outline inline-flex items-center gap-2 disabled:opacity-50"
+                          >
+                            {requestFirmasHandoff.isPending ? (
+                              <>
+                                <Loader2 className="w-4 h-4 animate-spin" />
+                                {t("firmas.sending")}
+                              </>
+                            ) : (
+                              <>
+                                <Smartphone className="w-4 h-4" />
+                                {t("firmas.signWithFirmas")}
+                              </>
+                            )}
+                          </button>
+                          <p className="text-xs text-muted-foreground mt-2 max-w-xs mx-auto">
+                            {t("firmas.signWithFirmasDescription")}
+                          </p>
+                        </div>
+                      )}
                     </div>
 
                     <DownloadLinks dealId={dealId} className="mt-6" />
@@ -938,57 +1109,102 @@ function SigningContent({ dealId }: { dealId: string }) {
             </>
           )}
         </div>
-      ) : (
-        <div className="card-brutal text-center py-6">
-          <FileSignature className="w-8 h-8 text-muted-foreground mx-auto mb-3" />
-          <h2 className="text-lg font-semibold mb-2">{t("readyForSignatures")}</h2>
-          <p className="text-sm text-muted-foreground mb-4 max-w-md mx-auto">
-            {t("readyForSignaturesDescription")}
-          </p>
-          <div className="flex items-center justify-center gap-3 mb-4 flex-wrap">
-            <button
-              onClick={() => initiateSigning.mutate({ dealRoomId: dealId })}
-              disabled={initiateSigning.isPending}
-              className="btn-brutal flex items-center gap-2"
-            >
-              {initiateSigning.isPending ? (
-                <>
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                  {t("starting")}
-                </>
-              ) : (
-                <>
-                  <PenTool className="w-4 h-4" />
-                  {t("startSigningProcess")}
-                </>
-              )}
-            </button>
-            {isInitiator && !isSoloMode && (
+      ) : (() => {
+        // Dual-fill gate. Mirrors the server-side precondition in
+        // signing.initiate / signing.requestFirmasHandoff. We render the buttons
+        // either way so users see what's possible, but disable them
+        // with a tooltip explaining *why* until both parties' details
+        // are submitted. The asymmetric messaging — "add yours" vs
+        // "waiting for them" — gives each side a clear next action.
+        const ownDetailsFilled = !!signingDetails?.own.signingDetails;
+        const otherDetailsFilled = !!signingDetails?.other?.signingDetails;
+        const otherName =
+          (deal.parties.find((p) => p.role !== deal.currentUserRole) as
+            | { user?: { name?: string | null } | null; name?: string | null; email?: string | null }
+            | undefined)?.user?.name ||
+          (deal.parties.find((p) => p.role !== deal.currentUserRole) as
+            | { name?: string | null; email?: string | null }
+            | undefined)?.name ||
+          (deal.parties.find((p) => p.role !== deal.currentUserRole) as
+            | { email?: string | null }
+            | undefined)?.email ||
+          t("theOtherParty");
+
+        // SOLO has no respondent, so the dual-fill collapses to
+        // "your details only."
+        const dualFillSatisfied = isSoloMode
+          ? ownDetailsFilled
+          : ownDetailsFilled && otherDetailsFilled;
+
+        let blockReason: string | null = null;
+        if (!ownDetailsFilled) {
+          blockReason = t("blocked.yourDetails");
+        } else if (!isSoloMode && !otherDetailsFilled) {
+          blockReason = t("blocked.theirDetails", { name: otherName });
+        }
+
+        const startDisabled = initiateSigning.isPending || !dualFillSatisfied;
+        const firmasDisabled = requestFirmasHandoff.isPending || !dualFillSatisfied;
+
+        return (
+          <div className="card-brutal text-center py-6">
+            <FileSignature className="w-8 h-8 text-muted-foreground mx-auto mb-3" />
+            <h2 className="text-lg font-semibold mb-2">{t("readyForSignatures")}</h2>
+            <p className="text-sm text-muted-foreground mb-4 max-w-md mx-auto">
+              {t("readyForSignaturesDescription")}
+            </p>
+            <div className="flex items-center justify-center gap-3 mb-4 flex-wrap">
               <button
-                onClick={() => sendToFirmas.mutate({ dealRoomId: dealId })}
-                disabled={sendToFirmas.isPending}
-                className="btn-brutal-outline flex items-center gap-2"
+                onClick={() => initiateSigning.mutate({ dealRoomId: dealId })}
+                disabled={startDisabled}
+                title={blockReason ?? undefined}
+                aria-disabled={startDisabled}
+                className="btn-brutal flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {sendToFirmas.isPending ? (
+                {initiateSigning.isPending ? (
                   <>
                     <Loader2 className="w-4 h-4 animate-spin" />
-                    {t("firmas.sending")}
+                    {t("starting")}
                   </>
                 ) : (
                   <>
-                    <Smartphone className="w-4 h-4" />
-                    {t("firmas.sendButton")}
+                    <PenTool className="w-4 h-4" />
+                    {t("startSigningProcess")}
                   </>
                 )}
               </button>
+              {!isSoloMode && (
+                <button
+                  onClick={() => requestFirmasHandoff.mutate({ dealRoomId: dealId })}
+                  disabled={firmasDisabled}
+                  title={blockReason ?? undefined}
+                  aria-disabled={firmasDisabled}
+                  className="btn-brutal-outline flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {requestFirmasHandoff.isPending ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      {t("firmas.sending")}
+                    </>
+                  ) : (
+                    <>
+                      <Smartphone className="w-4 h-4" />
+                      {t("firmas.signWithFirmas")}
+                    </>
+                  )}
+                </button>
+              )}
+            </div>
+            {blockReason && (
+              <p className="text-xs text-muted-foreground mb-3">{blockReason}</p>
             )}
+            <DownloadLinks dealId={dealId} className="mb-4" />
+            <p className="text-xs text-muted-foreground">
+              {t("canSignImmediately")}
+            </p>
           </div>
-          <DownloadLinks dealId={dealId} className="mb-4" />
-          <p className="text-xs text-muted-foreground">
-            {t("canSignImmediately")}
-          </p>
-        </div>
-      )}
+        );
+      })()}
 
       {/* Legal Notice */}
       <div className="card-brutal bg-muted/30 space-y-2">
@@ -1003,41 +1219,42 @@ function SigningContent({ dealId }: { dealId: string }) {
   );
 }
 
-interface FirmasStatusData {
-  status: string;
+interface FirmasHandoffCardProps {
+  /** Whether the current viewer is the party whose hand-off this is. */
+  isSelf: boolean;
+  /** Display name of the party this card is about. */
+  partyName: string;
+  token: string;
   firmasSentAt: Date | null;
-  respondentSignedAt: Date | null;
-  completedAt: Date | null;
+  signedAt: Date | null;
   attestedName: string | null;
   attestedRegion: string | null;
-}
-
-interface FirmasHandoffCardProps {
-  token: string;
-  respondentEmail: string | null;
-  firmasStatusData: FirmasStatusData | null;
-  firmasSentAt: Date | null;
   dealId: string;
   locale: string;
   governingLaw: string | null;
 }
 
 /**
- * Desktop-side status card the initiator sees after pressing
- * "Send to Firmas". Two display states:
- *   - "Waiting for signature on phone…" with spinner + copy-link
- *     fallback in case the email never lands.
- *   - "Signed by {attestedName}…" with download link for the signed
- *     bundle once the Firmas callback has fired.
+ * Per-party Firmas hand-off card. Three display states:
+ *   - SELF + waiting:   "Open this link on your phone…" + copy-link
+ *     button. The current user is being asked to scan/copy onto their
+ *     own phone.
+ *   - OTHER + waiting:  "Waiting for {name} to sign on their phone…"
+ *     Read-only status — we don't surface their token to the watcher.
+ *   - Signed (either):  "Signed by {attestedName} at {time}" with a
+ *     download link.
  *
- * The parent passes `firmasStatusData` from the 3-second poll so this
- * component stays a pure renderer — it doesn't own the polling.
+ * Pure renderer — parent owns the polling and feeds in the resolved
+ * fields. Same component covers initiator and respondent hand-offs.
  */
 function FirmasHandoffCard({
+  isSelf,
+  partyName,
   token,
-  respondentEmail,
-  firmasStatusData,
   firmasSentAt,
+  signedAt,
+  attestedName,
+  attestedRegion,
   dealId,
   locale,
   governingLaw,
@@ -1046,8 +1263,6 @@ function FirmasHandoffCard({
   const firmasBase =
     process.env.NEXT_PUBLIC_FIRMAS_BASE_URL ?? "https://www.firmas.io";
   const signUrl = `${firmasBase}/sign/${token}`;
-
-  const hasSigned = !!firmasStatusData?.respondentSignedAt;
 
   async function copyLink() {
     try {
@@ -1059,10 +1274,7 @@ function FirmasHandoffCard({
     }
   }
 
-  if (hasSigned) {
-    const signedAt = firmasStatusData?.respondentSignedAt
-      ? new Date(firmasStatusData.respondentSignedAt)
-      : null;
+  if (signedAt) {
     return (
       <div className="card-brutal border-primary/40 bg-primary/5">
         <div className="flex items-start gap-3">
@@ -1071,24 +1283,21 @@ function FirmasHandoffCard({
           </div>
           <div className="flex-1 min-w-0">
             <p className="font-semibold">
-              {t("firmas.signedTitle", {
-                name: firmasStatusData?.attestedName ?? "—",
-              })}
+              {t("firmas.signedTitle", { name: attestedName ?? partyName })}
             </p>
             <p className="text-sm text-muted-foreground mt-1">
-              {firmasStatusData?.attestedRegion ? (
+              {attestedRegion ? (
                 <>
-                  {t("firmas.signedFromRegion", {
-                    region: firmasStatusData.attestedRegion,
-                  })}
-                  {signedAt ? " · " : null}
+                  {t("firmas.signedFromRegion", { region: attestedRegion })}
+                  {" · "}
                 </>
               ) : null}
-              {signedAt
-                ? t("firmas.signedAt", {
-                    time: formatDateTime(signedAt, { locale, governingLaw: governingLaw ?? undefined }),
-                  })
-                : null}
+              {t("firmas.signedAt", {
+                time: formatDateTime(new Date(signedAt), {
+                  locale,
+                  governingLaw: governingLaw ?? undefined,
+                }),
+              })}
             </p>
             <div className="mt-3">
               <a
@@ -1105,6 +1314,9 @@ function FirmasHandoffCard({
     );
   }
 
+  // Waiting state. For the current user (isSelf), surface the link
+  // prominently — they need to open it on their phone. For the other
+  // party, render a read-only "waiting for them" state.
   return (
     <div className="card-brutal border-primary/30 bg-primary/5">
       <div className="flex items-start gap-3">
@@ -1112,29 +1324,38 @@ function FirmasHandoffCard({
           <Loader2 className="w-5 h-5 text-primary animate-spin" />
         </div>
         <div className="flex-1 min-w-0">
-          <p className="font-semibold">{t("firmas.waitingTitle")}</p>
+          <p className="font-semibold">
+            {isSelf
+              ? t("firmas.openOnPhoneTitle")
+              : t("firmas.waitingForOtherTitle", { name: partyName })}
+          </p>
           <p className="text-sm text-muted-foreground mt-1">
-            {t("firmas.waitingDescription", {
-              email: respondentEmail ?? "—",
-            })}
+            {isSelf
+              ? t("firmas.openOnPhoneDescription")
+              : t("firmas.waitingForOtherDescription", { name: partyName })}
           </p>
           {firmasSentAt ? (
             <p className="text-xs text-muted-foreground mt-1">
-              {formatDateTime(new Date(firmasSentAt), { locale, governingLaw: governingLaw ?? undefined })}
+              {formatDateTime(new Date(firmasSentAt), {
+                locale,
+                governingLaw: governingLaw ?? undefined,
+              })}
             </p>
           ) : null}
-          <div className="mt-3 flex items-center gap-2 flex-wrap">
-            <button
-              onClick={copyLink}
-              className="text-sm inline-flex items-center gap-1.5 px-3 py-1.5 border border-border rounded hover:bg-muted/50"
-            >
-              <Copy className="w-3.5 h-3.5" />
-              {t("firmas.copyLink")}
-            </button>
-            <code className="text-xs text-muted-foreground truncate max-w-full">
-              {signUrl}
-            </code>
-          </div>
+          {isSelf && (
+            <div className="mt-3 flex items-center gap-2 flex-wrap">
+              <button
+                onClick={copyLink}
+                className="text-sm inline-flex items-center gap-1.5 px-3 py-1.5 border border-border rounded hover:bg-muted/50"
+              >
+                <Copy className="w-3.5 h-3.5" />
+                {t("firmas.copyLink")}
+              </button>
+              <code className="text-xs text-muted-foreground truncate max-w-full">
+                {signUrl}
+              </code>
+            </div>
+          )}
         </div>
       </div>
     </div>

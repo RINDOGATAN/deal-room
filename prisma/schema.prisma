@@ -35,8 +35,8 @@ model User {
   updatedAt     DateTime  @updatedAt
 
   // Auth relations
-  accounts        Account[]
-  sessions        Session[]
+  accounts Account[]
+  sessions Session[]
 
   // Dealroom relations
   dealRoomParties DealRoomParty[]
@@ -690,60 +690,63 @@ enum InvitationStatus {
 // ============================================================
 
 model SigningRequest {
-  id                  String        @id @default(cuid())
-  dealRoomId          String        @unique
-  provider            String // "docusign", "hellosign", or "type-to-sign"
-  externalId          String? // ID from e-signature provider
-  documentUrl         String? // Generated document URL
-  status              SigningStatus @default(PENDING)
-  initiatorSignedAt   DateTime?
-  respondentSignedAt  DateTime?
-  initiatorSignature  String? // Typed signature for initiator
-  respondentSignature String? // Typed signature for respondent
+  id                    String        @id @default(cuid())
+  dealRoomId            String        @unique
+  provider              String // "docusign", "hellosign", or "type-to-sign"
+  externalId            String? // ID from e-signature provider
+  documentUrl           String? // Generated document URL
+  status                SigningStatus @default(PENDING)
+  initiatorSignedAt     DateTime?
+  respondentSignedAt    DateTime?
+  initiatorSignature    String? // Typed signature for initiator
+  respondentSignature   String? // Typed signature for respondent
   // Forensic envelope captured at signing time. Nullable because
   // historical rows pre-date this column and because some hosting
   // configurations strip the originating IP. Populated best-effort.
   initiatorSignatureIp  String?
-  initiatorSignatureUa  String? @db.Text
+  initiatorSignatureUa  String?       @db.Text
   respondentSignatureIp String?
-  respondentSignatureUa String? @db.Text
-  completedAt         DateTime?
-  signedDocumentUrl   String? // URL to signed document
-  ceremonyId          String? // Cloud API certification ceremony ID
-  documentHash        String? // SHA-256 hash of contract data at signing time
-  expiresAt           DateTime // Set at creation to createdAt + 14 days. Used to surface stall warnings.
+  respondentSignatureUa String?       @db.Text
+  completedAt           DateTime?
+  signedDocumentUrl     String? // URL to signed document
+  ceremonyId            String? // Cloud API certification ceremony ID
+  documentHash          String? // SHA-256 hash of contract data at signing time
+  expiresAt             DateTime // Set at creation to createdAt + 14 days. Used to surface stall warnings.
   // Stamp set by the daily cron after it sends the "expiring soon"
   // reminder email. Prevents a duplicate reminder if the cron runs
   // slightly off schedule.
-  expiryReminderSentAt DateTime?
+  expiryReminderSentAt  DateTime?
 
-  // ── Firmas hand-off (added 2026-05-15) ─────────────────────────
-  // Dealroom can route the respondent's signature ceremony through
-  // the Firmas wallet so the signer's identity is cryptographically
-  // attested (SD-JWT VC carrying given_name + family_name +
-  // id_number_sha256) before the signature is recorded. Population
-  // is opt-in per-deal via signing.sendToFirmas().
+  // ── Firmas hand-off (per-party, 2026-05-16) ─────────────────────
+  // Either party can self-mint a Firmas hand-off — initiator wants
+  // to sign with biometric mobile identity attestation, respondent
+  // wants the same. Each role gets its own opaque token, its own
+  // sent-at timestamp, and its own signed-bundle envelope. The
+  // firmas-callback receiver looks up the SigningRequest by either
+  // token and updates the matching role's columns.
   //
-  // firmasToken — opaque CUID minted at hand-off time. Embedded in
-  //   the firmas.io/sign/<token> link; the firmas-callback receiver
-  //   uses it to look up THIS request and reject anything else.
-  // firmasSentAt — first time the link was minted. Lets us show
-  //   "sent to Firmas <ago>" copy in the SigningRequest dashboard.
-  // signedBundle — the SignedReceipt envelope Firmas POSTs back
-  //   after the user signs: { sdJwtVc, signatureBase64url,
-  //   contractHash, signedAt }. Stored verbatim as JSON so the
-  //   audit trail keeps the original attestation forever.
-  firmasToken         String?       @unique
-  firmasSentAt        DateTime?
-  signedBundle        Json?
+  // <role>FirmasToken     — opaque UUID v4 minted at hand-off time
+  // <role>FirmasSentAt    — first time that party's link was minted
+  // <role>SignedBundle    — verbatim SignedReceipt envelope Firmas
+  //                         POSTs back; preserves the original
+  //                         attestation forever (SD-JWT VC, P-256
+  //                         signature, contractHash, signedAt)
+  initiatorFirmasToken  String?   @unique
+  initiatorFirmasSentAt DateTime?
+  initiatorSignedBundle Json?
 
-  createdAt           DateTime      @default(now())
-  updatedAt           DateTime      @updatedAt
+  respondentFirmasToken  String?   @unique
+  respondentFirmasSentAt DateTime?
+  respondentSignedBundle Json?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   dealRoom DealRoom @relation(fields: [dealRoomId], references: [id], onDelete: Cascade)
 
   @@index([expiresAt])
-  @@index([firmasToken])
+  @@index([initiatorFirmasToken])
+  @@index([respondentFirmasToken])
   @@map("signing_requests")
 }
 
@@ -1219,15 +1222,15 @@ enum StartupJourneyStatus {
 }
 
 model StartupJourney {
-  id              String               @id @default(cuid())
-  userId          String
-  status          StartupJourneyStatus @default(IN_PROGRESS)
+  id     String               @id @default(cuid())
+  userId String
+  status StartupJourneyStatus @default(IN_PROGRESS)
 
   // Company profile (shared across all deals in this journey)
-  companyName     String
-  companyAddress  String?
-  state           String               @default("DELAWARE") // US state, free-text for phase 2
-  entityType      String               @default("C_CORP") // C_CORP | LLC (future)
+  companyName    String
+  companyAddress String?
+  state          String  @default("DELAWARE") // US state, free-text for phase 2
+  entityType     String  @default("C_CORP") // C_CORP | LLC (future)
 
   // Capitalization defaults
   authorizedShares  Int      @default(10000000)

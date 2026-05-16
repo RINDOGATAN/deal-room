@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { headers } from "next/headers";
+import { Prisma } from "@prisma/client";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
 import {
@@ -225,6 +226,28 @@ export const signingRouter = createTRPCRouter({
         throw new TRPCError({
           code: "BAD_REQUEST",
           message: "Cannot initiate signing while joint counsel request is pending",
+        });
+      }
+
+      // Dual-fill requirement. Both parties must have submitted their
+      // execution details before we can flip AGREED → SIGNING. Without
+      // this, one party can race ahead and lock the deal into a state
+      // where the slower party's address / tax ID / signatory will never
+      // make it into the rendered contract. SOLO mode (no respondent)
+      // only requires the initiator's details.
+      const initiatorParty = deal.parties.find((p) => p.role === "INITIATOR");
+      const respondentParty = deal.parties.find((p) => p.role === "RESPONDENT");
+      const isSolo = deal.dealMode === "SOLO";
+      if (!initiatorParty?.signingDetails) {
+        throw new TRPCError({
+          code: "PRECONDITION_FAILED",
+          message: "The initiator must add execution details before signing can start",
+        });
+      }
+      if (!isSolo && !respondentParty?.signingDetails) {
+        throw new TRPCError({
+          code: "PRECONDITION_FAILED",
+          message: "The respondent must add execution details before signing can start",
         });
       }
 
@@ -615,35 +638,38 @@ export const signingRouter = createTRPCRouter({
     }),
 
   /**
-   * Hand the signing ceremony off to the Firmas wallet so the
-   * respondent's identity is cryptographically attested (SD-JWT VC
-   * carrying given_name + family_name + id_number_sha256) before the
-   * signature is recorded.
+   * Self-mint (or other-party-mint) a Firmas hand-off. Each party can
+   * choose to sign with the Firmas wallet for biometric mobile identity
+   * attestation. Defaults to minting for the caller's own role; the
+   * INITIATOR may additionally mint on behalf of the respondent (the
+   * original "send invitation by email" use case).
    *
-   * Returns a `firmas.io/sign/<token>` URL the caller can paste into
-   * the respondent's email or copy to their clipboard. The Firmas
-   * callback receiver at `/api/signing/firmas-callback` looks up the
-   * SigningRequest by token, verifies the signed bundle Firmas posts
-   * back, marks `respondentSignedAt`, and transitions the DealRoom
-   * to COMPLETED when both parties have signed.
+   * On call:
+   *   1. Validates dual-fill of execution details + agreement / review /
+   *      joint-counsel preconditions; auto-initiates the SigningRequest
+   *      if none exists yet.
+   *   2. Mints a UUID v4 into the appropriate <role>FirmasToken column;
+   *      idempotent — re-pressing returns the same token but bumps the
+   *      sentAt stamp.
+   *   3. If `forRole !== caller's role`, emails the target party the
+   *      link. Otherwise no email (caller is already on desktop and
+   *      copies the link onto their own phone).
    *
-   * Idempotent: calling twice on the same SigningRequest returns the
-   * same token (we don't churn link URLs if the user re-presses the
-   * button) but bumps `firmasSentAt` so the dashboard shows the
-   * most recent send.
+   * The firmas-callback receiver at `/api/signing/firmas-callback`
+   * looks up the SigningRequest by EITHER token, determines the
+   * signing party from which token matched, and updates the matching
+   * <role>SignedAt + <role>SignedBundle columns.
    */
-  sendToFirmas: protectedProcedure
-    .input(z.object({ dealRoomId: z.string() }))
+  requestFirmasHandoff: protectedProcedure
+    .input(
+      z.object({
+        dealRoomId: z.string(),
+        forRole: z.enum(["INITIATOR", "RESPONDENT"]).optional(),
+      }),
+    )
     .mutation(async ({ ctx, input }) => {
-      // Auth: caller must be the INITIATOR on the deal. Mirrors the
-      // rest of signing.* which treats signing as initiator-driven,
-      // so a hostile respondent can't fork the hand-off mid-flight.
-      const party = await ctx.prisma.dealRoomParty.findFirst({
-        where: {
-          dealRoomId: input.dealRoomId,
-          userId: ctx.session.user.id,
-          role: "INITIATOR",
-        },
+      const callerParty = await ctx.prisma.dealRoomParty.findFirst({
+        where: { dealRoomId: input.dealRoomId, userId: ctx.session.user.id },
         include: {
           dealRoom: {
             include: {
@@ -654,28 +680,64 @@ export const signingRouter = createTRPCRouter({
           },
         },
       });
-      if (!party) {
+      if (!callerParty) {
         throw new TRPCError({
           code: "FORBIDDEN",
-          message: "Only the deal initiator can hand off signing to Firmas",
+          message: "You do not have access to this deal",
         });
       }
 
-      const deal = party.dealRoom;
-      const respondent = deal.parties.find((p) => p.role === "RESPONDENT");
-      const respondentEmail = respondent?.user?.email ?? respondent?.email ?? null;
-      if (!respondentEmail) {
+      // Permission model: anyone can self-mint; only the initiator can
+      // mint for the respondent (the "send the invite" use case). A
+      // respondent can't mint on the initiator's behalf — that would
+      // let her hijack the initiator's signing-method choice.
+      const forRole = input.forRole ?? callerParty.role;
+      if (forRole !== callerParty.role && callerParty.role !== "INITIATOR") {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "You can only request a Firmas hand-off for yourself",
+        });
+      }
+
+      const deal = callerParty.dealRoom;
+      const initiatorParty = deal.parties.find((p) => p.role === "INITIATOR");
+      const respondentParty = deal.parties.find((p) => p.role === "RESPONDENT");
+      const isSolo = deal.dealMode === "SOLO";
+
+      if (forRole === "RESPONDENT" && isSolo) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Solo-mode deals have no respondent",
+        });
+      }
+      const targetParty = forRole === "INITIATOR" ? initiatorParty : respondentParty;
+      if (!targetParty) {
         throw new TRPCError({
           code: "PRECONDITION_FAILED",
-          message: "The respondent has no email on file; invite them first",
+          message: `The ${forRole.toLowerCase()} party is not on this deal yet`,
         });
       }
 
-      // Load (or create) the SigningRequest. The button is positioned
-      // as a peer of "Start Signing Process" — so if the user clicks
-      // this one first, we need to perform the same atomic AGREED →
-      // SIGNING transition that signing.initiate does. Safety checks
-      // mirror signing.initiate to keep the two paths interchangeable.
+      // Dual-fill requirement — Firmas needs to render the contract
+      // bundle with both parties' execution details. Enforced
+      // unconditionally (independently of whether a SigningRequest
+      // already exists) so the Firmas hand-off never produces a
+      // half-formed contract.
+      if (!initiatorParty?.signingDetails) {
+        throw new TRPCError({
+          code: "PRECONDITION_FAILED",
+          message: "Initiator must add execution details before signing can start",
+        });
+      }
+      if (!isSolo && !respondentParty?.signingDetails) {
+        throw new TRPCError({
+          code: "PRECONDITION_FAILED",
+          message: "Respondent must add execution details before signing can start",
+        });
+      }
+
+      // Load (or create) the SigningRequest. Safety checks mirror
+      // signing.initiate so the two paths stay interchangeable.
       let signingRequest = await ctx.prisma.signingRequest.findUnique({
         where: { dealRoomId: input.dealRoomId },
       });
@@ -782,53 +844,89 @@ export const signingRouter = createTRPCRouter({
         });
       }
 
-      // Mint token once, reuse on subsequent calls. UUID v4 — opaque,
-      // unguessable, indexed. The column is nullable, so we allocate
-      // on demand rather than littering the table with unused IDs.
-      const token = signingRequest.firmasToken ?? crypto.randomUUID();
+      // Already-signed guard. Once a party's signature is recorded,
+      // there's nothing for them to do in the Firmas app — minting a
+      // fresh token would silently shadow the one they signed with.
+      const alreadySigned =
+        forRole === "INITIATOR"
+          ? !!signingRequest.initiatorSignedAt
+          : !!signingRequest.respondentSignedAt;
+      if (alreadySigned) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: `${forRole === "INITIATOR" ? "Initiator" : "Respondent"} has already signed`,
+        });
+      }
+
+      // Mint (or reuse) the role-specific token.
+      const existingToken =
+        forRole === "INITIATOR"
+          ? signingRequest.initiatorFirmasToken
+          : signingRequest.respondentFirmasToken;
+      const token = existingToken ?? crypto.randomUUID();
+
+      const tokenUpdate =
+        forRole === "INITIATOR"
+          ? { initiatorFirmasToken: token, initiatorFirmasSentAt: new Date() }
+          : { respondentFirmasToken: token, respondentFirmasSentAt: new Date() };
 
       const updated = await ctx.prisma.signingRequest.update({
         where: { id: signingRequest.id },
         data: {
-          firmasToken: token,
-          firmasSentAt: new Date(),
+          ...tokenUpdate,
           status: signingRequest.status === "PENDING" ? "SENT" : signingRequest.status,
         },
       });
 
-      // The path is a Universal Link on iOS/Android (opens the Firmas
-      // app if installed), and falls back to the mobile-web signer in
-      // Safari/Chrome otherwise. The dealKey fragment is reserved for
-      // a future fragment-based E2E-encryption hardening pass.
+      // Universal Link on iOS/Android (opens the Firmas app if
+      // installed); falls back to the mobile-web signer in Safari/
+      // Chrome otherwise.
       const firmasBase = process.env.FIRMAS_BASE_URL ?? "https://www.firmas.io";
       const url = `${firmasBase}/sign/${token}`;
 
-      const dealName = deal.contractTemplate?.displayName || "contract";
-      const initiatorName = party.name || ctx.session.user.email || "Your counterparty";
-      try {
-        await sendFirmasSigningEmail({
-          to: respondentEmail,
-          initiatorName,
-          contractType: dealName,
-          signUrl: url,
-        });
-      } catch (error) {
-        console.error("Failed to send Firmas signing email:", error);
+      // Email the target party only when caller is acting on someone
+      // else's behalf (the "initiator sends respondent a link" case).
+      // Self-mint: no email — caller is on desktop and will scan/copy
+      // the link onto their own phone.
+      let emailedTo: string | null = null;
+      if (forRole !== callerParty.role) {
+        const targetEmail = targetParty.user?.email ?? targetParty.email ?? null;
+        if (targetEmail) {
+          const dealName = deal.contractTemplate?.displayName || "contract";
+          const senderName =
+            callerParty.name || ctx.session.user.email || "Your counterparty";
+          try {
+            await sendFirmasSigningEmail({
+              to: targetEmail,
+              initiatorName: senderName,
+              contractType: dealName,
+              signUrl: url,
+            });
+            emailedTo = targetEmail;
+          } catch (error) {
+            console.error("Failed to send Firmas signing email:", error);
+          }
+        }
       }
 
       return {
-        token: updated.firmasToken!,
-        sentAt: updated.firmasSentAt,
+        token,
+        sentAt:
+          forRole === "INITIATOR"
+            ? updated.initiatorFirmasSentAt
+            : updated.respondentFirmasSentAt,
         url,
-        respondentEmail,
+        forRole,
+        emailedTo,
       };
     }),
 
   /**
-   * Lightweight poller used by the initiator's desktop UI while
-   * waiting for the respondent to sign in the Firmas app. Surfaces
-   * only the attested fields the card renders — we deliberately
-   * avoid leaking the full SignedReceipt on every 3-second tick.
+   * Per-party Firmas poller. Returns the hand-off state for both
+   * parties so the calling UI can render the live "waiting → signed"
+   * transition without having to know which role it is. Surfaces only
+   * the attested fields the card renders — never the full
+   * SignedReceipt on every tick.
    */
   firmasStatus: protectedProcedure
     .input(z.object({ dealRoomId: z.string() }))
@@ -848,31 +946,203 @@ export const signingRouter = createTRPCRouter({
         where: { dealRoomId: input.dealRoomId },
         select: {
           status: true,
-          firmasSentAt: true,
-          respondentSignedAt: true,
           completedAt: true,
-          signedBundle: true,
+          initiatorFirmasToken: true,
+          initiatorFirmasSentAt: true,
+          initiatorSignedAt: true,
+          initiatorSignedBundle: true,
+          respondentFirmasToken: true,
+          respondentFirmasSentAt: true,
+          respondentSignedAt: true,
+          respondentSignedBundle: true,
         },
       });
       if (!sr) return null;
 
-      const bundle = sr.signedBundle as null | {
+      type Bundle = {
         attestedGivenName?: string | null;
         attestedFamilyName?: string | null;
         attestedIdRegion?: string | null;
       };
-
-      const attestedName = bundle
-        ? [bundle.attestedGivenName, bundle.attestedFamilyName].filter(Boolean).join(" ") || null
-        : null;
+      const projectBundle = (b: unknown) => {
+        const bundle = b as Bundle | null;
+        return {
+          attestedName: bundle
+            ? [bundle.attestedGivenName, bundle.attestedFamilyName]
+                .filter(Boolean)
+                .join(" ") || null
+            : null,
+          attestedRegion: bundle?.attestedIdRegion ?? null,
+        };
+      };
 
       return {
         status: sr.status,
-        firmasSentAt: sr.firmasSentAt,
-        respondentSignedAt: sr.respondentSignedAt,
         completedAt: sr.completedAt,
-        attestedName,
-        attestedRegion: bundle?.attestedIdRegion ?? null,
+        initiator: {
+          firmasToken: sr.initiatorFirmasToken,
+          firmasSentAt: sr.initiatorFirmasSentAt,
+          signedAt: sr.initiatorSignedAt,
+          ...projectBundle(sr.initiatorSignedBundle),
+        },
+        respondent: {
+          firmasToken: sr.respondentFirmasToken,
+          firmasSentAt: sr.respondentFirmasSentAt,
+          signedAt: sr.respondentSignedAt,
+          ...projectBundle(sr.respondentSignedBundle),
+        },
       };
+    }),
+
+  /**
+   * Cancel a Firmas hand-off the caller had requested for themselves
+   * but hasn't yet signed. Clears the caller's role-specific token +
+   * sent-at so they can switch back to type-to-sign (or re-mint
+   * fresh). Does NOT touch the signature columns — those only get
+   * cleared by undoSignature. If the caller already signed via this
+   * token, this errors out and the user has to use undoSignature
+   * instead (which has stricter preconditions).
+   */
+  cancelFirmasHandoff: protectedProcedure
+    .input(z.object({ dealRoomId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const party = await ctx.prisma.dealRoomParty.findFirst({
+        where: { dealRoomId: input.dealRoomId, userId: ctx.session.user.id },
+        include: { dealRoom: { include: { signingRequest: true } } },
+      });
+      if (!party) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "You do not have access to this deal",
+        });
+      }
+      const sr = party.dealRoom.signingRequest;
+      if (!sr) return { ok: true };
+
+      const alreadySigned =
+        party.role === "INITIATOR"
+          ? !!sr.initiatorSignedAt
+          : !!sr.respondentSignedAt;
+      if (alreadySigned) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Use undoSignature instead — your signature has already been recorded",
+        });
+      }
+
+      const clearData =
+        party.role === "INITIATOR"
+          ? { initiatorFirmasToken: null, initiatorFirmasSentAt: null }
+          : { respondentFirmasToken: null, respondentFirmasSentAt: null };
+
+      await ctx.prisma.signingRequest.update({
+        where: { id: sr.id },
+        data: clearData,
+      });
+
+      await ctx.prisma.auditLog.create({
+        data: {
+          dealRoomId: input.dealRoomId,
+          userId: ctx.session.user.id,
+          action: "FIRMAS_HANDOFF_CANCELLED",
+          details: { partyRole: party.role },
+        },
+      });
+
+      return { ok: true };
+    }),
+
+  /**
+   * Undo the caller's signature. Only allowed when the OTHER party
+   * has NOT yet signed — once the counterparty has committed, the
+   * one-way invariant kicks in (no rollback after dual signature).
+   * Clears the caller's signedAt + signature + signedBundle + any
+   * Firmas token they had minted, so they can choose a fresh signing
+   * method on the next attempt.
+   */
+  undoSignature: protectedProcedure
+    .input(z.object({ dealRoomId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const party = await ctx.prisma.dealRoomParty.findFirst({
+        where: { dealRoomId: input.dealRoomId, userId: ctx.session.user.id },
+        include: { dealRoom: { include: { signingRequest: true } } },
+      });
+      if (!party) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "You do not have access to this deal",
+        });
+      }
+      const sr = party.dealRoom.signingRequest;
+      if (!sr) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "No signing in progress for this deal",
+        });
+      }
+
+      const mySignedAt =
+        party.role === "INITIATOR" ? sr.initiatorSignedAt : sr.respondentSignedAt;
+      if (!mySignedAt) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "You haven't signed yet — nothing to undo",
+        });
+      }
+
+      const otherSignedAt =
+        party.role === "INITIATOR" ? sr.respondentSignedAt : sr.initiatorSignedAt;
+      if (otherSignedAt) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "The other party has already signed; this contract is committed",
+        });
+      }
+
+      const clearData =
+        party.role === "INITIATOR"
+          ? {
+              initiatorSignedAt: null,
+              initiatorSignature: null,
+              initiatorSignedBundle: Prisma.DbNull,
+              initiatorFirmasToken: null,
+              initiatorFirmasSentAt: null,
+              initiatorSignatureIp: null,
+              initiatorSignatureUa: null,
+            }
+          : {
+              respondentSignedAt: null,
+              respondentSignature: null,
+              respondentSignedBundle: Prisma.DbNull,
+              respondentFirmasToken: null,
+              respondentFirmasSentAt: null,
+              respondentSignatureIp: null,
+              respondentSignatureUa: null,
+            };
+
+      // If status was PARTIALLY_SIGNED, the only signature was this
+      // one — revert to SENT (signing-in-progress, nobody signed).
+      // Otherwise leave status alone; it was set by the other path.
+      const nextStatus = sr.status === "PARTIALLY_SIGNED" ? "SENT" : sr.status;
+
+      await ctx.prisma.signingRequest.update({
+        where: { id: sr.id },
+        data: {
+          ...clearData,
+          status: nextStatus,
+          completedAt: null,
+        },
+      });
+
+      await ctx.prisma.auditLog.create({
+        data: {
+          dealRoomId: input.dealRoomId,
+          userId: ctx.session.user.id,
+          action: "SIGNATURE_UNDONE",
+          details: { partyRole: party.role },
+        },
+      });
+
+      return { ok: true };
     }),
 });

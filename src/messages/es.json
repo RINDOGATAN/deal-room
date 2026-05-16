@@ -240,7 +240,21 @@
     "signingExpiresIn": "Caduca en {days, plural, =0 {menos de un día} =1 {1 día} other {# días}}",
     "signingExpired": "La firma caducó {days, plural, =0 {hoy} =1 {hace 1 día} other {hace # días}}",
     "respondentAcceptedTitle": "{name} se ha unido a este acuerdo",
-    "respondentAcceptedDescription": "Tu contraparte ya puede hacer sus selecciones. Podrás revisar el compromiso cuando las envíe."
+    "respondentAcceptedDescription": "Tu contraparte ya puede hacer sus selecciones. Podrás revisar el compromiso cuando las envíe.",
+    "theOtherParty": "la otra parte",
+    "readiness": {
+      "yourDetailsMissing": "Añade tus datos de firma",
+      "yourDetailsMissingDescription": "Indica tu denominación social, domicilio, NIF/CIF y firmante antes de que cualquiera de las partes pueda iniciar la firma.",
+      "addDetails": "Añadir datos",
+      "theirDetailsMissing": "Esperando a que {name} añada sus datos de firma",
+      "theirDetailsMissingDescription": "Debe indicar su denominación social, domicilio, NIF/CIF y firmante antes de que cualquiera de las partes pueda iniciar la firma.",
+      "yourTurn": "Es tu turno de firmar",
+      "readyToSign": "Los datos de firma de ambas partes están completos. Ya puedes firmar.",
+      "theyAlreadySigned": "{name} ya ha firmado. Puedes firmar ahora para finalizar el contrato.",
+      "signNow": "Firmar contrato",
+      "waitingForThemToSign": "Esperando a que {name} firme",
+      "youAlreadySigned": "Ya has firmado. El contrato se finalizará cuando la otra parte firme también."
+    }
   },
   "negotiate": {
     "clause": "Cláusula",
@@ -483,6 +497,8 @@
     "downloadTxt": "Descargar TXT",
     "youHaveSigned": "Has Firmado",
     "waitingForDocument": "Esperando que el documento sea finalizado...",
+    "undoSignature": "Deshacer mi firma",
+    "undoingSignature": "Deshaciendo…",
     "waitingForOtherParty": "Esperando que la otra parte firme...",
     "yourSignature": "Tu firma:",
     "downloadContractPdf": "Descargar PDF del Contrato",
@@ -517,20 +533,39 @@
       "initiationFailed": "Error al iniciar la firma: {error}",
       "signatureRecorded": "¡Firma registrada correctamente!",
       "signatureFailed": "Error al registrar firma: {error}",
-      "firmasSent": "Enviado. La otra parte recibirá un enlace para firmar desde el móvil.",
-      "firmasSendFailed": "No se pudo enviar a Firmas: {error}",
-      "firmasLinkCopied": "Enlace copiado al portapapeles"
+      "firmasSent": "Enviado. Recibirán un enlace para firmar desde el móvil.",
+      "firmasMinted": "Listo. Abre el enlace en tu móvil para firmar.",
+      "firmasSendFailed": "No se pudo iniciar la firma con Firmas: {error}",
+      "firmasLinkCopied": "Enlace copiado al portapapeles",
+      "firmasCancelled": "Firma con Firmas cancelada. Ya puedes firmar escribiendo tu nombre.",
+      "signatureUndone": "Firma deshecha. Puedes volver a firmar."
     },
     "firmas": {
       "sendButton": "Enviar a Firmas (firma móvil)",
+      "signWithFirmas": "Firmar con Firmas en mi móvil",
+      "signWithFirmasDescription": "Firma electrónica certificada con verificación biométrica de identidad. Abre la app de Firmas en tu teléfono, o una página web móvil si no tienes la app instalada.",
+      "orInsteadHeader": "O firma de forma más segura",
       "sending": "Enviando…",
-      "waitingTitle": "Esperando la firma en el móvil…",
-      "waitingDescription": "Hemos enviado un enlace a {email} que abre la app de Firmas en su teléfono.",
+      "openOnPhoneTitle": "Abre este enlace en tu móvil para firmar",
+      "openOnPhoneDescription": "Pulsa el enlace en tu teléfono: abrirá la app de Firmas y podrás firmar con un toque. Si no tienes la app, se abrirá una página web móvil que te guiará paso a paso.",
+      "waitingForOtherTitle": "Esperando a que {name} firme desde su móvil",
+      "waitingForOtherDescription": "{name} está firmando a través de la app de Firmas. Esta página se actualizará automáticamente cuando termine.",
+      "usingFirmas": "Estás firmando con Firmas",
+      "usingFirmasDescription": "Abre el enlace en tu móvil (consulta el panel en la parte superior de esta página). La vista de escritorio se actualizará cuando hayas firmado.",
+      "cancelAndType": "Volver a firmar escribiendo el nombre",
+      "cancelling": "Cancelando…",
       "copyLink": "Copiar enlace",
       "signedTitle": "Firmado por {name}",
       "signedFromRegion": "desde {region}",
       "signedAt": "el {time}",
       "downloadBundle": "Descargar paquete firmado"
+    },
+    "partyA": "la parte iniciadora",
+    "partyB": "la otra parte",
+    "theOtherParty": "la otra parte",
+    "blocked": {
+      "yourDetails": "Añade primero tus datos de firma.",
+      "theirDetails": "Esperando a que {name} añada sus datos de firma."
     },
     "signingDetails": {
       "title": "Datos de Ejecución",
