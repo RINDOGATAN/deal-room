@@ -166,30 +166,35 @@ export default function DealsPage() {
                 href={`/deals/${deal.id}`}
                 className="card-brutal group hover:border-primary transition-colors"
               >
-                <div className="flex items-start justify-between">
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-3">
-                      <h2 className="text-lg font-semibold group-hover:text-primary group-active:text-primary group-focus-visible:text-primary transition-colors">
+                <div className="flex items-start justify-between gap-3">
+                  {/* `min-w-0 flex-1` lets the inner `truncate` spans actually clip,
+                      and stops the column from pushing the page wider than 375px. */}
+                  <div className="space-y-2 min-w-0 flex-1">
+                    {/* Title + badge: wrap on narrow viewports — long deal names
+                        or wider Spanish status labels ("Esperando respuesta") used
+                        to push the row off-screen. */}
+                    <div className="flex items-center gap-x-3 gap-y-1 flex-wrap">
+                      <h2 className="text-lg font-semibold group-hover:text-primary group-active:text-primary group-focus-visible:text-primary transition-colors min-w-0 break-words">
                         {deal.name}
                       </h2>
-                      <Badge className={statusColor}>
+                      <Badge className={`${statusColor} flex-shrink-0`}>
                         <StatusIcon className="w-3 h-3 mr-1" />
                         {statusLabel}
                       </Badge>
                     </div>
 
-                    <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                      <span className="flex items-center gap-1">
-                        <FileText className="w-4 h-4" />
-                        {deal.contractTemplate.displayName}
+                    {/* Metadata row: wrap with gap instead of hard bullet
+                        separators (which orphan onto wrapped lines anyway). */}
+                    <div className="flex items-center gap-x-3 gap-y-1 text-sm text-muted-foreground flex-wrap">
+                      <span className="inline-flex items-center gap-1 min-w-0">
+                        <FileText className="w-4 h-4 flex-shrink-0" />
+                        <span className="truncate">{deal.contractTemplate.displayName}</span>
                       </span>
-                      <span>•</span>
                       <span><span className="metric text-foreground">{deal._count.clauses}</span> {t("clauses")}</span>
-                      <span>•</span>
                       <span>{t("updated", { date: formatDate(new Date(deal.updatedAt), { locale, governingLaw: deal.governingLaw }) })}</span>
                     </div>
 
-                    <div className="flex items-center gap-2 sm:gap-4 text-sm min-w-0">
+                    <div className="flex items-center gap-2 sm:gap-4 text-sm min-w-0 flex-wrap">
                       <span className="text-muted-foreground truncate min-w-0">
                         <span className="text-foreground">{initiator?.name || initiator?.email}</span>
                         {initiator?.company && ` (${initiator.company})`}
@@ -206,7 +211,7 @@ export default function DealsPage() {
                     </div>
 
                     {pendingInvitation && (
-                      <div className="flex items-center gap-3 text-xs pt-1">
+                      <div className="flex items-center gap-x-3 gap-y-2 text-xs pt-1 flex-wrap">
                         <span
                           className={`flex items-center gap-1.5 ${
                             invitationExpired
@@ -238,7 +243,7 @@ export default function DealsPage() {
                     )}
                   </div>
 
-                  <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-primary group-active:text-primary group-focus-visible:text-primary transition-colors" />
+                  <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-primary group-active:text-primary group-focus-visible:text-primary transition-colors flex-shrink-0 mt-1" />
                 </div>
               </Link>
             );
