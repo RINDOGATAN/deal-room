@@ -99,12 +99,42 @@ function ReviewContent({ dealId }: { dealId: string }) {
 
   const { data: deal, isLoading: dealLoading } = trpc.deal.getById.useQuery({ id: dealId });
   const contractLang = (deal as any)?.contractLanguage || "en";
-  const { data: suggestions, isLoading: suggestionsLoading, refetch } = trpc.compromise.getCurrent.useQuery({ dealRoomId: dealId });
-  const { data: satisfactionScores, refetch: refetchSatisfaction } = trpc.compromise.getSatisfactionScores.useQuery({ dealRoomId: dealId });
-  const { data: counterProposals, refetch: refetchCounterProposals } = trpc.compromise.getCounterProposals.useQuery({ dealRoomId: dealId });
-  const { data: history } = trpc.compromise.getHistory.useQuery({ dealRoomId: dealId });
-  const { data: parameterProposals, refetch: refetchParamProposals } = trpc.compromise.getParameterProposals.useQuery({ dealRoomId: dealId });
-  const { data: validation } = trpc.compromise.getValidation.useQuery({ dealRoomId: dealId });
+
+  // Only the heavy negotiation-state queries that we actually need on this
+  // page; gating each on the deal status avoids a 7-query waterfall during
+  // initial load. Worst-case cold-start of the review page is now bounded by
+  // `getById` + `getCurrent`, not by every supporting query.
+  const dealStatus = deal?.status;
+  const needsNegotiationData =
+    dealStatus === "NEGOTIATING" ||
+    dealStatus === "AGREED" ||
+    dealStatus === "SIGNING" ||
+    dealStatus === "COMPLETED";
+
+  const { data: suggestions, isLoading: suggestionsLoading, refetch } = trpc.compromise.getCurrent.useQuery(
+    { dealRoomId: dealId },
+    { enabled: needsNegotiationData },
+  );
+  const { data: satisfactionScores, refetch: refetchSatisfaction } = trpc.compromise.getSatisfactionScores.useQuery(
+    { dealRoomId: dealId },
+    { enabled: needsNegotiationData },
+  );
+  const { data: counterProposals, refetch: refetchCounterProposals } = trpc.compromise.getCounterProposals.useQuery(
+    { dealRoomId: dealId },
+    { enabled: dealStatus === "NEGOTIATING" },
+  );
+  const { data: history } = trpc.compromise.getHistory.useQuery(
+    { dealRoomId: dealId },
+    { enabled: needsNegotiationData && (deal?.currentRound ?? 0) > 1 },
+  );
+  const { data: parameterProposals, refetch: refetchParamProposals } = trpc.compromise.getParameterProposals.useQuery(
+    { dealRoomId: dealId },
+    { enabled: dealStatus === "NEGOTIATING" && !!deal?.parameters && Object.keys((deal.parameters as Record<string, string>) || {}).length > 0 },
+  );
+  const { data: validation } = trpc.compromise.getValidation.useQuery(
+    { dealRoomId: dealId },
+    { enabled: needsNegotiationData },
+  );
 
   // Attorney review queries
   const { data: reviewStatus, refetch: refetchReviewStatus } = trpc.attorneyReview.getReviewStatus.useQuery({ dealRoomId: dealId });
@@ -271,9 +301,12 @@ function ReviewContent({ dealId }: { dealId: string }) {
     },
   });
 
-  const isLoading = dealLoading || suggestionsLoading;
-
-  if (isLoading) {
+  // Render the page chrome as soon as `deal` resolves; only block on
+  // `suggestionsLoading` for statuses that actually need a suggestion. For
+  // DRAFT / AWAITING_RESPONSE this page has nothing useful to show — point
+  // the user back to the deal detail instead of leaving them on a blank
+  // skeleton.
+  if (dealLoading) {
     return (
       <div className="max-w-5xl mx-auto space-y-6">
         <div className="card-brutal animate-pulse h-16"></div>
@@ -282,7 +315,49 @@ function ReviewContent({ dealId }: { dealId: string }) {
     );
   }
 
-  if (!deal || !suggestions) {
+  if (!deal) {
+    return (
+      <div className="card-brutal border-yellow-500">
+        <div className="flex items-center gap-3 text-yellow-600">
+          <AlertCircle className="w-5 h-5" />
+          <span>{t("failedToLoad")}</span>
+        </div>
+      </div>
+    );
+  }
+
+  if (!needsNegotiationData) {
+    return (
+      <div className="max-w-5xl mx-auto space-y-6">
+        <div className="flex items-center gap-4">
+          <button
+            onClick={() => router.push(`/deals/${dealId}`)}
+            className="p-2 text-muted-foreground hover:text-foreground"
+          >
+            <ArrowLeft className="w-5 h-5" />
+          </button>
+          <div>
+            <h1 className="text-xl font-bold">{t("reviewCompromises")}</h1>
+            <p className="text-sm text-muted-foreground">{deal.name}</p>
+          </div>
+        </div>
+        <div className="card-brutal text-center py-10">
+          <p className="text-muted-foreground">{t("notReadyForReview")}</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (suggestionsLoading) {
+    return (
+      <div className="max-w-5xl mx-auto space-y-6">
+        <div className="card-brutal animate-pulse h-16"></div>
+        <div className="card-brutal animate-pulse h-96"></div>
+      </div>
+    );
+  }
+
+  if (!suggestions) {
     return (
       <div className="card-brutal border-yellow-500">
         <div className="flex items-center gap-3 text-yellow-600">

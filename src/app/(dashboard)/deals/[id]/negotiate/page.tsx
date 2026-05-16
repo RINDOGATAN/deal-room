@@ -781,7 +781,7 @@ function NegotiateContent({ dealId }: { dealId: string }) {
                         e.stopPropagation();
                         setExpandedOption(isExpanded ? null : option.id);
                       }}
-                      className="p-1 text-muted-foreground hover:text-foreground rounded-full hover:bg-secondary transition-colors"
+                      className="p-2.5 text-muted-foreground hover:text-foreground rounded-full hover:bg-secondary transition-colors"
                     >
                       {isExpanded ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
                     </button>

@@ -157,10 +157,28 @@ function DealDetailContent({ dealId }: { dealId: string }) {
   });
 
   if (isLoading) {
+    // Layout-matching skeleton: header band + status pill row + action row +
+    // parties card + clauses summary. Reduces the layout-shift jank when the
+    // real data lands and gives the user something to look at during the
+    // 200-800 ms fetch.
     return (
-      <div className="space-y-6">
-        <div className="card-brutal animate-pulse h-32"></div>
-        <div className="card-brutal animate-pulse h-64"></div>
+      <div className="space-y-6 animate-pulse">
+        <div className="space-y-3">
+          <div className="h-7 bg-muted rounded w-2/3 max-w-md" />
+          <div className="flex gap-2">
+            <div className="h-5 bg-muted rounded-full w-24" />
+            <div className="h-5 bg-muted/60 rounded-full w-32" />
+          </div>
+        </div>
+        <div className="flex gap-3">
+          <div className="h-10 bg-muted rounded-full w-40" />
+          <div className="h-10 bg-muted/60 rounded-full w-32" />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="card-brutal h-28" />
+          <div className="card-brutal h-28" />
+        </div>
+        <div className="card-brutal h-64" />
       </div>
     );
   }
