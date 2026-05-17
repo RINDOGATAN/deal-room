@@ -249,6 +249,8 @@
       "theirDetailsMissingDescription": "They need to provide their legal name, address, tax ID, and signatory before either party can start signing.",
       "yourTurn": "Your turn to sign",
       "readyToSign": "Both parties' execution details are complete. You can sign now.",
+      "soloReadyToSignTitle": "Ready to sign",
+      "soloReadyToSignDescription": "Your execution details are complete. Sign to finalize the contract.",
       "theyAlreadySigned": "{name} has signed. You can sign now to finalize the contract.",
       "signNow": "Sign contract",
       "waitingForThemToSign": "Waiting for {name} to sign",

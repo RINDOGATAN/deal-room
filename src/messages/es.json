@@ -250,6 +250,8 @@
       "theirDetailsMissingDescription": "Debe indicar su denominación social, domicilio, NIF/CIF y firmante antes de que cualquiera de las partes pueda iniciar la firma.",
       "yourTurn": "Es tu turno de firmar",
       "readyToSign": "Los datos de firma de ambas partes están completos. Ya puedes firmar.",
+      "soloReadyToSignTitle": "Listo para firmar",
+      "soloReadyToSignDescription": "Tus datos de firma están completos. Firma para finalizar el contrato.",
       "theyAlreadySigned": "{name} ya ha firmado. Puedes firmar ahora para finalizar el contrato.",
       "signNow": "Firmar contrato",
       "waitingForThemToSign": "Esperando a que {name} firme",
