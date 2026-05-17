@@ -224,7 +224,7 @@ function DealDetailContent({ dealId }: { dealId: string }) {
       <div className="space-y-4">
         <div className="space-y-2">
           <div className="flex items-center gap-3 flex-wrap">
-            <h1 className="text-2xl font-bold">{deal.name}</h1>
+            <h1 className="text-lg sm:text-2xl font-bold leading-tight break-words">{deal.name}</h1>
             <Badge className={statusColor}>
               <StatusIcon className="w-3 h-3 mr-1" />
               {statusLabel}
@@ -294,6 +294,30 @@ function DealDetailContent({ dealId }: { dealId: string }) {
                 </p>
                 <p className="text-xs text-muted-foreground">
                   {t("respondentAcceptedDescription")}
+                </p>
+              </div>
+            </div>
+          )}
+
+        {/* Respondent-side notice when they've accepted the invite but the
+            initiator hasn't submitted their selections yet — the symmetric
+            silent moment. Without this, the respondent lands on the hub,
+            sees a status badge with no actionable CTA, and may assume they
+            need to do something themselves. */}
+        {!isInitiator &&
+          !isSoloMode &&
+          deal.status === "AWAITING_RESPONSE" &&
+          initiator?.status !== "SUBMITTED" && (
+            <div className="card-brutal border-border bg-muted/30 flex items-center gap-3 py-3">
+              <Clock className="w-5 h-5 text-muted-foreground flex-shrink-0" />
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium">
+                  {t("waitingForInitiatorTitle", {
+                    name: initiator?.user?.name || initiator?.name || initiator?.email || t("theOtherParty"),
+                  })}
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  {t("waitingForInitiatorDescription")}
                 </p>
               </div>
             </div>
@@ -387,6 +411,28 @@ function DealDetailContent({ dealId }: { dealId: string }) {
           // background completion flip. Show a "you're done" note.
           return null;
         })()}
+
+      {/* CANCELLED recovery — the deal is in a terminal cancelled state.
+          Offer a "start over" affordance pre-loading the same contract
+          type so the user isn't trapped in a graveyard. */}
+      {deal.status === "CANCELLED" && (
+        <div className="card-brutal border-border bg-muted/30 flex items-start gap-3">
+          <X className="w-5 h-5 text-muted-foreground flex-shrink-0 mt-0.5" />
+          <div className="flex-1 min-w-0">
+            <p className="font-semibold">{t("cancelled.title")}</p>
+            <p className="text-sm text-muted-foreground mt-1">
+              {t("cancelled.description")}
+            </p>
+            <Link
+              href={`/deals/new?type=${deal.contractTemplate?.contractType ?? ""}`}
+              className="btn-brutal-outline inline-flex items-center gap-2 mt-3"
+            >
+              <FileText className="w-4 h-4" />
+              {t("cancelled.startNew")}
+            </Link>
+          </div>
+        </div>
+      )}
 
       {/* Signing readiness — the visible next-step for any two-party deal
           past negotiation. Tells each party exactly what's blocking and

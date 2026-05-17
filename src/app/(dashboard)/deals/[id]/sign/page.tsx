@@ -379,7 +379,7 @@ function SigningContent({ dealId }: { dealId: string }) {
           <FileText className="w-5 h-5 text-muted-foreground" />
           {t("contractSummary")}
         </h2>
-        <div className={`grid grid-cols-1 ${isSoloMode ? "" : "md:grid-cols-2"} gap-6 mb-6`}>
+        <div className={`grid grid-cols-1 ${isSoloMode ? "" : "sm:grid-cols-2"} gap-6 mb-6`}>
           <div className="space-y-4">
             <div className="p-4 bg-muted/30 border border-border">
               <p className="text-xs text-muted-foreground uppercase tracking-wider mb-2">{isSoloMode ? t("signingParty") : t("partyA")}</p>
@@ -419,7 +419,7 @@ function SigningContent({ dealId }: { dealId: string }) {
         {/* Agreed Terms Summary */}
         <div className="border-t border-border pt-4">
           <p className="text-sm text-muted-foreground mb-3">{t("agreedTerms", { count: deal.clauses.length })}</p>
-          <div className="space-y-2 max-h-48 overflow-y-auto">
+          <div className="space-y-2 max-h-72 sm:max-h-64 overflow-y-auto overscroll-contain">
             {deal.clauses.map((clause) => {
               const selection = clause.selections[0];
               return (
@@ -460,7 +460,7 @@ function SigningContent({ dealId }: { dealId: string }) {
           {t("signingDetails.description")}
         </p>
 
-        <div className={`grid grid-cols-1 ${isSoloMode ? "" : "md:grid-cols-2"} gap-6`}>
+        <div className={`grid grid-cols-1 ${isSoloMode ? "" : "sm:grid-cols-2"} gap-6`}>
           {/* Own Details */}
           <div className="space-y-4">
             <div className="flex items-center justify-between">
@@ -1196,7 +1196,10 @@ function SigningContent({ dealId }: { dealId: string }) {
               )}
             </div>
             {blockReason && (
-              <p className="text-xs text-muted-foreground mb-3">{blockReason}</p>
+              <div className="card-brutal border-border bg-muted/30 max-w-md mx-auto mb-4 flex items-start gap-3 text-left">
+                <AlertCircle className="w-5 h-5 text-muted-foreground flex-shrink-0 mt-0.5" />
+                <p className="text-sm text-muted-foreground">{blockReason}</p>
+              </div>
             )}
             <DownloadLinks dealId={dealId} className="mb-4" />
             <p className="text-xs text-muted-foreground">
