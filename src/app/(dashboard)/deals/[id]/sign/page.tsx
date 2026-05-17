@@ -29,8 +29,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { NextIntlClientProvider, useTranslations, useLocale } from "next-intl";
 import { formatDateTime } from "@/lib/date";
-import enMessages from "@/messages/en.json";
-import esMessages from "@/messages/es.json";
+import { useContractMessages } from "@/lib/use-contract-messages";
 
 function DownloadLinks({ dealId, className }: { dealId: string; className?: string }) {
   return (
@@ -51,7 +50,16 @@ export default function SigningPage() {
   const dealId = params.id as string;
   const { data: deal } = trpc.deal.getById.useQuery({ id: dealId });
   const contractLang = (deal as any)?.contractLanguage || "en";
-  const messages = contractLang === "es" ? esMessages : enMessages;
+  const messages = useContractMessages(contractLang);
+
+  if (!messages) {
+    return (
+      <div className="max-w-4xl mx-auto space-y-6">
+        <div className="card-brutal animate-pulse h-16"></div>
+        <div className="card-brutal animate-pulse h-64"></div>
+      </div>
+    );
+  }
 
   return (
     <NextIntlClientProvider locale={contractLang} messages={messages}>
