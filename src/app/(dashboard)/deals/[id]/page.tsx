@@ -109,7 +109,7 @@ function DealDetailContent({ dealId }: { dealId: string }) {
 
   const { data: deal, isLoading, error, refetch } = trpc.deal.getById.useQuery({ id: dealId });
   const { data: progress } = trpc.deal.getProgress.useQuery({ id: dealId });
-  const { data: signingRequest } = trpc.signing.getRequest.useQuery({ dealRoomId: dealId });
+  const { data: signingRequest, isLoading: signingRequestLoading } = trpc.signing.getRequest.useQuery({ dealRoomId: dealId });
 
   // Map status keys to translation keys
   const statusLabels: Record<string, string> = {
@@ -331,9 +331,13 @@ function DealDetailContent({ dealId }: { dealId: string }) {
       {/* Signing readiness — the visible next-step for any two-party deal
           past negotiation. Tells each party exactly what's blocking and
           what their action is. Replaces the previously silent area that
-          left users staring at an AGREED badge with no CTA. */}
+          left users staring at an AGREED badge with no CTA.
+          We hold rendering while the signingRequest query is in flight on
+          SIGNING-status deals so the user doesn't see a flicker of
+          "Your turn to sign" before the real state lands. */}
       {!isSoloMode &&
         (deal.status === "AGREED" || deal.status === "SIGNING") &&
+        !(deal.status === "SIGNING" && signingRequestLoading) &&
         (() => {
           const myParty = isInitiator ? initiator : respondent;
           const otherParty = isInitiator ? respondent : initiator;

@@ -58,8 +58,10 @@ function emailFrom(): string {
   const raw = process.env.EMAIL_FROM || "noreply@todo.law";
   // Tolerate EMAIL_FROM being set either bare ("noreply@todo.law")
   // or already formatted ("Whatever <noreply@todo.law>"); we always
-  // overwrite the display-name half.
-  const emailAddr = raw.includes("<") ? raw.match(/<(.+)>/)?.[1] ?? raw : raw;
+  // overwrite the display-name half. Non-greedy `(.+?)` so nested or
+  // malformed `<...>` sequences don't accidentally capture an inner
+  // angle bracket and produce a Resend-rejecting From header.
+  const emailAddr = raw.includes("<") ? raw.match(/<(.+?)>/)?.[1] ?? raw : raw;
   return `DEALROOM by TODO.LAW <${emailAddr}>`;
 }
 
