@@ -328,6 +328,66 @@ function DealDetailContent({ dealId }: { dealId: string }) {
         </div>
       </div>
 
+      {/* SOLO-mode readiness — single-party deals at AGREED/SIGNING.
+          Mirrors the two-party readiness card but collapses to one
+          actor: you fill your own details, then sign. Was previously
+          a dead-end: hub showed only download links and there was no
+          surfaced path to /sign. */}
+      {isSoloMode &&
+        (deal.status === "AGREED" || deal.status === "SIGNING") &&
+        !(deal.status === "SIGNING" && signingRequestLoading) &&
+        (() => {
+          const myParty = isInitiator ? initiator : respondent;
+          const myDetailsFilled = !!myParty?.signingDetails;
+          const mySignedAt = signingRequest?.initiatorSignedAt;
+          const signUrl = `/deals/${deal.id}/sign`;
+
+          if (!myDetailsFilled) {
+            return (
+              <div className="card-brutal border-primary/40 bg-primary/5 flex items-start gap-3">
+                <PenTool className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+                <div className="flex-1 min-w-0">
+                  <p className="font-semibold">{t("readiness.yourDetailsMissing")}</p>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    {t("readiness.yourDetailsMissingDescription")}
+                  </p>
+                  <Link
+                    href={signUrl}
+                    className="btn-brutal inline-flex items-center gap-2 mt-3"
+                  >
+                    <Edit className="w-4 h-4" />
+                    {t("readiness.addDetails")}
+                  </Link>
+                </div>
+              </div>
+            );
+          }
+          if (!mySignedAt) {
+            return (
+              <div className="card-brutal border-primary/40 bg-primary/5 flex items-start gap-3">
+                <PenTool className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+                <div className="flex-1 min-w-0">
+                  <p className="font-semibold">{t("readiness.soloReadyToSignTitle")}</p>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    {t("readiness.soloReadyToSignDescription")}
+                  </p>
+                  <Link
+                    href={signUrl}
+                    className="btn-brutal inline-flex items-center gap-2 mt-3"
+                  >
+                    <PenTool className="w-4 h-4" />
+                    {t("readiness.signNow")}
+                  </Link>
+                </div>
+              </div>
+            );
+          }
+          // Solo signed but status hasn't moved to COMPLETED yet —
+          // can happen briefly between recordSignature and the
+          // background completion flip. Show a "you're done" note.
+          return null;
+        })()}
+
       {/* Signing readiness — the visible next-step for any two-party deal
           past negotiation. Tells each party exactly what's blocking and
           what their action is. Replaces the previously silent area that
