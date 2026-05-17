@@ -500,8 +500,11 @@ function NegotiateContent({ dealId }: { dealId: string }) {
         </div>
       )}
 
-      {/* Skip to Submit banner — shown when all clauses selected but not on last clause */}
-      {isComplete && currentClauseIndex < clauses.length - 1 && (
+      {/* All-Clauses-Selected banner — sticky reminder that lets the user
+          jump straight to submit without scrolling. Persists across all
+          clauses (not just when they're not on the last one), so the
+          user always sees the affordance once they're done picking. */}
+      {isComplete && !isAlreadySubmitted && (
         <div className="card-brutal mb-6 border-primary/30 bg-primary/5">
           <div className="flex items-center justify-between gap-4">
             <div>
@@ -557,7 +560,7 @@ function NegotiateContent({ dealId }: { dealId: string }) {
             onClick={() => setSidebarOpen(false)}
           >
             <div
-              className="p-6 pt-8 overflow-y-auto h-full"
+              className="p-6 pt-8 overflow-y-auto h-full max-h-[100dvh] overscroll-contain"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex items-center justify-between mb-6">
@@ -739,12 +742,12 @@ function NegotiateContent({ dealId }: { dealId: string }) {
                 >
                   <div className="flex items-start justify-between">
                     <div className="flex items-start gap-4">
-                      {/* Radio circle */}
+                      {/* Radio circle — sized for mobile tap target (Apple HIG ~44pt minimum reached via parent card padding). */}
                       <div className={`
-                        w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 mt-0.5
+                        w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 mt-0.5
                         ${isSelected ? "border-primary bg-primary" : "border-muted-foreground"}
                       `}>
-                        {isSelected && <div className="w-2 h-2 rounded-full bg-primary-foreground" />}
+                        {isSelected && <div className="w-2.5 h-2.5 rounded-full bg-primary-foreground" />}
                       </div>
                       <div>
                         <div className="flex items-center gap-2 flex-wrap">

@@ -633,7 +633,8 @@ export default function NewDealPage() {
               )}
             </div>
             {categories.length > 1 && (
-              <div className="flex gap-2 overflow-x-auto pb-1 -mx-1 px-1 scrollbar-hide">
+              <div className="relative">
+                <div className="flex gap-2 overflow-x-auto pb-1 -mx-1 px-1 scrollbar-hide">
                 <button
                   onClick={() => setSelectedCategory(null)}
                   className={`
@@ -659,6 +660,12 @@ export default function NewDealPage() {
                     {cat}
                   </button>
                 ))}
+                </div>
+                {/* Fade-out cue on the right edge so users see there's
+                    more horizontal content; pointer-events-none so the
+                    last chip stays tappable underneath. Only visible on
+                    mobile widths where scroll is actually needed. */}
+                <div className="pointer-events-none absolute right-0 top-0 bottom-1 w-8 bg-gradient-to-l from-background to-transparent sm:hidden" />
               </div>
             )}
             {filteredFamilies.length === 0 && searchQuery.trim() && (

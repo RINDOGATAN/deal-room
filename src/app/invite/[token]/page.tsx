@@ -86,6 +86,15 @@ export default function InvitationPage() {
   }
 
   if (invitation.status === "EXPIRED") {
+    const inviterEmail = invitation.invitedBy?.email;
+    const inviterName = invitation.invitedBy?.name;
+    const dealName = invitation.dealRoom?.name;
+    const requestSubject = encodeURIComponent(
+      t("requestNewSubject", { dealName: dealName || "Dealroom" }),
+    );
+    const requestBody = encodeURIComponent(
+      t("requestNewBody", { name: inviterName || "there", dealName: dealName || "" }),
+    );
     return (
       <div className="min-h-screen bg-background flex items-center justify-center p-6">
         <div className="card-brutal max-w-md w-full text-center">
@@ -94,16 +103,38 @@ export default function InvitationPage() {
           </div>
           <h1 className="text-2xl font-bold mb-2">{t("expired")}</h1>
           <p className="text-muted-foreground mb-6">{t("expiredDescription")}</p>
-          <Link href="/sign-in" className="btn-brutal inline-flex items-center gap-2">
-            {t("goToSignIn")}
-            <ArrowRight className="w-4 h-4" />
-          </Link>
+          <div className="flex flex-col gap-3 items-center">
+            {inviterEmail && (
+              <a
+                href={`mailto:${inviterEmail}?subject=${requestSubject}&body=${requestBody}`}
+                className="btn-brutal inline-flex items-center gap-2"
+              >
+                <Mail className="w-4 h-4" />
+                {t("requestNew", { name: inviterName || inviterEmail })}
+              </a>
+            )}
+            <Link
+              href="/sign-in"
+              className="text-sm text-muted-foreground hover:text-foreground underline underline-offset-2"
+            >
+              {t("goToSignIn")}
+            </Link>
+          </div>
         </div>
       </div>
     );
   }
 
   if (invitation.status === "CANCELLED") {
+    const inviterEmail = invitation.invitedBy?.email;
+    const inviterName = invitation.invitedBy?.name;
+    const dealName = invitation.dealRoom?.name;
+    const requestSubject = encodeURIComponent(
+      t("requestNewSubject", { dealName: dealName || "Dealroom" }),
+    );
+    const requestBody = encodeURIComponent(
+      t("requestNewBody", { name: inviterName || "there", dealName: dealName || "" }),
+    );
     return (
       <div className="min-h-screen bg-background flex items-center justify-center p-6">
         <div className="card-brutal max-w-md w-full text-center">
@@ -112,10 +143,23 @@ export default function InvitationPage() {
           </div>
           <h1 className="text-2xl font-bold mb-2">{t("cancelled")}</h1>
           <p className="text-muted-foreground mb-6">{t("cancelledDescription")}</p>
-          <Link href="/sign-in" className="btn-brutal inline-flex items-center gap-2">
-            {t("goToSignIn")}
-            <ArrowRight className="w-4 h-4" />
-          </Link>
+          <div className="flex flex-col gap-3 items-center">
+            {inviterEmail && (
+              <a
+                href={`mailto:${inviterEmail}?subject=${requestSubject}&body=${requestBody}`}
+                className="btn-brutal inline-flex items-center gap-2"
+              >
+                <Mail className="w-4 h-4" />
+                {t("requestNew", { name: inviterName || inviterEmail })}
+              </a>
+            )}
+            <Link
+              href="/sign-in"
+              className="text-sm text-muted-foreground hover:text-foreground underline underline-offset-2"
+            >
+              {t("goToSignIn")}
+            </Link>
+          </div>
         </div>
       </div>
     );

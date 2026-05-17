@@ -240,7 +240,14 @@
     "signingExpired": "Signing expired {days, plural, =0 {today} =1 {1 day ago} other {# days ago}}",
     "respondentAcceptedTitle": "{name} has joined this deal",
     "respondentAcceptedDescription": "Your counterparty can now make their selections. You'll be able to review the compromise once they submit.",
+    "waitingForInitiatorTitle": "Waiting for {name} to start",
+    "waitingForInitiatorDescription": "You've accepted the invitation. {name} is preparing their selections; you'll be notified when they're ready for you to review.",
     "theOtherParty": "the other party",
+    "cancelled": {
+      "title": "This deal has been cancelled",
+      "description": "No further action is possible on this contract. You can start a new one of the same type whenever you're ready.",
+      "startNew": "Start a new one"
+    },
     "readiness": {
       "yourDetailsMissing": "Add your execution details",
       "yourDetailsMissingDescription": "Provide your legal name, address, tax ID, and signatory before either party can start signing.",
@@ -542,7 +549,6 @@
       "signatureUndone": "Signature undone — you can sign again."
     },
     "firmas": {
-      "sendButton": "Send to Firmas (mobile signature)",
       "signWithFirmas": "Sign with Firmas on my phone",
       "signWithFirmasDescription": "Certified electronic signature with biometric identity attestation. Opens the Firmas app on your phone — or a mobile web page if you don't have the app.",
       "orInsteadHeader": "Or sign more securely",
@@ -820,9 +826,12 @@
     "invalid": "Invalid Invitation",
     "invalidDescription": "This invitation link is invalid, has expired, or has already been used.",
     "expired": "Invitation Expired",
-    "expiredDescription": "This invitation has expired. Please contact the sender to get a new invitation.",
+    "expiredDescription": "This invitation has expired. Ask the sender to send a fresh one.",
     "cancelled": "Invitation Cancelled",
-    "cancelledDescription": "This invitation has been cancelled by the sender.",
+    "cancelledDescription": "This invitation has been cancelled by the sender. If that was a mistake, ask them to send a fresh one.",
+    "requestNew": "Email {name} for a new invitation",
+    "requestNewSubject": "Could you resend the {dealName} invitation?",
+    "requestNewBody": "Hi {name},\n\nThe invitation link for {dealName} expired before I got a chance to accept it. Could you send me a new one?\n\nThanks!",
     "alreadyAccepted": "Already Accepted",
     "alreadyAcceptedDescription": "This invitation has already been accepted.",
     "viewYourDeals": "View Your Deals",

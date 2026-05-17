@@ -241,7 +241,14 @@
     "signingExpired": "La firma caducó {days, plural, =0 {hoy} =1 {hace 1 día} other {hace # días}}",
     "respondentAcceptedTitle": "{name} se ha unido a este acuerdo",
     "respondentAcceptedDescription": "Tu contraparte ya puede hacer sus selecciones. Podrás revisar el compromiso cuando las envíe.",
+    "waitingForInitiatorTitle": "Esperando a que {name} empiece",
+    "waitingForInitiatorDescription": "Has aceptado la invitación. {name} está preparando sus selecciones; te avisaremos cuando estén listas para que las revises.",
     "theOtherParty": "la otra parte",
+    "cancelled": {
+      "title": "Este acuerdo se ha cancelado",
+      "description": "No es posible realizar más acciones sobre este contrato. Puedes empezar uno nuevo del mismo tipo cuando estés listo/a.",
+      "startNew": "Empezar uno nuevo"
+    },
     "readiness": {
       "yourDetailsMissing": "Añade tus datos de firma",
       "yourDetailsMissingDescription": "Indica tu denominación social, domicilio, NIF/CIF y firmante antes de que cualquiera de las partes pueda iniciar la firma.",
@@ -543,7 +550,6 @@
       "signatureUndone": "Firma deshecha. Puedes volver a firmar."
     },
     "firmas": {
-      "sendButton": "Enviar a Firmas (firma móvil)",
       "signWithFirmas": "Firmar con Firmas en mi móvil",
       "signWithFirmasDescription": "Firma electrónica certificada con verificación biométrica de identidad. Abre la app de Firmas en tu teléfono, o una página web móvil si no tienes la app instalada.",
       "orInsteadHeader": "O firma de forma más segura",
@@ -821,9 +827,12 @@
     "invalid": "Invitación no válida",
     "invalidDescription": "Este enlace de invitación no es válido, ha caducado o ya se ha utilizado.",
     "expired": "Invitación caducada",
-    "expiredDescription": "Esta invitación ha caducado. Contacta con el remitente para obtener una nueva.",
+    "expiredDescription": "Esta invitación ha caducado. Pide al remitente que te envíe una nueva.",
     "cancelled": "Invitación cancelada",
-    "cancelledDescription": "El remitente ha cancelado esta invitación.",
+    "cancelledDescription": "El remitente ha cancelado esta invitación. Si fue un error, pídele que te envíe una nueva.",
+    "requestNew": "Pedir a {name} una nueva invitación",
+    "requestNewSubject": "¿Podrías reenviarme la invitación de {dealName}?",
+    "requestNewBody": "Hola {name},\n\nEl enlace de invitación para {dealName} caducó antes de que pudiera aceptarlo. ¿Me podrías enviar uno nuevo?\n\nGracias.",
     "alreadyAccepted": "Ya aceptada",
     "alreadyAcceptedDescription": "Esta invitación ya ha sido aceptada.",
     "viewYourDeals": "Ver mis acuerdos",
