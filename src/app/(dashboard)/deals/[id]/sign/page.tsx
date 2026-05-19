@@ -1274,6 +1274,34 @@ function FirmasHandoffCard({
   const firmasBase =
     process.env.NEXT_PUBLIC_FIRMAS_BASE_URL ?? "https://www.firmas.io";
   const signUrl = `${firmasBase}/sign/${token}`;
+  const [qrDataUrl, setQrDataUrl] = useState<string | null>(null);
+  const [showUrl, setShowUrl] = useState(false);
+
+  // Generate the QR code lazily on the client. The qrcode package is
+  // dynamic-imported so it lands in its own webpack chunk and doesn't
+  // bloat the sign page for users who never see a Firmas hand-off.
+  useEffect(() => {
+    if (!isSelf || signedAt) return;
+    let cancelled = false;
+    import("qrcode")
+      .then((QRCode) =>
+        QRCode.toDataURL(signUrl, {
+          width: 220,
+          margin: 1,
+          errorCorrectionLevel: "M",
+        }),
+      )
+      .then((url) => {
+        if (!cancelled) setQrDataUrl(url);
+      })
+      .catch(() => {
+        // Silently fail — the primary "Open in Firmas" button still
+        // works without the QR fallback.
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [isSelf, signedAt, signUrl]);
 
   async function copyLink() {
     try {
@@ -1325,25 +1353,51 @@ function FirmasHandoffCard({
     );
   }
 
-  // Waiting state. For the current user (isSelf), surface the link
-  // prominently — they need to open it on their phone. For the other
-  // party, render a read-only "waiting for them" state.
+  // Waiting state — split by who's looking. The OTHER party gets a
+  // compact read-only "waiting for them" notice. The CURRENT user
+  // (isSelf) gets the full hand-off surface: a big tappable
+  // "Open in Firmas" button (Universal Link / App Link, which iOS
+  // and Android intercept to launch the native app), a QR code for
+  // the cross-device case (signing on a separate phone), and
+  // copy-link / show-URL as secondary affordances.
+  if (!isSelf) {
+    return (
+      <div className="card-brutal border-primary/30 bg-primary/5">
+        <div className="flex items-start gap-3">
+          <div className="w-10 h-10 rounded-full bg-primary/15 flex items-center justify-center flex-shrink-0">
+            <Loader2 className="w-5 h-5 text-primary animate-spin" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="font-semibold">
+              {t("firmas.waitingForOtherTitle", { name: partyName })}
+            </p>
+            <p className="text-sm text-muted-foreground mt-1">
+              {t("firmas.waitingForOtherDescription", { name: partyName })}
+            </p>
+            {firmasSentAt ? (
+              <p className="text-xs text-muted-foreground mt-1">
+                {formatDateTime(new Date(firmasSentAt), {
+                  locale,
+                  governingLaw: governingLaw ?? undefined,
+                })}
+              </p>
+            ) : null}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="card-brutal border-primary/30 bg-primary/5">
-      <div className="flex items-start gap-3">
+      <div className="flex items-start gap-3 mb-4">
         <div className="w-10 h-10 rounded-full bg-primary/15 flex items-center justify-center flex-shrink-0">
-          <Loader2 className="w-5 h-5 text-primary animate-spin" />
+          <Smartphone className="w-5 h-5 text-primary" />
         </div>
         <div className="flex-1 min-w-0">
-          <p className="font-semibold">
-            {isSelf
-              ? t("firmas.openOnPhoneTitle")
-              : t("firmas.waitingForOtherTitle", { name: partyName })}
-          </p>
+          <p className="font-semibold">{t("firmas.openOnPhoneTitle")}</p>
           <p className="text-sm text-muted-foreground mt-1">
-            {isSelf
-              ? t("firmas.openOnPhoneDescription")
-              : t("firmas.waitingForOtherDescription", { name: partyName })}
+            {t("firmas.openOnPhoneDescription")}
           </p>
           {firmasSentAt ? (
             <p className="text-xs text-muted-foreground mt-1">
@@ -1353,22 +1407,81 @@ function FirmasHandoffCard({
               })}
             </p>
           ) : null}
-          {isSelf && (
-            <div className="mt-3 flex items-center gap-2 flex-wrap">
-              <button
-                onClick={copyLink}
-                className="text-sm inline-flex items-center gap-1.5 px-3 py-1.5 border border-border rounded hover:bg-muted/50"
-              >
-                <Copy className="w-3.5 h-3.5" />
-                {t("firmas.copyLink")}
-              </button>
-              <code className="text-xs text-muted-foreground truncate max-w-full">
-                {signUrl}
-              </code>
+        </div>
+      </div>
+
+      {/* Primary action — direct anchor so iOS / Android resolves
+          firmas.io/sign/<token> as a Universal Link / App Link to
+          the native Firmas app if installed. Falls back to opening
+          the mobile-web signer at firmas.io otherwise. rel=noopener
+          isn't strictly needed for a same-window navigation, but
+          some inter-app handoffs prefer it not be there — leaving
+          off so iOS gets the cleanest hand-off semantics. */}
+      <a
+        href={signUrl}
+        className="btn-brutal flex items-center justify-center gap-2 w-full text-base font-semibold py-3"
+      >
+        <Smartphone className="w-5 h-5" />
+        {t("firmas.openInFirmas")}
+      </a>
+
+      {/* Cross-device fallback — QR code for the case where the
+          signer's phone is a different device from the one viewing
+          this card (e.g. initiator on desktop, signer on phone).
+          Lazy-loaded so the qrcode package only enters the bundle
+          when this card actually renders. */}
+      <div className="mt-5 pt-5 border-t border-border/40">
+        <p className="text-xs text-muted-foreground uppercase tracking-wider mb-3 text-center">
+          {t("firmas.qrLabel")}
+        </p>
+        <div className="flex justify-center">
+          {qrDataUrl ? (
+            <div className="bg-white p-3 rounded-md inline-block">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={qrDataUrl}
+                alt={t("firmas.qrAlt")}
+                width={180}
+                height={180}
+                className="block"
+              />
+            </div>
+          ) : (
+            <div className="w-[180px] h-[180px] bg-muted/30 rounded-md flex items-center justify-center">
+              <Loader2 className="w-5 h-5 text-muted-foreground animate-spin" />
             </div>
           )}
         </div>
       </div>
+
+      {/* Secondary controls — small text buttons so they don't
+          compete with the primary action above. */}
+      <div className="mt-4 flex items-center justify-center gap-4 text-sm">
+        <button
+          onClick={copyLink}
+          className="inline-flex items-center gap-1.5 text-muted-foreground hover:text-foreground"
+        >
+          <Copy className="w-3.5 h-3.5" />
+          {t("firmas.copyLink")}
+        </button>
+        <span aria-hidden className="text-muted-foreground/50">·</span>
+        <button
+          onClick={() => setShowUrl((v) => !v)}
+          className="text-muted-foreground hover:text-foreground"
+        >
+          {showUrl ? t("firmas.hideUrl") : t("firmas.showUrl")}
+        </button>
+      </div>
+      {showUrl && (
+        <div className="mt-3 text-center">
+          <a
+            href={signUrl}
+            className="text-xs text-muted-foreground break-all underline underline-offset-2 hover:text-foreground"
+          >
+            {signUrl}
+          </a>
+        </div>
+      )}
     </div>
   );
 }
