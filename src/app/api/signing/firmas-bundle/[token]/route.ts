@@ -27,6 +27,30 @@ import { generateContractData } from "@/server/services/document/generator";
 import { apiError } from "@/lib/api-response";
 import { createHash } from "crypto";
 
+const FIRMAS_WEB_ORIGIN = process.env.FIRMAS_BASE_URL ?? "https://www.firmas.io";
+
+// The Firmas mobile-web fallback at firmas.io fetches THIS endpoint
+// cross-origin to populate its sign screen. Without CORS headers
+// the browser blocks the preflight + response and Firmas shows
+// "Something went wrong / Load failed." Native iOS/Android apps
+// don't go through CORS (no Origin header in their fetch), so this
+// is a no-op for them — but the web fallback needs it.
+const corsHeaders = {
+  "Access-Control-Allow-Origin": FIRMAS_WEB_ORIGIN,
+  "Access-Control-Allow-Methods": "GET, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, Accept",
+  "Access-Control-Max-Age": "3600",
+  "Vary": "Origin",
+};
+
+export async function OPTIONS() {
+  return new NextResponse(null, { status: 204, headers: corsHeaders });
+}
+
+function corsJson(body: unknown, init?: { status?: number }): NextResponse {
+  return NextResponse.json(body, { ...init, headers: corsHeaders });
+}
+
 interface RouteContext {
   params: Promise<{ token: string }>;
 }
@@ -35,7 +59,7 @@ export async function GET(_request: NextRequest, ctx: RouteContext) {
   try {
     const { token } = await ctx.params;
     if (!token) {
-      return NextResponse.json({ error: "missing_token" }, { status: 400 });
+      return corsJson({ error: "missing_token" }, { status: 400 });
     }
 
     const signingRequest = await prisma.signingRequest.findFirst({
@@ -59,7 +83,7 @@ export async function GET(_request: NextRequest, ctx: RouteContext) {
     if (!signingRequest) {
       // Don't disclose whether the token "could have" existed; 404 here
       // is the same response a totally-random token would get.
-      return NextResponse.json({ error: "not_found" }, { status: 404 });
+      return corsJson({ error: "not_found" }, { status: 404 });
     }
 
     // Which role this token belongs to. Tells the Firmas mobile UI
@@ -69,7 +93,7 @@ export async function GET(_request: NextRequest, ctx: RouteContext) {
       signingRequest.initiatorFirmasToken === token ? "INITIATOR" : "RESPONDENT";
 
     if (signingRequest.status === "COMPLETED" || signingRequest.status === "DECLINED" || signingRequest.status === "EXPIRED") {
-      return NextResponse.json(
+      return corsJson(
         {
           error: "request_already_settled",
           status: signingRequest.status,
@@ -88,7 +112,7 @@ export async function GET(_request: NextRequest, ctx: RouteContext) {
         ? !!signingRequest.initiatorSignedAt
         : !!signingRequest.respondentSignedAt;
     if (partyAlreadySigned) {
-      return NextResponse.json(
+      return corsJson(
         { error: "party_already_signed", signingAs },
         { status: 410 },
       );
@@ -103,7 +127,7 @@ export async function GET(_request: NextRequest, ctx: RouteContext) {
     // contract allows null.
     const contractData = await generateContractData(signingRequest.dealRoomId);
     if (!contractData) {
-      return NextResponse.json({ error: "deal_not_found" }, { status: 404 });
+      return corsJson({ error: "deal_not_found" }, { status: 404 });
     }
 
     // Canonical document hash. If the SigningRequest already has one
@@ -129,7 +153,7 @@ export async function GET(_request: NextRequest, ctx: RouteContext) {
         ? signingRequest.initiatorFirmasSentAt
         : signingRequest.respondentFirmasSentAt;
 
-    return NextResponse.json({
+    return corsJson({
       schemaVersion: 1,
       dealRoomId: signingRequest.dealRoomId,
       // Tell the Firmas mobile UI which party's identity attestation
@@ -169,6 +193,14 @@ export async function GET(_request: NextRequest, ctx: RouteContext) {
       expiresAt: signingRequest.expiresAt,
     });
   } catch (error) {
-    return apiError(error, "Failed to load signing bundle");
+    // apiError returns a NextResponse without CORS headers — but the
+    // Firmas web fallback needs them to surface the 500 / 503 cleanly
+    // rather than as a generic "load failed." Re-stamp the headers
+    // before returning.
+    const res = apiError(error, "Failed to load signing bundle");
+    for (const [k, v] of Object.entries(corsHeaders)) {
+      res.headers.set(k, v);
+    }
+    return res;
   }
 }
