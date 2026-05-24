@@ -1027,6 +1027,7 @@ model LawyerProfile {
   contactUrl             String?
   acceptingClients       Boolean  @default(true)
   stripeConnectAccountId String? // Stripe Connect account for revenue share (Phase 2)
+  notifyEmails           String[] @default([]) // additional inboxes BCC'd on contact requests; not exposed publicly
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 

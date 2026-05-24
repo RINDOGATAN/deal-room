@@ -873,6 +873,59 @@ async function main() {
   });
   console.log("  Created/updated LawyerProfile: Wences Spiegel Marquez (Deployment)");
 
+  // ── Seed Steve Crowley as Deployment expert ──
+  // Public-facing contact is steve.crowley@spc-consulting.com.
+  // Wences Spiegel is BCC'd on every contact request via notifyEmails
+  // so both inboxes see the request without exposing Wences's address
+  // in the directory listing.
+  const steveUser = await prisma.user.upsert({
+    where: { email: "steve.crowley@spc-consulting.com" },
+    create: {
+      email: "steve.crowley@spc-consulting.com",
+      name: "Steve Crowley",
+      company: "SPC Consulting",
+      isLawyer: true,
+      role: "LAWYER",
+    },
+    update: {
+      name: "Steve Crowley",
+      company: "SPC Consulting",
+      isLawyer: true,
+      role: "LAWYER",
+    },
+  });
+  await prisma.lawyerProfile.upsert({
+    where: { userId: steveUser.id },
+    create: {
+      userId: steveUser.id,
+      title: "Deployment Consultant",
+      bio: "Self-hosting and deployment specialist covering EU, US, and UK environments.",
+      jurisdictions: [],
+      languages: ["en", "es"],
+      expertTypes: ["DEPLOYMENT"],
+      specializations: ["SELF_HOSTING_DEPLOYMENT"],
+      certifications: [],
+      countryCode: "GB",
+      city: "London",
+      jurisdictionsCovered: ["EU", "US", "UK"],
+      acceptingClients: true,
+      isPublished: true,
+      notifyEmails: ["wences.spiegel@rindogatan.com"],
+    },
+    update: {
+      title: "Deployment Consultant",
+      languages: ["en", "es"],
+      expertTypes: ["DEPLOYMENT"],
+      specializations: ["SELF_HOSTING_DEPLOYMENT"],
+      countryCode: "GB",
+      city: "London",
+      jurisdictionsCovered: ["EU", "US", "UK"],
+      isPublished: true,
+      notifyEmails: ["wences.spiegel@rindogatan.com"],
+    },
+  });
+  console.log("  Created/updated LawyerProfile: Steve Crowley (Deployment)");
+
   // ── Seed sample invite codes for northend.law brand ──
   if (process.env.NEXT_PUBLIC_BRAND === "northend") {
     // Create a demo customer if none exists
