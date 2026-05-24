@@ -150,10 +150,14 @@ export async function POST(
       },
     });
 
-    // Send email notification to the expert
+    // Send email notification to the expert. notifyEmails BCCs any
+    // additional inboxes the directory entry has configured (e.g. a
+    // back-office partner who should also see incoming requests but
+    // isn't shown as the public contact).
     try {
       await sendRecommendationRequestEmail({
         to: profile.user.email,
+        bcc: profile.notifyEmails,
         requesterName,
         requesterEmail,
         requesterCompany,

@@ -570,10 +570,14 @@ export const lawyerRouter = createTRPCRouter({
       });
       const countMap = new Map(vettingCounts.map((v) => [v.lawyerId, v._count]));
 
-      return profiles.map((p) => ({
-        ...p,
-        approvedVettingCount: countMap.get(p.userId) ?? 0,
-      }));
+      return profiles.map((p) => {
+        const { notifyEmails: _omit, ...rest } = p;
+        void _omit;
+        return {
+          ...rest,
+          approvedVettingCount: countMap.get(p.userId) ?? 0,
+        };
+      });
     }),
 
   /** Business owner sends recommendation request to a published lawyer */
@@ -640,6 +644,7 @@ export const lawyerRouter = createTRPCRouter({
       try {
         await sendRecommendationRequestEmail({
           to: lawyerProfile.user.email!,
+          bcc: lawyerProfile.notifyEmails,
           requesterName,
           requesterEmail,
           requesterCompany,

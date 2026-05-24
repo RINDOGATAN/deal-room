@@ -170,6 +170,7 @@ export async function sendClientInvitationEmail({
 
 interface SendRecommendationRequestEmailParams {
   to: string;
+  bcc?: string[];
   requesterName: string;
   requesterEmail: string;
   requesterCompany?: string;
@@ -181,6 +182,7 @@ interface SendRecommendationRequestEmailParams {
 
 export async function sendRecommendationRequestEmail({
   to,
+  bcc,
   requesterName,
   requesterEmail,
   requesterCompany,
@@ -214,6 +216,7 @@ export async function sendRecommendationRequestEmail({
     await getResend().emails.send({
       from: emailFrom(),
       to,
+      ...(bcc && bcc.length > 0 ? { bcc } : {}),
       replyTo: requesterEmail,
       subject,
       html: emailWrapper("Recommendation Request", `
