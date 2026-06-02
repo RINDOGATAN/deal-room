@@ -1163,7 +1163,12 @@
           "bias": {
             "partyA": 0,
             "partyB": 0
-          }
+          },
+          "jurisdictions": [
+            "CALIFORNIA",
+            "ENGLAND_WALES",
+            "SPAIN"
+          ]
         },
         {
           "id": "dispute-courts-delaware",
@@ -1232,7 +1237,10 @@
           "bias": {
             "partyA": 0,
             "partyB": 0
-          }
+          },
+          "jurisdictions": [
+            "CALIFORNIA"
+          ]
         },
         {
           "id": "dispute-arbitration-jams",
@@ -1305,7 +1313,10 @@
           "bias": {
             "partyA": 0.1,
             "partyB": -0.1
-          }
+          },
+          "jurisdictions": [
+            "CALIFORNIA"
+          ]
         },
         {
           "id": "dispute-arbitration-icc",
@@ -1374,7 +1385,12 @@
           "bias": {
             "partyA": 0,
             "partyB": 0
-          }
+          },
+          "jurisdictions": [
+            "CALIFORNIA",
+            "ENGLAND_WALES",
+            "SPAIN"
+          ]
         },
         {
           "id": "dispute-arbitration-aaa",
@@ -1445,7 +1461,10 @@
           "bias": {
             "partyA": 0,
             "partyB": 0
-          }
+          },
+          "jurisdictions": [
+            "CALIFORNIA"
+          ]
         },
         {
           "id": "dispute-arbitration-lcia",
@@ -1514,6 +1533,225 @@
           "bias": {
             "partyA": 0,
             "partyB": 0
+          },
+          "jurisdictions": [
+            "ENGLAND_WALES"
+          ]
+        },
+        {
+          "id": "dispute-courts-spanish",
+          "code": "courts-spanish",
+          "label": {
+            "en": "Spanish courts",
+            "es": "Tribunales españoles"
+          },
+          "order": 7,
+          "jurisdictions": [
+            "SPAIN"
+          ],
+          "plainDescription": {
+            "en": "Submission to the ordinary courts of a Spanish city — public, fast, no arbitration fees.",
+            "es": "Sumisión expresa a los Juzgados y Tribunales de una ciudad española — vía pública, rápida y sin costes de arbitraje."
+          },
+          "pros": {
+            "partyA": {
+              "en": [
+                "Public record creates deterrent value",
+                "No arbitration fees",
+                "Familiar Spanish procedural rules"
+              ],
+              "es": [
+                "El expediente público disuade",
+                "Sin costes arbitrales",
+                "Reglas procesales españolas conocidas"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Lower cost — no arbitral fees",
+                "Public record protects against future abuses",
+                "Standard procedural protections"
+              ],
+              "es": [
+                "Coste reducido — sin honorarios arbitrales",
+                "El expediente público protege contra futuros abusos",
+                "Protecciones procesales estándar"
+              ]
+            }
+          },
+          "cons": {
+            "partyA": {
+              "en": [
+                "Public proceedings — confidentiality concerns",
+                "Slower than arbitration in many regions"
+              ],
+              "es": [
+                "Procedimiento público — afecta a la confidencialidad",
+                "Más lento que el arbitraje en muchas plazas"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Limited control over case management",
+                "Standard but rigid procedural deadlines"
+              ],
+              "es": [
+                "Menor control sobre la dirección del proceso",
+                "Plazos procesales rígidos"
+              ]
+            }
+          },
+          "legalText": {
+            "en": "Any dispute arising out of or relating to this Agreement shall be submitted to the exclusive jurisdiction of the courts of [DISPUTE FORUM CITY], the parties expressly waiving any other forum that might otherwise apply.",
+            "es": "Cualquier controversia derivada del presente Acuerdo o relacionada con él se someterá a la jurisdicción exclusiva de los Juzgados y Tribunales de [DISPUTE FORUM CITY], renunciando expresamente las partes a cualquier otro fuero que pudiera corresponderles."
+          },
+          "bias": {
+            "partyA": 0.0,
+            "partyB": 0.1
+          }
+        },
+        {
+          "id": "dispute-mediation-spanish",
+          "code": "mediation-spanish",
+          "label": {
+            "en": "Mediation + Spanish courts",
+            "es": "Mediación previa + tribunales españoles"
+          },
+          "order": 8,
+          "jurisdictions": [
+            "SPAIN"
+          ],
+          "plainDescription": {
+            "en": "Mediation under Ley 5/2012 first, with Spanish courts as fallback if no agreement within 60 days.",
+            "es": "Mediación previa conforme a la Ley 5/2012 de mediación civil y mercantil, con vía judicial española como fallback si no hay acuerdo en 60 días."
+          },
+          "pros": {
+            "partyA": {
+              "en": [
+                "Private process preserves relationship",
+                "Often resolves before incurring litigation costs",
+                "Court fallback retains enforcement teeth"
+              ],
+              "es": [
+                "Proceso privado que preserva la relación",
+                "Resuelve a menudo antes de incurrir en costes de litigio",
+                "Vía judicial como respaldo ejecutivo"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Lower cost than litigation",
+                "Confidentiality preserved during mediation",
+                "Independent mediator levels the table"
+              ],
+              "es": [
+                "Coste inferior al litigio",
+                "Confidencialidad mantenida durante la mediación",
+                "Mediador independiente equilibra la negociación"
+              ]
+            }
+          },
+          "cons": {
+            "partyA": {
+              "en": [
+                "Adds at least 60 days before courts can act",
+                "Mediator's recommendation is non-binding"
+              ],
+              "es": [
+                "Añade al menos 60 días antes de poder acudir a tribunales",
+                "La propuesta del mediador no es vinculante"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Requires good-faith engagement by counterparty",
+                "If mediation fails, parties still litigate"
+              ],
+              "es": [
+                "Requiere buena fe de la contraparte",
+                "Si fracasa, sigue siendo necesario litigar"
+              ]
+            }
+          },
+          "legalText": {
+            "en": "Before filing any judicial proceeding, the parties shall first attempt to resolve any dispute arising out of or relating to this Agreement through mediation conducted under Spanish Law 5/2012 of 6 July on mediation in civil and commercial matters. If no settlement is reached within sixty (60) days of the mediator's first session, either party may then submit the dispute to the exclusive jurisdiction of the courts of [DISPUTE FORUM CITY].",
+            "es": "Antes de acudir a los tribunales, las partes intentarán resolver cualquier controversia derivada del presente Acuerdo o relacionada con él mediante mediación conforme a la Ley 5/2012, de 6 de julio, de mediación en asuntos civiles y mercantiles. Si no se alcanza un acuerdo en el plazo de sesenta (60) días desde la primera sesión del mediador, cualquiera de las partes podrá someter la controversia a la jurisdicción exclusiva de los Juzgados y Tribunales de [DISPUTE FORUM CITY]."
+          },
+          "bias": {
+            "partyA": -0.1,
+            "partyB": 0.2
+          }
+        },
+        {
+          "id": "dispute-arbitration-cam",
+          "code": "arbitration-cam",
+          "label": {
+            "en": "Madrid Arbitration Court (CAM)",
+            "es": "Arbitraje de la Corte de Arbitraje de Madrid (CAM)"
+          },
+          "order": 9,
+          "jurisdictions": [
+            "SPAIN"
+          ],
+          "plainDescription": {
+            "en": "Binding arbitration administered by the Madrid Arbitration Court — private, faster than courts, leading Spanish institution.",
+            "es": "Arbitraje vinculante administrado por la Corte de Arbitraje de Madrid — vía privada, más rápida que los tribunales y la institución arbitral de referencia en España."
+          },
+          "pros": {
+            "partyA": {
+              "en": [
+                "Strict confidentiality — proceedings are private",
+                "Faster than ordinary courts",
+                "Award directly enforceable under NY Convention"
+              ],
+              "es": [
+                "Confidencialidad estricta — el procedimiento es privado",
+                "Más rápido que la vía ordinaria",
+                "Laudo directamente ejecutable conforme al Convenio de Nueva York"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Confidentiality preserved",
+                "Predictable timeline",
+                "Professional, specialised arbitrators"
+              ],
+              "es": [
+                "Confidencialidad preservada",
+                "Plazos predecibles",
+                "Árbitros profesionales especializados"
+              ]
+            }
+          },
+          "cons": {
+            "partyA": {
+              "en": [
+                "Arbitration fees can be significant for small disputes",
+                "Limited appeal — narrow annulment grounds"
+              ],
+              "es": [
+                "Honorarios arbitrales significativos para controversias pequeñas",
+                "Recurso limitado — causas tasadas de anulación"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Higher upfront costs than courts",
+                "No public deterrent record"
+              ],
+              "es": [
+                "Coste inicial superior al de los tribunales",
+                "Sin expediente público disuasorio"
+              ]
+            }
+          },
+          "legalText": {
+            "en": "Any dispute arising out of or relating to this Agreement, including its existence, validity, termination, or breach, shall be finally settled by arbitration administered by the Madrid Arbitration Court of the Madrid Chamber of Commerce, in accordance with its Arbitration Rules in force on the date of the request for arbitration. The arbitral tribunal shall be composed of one (1) arbitrator. The seat of arbitration shall be Madrid (Spain) and the language of the proceedings shall be Spanish. The arbitration shall be a derecho (decided in law, not in equity).",
+            "es": "Cualquier controversia derivada del presente Acuerdo o relacionada con él, incluida su existencia, validez, terminación o incumplimiento, se resolverá definitivamente mediante arbitraje administrado por la Corte de Arbitraje de Madrid de la Cámara de Comercio de Madrid, conforme a su Reglamento vigente en la fecha de presentación de la solicitud de arbitraje. El tribunal arbitral estará formado por un (1) árbitro. La sede del arbitraje será Madrid (España) y el idioma de las actuaciones, el castellano. El arbitraje será de Derecho."
+          },
+          "bias": {
+            "partyA": 0.3,
+            "partyB": -0.2
           }
         }
       ]
