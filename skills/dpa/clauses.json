@@ -3868,6 +3868,463 @@
           }
         }
       ]
+    },
+    {
+      "id": "governing-law-jurisdiction",
+      "title": {
+        "en": "Governing law and jurisdiction",
+        "es": "Ley aplicable y jurisdicción"
+      },
+      "category": {
+        "en": "Governing law",
+        "es": "Ley aplicable"
+      },
+      "order": 14,
+      "isRequired": true,
+      "plainDescription": {
+        "en": "Which law governs this DPA, and where (or how) any dispute about it is resolved.",
+        "es": "Qué ley rige este ATD y dónde (o cómo) se resuelve cualquier controversia relativa a él."
+      },
+      "legalContext": {
+        "en": "A DPA should state its governing law and the forum for disputes. Spanish-law agreements default to the Courts of Madrid; US-law agreements typically offer arbitration (JAMS/AAA) as an alternative to the courts; UK-law agreements offer the London courts, LCIA arbitration, or mediation. Only the options valid for the chosen governing law are shown.",
+        "es": "Un ATD debe indicar su ley aplicable y el fuero para las controversias. Los acuerdos regidos por el Derecho español se someten por defecto a los Juzgados y Tribunales de Madrid; los regidos por el Derecho estadounidense suelen ofrecer el arbitraje (JAMS/AAA) como alternativa a los tribunales; los regidos por el Derecho del Reino Unido ofrecen los tribunales de Londres, el arbitraje LCIA o la mediación. Solo se muestran las opciones válidas para la ley aplicable elegida."
+      },
+      "options": [
+        {
+          "id": "glj-es-madrid",
+          "code": "es-madrid-courts",
+          "order": 1,
+          "label": {
+            "en": "Courts of Madrid (exclusive jurisdiction)",
+            "es": "Juzgados y Tribunales de Madrid (jurisdicción exclusiva)"
+          },
+          "plainDescription": {
+            "en": "Courts of Madrid (exclusive jurisdiction)",
+            "es": "Juzgados y Tribunales de Madrid (jurisdicción exclusiva)"
+          },
+          "prosPartyA": {
+            "en": [
+              "Local, predictable forum"
+            ],
+            "es": [
+              "Local, predictable forum"
+            ]
+          },
+          "consPartyA": {
+            "en": [
+              "Litigation is public"
+            ],
+            "es": [
+              "Litigation is public"
+            ]
+          },
+          "prosPartyB": {
+            "en": [
+              "Local, predictable forum"
+            ],
+            "es": [
+              "Local, predictable forum"
+            ]
+          },
+          "consPartyB": {
+            "en": [
+              "Litigation is public"
+            ],
+            "es": [
+              "Litigation is public"
+            ]
+          },
+          "legalText": {
+            "en": "This Data Processing Agreement is governed by the EU General Data Protection Regulation (Regulation (EU) 2016/679) and the Spanish Ley Orgánica 3/2018, de Protección de Datos Personales y garantía de los derechos digitales (LOPDGDD). The parties submit any dispute arising out of or in connection with this Agreement to the exclusive jurisdiction of the Courts and Tribunals of the city of Madrid (Spain), expressly waiving any other forum that may correspond to them.",
+            "es": "El presente Acuerdo de Encargo de Tratamiento se rige por el Reglamento General de Protección de Datos de la UE (Reglamento (UE) 2016/679) y por la Ley Orgánica 3/2018, de Protección de Datos Personales y garantía de los derechos digitales (LOPDGDD). Las partes someten cualquier controversia que derive del presente Acuerdo o que guarde relación con él a la jurisdicción exclusiva de los Juzgados y Tribunales de la ciudad de Madrid (España), con renuncia expresa a cualquier otro fuero que pudiera corresponderles."
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
+          "jurisdictionConfig": {
+            "CALIFORNIA": {
+              "available": false
+            },
+            "ENGLAND_WALES": {
+              "available": false
+            },
+            "SPAIN": {
+              "available": true
+            }
+          }
+        },
+        {
+          "id": "glj-us-courts",
+          "code": "us-courts",
+          "order": 2,
+          "label": {
+            "en": "California courts (exclusive jurisdiction)",
+            "es": "Tribunales de California (jurisdicción exclusiva)"
+          },
+          "plainDescription": {
+            "en": "California courts (exclusive jurisdiction)",
+            "es": "Tribunales de California (jurisdicción exclusiva)"
+          },
+          "prosPartyA": {
+            "en": [
+              "Court precedent and appeals"
+            ],
+            "es": [
+              "Court precedent and appeals"
+            ]
+          },
+          "consPartyA": {
+            "en": [
+              "Public and slower"
+            ],
+            "es": [
+              "Public and slower"
+            ]
+          },
+          "prosPartyB": {
+            "en": [
+              "Court precedent and appeals"
+            ],
+            "es": [
+              "Court precedent and appeals"
+            ]
+          },
+          "consPartyB": {
+            "en": [
+              "Public and slower"
+            ],
+            "es": [
+              "Public and slower"
+            ]
+          },
+          "legalText": {
+            "en": "This Data Processing Agreement is governed by the laws of the State of California and applicable United States federal law, including the California Consumer Privacy Act of 2018 as amended by the California Privacy Rights Act of 2020 (CCPA/CPRA). Any dispute arising out of or relating to this Agreement shall be resolved exclusively by the state and federal courts located in California, and each party irrevocably submits to the exclusive jurisdiction of those courts.",
+            "es": "El presente Acuerdo de Encargo de Tratamiento se rige por la legislación del Estado de California y por el Derecho federal estadounidense aplicable, incluida la California Consumer Privacy Act de 2018 en su versión modificada por la California Privacy Rights Act de 2020 (CCPA/CPRA). Cualquier controversia que derive del presente Acuerdo o guarde relación con él se resolverá exclusivamente ante los tribunales estatales y federales situados en California, y cada parte se somete irrevocablemente a la jurisdicción exclusiva de dichos tribunales."
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
+          "jurisdictionConfig": {
+            "CALIFORNIA": {
+              "available": true
+            },
+            "ENGLAND_WALES": {
+              "available": false
+            },
+            "SPAIN": {
+              "available": false
+            }
+          }
+        },
+        {
+          "id": "glj-us-jams",
+          "code": "us-jams",
+          "order": 3,
+          "label": {
+            "en": "JAMS arbitration (California seat)",
+            "es": "Arbitraje JAMS (sede en California)"
+          },
+          "plainDescription": {
+            "en": "JAMS arbitration (California seat)",
+            "es": "Arbitraje JAMS (sede en California)"
+          },
+          "prosPartyA": {
+            "en": [
+              "Private and final"
+            ],
+            "es": [
+              "Private and final"
+            ]
+          },
+          "consPartyA": {
+            "en": [
+              "No appeal"
+            ],
+            "es": [
+              "No appeal"
+            ]
+          },
+          "prosPartyB": {
+            "en": [
+              "Private, faster, confidential"
+            ],
+            "es": [
+              "Private, faster, confidential"
+            ]
+          },
+          "consPartyB": {
+            "en": [
+              "Arbitrator costs"
+            ],
+            "es": [
+              "Arbitrator costs"
+            ]
+          },
+          "legalText": {
+            "en": "This Data Processing Agreement is governed by the laws of the State of California and applicable United States federal law, including the California Consumer Privacy Act of 2018 as amended by the California Privacy Rights Act of 2020 (CCPA/CPRA). Any dispute arising out of or relating to this Agreement shall be finally resolved by binding arbitration administered by JAMS under its Comprehensive Arbitration Rules, before a single arbitrator seated in California. Judgment on the award may be entered in any court of competent jurisdiction.",
+            "es": "El presente Acuerdo de Encargo de Tratamiento se rige por la legislación del Estado de California y por el Derecho federal estadounidense aplicable, incluida la California Consumer Privacy Act de 2018 en su versión modificada por la California Privacy Rights Act de 2020 (CCPA/CPRA). Cualquier controversia que derive del presente Acuerdo o guarde relación con él se resolverá de forma definitiva mediante arbitraje vinculante administrado por JAMS conforme a sus Comprehensive Arbitration Rules, ante un único árbitro con sede en California. El laudo podrá elevarse a definitivo ante cualquier tribunal competente."
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0.1,
+          "jurisdictionConfig": {
+            "CALIFORNIA": {
+              "available": true
+            },
+            "ENGLAND_WALES": {
+              "available": false
+            },
+            "SPAIN": {
+              "available": false
+            }
+          }
+        },
+        {
+          "id": "glj-us-aaa",
+          "code": "us-aaa",
+          "order": 4,
+          "label": {
+            "en": "AAA arbitration (California seat)",
+            "es": "Arbitraje AAA (sede en California)"
+          },
+          "plainDescription": {
+            "en": "AAA arbitration (California seat)",
+            "es": "Arbitraje AAA (sede en California)"
+          },
+          "prosPartyA": {
+            "en": [
+              "Private and final"
+            ],
+            "es": [
+              "Private and final"
+            ]
+          },
+          "consPartyA": {
+            "en": [
+              "No appeal"
+            ],
+            "es": [
+              "No appeal"
+            ]
+          },
+          "prosPartyB": {
+            "en": [
+              "Private, faster, confidential"
+            ],
+            "es": [
+              "Private, faster, confidential"
+            ]
+          },
+          "consPartyB": {
+            "en": [
+              "Arbitrator costs"
+            ],
+            "es": [
+              "Arbitrator costs"
+            ]
+          },
+          "legalText": {
+            "en": "This Data Processing Agreement is governed by the laws of the State of California and applicable United States federal law, including the California Consumer Privacy Act of 2018 as amended by the California Privacy Rights Act of 2020 (CCPA/CPRA). Any dispute arising out of or relating to this Agreement shall be finally resolved by arbitration administered by the American Arbitration Association under its Commercial Arbitration Rules, before a single arbitrator seated in California. Judgment on the award may be entered in any court of competent jurisdiction.",
+            "es": "El presente Acuerdo de Encargo de Tratamiento se rige por la legislación del Estado de California y por el Derecho federal estadounidense aplicable, incluida la California Consumer Privacy Act de 2018 en su versión modificada por la California Privacy Rights Act de 2020 (CCPA/CPRA). Cualquier controversia que derive del presente Acuerdo o guarde relación con él se resolverá de forma definitiva mediante arbitraje administrado por la American Arbitration Association conforme a sus Commercial Arbitration Rules, ante un único árbitro con sede en California. El laudo podrá elevarse a definitivo ante cualquier tribunal competente."
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0.1,
+          "jurisdictionConfig": {
+            "CALIFORNIA": {
+              "available": true
+            },
+            "ENGLAND_WALES": {
+              "available": false
+            },
+            "SPAIN": {
+              "available": false
+            }
+          }
+        },
+        {
+          "id": "glj-uk-london",
+          "code": "uk-london-courts",
+          "order": 5,
+          "label": {
+            "en": "Courts of London (exclusive jurisdiction)",
+            "es": "Tribunales de Londres (jurisdicción exclusiva)"
+          },
+          "plainDescription": {
+            "en": "Courts of London (exclusive jurisdiction)",
+            "es": "Tribunales de Londres (jurisdicción exclusiva)"
+          },
+          "prosPartyA": {
+            "en": [
+              "Established commercial courts"
+            ],
+            "es": [
+              "Established commercial courts"
+            ]
+          },
+          "consPartyA": {
+            "en": [
+              "Public and slower"
+            ],
+            "es": [
+              "Public and slower"
+            ]
+          },
+          "prosPartyB": {
+            "en": [
+              "Established commercial courts"
+            ],
+            "es": [
+              "Established commercial courts"
+            ]
+          },
+          "consPartyB": {
+            "en": [
+              "Public and slower"
+            ],
+            "es": [
+              "Public and slower"
+            ]
+          },
+          "legalText": {
+            "en": "This Data Processing Agreement is governed by the laws of England and Wales, including the UK GDPR and the Data Protection Act 2018, in each case as amended by the Data (Use and Access) Act 2025. The parties submit to the exclusive jurisdiction of the courts of London, England, in respect of any dispute arising out of or in connection with this Agreement.",
+            "es": "El presente Acuerdo de Encargo de Tratamiento se rige por el Derecho de Inglaterra y Gales, incluido el RGPD del RU y la Data Protection Act 2018, en cada caso en su versión modificada por la Data (Use and Access) Act 2025. Las partes se someten a la jurisdicción exclusiva de los tribunales de Londres (Inglaterra) respecto de cualquier controversia que derive del presente Acuerdo o guarde relación con él."
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
+          "jurisdictionConfig": {
+            "CALIFORNIA": {
+              "available": false
+            },
+            "ENGLAND_WALES": {
+              "available": true
+            },
+            "SPAIN": {
+              "available": false
+            }
+          }
+        },
+        {
+          "id": "glj-uk-lcia",
+          "code": "uk-lcia",
+          "order": 6,
+          "label": {
+            "en": "LCIA arbitration (London seat)",
+            "es": "Arbitraje LCIA (sede en Londres)"
+          },
+          "plainDescription": {
+            "en": "LCIA arbitration (London seat)",
+            "es": "Arbitraje LCIA (sede en Londres)"
+          },
+          "prosPartyA": {
+            "en": [
+              "Private and final"
+            ],
+            "es": [
+              "Private and final"
+            ]
+          },
+          "consPartyA": {
+            "en": [
+              "No appeal"
+            ],
+            "es": [
+              "No appeal"
+            ]
+          },
+          "prosPartyB": {
+            "en": [
+              "Private, confidential"
+            ],
+            "es": [
+              "Private, confidential"
+            ]
+          },
+          "consPartyB": {
+            "en": [
+              "Arbitrator costs"
+            ],
+            "es": [
+              "Arbitrator costs"
+            ]
+          },
+          "legalText": {
+            "en": "This Data Processing Agreement is governed by the laws of England and Wales, including the UK GDPR and the Data Protection Act 2018, in each case as amended by the Data (Use and Access) Act 2025. Any dispute arising out of or in connection with this Agreement shall be finally resolved by arbitration under the LCIA Rules, before a sole arbitrator, with the seat of arbitration in London, England.",
+            "es": "El presente Acuerdo de Encargo de Tratamiento se rige por el Derecho de Inglaterra y Gales, incluido el RGPD del RU y la Data Protection Act 2018, en cada caso en su versión modificada por la Data (Use and Access) Act 2025. Cualquier controversia que derive del presente Acuerdo o guarde relación con él se resolverá de forma definitiva mediante arbitraje conforme al Reglamento de la LCIA, ante un árbitro único, con sede del arbitraje en Londres (Inglaterra)."
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0.1,
+          "jurisdictionConfig": {
+            "CALIFORNIA": {
+              "available": false
+            },
+            "ENGLAND_WALES": {
+              "available": true
+            },
+            "SPAIN": {
+              "available": false
+            }
+          }
+        },
+        {
+          "id": "glj-uk-mediation",
+          "code": "uk-mediation",
+          "order": 7,
+          "label": {
+            "en": "Mediation first, then London courts",
+            "es": "Mediación previa y, en su defecto, tribunales de Londres"
+          },
+          "plainDescription": {
+            "en": "Mediation first, then London courts",
+            "es": "Mediación previa y, en su defecto, tribunales de Londres"
+          },
+          "prosPartyA": {
+            "en": [
+              "Cheaper first step"
+            ],
+            "es": [
+              "Cheaper first step"
+            ]
+          },
+          "consPartyA": {
+            "en": [
+              "Can delay resolution"
+            ],
+            "es": [
+              "Can delay resolution"
+            ]
+          },
+          "prosPartyB": {
+            "en": [
+              "Cheaper first step"
+            ],
+            "es": [
+              "Cheaper first step"
+            ]
+          },
+          "consPartyB": {
+            "en": [
+              "Can delay resolution"
+            ],
+            "es": [
+              "Can delay resolution"
+            ]
+          },
+          "legalText": {
+            "en": "This Data Processing Agreement is governed by the laws of England and Wales, including the UK GDPR and the Data Protection Act 2018, in each case as amended by the Data (Use and Access) Act 2025. The parties shall first attempt in good faith to resolve any dispute by mediation in London under the CEDR Model Mediation Procedure. If the dispute is not resolved within thirty (30) days of the mediator's appointment, it shall be subject to the exclusive jurisdiction of the courts of London, England.",
+            "es": "El presente Acuerdo de Encargo de Tratamiento se rige por el Derecho de Inglaterra y Gales, incluido el RGPD del RU y la Data Protection Act 2018, en cada caso en su versión modificada por la Data (Use and Access) Act 2025. Las partes intentarán de buena fe resolver primero cualquier controversia mediante mediación en Londres conforme al CEDR Model Mediation Procedure. Si la controversia no se resuelve en el plazo de treinta (30) días desde el nombramiento del mediador, quedará sometida a la jurisdicción exclusiva de los tribunales de Londres (Inglaterra)."
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
+          "jurisdictionConfig": {
+            "CALIFORNIA": {
+              "available": false
+            },
+            "ENGLAND_WALES": {
+              "available": true
+            },
+            "SPAIN": {
+              "available": false
+            }
+          }
+        }
+      ]
     }
   ]
 }

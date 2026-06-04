@@ -361,7 +361,34 @@ export async function generateContractDocx(
       });
     }
 
-    // Jurisdiction Provision(s) — multi or single
+    // Governing law and jurisdiction — its own top-level article (negotiated forum)
+    if (data.governingLawArticle) {
+      children.push(
+        new Paragraph({
+          heading: HeadingLevel.HEADING_2,
+          spacing: { before: 200, after: 100 },
+          children: [
+            new TextRun({
+              text: `${sectionNumber++}. ${data.governingLawArticle.title}`,
+              bold: true,
+              size: 24,
+              font: "Times New Roman",
+            }),
+          ],
+        })
+      );
+      children.push(
+        new Paragraph({
+          alignment: AlignmentType.JUSTIFIED,
+          spacing: { after: 300 },
+          children: [
+            new TextRun({ text: data.governingLawArticle.text, size: 20, font: "Times New Roman" }),
+          ],
+        })
+      );
+    }
+
+    // Jurisdiction-specific regulatory provision(s) — multi or single
     const jpList = bp.jurisdictionProvisions?.length
       ? bp.jurisdictionProvisions
       : bp.jurisdictionProvision
@@ -396,38 +423,6 @@ export async function generateContractDocx(
         })
       );
     }
-
-    // Governing Law Box
-    children.push(
-      new Paragraph({
-        shading: { type: ShadingType.SOLID, color: "F5F5F5" },
-        spacing: { before: 200, after: 100 },
-        indent: { left: 200, right: 200 },
-        children: [
-          new TextRun({
-            text: labels.governingLaw.toUpperCase(),
-            size: 18,
-            color: "666666",
-            font: "Times New Roman",
-          }),
-        ],
-      })
-    );
-    children.push(
-      new Paragraph({
-        shading: { type: ShadingType.SOLID, color: "F5F5F5" },
-        spacing: { after: 300 },
-        indent: { left: 200, right: 200 },
-        children: [
-          new TextRun({
-            text: data.governingLaw,
-            bold: true,
-            size: 22,
-            font: "Times New Roman",
-          }),
-        ],
-      })
-    );
 
     // Signatures
     children.push(
