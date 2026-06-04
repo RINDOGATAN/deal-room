@@ -42,6 +42,13 @@ const signingDetailsSchema = z.object({
   taxId: z.string().optional(),
   signatoryName: z.string().min(1),
   signatoryTitle: z.string().min(1),
+  /**
+   * Which role the filling party takes when completing a single-party (SOLO)
+   * document that has asymmetric party roles (currently DPA: Controller vs
+   * Processor). The other role's block is left blank in the output. Absent on
+   * two-party deals and non-DPA skills, where roles are fixed by position.
+   */
+  fillRole: z.enum(["CONTROLLER", "PROCESSOR"]).optional(),
 });
 
 export type SigningDetails = z.infer<typeof signingDetailsSchema>;

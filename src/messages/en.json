@@ -489,8 +489,8 @@
     "allClausesMustBeAgreed": "All clauses must be agreed upon by both parties before the contract can be signed.",
     "returnToReview": "Return to Review",
     "contractSummary": "Contract Summary",
-    "partyA": "Party A",
-    "partyB": "Party B",
+    "partyA": "the initiator",
+    "partyB": "the respondent",
     "signingParty": "Signing Party",
     "agreedTerms": "Agreed Terms ({count} clauses)",
     "signingStatus": "Signing Status",
@@ -572,8 +572,6 @@
       "signedAt": "at {time}",
       "downloadBundle": "Download signed bundle"
     },
-    "partyA": "the initiator",
-    "partyB": "the respondent",
     "theOtherParty": "the other party",
     "blocked": {
       "yourDetails": "Add your execution details first.",
@@ -602,7 +600,13 @@
       "edit": "Edit details",
       "frozenAfterSigning": "Details are locked after signing",
       "waitingForOtherParty": "The other party has not yet submitted their details",
-      "requiredBeforeSigning": "Please confirm your execution details above before signing"
+      "requiredBeforeSigning": "Please confirm your execution details above before signing",
+      "completeAs": "Complete this DPA as",
+      "completeAsHint": "Pick your role. We fill your side and leave the other party's block blank for them to complete — most processors prepare the template for a controller to receive.",
+      "role": {
+        "processor": "Processor (we process data for a controller)",
+        "controller": "Controller (we decide why and how data is processed)"
+      }
     }
   },
   "settings": {
@@ -1884,7 +1888,6 @@
     "scopeBillingRead": "View subscriptions and billing information",
     "scopeWebhooksManage": "Register, list, and delete webhook endpoints",
     "scopeDisputesCreate": "Escalate deals to dispute resolution",
-
     "entitlements": "Entitlements",
     "entitlementsDesc": "Premium skills require an active Stripe subscription. Free skills (NDA, MSA, SaaS, DPA, Privacy Notice) are available to all API keys without a subscription.",
     "entitlementInitiatorTitle": "Initiator pays",
@@ -1892,7 +1895,6 @@
     "entitlementRespondentTitle": "Respondent free",
     "entitlementRespondentDesc": "The responding agent does not need a subscription — this reduces adoption friction and accelerates network effects.",
     "entitlementPricing": "Premium skills cost $9/month (USD) or €9/month (EUR) per skill, matching the human subscription model.",
-
     "rateLimits": "Rate Limits",
     "rateLimitsDesc": "Per-customer sliding window rate limits apply to all authenticated endpoints:",
     "rateLimitGroup": "Endpoint Group",
@@ -1903,11 +1905,9 @@
     "rateLimitDefault": "All other endpoints",
     "rateLimitDefaultLimit": "1,000 requests / hour",
     "rateLimitRetryAfter": "When exceeded, the API returns 429 with a Retry-After header indicating seconds until the next allowed request.",
-
     "sectionSubscriptions": "Subscriptions & Billing",
     "purposeGetSubscriptions": "View active subscriptions and their status",
     "purposeSubscribe": "Subscribe to premium skills (returns Stripe Checkout URL)",
-
     "sectionWebhooks": "Webhooks",
     "webhooksDesc": "Register webhook endpoints to receive real-time event notifications. Payloads are signed with HMAC-SHA256 using your webhook secret.",
     "purposeRegisterWebhook": "Register a new webhook endpoint",
@@ -1921,7 +1921,6 @@
     "webhookEventCounter": "Counterparty submitted counter-proposals",
     "webhookSigning": "Every webhook delivery includes an X-Dealroom-Signature header containing the HMAC-SHA256 hash of the request body, signed with the secret returned at registration. Verify this signature before processing events.",
     "webhookRetries": "Failed deliveries are retried up to 3 times with exponential backoff.",
-
     "asyncNegotiation": "Async Multi-Round Negotiation",
     "asyncNegotiationDesc": "For deals requiring review and counter-proposals, pass mode: \"async\" when joining a negotiation. Instead of resolving immediately, the deal enters a SUGGESTED state that either party can counter or accept.",
     "asyncStep1Title": "Join in async mode",
@@ -1935,12 +1934,10 @@
     "purposeReject": "Reject and fail the deal",
     "purposeStatus": "Lightweight status poll",
     "sectionAsyncEndpoints": "Async Endpoints",
-
     "attestation": "Attorney Attestation",
     "attestationDesc": "When a premium skill has been reviewed by a supervising attorney, agreed deals include an attestation object with the reviewing attorney's name and bar number.",
     "attestationUeta": "All agent-generated contracts include a UETA § 14 / E-SIGN Act compliance preamble stating that the agreement was formed by electronic agents authorized by the parties.",
     "attestationResponseTitle": "Attestation in deal response",
-
     "protocolDiscovery": "Protocol Discovery",
     "protocolDiscoveryDesc": "Dealroom is discoverable by A2A and MCP-compatible AI agents via standard discovery endpoints:",
     "a2aCard": "A2A Agent Card",
@@ -1949,11 +1946,9 @@
     "mcpTools": "MCP Tool Definitions",
     "mcpToolsDesc": "Returns MCP-compatible tool definitions for all Dealroom operations. Discovery only — execution goes through the REST API.",
     "mcpToolsPath": "GET /api/v1/agent/mcp",
-
     "sectionDisputes": "Disputes",
     "disputesDesc": "When a deal fails or a party alleges breach, either party can escalate to arbitration via the Gavel dispute resolution platform.",
     "purposeDispute": "Escalate a deal to arbitration",
-
     "versioning": "Versioning",
     "versioningDesc1": "The API uses",
     "versioningDesc2": "versioning. Breaking changes will be introduced under a new version prefix."

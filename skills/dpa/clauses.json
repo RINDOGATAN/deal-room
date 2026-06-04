@@ -3334,6 +3334,223 @@
       ]
     },
     {
+      "id": "breach-liability-cap",
+      "title": {
+        "en": "Separate data-breach liability cap",
+        "es": "Límite de responsabilidad específico por violaciones de datos"
+      },
+      "category": {
+        "en": "Liability",
+        "es": "Responsabilidad"
+      },
+      "order": 12,
+      "isRequired": false,
+      "plainDescription": {
+        "en": "Optional. Adds a liability cap that applies specifically to personal data breaches, alongside the general liability clause. This is offered only where the agreement is governed by EU or UK law; under US-governed agreements, breach exposure is handled in the general Liability & indemnification clause, so this clause prints nothing.",
+        "es": "Opcional. Añade un límite de responsabilidad aplicable específicamente a las violaciones de datos personales, junto a la cláusula general de responsabilidad. Solo se ofrece cuando el acuerdo se rige por el Derecho de la UE o del Reino Unido; en acuerdos regidos por el Derecho estadounidense, la exposición por violaciones se aborda en la cláusula general de Responsabilidad e indemnización, por lo que esta cláusula no genera texto."
+      },
+      "legalContext": {
+        "en": "There is no breach-specific statutory liability regime in the EU or the UK: Article 82 GDPR governs all damage arising from non-compliant processing, and the general liability clause already addresses it. US state data-breach-notification statutes and CCPA/CPRA statutory damages (Cal. Civ. Code §1798.150) make breach-specific caps meaningful, but for US-governed agreements those are addressed in the general Liability & indemnification clause — hence the cap options here are unavailable for California.",
+        "es": "No existe un régimen legal de responsabilidad específico por violaciones en la UE ni en el Reino Unido: el artículo 82 del RGPD regula todo daño derivado de un tratamiento no conforme, y la cláusula general de responsabilidad ya lo aborda. Las leyes estatales estadounidenses de notificación de violaciones y los daños legales de la CCPA/CPRA (Cal. Civ. Code §1798.150) hacen relevantes los límites específicos por violaciones, pero en acuerdos regidos por el Derecho estadounidense estos se abordan en la cláusula general de Responsabilidad e indemnización; por ello, las opciones de límite aquí no están disponibles para California."
+      },
+      "options": [
+        {
+          "id": "breachcap-none",
+          "code": "none",
+          "order": 1,
+          "label": {
+            "en": "None — general liability clause governs",
+            "es": "Ninguno — rige la cláusula general de responsabilidad"
+          },
+          "plainDescription": {
+            "en": "No separate breach cap. Liability for personal data breaches is governed entirely by the general Liability & indemnification clause.",
+            "es": "Sin límite específico por violaciones. La responsabilidad por violaciones de datos personales se rige íntegramente por la cláusula general de Responsabilidad e indemnización."
+          },
+          "prosPartyA": {
+            "en": [
+              "No fragmentation of the liability regime"
+            ],
+            "es": [
+              "No fragmenta el régimen de responsabilidad"
+            ]
+          },
+          "consPartyA": {
+            "en": [
+              "No breach-specific certainty"
+            ],
+            "es": [
+              "Sin certeza específica para violaciones"
+            ]
+          },
+          "prosPartyB": {
+            "en": [
+              "Single, predictable liability regime"
+            ],
+            "es": [
+              "Régimen de responsabilidad único y previsible"
+            ]
+          },
+          "consPartyB": {
+            "en": [
+              "No separate carve-out to negotiate"
+            ],
+            "es": [
+              "Sin exclusión específica que negociar"
+            ]
+          },
+          "legalText": {
+            "en": "",
+            "es": ""
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
+          "jurisdictionConfig": {
+            "CALIFORNIA": {
+              "available": true
+            },
+            "ENGLAND_WALES": {
+              "available": true
+            },
+            "SPAIN": {
+              "available": true
+            }
+          }
+        },
+        {
+          "id": "breachcap-supercap-2x",
+          "code": "supercap-2x",
+          "order": 2,
+          "label": {
+            "en": "Breach super-cap — 2× annual fees, in addition to the general cap",
+            "es": "Supralímite por violaciones — 2× cuotas anuales, adicional al límite general"
+          },
+          "plainDescription": {
+            "en": "Breaches get their own, higher cap that sits on top of the general liability cap — favouring the Controller.",
+            "es": "Las violaciones tienen su propio límite, más elevado, que se suma al límite general de responsabilidad — favorece al Responsable."
+          },
+          "prosPartyA": {
+            "en": [
+              "Higher recovery ceiling for breach harm"
+            ],
+            "es": [
+              "Mayor techo de resarcimiento por daños de violación"
+            ]
+          },
+          "consPartyA": {
+            "en": [
+              "More complex liability structure"
+            ],
+            "es": [
+              "Estructura de responsabilidad más compleja"
+            ]
+          },
+          "prosPartyB": {
+            "en": [
+              "Exposure remains quantified and fee-linked"
+            ],
+            "es": [
+              "La exposición sigue cuantificada y ligada a las cuotas"
+            ]
+          },
+          "consPartyB": {
+            "en": [
+              "Greater aggregate exposure for breaches"
+            ],
+            "es": [
+              "Mayor exposición agregada por violaciones"
+            ]
+          },
+          "legalText": {
+            "en": "Notwithstanding any general limitation of liability in this DPA or the Principal Agreement, the Processor's liability arising from a Personal Data Breach caused by the Processor's breach of this DPA shall be subject to a separate aggregate cap equal to two (2) times the annual fees paid or payable by the Controller under the Principal Agreement in the twelve (12) months preceding the first such Personal Data Breach. This separate cap applies in addition to the general limitation of liability and is not reduced by amounts counting towards it. Nothing in this clause limits liability for intentional misconduct or gross negligence, or any liability that cannot be limited or excluded under applicable law.",
+            "es": "No obstante cualquier limitación general de responsabilidad prevista en el presente ATD o en el contrato principal, la responsabilidad del Encargado derivada de una Violación de Datos Personales causada por su incumplimiento del presente ATD quedará sujeta a un límite agregado independiente equivalente a dos (2) veces las cuotas anuales pagadas o pagaderas por el Responsable en virtud del contrato principal durante los doce (12) meses anteriores a la primera Violación de Datos Personales. Este límite independiente se aplica de forma adicional a la limitación general de responsabilidad y no se ve reducido por las cuantías imputadas a esta. Nada de lo previsto en la presente cláusula limita la responsabilidad por dolo o culpa grave, ni cualquier responsabilidad que no pueda limitarse o excluirse conforme a la legislación aplicable."
+          },
+          "biasPartyA": 0.3,
+          "biasPartyB": -0.3,
+          "jurisdictionConfig": {
+            "CALIFORNIA": {
+              "available": false,
+              "warning": {
+                "en": "Under US-governed agreements, breach-specific exposure is addressed in the general Liability & indemnification clause; a separate breach cap is not used here.",
+                "es": "En acuerdos regidos por el Derecho estadounidense, la exposición específica por violaciones se aborda en la cláusula general de Responsabilidad e indemnización; aquí no se utiliza un límite específico por violaciones."
+              }
+            },
+            "ENGLAND_WALES": {
+              "available": true
+            },
+            "SPAIN": {
+              "available": true
+            }
+          }
+        },
+        {
+          "id": "breachcap-subcap-1x",
+          "code": "subcap-1x",
+          "order": 3,
+          "label": {
+            "en": "Breach sub-cap — limited to 1× annual fees, within the general cap",
+            "es": "Sublímite por violaciones — limitado a 1× cuotas anuales, dentro del límite general"
+          },
+          "plainDescription": {
+            "en": "Breaches are limited to their own, lower cap that counts within the general liability cap — favouring the Processor.",
+            "es": "Las violaciones se limitan a su propio límite, más bajo, que se computa dentro del límite general — favorece al Encargado."
+          },
+          "prosPartyA": {
+            "en": [
+              "Breach liability remains expressly recoverable"
+            ],
+            "es": [
+              "La responsabilidad por violaciones sigue siendo expresamente exigible"
+            ]
+          },
+          "consPartyA": {
+            "en": [
+              "Lower ceiling for breach harm"
+            ],
+            "es": [
+              "Techo más bajo para los daños de violación"
+            ]
+          },
+          "prosPartyB": {
+            "en": [
+              "Predictable, capped breach exposure"
+            ],
+            "es": [
+              "Exposición por violaciones acotada y previsible"
+            ]
+          },
+          "consPartyB": {
+            "en": [
+              "Still carries explicit breach liability"
+            ],
+            "es": [
+              "Mantiene una responsabilidad expresa por violaciones"
+            ]
+          },
+          "legalText": {
+            "en": "The Processor's total aggregate liability for all Personal Data Breaches arising under this DPA shall not exceed the total fees paid or payable by the Controller under the Principal Agreement in the twelve (12) months preceding the first such Personal Data Breach, and such liability shall count towards, and not be additional to, any general limitation of liability. Nothing in this clause limits liability for intentional misconduct or gross negligence, or any liability that cannot be limited or excluded under applicable law.",
+            "es": "La responsabilidad agregada total del Encargado por todas las Violaciones de Datos Personales derivadas del presente ATD no excederá del total de las cuotas pagadas o pagaderas por el Responsable en virtud del contrato principal durante los doce (12) meses anteriores a la primera Violación de Datos Personales, y dicha responsabilidad se computará dentro de cualquier limitación general de responsabilidad, sin sumarse a esta. Nada de lo previsto en la presente cláusula limita la responsabilidad por dolo o culpa grave, ni cualquier responsabilidad que no pueda limitarse o excluirse conforme a la legislación aplicable."
+          },
+          "biasPartyA": -0.3,
+          "biasPartyB": 0.3,
+          "jurisdictionConfig": {
+            "CALIFORNIA": {
+              "available": false,
+              "warning": {
+                "en": "Under US-governed agreements, breach-specific exposure is addressed in the general Liability & indemnification clause; a separate breach cap is not used here.",
+                "es": "En acuerdos regidos por el Derecho estadounidense, la exposición específica por violaciones se aborda en la cláusula general de Responsabilidad e indemnización; aquí no se utiliza un límite específico por violaciones."
+              }
+            },
+            "ENGLAND_WALES": {
+              "available": true
+            },
+            "SPAIN": {
+              "available": true
+            }
+          }
+        }
+      ]
+    },
+    {
       "id": "term-termination",
       "title": {
         "en": "Term & termination",
@@ -3343,7 +3560,7 @@
         "en": "Commercial",
         "es": "Comercial"
       },
-      "order": 12,
+      "order": 13,
       "plainDescription": {
         "en": "How long does this DPA last, and under what conditions can either party terminate it?",
         "es": "¿Cuánto dura este acuerdo, y bajo qué condiciones puede cualquiera de las partes terminarlo?"

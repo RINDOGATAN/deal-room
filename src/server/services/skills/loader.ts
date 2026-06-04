@@ -176,6 +176,9 @@ const BoilerplateSchema = z.object({
   jurisdictionProvisions: z.record(z.string(), JurisdictionProvisionSchema),
   signatureBlock: BoilerplateStringSchema,
   partyLabels: PartyLabelsSchema,
+  // Annexes/Schedules rendered on their own pages AFTER the signature blocks
+  // (e.g. DPA Annex I — Description of Processing, Annex II — TOMs).
+  annexes: z.array(StandardClauseSchema).optional(),
 });
 
 export type ClausesFile = z.infer<typeof ClausesFileSchema>;
