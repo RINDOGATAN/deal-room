@@ -158,21 +158,25 @@ export function generateContractTxt(data: ContractData): string {
     }
   }
 
-  // Jurisdiction provision(s) — multi or single
+  // Governing law and jurisdiction — its own article (negotiated forum)
+  if (data.governingLawArticle) {
+    lines.push(sectionHeader(data.governingLawArticle.title));
+    lines.push("");
+    lines.push(data.governingLawArticle.text);
+    lines.push("");
+  }
+
+  // Jurisdiction-specific regulatory provision(s) — multi or single
   const jpList = data.boilerplate?.jurisdictionProvisions?.length
     ? data.boilerplate.jurisdictionProvisions
     : data.boilerplate?.jurisdictionProvision
       ? [data.boilerplate.jurisdictionProvision]
       : [];
-  if (jpList.length > 0) {
-    lines.push(sectionHeader(l.governingLaw));
+  for (const jp of jpList) {
+    lines.push(sectionHeader(jp.title));
     lines.push("");
-    for (const jp of jpList) {
-      lines.push(jp.title);
-      lines.push("");
-      lines.push(jp.text);
-      lines.push("");
-    }
+    lines.push(jp.text);
+    lines.push("");
   }
 
   // Signatures

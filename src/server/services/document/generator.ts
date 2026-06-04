@@ -83,6 +83,9 @@ export interface ContractData {
   partyA: PartyData;
   partyB: PartyData | null;
   clauses: ClauseData[];
+  /** Governing-law-and-jurisdiction article (negotiated forum), rendered as its
+   *  own top-level article rather than under "Negotiated Terms". */
+  governingLawArticle?: { title: string; text: string };
   boilerplate: BoilerplateData | null;
   language: string;
   /** Present when document has been certified via Cloud API */
@@ -265,6 +268,18 @@ export async function generateContractData(
   // Compile clauses with agreed options
   const clauses: ClauseData[] = [];
 
+  // The governing-law-and-jurisdiction clause is negotiated (the builder picks
+  // the forum) but rendered as its own top-level article, not under "Negotiated
+  // Terms" — so we route it to a dedicated field instead of the clause list.
+  let governingLawArticle: { title: string; text: string } | undefined;
+  const pushClause = (entry: ClauseData, clauseId: string) => {
+    if (clauseId === "governing-law-jurisdiction") {
+      governingLawArticle = { title: entry.title, text: entry.legalText };
+    } else {
+      clauses.push(entry);
+    }
+  };
+
   for (const clause of deal.clauses) {
     if (clause.status !== "AGREED" || !clause.agreedOptionId) {
       continue;
@@ -302,14 +317,14 @@ export async function generateContractData(
         // Optional clauses whose agreed option carries no legal text (e.g. a
         // "None — not applicable" choice) are omitted from the document entirely.
         if (legalText && legalText.trim()) {
-          clauses.push({
+          pushClause({
             title: clauseTitle,
             category: clauseCategory,
             agreedOption: selLocalized?.label
               ? resolveLocalizedString(selLocalized.label, language)
               : selection.option.label,
             legalText,
-          });
+          }, clause.clauseTemplate.clauseId);
         }
       }
       continue;
@@ -331,14 +346,14 @@ export async function generateContractData(
     // Optional clauses whose agreed option carries no legal text (e.g. a
     // "None — not applicable" choice) are omitted from the document entirely.
     if (legalText && legalText.trim()) {
-      clauses.push({
+      pushClause({
         title: clauseTitle,
         category: clauseCategory,
         agreedOption: optLocalized?.label
           ? resolveLocalizedString(optLocalized.label, language)
           : agreedOption.label,
         legalText,
-      });
+      }, clause.clauseTemplate.clauseId);
     }
   }
 
@@ -482,6 +497,7 @@ export async function generateContractData(
         }
       : null,
     clauses,
+    governingLawArticle,
     boilerplate,
     language,
     agentAttestation,

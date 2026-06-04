@@ -6,6 +6,7 @@
  */
 
 import React from "react";
+import path from "node:path";
 import {
   Document,
   Page,
@@ -18,13 +19,29 @@ import type { Style } from "@react-pdf/types";
 import type { ContractData, CertificationData } from "./generator";
 import { brand } from "@/config/brand";
 
-// Register fonts (using built-in fonts for simplicity)
+// IBM Plex — a designed superfamily, so the serif body and the sans headers
+// are in tune by construction. TTFs are bundled in ./fonts and force-traced
+// into the serverless bundle via next.config `outputFileTracingIncludes`.
+const FONT_DIR = path.join(process.cwd(), "src/server/services/document/fonts");
+const SERIF = "PlexSerif";
+const SANS = "PlexSans";
+
 Font.register({
-  family: "Times-Roman",
+  family: SERIF,
   fonts: [
-    { src: "Times-Roman" },
-    { src: "Times-Bold", fontWeight: "bold" },
-    { src: "Times-Italic", fontStyle: "italic" },
+    { src: path.join(FONT_DIR, "IBMPlexSerif-Regular.ttf"), fontWeight: 400 },
+    { src: path.join(FONT_DIR, "IBMPlexSerif-SemiBold.ttf"), fontWeight: 600 },
+    { src: path.join(FONT_DIR, "IBMPlexSerif-Bold.ttf"), fontWeight: 700 },
+    { src: path.join(FONT_DIR, "IBMPlexSerif-Italic.ttf"), fontStyle: "italic" },
+  ],
+});
+Font.register({
+  family: SANS,
+  fonts: [
+    { src: path.join(FONT_DIR, "IBMPlexSans-Regular.ttf"), fontWeight: 400 },
+    { src: path.join(FONT_DIR, "IBMPlexSans-Medium.ttf"), fontWeight: 500 },
+    { src: path.join(FONT_DIR, "IBMPlexSans-SemiBold.ttf"), fontWeight: 600 },
+    { src: path.join(FONT_DIR, "IBMPlexSans-Bold.ttf"), fontWeight: 700 },
   ],
 });
 
@@ -34,14 +51,14 @@ Font.registerHyphenationCallback((word) => [word]);
 
 const styles = StyleSheet.create({
   page: {
-    fontFamily: "Times-Roman",
-    fontSize: 11,
-    color: "#1a1a1a",
-    paddingTop: 74,
+    fontFamily: SERIF,
+    fontSize: 10.5,
+    color: "#1f2933",
+    paddingTop: 76,
     paddingBottom: 76,
-    paddingLeft: 72,
-    paddingRight: 64,
-    lineHeight: 1.5,
+    paddingLeft: 70,
+    paddingRight: 70,
+    lineHeight: 1.55,
   },
   header: {
     marginBottom: 30,
@@ -62,11 +79,11 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   sectionTitle: {
-    fontFamily: "Helvetica-Bold",
-    fontSize: 10.5,
-    marginBottom: 11,
+    fontFamily: SANS, fontWeight: 600,
+    fontSize: 9.5,
+    marginBottom: 12,
     textTransform: "uppercase",
-    letterSpacing: 1.2,
+    letterSpacing: 1.5,
     color: "#1a3a5c",
   },
   sectionNumber: {
@@ -107,71 +124,73 @@ const styles = StyleSheet.create({
     color: "#666",
   },
   preambleText: {
-    fontSize: 11,
+    fontSize: 10.5,
     textAlign: "left",
     lineHeight: 1.6,
-    marginBottom: 15,
+    marginBottom: 14,
   },
   backgroundText: {
-    fontSize: 11,
+    fontSize: 10.5,
     textAlign: "left",
     lineHeight: 1.6,
-    marginBottom: 15,
+    marginBottom: 14,
   },
-  definitionContainer: {
-    marginBottom: 10,
-    paddingLeft: 10,
+  // Definitions use the same hanging grid: term in the left column, definition
+  // in the content column, so every term and body share one left edge.
+  definitionRow: {
+    flexDirection: "row",
+    marginBottom: 9,
   },
   definitionTerm: {
-    fontSize: 11,
-    fontWeight: "bold",
+    fontSize: 10.5,
+    fontWeight: 600,
+    width: 120,
+    paddingRight: 10,
+    color: "#16263a",
   },
   definitionText: {
-    fontSize: 10,
+    flex: 1,
+    fontSize: 10.5,
     textAlign: "left",
-    lineHeight: 1.5,
+    lineHeight: 1.55,
   },
-  clauseContainer: {
-    marginBottom: 16,
+  // ---- Hanging-indent grid for numbered clauses/provisions ----
+  // The number sits in a fixed 30pt left column and the title fills the rest;
+  // the body is a separate block indented to the same left edge as the title
+  // (marginLeft 30) so it can page-break freely while staying aligned.
+  clauseItem: {
+    marginBottom: 13,
   },
-  clauseHeader: {
+  clauseHead: {
     flexDirection: "row",
-    marginBottom: 6,
+    marginBottom: 3,
   },
-  clauseNumber: {
-    fontSize: 11,
-    fontWeight: "bold",
-    marginRight: 8,
+  clauseNum: {
+    fontFamily: SANS,
+    fontWeight: 600,
+    fontSize: 10,
+    color: "#1a3a5c",
+    width: 30,
   },
   clauseTitle: {
-    fontSize: 11,
-    fontWeight: "bold",
+    flex: 1,
+    fontFamily: SERIF,
+    fontWeight: 600,
+    fontSize: 10.5,
+    color: "#16263a",
   },
-  clauseText: {
-    fontSize: 10,
+  clauseBody: {
+    fontSize: 10.5,
     textAlign: "left",
     lineHeight: 1.6,
-    paddingLeft: 20,
+    marginLeft: 30,
   },
-  legalText: {
-    fontSize: 10,
+  // Body for a section-level article (governing law, regulatory provisions):
+  // full width under the section header, no hanging number column.
+  articleBody: {
+    fontSize: 10.5,
     textAlign: "left",
     lineHeight: 1.6,
-    paddingLeft: 20,
-  },
-  provisionContainer: {
-    marginBottom: 12,
-  },
-  provisionTitle: {
-    fontSize: 11,
-    fontWeight: "bold",
-    marginBottom: 4,
-  },
-  provisionText: {
-    fontSize: 10,
-    textAlign: "left",
-    lineHeight: 1.6,
-    paddingLeft: 20,
   },
   annexHeader: {
     marginBottom: 22,
@@ -181,7 +200,7 @@ const styles = StyleSheet.create({
     borderBottomStyle: "solid",
   },
   annexKicker: {
-    fontFamily: "Helvetica",
+    fontFamily: SANS,
     fontSize: 8,
     letterSpacing: 2,
     textTransform: "uppercase",
@@ -189,15 +208,53 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   annexTitle: {
-    fontFamily: "Helvetica-Bold",
+    fontFamily: SANS, fontWeight: 600,
     fontSize: 15,
     letterSpacing: 0.3,
     color: "#16263a",
   },
   annexText: {
-    fontSize: 10,
+    fontSize: 10.5,
     textAlign: "left",
     lineHeight: 1.6,
+  },
+  // ---- Beautifully structured annex bodies ----
+  // A numbered ALL-CAPS line (e.g. "1. ENCRYPTION") becomes a sans subheading.
+  annexSubhead: {
+    fontFamily: SANS,
+    fontWeight: 600,
+    fontSize: 9,
+    letterSpacing: 1.2,
+    textTransform: "uppercase",
+    color: "#1a3a5c",
+    marginTop: 14,
+    marginBottom: 7,
+  },
+  annexPara: {
+    fontSize: 10.5,
+    lineHeight: 1.6,
+    marginBottom: 5,
+  },
+  // A lettered item "(a) Label — description" renders the label bold, hanging.
+  annexItemRow: {
+    flexDirection: "row",
+    marginBottom: 4,
+    paddingLeft: 6,
+  },
+  annexItemMarker: {
+    width: 18,
+    fontSize: 10.5,
+    fontWeight: 600,
+    color: "#1a3a5c",
+  },
+  annexItemBody: {
+    flex: 1,
+    fontSize: 10.5,
+    lineHeight: 1.55,
+  },
+  annexItemLabel: {
+    fontWeight: 600,
+    color: "#16263a",
   },
   governingLawBox: {
     backgroundColor: "#f4f6f8",
@@ -209,7 +266,7 @@ const styles = StyleSheet.create({
     borderLeftStyle: "solid",
   },
   governingLawLabel: {
-    fontFamily: "Helvetica",
+    fontFamily: SANS,
     fontSize: 8,
     color: "#8a97a4",
     textTransform: "uppercase",
@@ -217,7 +274,7 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   governingLawText: {
-    fontFamily: "Times-Roman",
+    fontFamily: SERIF,
     fontSize: 12,
     fontWeight: "bold",
     color: "#16263a",
@@ -226,8 +283,9 @@ const styles = StyleSheet.create({
     marginTop: 40,
   },
   signatureText: {
-    fontSize: 10,
-    marginBottom: 20,
+    fontSize: 10.5,
+    lineHeight: 1.6,
+    marginBottom: 22,
   },
   signatureGrid: {
     flexDirection: "row",
@@ -246,7 +304,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
   },
   signatureScript: {
-    fontFamily: "Times-Italic",
+    fontFamily: SERIF,
     fontStyle: "italic",
     fontSize: 22,
     color: "#1a3a5c",
@@ -267,18 +325,32 @@ const styles = StyleSheet.create({
     fontSize: 10,
   },
   signatureLabel: {
-    fontSize: 9,
-    color: "#666",
+    fontFamily: SANS,
+    fontSize: 8,
+    letterSpacing: 1,
+    textTransform: "uppercase",
+    color: "#8a97a4",
     marginBottom: 4,
   },
   signaturePartyName: {
-    fontSize: 10,
-    fontWeight: "bold",
+    fontFamily: SERIF,
+    fontSize: 10.5,
+    fontWeight: 600,
+    color: "#16263a",
+  },
+  signatureMeta: {
+    fontFamily: SANS,
+    fontSize: 8.5,
+    color: "#5b6b7b",
+    marginTop: 1,
   },
   signatureDate: {
-    fontSize: 9,
-    color: "#666",
-    marginTop: 15,
+    fontFamily: SANS,
+    fontSize: 8,
+    letterSpacing: 0.5,
+    textTransform: "uppercase",
+    color: "#8a97a4",
+    marginTop: 16,
   },
   dateLine: {
     borderBottomWidth: 1,
@@ -308,11 +380,11 @@ const styles = StyleSheet.create({
     marginVertical: 15,
   },
   negotiatedTermsHeader: {
-    fontFamily: "Helvetica-Bold",
-    fontSize: 10.5,
-    marginBottom: 11,
+    fontFamily: SANS, fontWeight: 600,
+    fontSize: 9.5,
+    marginBottom: 12,
     textTransform: "uppercase",
-    letterSpacing: 1.2,
+    letterSpacing: 1.5,
     color: "#1a3a5c",
   },
   certificationFooter: {
@@ -351,7 +423,7 @@ const styles = StyleSheet.create({
     borderColor: "#9a3412",
   },
   auditPage: {
-    fontFamily: "Times-Roman",
+    fontFamily: SERIF,
     fontSize: 10,
     paddingTop: 60,
     paddingBottom: 80,
@@ -397,7 +469,7 @@ const styles = StyleSheet.create({
 
   // ---- Cover page ----
   coverPage: {
-    fontFamily: "Times-Roman",
+    fontFamily: SERIF,
     color: "#1a1a1a",
     flexDirection: "column",
   },
@@ -412,14 +484,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 72,
   },
   coverBrand: {
-    fontFamily: "Helvetica-Bold",
+    fontFamily: SANS, fontWeight: 600,
     fontSize: 11,
     letterSpacing: 3,
     textTransform: "uppercase",
     color: "#1a3a5c",
   },
   coverKicker: {
-    fontFamily: "Helvetica",
+    fontFamily: SANS,
     fontSize: 8.5,
     letterSpacing: 2,
     textTransform: "uppercase",
@@ -428,7 +500,7 @@ const styles = StyleSheet.create({
     marginBottom: 80,
   },
   coverTitle: {
-    fontFamily: "Times-Roman",
+    fontFamily: SERIF,
     fontWeight: "bold",
     fontSize: 30,
     lineHeight: 1.15,
@@ -450,7 +522,7 @@ const styles = StyleSheet.create({
     width: "47%",
   },
   coverMetaLabel: {
-    fontFamily: "Helvetica",
+    fontFamily: SANS,
     fontSize: 8,
     letterSpacing: 1.5,
     textTransform: "uppercase",
@@ -458,7 +530,7 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   coverMetaValue: {
-    fontFamily: "Times-Roman",
+    fontFamily: SERIF,
     fontSize: 12.5,
     color: "#1a1a1a",
     marginBottom: 20,
@@ -473,7 +545,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   coverFootText: {
-    fontFamily: "Helvetica",
+    fontFamily: SANS,
     fontSize: 8,
     color: "#8a97a4",
     letterSpacing: 0.5,
@@ -494,14 +566,14 @@ const styles = StyleSheet.create({
     borderBottomStyle: "solid",
   },
   runHeaderLeft: {
-    fontFamily: "Helvetica-Bold",
+    fontFamily: SANS, fontWeight: 600,
     fontSize: 7.5,
     letterSpacing: 1,
     textTransform: "uppercase",
     color: "#1a3a5c",
   },
   runHeaderRight: {
-    fontFamily: "Helvetica",
+    fontFamily: SANS,
     fontSize: 7.5,
     letterSpacing: 0.5,
     color: "#9aa6b2",
@@ -520,7 +592,7 @@ const styles = StyleSheet.create({
     borderTopStyle: "solid",
   },
   runFootText: {
-    fontFamily: "Helvetica",
+    fontFamily: SANS,
     fontSize: 7.5,
     color: "#9aa6b2",
     letterSpacing: 0.3,
@@ -612,6 +684,87 @@ function ParagraphText({ children, style }: { children: string; style: Style }) 
           {p}
         </Text>
       ))}
+    </>
+  );
+}
+
+/** A numbered clause/provision rendered on the shared hanging-indent grid. */
+function Clause({
+  number,
+  title,
+  body,
+}: {
+  number: string;
+  title: string;
+  body: string;
+}) {
+  return (
+    <View style={styles.clauseItem}>
+      <View style={styles.clauseHead}>
+        <Text style={styles.clauseNum}>{number}</Text>
+        <Text style={styles.clauseTitle}>{title}</Text>
+      </View>
+      <ParagraphText style={styles.clauseBody}>{body}</ParagraphText>
+    </View>
+  );
+}
+
+/** One defined term on the same hanging grid (term column + definition). */
+function DefinitionItem({ term, definition }: { term: string; definition: string }) {
+  return (
+    <View style={styles.definitionRow}>
+      <Text style={styles.definitionTerm}>{`“${term}”`}</Text>
+      <Text style={styles.definitionText}>{definition}</Text>
+    </View>
+  );
+}
+
+/**
+ * Renders an annex body with structure: ALL-CAPS numbered lines become sans
+ * subheadings; lettered "(a) Label — description" items render the label bold
+ * and hanging; everything else is a plain paragraph.
+ */
+function AnnexBody({ text }: { text: string }) {
+  const lines = text.split("\n").filter((l) => l.trim() !== "");
+  return (
+    <>
+      {lines.map((line, i) => {
+        const subhead = /^\d+\.\s+[A-Z0-9 ,/&()-]+$/.test(line);
+        if (subhead) {
+          return (
+            <Text key={i} style={styles.annexSubhead}>
+              {line}
+            </Text>
+          );
+        }
+        const item = line.match(/^(\([a-z0-9]+\))\s+(.*)$/i);
+        if (item) {
+          const rest = item[2];
+          const dash = rest.indexOf("—");
+          const label = dash > -1 ? rest.slice(0, dash).trim() : null;
+          const desc = dash > -1 ? rest.slice(dash) : rest;
+          return (
+            <View key={i} style={styles.annexItemRow}>
+              <Text style={styles.annexItemMarker}>{item[1]}</Text>
+              <Text style={styles.annexItemBody}>
+                {label ? (
+                  <>
+                    <Text style={styles.annexItemLabel}>{label} </Text>
+                    {desc}
+                  </>
+                ) : (
+                  rest
+                )}
+              </Text>
+            </View>
+          );
+        }
+        return (
+          <Text key={i} style={styles.annexPara}>
+            {line}
+          </Text>
+        );
+      })}
     </>
   );
 }
@@ -763,18 +916,11 @@ export function ContractPDF({ data }: ContractPDFProps) {
                 <Text style={styles.sectionTitle}>
                   {sectionNumber++}. {labels.definitions}
                 </Text>
-                <Text style={{ fontSize: 10, marginBottom: 10 }}>
+                <Text style={{ fontSize: 10.5, marginBottom: 11, color: "#5b6b7b" }}>
                   {labels.inThisAgreement}
                 </Text>
                 {data.boilerplate!.definitions.map((def, index) => (
-                  <View key={index} style={styles.definitionContainer}>
-                    <Text style={styles.definitionTerm}>
-                      &quot;{def.term}&quot;
-                    </Text>
-                    <ParagraphText style={styles.definitionText}>
-                      {def.definition}
-                    </ParagraphText>
-                  </View>
+                  <DefinitionItem key={index} term={def.term} definition={def.definition} />
                 ))}
               </View>
             )}
@@ -782,11 +928,7 @@ export function ContractPDF({ data }: ContractPDFProps) {
             {/* Standard Clauses from Boilerplate */}
             {data.boilerplate!.standardClauses.map((clause, index) => (
               <View key={`std-${index}`} style={styles.section}>
-                <View style={styles.clauseHeader}>
-                  <Text style={styles.clauseNumber}>{sectionNumber++}.</Text>
-                  <Text style={styles.clauseTitle}>{clause.title}</Text>
-                </View>
-                <ParagraphText style={styles.clauseText}>{clause.text}</ParagraphText>
+                <Clause number={`${sectionNumber++}.`} title={clause.title} body={clause.text} />
               </View>
             ))}
           </>
@@ -829,13 +971,7 @@ export function ContractPDF({ data }: ContractPDFProps) {
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>{labels.termsAndConditions}</Text>
               {data.clauses.map((clause, index) => (
-                <View key={index} style={styles.clauseContainer}>
-                  <View style={styles.clauseHeader}>
-                    <Text style={styles.clauseNumber}>{index + 1}.</Text>
-                    <Text style={styles.clauseTitle}>{clause.title}</Text>
-                  </View>
-                  <Text style={styles.legalText}>{clause.legalText}</Text>
-                </View>
+                <Clause key={index} number={`${index + 1}.`} title={clause.title} body={clause.legalText} />
               ))}
             </View>
 
@@ -855,11 +991,11 @@ export function ContractPDF({ data }: ContractPDFProps) {
                   <Text style={styles.signaturePartyName}>
                     {data.partyA.legalName || data.partyA.company || data.partyA.name}
                   </Text>
-                  <Text style={{ fontSize: 9, color: "#666" }}>
+                  <Text style={styles.signatureMeta}>
                     {data.partyA.signatoryName || data.partyA.name}
                   </Text>
                   {data.partyA.signatoryTitle && (
-                    <Text style={{ fontSize: 9, color: "#666" }}>
+                    <Text style={styles.signatureMeta}>
                       {data.partyA.signatoryTitle}
                     </Text>
                   )}
@@ -884,11 +1020,11 @@ export function ContractPDF({ data }: ContractPDFProps) {
                   <Text style={styles.signaturePartyName}>
                     {data.partyB ? (data.partyB.legalName || data.partyB.company || data.partyB.name) : "[_________________]"}
                   </Text>
-                  <Text style={{ fontSize: 9, color: "#666" }}>
+                  <Text style={styles.signatureMeta}>
                     {data.partyB ? (data.partyB.signatoryName || data.partyB.name) : "[_________________]"}
                   </Text>
                   {data.partyB?.signatoryTitle && (
-                    <Text style={{ fontSize: 9, color: "#666" }}>
+                    <Text style={styles.signatureMeta}>
                       {data.partyB.signatoryTitle}
                     </Text>
                   )}
@@ -922,18 +1058,12 @@ export function ContractPDF({ data }: ContractPDFProps) {
                 {sectionNumber++}. {labels.negotiatedTerms}
               </Text>
               {data.clauses.map((clause, index) => (
-                <View
+                <Clause
                   key={`neg-${index}`}
-                  style={styles.clauseContainer}
-                >
-                  <View style={styles.clauseHeader}>
-                    <Text style={styles.clauseNumber}>
-                      {sectionNumber - 1}.{index + 1}
-                    </Text>
-                    <Text style={styles.clauseTitle}>{clause.title}</Text>
-                  </View>
-                  <ParagraphText style={styles.legalText}>{clause.legalText}</ParagraphText>
-                </View>
+                  number={`${sectionNumber - 1}.${index + 1}`}
+                  title={clause.title}
+                  body={clause.legalText}
+                />
               ))}
             </View>
           )}
@@ -945,49 +1075,43 @@ export function ContractPDF({ data }: ContractPDFProps) {
                 {sectionNumber++}. {labels.generalProvisions}
               </Text>
               {data.boilerplate!.generalProvisions.map((provision, index) => (
-                <View
+                <Clause
                   key={`gen-${index}`}
-                  style={styles.clauseContainer}
-                >
-                  <View style={styles.clauseHeader}>
-                    <Text style={styles.clauseNumber}>
-                      {sectionNumber - 1}.{index + 1}
-                    </Text>
-                    <Text style={styles.clauseTitle}>{provision.title}</Text>
-                  </View>
-                  <ParagraphText style={styles.provisionText}>{provision.text}</ParagraphText>
-                </View>
+                  number={`${sectionNumber - 1}.${index + 1}`}
+                  title={provision.title}
+                  body={provision.text}
+                />
               ))}
             </View>
           )}
 
-          {/* Jurisdiction-Specific Provisions */}
-          {data.boilerplate!.jurisdictionProvisions?.length ? (
-            data.boilerplate!.jurisdictionProvisions.map((jp, i) => (
-              <View key={i} style={styles.section}>
-                <Text style={styles.sectionTitle}>
-                  {sectionNumber++}. {jp.title}
-                </Text>
-                <ParagraphText style={styles.provisionText}>{jp.text}</ParagraphText>
-              </View>
-            ))
-          ) : data.boilerplate!.jurisdictionProvision ? (
+          {/* Governing law and jurisdiction — its own top-level article
+              (the negotiated forum), replacing the old governing-law box. */}
+          {data.governingLawArticle && (
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>
-                {sectionNumber++}.{" "}
-                {data.boilerplate!.jurisdictionProvision.title}
+                {sectionNumber++}. {data.governingLawArticle.title}
               </Text>
-              <ParagraphText style={styles.provisionText}>
-                {data.boilerplate!.jurisdictionProvision.text}
+              <ParagraphText style={styles.articleBody}>
+                {data.governingLawArticle.text}
               </ParagraphText>
             </View>
-          ) : null}
+          )}
 
-          {/* Governing Law Box */}
-          <View style={styles.governingLawBox}>
-            <Text style={styles.governingLawLabel}>{labels.governingLaw}</Text>
-            <Text style={styles.governingLawText}>{data.governingLaw}</Text>
-          </View>
+          {/* Jurisdiction-specific regulatory provisions (section-format article) */}
+          {(data.boilerplate!.jurisdictionProvisions?.length
+            ? data.boilerplate!.jurisdictionProvisions
+            : data.boilerplate!.jurisdictionProvision
+              ? [data.boilerplate!.jurisdictionProvision]
+              : []
+          ).map((jp, i) => (
+            <View key={`reg-${i}`} style={styles.section}>
+              <Text style={styles.sectionTitle}>
+                {sectionNumber++}. {jp.title}
+              </Text>
+              <ParagraphText style={styles.articleBody}>{jp.text}</ParagraphText>
+            </View>
+          ))}
 
           {/* Signature Section */}
           {data.partyB !== null ? (
@@ -1005,11 +1129,11 @@ export function ContractPDF({ data }: ContractPDFProps) {
                   <Text style={styles.signaturePartyName}>
                     {data.partyA.legalName || data.partyA.company || data.partyA.name}
                   </Text>
-                  <Text style={{ fontSize: 9, color: "#666" }}>
+                  <Text style={styles.signatureMeta}>
                     {data.partyA.signatoryName || data.partyA.name}
                   </Text>
                   {data.partyA.signatoryTitle && (
-                    <Text style={{ fontSize: 9, color: "#666" }}>
+                    <Text style={styles.signatureMeta}>
                       {data.partyA.signatoryTitle}
                     </Text>
                   )}
@@ -1024,11 +1148,11 @@ export function ContractPDF({ data }: ContractPDFProps) {
                   <Text style={styles.signaturePartyName}>
                     {data.partyB.legalName || data.partyB.company || data.partyB.name}
                   </Text>
-                  <Text style={{ fontSize: 9, color: "#666" }}>
+                  <Text style={styles.signatureMeta}>
                     {data.partyB.signatoryName || data.partyB.name}
                   </Text>
                   {data.partyB.signatoryTitle && (
-                    <Text style={{ fontSize: 9, color: "#666" }}>
+                    <Text style={styles.signatureMeta}>
                       {data.partyB.signatoryTitle}
                     </Text>
                   )}
@@ -1071,7 +1195,7 @@ export function ContractPDF({ data }: ContractPDFProps) {
                   <Text style={styles.annexTitle}>{annex.title}</Text>
                 )}
               </View>
-              <ParagraphText style={styles.annexText}>{annex.text}</ParagraphText>
+              <AnnexBody text={annex.text} />
               <RunningFooter labels={labels} certified={certified} />
             </Page>
           );
@@ -1128,7 +1252,7 @@ function AuditCertificatePage({
             <Text style={{ fontSize: 10, fontWeight: "bold" }}>
               {ts.partyRole === "INITIATOR" ? "Party A" : "Party B"}
             </Text>
-            <Text style={{ fontSize: 9, color: "#666" }}>
+            <Text style={styles.signatureMeta}>
               Signed: {ts.signedAt}
             </Text>
             <Text style={{ fontSize: 8, color: "#999", fontFamily: "Courier" }}>
