@@ -86,6 +86,10 @@ export interface ContractData {
   /** Governing-law-and-jurisdiction article (negotiated forum), rendered as its
    *  own top-level article rather than under "Negotiated Terms". */
   governingLawArticle?: { title: string; text: string };
+  /** Display names for the cover-page A/B slots, already reflecting the solo
+   *  Controller/Processor swap. Falls back to the party objects when absent. */
+  coverPartyAName?: string;
+  coverPartyBName?: string;
   boilerplate: BoilerplateData | null;
   language: string;
   /** Present when document has been certified via Cloud API */
@@ -449,6 +453,12 @@ export async function generateContractData(
     }
   }
 
+  // Cover-page party names follow the same A/B slots as the boilerplate text,
+  // including the solo Processor swap above — so a processor's details show
+  // under "Processor", not "Controller", on the cover.
+  const coverPartyAName = variables.partyAName;
+  const coverPartyBName = variables.partyBName;
+
   // Check for multi-jurisdiction parameters (e.g., Privacy Notice)
   const multiJurisdictionKeys = dealParams.jurisdictions
     ? dealParams.jurisdictions.split(",").map((j: string) => j.trim()).filter(Boolean)
@@ -527,6 +537,8 @@ export async function generateContractData(
       : null,
     clauses,
     governingLawArticle,
+    coverPartyAName,
+    coverPartyBName,
     boilerplate,
     language,
     agentAttestation,

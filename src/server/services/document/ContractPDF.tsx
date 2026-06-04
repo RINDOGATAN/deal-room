@@ -822,11 +822,18 @@ function CoverPage({
   const title = hasBoilerplate ? data.boilerplate!.contractTitle : data.contractType;
   const partyALabel = data.boilerplate?.partyLabels?.partyA || labels.partyA;
   const partyBLabel = data.boilerplate?.partyLabels?.partyB || labels.partyB;
+  // Prefer the generator-resolved names, which already reflect the solo
+  // Controller/Processor swap; fall back to the party objects otherwise.
   const partyAName =
-    data.partyA.legalName || data.partyA.company || data.partyA.name;
-  const partyBName = data.partyB
-    ? data.partyB.legalName || data.partyB.company || data.partyB.name
-    : "[_________________]";
+    data.coverPartyAName ||
+    data.partyA.legalName ||
+    data.partyA.company ||
+    data.partyA.name;
+  const partyBName =
+    data.coverPartyBName ||
+    (data.partyB
+      ? data.partyB.legalName || data.partyB.company || data.partyB.name
+      : "[_________________]");
 
   return (
     <Page size="A4" style={styles.coverPage}>
