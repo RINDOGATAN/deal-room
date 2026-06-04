@@ -90,11 +90,19 @@ test.describe("New Deal — Smoke Permutations", () => {
         if (await jurisdictionChip.isVisible().catch(() => false)) {
           await jurisdictionChip.click();
         }
-        // Fill required text fields by label
+        // DPA: pick at least one personal-data category chip (required multiSelect)
+        const dataCategoryChip = page.locator(
+          'button:has-text("Contact details"), button:has-text("Datos de contacto")'
+        );
+        if (await dataCategoryChip.first().isVisible().catch(() => false)) {
+          await dataCategoryChip.first().click();
+        }
+        // Fill required text/textarea fields by label (EN|ES)
         const paramFields: Record<string, string> = {
           "Company Name": "Smoke Test Corp",
           "Company Website": "https://smoke-test.com",
           "Privacy Contact Email": "privacy@smoke-test.com",
+          "purpose of the processing|finalidad del tratamiento": "Providing the contracted service and support.",
         };
         for (const [label, value] of Object.entries(paramFields)) {
           const input = page.getByLabel(new RegExp(label));

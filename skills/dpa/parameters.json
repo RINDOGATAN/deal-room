@@ -1,0 +1,86 @@
+{
+  "version": "1.0",
+  "parameters": [
+    {
+      "id": "processing-purpose",
+      "token": "processing purpose",
+      "scope": "*",
+      "type": "textarea",
+      "required": true,
+      "boilerplateVariable": "processingPurpose",
+      "label": {
+        "en": "What is the purpose of the processing?",
+        "es": "¿Cuál es la finalidad del tratamiento?"
+      },
+      "hint": {
+        "en": "Describe, in your own words, why the Processor handles personal data — this is written verbatim into Annex I.",
+        "es": "Describa, con sus palabras, por qué el Encargado trata datos personales — se incluirá literalmente en el Anexo I."
+      },
+      "placeholder": {
+        "en": "e.g. Providing and maintaining the contracted SaaS analytics service and customer support.",
+        "es": "p. ej. Prestar y mantener el servicio SaaS de analítica contratado y dar soporte al cliente."
+      }
+    },
+    {
+      "id": "data-categories",
+      "token": "data categories",
+      "scope": "*",
+      "type": "multiSelect",
+      "required": true,
+      "boilerplateVariable": "dataCategoriesList",
+      "label": {
+        "en": "What categories of personal data will be processed?",
+        "es": "¿Qué categorías de datos personales se tratarán?"
+      },
+      "hint": {
+        "en": "Pick all that apply. Add anything specific under \"Other\" below.",
+        "es": "Seleccione todas las que apliquen. Añada lo específico en «Otros» más abajo."
+      },
+      "options": [
+        "contact-details",
+        "identification-data",
+        "financial-data",
+        "account-credentials",
+        "usage-technical",
+        "location-data",
+        "professional-data",
+        "marketing-comms",
+        "support-content",
+        "special-category",
+        "children-data"
+      ],
+      "optionLabels": {
+        "contact-details": { "en": "Contact details", "es": "Datos de contacto" },
+        "identification-data": { "en": "Identification data", "es": "Datos identificativos" },
+        "financial-data": { "en": "Financial / payment data", "es": "Datos financieros y de pago" },
+        "account-credentials": { "en": "Account & login credentials", "es": "Credenciales de cuenta y acceso" },
+        "usage-technical": { "en": "Usage, device & technical data (incl. IP)", "es": "Datos de uso, dispositivo y técnicos (incl. IP)" },
+        "location-data": { "en": "Location data", "es": "Datos de localización" },
+        "professional-data": { "en": "Professional / employment data", "es": "Datos profesionales y de empleo" },
+        "marketing-comms": { "en": "Marketing & communications", "es": "Marketing y comunicaciones" },
+        "support-content": { "en": "Customer-support content", "es": "Contenido de atención al cliente" },
+        "special-category": { "en": "Special-category data (health, biometric, etc.)", "es": "Categorías especiales de datos (salud, biometría, etc.)" },
+        "children-data": { "en": "Children's data", "es": "Datos de menores" }
+      }
+    },
+    {
+      "id": "data-categories-other",
+      "token": "other data categories",
+      "scope": "*",
+      "type": "text",
+      "required": false,
+      "label": {
+        "en": "Other categories (optional)",
+        "es": "Otras categorías (opcional)"
+      },
+      "hint": {
+        "en": "Anything not covered above — separate multiple entries with semicolons.",
+        "es": "Lo que no esté cubierto arriba — separe varias entradas con punto y coma."
+      },
+      "placeholder": {
+        "en": "e.g. Vehicle registration numbers; loyalty-card history",
+        "es": "p. ej. Matrículas de vehículos; historial de tarjeta de fidelización"
+      }
+    }
+  ]
+}
