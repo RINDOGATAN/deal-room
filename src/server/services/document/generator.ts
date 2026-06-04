@@ -400,6 +400,31 @@ export async function generateContractData(
   const paramBoilerplateVars = buildBoilerplateVariables(dealParams, parameterSchema);
   Object.assign(variables, paramBoilerplateVars);
 
+  // DPA Annex I data categories: turn the selected canonical keys into a
+  // localized, lettered list, appending any free-text "other" entries. This
+  // overrides the raw comma value that buildBoilerplateVariables produced for
+  // {dataCategoriesList}.
+  const dcParam = parameterSchema?.parameters?.find((p) => p.id === "data-categories");
+  if (dcParam) {
+    const keys = (dealParams["data-categories"] || "")
+      .split(",").map((s) => s.trim()).filter(Boolean);
+    const labels = keys.map((k) =>
+      dcParam.optionLabels?.[k]
+        ? resolveLocalizedString(dcParam.optionLabels[k], language)
+        : k
+    );
+    const other = (dealParams["data-categories-other"] || "").trim();
+    if (other) {
+      labels.push(...other.split(";").map((s) => s.trim()).filter(Boolean));
+    }
+    const letters = "abcdefghijklmnopqrstuvwxyz";
+    variables.dataCategoriesList = labels.length
+      ? labels.map((l, i) => `(${letters[i] || i + 1}) ${l};`).join("\n")
+      : (language === "es"
+          ? "(según se describa con más detalle en el contrato principal)"
+          : "(as further described in the principal agreement)");
+  }
+
   // SOLO mode with an asymmetric-role contract (e.g. DPA: Controller vs
   // Processor): the filling party chose which role they occupy. Party A is the
   // Controller slot by convention; when the solo party completes AS the

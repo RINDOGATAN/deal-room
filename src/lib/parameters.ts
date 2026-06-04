@@ -9,6 +9,7 @@
 
 export type ParameterType =
   | "text"
+  | "textarea"
   | "currency"
   | "number"
   | "percentage"
@@ -26,7 +27,9 @@ export interface ParameterDefinition {
   hint?: string | Record<string, string>;
   placeholder?: string | Record<string, string>;
   default?: string;
-  options?: string[]; // for "choice" type
+  options?: string[]; // for "choice"/"multiSelect" — canonical (English) values
+  /** Localized display labels for `options`, keyed by canonical value. */
+  optionLabels?: Record<string, string | Record<string, string>>;
   boilerplateVariable?: string; // also inject into {curly} boilerplate
   negotiable?: boolean; // if true, counterparty can propose changes during review
 }

@@ -1221,9 +1221,11 @@ function ParameterField({
                     : "bg-muted/50 text-muted-foreground border-border hover:border-muted-foreground"
                 }`}
               >
-                {opt === "CALIFORNIA" ? `🇺🇸 ${t("jurisdictions.california")}` :
-                 opt === "ENGLAND_WALES" ? `🇬🇧 ${t("jurisdictions.englandWales")}` :
-                 opt === "SPAIN" ? `🇪🇸 ${t("jurisdictions.spain")}` : opt}
+                {param.optionLabels?.[opt]
+                  ? resolveParamString(param.optionLabels[opt], lang)
+                  : opt === "CALIFORNIA" ? `🇺🇸 ${t("jurisdictions.california")}` :
+                  opt === "ENGLAND_WALES" ? `🇬🇧 ${t("jurisdictions.englandWales")}` :
+                  opt === "SPAIN" ? `🇪🇸 ${t("jurisdictions.spain")}` : opt}
               </button>
             );
           })}
@@ -1245,6 +1247,15 @@ function ParameterField({
             </button>
           ))}
         </div>
+      ) : param.type === "textarea" ? (
+        <textarea
+          id={`param-${param.id}`}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          placeholder={placeholder}
+          rows={3}
+          className={`input-brutal w-full resize-y ${error ? "border-destructive" : ""}`}
+        />
       ) : (
         <div className="relative">
           {param.type === "currency" && (
