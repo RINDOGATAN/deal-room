@@ -28,14 +28,19 @@ Font.register({
   ],
 });
 
+// Disable react-pdf's default mid-word hyphenation so titles and legal text
+// wrap on whole words (e.g. "AGREEMENT" never breaks as "AGREE-MENT").
+Font.registerHyphenationCallback((word) => [word]);
+
 const styles = StyleSheet.create({
   page: {
     fontFamily: "Times-Roman",
     fontSize: 11,
-    paddingTop: 60,
-    paddingBottom: 80,
+    color: "#1a1a1a",
+    paddingTop: 74,
+    paddingBottom: 76,
     paddingLeft: 72,
-    paddingRight: 60,
+    paddingRight: 64,
     lineHeight: 1.5,
   },
   header: {
@@ -57,10 +62,12 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   sectionTitle: {
-    fontSize: 12,
-    fontWeight: "bold",
-    marginBottom: 10,
+    fontFamily: "Helvetica-Bold",
+    fontSize: 10.5,
+    marginBottom: 11,
     textTransform: "uppercase",
+    letterSpacing: 1.2,
+    color: "#1a3a5c",
   },
   sectionNumber: {
     fontSize: 12,
@@ -166,20 +173,54 @@ const styles = StyleSheet.create({
     lineHeight: 1.6,
     paddingLeft: 20,
   },
+  annexHeader: {
+    marginBottom: 22,
+    paddingBottom: 10,
+    borderBottomWidth: 2,
+    borderBottomColor: "#1a3a5c",
+    borderBottomStyle: "solid",
+  },
+  annexKicker: {
+    fontFamily: "Helvetica",
+    fontSize: 8,
+    letterSpacing: 2,
+    textTransform: "uppercase",
+    color: "#8a97a4",
+    marginBottom: 5,
+  },
+  annexTitle: {
+    fontFamily: "Helvetica-Bold",
+    fontSize: 15,
+    letterSpacing: 0.3,
+    color: "#16263a",
+  },
+  annexText: {
+    fontSize: 10,
+    textAlign: "left",
+    lineHeight: 1.6,
+  },
   governingLawBox: {
-    backgroundColor: "#f5f5f5",
-    padding: 12,
+    backgroundColor: "#f4f6f8",
+    paddingVertical: 12,
+    paddingHorizontal: 14,
     marginBottom: 20,
+    borderLeftWidth: 3,
+    borderLeftColor: "#1a3a5c",
+    borderLeftStyle: "solid",
   },
   governingLawLabel: {
-    fontSize: 9,
-    color: "#666",
+    fontFamily: "Helvetica",
+    fontSize: 8,
+    color: "#8a97a4",
     textTransform: "uppercase",
+    letterSpacing: 1,
     marginBottom: 4,
   },
   governingLawText: {
-    fontSize: 11,
+    fontFamily: "Times-Roman",
+    fontSize: 12,
     fontWeight: "bold",
+    color: "#16263a",
   },
   signatureSection: {
     marginTop: 40,
@@ -267,10 +308,12 @@ const styles = StyleSheet.create({
     marginVertical: 15,
   },
   negotiatedTermsHeader: {
-    fontSize: 12,
-    fontWeight: "bold",
-    marginBottom: 10,
+    fontFamily: "Helvetica-Bold",
+    fontSize: 10.5,
+    marginBottom: 11,
     textTransform: "uppercase",
+    letterSpacing: 1.2,
+    color: "#1a3a5c",
   },
   certificationFooter: {
     position: "absolute",
@@ -351,6 +394,137 @@ const styles = StyleSheet.create({
     marginTop: 4,
     marginBottom: 12,
   },
+
+  // ---- Cover page ----
+  coverPage: {
+    fontFamily: "Times-Roman",
+    color: "#1a1a1a",
+    flexDirection: "column",
+  },
+  coverTopBar: {
+    height: 7,
+    backgroundColor: "#1a3a5c",
+  },
+  coverBody: {
+    flexGrow: 1,
+    paddingTop: 96,
+    paddingBottom: 54,
+    paddingHorizontal: 72,
+  },
+  coverBrand: {
+    fontFamily: "Helvetica-Bold",
+    fontSize: 11,
+    letterSpacing: 3,
+    textTransform: "uppercase",
+    color: "#1a3a5c",
+  },
+  coverKicker: {
+    fontFamily: "Helvetica",
+    fontSize: 8.5,
+    letterSpacing: 2,
+    textTransform: "uppercase",
+    color: "#8a97a4",
+    marginTop: 6,
+    marginBottom: 80,
+  },
+  coverTitle: {
+    fontFamily: "Times-Roman",
+    fontWeight: "bold",
+    fontSize: 30,
+    lineHeight: 1.15,
+    color: "#16263a",
+    marginBottom: 18,
+  },
+  coverRule: {
+    height: 2,
+    width: 78,
+    backgroundColor: "#1a3a5c",
+    marginBottom: 34,
+  },
+  coverPartiesRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 30,
+  },
+  coverPartyCol: {
+    width: "47%",
+  },
+  coverMetaLabel: {
+    fontFamily: "Helvetica",
+    fontSize: 8,
+    letterSpacing: 1.5,
+    textTransform: "uppercase",
+    color: "#8a97a4",
+    marginBottom: 4,
+  },
+  coverMetaValue: {
+    fontFamily: "Times-Roman",
+    fontSize: 12.5,
+    color: "#1a1a1a",
+    marginBottom: 20,
+  },
+  coverFootRow: {
+    marginTop: "auto",
+    paddingTop: 16,
+    borderTopWidth: 0.75,
+    borderTopColor: "#d8dee4",
+    borderTopStyle: "solid",
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  coverFootText: {
+    fontFamily: "Helvetica",
+    fontSize: 8,
+    color: "#8a97a4",
+    letterSpacing: 0.5,
+  },
+
+  // ---- Running header / footer ----
+  runHeader: {
+    position: "absolute",
+    top: 28,
+    left: 64,
+    right: 64,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingBottom: 5,
+    borderBottomWidth: 0.75,
+    borderBottomColor: "#d8dee4",
+    borderBottomStyle: "solid",
+  },
+  runHeaderLeft: {
+    fontFamily: "Helvetica-Bold",
+    fontSize: 7.5,
+    letterSpacing: 1,
+    textTransform: "uppercase",
+    color: "#1a3a5c",
+  },
+  runHeaderRight: {
+    fontFamily: "Helvetica",
+    fontSize: 7.5,
+    letterSpacing: 0.5,
+    color: "#9aa6b2",
+  },
+  runFooter: {
+    position: "absolute",
+    bottom: 30,
+    left: 64,
+    right: 64,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingTop: 5,
+    borderTopWidth: 0.75,
+    borderTopColor: "#d8dee4",
+    borderTopStyle: "solid",
+  },
+  runFootText: {
+    fontFamily: "Helvetica",
+    fontSize: 7.5,
+    color: "#9aa6b2",
+    letterSpacing: 0.3,
+  },
 });
 
 const PDF_LABELS: Record<string, Record<string, string>> = {
@@ -380,6 +554,7 @@ const PDF_LABELS: Record<string, Record<string, string>> = {
     signatureTimestamps: "Signature Timestamps",
     verificationUrl: "Verification",
     verifyInstructions: "To verify this document, visit the URL above and enter the document hash.",
+    confidential: "Private & Confidential",
   },
   es: {
     effectiveDate: "Fecha de Efecto",
@@ -407,6 +582,7 @@ const PDF_LABELS: Record<string, Record<string, string>> = {
     signatureTimestamps: "Marcas de Tiempo de Firma",
     verificationUrl: "Verificación",
     verifyInstructions: "Para verificar este documento, visite la URL anterior e introduzca el hash del documento.",
+    confidential: "Privado y Confidencial",
   },
 };
 
@@ -440,6 +616,101 @@ function ParagraphText({ children, style }: { children: string; style: Style }) 
   );
 }
 
+/** Fixed running header repeated on every content/annex page (not the cover). */
+function RunningHeader({ title, dealName }: { title: string; dealName: string }) {
+  return (
+    <View style={styles.runHeader} fixed>
+      <Text style={styles.runHeaderLeft}>{title}</Text>
+      <Text style={styles.runHeaderRight}>{dealName}</Text>
+    </View>
+  );
+}
+
+/**
+ * Fixed running footer: brand wordmark · optional certified mark · page x of y.
+ * Page numbering discounts the cover (always the first page) so the first
+ * content page reads "Page 1", not "Page 2".
+ */
+function RunningFooter({
+  labels,
+  certified,
+}: {
+  labels: Record<string, string>;
+  certified: boolean;
+}) {
+  return (
+    <View style={styles.runFooter} fixed>
+      <Text style={styles.runFootText}>{brand.name.toUpperCase()}</Text>
+      <Text style={styles.runFootText}>
+        {certified ? `✓ ${labels.certifiedBy}` : ""}
+      </Text>
+      <Text
+        style={styles.runFootText}
+        render={({ pageNumber, totalPages }) =>
+          `${labels.page} ${Math.max(1, pageNumber - 1)} ${labels.of} ${Math.max(1, totalPages - 1)}`
+        }
+      />
+    </View>
+  );
+}
+
+/** Full-page cover sheet: brand bar, title, parties, key metadata. */
+function CoverPage({
+  data,
+  hasBoilerplate,
+  labels,
+  lang,
+}: {
+  data: ContractData;
+  hasBoilerplate: boolean;
+  labels: Record<string, string>;
+  lang: string;
+}) {
+  const title = hasBoilerplate ? data.boilerplate!.contractTitle : data.contractType;
+  const partyALabel = data.boilerplate?.partyLabels?.partyA || labels.partyA;
+  const partyBLabel = data.boilerplate?.partyLabels?.partyB || labels.partyB;
+  const partyAName =
+    data.partyA.legalName || data.partyA.company || data.partyA.name;
+  const partyBName = data.partyB
+    ? data.partyB.legalName || data.partyB.company || data.partyB.name
+    : "[_________________]";
+
+  return (
+    <Page size="A4" style={styles.coverPage}>
+      <View style={styles.coverTopBar} />
+      <View style={styles.coverBody}>
+        <Text style={styles.coverBrand}>{brand.name}</Text>
+        <Text style={styles.coverKicker}>{labels.confidential}</Text>
+
+        <Text style={styles.coverTitle}>{title}</Text>
+        <View style={styles.coverRule} />
+
+        <View style={styles.coverPartiesRow}>
+          <View style={styles.coverPartyCol}>
+            <Text style={styles.coverMetaLabel}>{partyALabel}</Text>
+            <Text style={styles.coverMetaValue}>{partyAName}</Text>
+          </View>
+          <View style={styles.coverPartyCol}>
+            <Text style={styles.coverMetaLabel}>{partyBLabel}</Text>
+            <Text style={styles.coverMetaValue}>{partyBName}</Text>
+          </View>
+        </View>
+
+        <Text style={styles.coverMetaLabel}>{labels.effectiveDate}</Text>
+        <Text style={styles.coverMetaValue}>{formatDate(data.createdAt, lang)}</Text>
+
+        <Text style={styles.coverMetaLabel}>{labels.governingLaw}</Text>
+        <Text style={styles.coverMetaValue}>{data.governingLaw}</Text>
+
+        <View style={styles.coverFootRow}>
+          <Text style={styles.coverFootText}>{data.dealName}</Text>
+          <Text style={styles.coverFootText}>{brand.name.toUpperCase()}</Text>
+        </View>
+      </View>
+    </Page>
+  );
+}
+
 interface ContractPDFProps {
   data: ContractData;
 }
@@ -449,6 +720,10 @@ export function ContractPDF({ data }: ContractPDFProps) {
   let sectionNumber = 1;
   const lang = data.language || "en";
   const labels = PDF_LABELS[lang] || PDF_LABELS.en;
+  const coverTitle = hasBoilerplate
+    ? data.boilerplate!.contractTitle
+    : data.contractType;
+  const certified = !!data.certification?.certified;
 
   return (
     <Document
@@ -456,21 +731,12 @@ export function ContractPDF({ data }: ContractPDFProps) {
       author={brand.name}
       subject={data.contractType}
     >
-      {/* Page 1: Header, Preamble, Definitions, Standard Clauses */}
+      {/* Cover sheet */}
+      <CoverPage data={data} hasBoilerplate={hasBoilerplate} labels={labels} lang={lang} />
+
+      {/* Page 1: Preamble, Definitions, Standard Clauses */}
       <Page size="A4" style={styles.page}>
-        {/* Header */}
-        <View style={styles.header}>
-          <Text style={styles.title}>
-            {hasBoilerplate
-              ? data.boilerplate!.contractTitle
-              : data.contractType}
-          </Text>
-          <Text style={styles.subtitle}>
-            {lang === "es"
-              ? formatDate(data.createdAt, lang)
-              : `${labels.effectiveDate}: ${formatDate(data.createdAt, lang)}`}
-          </Text>
-        </View>
+        <RunningHeader title={coverTitle} dealName={data.dealName} />
 
         {hasBoilerplate ? (
           <>
@@ -642,37 +908,13 @@ export function ContractPDF({ data }: ContractPDFProps) {
           </>
         )}
 
-        {/* Certification footer \u2014 rendered only when the document was
-            actually certified by the cryptographic-timestamping pipeline.
-            Without a real certificate we used to print a red "UNVERIFIED"
-            badge, which felt accusatory; better to print nothing while
-            we wait for the Firmas integration. */}
-        {data.certification?.certified && (
-          <View style={styles.certificationFooter} fixed>
-            <Text style={styles.certifiedBadge}>
-              {`\u2713 ${labels.certifiedBy}`}
-            </Text>
-            <Text style={{ fontSize: 7, color: "#999" }}>
-              {data.certification?.documentHash
-                ? `SHA-256: ${data.certification.documentHash.slice(0, 16)}...`
-                : ""}
-            </Text>
-          </View>
-        )}
-
-        {/* Footer with page number */}
-        <Text
-          style={styles.footer}
-          render={({ pageNumber, totalPages }) =>
-            `${data.dealName} | ${labels.page} ${pageNumber} ${labels.of} ${totalPages}`
-          }
-          fixed
-        />
+        <RunningFooter labels={labels} certified={certified} />
       </Page>
 
       {/* Page 2: Negotiated Terms, General Provisions, Jurisdiction, Signature (boilerplate contracts only) */}
       {hasBoilerplate && (
         <Page size="A4" style={styles.page}>
+          <RunningHeader title={coverTitle} dealName={data.dealName} />
           {/* Negotiated Terms */}
           {data.clauses.length > 0 && (
             <View style={styles.section}>
@@ -804,30 +1046,36 @@ export function ContractPDF({ data }: ContractPDFProps) {
             </View>
           )}
 
-          {/* Certification footer \u2014 only when actually certified. */}
-          {data.certification?.certified && (
-            <View style={styles.certificationFooter} fixed>
-              <Text style={styles.certifiedBadge}>
-                {`\u2713 ${labels.certifiedBy}`}
-              </Text>
-              <Text style={{ fontSize: 7, color: "#999" }}>
-                {data.certification?.documentHash
-                  ? `SHA-256: ${data.certification.documentHash.slice(0, 16)}...`
-                  : ""}
-              </Text>
-            </View>
-          )}
-
-          {/* Footer with page number */}
-          <Text
-            style={styles.footer}
-            render={({ pageNumber, totalPages }) =>
-              `${data.dealName} | ${labels.page} ${pageNumber} ${labels.of} ${totalPages}`
-            }
-            fixed
-          />
+          <RunningFooter labels={labels} certified={certified} />
         </Page>
       )}
+
+      {/* Annex pages — each annex on its own page, AFTER the signature blocks.
+          The annex bodies (Description of Processing, Technical & Organisational
+          Measures, etc.) are part of the agreement but, by convention, follow
+          the signatures rather than sitting mid-document as numbered articles. */}
+      {hasBoilerplate &&
+        data.boilerplate!.annexes?.map((annex, i) => {
+          const [annexLabel, ...rest] = annex.title.split("—");
+          const annexBody = rest.join("—").trim();
+          return (
+            <Page key={`annex-${i}`} size="A4" style={styles.page}>
+              <RunningHeader title={coverTitle} dealName={data.dealName} />
+              <View style={styles.annexHeader}>
+                {annexBody ? (
+                  <>
+                    <Text style={styles.annexKicker}>{annexLabel.trim()}</Text>
+                    <Text style={styles.annexTitle}>{annexBody}</Text>
+                  </>
+                ) : (
+                  <Text style={styles.annexTitle}>{annex.title}</Text>
+                )}
+              </View>
+              <ParagraphText style={styles.annexText}>{annex.text}</ParagraphText>
+              <RunningFooter labels={labels} certified={certified} />
+            </Page>
+          );
+        })}
 
       {/* Audit Certificate Page (only when certified) */}
       {data.certification?.certified && (

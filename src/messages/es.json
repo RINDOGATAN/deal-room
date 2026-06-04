@@ -490,8 +490,8 @@
     "allClausesMustBeAgreed": "Todas las cláusulas deben ser acordadas por ambas partes antes de poder firmar el contrato.",
     "returnToReview": "Volver a Revisión",
     "contractSummary": "Resumen del Contrato",
-    "partyA": "Parte A",
-    "partyB": "Parte B",
+    "partyA": "la parte iniciadora",
+    "partyB": "la otra parte",
     "signingParty": "Parte Firmante",
     "agreedTerms": "Términos Acordados ({count} cláusulas)",
     "signingStatus": "Estado de Firma",
@@ -573,8 +573,6 @@
       "signedAt": "el {time}",
       "downloadBundle": "Descargar paquete firmado"
     },
-    "partyA": "la parte iniciadora",
-    "partyB": "la otra parte",
     "theOtherParty": "la otra parte",
     "blocked": {
       "yourDetails": "Añade primero tus datos de firma.",
@@ -603,7 +601,13 @@
       "edit": "Editar datos",
       "frozenAfterSigning": "Los datos quedan bloqueados tras firmar",
       "waitingForOtherParty": "La otra parte aún no ha enviado sus datos",
-      "requiredBeforeSigning": "Confirma tus datos de ejecución arriba antes de firmar"
+      "requiredBeforeSigning": "Confirma tus datos de ejecución arriba antes de firmar",
+      "completeAs": "Completar este ATD como",
+      "completeAsHint": "Elija su rol. Rellenamos su parte y dejamos en blanco el bloque de la otra parte para que lo complete — la mayoría de los encargados preparan la plantilla para que la reciba un responsable.",
+      "role": {
+        "processor": "Encargado (tratamos datos por cuenta de un responsable)",
+        "controller": "Responsable (decidimos por qué y cómo se tratan los datos)"
+      }
     }
   },
   "settings": {
@@ -1885,7 +1889,6 @@
     "scopeBillingRead": "Ver suscripciones e información de facturación",
     "scopeWebhooksManage": "Registrar, listar y eliminar endpoints de webhooks",
     "scopeDisputesCreate": "Escalar operaciones a resolución de disputas",
-
     "entitlements": "Derechos de Uso",
     "entitlementsDesc": "Los skills premium requieren una suscripción activa en Stripe. Los skills gratuitos (NDA, MSA, SaaS, DPA, Aviso de Privacidad) están disponibles para todas las claves API sin suscripción.",
     "entitlementInitiatorTitle": "El promotor paga",
@@ -1893,7 +1896,6 @@
     "entitlementRespondentTitle": "Respondedor gratuito",
     "entitlementRespondentDesc": "El agente respondedor no necesita suscripción — esto reduce la fricción de adopción y acelera los efectos de red.",
     "entitlementPricing": "Los skills premium cuestan 9 $/mes (USD) o 9 €/mes (EUR) por skill, con el mismo modelo de suscripción que los usuarios humanos.",
-
     "rateLimits": "Límites de Frecuencia",
     "rateLimitsDesc": "Se aplican límites de frecuencia por cliente con ventana deslizante a todos los endpoints autenticados:",
     "rateLimitGroup": "Grupo de Endpoints",
@@ -1904,11 +1906,9 @@
     "rateLimitDefault": "Todos los demás endpoints",
     "rateLimitDefaultLimit": "1.000 peticiones / hora",
     "rateLimitRetryAfter": "Al exceder el límite, la API devuelve 429 con una cabecera Retry-After indicando los segundos hasta la siguiente petición permitida.",
-
     "sectionSubscriptions": "Suscripciones y Facturación",
     "purposeGetSubscriptions": "Ver suscripciones activas y su estado",
     "purposeSubscribe": "Suscribirse a skills premium (devuelve URL de pago de Stripe)",
-
     "sectionWebhooks": "Webhooks",
     "webhooksDesc": "Registra endpoints de webhooks para recibir notificaciones de eventos en tiempo real. Los payloads se firman con HMAC-SHA256 usando tu secreto de webhook.",
     "purposeRegisterWebhook": "Registrar un nuevo endpoint de webhook",
@@ -1922,7 +1922,6 @@
     "webhookEventCounter": "La contraparte envió contrapropuestas",
     "webhookSigning": "Cada entrega de webhook incluye una cabecera X-Dealroom-Signature con el hash HMAC-SHA256 del cuerpo de la petición, firmado con el secreto proporcionado en el registro. Verifica esta firma antes de procesar los eventos.",
     "webhookRetries": "Las entregas fallidas se reintentan hasta 3 veces con retroceso exponencial.",
-
     "asyncNegotiation": "Negociación Asíncrona Multironda",
     "asyncNegotiationDesc": "Para operaciones que requieren revisión y contrapropuestas, pasa mode: \"async\" al unirse a una negociación. En lugar de resolverse inmediatamente, la operación entra en estado SUGGESTED donde cualquiera de las partes puede contraproposer o aceptar.",
     "asyncStep1Title": "Unirse en modo asíncrono",
@@ -1936,12 +1935,10 @@
     "purposeReject": "Rechazar y fallar la operación",
     "purposeStatus": "Consulta ligera de estado",
     "sectionAsyncEndpoints": "Endpoints Asíncronos",
-
     "attestation": "Atestación de Abogado/a",
     "attestationDesc": "Cuando un skill premium ha sido revisado por un abogado/a supervisor/a, las operaciones acordadas incluyen un objeto de atestación con el nombre y número de colegiación del abogado/a revisor/a.",
     "attestationUeta": "Todos los contratos generados por agentes incluyen un preámbulo de cumplimiento UETA § 14 / E-SIGN Act indicando que el acuerdo fue formado por agentes electrónicos autorizados por las partes.",
     "attestationResponseTitle": "Atestación en la respuesta de la operación",
-
     "protocolDiscovery": "Descubrimiento de Protocolos",
     "protocolDiscoveryDesc": "Dealroom es descubrible por agentes de IA compatibles con A2A y MCP mediante endpoints de descubrimiento estándar:",
     "a2aCard": "Tarjeta de Agente A2A",
@@ -1950,11 +1947,9 @@
     "mcpTools": "Definiciones de Herramientas MCP",
     "mcpToolsDesc": "Devuelve definiciones de herramientas compatibles con MCP para todas las operaciones de Dealroom. Solo descubrimiento — la ejecución se realiza a través de la API REST.",
     "mcpToolsPath": "GET /api/v1/agent/mcp",
-
     "sectionDisputes": "Disputas",
     "disputesDesc": "Cuando una operación falla o una parte alega incumplimiento, cualquiera de las partes puede escalar a arbitraje a través de la plataforma de resolución de disputas Gavel.",
     "purposeDispute": "Escalar una operación a arbitraje",
-
     "versioning": "Versionado",
     "versioningDesc1": "La API utiliza versionado",
     "versioningDesc2": ". Los cambios incompatibles se introducirán bajo un nuevo prefijo de versión."

@@ -56,6 +56,8 @@ export interface BoilerplateData {
   jurisdictionProvisions?: StandardClause[]; // Multi-jurisdiction (e.g., Privacy Notice)
   signatureBlock: string;
   partyLabels?: { partyA: string; partyB: string };
+  /** Annexes/Schedules rendered on their own pages AFTER the signature blocks (e.g. DPA Annex I/II). */
+  annexes?: StandardClause[];
 }
 
 export interface CertificationData {
@@ -175,6 +177,11 @@ function processBoilerplate(
     text: resolve(p.text),
   }));
 
+  const annexes = (bp.annexes as Array<Record<string, unknown>> || []).map((a) => ({
+    title: resolveLocalizedString(a.title, language),
+    text: resolve(a.text),
+  }));
+
   const partyLabels = bp.partyLabels as Record<string, unknown> | undefined;
 
   return {
@@ -186,6 +193,7 @@ function processBoilerplate(
     generalProvisions,
     jurisdictionProvision,
     jurisdictionProvisions: multiJurisdictionProvisions,
+    annexes: annexes.length > 0 ? annexes : undefined,
     signatureBlock: resolve(bp.signatureBlock),
     partyLabels: partyLabels
       ? {
@@ -291,14 +299,18 @@ export async function generateContractData(
           clause.clauseTemplate.clauseId, language
         );
 
-        clauses.push({
-          title: clauseTitle,
-          category: clauseCategory,
-          agreedOption: selLocalized?.label
-            ? resolveLocalizedString(selLocalized.label, language)
-            : selection.option.label,
-          legalText,
-        });
+        // Optional clauses whose agreed option carries no legal text (e.g. a
+        // "None — not applicable" choice) are omitted from the document entirely.
+        if (legalText && legalText.trim()) {
+          clauses.push({
+            title: clauseTitle,
+            category: clauseCategory,
+            agreedOption: selLocalized?.label
+              ? resolveLocalizedString(selLocalized.label, language)
+              : selection.option.label,
+            legalText,
+          });
+        }
       }
       continue;
     }
@@ -316,14 +328,18 @@ export async function generateContractData(
       clause.clauseTemplate.clauseId, language
     );
 
-    clauses.push({
-      title: clauseTitle,
-      category: clauseCategory,
-      agreedOption: optLocalized?.label
-        ? resolveLocalizedString(optLocalized.label, language)
-        : agreedOption.label,
-      legalText,
-    });
+    // Optional clauses whose agreed option carries no legal text (e.g. a
+    // "None — not applicable" choice) are omitted from the document entirely.
+    if (legalText && legalText.trim()) {
+      clauses.push({
+        title: clauseTitle,
+        category: clauseCategory,
+        agreedOption: optLocalized?.label
+          ? resolveLocalizedString(optLocalized.label, language)
+          : agreedOption.label,
+        legalText,
+      });
+    }
   }
 
   // Format date for boilerplate
@@ -368,6 +384,26 @@ export async function generateContractData(
   // Merge deal parameter boilerplate variables into the variables dict
   const paramBoilerplateVars = buildBoilerplateVariables(dealParams, parameterSchema);
   Object.assign(variables, paramBoilerplateVars);
+
+  // SOLO mode with an asymmetric-role contract (e.g. DPA: Controller vs
+  // Processor): the filling party chose which role they occupy. Party A is the
+  // Controller slot by convention; when the solo party completes AS the
+  // Processor, we move their details into the B (Processor) slot and leave the
+  // Controller slot blank for the counterparty. Default (CONTROLLER / undefined)
+  // keeps the historical behaviour, so non-DPA and two-party deals are untouched.
+  const soloFillRole = (sdA as { fillRole?: string } | null)?.fillRole;
+  if (isSolo && soloFillRole === "PROCESSOR") {
+    for (const [a, b] of [
+      ["partyAName", "partyBName"],
+      ["partyAAddress", "partyBAddress"],
+      ["partyAId", "partyBId"],
+      ["partyASignatureBlock", "partyBSignatureBlock"],
+    ]) {
+      const tmp = variables[a];
+      variables[a] = variables[b];
+      variables[b] = tmp;
+    }
+  }
 
   // Check for multi-jurisdiction parameters (e.g., Privacy Notice)
   const multiJurisdictionKeys = dealParams.jurisdictions

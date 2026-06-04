@@ -200,6 +200,19 @@ export function generateContractTxt(data: ContractData): string {
     lines.push("");
   }
 
+  // Annexes — after the signature blocks, each separated by a page-feed marker.
+  if (data.boilerplate?.annexes && data.boilerplate.annexes.length > 0) {
+    for (const annex of data.boilerplate.annexes) {
+      lines.push("\f"); // form feed: a page break for text renderers
+      lines.push(divider("═", 60));
+      lines.push(`  ${annex.title.toUpperCase()}`);
+      lines.push(divider("═", 60));
+      lines.push("");
+      lines.push(annex.text);
+      lines.push("");
+    }
+  }
+
   lines.push(divider("═", 60));
 
   return lines.join("\n");

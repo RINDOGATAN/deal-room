@@ -639,6 +639,22 @@ export async function generateContractDocx(
     },
   ];
 
+  // Annex pages — each annex as its own section (own page), AFTER the
+  // signature blocks, mirroring the PDF/legal convention of annexes following
+  // the signatures rather than sitting mid-document as numbered articles.
+  if (data.boilerplate?.annexes?.length) {
+    for (const annex of data.boilerplate.annexes) {
+      sections.push({
+        properties: {
+          page: {
+            margin: { top: 1440, right: 1440, bottom: 1440, left: 1440 },
+          },
+        },
+        children: buildAnnexSection(annex),
+      });
+    }
+  }
+
   // Audit Certificate page (only when certified)
   if (data.certification?.certified) {
     sections.push({
@@ -1031,6 +1047,49 @@ function addSignatureBlocks(
       ],
     })
   );
+}
+
+function buildAnnexSection(annex: { title: string; text: string }): Paragraph[] {
+  const paragraphs: Paragraph[] = [];
+
+  // Annex heading with a coloured rule underneath
+  paragraphs.push(
+    new Paragraph({
+      spacing: { after: 240 },
+      border: {
+        bottom: { style: BorderStyle.SINGLE, size: 6, color: "1A3A5C" },
+      },
+      children: [
+        new TextRun({
+          text: annex.title.toUpperCase(),
+          bold: true,
+          size: 26,
+          color: "1A3A5C",
+          font: "Times New Roman",
+        }),
+      ],
+    })
+  );
+
+  // Annex body — one paragraph per non-empty line
+  for (const line of annex.text.split("\n")) {
+    if (!line.trim()) continue;
+    paragraphs.push(
+      new Paragraph({
+        alignment: AlignmentType.JUSTIFIED,
+        spacing: { after: 120 },
+        children: [
+          new TextRun({
+            text: line,
+            size: 20,
+            font: "Times New Roman",
+          }),
+        ],
+      })
+    );
+  }
+
+  return paragraphs;
 }
 
 function buildAuditCertificateSection(

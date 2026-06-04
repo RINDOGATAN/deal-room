@@ -78,12 +78,20 @@ function SigningContent({ dealId }: { dealId: string }) {
   const [confirmChecked, setConfirmChecked] = useState(false);
 
   // Execution details form state
-  const [detailsForm, setDetailsForm] = useState({
+  const [detailsForm, setDetailsForm] = useState<{
+    legalName: string;
+    address: string;
+    taxId: string;
+    signatoryName: string;
+    signatoryTitle: string;
+    fillRole: "CONTROLLER" | "PROCESSOR";
+  }>({
     legalName: "",
     address: "",
     taxId: "",
     signatoryName: "",
     signatoryTitle: "",
+    fillRole: "PROCESSOR",
   });
 
   const { data: deal, isLoading: dealLoading } = trpc.deal.getById.useQuery({ id: dealId });
@@ -96,13 +104,14 @@ function SigningContent({ dealId }: { dealId: string }) {
     if (!signingDetails) return;
     const saved = signingDetails.own.signingDetails;
     if (saved) {
-      setDetailsForm({
+      setDetailsForm((prev) => ({
         legalName: saved.legalName,
         address: saved.address,
         taxId: saved.taxId || "",
         signatoryName: saved.signatoryName,
         signatoryTitle: saved.signatoryTitle,
-      });
+        fillRole: (saved as { fillRole?: "CONTROLLER" | "PROCESSOR" }).fillRole || prev.fillRole,
+      }));
     } else {
       setDetailsForm((prev) => ({
         ...prev,
@@ -232,6 +241,10 @@ function SigningContent({ dealId }: { dealId: string }) {
   const respondent = deal.parties.find((p) => p.role === "RESPONDENT");
   const isInitiator = deal.currentUserRole === "INITIATOR";
   const isSoloMode = (deal as any)?.dealMode === "SOLO";
+  // DPA in solo mode is the one asymmetric-role contract where the filling
+  // party must declare whether they are the Controller or the Processor; the
+  // other party's block is left blank in the output.
+  const isDpaSolo = isSoloMode && deal.contractTemplate?.contractType === "DPA";
 
   // Check if all clauses are agreed
   const allAgreed = deal.clauses.every((c) => c.status === "AGREED");
@@ -330,6 +343,7 @@ function SigningContent({ dealId }: { dealId: string }) {
         taxId: detailsForm.taxId.trim() || undefined,
         signatoryName: detailsForm.signatoryName.trim(),
         signatoryTitle: detailsForm.signatoryTitle.trim(),
+        ...(isDpaSolo ? { fillRole: detailsForm.fillRole } : {}),
       },
     });
   }
@@ -526,13 +540,14 @@ function SigningContent({ dealId }: { dealId: string }) {
                 <button
                   onClick={() => {
                     const saved = signingDetails!.own.signingDetails!;
-                    setDetailsForm({
+                    setDetailsForm((prev) => ({
                       legalName: saved.legalName,
                       address: saved.address,
                       taxId: saved.taxId || "",
                       signatoryName: saved.signatoryName,
                       signatoryTitle: saved.signatoryTitle,
-                    });
+                      fillRole: (saved as { fillRole?: "CONTROLLER" | "PROCESSOR" }).fillRole || prev.fillRole,
+                    }));
                     // Clear saved to show form again
                     submitDetails.reset();
                     refetchDetails();
@@ -566,6 +581,33 @@ function SigningContent({ dealId }: { dealId: string }) {
             ) : (
               // Editable form
               <div className="space-y-3">
+                {isDpaSolo && (
+                  <div>
+                    <label className="block text-sm font-medium mb-1">
+                      {t("signingDetails.completeAs")}
+                    </label>
+                    <p className="text-xs text-muted-foreground mb-2">
+                      {t("signingDetails.completeAsHint")}
+                    </p>
+                    <div className="grid grid-cols-2 gap-2">
+                      {(["PROCESSOR", "CONTROLLER"] as const).map((role) => (
+                        <button
+                          key={role}
+                          type="button"
+                          onClick={() => setDetailsForm((f) => ({ ...f, fillRole: role }))}
+                          aria-pressed={detailsForm.fillRole === role}
+                          className={`p-3 text-sm border rounded-xl text-left transition-colors ${
+                            detailsForm.fillRole === role
+                              ? "border-primary bg-primary/5 font-medium"
+                              : "border-border hover:border-primary/50"
+                          }`}
+                        >
+                          {t(`signingDetails.role.${role.toLowerCase()}`)}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
                 <div>
                   <label className="block text-sm font-medium mb-1">{t("signingDetails.legalName")}</label>
                   <Input

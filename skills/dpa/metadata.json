@@ -1,6 +1,9 @@
 {
   "contractType": "DPA",
-  "category": { "en": "Privacy", "es": "Privacidad" },
+  "category": {
+    "en": "Privacy",
+    "es": "Privacidad"
+  },
   "displayName": {
     "en": "Data Processing Agreement",
     "es": "Acuerdo de encargo de tratamiento de datos"
@@ -10,9 +13,16 @@
     "es": "Acuerdo entre Responsable y Encargado del tratamiento para empresas SaaS que tratan datos personales de clientes, conforme al RGPD, RGPD del Reino Unido y CCPA/CPRA"
   },
   "version": "1.0",
-  "clauseCount": 12,
-  "jurisdictions": ["CALIFORNIA", "ENGLAND_WALES", "SPAIN"],
-  "languages": ["en", "es"],
+  "clauseCount": 13,
+  "jurisdictions": [
+    "CALIFORNIA",
+    "ENGLAND_WALES",
+    "SPAIN"
+  ],
+  "languages": [
+    "en",
+    "es"
+  ],
   "soloModeSupported": true,
   "soloModeDefault": false
 }
