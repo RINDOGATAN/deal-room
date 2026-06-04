@@ -198,6 +198,16 @@
   "generalProvisions": [
     {
       "title": {
+        "en": "Governing law",
+        "es": "Ley aplicable"
+      },
+      "text": {
+        "en": "This Agreement is governed by and construed in accordance with the laws of {governingLaw}, without regard to its conflict-of-laws principles.",
+        "es": "El presente Acuerdo se rige e interpreta de conformidad con la legislación de {governingLaw}, sin atención a sus normas sobre conflicto de leyes."
+      }
+    },
+    {
+      "title": {
         "en": "Entire agreement",
         "es": "Integridad del contrato"
       },
@@ -294,8 +304,8 @@
         "es": "Disposiciones específicas de Inglaterra y Gales"
       },
       "text": {
-        "en": "(a) Third Party Rights: No person who is not a party to this Agreement shall have any rights under the Contracts (Rights of Third Parties) Act 1999 to enforce any term of this Agreement.\n\n(b) Non-Excludable Liability: Nothing in this Agreement shall exclude or limit liability for: (i) fraud or fraudulent misrepresentation; (ii) death or personal injury caused by negligence; or (iii) any other liability that cannot be excluded or limited under applicable law.\n\n(c) IR35: Where applicable, the parties shall comply with the off-payroll working rules (IR35) under the Income Tax (Earnings and Pensions) Act 2003, as amended. The Client shall be responsible for making any status determination statement required under Chapter 10 of Part 2 of that Act.\n\n(d) UK GDPR: To the extent that any personal data (as defined under the UK General Data Protection Regulation and the Data Protection Act 2018) is processed in connection with the Services, both parties shall comply with all applicable data protection requirements.",
-        "es": "(a) Derechos de terceros: Ninguna persona que no sea parte del presente Contrato tendrá derecho alguno en virtud de la Contracts (Rights of Third Parties) Act 1999 para exigir el cumplimiento de cualquier estipulación de este Contrato.\n\n(b) Responsabilidad no excluible: Nada en el presente Contrato excluirá ni limitará la responsabilidad por: (i) fraude o declaración fraudulenta; (ii) muerte o lesiones personales causadas por negligencia; o (iii) cualquier otra responsabilidad que no pueda ser excluida o limitada conforme a la legislación aplicable.\n\n(c) IR35: Cuando resulte aplicable, las partes cumplirán con las normas sobre trabajo fuera de nómina (IR35) conforme a la Income Tax (Earnings and Pensions) Act 2003, en su versión modificada. El Cliente será responsable de emitir cualquier declaración de determinación de estatus requerida conforme al Capítulo 10 de la Parte 2 de dicha ley.\n\n(d) RGPD del RU: En la medida en que se traten datos personales (según se definen en el Reglamento General de Protección de Datos del Reino Unido y la Data Protection Act 2018) en relación con los Servicios, ambas partes cumplirán con todos los requisitos aplicables en materia de protección de datos."
+        "en": "(a) Third Party Rights: No person who is not a party to this Agreement shall have any rights under the Contracts (Rights of Third Parties) Act 1999 to enforce any term of this Agreement.\n\n(b) Non-Excludable Liability: Nothing in this Agreement shall exclude or limit liability for: (i) fraud or fraudulent misrepresentation; (ii) death or personal injury caused by negligence; or (iii) any other liability that cannot be excluded or limited under applicable law.\n\n(c) IR35: Where applicable, the parties shall comply with the off-payroll working rules (IR35) under the Income Tax (Earnings and Pensions) Act 2003, as amended. The Client shall be responsible for making any status determination statement required under Chapter 10 of Part 2 of that Act.\n\n(d) UK GDPR: To the extent that any personal data (as defined under the UK General Data Protection Regulation and the Data Protection Act 2018, in each case as amended by the Data (Use and Access) Act 2025) is processed in connection with the Services, both parties shall comply with all applicable data protection requirements.",
+        "es": "(a) Derechos de terceros: Ninguna persona que no sea parte del presente Contrato tendrá derecho alguno en virtud de la Contracts (Rights of Third Parties) Act 1999 para exigir el cumplimiento de cualquier estipulación de este Contrato.\n\n(b) Responsabilidad no excluible: Nada en el presente Contrato excluirá ni limitará la responsabilidad por: (i) fraude o declaración fraudulenta; (ii) muerte o lesiones personales causadas por negligencia; o (iii) cualquier otra responsabilidad que no pueda ser excluida o limitada conforme a la legislación aplicable.\n\n(c) IR35: Cuando resulte aplicable, las partes cumplirán con las normas sobre trabajo fuera de nómina (IR35) conforme a la Income Tax (Earnings and Pensions) Act 2003, en su versión modificada. El Cliente será responsable de emitir cualquier declaración de determinación de estatus requerida conforme al Capítulo 10 de la Parte 2 de dicha ley.\n\n(d) RGPD del RU: En la medida en que se traten datos personales (según se definen en el Reglamento General de Protección de Datos del Reino Unido y la Data Protection Act 2018, en cada caso en su versión modificada por la Data (Use and Access) Act 2025) en relación con los Servicios, ambas partes cumplirán con todos los requisitos aplicables en materia de protección de datos."
       }
     },
     "SPAIN": {

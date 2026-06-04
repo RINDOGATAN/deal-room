@@ -32,6 +32,7 @@ const REQUIRED_FILES = ["clauses.json", "metadata.json", "boilerplate.json"];
 // Source of truth: src/server/services/document/generator.ts:349-361
 const SYSTEM_BOILERPLATE_VARS = new Set([
   "effectiveDate",
+  "governingLaw",
   "partyAName",
   "partyBName",
   "partyAAddress",

@@ -228,6 +228,16 @@
   "generalProvisions": [
     {
       "title": {
+        "en": "Governing law",
+        "es": "Ley aplicable"
+      },
+      "text": {
+        "en": "This Agreement is governed by and construed in accordance with the laws of {governingLaw}, without regard to its conflict-of-laws principles.",
+        "es": "El presente Acuerdo se rige e interpreta de conformidad con la legislación de {governingLaw}, sin atención a sus normas sobre conflicto de leyes."
+      }
+    },
+    {
+      "title": {
         "en": "Entire agreement",
         "es": "Integridad del contrato"
       },
@@ -324,8 +334,8 @@
         "es": "Disposiciones específicas de Inglaterra y Gales"
       },
       "text": {
-        "en": "(a) Third Party Rights: No person who is not a party to this Agreement shall have any rights under the Contracts (Rights of Third Parties) Act 1999 to enforce any term of this Agreement.\n\n(b) Non-Excludable Liability: Nothing in this Agreement shall exclude or limit liability for: (i) fraud or fraudulent misrepresentation; (ii) death or personal injury caused by negligence; or (iii) any other liability that cannot be excluded or limited under applicable law.\n\n(c) Consumer Rights: To the extent applicable, nothing in this Agreement shall affect the Customer's statutory rights under the Consumer Rights Act 2015.\n\n(d) UK GDPR: To the extent that the Provider processes personal data (as defined under the UK General Data Protection Regulation and the Data Protection Act 2018) on behalf of the Customer, the Provider shall act as a \"processor\" and both parties shall comply with all applicable data protection requirements. The parties agree to enter into a Data Processing Agreement that complies with Article 28 of the UK GDPR.",
-        "es": "(a) Derechos de terceros: Ninguna persona que no sea parte del presente Contrato tendrá derecho alguno en virtud de la Contracts (Rights of Third Parties) Act 1999 para exigir el cumplimiento de cualquier estipulación de este Contrato.\n\n(b) Responsabilidad no excluible: Nada en el presente Contrato excluirá ni limitará la responsabilidad por: (i) fraude o declaración fraudulenta; (ii) muerte o lesiones personales causadas por negligencia; o (iii) cualquier otra responsabilidad que no pueda ser excluida o limitada conforme a la legislación aplicable.\n\n(c) Derechos del consumidor: En la medida en que resulte aplicable, nada en el presente Contrato afectará a los derechos legales del Cliente conforme a la Consumer Rights Act 2015.\n\n(d) RGPD del RU: En la medida en que el Proveedor trate datos personales (según se definen en el Reglamento General de Protección de Datos del Reino Unido y la Data Protection Act 2018) por cuenta del Cliente, el Proveedor actuará como \"encargado del tratamiento\" y ambas partes cumplirán con todos los requisitos aplicables en materia de protección de datos. Las partes acuerdan formalizar un Acuerdo de Encargo de Tratamiento de Datos que cumpla con el artículo 28 del RGPD del RU."
+        "en": "(a) Third Party Rights: No person who is not a party to this Agreement shall have any rights under the Contracts (Rights of Third Parties) Act 1999 to enforce any term of this Agreement.\n\n(b) Non-Excludable Liability: Nothing in this Agreement shall exclude or limit liability for: (i) fraud or fraudulent misrepresentation; (ii) death or personal injury caused by negligence; or (iii) any other liability that cannot be excluded or limited under applicable law.\n\n(c) Consumer Rights: To the extent applicable, nothing in this Agreement shall affect the Customer's statutory rights under the Consumer Rights Act 2015.\n\n(d) UK GDPR: To the extent that the Provider processes personal data (as defined under the UK General Data Protection Regulation and the Data Protection Act 2018, in each case as amended by the Data (Use and Access) Act 2025) on behalf of the Customer, the Provider shall act as a \"processor\" and both parties shall comply with all applicable data protection requirements. The parties agree to enter into a Data Processing Agreement that complies with Article 28 of the UK GDPR.",
+        "es": "(a) Derechos de terceros: Ninguna persona que no sea parte del presente Contrato tendrá derecho alguno en virtud de la Contracts (Rights of Third Parties) Act 1999 para exigir el cumplimiento de cualquier estipulación de este Contrato.\n\n(b) Responsabilidad no excluible: Nada en el presente Contrato excluirá ni limitará la responsabilidad por: (i) fraude o declaración fraudulenta; (ii) muerte o lesiones personales causadas por negligencia; o (iii) cualquier otra responsabilidad que no pueda ser excluida o limitada conforme a la legislación aplicable.\n\n(c) Derechos del consumidor: En la medida en que resulte aplicable, nada en el presente Contrato afectará a los derechos legales del Cliente conforme a la Consumer Rights Act 2015.\n\n(d) RGPD del RU: En la medida en que el Proveedor trate datos personales (según se definen en el Reglamento General de Protección de Datos del Reino Unido y la Data Protection Act 2018, en cada caso en su versión modificada por la Data (Use and Access) Act 2025) por cuenta del Cliente, el Proveedor actuará como \"encargado del tratamiento\" y ambas partes cumplirán con todos los requisitos aplicables en materia de protección de datos. Las partes acuerdan formalizar un Acuerdo de Encargo de Tratamiento de Datos que cumpla con el artículo 28 del RGPD del RU."
       }
     },
     "SPAIN": {

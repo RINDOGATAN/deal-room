@@ -384,6 +384,10 @@ export async function generateContractData(
   // Variables for boilerplate interpolation
   const variables: Record<string, string> = {
     effectiveDate,
+    governingLaw:
+      GOVERNING_LAW_DISPLAY[deal.governingLaw]?.[language] ||
+      GOVERNING_LAW_DISPLAY[deal.governingLaw]?.en ||
+      deal.governingLaw,
     partyAName,
     partyBName,
     partyAAddress,
