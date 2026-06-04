@@ -118,16 +118,6 @@
   "generalProvisions": [
     {
       "title": {
-        "en": "Governing law",
-        "es": "Ley aplicable"
-      },
-      "text": {
-        "en": "This Agreement is governed by and construed in accordance with the laws of {governingLaw}, without regard to its conflict-of-laws principles.",
-        "es": "El presente Acuerdo se rige e interpreta de conformidad con la legislación de {governingLaw}, sin atención a sus normas sobre conflicto de leyes."
-      }
-    },
-    {
-      "title": {
         "en": "Entire agreement",
         "es": "Integridad del acuerdo"
       },
