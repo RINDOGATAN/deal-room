@@ -9,7 +9,10 @@
     "es": "Contrato marco para servicios profesionales y de consultoría con estructura de Órdenes de Trabajo"
   },
   "version": "1.0",
-  "languages": ["en", "es"],
+  "languages": [
+    "en",
+    "es"
+  ],
   "clauses": [
     {
       "id": "payment-terms",
@@ -2225,8 +2228,8 @@
     {
       "id": "dispute-resolution",
       "title": {
-        "en": "Dispute resolution",
-        "es": "Resolución de controversias"
+        "en": "Governing law and jurisdiction",
+        "es": "Ley aplicable y jurisdicción"
       },
       "category": {
         "en": "Legal",
@@ -2234,8 +2237,8 @@
       },
       "order": 11,
       "plainDescription": {
-        "en": "How and where will disputes about this agreement be resolved? You can choose courts in the governing law jurisdiction, courts elsewhere, or private arbitration.",
-        "es": "¿Cómo y dónde se resolverán las controversias derivadas de este Contrato? Puede elegir los tribunales de la jurisdicción de la ley aplicable, tribunales de otra jurisdicción o arbitraje privado."
+        "en": "Which law governs this agreement, and how and where any dispute about it is resolved — courts in the governing-law jurisdiction, neutral Delaware courts, or arbitration (JAMS, AAA, ICC or LCIA).",
+        "es": "Qué ley rige este acuerdo y cómo y dónde se resuelve cualquier controversia relativa a él — tribunales de la jurisdicción de la ley aplicable, tribunales neutrales de Delaware o arbitraje (JAMS, AAA, ICC o LCIA)."
       },
       "legalContext": {
         "en": "For services disputes, the choice of forum can significantly impact cost and convenience. Arbitration is popular for professional services due to confidentiality and specialized arbitrators.",

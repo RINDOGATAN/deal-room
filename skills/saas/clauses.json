@@ -9,7 +9,10 @@
     "es": "Contratos de suscripción de Software como Servicio que regulan el acceso, uso, soporte y niveles de servicio"
   },
   "version": "1.0",
-  "languages": ["en", "es"],
+  "languages": [
+    "en",
+    "es"
+  ],
   "clauses": [
     {
       "id": "uptime-sla",
@@ -2021,8 +2024,8 @@
     {
       "id": "dispute-resolution",
       "title": {
-        "en": "Dispute resolution",
-        "es": "Resolución de controversias"
+        "en": "Governing law and jurisdiction",
+        "es": "Ley aplicable y jurisdicción"
       },
       "category": {
         "en": "Legal",
@@ -2030,8 +2033,8 @@
       },
       "order": 10,
       "plainDescription": {
-        "en": "How and where will disputes about this agreement be resolved? You can choose courts in the governing law jurisdiction, courts elsewhere, or private arbitration.",
-        "es": "¿Cómo y dónde se resolverán las controversias derivadas de este contrato? Se puede optar por los tribunales de la jurisdicción de la ley aplicable, tribunales de otra jurisdicción o arbitraje privado."
+        "en": "Which law governs this agreement, and how and where any dispute about it is resolved — courts in the governing-law jurisdiction, neutral Delaware courts, or arbitration (JAMS, AAA, ICC or LCIA).",
+        "es": "Qué ley rige este acuerdo y cómo y dónde se resuelve cualquier controversia relativa a él — tribunales de la jurisdicción de la ley aplicable, tribunales neutrales de Delaware o arbitraje (JAMS, AAA, ICC o LCIA)."
       },
       "legalContext": {
         "en": "The forum for disputes is negotiable even though the governing law is fixed. Court litigation is public with appeal rights. Arbitration is private and faster but typically final. For SaaS disputes, arbitration is increasingly popular due to confidentiality.",

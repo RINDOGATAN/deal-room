@@ -272,13 +272,26 @@ export async function generateContractData(
   // Compile clauses with agreed options
   const clauses: ClauseData[] = [];
 
-  // The governing-law-and-jurisdiction clause is negotiated (the builder picks
-  // the forum) but rendered as its own top-level article, not under "Negotiated
-  // Terms" — so we route it to a dedicated field instead of the clause list.
+  // The governing-law / forum clause is negotiated (the builder picks the forum)
+  // but rendered as its own top-level article, not under "Negotiated Terms" — so
+  // we route it to a dedicated field instead of the clause list. Two shapes:
+  //  - DPA `governing-law-jurisdiction`: options already state law + forum.
+  //  - MSA/NDA/SaaS `dispute-resolution`: forum-only, so we prepend a governing
+  //    law sentence built from the deal's chosen jurisdiction.
+  const govLawDisplay =
+    GOVERNING_LAW_DISPLAY[deal.governingLaw]?.[language] ||
+    GOVERNING_LAW_DISPLAY[deal.governingLaw]?.en ||
+    deal.governingLaw;
+  const govLawLead =
+    language === "es"
+      ? `El presente Acuerdo se rige e interpreta de conformidad con la legislación de ${govLawDisplay}. `
+      : `This Agreement is governed by and construed in accordance with the laws of ${govLawDisplay}. `;
   let governingLawArticle: { title: string; text: string } | undefined;
   const pushClause = (entry: ClauseData, clauseId: string) => {
     if (clauseId === "governing-law-jurisdiction") {
       governingLawArticle = { title: entry.title, text: entry.legalText };
+    } else if (clauseId === "dispute-resolution") {
+      governingLawArticle = { title: entry.title, text: govLawLead + entry.legalText };
     } else {
       clauses.push(entry);
     }
