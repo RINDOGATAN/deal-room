@@ -589,14 +589,14 @@ function SigningContent({ dealId }: { dealId: string }) {
                     <p className="text-xs text-muted-foreground mb-2">
                       {t("signingDetails.completeAsHint")}
                     </p>
-                    <div className="grid grid-cols-2 gap-2">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                       {(["PROCESSOR", "CONTROLLER"] as const).map((role) => (
                         <button
                           key={role}
                           type="button"
                           onClick={() => setDetailsForm((f) => ({ ...f, fillRole: role }))}
                           aria-pressed={detailsForm.fillRole === role}
-                          className={`p-3 text-sm border rounded-xl text-left transition-colors ${
+                          className={`p-3 text-sm border rounded-xl text-left transition-colors min-h-[44px] ${
                             detailsForm.fillRole === role
                               ? "border-primary bg-primary/5 font-medium"
                               : "border-border hover:border-primary/50"
