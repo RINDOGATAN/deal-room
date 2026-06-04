@@ -500,6 +500,42 @@ export async function generateContractData(
     }
   }
 
+  // Build the party objects, then apply the solo Processor swap to the objects
+  // themselves (not just the boilerplate variables) so EVERY renderer — cover,
+  // parties section, and signature blocks in PDF/DOCX/TXT — shows the filling
+  // party under the role they chose, with the other slot left blank.
+  let outPartyA: PartyData = {
+    name: initiator.name || initiator.email,
+    email: initiator.email,
+    company: initiator.company || undefined,
+    legalName: sdA?.legalName,
+    address: sdA?.address,
+    taxId: sdA?.taxId,
+    signatoryName: sdA?.signatoryName,
+    signatoryTitle: sdA?.signatoryTitle,
+    signature: deal.signingRequest?.initiatorSignature || undefined,
+    signedAt: deal.signingRequest?.initiatorSignedAt || undefined,
+  };
+  let outPartyB: PartyData | null = respondent
+    ? {
+        name: respondent.name || respondent.email,
+        email: respondent.email,
+        company: respondent.company || undefined,
+        legalName: sdB?.legalName,
+        address: sdB?.address,
+        taxId: sdB?.taxId,
+        signatoryName: sdB?.signatoryName,
+        signatoryTitle: sdB?.signatoryTitle,
+        signature: deal.signingRequest?.respondentSignature || undefined,
+        signedAt: deal.signingRequest?.respondentSignedAt || undefined,
+      }
+    : null;
+
+  if (isSolo && soloFillRole === "PROCESSOR") {
+    outPartyB = outPartyA; // filling party → Processor (slot B)
+    outPartyA = { name: "[_________________]", email: "" }; // Controller (slot A) left blank
+  }
+
   return {
     dealName: deal.name,
     contractType: deal.contractTemplate.displayName,
@@ -509,32 +545,8 @@ export async function generateContractData(
       deal.governingLaw,
     governingLawKey: deal.governingLaw,
     createdAt: deal.createdAt,
-    partyA: {
-      name: initiator.name || initiator.email,
-      email: initiator.email,
-      company: initiator.company || undefined,
-      legalName: sdA?.legalName,
-      address: sdA?.address,
-      taxId: sdA?.taxId,
-      signatoryName: sdA?.signatoryName,
-      signatoryTitle: sdA?.signatoryTitle,
-      signature: deal.signingRequest?.initiatorSignature || undefined,
-      signedAt: deal.signingRequest?.initiatorSignedAt || undefined,
-    },
-    partyB: respondent
-      ? {
-          name: respondent.name || respondent.email,
-          email: respondent.email,
-          company: respondent.company || undefined,
-          legalName: sdB?.legalName,
-          address: sdB?.address,
-          taxId: sdB?.taxId,
-          signatoryName: sdB?.signatoryName,
-          signatoryTitle: sdB?.signatoryTitle,
-          signature: deal.signingRequest?.respondentSignature || undefined,
-          signedAt: deal.signingRequest?.respondentSignedAt || undefined,
-        }
-      : null,
+    partyA: outPartyA,
+    partyB: outPartyB,
     clauses,
     governingLawArticle,
     coverPartyAName,
