@@ -83,6 +83,24 @@ function buildTwoPartyDpa(soloFillRole: "CONTROLLER" | "PROCESSOR") {
   };
 }
 
+// Solo: a single filling party, no respondent. The other role's block is left
+// blank in the output for the counterparty to complete offline.
+function buildSoloDpa(soloFillRole: "CONTROLLER" | "PROCESSOR") {
+  return {
+    ...buildTwoPartyDpa(soloFillRole),
+    dealMode: "SOLO",
+    parties: [INITIATOR],
+    signingRequest: {
+      initiatorSignature: "Ada Processor",
+      initiatorSignedAt: new Date("2026-06-26T10:00:00Z"),
+      respondentSignature: null,
+      respondentSignedAt: null,
+    },
+  };
+}
+
+const BLANK = "[_________________]";
+
 beforeEach(() => {
   currentDeal = null;
 });
@@ -146,5 +164,45 @@ describe("two-party DPA Controller/Processor swap", () => {
     const buf = await renderToBuffer(ContractPDF({ data }) as never);
     expect(buf.length).toBeGreaterThan(1000);
     expect(buf.subarray(0, 5).toString("latin1")).toBe("%PDF-");
+  });
+});
+
+describe("solo DPA Controller/Processor fill", () => {
+  it("PROCESSOR: filling party → Processor slot, Controller slot left blank", async () => {
+    currentDeal = buildSoloDpa("PROCESSOR");
+    const data = (await generateContractData("deal-1"))!;
+
+    // Controller slot (Party A) blank; filling party moves into Processor (B).
+    expect(data.partyA.name).toBe(BLANK);
+    expect(data.partyB?.company).toBe("Acme Processing SL");
+    expect(data.partyB?.signature).toBe("Ada Processor");
+    expect(data.coverPartyAName).toBe(BLANK);
+    expect(data.coverPartyBName).toContain("Acme");
+
+    const pre = data.boilerplate!.preamble;
+    expect(pre.indexOf("DATA CONTROLLER")).toBeLessThan(pre.indexOf(BLANK));
+    expect(pre.indexOf(BLANK)).toBeLessThan(pre.indexOf("DATA PROCESSOR"));
+    expect(pre.indexOf("DATA PROCESSOR")).toBeLessThan(pre.indexOf("Acme"));
+
+    // TXT: Processor → Acme; Controller label carries the blank placeholder.
+    const txt = generateContractTxt(data);
+    expect(txt).toMatch(/Processor:\n\s+Acme Processing SL/);
+    expect(txt).not.toMatch(/Controller:\n\s+Acme Processing SL/);
+
+    const buf = await renderToBuffer(ContractPDF({ data }) as never);
+    expect(buf.subarray(0, 5).toString("latin1")).toBe("%PDF-");
+  });
+
+  it("CONTROLLER (default/no swap): filling party stays Controller, Processor blank", async () => {
+    currentDeal = buildSoloDpa("CONTROLLER");
+    const data = (await generateContractData("deal-1"))!;
+
+    expect(data.partyA.company).toBe("Acme Processing SL");
+    expect(data.partyB).toBeNull(); // no respondent; Processor slot rendered blank
+    expect(data.coverPartyBName).toBe(BLANK);
+
+    const pre = data.boilerplate!.preamble;
+    expect(pre.indexOf("DATA CONTROLLER")).toBeLessThan(pre.indexOf("Acme"));
+    expect(pre.indexOf("Acme")).toBeLessThan(pre.indexOf("DATA PROCESSOR"));
   });
 });
