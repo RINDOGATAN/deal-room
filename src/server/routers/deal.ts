@@ -296,8 +296,8 @@ export const dealRouter = createTRPCRouter({
         initiatorCompany: z.string().optional(),
         lawyerVettingId: z.string().optional(),
         parameters: z.record(z.string(), z.string()).optional(),
-        // SOLO asymmetric-role contracts (DPA): which role the filling party
-        // takes. Ignored for two-party deals and symmetric-role skills.
+        // Asymmetric-role contracts (DPA): which role the initiator takes. The
+        // counterparty (if any) takes the other. Ignored for symmetric skills.
         fillRole: z.enum(["CONTROLLER", "PROCESSOR"]).optional(),
       })
     )
@@ -417,12 +417,13 @@ export const dealRouter = createTRPCRouter({
           parameters: Object.keys(dealParameters).length > 0
             ? (dealParameters as Prisma.InputJsonValue)
             : Prisma.DbNull,
-          // Persist the Controller/Processor choice only for solo DPAs; for
-          // every other deal the role is fixed by party position so we leave
-          // it null. This is the single source of truth read by the document
-          // generator (download + signing paths both honour it).
+          // Persist the Controller/Processor choice for DPAs (both solo and
+          // two-party); other skills have roles fixed by position so we leave it
+          // null. Single source of truth read by the document generator — solo
+          // leaves the other role blank, two-party swaps the counterparty into
+          // it. Default Processor (the common "processor prepares the DPA" case).
           soloFillRole:
-            input.dealMode === "SOLO" && input.contractType === "DPA"
+            input.contractType === "DPA"
               ? input.fillRole ?? "PROCESSOR"
               : null,
           lawyerVettingId: input.lawyerVettingId,

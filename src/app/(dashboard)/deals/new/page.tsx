@@ -158,6 +158,53 @@ const jurisdictionMeta = [
   { value: "SPAIN" as GoverningLaw, flag: "🇪🇸", tKey: "spain" as const },
 ];
 
+/** Controller/Processor role picker for DPAs. The initiator chooses; in SOLO
+ *  the other role's block is left blank, in NEGOTIATION the counterparty takes
+ *  the opposite role. Shared by the main and vetting-flow forms. */
+function DpaRoleSelector({
+  value,
+  onChange,
+  mode,
+}: {
+  value: "CONTROLLER" | "PROCESSOR";
+  onChange: (role: "CONTROLLER" | "PROCESSOR") => void;
+  mode: DealMode;
+}) {
+  const t = useTranslations("newDeal");
+  return (
+    <div className="space-y-2">
+      <Label>{t("dpaRoleTitle")}</Label>
+      <p className="text-xs text-muted-foreground">
+        {mode === "SOLO" ? t("dpaRoleHint") : t("dpaRoleHintNegotiation")}
+      </p>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+        {([
+          { role: "PROCESSOR" as const, title: t("dpaRoleProcessor"), desc: t("dpaRoleProcessorDescription") },
+          { role: "CONTROLLER" as const, title: t("dpaRoleController"), desc: t("dpaRoleControllerDescription") },
+        ]).map(({ role, title, desc }) => (
+          <button
+            key={role}
+            type="button"
+            onClick={() => onChange(role)}
+            aria-pressed={value === role}
+            className={`card-brutal text-left relative transition-colors p-4 ${
+              value === role ? "border-primary" : "hover:border-muted-foreground"
+            }`}
+          >
+            {value === role && (
+              <div className="absolute top-4 right-4 w-6 h-6 bg-primary flex items-center justify-center rounded-full">
+                <Check className="w-4 h-4 text-primary-foreground" />
+              </div>
+            )}
+            <h3 className="font-semibold">{title}</h3>
+            <p className="text-sm text-muted-foreground mt-1">{desc}</p>
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function NewDealPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -384,7 +431,7 @@ export default function NewDealPage() {
       initiatorCompany: company.trim() || undefined,
       lawyerVettingId: vettingId || undefined,
       parameters: hasParameters ? parameterValues : undefined,
-      fillRole: dealMode === "SOLO" && selectedType === "DPA" ? fillRole : undefined,
+      fillRole: selectedType === "DPA" ? fillRole : undefined,
     });
   };
 
@@ -478,6 +525,11 @@ export default function NewDealPage() {
               {t("yourCompanyDescription")}
             </p>
           </div>
+
+          {/* DPA role choice also applies to lawyer-vetted DPAs. */}
+          {selectedType === "DPA" && (
+            <DpaRoleSelector value={fillRole} onChange={setFillRole} mode={dealMode} />
+          )}
         </div>
 
         <div className="flex items-center justify-between gap-4 pt-4 border-t border-border">
@@ -1102,38 +1154,12 @@ export default function NewDealPage() {
                 </p>
               </div>
 
-              {/* SOLO DPA: which role the filling party takes. Set here so the
-                  choice flows consistently into both the direct download and the
-                  signing paths (editable later on the sign page). */}
-              {dealMode === "SOLO" && selectedType === "DPA" && (
-                <div className="space-y-2">
-                  <Label>{t("dpaRoleTitle")}</Label>
-                  <p className="text-xs text-muted-foreground">{t("dpaRoleHint")}</p>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
-                    {([
-                      { role: "PROCESSOR" as const, title: t("dpaRoleProcessor"), desc: t("dpaRoleProcessorDescription") },
-                      { role: "CONTROLLER" as const, title: t("dpaRoleController"), desc: t("dpaRoleControllerDescription") },
-                    ]).map(({ role, title, desc }) => (
-                      <button
-                        key={role}
-                        type="button"
-                        onClick={() => setFillRole(role)}
-                        aria-pressed={fillRole === role}
-                        className={`card-brutal text-left relative transition-colors p-4 ${
-                          fillRole === role ? "border-primary" : "hover:border-muted-foreground"
-                        }`}
-                      >
-                        {fillRole === role && (
-                          <div className="absolute top-4 right-4 w-6 h-6 bg-primary flex items-center justify-center rounded-full">
-                            <Check className="w-4 h-4 text-primary-foreground" />
-                          </div>
-                        )}
-                        <h3 className="font-semibold">{title}</h3>
-                        <p className="text-sm text-muted-foreground mt-1">{desc}</p>
-                      </button>
-                    ))}
-                  </div>
-                </div>
+              {/* DPA: which role the initiator takes. In SOLO the other role's
+                  block is left blank; in NEGOTIATION the counterparty takes the
+                  other role. Set here so the choice flows consistently into the
+                  download, signing and generated document. */}
+              {selectedType === "DPA" && (
+                <DpaRoleSelector value={fillRole} onChange={setFillRole} mode={dealMode} />
               )}
             </div>
           </div>

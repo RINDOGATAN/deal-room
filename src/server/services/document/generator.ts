@@ -446,18 +446,21 @@ export async function generateContractData(
           : "(as further described in the principal agreement)");
   }
 
-  // SOLO mode with an asymmetric-role contract (e.g. DPA: Controller vs
-  // Processor): the filling party chose which role they occupy. Party A is the
-  // Controller slot by convention; when the solo party completes AS the
-  // Processor, we move their details into the B (Processor) slot and leave the
-  // Controller slot blank for the counterparty. Default (CONTROLLER / undefined)
-  // keeps the historical behaviour, so non-DPA and two-party deals are untouched.
-  // Source of truth is the deal's soloFillRole column (set at creation, editable
-  // at signing); fall back to the legacy per-party signingDetails.fillRole for
-  // deals created before the column existed.
-  const soloFillRole =
+  // Asymmetric-role contract (e.g. DPA: Controller vs Processor): Party A is the
+  // Controller slot by convention. When the initiator / filling party chose the
+  // Processor role instead, swap the A/B boilerplate variables so the preamble,
+  // signature blocks and cover all place them under Processor and the
+  // counterparty under Controller. The variable swap is identical for solo and
+  // two-party; the party-object swap below differs (solo blanks the absent role,
+  // two-party exchanges the two real parties).
+  // Default (CONTROLLER / undefined) keeps the historical behaviour, so non-DPA
+  // deals are untouched. Source of truth is the deal's soloFillRole column (set
+  // at creation, editable at signing); fall back to the legacy per-party
+  // signingDetails.fillRole for deals created before the column existed.
+  const fillRole =
     deal.soloFillRole ?? (sdA as { fillRole?: string } | null)?.fillRole;
-  if (isSolo && soloFillRole === "PROCESSOR") {
+  const swapRoles = fillRole === "PROCESSOR";
+  if (swapRoles) {
     for (const [a, b] of [
       ["partyAName", "partyBName"],
       ["partyAAddress", "partyBAddress"],
@@ -517,10 +520,10 @@ export async function generateContractData(
     }
   }
 
-  // Build the party objects, then apply the solo Processor swap to the objects
+  // Build the party objects, then apply the Processor-role swap to the objects
   // themselves (not just the boilerplate variables) so EVERY renderer — cover,
-  // parties section, and signature blocks in PDF/DOCX/TXT — shows the filling
-  // party under the role they chose, with the other slot left blank.
+  // parties section, and signature blocks in PDF/DOCX/TXT — shows each party
+  // under the role they chose.
   let outPartyA: PartyData = {
     name: initiator.name || initiator.email,
     email: initiator.email,
@@ -548,9 +551,17 @@ export async function generateContractData(
       }
     : null;
 
-  if (isSolo && soloFillRole === "PROCESSOR") {
-    outPartyB = outPartyA; // filling party → Processor (slot B)
-    outPartyA = { name: "[_________________]", email: "" }; // Controller (slot A) left blank
+  if (swapRoles) {
+    if (isSolo || !outPartyB) {
+      outPartyB = outPartyA; // filling party → Processor (slot B)
+      outPartyA = { name: "[_________________]", email: "" }; // Controller (slot A) left blank
+    } else {
+      // Two-party: a true swap so the initiator lands in the Processor slot and
+      // the respondent in the Controller slot — each keeps their own signature.
+      const tmp = outPartyA;
+      outPartyA = outPartyB;
+      outPartyB = tmp;
+    }
   }
 
   return {

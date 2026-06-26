@@ -145,6 +145,7 @@
     "yourCompanyDescription": "Will be shown to the other party",
     "dpaRoleTitle": "Your role in this DPA",
     "dpaRoleHint": "Pick your role. We fill your side and leave the other party's block blank for them to complete — most processors prepare the template for a controller to receive.",
+    "dpaRoleHintNegotiation": "Pick your role. The other party takes the opposite role and fills in their own details when they join.",
     "dpaRoleProcessor": "Processor",
     "dpaRoleProcessorDescription": "We process data on behalf of a controller",
     "dpaRoleController": "Controller",
