@@ -447,6 +447,10 @@ model DealRoom {
   governingLaw               GoverningLaw // Determines applicable law framework
   contractLanguage           String         @default("en") // "en" or "es" for contract output language
   parameters                 Json? // Deal-specific parameter values {"param-id": "value", ...}
+  // SOLO mode with an asymmetric-role contract (DPA: Controller vs Processor):
+  // which role the single filling party occupies. The other role's block is left
+  // blank in the output. Null for two-party deals and symmetric-role skills.
+  soloFillRole               String? // "CONTROLLER" | "PROCESSOR"
   status                     DealRoomStatus @default(DRAFT)
   currentRound               Int            @default(0)
   lawyerVettingId            String?

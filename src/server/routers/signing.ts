@@ -146,6 +146,16 @@ export const signingRouter = createTRPCRouter({
         data: { signingDetails: input.details },
       });
 
+      // For solo asymmetric-role contracts (DPA), the role choice lives on the
+      // deal so it applies to the direct-download path too — mirror any edit
+      // made here onto the deal's soloFillRole column.
+      if (input.details.fillRole && party.dealRoom.dealMode === "SOLO") {
+        await ctx.prisma.dealRoom.update({
+          where: { id: input.dealRoomId },
+          data: { soloFillRole: input.details.fillRole },
+        });
+      }
+
       await ctx.prisma.auditLog.create({
         data: {
           dealRoomId: input.dealRoomId,

@@ -452,7 +452,11 @@ export async function generateContractData(
   // Processor, we move their details into the B (Processor) slot and leave the
   // Controller slot blank for the counterparty. Default (CONTROLLER / undefined)
   // keeps the historical behaviour, so non-DPA and two-party deals are untouched.
-  const soloFillRole = (sdA as { fillRole?: string } | null)?.fillRole;
+  // Source of truth is the deal's soloFillRole column (set at creation, editable
+  // at signing); fall back to the legacy per-party signingDetails.fillRole for
+  // deals created before the column existed.
+  const soloFillRole =
+    deal.soloFillRole ?? (sdA as { fillRole?: string } | null)?.fillRole;
   if (isSolo && soloFillRole === "PROCESSOR") {
     for (const [a, b] of [
       ["partyAName", "partyBName"],

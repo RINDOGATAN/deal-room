@@ -121,6 +121,17 @@ function SigningContent({ dealId }: { dealId: string }) {
     }
   }, [signingDetails]);
 
+  // Reflect the Controller/Processor choice made at deal creation. The deal's
+  // soloFillRole column is the source of truth; this keeps the selector in sync
+  // so the signing path agrees with whatever was chosen up front (and with the
+  // direct-download path). Only fires when the value actually changes.
+  const soloFillRoleFromDeal = (deal as { soloFillRole?: "CONTROLLER" | "PROCESSOR" | null } | undefined)?.soloFillRole;
+  useEffect(() => {
+    if (soloFillRoleFromDeal) {
+      setDetailsForm((f) => ({ ...f, fillRole: soloFillRoleFromDeal }));
+    }
+  }, [soloFillRoleFromDeal]);
+
   const submitDetails = trpc.signing.submitSigningDetails.useMutation({
     onSuccess: () => {
       toast.success(t("signingDetails.saved"));
