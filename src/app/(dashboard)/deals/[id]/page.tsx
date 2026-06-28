@@ -251,7 +251,7 @@ function DealDetailContent({ dealId }: { dealId: string }) {
               )
             )}
           </div>
-          <div className="flex items-center gap-4 text-sm text-muted-foreground">
+          <div className="flex items-center gap-4 flex-wrap text-sm text-muted-foreground">
             <span className="flex items-center gap-1">
               <FileText className="w-4 h-4" />
               {deal.contractTemplate.displayName}
@@ -703,22 +703,22 @@ function DealDetailContent({ dealId }: { dealId: string }) {
                 key={clause.id}
                 className="stat-row px-6"
               >
-                <div className="flex items-center gap-4">
-                  <span className="metric text-muted-foreground w-6 text-right">{index + 1}</span>
-                  <div className={`w-2 h-2 ${
+                <div className="flex items-center gap-4 min-w-0">
+                  <span className="metric text-muted-foreground w-6 text-right flex-shrink-0">{index + 1}</span>
+                  <div className={`w-2 h-2 flex-shrink-0 ${
                     clauseStatus === "AGREED" ? "bg-primary" :
                     clauseStatus === "SUGGESTED" ? "bg-blue-500" :
                     clauseStatus === "DIVERGENT" ? "bg-yellow-500" :
                     "bg-muted-foreground/30"
                   }`} />
-                  <div>
-                    <p className="font-medium">{clause.clauseTemplate.title}</p>
-                    <p className="text-xs text-muted-foreground">{clause.clauseTemplate.category}</p>
+                  <div className="min-w-0">
+                    <p className="font-medium truncate">{clause.clauseTemplate.title}</p>
+                    <p className="text-xs text-muted-foreground truncate">{clause.clauseTemplate.category}</p>
                   </div>
                 </div>
-                <div className="text-right">
+                <div className="text-right flex-shrink-0 min-w-0">
                   {mySelection ? (
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-sm text-muted-foreground truncate">
                       <span className="text-foreground">{mySelection.option.label}</span>
                     </p>
                   ) : (

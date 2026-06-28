@@ -66,8 +66,8 @@ export default function LaunchLandingPage() {
                 href={`/launch/${j.id}`}
                 className="card-brutal group hover:border-primary transition-colors flex items-center justify-between"
               >
-                <div className="space-y-1">
-                  <p className="font-semibold group-hover:text-primary transition-colors">
+                <div className="space-y-1 min-w-0">
+                  <p className="font-semibold group-hover:text-primary transition-colors break-words">
                     {j.companyName}
                   </p>
                   <p className="text-sm text-muted-foreground">
@@ -81,7 +81,7 @@ export default function LaunchLandingPage() {
                       : t("documentCountOther", { count: j._count.dealRooms })}
                   </p>
                 </div>
-                <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors" />
+                <ArrowRight className="w-5 h-5 flex-shrink-0 text-muted-foreground group-hover:text-primary transition-colors" />
               </Link>
             ))}
           </div>

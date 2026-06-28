@@ -46,7 +46,7 @@ export function OnboardingModal({ open, dismissible, onComplete }: OnboardingMod
   return (
     <Dialog open={open} onOpenChange={(isOpen) => { if (!isOpen && dismissible) onComplete?.(); }}>
       <DialogContent
-        className="bg-card border-border max-w-2xl w-full"
+        className="bg-card border-border w-full sm:max-w-2xl"
         showCloseButton={dismissible}
       >
         <DialogHeader>

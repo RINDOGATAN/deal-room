@@ -363,16 +363,16 @@ function SigningContent({ dealId }: { dealId: string }) {
     <div className="max-w-4xl mx-auto space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 min-w-0">
           <button
             onClick={() => router.push(`/deals/${dealId}`)}
-            className="p-2 text-muted-foreground hover:text-foreground"
+            className="p-2 text-muted-foreground hover:text-foreground flex-shrink-0"
           >
             <ArrowLeft className="w-5 h-5" />
           </button>
-          <div>
+          <div className="min-w-0">
             <h1 className="text-xl font-bold">{t("eSignature")}</h1>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm text-muted-foreground truncate">
               {deal.name} • {deal.contractTemplate.displayName}
             </p>
           </div>
@@ -417,13 +417,13 @@ function SigningContent({ dealId }: { dealId: string }) {
             <div className="p-4 bg-muted/30 border border-border">
               <p className="text-xs text-muted-foreground uppercase tracking-wider mb-2">{isSoloMode ? t("signingParty") : t("partyA")}</p>
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-primary flex items-center justify-center text-primary-foreground font-semibold">
+                <div className="w-10 h-10 bg-primary flex items-center justify-center text-primary-foreground font-semibold flex-shrink-0">
                   {(initiator?.name || initiator?.email || "?")[0].toUpperCase()}
                 </div>
-                <div>
-                  <p className="font-medium">{initiator?.name || initiator?.email}</p>
+                <div className="min-w-0">
+                  <p className="font-medium truncate">{initiator?.name || initiator?.email}</p>
                   {initiator?.company && (
-                    <p className="text-sm text-muted-foreground">{initiator.company}</p>
+                    <p className="text-sm text-muted-foreground truncate">{initiator.company}</p>
                   )}
                 </div>
               </div>
@@ -434,13 +434,13 @@ function SigningContent({ dealId }: { dealId: string }) {
               <div className="p-4 bg-muted/30 border border-border">
                 <p className="text-xs text-muted-foreground uppercase tracking-wider mb-2">{t("partyB")}</p>
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-muted flex items-center justify-center text-muted-foreground font-semibold">
+                  <div className="w-10 h-10 bg-muted flex items-center justify-center text-muted-foreground font-semibold flex-shrink-0">
                     {(respondent?.name || respondent?.email || "?")[0].toUpperCase()}
                   </div>
-                  <div>
-                    <p className="font-medium">{respondent?.name || respondent?.email}</p>
+                  <div className="min-w-0">
+                    <p className="font-medium truncate">{respondent?.name || respondent?.email}</p>
                     {respondent?.company && (
-                      <p className="text-sm text-muted-foreground">{respondent.company}</p>
+                      <p className="text-sm text-muted-foreground truncate">{respondent.company}</p>
                     )}
                   </div>
                 </div>
@@ -968,7 +968,7 @@ function SigningContent({ dealId }: { dealId: string }) {
                           <p className="text-xs text-muted-foreground mb-2 text-center">{t("yourSignature")}</p>
                           <div className="p-4 border border-primary/30 bg-muted/20">
                             <p
-                              className="text-2xl text-center text-primary"
+                              className="text-2xl text-center text-primary break-words overflow-hidden"
                               style={{ fontFamily: "var(--font-signature), 'Brush Script MT', cursive" }}
                             >
                               {currentPartySignature}
