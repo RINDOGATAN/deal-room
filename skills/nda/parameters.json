@@ -1,0 +1,26 @@
+{
+  "version": "1.0",
+  "parameters": [
+    {
+      "id": "dispute-forum-city",
+      "token": "dispute forum city",
+      "scope": "dispute-resolution",
+      "type": "text",
+      "required": true,
+      "default": "Madrid",
+      "jurisdictions": ["SPAIN"],
+      "label": {
+        "en": "City of the competent courts",
+        "es": "Ciudad de los juzgados y tribunales competentes"
+      },
+      "hint": {
+        "en": "Only used if you choose a Spanish-courts dispute option. The city whose courts will have exclusive jurisdiction — typically the registered office of the disclosing party.",
+        "es": "Solo se utiliza si elige una opción de resolución de controversias ante tribunales españoles. La ciudad cuyos Juzgados y Tribunales tendrán jurisdicción exclusiva — habitualmente, el domicilio social de la parte divulgadora."
+      },
+      "placeholder": {
+        "en": "e.g. Madrid",
+        "es": "p. ej. Madrid"
+      }
+    }
+  ]
+}

@@ -260,14 +260,22 @@ export default function NewDealPage() {
     { contractType: selectedType! },
     { enabled: !!selectedType }
   );
-  const hasParameters = !!(parameterSchema as ParameterSchema | null)?.parameters?.length;
-
-  // Pre-fill default values when parameter schema loads
-  useEffect(() => {
+  // Parameters applicable to the chosen jurisdiction (some are jurisdiction-scoped, e.g. Spain-only forum city)
+  const visibleParameters = useMemo(() => {
     const schema = parameterSchema as ParameterSchema | null;
-    if (!schema?.parameters?.length) return;
+    if (!schema?.parameters?.length) return [];
+    return schema.parameters.filter(
+      (p) =>
+        !p.jurisdictions?.length ||
+        (selectedJurisdiction !== null && p.jurisdictions.includes(selectedJurisdiction))
+    );
+  }, [parameterSchema, selectedJurisdiction]);
+
+  // Pre-fill default values when the applicable parameter set changes
+  useEffect(() => {
+    if (!visibleParameters.length) return;
     const defaults: Record<string, string> = {};
-    for (const p of schema.parameters) {
+    for (const p of visibleParameters) {
       if (p.default && !parameterValues[p.id]) {
         defaults[p.id] = p.default;
       }
@@ -275,7 +283,7 @@ export default function NewDealPage() {
     if (Object.keys(defaults).length > 0) {
       setParameterValues((prev) => ({ ...defaults, ...prev }));
     }
-  }, [parameterSchema]);
+  }, [visibleParameters]);
   const { data: billingConfig } = trpc.billing.getConfig.useQuery();
   const selfServiceUpgrade = billingConfig?.selfServiceUpgrade ?? false;
   const allFamilies = templates ? groupTemplatesByFamily(templates) : [];
@@ -407,10 +415,9 @@ export default function NewDealPage() {
       return;
     }
 
-    // Validate required parameters
-    const schema = parameterSchema as ParameterSchema | null;
-    if (schema?.parameters?.length) {
-      const missing = schema.parameters.filter(
+    // Validate required parameters (only those applicable to the chosen jurisdiction)
+    if (visibleParameters.length) {
+      const missing = visibleParameters.filter(
         (p) => p.required && !parameterValues[p.id]?.trim()
       );
       if (missing.length > 0) {
@@ -430,7 +437,7 @@ export default function NewDealPage() {
       dealMode,
       initiatorCompany: company.trim() || undefined,
       lawyerVettingId: vettingId || undefined,
-      parameters: hasParameters ? parameterValues : undefined,
+      parameters: visibleParameters.length > 0 ? parameterValues : undefined,
       fillRole: selectedType === "DPA" ? fillRole : undefined,
     });
   };
@@ -1165,7 +1172,7 @@ export default function NewDealPage() {
           </div>
 
           {/* Deal Parameters (conditional) */}
-          {hasParameters && (
+          {visibleParameters.length > 0 && (
             <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-300">
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold rounded-full">
@@ -1185,13 +1192,13 @@ export default function NewDealPage() {
                   <p className="text-sm text-muted-foreground">
                     {t("dealParametersDescription")}
                   </p>
-                  {(parameterSchema as ParameterSchema)?.parameters.some((p) => p.required) && (
+                  {visibleParameters.some((p) => p.required) && (
                     <p className="text-xs text-muted-foreground shrink-0">
                       <span className="text-destructive">*</span> {t("requiredFieldsLegend")}
                     </p>
                   )}
                 </div>
-                {(parameterSchema as ParameterSchema)?.parameters.map((param) => (
+                {visibleParameters.map((param) => (
                   <ParameterField
                     key={param.id}
                     param={param}

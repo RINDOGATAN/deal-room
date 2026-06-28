@@ -32,6 +32,7 @@ export interface ParameterDefinition {
   optionLabels?: Record<string, string | Record<string, string>>;
   boilerplateVariable?: string; // also inject into {curly} boilerplate
   negotiable?: boolean; // if true, counterparty can propose changes during review
+  jurisdictions?: string[]; // if set, only collected for these governing-law jurisdictions
 }
 
 export interface ParameterSchema {
