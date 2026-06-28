@@ -95,7 +95,7 @@ export default function JourneyHubPage() {
           <Rocket className="w-3.5 h-3.5" />
           <span>{t("yourLaunch")}</span>
         </div>
-        <h1 className="text-2xl md:text-3xl font-bold">{journey.companyName}</h1>
+        <h1 className="text-2xl md:text-3xl font-bold break-words">{journey.companyName}</h1>
         <p className="text-sm text-muted-foreground">
           {journey.state} {journey.entityType.replace("_", "-")}
           {" · "}
@@ -157,7 +157,7 @@ export default function JourneyHubPage() {
               key={key}
               className={`card-brutal ${unlocked ? "" : "opacity-60"}`}
             >
-              <div className="flex items-start justify-between gap-4">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                 <div className="space-y-2 min-w-0">
                   <div className="flex items-center gap-3 flex-wrap">
                     <h2 className="text-lg font-semibold">{stepTitle}</h2>
@@ -177,7 +177,7 @@ export default function JourneyHubPage() {
                     </p>
                   )}
                 </div>
-                <div className="flex-shrink-0 flex flex-col items-end gap-2">
+                <div className="flex flex-col items-start gap-2 sm:flex-shrink-0 sm:items-end">
                   {!unlocked ? (
                     <div
                       className="inline-flex items-center gap-2 text-xs text-muted-foreground"
@@ -192,7 +192,7 @@ export default function JourneyHubPage() {
                         resetStep.mutate({ journeyId: journey.id, stepKey: key })
                       }
                       disabled={resetStep.isPending}
-                      className="text-xs text-muted-foreground hover:text-foreground underline underline-offset-2 disabled:opacity-40"
+                      className="inline-flex items-center min-h-[44px] py-2 text-xs text-muted-foreground hover:text-foreground underline underline-offset-2 disabled:opacity-40"
                     >
                       {t("actuallyINeed")}
                     </button>
@@ -224,7 +224,7 @@ export default function JourneyHubPage() {
                   {unlocked && status === "NOT_STARTED" && (
                     <button
                       onClick={() => setMarkDoneDialogStep(key)}
-                      className="text-xs text-muted-foreground hover:text-foreground underline underline-offset-2"
+                      className="inline-flex items-center min-h-[44px] py-2 text-xs text-muted-foreground hover:text-foreground underline underline-offset-2"
                     >
                       {t("iHaveThis")}
                     </button>

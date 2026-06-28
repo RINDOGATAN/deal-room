@@ -149,14 +149,14 @@ export function RequestRecommendationDialog({
         <div className="flex justify-end gap-2 pt-4">
           <button
             onClick={() => onOpenChange(false)}
-            className="px-4 py-2 text-sm border border-border rounded-full hover:bg-secondary transition-colors"
+            className="px-4 py-2 min-h-[44px] text-sm border border-border rounded-full hover:bg-secondary transition-colors"
           >
             {tCommon("cancel")}
           </button>
           <button
             onClick={handleSubmit}
             disabled={!contractType || !governingLaw || requestMutation.isPending}
-            className="btn-brutal text-sm disabled:opacity-50"
+            className="btn-brutal text-sm min-h-[44px] disabled:opacity-50"
           >
             {requestMutation.isPending ? t("submitting") : t("submitRequest")}
           </button>

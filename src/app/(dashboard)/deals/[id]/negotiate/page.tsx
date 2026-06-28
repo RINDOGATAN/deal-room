@@ -430,16 +430,16 @@ function NegotiateContent({ dealId }: { dealId: string }) {
       </div>
 
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-6">
         <div className="flex items-center gap-4">
           <button
             onClick={() => router.push(`/deals/${dealId}`)}
-            className="p-2 text-muted-foreground hover:text-foreground rounded-full hover:bg-secondary transition-colors"
+            className="p-3 text-muted-foreground hover:text-foreground rounded-full hover:bg-secondary transition-colors"
           >
             <ArrowLeft className="w-5 h-5" />
           </button>
-          <div>
-            <h1 className="text-xl font-heading">{deal.name}</h1>
+          <div className="min-w-0">
+            <h1 className="text-xl font-heading break-words">{deal.name}</h1>
             <p className="text-sm text-muted-foreground">
               {deal.contractTemplate.displayName} • {t("clause")} <span className="metric text-foreground">{currentClauseIndex + 1}</span> {t("of")} <span className="metric">{clauses.length}</span>
             </p>
@@ -471,7 +471,7 @@ function NegotiateContent({ dealId }: { dealId: string }) {
             <p className="text-sm text-muted-foreground">{t("progress")}</p>
             <p className="metric"><span className="text-primary">{selections.size}</span><span className="text-muted-foreground">/{clauses.length}</span></p>
           </div>
-          <Progress value={progress} className="w-32 h-1.5" />
+          <Progress value={progress} className="hidden sm:block w-32 h-1.5" />
         </div>
       </div>
 
@@ -575,7 +575,7 @@ function NegotiateContent({ dealId }: { dealId: string }) {
                 <p className="section-label text-primary">{t("clauses")}</p>
                 <button
                   onClick={() => setSidebarOpen(false)}
-                  className="p-2 text-muted-foreground hover:text-foreground"
+                  className="p-3 text-muted-foreground hover:text-foreground"
                 >
                   <ArrowLeft className="w-5 h-5" />
                 </button>
@@ -792,7 +792,7 @@ function NegotiateContent({ dealId }: { dealId: string }) {
                         e.stopPropagation();
                         setExpandedOption(isExpanded ? null : option.id);
                       }}
-                      className="p-2.5 text-muted-foreground hover:text-foreground rounded-full hover:bg-secondary transition-colors"
+                      className="p-3 text-muted-foreground hover:text-foreground rounded-full hover:bg-secondary transition-colors"
                     >
                       {isExpanded ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
                     </button>

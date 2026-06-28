@@ -689,7 +689,7 @@ export default function NewDealPage() {
                   type="button"
                   onClick={() => setSearchQuery("")}
                   aria-label="Clear search"
-                  className="absolute right-1 top-1/2 -translate-y-1/2 p-2 text-muted-foreground hover:text-foreground transition-colors"
+                  className="absolute right-1 top-1/2 -translate-y-1/2 px-2 py-2.5 min-h-[44px] inline-flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
                 >
                   <X className="h-4 w-4" />
                 </button>
@@ -701,7 +701,7 @@ export default function NewDealPage() {
                 <button
                   onClick={() => setSelectedCategory(null)}
                   className={`
-                    shrink-0 px-4 py-1.5 rounded-full text-sm font-medium border transition-colors
+                    shrink-0 px-4 py-2.5 min-h-[44px] rounded-full text-sm font-medium border transition-colors
                     ${selectedCategory === null
                       ? "bg-primary text-primary-foreground border-primary"
                       : "bg-muted/50 text-muted-foreground border-border hover:border-muted-foreground"}
@@ -714,7 +714,7 @@ export default function NewDealPage() {
                     key={cat}
                     onClick={() => setSelectedCategory(selectedCategory === cat ? null : cat)}
                     className={`
-                      shrink-0 px-4 py-1.5 rounded-full text-sm font-medium border transition-colors
+                      shrink-0 px-4 py-2.5 min-h-[44px] rounded-full text-sm font-medium border transition-colors
                       ${selectedCategory === cat
                         ? "bg-primary text-primary-foreground border-primary"
                         : "bg-muted/50 text-muted-foreground border-border hover:border-muted-foreground"}
@@ -1216,14 +1216,14 @@ export default function NewDealPage() {
             </div>
           )}
 
-          <div className="flex items-center justify-between pt-4 border-t border-border">
+          <div className="flex items-center justify-between gap-4 pt-4 border-t border-border">
             <p className="text-sm text-muted-foreground">
               {t("selectOptionsNext")}
             </p>
             <button
               onClick={handleCreate}
               disabled={!dealName.trim() || createDeal.isPending}
-              className="btn-brutal flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="btn-brutal flex items-center gap-2 flex-shrink-0 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {createDeal.isPending ? t("creating") : tCommon("continue")}
               <ArrowRight className="w-4 h-4" />
@@ -1286,7 +1286,7 @@ function ParameterField({
                     : [...current, opt];
                   onChange(next.join(","));
                 }}
-                className={`px-3 py-1.5 rounded-full text-sm border transition-colors ${
+                className={`px-3 py-2.5 min-h-[44px] rounded-full text-sm border transition-colors ${
                   isSelected
                     ? "bg-primary text-primary-foreground border-primary"
                     : "bg-muted/50 text-muted-foreground border-border hover:border-muted-foreground"
@@ -1308,7 +1308,7 @@ function ParameterField({
               key={opt}
               type="button"
               onClick={() => onChange(opt)}
-              className={`px-3 py-1.5 rounded-full text-sm border transition-colors ${
+              className={`px-3 py-2.5 min-h-[44px] rounded-full text-sm border transition-colors ${
                 value === opt
                   ? "bg-primary text-primary-foreground border-primary"
                   : "bg-muted/50 text-muted-foreground border-border hover:border-muted-foreground"
