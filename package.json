@@ -107,6 +107,7 @@
     "vitest": "^4.1.5"
   },
   "overrides": {
+    "nodemailer": "$nodemailer",
     "uuid": "$uuid",
     "cookie": "^0.7.0"
   }
