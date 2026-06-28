@@ -1163,12 +1163,7 @@
           "bias": {
             "partyA": 0,
             "partyB": 0
-          },
-          "jurisdictions": [
-            "CALIFORNIA",
-            "ENGLAND_WALES",
-            "SPAIN"
-          ]
+          }
         },
         {
           "id": "dispute-courts-delaware",
@@ -1238,9 +1233,14 @@
             "partyA": 0,
             "partyB": 0
           },
-          "jurisdictions": [
-            "CALIFORNIA"
-          ]
+          "jurisdictionConfig": {
+            "ENGLAND_WALES": {
+              "available": false
+            },
+            "SPAIN": {
+              "available": false
+            }
+          }
         },
         {
           "id": "dispute-arbitration-jams",
@@ -1314,9 +1314,14 @@
             "partyA": 0.1,
             "partyB": -0.1
           },
-          "jurisdictions": [
-            "CALIFORNIA"
-          ]
+          "jurisdictionConfig": {
+            "ENGLAND_WALES": {
+              "available": false
+            },
+            "SPAIN": {
+              "available": false
+            }
+          }
         },
         {
           "id": "dispute-arbitration-icc",
@@ -1385,12 +1390,7 @@
           "bias": {
             "partyA": 0,
             "partyB": 0
-          },
-          "jurisdictions": [
-            "CALIFORNIA",
-            "ENGLAND_WALES",
-            "SPAIN"
-          ]
+          }
         },
         {
           "id": "dispute-arbitration-aaa",
@@ -1462,9 +1462,14 @@
             "partyA": 0,
             "partyB": 0
           },
-          "jurisdictions": [
-            "CALIFORNIA"
-          ]
+          "jurisdictionConfig": {
+            "ENGLAND_WALES": {
+              "available": false
+            },
+            "SPAIN": {
+              "available": false
+            }
+          }
         },
         {
           "id": "dispute-arbitration-lcia",
@@ -1534,9 +1539,14 @@
             "partyA": 0,
             "partyB": 0
           },
-          "jurisdictions": [
-            "ENGLAND_WALES"
-          ]
+          "jurisdictionConfig": {
+            "CALIFORNIA": {
+              "available": false
+            },
+            "SPAIN": {
+              "available": false
+            }
+          }
         },
         {
           "id": "dispute-courts-spanish",
@@ -1546,9 +1556,14 @@
             "es": "Tribunales españoles"
           },
           "order": 7,
-          "jurisdictions": [
-            "SPAIN"
-          ],
+          "jurisdictionConfig": {
+            "CALIFORNIA": {
+              "available": false
+            },
+            "ENGLAND_WALES": {
+              "available": false
+            }
+          },
           "plainDescription": {
             "en": "Submission to the ordinary courts of a Spanish city — public, fast, no arbitration fees.",
             "es": "Sumisión expresa a los Juzgados y Tribunales de una ciudad española — vía pública, rápida y sin costes de arbitraje."
@@ -1602,8 +1617,8 @@
             }
           },
           "legalText": {
-            "en": "Any dispute arising out of or relating to this Agreement shall be submitted to the exclusive jurisdiction of the courts of [DISPUTE FORUM CITY], the parties expressly waiving any other forum that might otherwise apply.",
-            "es": "Cualquier controversia derivada del presente Acuerdo o relacionada con él se someterá a la jurisdicción exclusiva de los Juzgados y Tribunales de [DISPUTE FORUM CITY], renunciando expresamente las partes a cualquier otro fuero que pudiera corresponderles."
+            "en": "Any dispute arising out of or relating to this Agreement shall be submitted to the exclusive jurisdiction of the courts of [dispute forum city], the parties expressly waiving any other forum that might otherwise apply.",
+            "es": "Cualquier controversia derivada del presente Acuerdo o relacionada con él se someterá a la jurisdicción exclusiva de los Juzgados y Tribunales de [dispute forum city], renunciando expresamente las partes a cualquier otro fuero que pudiera corresponderles."
           },
           "bias": {
             "partyA": 0.0,
@@ -1618,9 +1633,14 @@
             "es": "Mediación previa + tribunales españoles"
           },
           "order": 8,
-          "jurisdictions": [
-            "SPAIN"
-          ],
+          "jurisdictionConfig": {
+            "CALIFORNIA": {
+              "available": false
+            },
+            "ENGLAND_WALES": {
+              "available": false
+            }
+          },
           "plainDescription": {
             "en": "Mediation under Ley 5/2012 first, with Spanish courts as fallback if no agreement within 60 days.",
             "es": "Mediación previa conforme a la Ley 5/2012 de mediación civil y mercantil, con vía judicial española como fallback si no hay acuerdo en 60 días."
@@ -1674,8 +1694,8 @@
             }
           },
           "legalText": {
-            "en": "Before filing any judicial proceeding, the parties shall first attempt to resolve any dispute arising out of or relating to this Agreement through mediation conducted under Spanish Law 5/2012 of 6 July on mediation in civil and commercial matters. If no settlement is reached within sixty (60) days of the mediator's first session, either party may then submit the dispute to the exclusive jurisdiction of the courts of [DISPUTE FORUM CITY].",
-            "es": "Antes de acudir a los tribunales, las partes intentarán resolver cualquier controversia derivada del presente Acuerdo o relacionada con él mediante mediación conforme a la Ley 5/2012, de 6 de julio, de mediación en asuntos civiles y mercantiles. Si no se alcanza un acuerdo en el plazo de sesenta (60) días desde la primera sesión del mediador, cualquiera de las partes podrá someter la controversia a la jurisdicción exclusiva de los Juzgados y Tribunales de [DISPUTE FORUM CITY]."
+            "en": "Before filing any judicial proceeding, the parties shall first attempt to resolve any dispute arising out of or relating to this Agreement through mediation conducted under Spanish Law 5/2012 of 6 July on mediation in civil and commercial matters. If no settlement is reached within sixty (60) days of the mediator's first session, either party may then submit the dispute to the exclusive jurisdiction of the courts of [dispute forum city].",
+            "es": "Antes de acudir a los tribunales, las partes intentarán resolver cualquier controversia derivada del presente Acuerdo o relacionada con él mediante mediación conforme a la Ley 5/2012, de 6 de julio, de mediación en asuntos civiles y mercantiles. Si no se alcanza un acuerdo en el plazo de sesenta (60) días desde la primera sesión del mediador, cualquiera de las partes podrá someter la controversia a la jurisdicción exclusiva de los Juzgados y Tribunales de [dispute forum city]."
           },
           "bias": {
             "partyA": -0.1,
@@ -1690,9 +1710,14 @@
             "es": "Arbitraje de la Corte de Arbitraje de Madrid (CAM)"
           },
           "order": 9,
-          "jurisdictions": [
-            "SPAIN"
-          ],
+          "jurisdictionConfig": {
+            "CALIFORNIA": {
+              "available": false
+            },
+            "ENGLAND_WALES": {
+              "available": false
+            }
+          },
           "plainDescription": {
             "en": "Binding arbitration administered by the Madrid Arbitration Court — private, faster than courts, leading Spanish institution.",
             "es": "Arbitraje vinculante administrado por la Corte de Arbitraje de Madrid — vía privada, más rápida que los tribunales y la institución arbitral de referencia en España."
