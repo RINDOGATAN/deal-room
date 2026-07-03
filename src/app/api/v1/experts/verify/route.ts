@@ -18,6 +18,7 @@ import {
 } from "@/server/middleware/apiKeyAuth";
 import { features } from "@/config/features";
 import {
+  EXPERT_TYPES,
   SPECIALIZATION_LABELS,
   type Specialization,
 } from "@/server/services/experts/taxonomy";
@@ -66,11 +67,15 @@ export async function GET(req: NextRequest) {
       },
     });
 
-    // Verified if the user exists, has a LawyerProfile, and the profile
-    // has at least a title or one specialization.
+    // Verified if the user exists, has a LawyerProfile with at least one
+    // allowed expert type (legacy LEGAL-only rows are never verified), and
+    // the profile has at least a title or one specialization.
     const profile = user?.lawyerProfile;
     const isVerified =
       !!profile &&
+      profile.expertTypes.some((t: string) =>
+        (EXPERT_TYPES as readonly string[]).includes(t)
+      ) &&
       (!!profile.title || profile.specializations.length > 0);
 
     if (!isVerified) {
@@ -82,7 +87,10 @@ export async function GET(req: NextRequest) {
       expert: {
         id: user!.id,
         name: user!.name,
-        expertTypes: profile!.expertTypes.map((t: string) => t.toLowerCase()),
+        // Drop any residual legacy types (e.g. "LEGAL") from mixed-type rows.
+        expertTypes: profile!.expertTypes
+          .filter((t: string) => (EXPERT_TYPES as readonly string[]).includes(t))
+          .map((t: string) => t.toLowerCase()),
         specializations: profile!.specializations.map(
           (s) => SPECIALIZATION_LABELS[s as Specialization] ?? s
         ),

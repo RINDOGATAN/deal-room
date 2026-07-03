@@ -294,7 +294,6 @@ export const dealRouter = createTRPCRouter({
         contractLanguage: z.enum(["en", "es"]).default("en"),
         dealMode: z.enum(["NEGOTIATION", "SOLO"]).default("NEGOTIATION"),
         initiatorCompany: z.string().optional(),
-        lawyerVettingId: z.string().optional(),
         parameters: z.record(z.string(), z.string()).optional(),
         // Asymmetric-role contracts (DPA): which role the initiator takes. The
         // counterparty (if any) takes the other. Ignored for symmetric skills.
@@ -426,7 +425,6 @@ export const dealRouter = createTRPCRouter({
             input.contractType === "DPA"
               ? input.fillRole ?? "PROCESSOR"
               : null,
-          lawyerVettingId: input.lawyerVettingId,
           status: DealRoomStatus.DRAFT,
           parties: {
             create: {

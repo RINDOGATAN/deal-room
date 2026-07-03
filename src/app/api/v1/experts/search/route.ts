@@ -14,6 +14,7 @@ import {
 } from "@/server/middleware/apiKeyAuth";
 import { features } from "@/config/features";
 import {
+  EXPERT_TYPES,
   SPECIALIZATION_LABELS,
   CERTIFICATION_LABELS,
   computeProfileCompleteness,
@@ -49,7 +50,10 @@ function formatProfile(profile: {
     title: profile.title,
     firm: profile.user.company,
     bio: profile.bio,
-    expertTypes: profile.expertTypes.map((t) => t.toLowerCase()),
+    // Drop any residual legacy types (e.g. "LEGAL") from mixed-type rows.
+    expertTypes: profile.expertTypes
+      .filter((t) => (EXPERT_TYPES as readonly string[]).includes(t))
+      .map((t) => t.toLowerCase()),
     specializations: profile.specializations.map(
       (s) => SPECIALIZATION_LABELS[s as Specialization] ?? s
     ),
@@ -111,8 +115,13 @@ export async function POST(req: NextRequest) {
     const limit = Math.min(Math.max(rawLimit ?? 20, 1), 100);
     const offset = Math.max(rawOffset ?? 0, 0);
 
-    // Build Prisma where clause
-    const where: Record<string, unknown> = { isPublished: true };
+    // Build Prisma where clause. The expertTypes guard is global: rows that
+    // carry none of the allowed types (e.g. legacy LEGAL-only profiles) can
+    // never be exposed, regardless of what the client requests.
+    const where: Record<string, unknown> = {
+      isPublished: true,
+      expertTypes: { hasSome: [...EXPERT_TYPES] },
+    };
 
     if (specialization) {
       // Accept both enum keys (SELF_HOSTING_DEPLOYMENT) and display labels (Self-Hosting / Deployment)
@@ -130,7 +139,9 @@ export async function POST(req: NextRequest) {
     }
     if (expertType) {
       const mapped = expertType.toUpperCase();
-      if (mapped === "LEGAL" || mapped === "TECHNICAL" || mapped === "DEPLOYMENT") {
+      // Only allow-listed types can narrow the filter; anything else (incl.
+      // the retired "LEGAL") leaves the global hasSome guard in place.
+      if ((EXPERT_TYPES as readonly string[]).includes(mapped)) {
         where.expertTypes = { has: mapped };
       }
     }

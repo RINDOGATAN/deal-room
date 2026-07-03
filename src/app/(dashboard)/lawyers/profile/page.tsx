@@ -50,7 +50,7 @@ export default function LawyerProfilePage() {
   const [languages, setLanguages] = useState<string[]>([]);
   const [isPublished, setIsPublished] = useState(false);
   const [title, setTitle] = useState("");
-  const [expertTypes, setExpertTypes] = useState<ExpertType[]>(["LEGAL"]);
+  const [expertTypes, setExpertTypes] = useState<ExpertType[]>(["TECHNICAL"]);
   const [specializations, setSpecializations] = useState<Specialization[]>([]);
   const [certifications, setCertifications] = useState<Certification[]>([]);
   const [countryCode, setCountryCode] = useState("");
@@ -66,7 +66,13 @@ export default function LawyerProfilePage() {
       setLanguages(profile.languages);
       setIsPublished(profile.isPublished);
       setTitle(profile.title || "");
-      setExpertTypes((profile.expertTypes as ExpertType[]) || ["LEGAL"]);
+      // Filter out retired types (e.g. legacy "LEGAL") so a save can't
+      // fail validation against the current EXPERT_TYPES vocabulary.
+      setExpertTypes(
+        ((profile.expertTypes || []) as string[]).filter((t): t is ExpertType =>
+          (EXPERT_TYPES as readonly string[]).includes(t)
+        )
+      );
       setSpecializations((profile.specializations as Specialization[]) || []);
       setCertifications((profile.certifications as Certification[]) || []);
       setCountryCode(profile.countryCode || "");

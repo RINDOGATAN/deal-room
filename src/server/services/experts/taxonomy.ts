@@ -77,7 +77,10 @@ export const CERTIFICATION_LABELS: Record<Certification, string> = {
   FIP: "FIP",
 };
 
-export const EXPERT_TYPES = ["LEGAL", "TECHNICAL", "DEPLOYMENT"] as const;
+// "LEGAL" removed 2026-07 — lawyer-expert directory retired. Legacy LEGAL rows
+// may persist in the DB; the /api/v1/experts/* routes guard every query with an
+// `expertTypes: { hasSome: EXPERT_TYPES }` filter so they are never exposed.
+export const EXPERT_TYPES = ["TECHNICAL", "DEPLOYMENT"] as const;
 export type ExpertType = (typeof EXPERT_TYPES)[number];
 
 /**

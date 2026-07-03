@@ -18,7 +18,6 @@ import {
   Copy,
   List,
   ChevronsRight,
-  Scale,
   Loader2,
   UserPlus,
   CheckCircle,
@@ -96,7 +95,6 @@ function NegotiateContent({ dealId }: { dealId: string }) {
   const router = useRouter();
   const t = useTranslations("negotiate");
   const tCommon = useTranslations("common");
-  const tLawyer = useTranslations("lawyer");
   const tNewDeal = useTranslations("newDeal");
 
   const { data: session } = useSession();
@@ -110,7 +108,6 @@ function NegotiateContent({ dealId }: { dealId: string }) {
 
   const { data: deal, isLoading, error, refetch: refetchDeal } = trpc.deal.getById.useQuery({ id: dealId });
   const { data: existingSelections } = trpc.selections.getMySelections.useQuery({ dealRoomId: dealId });
-  const { data: lawyerData } = trpc.lawyer.getRecommendations.useQuery({ dealRoomId: dealId });
 
   // Cloud Intelligence: quality scores for current clause options
   const currentClauseData = deal?.clauses[currentClauseIndex];
@@ -299,17 +296,6 @@ function NegotiateContent({ dealId }: { dealId: string }) {
   const hasRespondent = !!respondentParty?.userId;
   const respondentSubmitted = respondentParty?.status === "SUBMITTED" || respondentParty?.status === "REVIEWING" || respondentParty?.status === "ACCEPTED";
   const bothSubmitted = isAlreadySubmitted && respondentSubmitted;
-
-  // Lawyer recommendation lookup: clauseTemplateId -> recommended optionId + note
-  const recommendationMap = new Map<string, { clauseOptionId: string; note: string | null }>();
-  if (lawyerData) {
-    for (const rec of lawyerData.recommendations) {
-      recommendationMap.set(rec.clauseTemplateId, {
-        clauseOptionId: rec.clauseOptionId,
-        note: rec.note,
-      });
-    }
-  }
 
   // Resolve a potentially localized string ({en, es} object or plain string)
   const resolveLocalized = (value: string | Record<string, string> | undefined): string | undefined => {
@@ -734,8 +720,6 @@ function NegotiateContent({ dealId }: { dealId: string }) {
               const jurisdictionRules = getJurisdictionRules(option);
               const hasWarning = jurisdictionRules?.warning;
               const hasNote = jurisdictionRules?.note;
-              const lawyerRec = recommendationMap.get(currentClause.clauseTemplateId);
-              const isLawyerRecommended = lawyerRec?.clauseOptionId === option.id;
               const quality = qualityMap.get(option.id);
 
               return (
@@ -760,12 +744,6 @@ function NegotiateContent({ dealId }: { dealId: string }) {
                       <div>
                         <div className="flex items-center gap-2 flex-wrap">
                           <p className="font-heading text-base">{option.label}</p>
-                          {isLawyerRecommended && (
-                            <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full flex items-center gap-1 font-medium">
-                              <Scale className="w-3 h-3" />
-                              {tLawyer("recommendedByLawyer")}
-                            </span>
-                          )}
                           {/* Cloud Intelligence quality badge */}
                           <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
                             quality?.score != null && quality.score >= 70
@@ -810,17 +788,6 @@ function NegotiateContent({ dealId }: { dealId: string }) {
                         {hasWarning ? jurisdictionRules.warning : jurisdictionRules.note}
                         {hasWarning && hasNote && <> — {jurisdictionRules.note}</>}
                       </span>
-                    </div>
-                  )}
-
-                  {/* Lawyer's note */}
-                  {isLawyerRecommended && lawyerRec?.note && (
-                    <div className="mt-3 p-3 bg-primary/5 border border-primary/20 rounded-xl flex items-start gap-2">
-                      <Scale className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
-                      <div>
-                        <p className="text-xs text-primary font-medium mb-0.5">{tLawyer("lawyerNote")}</p>
-                        <p className="text-sm text-muted-foreground">{lawyerRec.note}</p>
-                      </div>
                     </div>
                   )}
 

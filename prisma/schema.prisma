@@ -791,6 +791,7 @@ model AuditLog {
 // LAWYER VETTING & CLIENT INVITATIONS
 // ============================================================
 
+/// DEPRECATED 2026-07-04 — vetting feature removed; table retained for audit; drop in a future approved migration
 model LawyerVetting {
   id                 String              @id @default(cuid())
   lawyerId           String
@@ -817,6 +818,7 @@ enum LawyerVettingStatus {
   APPROVED
 }
 
+/// DEPRECATED 2026-07-04 — vetting feature removed; table retained for audit; drop in a future approved migration
 model LawyerRecommendation {
   id               String  @id @default(cuid())
   vettingId        String
@@ -832,6 +834,7 @@ model LawyerRecommendation {
   @@map("lawyer_recommendations")
 }
 
+/// DEPRECATED 2026-07-04 — vetting feature removed; table retained for audit; drop in a future approved migration
 model ClientInvitation {
   id          String                 @id @default(cuid())
   vettingId   String
@@ -1023,7 +1026,7 @@ model LawyerProfile {
 
   // Cross-product directory fields
   title                  String? // e.g. "Partner, Data Protection"
-  expertTypes            String[] // controlled vocabulary: LEGAL, TECHNICAL, DEPLOYMENT — validated at app layer
+  expertTypes            String[] // controlled vocabulary: TECHNICAL, DEPLOYMENT — validated at app layer (LEGAL retired 2026-07; legacy rows filtered out by the experts API)
   specializations        String[] // controlled vocabulary, validated at app layer
   certifications         String[] // e.g. ["CIPP_E", "CISSP"]
   countryCode            String? // ISO 3166-1 alpha-2 (where they are based)

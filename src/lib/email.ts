@@ -132,42 +132,6 @@ export async function sendAttorneyReviewRequestEmail({
   }
 }
 
-interface SendClientInvitationEmailParams {
-  to: string;
-  token: string;
-  templateName: string;
-  lawyerName: string;
-}
-
-export async function sendClientInvitationEmail({
-  to,
-  token,
-  templateName,
-  lawyerName,
-}: SendClientInvitationEmailParams) {
-  const inviteUrl = `${process.env.NEXTAUTH_URL}/client-invite/${token}`;
-
-  try {
-    await getResend().emails.send({
-      from: emailFrom(),
-      to,
-      subject: `Your lawyer has prepared a contract for you: ${templateName}`,
-      html: emailWrapper("Attorney-Vetted Contract", `
-        <p style="color: #e5e5e5; font-size: 15px; line-height: 1.6; margin: 0 0 16px;">
-          <strong style="color: ${brand.colors.foreground};">${lawyerName}</strong> has reviewed and pre-approved a <strong style="color: ${brand.colors.foreground};">${templateName}</strong> contract for you.
-        </p>
-        <div style="background: ${brand.colors.card}; border-left: 3px solid ${brand.colors.primary}; padding: 12px 16px; margin: 0 0 24px; border-radius: 0 8px 8px 0;">
-          <p style="color: ${brand.colors.muted}; font-size: 13px; margin: 0;">Your lawyer has pre-selected recommended options for each clause. You'll see their recommendations as you negotiate.</p>
-        </div>
-        ${emailButton(inviteUrl, "Start Your Contract")}
-        ${emailMuted("This link expires in 30 days. If you weren't expecting this, you can safely ignore it.")}
-      `),
-    });
-  } catch (error) {
-    console.error("Failed to send client invitation email:", error);
-  }
-}
-
 interface SendRecommendationRequestEmailParams {
   to: string;
   bcc?: string[];

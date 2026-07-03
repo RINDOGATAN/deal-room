@@ -23,7 +23,6 @@ test.describe("Accessibility Audit", () => {
   });
 
   const pages = [
-    { name: "Lawyer Directory", path: "/lawyers" },
     { name: "Requests", path: "/lawyers/requests" },
     { name: "New Deal", path: "/deals/new" },
     { name: "Deals List", path: "/deals" },

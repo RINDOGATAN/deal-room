@@ -17,6 +17,7 @@ import {
 } from "@/server/middleware/apiKeyAuth";
 import { features } from "@/config/features";
 import {
+  EXPERT_TYPES,
   SPECIALIZATION_LABELS,
   type Specialization,
 } from "@/server/services/experts/taxonomy";
@@ -42,7 +43,11 @@ export async function GET(req: NextRequest) {
     }
 
     const profiles = await prisma.lawyerProfile.findMany({
-      where: { isPublished: true },
+      // The expertTypes guard keeps legacy LEGAL-only rows unexposed.
+      where: {
+        isPublished: true,
+        expertTypes: { hasSome: [...EXPERT_TYPES] },
+      },
       select: {
         specializations: true,
         countryCode: true,
@@ -63,7 +68,12 @@ export async function GET(req: NextRequest) {
       }
       if (p.countryCode) countrySet.add(p.countryCode);
       for (const l of p.languages) langSet.add(l);
-      for (const t of p.expertTypes) typeSet.add(t.toLowerCase());
+      for (const t of p.expertTypes) {
+        // Skip residual legacy types (e.g. "LEGAL") on mixed-type rows.
+        if ((EXPERT_TYPES as readonly string[]).includes(t)) {
+          typeSet.add(t.toLowerCase());
+        }
+      }
     }
 
     return NextResponse.json({

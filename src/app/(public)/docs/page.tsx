@@ -7,7 +7,6 @@ import {
   Package,
   Scale,
   ArrowRight,
-  ClipboardCheck,
   Shield,
 } from "lucide-react";
 
@@ -29,12 +28,6 @@ const sectionDefs = [
     icon: Package,
     titleKey: "sectionSkillsTitle",
     descKey: "sectionSkillsDesc",
-  },
-  {
-    href: "/docs/vetting",
-    icon: ClipboardCheck,
-    titleKey: "sectionVettingTitle",
-    descKey: "sectionVettingDesc",
   },
   {
     href: "/docs/agent-preparation",

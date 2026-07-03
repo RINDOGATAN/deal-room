@@ -8,7 +8,6 @@ import {
   BookOpen,
   Scale,
   ChevronDown,
-  ClipboardCheck,
   HardDrive,
   Bot,
   Shield,
@@ -45,12 +44,6 @@ const navSectionsDef: NavSection[] = [
       { href: "/docs/compromise", labelKey: "compromiseAlgorithm" },
       { href: "/docs/skills", labelKey: "skillsLicensing" },
     ],
-  },
-  {
-    id: "lawyer-vetting",
-    labelKey: "lawyerVetting",
-    icon: ClipboardCheck,
-    items: [{ href: "/docs/vetting", labelKey: "howVettingWorks" }],
   },
   {
     id: "self-hosted",
