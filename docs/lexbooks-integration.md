@@ -82,7 +82,7 @@ Body:
   "specialization": "GDPR",             // Taxonomy code
   "country": "ES",                      // ISO 3166-1 alpha-2
   "language": "es",                     // ISO 639-1
-  "expertType": "LEGAL",               // LEGAL | TECHNICAL | DEPLOYMENT
+  "expertType": "TECHNICAL",          // TECHNICAL | DEPLOYMENT
   "limit": 20,                          // 1-100
   "offset": 0
 }
@@ -126,7 +126,7 @@ Returns 404 if profile not published.
 
 ### 3.3 Expert taxonomy (hardcode in LexBooks)
 
-**Expert types:** `LEGAL`, `TECHNICAL`, `DEPLOYMENT` (non-exclusive, stored as array)
+**Expert types:** `TECHNICAL`, `DEPLOYMENT` (non-exclusive, stored as array; `LEGAL` retired 2026-07 — legacy rows are never returned by the API)
 
 **Specializations (17):**
 
@@ -337,7 +337,7 @@ jurisdictions       Enum[]      Practice jurisdictions: CALIFORNIA, ENGLAND_WALE
 languages           String[]    ISO 639-1 codes (e.g. "en", "es")
 isPublished         Boolean     Controls visibility in directory and API
 title               String?     Professional title (max 200 chars)
-expertTypes         String[]    LEGAL, TECHNICAL, DEPLOYMENT (non-exclusive)
+expertTypes         String[]    TECHNICAL, DEPLOYMENT (non-exclusive; LEGAL retired 2026-07)
 specializations     String[]    Taxonomy codes (see Section 3.3)
 certifications      String[]    Taxonomy codes (see Section 3.3)
 countryCode         String?     ISO 3166-1 alpha-2

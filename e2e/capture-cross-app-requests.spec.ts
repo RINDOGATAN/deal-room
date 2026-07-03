@@ -2,9 +2,9 @@
  * Capture Screenshots for Cross-App Assistance Request Video
  * ===========================================================
  * Walks through the full workflow: external app sends a request via API →
- * lawyer sees it in her inbox with source badge → accepts → creates vetting.
+ * expert sees it in her inbox with source badge → accepts.
  *
- * Output: 6 PNG files in ../todolaw/videos/public/ (prefixed "crossapp-")
+ * Output: PNG files in ../todolaw/videos/public/ (prefixed "crossapp-")
  *
  * HOW TO RUN:
  *   E2E_CREDENTIALS_SECRET="e2e-test-secret" \
@@ -123,17 +123,6 @@ test.describe("Cross-App Assistance Request Screenshots", () => {
     await setLawyerRole(page);
     await loginAs(page, LAWYER_EMAIL);
 
-    // ── ACT 1: External API call (simulated via curl-style display) ──
-    // We show the Experts Directory search page as context for the "external app" perspective
-    // Navigate to lawyers directory (business owner view) to get an overview shot
-    await page.goto(`${BASE_URL}/lawyers`);
-    await page.waitForTimeout(3_000);
-    await dismissDialogs(page);
-    await page.waitForTimeout(1_000);
-
-    // 📸 SCREENSHOT 0: Lawyer directory — the starting point for cross-app consumers
-    await capture(page, "crossapp-directory");
-
     // ── ACT 2: Show the API key management in admin ──
     // Navigate to admin customers page (if accessible) or show the request already created
     // Instead, we'll go straight to the lawyer inbox since the API call is shown as a code snippet in the video
@@ -206,25 +195,12 @@ test.describe("Cross-App Assistance Request Screenshots", () => {
       await capture(page, "crossapp-accept");
     }
 
-    // ── ACT 7: Lawyer clicks "Create Vetting" to begin reviewing ──
-    const createVettingBtn = page.locator("a, button").filter({ hasText: /Create Vetting|Crear Revisión/i });
-    if (await createVettingBtn.first().isVisible({ timeout: 5_000 }).catch(() => false)) {
-      // 📸 SCREENSHOT 4: Accepted state with "Create Vetting" button visible
-      await capture(page, "crossapp-vetting");
+    // ── ACT 7: Capture the accepted state (the vetting flow was removed with
+    // the lawyer-expert directory; the expert now follows up by email) ──
+    await page.waitForTimeout(1_000);
+    // 📸 SCREENSHOT 4: Accepted request state
+    await capture(page, "crossapp-accepted");
 
-      await createVettingBtn.first().click();
-      await page.waitForTimeout(3_000);
-      await dismissDialogs(page);
-      await page.waitForTimeout(1_000);
-
-      // 📸 SCREENSHOT 5: New vetting form pre-filled from the request
-      await capture(page, "crossapp-review");
-    } else {
-      log("No Create Vetting button visible — capturing current state");
-      await capture(page, "crossapp-vetting");
-      await capture(page, "crossapp-review");
-    }
-
-    log("CAPTURE COMPLETE — 6 screenshots saved to videos/public/");
+    log("CAPTURE COMPLETE — screenshots saved to videos/public/");
   });
 });

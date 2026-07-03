@@ -14,6 +14,7 @@ import {
 } from "@/server/middleware/apiKeyAuth";
 import { features } from "@/config/features";
 import {
+  EXPERT_TYPES,
   SPECIALIZATION_LABELS,
   CERTIFICATION_LABELS,
   computeProfileCompleteness,
@@ -47,7 +48,12 @@ export async function GET(
     const { id } = await params;
 
     const profile = await prisma.lawyerProfile.findFirst({
-      where: { userId: id, isPublished: true },
+      // The expertTypes guard keeps legacy LEGAL-only rows unexposed.
+      where: {
+        userId: id,
+        isPublished: true,
+        expertTypes: { hasSome: [...EXPERT_TYPES] },
+      },
       include: {
         user: {
           select: {
@@ -72,7 +78,10 @@ export async function GET(
       title: profile.title,
       firm: profile.user.company,
       bio: profile.bio,
-      expertTypes: profile.expertTypes.map((t: string) => t.toLowerCase()),
+      // Drop any residual legacy types (e.g. "LEGAL") from mixed-type rows.
+      expertTypes: profile.expertTypes
+        .filter((t: string) => (EXPERT_TYPES as readonly string[]).includes(t))
+        .map((t: string) => t.toLowerCase()),
       specializations: profile.specializations.map(
         (s) => SPECIALIZATION_LABELS[s as Specialization] ?? s
       ),

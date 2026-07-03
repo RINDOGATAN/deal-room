@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useMemo } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useSession } from "next-auth/react";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 import { useTranslations, useLocale } from "next-intl";
@@ -41,7 +40,6 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { getContactMailto } from "@/config/brand";
-import { features } from "@/config/features";
 import { PromoBanner } from "@/components/PromoBanner";
 import { EnableFeatureModal } from "@/components/premium/enable-feature-modal";
 
@@ -160,7 +158,7 @@ const jurisdictionMeta = [
 
 /** Controller/Processor role picker for DPAs. The initiator chooses; in SOLO
  *  the other role's block is left blank, in NEGOTIATION the counterparty takes
- *  the opposite role. Shared by the main and vetting-flow forms. */
+ *  the opposite role. */
 function DpaRoleSelector({
   value,
   onChange,
@@ -208,12 +206,8 @@ function DpaRoleSelector({
 export default function NewDealPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { data: session } = useSession();
-  const isLawyer = session?.user?.role === "LAWYER";
   const t = useTranslations("newDeal");
   const tCommon = useTranslations("common");
-  const tLawyer = useTranslations("lawyer");
-  const tDirectory = useTranslations("directory");
   const locale = useLocale();
   const [selectedFamily, setSelectedFamily] = useState<string | null>(null);
   const [selectedType, setSelectedType] = useState<string | null>(null);
@@ -232,26 +226,6 @@ export default function NewDealPage() {
   // Default Processor — most processors prepare the template for a controller.
   const [fillRole, setFillRole] = useState<"CONTROLLER" | "PROCESSOR">("PROCESSOR");
   const [searchQuery, setSearchQuery] = useState(searchParams.get("q") ?? "");
-
-  // Lawyer vetting flow
-  const vettingId = searchParams.get("vetting");
-  const invitationToken = searchParams.get("invitation");
-  const isVettingFlow = !!vettingId;
-
-  // If coming from vetting flow, fetch vetting summary (doesn't require lawyer access)
-  const { data: vettingData } = trpc.lawyer.getVettingSummary.useQuery(
-    { vettingId: vettingId!, token: invitationToken! },
-    { enabled: isVettingFlow && !!invitationToken }
-  );
-
-  // Pre-populate from vetting
-  useEffect(() => {
-    if (vettingData) {
-      setSelectedType(vettingData.contractTemplate.contractType);
-      setSelectedJurisdiction(vettingData.governingLaw as GoverningLaw);
-      setSelectedLanguage(vettingData.contractLanguage as ContractLanguage);
-    }
-  }, [vettingData]);
 
   const { data: templates, isLoading } = trpc.skills.listTemplatesWithAccess.useQuery({ language: locale });
 
@@ -436,7 +410,6 @@ export default function NewDealPage() {
       contractLanguage: selectedLanguage,
       dealMode,
       initiatorCompany: company.trim() || undefined,
-      lawyerVettingId: vettingId || undefined,
       parameters: visibleParameters.length > 0 ? parameterValues : undefined,
       fillRole: selectedType === "DPA" ? fillRole : undefined,
     });
@@ -462,100 +435,6 @@ export default function NewDealPage() {
     );
   }
 
-  // Vetting flow: skip template selection, show summary + deal details directly
-  if (isVettingFlow && vettingData && selectedType) {
-    const vTemplateDisplayName = vettingData.contractTemplate.displayName;
-    const vJurisdictionMeta = jurisdictionMeta.find((j) => j.value === vettingData.governingLaw);
-    const vLanguageMeta = contractLanguageMeta.find((l) => l.value === vettingData.contractLanguage);
-
-    return (
-      <div className="max-w-3xl mx-auto space-y-8">
-        <div>
-          <h1 className="text-2xl font-bold">{t("createNewDeal")}</h1>
-          <p className="text-muted-foreground mt-1">{tLawyer("contractPrepared")}</p>
-        </div>
-
-        {/* Vetting summary banner */}
-        <div className="card-brutal border-primary bg-primary/5">
-          <div className="flex items-start gap-3">
-            <Scale className="w-5 h-5 text-primary mt-0.5" />
-            <div>
-              <p className="text-sm font-medium">{tLawyer("vettedContract")}</p>
-              <p className="text-sm text-muted-foreground mt-1">
-                {tLawyer("vettedBy", { name: vettingData.lawyer.name || vettingData.lawyer.email })}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Locked selections summary */}
-        <div className="card-brutal space-y-6">
-          <div className="p-3 bg-muted/30 border border-border text-sm rounded-xl">
-            <div className="flex items-center justify-between">
-              <span className="text-muted-foreground">{t("contract")}</span>
-              <span className="font-medium">{vTemplateDisplayName}</span>
-            </div>
-            <div className="flex items-center justify-between mt-2">
-              <span className="text-muted-foreground">{t("governingLaw")}:</span>
-              <span className="font-medium">{vJurisdictionMeta?.flag} {vJurisdictionMeta ? t(`jurisdictions.${vJurisdictionMeta.tKey}`) : ""}</span>
-            </div>
-            <div className="flex items-center justify-between mt-2">
-              <span className="text-muted-foreground">{t("contractLanguage")}:</span>
-              <span className="font-medium">{vLanguageMeta ? t(`languages.${vLanguageMeta.tKey}`) : ""}</span>
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="dealName">{t("dealName")} *</Label>
-            <Input
-              id="dealName"
-              value={dealName}
-              onChange={(e) => setDealName(e.target.value)}
-              placeholder={t("dealNamePlaceholder")}
-              className={`input-brutal ${!dealName.trim() ? "border-primary" : ""}`}
-            />
-            <p className="text-xs text-muted-foreground">
-              {t("dealNameDescription")}
-            </p>
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="company">{t("yourCompany")} ({tCommon("optional")})</Label>
-            <Input
-              id="company"
-              value={company}
-              onChange={(e) => setCompany(e.target.value)}
-              placeholder={t("yourCompanyPlaceholder")}
-              className={`input-brutal ${!company.trim() ? "border-primary" : ""}`}
-            />
-            <p className="text-xs text-muted-foreground">
-              {t("yourCompanyDescription")}
-            </p>
-          </div>
-
-          {/* DPA role choice also applies to lawyer-vetted DPAs. */}
-          {selectedType === "DPA" && (
-            <DpaRoleSelector value={fillRole} onChange={setFillRole} mode={dealMode} />
-          )}
-        </div>
-
-        <div className="flex items-center justify-between gap-4 pt-4 border-t border-border">
-          <p className="text-sm text-muted-foreground">
-            {t("selectOptionsNext")}
-          </p>
-          <button
-            onClick={handleCreate}
-            disabled={!dealName.trim() || createDeal.isPending}
-            className="btn-brutal flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0"
-          >
-            {createDeal.isPending ? t("creating") : tCommon("continue")}
-            <ArrowRight className="w-4 h-4" />
-          </button>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="max-w-3xl mx-auto space-y-8">
       <div>
@@ -566,17 +445,6 @@ export default function NewDealPage() {
       </div>
 
       <PromoBanner />
-
-      {/* Lawyer directory hint — hidden for lawyers and vetting flows */}
-      {features.lawyerInvolvement && !isVettingFlow && !isLawyer && (
-        <div className="flex items-center gap-3 px-4 py-3 bg-secondary/50 border border-border rounded-xl text-sm">
-          <Scale className="w-4 h-4 text-muted-foreground shrink-0" />
-          <span className="text-muted-foreground">{tDirectory("lawyerHint")}</span>
-          <a href="/lawyers" className="text-primary hover:underline font-medium whitespace-nowrap">
-            {tDirectory("lawyerHintLink")} &rarr;
-          </a>
-        </div>
-      )}
 
       {/* Entitlement Error Modal */}
       <Dialog open={!!entitlementError} onOpenChange={(open) => !open && setEntitlementError(null)}>

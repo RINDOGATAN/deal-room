@@ -462,9 +462,6 @@ function RequestReviewDialog({
             <p className="text-sm text-muted-foreground">
               {tReview("noAttorneys")}
             </p>
-            <Link href="/lawyers" className="text-sm text-primary underline">
-              {tReview("browseDirectory")}
-            </Link>
           </div>
         ) : (
           <div className="space-y-2 max-h-80 overflow-y-auto">

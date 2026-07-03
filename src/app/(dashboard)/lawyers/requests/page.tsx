@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
@@ -11,8 +10,6 @@ import {
   CheckCircle2,
   XCircle,
   Clock,
-  ArrowRight,
-  Plus,
 } from "lucide-react";
 
 const statusIcons: Record<string, typeof Clock> = {
@@ -123,15 +120,6 @@ export default function RequestsPage() {
           <h2 className="text-lg font-semibold mb-2">
             {isLawyer ? t("noIncoming") : t("noSent")}
           </h2>
-          {!isLawyer && (
-            <Link
-              href="/lawyers"
-              className="btn-brutal inline-flex items-center gap-2 text-sm mt-4"
-            >
-              {t("title")}
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-          )}
         </div>
       ) : (
         <div className="space-y-3">
@@ -222,15 +210,6 @@ export default function RequestsPage() {
                         {respondMutation.isPending ? t("declining") : t("decline")}
                       </button>
                     </div>
-                  )}
-                  {isLawyer && request.status === "ACCEPTED" && (
-                    <Link
-                      href={`/lawyer/vettings/new?requestId=${request.id}&contractType=${request.contractType}${request.governingLaw ? `&governingLaw=${request.governingLaw}` : ""}`}
-                      className="btn-brutal text-xs px-3 py-1.5 flex items-center gap-1 shrink-0"
-                    >
-                      <Plus className="w-3 h-3" />
-                      {t("createVetting")}
-                    </Link>
                   )}
                   {!isLawyer && (request.status === "PENDING" || request.status === "ACCEPTED") && (
                     <button

@@ -43,7 +43,7 @@ rm .env.prod
 - **Agent:** `/api/v1/agent/` — playbooks, negotiation, deals, webhooks, credits, MCP/A2A. Docs: `docs/agent-api.md`
 - **A2A Rate Limits:** `A2A_` prefixed contract types have weekly limits — standard: 5/skill/week, premium (`premiumA2A` in Customer.metadata): 300/week
 - **Idempotency:** All 9 mutating agent POST endpoints honor an optional `Idempotency-Key` header (24h TTL, table `idempotency_records`). Replays return the cached 2xx response with an `Idempotent-Replay: true` header — described on `.well-known/agent.json` for federated discovery. Helper at `src/server/middleware/idempotency.ts`.
-- **Experts:** `/api/v1/experts/` — search, get-by-ID, filters, contact, verify. Auth: `drk_...` tokens with scopes (`experts:read`, `experts:contact`). Contact endpoint capped at 2-per-(customer, expert)-per-day; resulting `RecommendationRequest` rows expire after 30 days
+- **Experts:** `/api/v1/experts/` — search, get-by-ID, filters, contact, verify. Auth: `drk_...` tokens with scopes (`experts:read`, `experts:contact`). Contact endpoint capped at 2-per-(customer, expert)-per-day; resulting `RecommendationRequest` rows expire after 30 days. Expert types are TECHNICAL/DEPLOYMENT only — the lawyer (LEGAL) directory was removed 2026-07 and every route carries an `expertTypes: { hasSome: EXPERT_TYPES }` guard so legacy LEGAL-only rows are never exposed
 - **Gavel:** Dispute escalation via `POST /api/v1/agent/deals/:id/dispute`. DRC protocol at `gavel.todo.law`. Inbound webhook at `/api/webhooks/gavel` fails closed (503) when `GAVEL_WEBHOOK_SECRET` is unset; 401 on bad signature
 - **Stripe:** Inbound webhook at `/api/webhooks/stripe` is idempotent — claims `event.id` via `stripe_webhook_events` table on first delivery, subsequent redeliveries return 200 with `{ idempotent: true }` and skip the handler
 
@@ -89,8 +89,7 @@ SKILLS_DIR=/path/to/legalskills npm run check:skills # Same guard on the premium
 - Steps: Contract Type → Jurisdiction → Language → Mode → Deal Details (+ Parameters)
 - `soloModeOnly` types (Privacy Notice) skip jurisdiction and mode selection
 - `soloModeSupported` / `soloModeDefault` flags control mode selector visibility
-- Lawyer hint and "proceed without lawyer" warning modal both hidden for `LAWYER` role users
-- Lawyer directory filters to `expertTypes: { has: "LEGAL" }` (excludes deployment specialists)
+- "Proceed without lawyer" warning modal hidden for `LAWYER` role users
 - Create button text: "Continue" (EN) / "Continuar" (ES)
 
 ## Jurisdiction-specific flows
@@ -106,7 +105,7 @@ Current example: `/launch` (Delaware C-Corp formation) is hidden from `locale ==
 
 ## Public Docs (`/docs`)
 
-- Skills & Licensing, Compromise Algorithm, How It Works, Vetting, Supervision
+- Skills & Licensing, Compromise Algorithm, How It Works, Supervision
 - Agent API reference, A2A Skills Catalog (dynamic, queries DB for `A2A_` templates)
 - **Agent Preparation Guide:** `/docs/agent-preparation/` — policy authoring, playbook builder (dynamic), dispute readiness with Gavel DRC
 - All docs pages bilingual EN/ES via `useTranslations()`. Layout: `src/app/(public)/docs/layout.tsx`

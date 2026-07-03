@@ -534,7 +534,6 @@ async function main() {
 
   // ── Mark licensed skills as premium + set Stripe price ──
   const STRIPE_PRICE_ID = process.env.STRIPE_PRICE_ID || null;
-  const STRIPE_PRICE_VETTED = process.env.STRIPE_PRICE_VETTED || STRIPE_PRICE_ID;
   const premiumSkillIds = [
     "com.nel.skills.founders",
     "com.nel.skills.safe",
@@ -614,34 +613,21 @@ async function main() {
     }
   }
 
-  // ── Upsert "Vetted Contracts" feature package ──
-  await prisma.skillPackage.upsert({
+  // ── Retire "Vetted Contracts" feature package ──
+  // The lawyer contract-vetting flow was removed 2026-07 with the lawyer-expert
+  // directory. Deactivate the package (rather than delete it) so existing
+  // entitlement rows keep their audit trail while the plan disappears from the
+  // billing catalog (getAvailablePlans filters on isActive).
+  const vettedPkg = await prisma.skillPackage.findUnique({
     where: { skillId: "com.nel.features.vetted-contracts" },
-    create: {
-      skillId: "com.nel.features.vetted-contracts",
-      name: "vetted-contracts",
-      displayName: "Vetted Contracts",
-      version: "1.0.0",
-      packageHash: crypto.createHash("sha256").update("vetted-contracts").digest("hex"),
-      jurisdictions: [],
-      languages: ["en", "es"],
-      isPremium: true,
-      stripePriceId: STRIPE_PRICE_VETTED,
-      priceAmount: 900,
-      priceCurrency: "eur",
-      description: "Send attorney-vetted contract templates to clients via email invitation",
-      isActive: true,
-    },
-    update: {
-      displayName: "Vetted Contracts",
-      isPremium: true,
-      stripePriceId: STRIPE_PRICE_VETTED,
-      priceAmount: 900,
-      priceCurrency: "eur",
-      description: "Send attorney-vetted contract templates to clients via email invitation",
-    },
   });
-  console.log("  Created/updated Vetted Contracts feature package");
+  if (vettedPkg && vettedPkg.isActive) {
+    await prisma.skillPackage.update({
+      where: { skillId: "com.nel.features.vetted-contracts" },
+      data: { isActive: false },
+    });
+    console.log("  Deactivated retired Vetted Contracts feature package");
+  }
 
   // ── Seed pre-approved supervisory attorney ──
   const supervisor = await prisma.supervisor.upsert({
@@ -693,138 +679,10 @@ async function main() {
   });
   console.log("  Created/updated bar admissions: CALIFORNIA (#367079), SPAIN (ICAM-64040)");
 
-  // ── Seed Sergio Maldonado as Lawyer Directory expert ──
-  const sergioUser = await prisma.user.upsert({
-    where: { email: "smaldonado@privacycloud.com" },
-    create: {
-      email: "smaldonado@privacycloud.com",
-      name: "Sergio Maldonado",
-    },
-    update: {
-      name: "Sergio Maldonado",
-    },
-  });
-  await prisma.lawyerProfile.upsert({
-    where: { userId: sergioUser.id },
-    create: {
-      userId: sergioUser.id,
-      title: "Attorney — Privacy / Data Protection, AI Governance & Copyright / IP",
-      bio: "Admitted to the State Bar of California (#367079) and the Madrid Bar / ICAM (#64040). Specializing in privacy, data protection, AI governance, and intellectual property across US and EU jurisdictions.",
-      jurisdictions: ["CALIFORNIA", "SPAIN"],
-      languages: ["en", "es"],
-      expertTypes: ["LEGAL"],
-      specializations: ["GDPR", "CCPA_US_STATE_PRIVACY", "CROSS_BORDER_TRANSFERS", "DPA_VENDOR_CONTRACTS", "AI_GOVERNANCE_EU_AI_ACT", "COPYRIGHT_IP"],
-      certifications: ["CIPP_E", "CIPP_US", "FIP", "CIPT"],
-      countryCode: "US",
-      city: "San Francisco",
-      jurisdictionsCovered: ["US", "EU", "ES"],
-      acceptingClients: true,
-      isPublished: true,
-    },
-    update: {
-      title: "Attorney — Privacy / Data Protection, AI Governance & Copyright / IP",
-      bio: "Admitted to the State Bar of California (#367079) and the Madrid Bar / ICAM (#64040). Specializing in privacy, data protection, AI governance, and intellectual property across US and EU jurisdictions.",
-      jurisdictions: ["CALIFORNIA", "SPAIN"],
-      languages: ["en", "es"],
-      specializations: ["GDPR", "CCPA_US_STATE_PRIVACY", "CROSS_BORDER_TRANSFERS", "DPA_VENDOR_CONTRACTS", "AI_GOVERNANCE_EU_AI_ACT", "COPYRIGHT_IP"],
-      certifications: ["CIPP_E", "CIPP_US", "FIP", "CIPT"],
-      jurisdictionsCovered: ["US", "EU", "ES"],
-      isPublished: true,
-    },
-  });
-  console.log("  Created/updated LawyerProfile: Sergio Maldonado (CA + ES)");
-
-  // ── Seed Sergio De Juan-Creix as Lawyer Directory expert ──
-  const sergiodjUser = await prisma.user.upsert({
-    where: { email: "sergio.dejuandreix@croma.legal" },
-    create: {
-      email: "sergio.dejuandreix@croma.legal",
-      name: "Sergio De Juan-Creix Cuatrecasas",
-      company: "Croma Legal",
-      isLawyer: true,
-      role: "LAWYER",
-    },
-    update: {
-      name: "Sergio De Juan-Creix Cuatrecasas",
-      company: "Croma Legal",
-      isLawyer: true,
-      role: "LAWYER",
-    },
-  });
-  await prisma.lawyerProfile.upsert({
-    where: { userId: sergiodjUser.id },
-    create: {
-      userId: sergiodjUser.id,
-      title: "Abogado — Croma Legal",
-      bio: "Colegiado en el Ilustre Colegio de la Abogacía de Barcelona (ICAB). Número de colegiado pendiente de asignación.",
-      jurisdictions: ["SPAIN"],
-      languages: ["es", "en"],
-      expertTypes: ["LEGAL"],
-      specializations: ["GDPR", "DPA_VENDOR_CONTRACTS", "PRIVACY_BY_DESIGN"],
-      certifications: [],
-      countryCode: "ES",
-      city: "Barcelona",
-      jurisdictionsCovered: ["EU", "ES"],
-      acceptingClients: true,
-      isPublished: true,
-    },
-    update: {
-      title: "Abogado — Croma Legal",
-      jurisdictions: ["SPAIN"],
-      languages: ["es", "en"],
-      specializations: ["GDPR", "DPA_VENDOR_CONTRACTS", "PRIVACY_BY_DESIGN"],
-      countryCode: "ES",
-      city: "Barcelona",
-      isPublished: true,
-    },
-  });
-  console.log("  Created/updated LawyerProfile: Sergio De Juan-Creix Cuatrecasas (ES)");
-
-  // ── Seed Carlos García Berned as Lawyer Directory expert ──
-  const carlosUser = await prisma.user.upsert({
-    where: { email: "carlos.garcia@croma.legal" },
-    create: {
-      email: "carlos.garcia@croma.legal",
-      name: "Carlos García Berned",
-      company: "Croma Legal",
-      isLawyer: true,
-      role: "LAWYER",
-    },
-    update: {
-      name: "Carlos García Berned",
-      company: "Croma Legal",
-      isLawyer: true,
-      role: "LAWYER",
-    },
-  });
-  await prisma.lawyerProfile.upsert({
-    where: { userId: carlosUser.id },
-    create: {
-      userId: carlosUser.id,
-      title: "Abogado — Croma Legal",
-      bio: "Colegiado en el Ilustre Colegio de la Abogacía de Barcelona (ICAB). Número de colegiado pendiente de asignación.",
-      jurisdictions: ["SPAIN"],
-      languages: ["es", "en"],
-      expertTypes: ["LEGAL"],
-      specializations: ["GDPR", "DPA_VENDOR_CONTRACTS", "PRIVACY_BY_DESIGN"],
-      certifications: [],
-      countryCode: "ES",
-      city: "Barcelona",
-      jurisdictionsCovered: ["EU", "ES"],
-      acceptingClients: true,
-      isPublished: true,
-    },
-    update: {
-      title: "Abogado — Croma Legal",
-      jurisdictions: ["SPAIN"],
-      languages: ["es", "en"],
-      specializations: ["GDPR", "DPA_VENDOR_CONTRACTS", "PRIVACY_BY_DESIGN"],
-      countryCode: "ES",
-      city: "Barcelona",
-      isPublished: true,
-    },
-  });
-  console.log("  Created/updated LawyerProfile: Carlos García Berned (ES)");
+  // NOTE (2026-07): the three LEGAL expert seed profiles (Sergio Maldonado and
+  // two Croma Legal lawyers) were removed with the lawyer-expert directory.
+  // Any legacy LEGAL rows in production are handled by a manual data step
+  // (deactivate + strip LEGAL from expertTypes) — see the removal plan.
 
   // ── Seed Wences Spiegel Marquez as Deployment expert ──
   const wencesUser = await prisma.user.upsert({

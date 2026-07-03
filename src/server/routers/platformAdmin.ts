@@ -840,7 +840,7 @@ export const platformAdminRouter = createTRPCRouter({
       languages: z.array(z.string()).min(1),
       isPublished: z.boolean().default(false),
       title: z.string().max(200).optional(),
-      expertTypes: z.array(z.enum(EXPERT_TYPES)).default(["LEGAL"]),
+      expertTypes: z.array(z.enum(EXPERT_TYPES)).default(["TECHNICAL"]),
       specializations: z.array(z.enum(SPECIALIZATIONS)).default([]),
       certifications: z.array(z.enum(CERTIFICATIONS)).default([]),
       countryCode: z.string().length(2).optional(),

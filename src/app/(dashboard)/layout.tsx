@@ -14,7 +14,6 @@ import {
   Menu,
   X,
   Scale,
-  ClipboardCheck,
   BookOpen,
   CreditCard,
   Store,
@@ -41,7 +40,6 @@ export default function DashboardLayout({
   const pathname = usePathname();
   const t = useTranslations("nav");
   const tCommon = useTranslations("common");
-  const tLawyer = useTranslations("lawyer");
   const tFooter = useTranslations("footer");
   const tOnboarding = useTranslations("onboarding");
   const locale = useLocale();
@@ -82,9 +80,6 @@ export default function DashboardLayout({
     // Hide it for Spanish-locale users to avoid the misleading entry point.
     ...(features.startupJourney && !lawyerProfile?.isLawyer && locale !== "es"
       ? [{ href: "/launch", label: t("launch"), icon: Rocket }]
-      : []),
-    ...(features.lawyerInvolvement && lawyerProfile?.isLawyer
-      ? [{ href: "/lawyer/vettings", label: tLawyer("myVettings"), icon: ClipboardCheck }]
       : []),
   ];
 
@@ -255,23 +250,17 @@ export default function DashboardLayout({
                 <span>{userRole === "LAWYER" ? tOnboarding("roleLawyer") : tOnboarding("roleBusiness")}</span>
                 <ArrowRightLeft className="w-3 h-3 ml-0.5 text-primary" />
               </button>
-              <span className="text-border">&middot;</span>
-              {userRole === "BUSINESS_OWNER" ? (
-                <Link
-                  href="/lawyers"
-                  className="flex items-center gap-1.5 hover:text-foreground transition-colors"
-                >
-                  <Scale className="w-3.5 h-3.5" />
-                  {t("findLawyer")}
-                </Link>
-              ) : (
-                <Link
-                  href="/lawyers/requests"
-                  className="flex items-center gap-1.5 hover:text-foreground transition-colors"
-                >
-                  <Briefcase className="w-3.5 h-3.5" />
-                  {t("requests")}
-                </Link>
+              {userRole === "LAWYER" && (
+                <>
+                  <span className="text-border">&middot;</span>
+                  <Link
+                    href="/lawyers/requests"
+                    className="flex items-center gap-1.5 hover:text-foreground transition-colors"
+                  >
+                    <Briefcase className="w-3.5 h-3.5" />
+                    {t("requests")}
+                  </Link>
+                </>
               )}
             </div>
           )}

@@ -45,7 +45,7 @@ async function main() {
         languages: ["ENGLISH", "SPANISH"],
         specializations: ["GDPR", "CCPA_US_STATE", "DPIA_IMPACT", "DSAR_RIGHTS", "DPA_VENDOR", "VENDOR_RISK", "CROSS_BORDER_TRANSFERS"],
         certifications: ["CIPP_E", "CIPP_US", "CIPM"],
-        expertTypes: ["LEGAL", "TECHNICAL"],
+        expertTypes: ["TECHNICAL"],
       },
     });
     console.log("Created lawyer profile:", profile.id);

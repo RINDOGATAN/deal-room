@@ -30,7 +30,6 @@ import {
 } from "@/server/services/experts/taxonomy";
 
 const expertTypeLabels: Record<ExpertType, string> = {
-  LEGAL: "Legal",
   TECHNICAL: "Technical",
   DEPLOYMENT: "Deployment",
 };
@@ -157,11 +156,9 @@ function ExpertsList({
                   <Badge
                     key={et}
                     className={
-                      et === "LEGAL"
-                        ? "bg-blue-500/20 text-blue-500"
-                        : et === "TECHNICAL"
-                          ? "bg-orange-500/20 text-orange-500"
-                          : "bg-green-500/20 text-green-500"
+                      et === "TECHNICAL"
+                        ? "bg-orange-500/20 text-orange-500"
+                        : "bg-green-500/20 text-green-500"
                     }
                   >
                     {expertTypeLabels[et as ExpertType] || et}
@@ -276,7 +273,7 @@ function ExpertEditor({
   const [languages, setLanguages] = useState<string[]>([]);
   const [isPublished, setIsPublished] = useState(false);
   const [title, setTitle] = useState("");
-  const [expertTypes, setExpertTypes] = useState<ExpertType[]>(["LEGAL"]);
+  const [expertTypes, setExpertTypes] = useState<ExpertType[]>(["TECHNICAL"]);
   const [specializations, setSpecializations] = useState<Specialization[]>([]);
   const [certifications, setCertifications] = useState<Certification[]>([]);
   const [countryCode, setCountryCode] = useState("");
@@ -292,7 +289,13 @@ function ExpertEditor({
       setLanguages(existingProfile.languages);
       setIsPublished(existingProfile.isPublished);
       setTitle(existingProfile.title || "");
-      setExpertTypes((existingProfile.expertTypes as ExpertType[]) || ["LEGAL"]);
+      // Filter out retired types (e.g. legacy "LEGAL") so a save can't
+      // fail validation against the current EXPERT_TYPES vocabulary.
+      setExpertTypes(
+        ((existingProfile.expertTypes || []) as string[]).filter((t): t is ExpertType =>
+          (EXPERT_TYPES as readonly string[]).includes(t)
+        )
+      );
       setSpecializations((existingProfile.specializations as Specialization[]) || []);
       setCertifications((existingProfile.certifications as Certification[]) || []);
       setCountryCode(existingProfile.countryCode || "");

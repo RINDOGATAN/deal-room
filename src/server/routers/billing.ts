@@ -49,39 +49,6 @@ export const billingRouter = createTRPCRouter({
     };
   }),
 
-  hasVettedContracts: protectedProcedure.query(async ({ ctx }) => {
-    // Promo: every skill (including the Vetted Contracts feature pack)
-    // is unlocked — report active so the UI doesn't surface a paywall.
-    if (features.allSkillsFree) {
-      return { active: true, selfServiceUpgrade: features.selfServiceUpgrade, skillPackageId: null };
-    }
-    const email = ctx.session.user.email;
-    if (!email) return { active: false, selfServiceUpgrade: features.selfServiceUpgrade, skillPackageId: null };
-
-    const vettedPkg = await ctx.prisma.skillPackage.findUnique({
-      where: { skillId: "com.nel.features.vetted-contracts" },
-      select: { id: true },
-    });
-
-    if (!vettedPkg) return { active: false, selfServiceUpgrade: features.selfServiceUpgrade, skillPackageId: null };
-
-    const customer = await ctx.prisma.customer.findFirst({
-      where: { email: { equals: email, mode: "insensitive" } },
-      include: {
-        entitlements: {
-          where: { skillPackageId: vettedPkg.id, status: "ACTIVE" },
-          take: 1,
-        },
-      },
-    });
-
-    return {
-      active: (customer?.entitlements.length ?? 0) > 0,
-      selfServiceUpgrade: features.selfServiceUpgrade,
-      skillPackageId: vettedPkg.id,
-    };
-  }),
-
   getAvailablePlans: protectedProcedure.query(async ({ ctx }) => {
     const email = ctx.session.user.email;
 
