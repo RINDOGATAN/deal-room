@@ -23,7 +23,14 @@ const CROSS_APP_COOKIES = [
 
 export async function POST() {
   const response = NextResponse.json({ ok: true });
-  const domain = isProduction ? ".todo.law" : undefined;
+  // Sovereign/self-hosted deployments set AUTH_COOKIE_DOMAIN="" for a
+  // host-only cookie; the .todo.law cross-app SSO domain is cloud-only.
+  const domain =
+    process.env.AUTH_COOKIE_DOMAIN !== undefined
+      ? process.env.AUTH_COOKIE_DOMAIN || undefined
+      : isProduction
+        ? ".todo.law"
+        : undefined;
 
   for (const name of CROSS_APP_COOKIES) {
     response.cookies.set(name, "", {

@@ -1,0 +1,18 @@
+# Build-context ignore for deploy/sovereign/Dockerfile (BuildKit picks this
+# up as <Dockerfile>.dockerignore). Keep the context lean and the host's
+# mac-native node_modules out of the Linux image.
+node_modules
+.next
+.git
+.env*
+!.env.example
+tsconfig.tsbuildinfo
+deploy/sovereign/backups
+playwright-report
+test-results
+sshots
+sample-pdfs
+reference
+docs
+logos
+dist

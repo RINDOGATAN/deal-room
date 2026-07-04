@@ -61,6 +61,8 @@
     "invalidInviteCode": "Código de invitación no válido o ya utilizado.",
     "inviteCode": "Código de Invitación",
     "signInWithCode": "Iniciar sesión con código",
+    "localSignIn": "Iniciar sesión",
+    "localSignInHint": "Acceso de instancia local: tu email es tu cuenta. Sin contraseña; no se envía ningún correo.",
     "unexpectedError": "Ha ocurrido un error inesperado.",
     "googleSignInFailed": "Error al iniciar sesión con Google.",
     "errorTitle": "No se pudo iniciar sesión",

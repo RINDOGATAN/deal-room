@@ -40,6 +40,8 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!deploy/sovereign/.env.example
+deploy/sovereign/backups/
 
 # vercel
 .vercel

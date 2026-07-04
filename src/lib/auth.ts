@@ -13,13 +13,57 @@ const isProduction =
   process.env.NODE_ENV === "production" &&
   (process.env.NEXTAUTH_URL?.startsWith("https://") ?? true);
 
-// Build providers list based on brand/features
-const providers: NextAuthOptions["providers"] = [
-  GoogleProvider({
-    clientId: process.env.GOOGLE_CLIENT_ID!,
-    clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-  }),
-];
+// Cross-app SSO: the cloud deployment shares its session cookie across
+// *.todo.law (brand.cookieDomain). Sovereign/self-hosted deployments set
+// AUTH_COOKIE_DOMAIN="" in the environment to fall back to a host-only
+// cookie — the .todo.law domain is a cloud-deployment concern only.
+const cookieDomain =
+  process.env.AUTH_COOKIE_DOMAIN !== undefined
+    ? process.env.AUTH_COOKIE_DOMAIN || undefined
+    : isProduction
+      ? brand.cookieDomain
+      : undefined;
+
+// Build providers list based on brand/features.
+// Google OAuth only when configured — sovereign bundles run without it.
+const providers: NextAuthOptions["providers"] = [];
+
+if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
+  providers.push(
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    })
+  );
+}
+
+// Local credentials login for sovereign/self-hosted deployments
+// (NEXT_PUBLIC_LOCAL_AUTH_ENABLED=true): email-only find-or-create, no
+// external OAuth or mailer. Only safe behind the firm's own network —
+// never enable on an internet-facing instance.
+if (process.env.NEXT_PUBLIC_LOCAL_AUTH_ENABLED === "true") {
+  providers.push(
+    CredentialsProvider({
+      id: "local",
+      name: "Local Login",
+      credentials: {
+        email: { label: "Email", type: "email" },
+      },
+      async authorize(credentials) {
+        const email = credentials?.email?.trim().toLowerCase();
+        if (!email) return null;
+
+        let user = await prisma.user.findUnique({ where: { email } });
+        if (!user) {
+          user = await prisma.user.create({
+            data: { email, emailVerified: new Date() },
+          });
+        }
+        return { id: user.id, email: user.email, name: user.name };
+      },
+    })
+  );
+}
 
 // Magic-link email provider (todo.law)
 if (features.magicLinkAuth) {
@@ -196,7 +240,7 @@ export const authOptions: NextAuthOptions = {
         sameSite: "lax",
         path: "/",
         secure: isProduction,
-        domain: isProduction ? brand.cookieDomain : undefined,
+        domain: cookieDomain,
       },
     },
     callbackUrl: {
@@ -207,7 +251,7 @@ export const authOptions: NextAuthOptions = {
         sameSite: "lax",
         path: "/",
         secure: isProduction,
-        domain: isProduction ? brand.cookieDomain : undefined,
+        domain: cookieDomain,
       },
     },
     csrfToken: {
