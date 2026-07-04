@@ -16,7 +16,7 @@
 set -eu
 cd /app
 
-if node -e "const{PrismaClient}=require('@prisma/client');const p=new PrismaClient();p.\$queryRawUnsafe(\"SELECT to_regclass('public.users') AS r\").then(rows=>process.exit(rows[0].r?0:1)).catch(()=>process.exit(1))"; then
+if node -e "const{PrismaClient}=require('@prisma/client');const p=new PrismaClient();p.\$queryRawUnsafe(\"SELECT to_regclass('public.users')::text AS r\").then(rows=>process.exit(rows[0].r?0:1)).catch(()=>process.exit(1))"; then
   echo "[migrate] existing schema — applying prisma/migrations (migrate deploy)…"
   npx prisma migrate deploy
 else
