@@ -61,6 +61,8 @@
     "invalidInviteCode": "Invalid invite code or already used.",
     "inviteCode": "Invite Code",
     "signInWithCode": "Sign In with Invite Code",
+    "localSignIn": "Sign in",
+    "localSignInHint": "Local instance login — your email is your account. No password, no email is sent.",
     "unexpectedError": "An unexpected error occurred.",
     "googleSignInFailed": "Google sign-in failed.",
     "errorTitle": "Sign-in problem",

@@ -1,11 +1,17 @@
 import type { BrandConfig } from "../brand";
 
+// Sovereign/self-hosted rebrand hooks — env-only, baked into the bundle at
+// build time (NEXT_PUBLIC_*). Unset (cloud) = todo.law identity unchanged.
+const BRAND_NAME = process.env.NEXT_PUBLIC_BRAND_NAME || "Dealroom";
+const BRAND_ACCENT = process.env.NEXT_PUBLIC_BRAND_ACCENT || "#53aecc";
+const BRAND_LOGO_URL = process.env.NEXT_PUBLIC_BRAND_LOGO_URL || "/logo.svg";
+
 export const todo: BrandConfig = {
   id: "todo",
 
   // Product identity
-  name: "Dealroom",
-  shortName: "Dealroom",
+  name: BRAND_NAME,
+  shortName: BRAND_NAME,
   tagline: "Contract Negotiation Platform",
   description: "Two-party asynchronous contract negotiation platform with intelligent compromise suggestions",
 
@@ -18,7 +24,7 @@ export const todo: BrandConfig = {
 
   // Brand colors (used in CSS variables and email templates)
   colors: {
-    primary: "#53aecc",
+    primary: BRAND_ACCENT,
     background: "#1a1a1a",
     card: "#242424",
     foreground: "#fefeff",
@@ -57,7 +63,7 @@ export const todo: BrandConfig = {
 
   // Asset paths (relative to public directory)
   assets: {
-    logo: "/logo.svg",
+    logo: BRAND_LOGO_URL,
     icon: "/icon.svg",
     favicon: "/favicon.ico",
   },

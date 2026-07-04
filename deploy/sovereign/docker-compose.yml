@@ -1,0 +1,169 @@
+# ============================================================================
+# Dealroom — Sovereign bundle (portability doctrine: "self-hostable in an
+# instant"). One command brings up the FULL app on firm hardware:
+#
+#   Postgres 16  ← the firm's deal/negotiation data, on the firm's disk
+#   migrator     ← one-shot: prisma migrate deploy + first-boot seed
+#   app          ← the SAME Next.js app the cloud runs, standalone build
+#                  → http://localhost:8486
+#
+# Posture switches (env only, never code): local credentials login instead of
+# Google/Resend, Stripe off (the marketplace is the cloud tier — all skills
+# are unlocked locally via FREE_TRIAL_ALL_SKILLS), host-only auth cookie via
+# AUTH_COOKIE_DOMAIN="", brand via NEXT_PUBLIC_BRAND_*.
+#
+# Runbook: deploy/sovereign/README.md
+# ============================================================================
+
+name: dealroom-sovereign
+
+# One build definition, two targets (builder = migrator, runner = app).
+# NEXT_PUBLIC_* are baked into the bundles at BUILD time — changing them in
+# .env requires: docker compose up -d --build app
+x-build: &app-build
+  context: ../..
+  dockerfile: deploy/sovereign/Dockerfile
+  args:
+    NEXT_PUBLIC_LOCAL_AUTH_ENABLED: ${NEXT_PUBLIC_LOCAL_AUTH_ENABLED:-true}
+    NEXT_PUBLIC_TESTER_MODE: ${NEXT_PUBLIC_TESTER_MODE:-false}
+    NEXT_PUBLIC_FREE_TRIAL_ALL_SKILLS: ${NEXT_PUBLIC_FREE_TRIAL_ALL_SKILLS:-true}
+    NEXT_PUBLIC_BRAND_NAME: ${NEXT_PUBLIC_BRAND_NAME:-}
+    NEXT_PUBLIC_BRAND_ACCENT: ${NEXT_PUBLIC_BRAND_ACCENT:-}
+    NEXT_PUBLIC_BRAND_LOGO_URL: ${NEXT_PUBLIC_BRAND_LOGO_URL:-}
+
+# Env shared by migrator + app. The schema declares directUrl =
+# DATABASE_URL_UNPOOLED (a Neon/pgBouncer concern) — locally both point at
+# the same Postgres.
+x-db-env: &db-env
+  DATABASE_URL: postgresql://dealroom:${POSTGRES_PASSWORD}@db:5432/dealroom
+  DATABASE_URL_UNPOOLED: postgresql://dealroom:${POSTGRES_PASSWORD}@db:5432/dealroom
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: dealroom
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set in .env}
+      POSTGRES_DB: dealroom
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dealroom -d dealroom"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+    # Uncomment to reach the DB from the host (psql/backups):
+    # ports:
+    #   - "127.0.0.1:55434:5432"
+
+  # One-shot: applies prisma/migrations (migrate deploy), then seeds the
+  # skill catalog + demo data on FIRST boot only — an instance with users
+  # is never re-seeded. Safe to re-run: docker compose run --rm migrator
+  migrator:
+    build:
+      <<: *app-build
+      target: builder
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      <<: *db-env
+    volumes:
+      - ./migrate.sh:/migrate.sh:ro
+    entrypoint: ["/bin/sh", "/migrate.sh"]
+    restart: "no"
+
+  app:
+    build:
+      <<: *app-build
+      target: runner
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+      migrator:
+        condition: service_completed_successfully
+    environment:
+      <<: *db-env
+      NEXTAUTH_URL: ${PUBLIC_URL:?e.g. http://localhost:8486}
+      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET:?openssl rand -base64 32}
+      # Empty = host-only session cookie (NextAuth defaults). The .todo.law
+      # cross-app SSO domain is a cloud-deployment concern only.
+      AUTH_COOKIE_DOMAIN: ${AUTH_COOKIE_DOMAIN:-}
+      # Stripe is the CLOUD tier (skill marketplace billing). The sovereign
+      # posture runs with these empty — the app boots and functions fully.
+      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY:-}
+      STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET:-}
+      STRIPE_PRICE_ID: ${STRIPE_PRICE_ID:-}
+      STRIPE_PRICE_ID_USD: ${STRIPE_PRICE_ID_USD:-}
+      # All premium skills unlocked locally (no marketplace billing).
+      FREE_TRIAL_ALL_SKILLS: ${NEXT_PUBLIC_FREE_TRIAL_ALL_SKILLS:-true}
+      # Optional cloud mailer (magic links, deal invitations, signing
+      # notifications). Empty = emails are skipped with a log line; the
+      # local credentials login needs no mailer.
+      RESEND_API_KEY: ${RESEND_API_KEY:-}
+      EMAIL_FROM: ${EMAIL_FROM:-}
+      # Google OAuth (cloud-tier option, off by default).
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
+      # Optional sibling/cloud services — all degrade gracefully when empty:
+      # Dealroom Cloud Intelligence (biases/quality/certification), Gavel
+      # (dispute resolution), Firmas (mobile signing).
+      DEALROOM_CLOUD_API_URL: ${DEALROOM_CLOUD_API_URL:-}
+      DEALROOM_CLOUD_API_KEY: ${DEALROOM_CLOUD_API_KEY:-}
+      GAVEL_API_URL: ${GAVEL_API_URL:-}
+      GAVEL_API_KEY: ${GAVEL_API_KEY:-}
+      GAVEL_WEBHOOK_SECRET: ${GAVEL_WEBHOOK_SECRET:-}
+      FIRMAS_BASE_URL: ${FIRMAS_BASE_URL:-}
+      FIRMAS_ISSUER: ${FIRMAS_ISSUER:-}
+      # Signed skill downloads + skill package verification (optional).
+      DOWNLOAD_TOKEN_SECRET: ${DOWNLOAD_TOKEN_SECRET:-}
+      SKILL_SIGNING_PUBLIC_KEY: ${SKILL_SIGNING_PUBLIC_KEY:-}
+      # Skill libraries: built-ins baked into the image; marketplace
+      # installs land on the named volume below.
+      SKILLS_DIR: /app/data/skills
+      INSTALLED_SKILLS_DIR: /app/data/skills/installed
+      # /api/cron/daily guard (signing reminders/expiry) — see README.
+      CRON_SECRET: ${CRON_SECRET:-}
+      TESTER_MODE_ENABLED: ${TESTER_MODE_ENABLED:-false}
+      DEFAULT_LANGUAGE: ${DEFAULT_LANGUAGE:-}
+      # Runtime copies of the build-time posture/brand vars so server-rendered
+      # output matches the client bundles.
+      NEXT_PUBLIC_LOCAL_AUTH_ENABLED: ${NEXT_PUBLIC_LOCAL_AUTH_ENABLED:-true}
+      NEXT_PUBLIC_TESTER_MODE: ${NEXT_PUBLIC_TESTER_MODE:-false}
+      NEXT_PUBLIC_FREE_TRIAL_ALL_SKILLS: ${NEXT_PUBLIC_FREE_TRIAL_ALL_SKILLS:-true}
+      NEXT_PUBLIC_BRAND_NAME: ${NEXT_PUBLIC_BRAND_NAME:-}
+      NEXT_PUBLIC_BRAND_ACCENT: ${NEXT_PUBLIC_BRAND_ACCENT:-}
+      NEXT_PUBLIC_BRAND_LOGO_URL: ${NEXT_PUBLIC_BRAND_LOGO_URL:-}
+    volumes:
+      - skills-data:/app/data/skills/installed
+    ports:
+      - "${BIND_ADDR:-127.0.0.1}:${PORT:-8486}:3000"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  # Optional TLS front (profile "tls"): automatic HTTPS via Caddy for
+  # LAN/VPS deployments. Set TLS_DOMAIN (public DNS → Let's Encrypt; LAN
+  # hostname → Caddy internal CA) and PUBLIC_URL=https://<TLS_DOMAIN>,
+  # then: docker compose --profile tls up -d
+  # Plain-HTTP localhost use needs none of this.
+  tls:
+    profiles: ["tls"]
+    image: caddy:2-alpine
+    restart: unless-stopped
+    depends_on:
+      - app
+    command: caddy reverse-proxy --from ${TLS_DOMAIN:-localhost} --to app:3000
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - caddy-data:/data
+      - caddy-config:/config
+
+volumes:
+  db-data:
+  skills-data:
+  caddy-data:
+  caddy-config:

@@ -12,6 +12,11 @@ import { TESTER_EMAILS } from "@/lib/tester";
 
 const TESTER_MODE_ON = process.env.NEXT_PUBLIC_TESTER_MODE === "true";
 
+// Sovereign/self-hosted posture: local credentials login replaces the
+// cloud sign-in options (magic link / Google). Baked in at build time;
+// cloud builds leave the var unset, so nothing changes there.
+const LOCAL_AUTH_ON = process.env.NEXT_PUBLIC_LOCAL_AUTH_ENABLED === "true";
+
 const TESTER_PERSONAS: Array<{
   email: (typeof TESTER_EMAILS)[number];
   labelKey: "testerStartup" | "testerLawyer" | "testerBusiness";
@@ -84,6 +89,32 @@ export default function SignInPage() {
     }
   };
 
+  const handleLocalSignIn = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email.trim()) return;
+
+    setIsEmailLoading(true);
+    setError(null);
+
+    try {
+      const result = await signIn("local", {
+        email: email.trim(),
+        redirect: false,
+        callbackUrl: "/deals",
+      });
+
+      if (result?.error) {
+        setError(t("unexpectedError"));
+        setIsEmailLoading(false);
+      } else if (result?.ok) {
+        window.location.href = "/deals";
+      }
+    } catch {
+      setError(t("unexpectedError"));
+      setIsEmailLoading(false);
+    }
+  };
+
   const handleGoogleSignIn = async () => {
     setIsGoogleLoading(true);
     setError(null);
@@ -144,8 +175,48 @@ export default function SignInPage() {
           </div>
         )}
 
+        {/* Local credentials login (sovereign/self-hosted) */}
+        {LOCAL_AUTH_ON && (
+          <form onSubmit={handleLocalSignIn} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="email">{t("emailAddress")}</Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="you@company.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="bg-background"
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={isEmailLoading || !email.trim()}
+              className="btn-brutal w-full flex items-center justify-center gap-3 py-3 disabled:opacity-50"
+            >
+              {isEmailLoading ? (
+                <>
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  {t("signingIn")}
+                </>
+              ) : (
+                <>
+                  <KeyRound className="w-5 h-5" />
+                  {t("localSignIn")}
+                </>
+              )}
+            </button>
+
+            <p className="text-center text-xs text-muted-foreground">
+              {t("localSignInHint")}
+            </p>
+          </form>
+        )}
+
         {/* Magic Link Email Form */}
-        {features.magicLinkAuth && (
+        {!LOCAL_AUTH_ON && features.magicLinkAuth && (
           <form onSubmit={handleEmailSignIn} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="email">{t("emailAddress")}</Label>
@@ -234,6 +305,7 @@ export default function SignInPage() {
         )}
 
         {/* Google Sign In */}
+        {!LOCAL_AUTH_ON && (
         <div className="mt-8 pt-6 border-t border-border">
           <p className="text-xs text-muted-foreground text-center mb-4">
             {t("orContinueWith")}
@@ -272,6 +344,7 @@ export default function SignInPage() {
             </span>
           </button>
         </div>
+        )}
 
         {TESTER_MODE_ON && (
           <div className="mt-8 pt-6 border-t border-dashed border-primary/30">
