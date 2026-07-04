@@ -16,9 +16,13 @@
 set -eu
 cd "$(dirname "$0")"
 
-set -a
-[ -f .env ] && . ./.env
-set +a
+# .env is a docker-compose env file, not a shell script — unquoted values
+# may contain spaces (e.g. NEXT_PUBLIC_BRAND_NAME=DPO Central), so it must
+# never be sourced. Extract only the keys this script needs.
+env_get() { { [ -f .env ] && sed -n "s/^$1=//p" .env | tail -1; } || true; }
+BACKUP_PASSPHRASE="${BACKUP_PASSPHRASE:-$(env_get BACKUP_PASSPHRASE)}"
+BACKUP_RCLONE_REMOTE="${BACKUP_RCLONE_REMOTE:-$(env_get BACKUP_RCLONE_REMOTE)}"
+export BACKUP_PASSPHRASE
 : "${BACKUP_PASSPHRASE:?set BACKUP_PASSPHRASE in deploy/sovereign/.env}"
 
 OUT="${1:-./backups}"
