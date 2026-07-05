@@ -131,6 +131,16 @@ export default function PublicLayout({
               {tFooter("privacyNotice")}
             </a>
             <span className="text-border">&middot;</span>
+            {/* AGPL §13: offer of Corresponding Source to network users */}
+            <a
+              href={brand.links.sourceCode}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-foreground transition-colors"
+            >
+              {tFooter("sourceCode")}
+            </a>
+            <span className="text-border">&middot;</span>
             <LanguageSwitcher />
           </div>
         </div>

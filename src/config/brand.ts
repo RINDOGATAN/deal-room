@@ -68,6 +68,10 @@ export interface BrandConfig {
     userGuide: string;
     terms: string;
     privacy: string;
+    // AGPL §13: where this deployment offers its Corresponding Source to
+    // network users. Forks/self-hosts point this at their own repo via
+    // NEXT_PUBLIC_SOURCE_URL (baked at build time).
+    sourceCode: string;
   };
 
   // Cookie domain (for production cross-subdomain auth)

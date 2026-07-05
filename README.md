@@ -11,20 +11,15 @@ Two-party async contract negotiation platform with weighted compromise algorithm
 - **Skills Marketplace** — Licensed contract templates (NDA, DPA, MSA, etc.)
 - **Multilingual Support** — Cross-language negotiation (Party A in English, Party B in Spanish)
 - **Two-Level Admin** — Platform admins manage marketplace; supervisors monitor deals
-- **Multi-Brand Deployment** — Single codebase, multiple brands via environment variables
+- **Self-Hostable** — AGPL-licensed sovereign kit for running on your own hardware (see below)
 
-## Brands
-
-| Brand | Domain | Auth | UI |
-|-------|--------|------|----|
-| **TODO.LAW** (default) | `dealroom.todo.law` | Magic-link + Google | Rounded blue |
-| **North End Law** | `dealroom.northend.law` | Invite-code + Google | Brutalist teal |
-
-Set `NEXT_PUBLIC_BRAND=todo` or `NEXT_PUBLIC_BRAND=northend` to select brand. See [docs/deployment.md](docs/deployment.md) for full multi-brand architecture.
+> **Note:** the earlier dual-brand system (todo.law + northend.law) was retired
+> in May 2026; the codebase now ships a single brand (`src/config/brand.ts`
+> documents the rationale and the restore path).
 
 ## Tech Stack
 
-- **Framework:** Next.js 14 (App Router)
+- **Framework:** Next.js 16 (App Router)
 - **Language:** TypeScript
 - **API:** tRPC
 - **Database:** PostgreSQL + Prisma
@@ -34,7 +29,7 @@ Set `NEXT_PUBLIC_BRAND=todo` or `NEXT_PUBLIC_BRAND=northend` to select brand. Se
 
 ### Prerequisites
 
-- Node.js 18+
+- Node.js 20+
 - PostgreSQL database
 - Resend account (for magic link emails)
 
@@ -59,11 +54,21 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) to access the app.
 
-To run as a different brand:
+## Self-Hosting (Sovereign Kit)
+
+Law firms can run Dealroom entirely on their own hardware with the
+Docker-based sovereign kit — app + PostgreSQL + migrator (+ optional Caddy
+TLS), published on port **8486**, health-gated via `/api/health`:
 
 ```bash
-NEXT_PUBLIC_BRAND=northend npm run dev
+cd deploy/sovereign
+cp .env.example .env   # fill in secrets
+docker compose up -d
 ```
+
+See [deploy/sovereign/README.md](deploy/sovereign/README.md) for the full
+runbook (backups, restore, cron wiring, hardening checklist).
+[docs/deployment.md](docs/deployment.md) covers the hosted/Vercel path.
 
 ### Environment Variables
 
@@ -71,7 +76,6 @@ NEXT_PUBLIC_BRAND=northend npm run dev
 DATABASE_URL=postgresql://...
 NEXTAUTH_SECRET=...
 NEXTAUTH_URL=http://localhost:3000
-NEXT_PUBLIC_BRAND=todo              # todo | northend
 RESEND_API_KEY=...
 EMAIL_FROM=noreply@yourdomain.com
 GOOGLE_CLIENT_ID=...
@@ -110,6 +114,8 @@ Supervisors access their portal at `/supervise` and can only view deals assigned
 | [intervencion-abogado.md](docs/intervencion-abogado.md) | Tres fases de intervención de abogado/a (ES) |
 | [agent-api.md](docs/agent-api.md) | Agent Negotiation REST API reference |
 | [skills-and-licensing.md](docs/skills-and-licensing.md) | Skill packages, licensing, activation, i18n |
+
+Project governance: [SECURITY.md](SECURITY.md) · [CONTRIBUTING.md](CONTRIBUTING.md) · [NOTICES.md](NOTICES.md) · [CHANGELOG.md](CHANGELOG.md)
 
 ## Project Structure
 
@@ -168,3 +174,9 @@ Each party sets a **firmness** level (1–5) per clause; the UI shows firmness w
 Copyright (c) 2025-2026 Rindogatan LLC
 
 This project is licensed under the [GNU Affero General Public License v3.0](LICENSE).
+
+Under AGPL §13, if you run a modified Dealroom as a network service you must
+offer its Corresponding Source to your users. The app footer renders a
+"Source code (AGPL-3.0)" link for this; point it at your fork with
+`NEXT_PUBLIC_SOURCE_URL` at build time. Third-party attribution lives in
+[NOTICES.md](NOTICES.md).

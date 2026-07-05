@@ -54,6 +54,16 @@ export default function AuthLayout({
           >
             How It Works
           </Link>
+          <span className="hidden sm:inline">&middot;</span>
+          {/* AGPL §13: offer of Corresponding Source to network users */}
+          <a
+            href={brand.links.sourceCode}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-foreground transition-colors"
+          >
+            Source code (AGPL-3.0)
+          </a>
         </div>
       </footer>
     </div>
