@@ -15,6 +15,8 @@
     "test:run": "vitest run",
     "check:api": "node scripts/check-api-error-handling.mjs",
     "check:skills": "node scripts/check-skills.mjs",
+    "skills:manifest": "node scripts/skills-sync.mjs manifest",
+    "skills:diff": "node scripts/skills-sync.mjs diff",
     "db:seed": "tsx prisma/seed.ts",
     "db:push": "prisma db push",
     "db:studio": "prisma studio",
