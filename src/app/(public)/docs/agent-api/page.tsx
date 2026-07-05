@@ -139,7 +139,7 @@ export default function AgentApiPage() {
 
         <div className="p-4 border border-border bg-card font-mono text-sm rounded-2xl">
           <span className="text-muted-foreground">Authorization:</span>{" "}
-          <span className="text-primary">Bearer drk_96eddb08b83dc09b...</span>
+          <span className="text-primary">Bearer drk_exampleexampleexample</span>
         </div>
 
         <h3 className="text-lg font-bold mt-6">{t("scopes")}</h3>

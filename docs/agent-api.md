@@ -11,10 +11,10 @@ REST API for automated contract negotiation between AI agents. Companies pre-con
 All requests require a Bearer token with the `drk_` prefix:
 
 ```
-Authorization: Bearer drk_96eddb08b83dc09b87deafed3deaccc...
+Authorization: Bearer drk_exampleexampleexample
 ```
 
-API keys are created by a Platform Admin at `/admin/customers`. The raw key is shown **once** on creation and cannot be retrieved later — only a prefix (`drk_96eddb08`) and hash are stored.
+API keys are created by a Platform Admin at `/admin/customers`. The raw key is shown **once** on creation and cannot be retrieved later — only a prefix (`drk_example`) and hash are stored.
 
 ### Scopes
 
