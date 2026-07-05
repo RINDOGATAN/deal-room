@@ -36,12 +36,12 @@ export default function AdminVerifyPage() {
   };
 
   const verifyMutation = trpc.platformAdminTwoFactor.verify.useMutation({
-    onSuccess: () => {
-      // Set httpOnly cookie via API route
+    onSuccess: (_data, variables) => {
+      // Set httpOnly cookie via API route; it re-verifies the TOTP code server-side
       fetch("/api/platform-admin-2fa-verify", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ verified: true }),
+        body: JSON.stringify({ code: variables.code }),
       }).then(() => {
         router.push("/admin");
       });
