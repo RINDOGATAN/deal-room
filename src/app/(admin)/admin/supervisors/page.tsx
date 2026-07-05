@@ -302,7 +302,7 @@ export default function SupervisorsPage() {
                 id="barNumber"
                 value={admissionBarNumber}
                 onChange={(e) => setAdmissionBarNumber(e.target.value)}
-                placeholder="e.g., 367079"
+                placeholder="e.g., 000000"
                 className="input-brutal"
               />
             </div>

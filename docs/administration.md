@@ -138,16 +138,16 @@ The database seed (`prisma/seed.ts`) creates a default supervisory attorney:
 
 | Field | Value |
 |-------|-------|
-| Email | `smaldonado@privacycloud.com` |
-| Name | `Sergio Maldonado (#367079 State Bar of California)` |
+| Email | `alex@example-firm.test` |
+| Name | `Alex Ferris (#000000 State Bar of California)` |
 | Active | `true` |
 
 The seed also creates bar admissions for this supervisor:
 
 | Jurisdiction | Bar Number |
 |-------------|------------|
-| CALIFORNIA | `367079` |
-| SPAIN | `ICAM-12345` |
+| CALIFORNIA | `000000` |
+| SPAIN | `ICAM-00000` |
 
 This is upserted on `email` / `supervisorId_jurisdiction`, so re-running `npx prisma db seed` is safe.
 
