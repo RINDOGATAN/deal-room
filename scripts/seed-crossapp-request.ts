@@ -8,7 +8,7 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-const LAWYER_EMAIL = "sergio@todo.law";
+const LAWYER_EMAIL = "alex@example-firm.test";
 const REQUESTER_EMAIL = "maria.garcia@meridianretail.eu";
 
 async function main() {
@@ -18,7 +18,7 @@ async function main() {
     lawyer = await prisma.user.create({
       data: {
         email: LAWYER_EMAIL,
-        name: "Sergio Maldonado",
+        name: "Alex Ferris",
         emailVerified: new Date(),
         role: "LAWYER",
       },
@@ -40,7 +40,7 @@ async function main() {
         userId: lawyer.id,
         isPublished: true,
         acceptingClients: true,
-        bio: "Admitted to the State Bar of California (#367079) and the Madrid Bar / ICAM (#64040). Specializing in privacy, data protection, and intellectual property across US and EU jurisdictions.",
+        bio: "Admitted to the State Bar of California (#000000) and the Madrid Bar / ICAM (#00000). Specializing in privacy, data protection, and intellectual property across US and EU jurisdictions.",
         jurisdictions: ["CALIFORNIA", "SPAIN"],
         languages: ["ENGLISH", "SPANISH"],
         specializations: ["GDPR", "CCPA_US_STATE", "DPIA_IMPACT", "DSAR_RIGHTS", "DPA_VENDOR", "VENDOR_RISK", "CROSS_BORDER_TRANSFERS"],

@@ -629,20 +629,20 @@ async function main() {
     console.log("  Deactivated retired Vetted Contracts feature package");
   }
 
-  // ── Seed pre-approved supervisory attorney ──
+  // ── Seed pre-approved supervisory attorney (fictional fixture) ──
   const supervisor = await prisma.supervisor.upsert({
-    where: { email: "smaldonado@privacycloud.com" },
+    where: { email: "alex@example-firm.test" },
     create: {
-      email: "smaldonado@privacycloud.com",
-      name: "Sergio Maldonado (#367079 State Bar of California)",
+      email: "alex@example-firm.test",
+      name: "Alex Ferris (#000000 State Bar of California)",
       isActive: true,
     },
     update: {
-      name: "Sergio Maldonado (#367079 State Bar of California)",
+      name: "Alex Ferris (#000000 State Bar of California)",
       isActive: true,
     },
   });
-  console.log("  Created/updated Supervisor: Sergio Maldonado");
+  console.log("  Created/updated Supervisor: Alex Ferris");
 
   // Seed bar admissions for the supervisor
   await prisma.supervisorBarAdmission.upsert({
@@ -655,10 +655,10 @@ async function main() {
     create: {
       supervisorId: supervisor.id,
       jurisdiction: "CALIFORNIA",
-      barNumber: "367079",
+      barNumber: "000000",
     },
     update: {
-      barNumber: "367079",
+      barNumber: "000000",
     },
   });
   await prisma.supervisorBarAdmission.upsert({
@@ -671,40 +671,40 @@ async function main() {
     create: {
       supervisorId: supervisor.id,
       jurisdiction: "SPAIN",
-      barNumber: "ICAM-64040",
+      barNumber: "ICAM-00000",
     },
     update: {
-      barNumber: "ICAM-64040",
+      barNumber: "ICAM-00000",
     },
   });
-  console.log("  Created/updated bar admissions: CALIFORNIA (#367079), SPAIN (ICAM-64040)");
+  console.log("  Created/updated bar admissions: CALIFORNIA (#000000), SPAIN (ICAM-00000)");
 
-  // NOTE (2026-07): the three LEGAL expert seed profiles (Sergio Maldonado and
-  // two Croma Legal lawyers) were removed with the lawyer-expert directory.
-  // Any legacy LEGAL rows in production are handled by a manual data step
-  // (deactivate + strip LEGAL from expertTypes) — see the removal plan.
+  // NOTE (2026-07): the three LEGAL expert seed profiles were removed with the
+  // lawyer-expert directory. Any legacy LEGAL rows in production are handled
+  // by a manual data step (deactivate + strip LEGAL from expertTypes) — see
+  // the removal plan.
 
-  // ── Seed Wences Spiegel Marquez as Deployment expert ──
-  const wencesUser = await prisma.user.upsert({
-    where: { email: "wences.spiegel@rindogatan.com" },
+  // ── Seed first Deployment expert (fictional fixture) ──
+  const deploymentExpertA = await prisma.user.upsert({
+    where: { email: "jordan.vale@example-consulting.test" },
     create: {
-      email: "wences.spiegel@rindogatan.com",
-      name: "Wences Spiegel Marquez",
-      company: "Rindogatan",
+      email: "jordan.vale@example-consulting.test",
+      name: "Jordan Vale",
+      company: "Example Consulting",
       isLawyer: true,
       role: "LAWYER",
     },
     update: {
-      name: "Wences Spiegel Marquez",
-      company: "Rindogatan",
+      name: "Jordan Vale",
+      company: "Example Consulting",
       isLawyer: true,
       role: "LAWYER",
     },
   });
   await prisma.lawyerProfile.upsert({
-    where: { userId: wencesUser.id },
+    where: { userId: deploymentExpertA.id },
     create: {
-      userId: wencesUser.id,
+      userId: deploymentExpertA.id,
       title: "Deployment Consultant",
       bio: "Self-hosting and deployment specialist covering EU, US, and UK environments.",
       jurisdictions: [],
@@ -729,33 +729,30 @@ async function main() {
       isPublished: true,
     },
   });
-  console.log("  Created/updated LawyerProfile: Wences Spiegel Marquez (Deployment)");
+  console.log("  Created/updated LawyerProfile: Jordan Vale (Deployment)");
 
-  // ── Seed Steve Crowley as Deployment expert ──
-  // Public-facing contact is steve.crowley@spc-consulting.com.
-  // Wences Spiegel is BCC'd on every contact request via notifyEmails
-  // so both inboxes see the request without exposing Wences's address
-  // in the directory listing.
-  const steveUser = await prisma.user.upsert({
-    where: { email: "steve.crowley@spc-consulting.com" },
+  // ── Seed second Deployment expert (fictional fixture) ──
+  // notifyEmails exercises the additional-notification-recipients path.
+  const deploymentExpertB = await prisma.user.upsert({
+    where: { email: "sam.porter@example-deploy.test" },
     create: {
-      email: "steve.crowley@spc-consulting.com",
-      name: "Steve Crowley",
-      company: "SPC Consulting",
+      email: "sam.porter@example-deploy.test",
+      name: "Sam Porter",
+      company: "Example Deploy Co",
       isLawyer: true,
       role: "LAWYER",
     },
     update: {
-      name: "Steve Crowley",
-      company: "SPC Consulting",
+      name: "Sam Porter",
+      company: "Example Deploy Co",
       isLawyer: true,
       role: "LAWYER",
     },
   });
   await prisma.lawyerProfile.upsert({
-    where: { userId: steveUser.id },
+    where: { userId: deploymentExpertB.id },
     create: {
-      userId: steveUser.id,
+      userId: deploymentExpertB.id,
       title: "Deployment Consultant",
       bio: "Self-hosting and deployment specialist covering EU, US, and UK environments.",
       jurisdictions: [],
@@ -768,7 +765,7 @@ async function main() {
       jurisdictionsCovered: ["EU", "US", "UK"],
       acceptingClients: true,
       isPublished: true,
-      notifyEmails: ["wences.spiegel@rindogatan.com"],
+      notifyEmails: ["jordan.vale@example-consulting.test"],
     },
     update: {
       title: "Deployment Consultant",
@@ -779,19 +776,19 @@ async function main() {
       city: "London",
       jurisdictionsCovered: ["EU", "US", "UK"],
       isPublished: true,
-      notifyEmails: ["wences.spiegel@rindogatan.com"],
+      notifyEmails: ["jordan.vale@example-consulting.test"],
     },
   });
-  console.log("  Created/updated LawyerProfile: Steve Crowley (Deployment)");
+  console.log("  Created/updated LawyerProfile: Sam Porter (Deployment)");
 
   // ── Seed sample invite codes for northend.law brand ──
   if (process.env.NEXT_PUBLIC_BRAND === "northend") {
     // Create a demo customer if none exists
     const demoCustomer = await prisma.customer.upsert({
-      where: { email: "demo@northend.law" },
+      where: { email: "demo@example.test" },
       create: {
-        name: "North End Law Demo",
-        email: "demo@northend.law",
+        name: "Demo Law Firm",
+        email: "demo@example.test",
         type: "SAAS",
       },
       update: {},

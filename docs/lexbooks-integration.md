@@ -91,8 +91,8 @@ Response:
 {
   "results": [{
     "id": "clxyz...",
-    "name": "Sergio Maldonado",
-    "email": "sergio@todo.law",
+    "name": "Alex Ferris",
+    "email": "alex@example-firm.test",
     "title": "Founder & DPO",
     "firm": "todo.law",
     "bio": "...",
@@ -102,7 +102,7 @@ Response:
     "languages": ["en", "es"],
     "location": { "city": "Barcelona", "country": "ES" },
     "jurisdictions": ["EU", "UK", "US"],
-    "contactUrl": "mailto:sergio@todo.law",
+    "contactUrl": "mailto:alex@example-firm.test",
     "imageUrl": "https://...",
     "acceptingClients": true,
     "profileCompleteness": 85
@@ -213,7 +213,7 @@ Response:
 {
   "requestId": "clxyz...",
   "expertId": "cluser...",
-  "expertName": "Sergio Maldonado",
+  "expertName": "Alex Ferris",
   "subject": "DPO Assessment for GDPR Audit",
   "status": "PENDING",
   "message": "We need help with...",
