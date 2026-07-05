@@ -1825,7 +1825,8 @@
     "marketplace": "Marketplace",
     "billing": "Facturación",
     "termsOfUse": "Términos de Uso",
-    "privacyNotice": "Aviso de Privacidad"
+    "privacyNotice": "Aviso de Privacidad",
+    "sourceCode": "Código fuente (AGPL-3.0)"
   },
   "onboarding": {
     "chooseRole": "¿Cómo vas a usar Dealroom?",

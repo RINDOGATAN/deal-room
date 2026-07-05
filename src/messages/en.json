@@ -1824,7 +1824,8 @@
     "marketplace": "Marketplace",
     "billing": "Billing",
     "termsOfUse": "Terms of Use",
-    "privacyNotice": "Privacy Notice"
+    "privacyNotice": "Privacy Notice",
+    "sourceCode": "Source code (AGPL-3.0)"
   },
   "onboarding": {
     "chooseRole": "How will you use Dealroom?",

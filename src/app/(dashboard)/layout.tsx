@@ -324,6 +324,15 @@ export default function DashboardLayout({
             >
               {tFooter("privacyNotice")}
             </a>
+            {/* AGPL §13: offer of Corresponding Source to network users */}
+            <a
+              href={brand.links.sourceCode}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="col-span-2 flex items-center justify-center gap-1.5 hover:text-foreground transition-colors"
+            >
+              {tFooter("sourceCode")}
+            </a>
             <div className="col-span-2 flex justify-center pt-1">
               <LanguageSwitcher />
             </div>
@@ -383,6 +392,16 @@ export default function DashboardLayout({
               className="hover:text-foreground transition-colors"
             >
               {tFooter("privacyNotice")}
+            </a>
+            <span className="text-border">&middot;</span>
+            {/* AGPL §13: offer of Corresponding Source to network users */}
+            <a
+              href={brand.links.sourceCode}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-foreground transition-colors"
+            >
+              {tFooter("sourceCode")}
             </a>
             <span className="text-border">&middot;</span>
             <LanguageSwitcher />

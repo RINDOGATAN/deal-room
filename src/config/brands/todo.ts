@@ -74,6 +74,8 @@ export const todo: BrandConfig = {
     userGuide: "/docs",
     terms: "https://todo.law/terms",
     privacy: "https://todo.law/privacy",
+    sourceCode:
+      process.env.NEXT_PUBLIC_SOURCE_URL || "https://github.com/RINDOGATAN/deal-room",
   },
 
   // Cookie domain (for production cross-subdomain auth)
