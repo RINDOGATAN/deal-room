@@ -49,7 +49,7 @@ export default function SigningPage() {
   const params = useParams();
   const dealId = params.id as string;
   const { data: deal } = trpc.deal.getById.useQuery({ id: dealId });
-  const contractLang = (deal as any)?.contractLanguage || "en";
+  const contractLang = deal?.contractLanguage || "en";
   const messages = useContractMessages(contractLang);
 
   if (!messages) {
@@ -104,6 +104,7 @@ function SigningContent({ dealId }: { dealId: string }) {
     if (!signingDetails) return;
     const saved = signingDetails.own.signingDetails;
     if (saved) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- hydrates the execution-details form once from the fetched signing details; the form is user-editable afterwards so it cannot be derived during render
       setDetailsForm((prev) => ({
         legalName: saved.legalName,
         address: saved.address,
@@ -128,6 +129,7 @@ function SigningContent({ dealId }: { dealId: string }) {
   const soloFillRoleFromDeal = (deal as { soloFillRole?: "CONTROLLER" | "PROCESSOR" | null } | undefined)?.soloFillRole;
   useEffect(() => {
     if (soloFillRoleFromDeal) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- syncs the user-editable form with the server-side soloFillRole source of truth; deriving during render would drop subsequent user edits
       setDetailsForm((f) => ({ ...f, fillRole: soloFillRoleFromDeal }));
     }
   }, [soloFillRoleFromDeal]);
@@ -251,7 +253,7 @@ function SigningContent({ dealId }: { dealId: string }) {
   const initiator = deal.parties.find((p) => p.role === "INITIATOR");
   const respondent = deal.parties.find((p) => p.role === "RESPONDENT");
   const isInitiator = deal.currentUserRole === "INITIATOR";
-  const isSoloMode = (deal as any)?.dealMode === "SOLO";
+  const isSoloMode = deal?.dealMode === "SOLO";
   // DPA in solo mode is the one asymmetric-role contract where the filling
   // party must declare whether they are the Controller or the Processor; the
   // other party's block is left blank in the output.
@@ -1490,7 +1492,6 @@ function FirmasHandoffCard({
         <div className="flex justify-center">
           {qrDataUrl ? (
             <div className="bg-white p-3 rounded-md inline-block">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={qrDataUrl}
                 alt={t("firmas.qrAlt")}

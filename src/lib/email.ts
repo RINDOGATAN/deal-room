@@ -1,10 +1,18 @@
 import { Resend } from "resend";
 import { brand } from "@/config/brand";
+import { createLogger } from "@/lib/logger";
+
+const logger = createLogger("email");
 
 const noopResend = {
   emails: {
     send: async (params: { subject?: string; to?: string | string[] }) => {
-      console.log(`[email] Skipped (no RESEND_API_KEY): "${params.subject}" → ${params.to}`);
+      // Local-dev diagnostic (no RESEND_API_KEY set): kept at debug so
+      // recipient addresses and subjects never hit info-level production logs.
+      logger.debug("Skipped send (no RESEND_API_KEY)", {
+        subject: params.subject,
+        to: params.to,
+      });
       return { data: { id: "skipped" }, error: null };
     },
   },
@@ -94,7 +102,7 @@ export async function sendInvitationEmail({
       `),
     });
   } catch (error) {
-    console.error("Failed to send invitation email:", error);
+    logger.error("Failed to send invitation email", { err: String(error) });
   }
 }
 
@@ -111,7 +119,8 @@ export async function sendAttorneyReviewRequestEmail({
   supervisorName,
   dealName,
   partyName,
-  dealRoomId,
+  // dealRoomId intentionally not destructured — the email links to the
+  // supervisor portal, not the deal; callers still pass it (interface shape kept).
 }: SendAttorneyReviewRequestEmailParams) {
   const portalUrl = `${process.env.NEXTAUTH_URL}/supervise`;
 
@@ -128,7 +137,7 @@ export async function sendAttorneyReviewRequestEmail({
       `),
     });
   } catch (error) {
-    console.error("Failed to send attorney review request email:", error);
+    logger.error("Failed to send attorney review request email", { err: String(error) });
   }
 }
 
@@ -192,7 +201,7 @@ export async function sendRecommendationRequestEmail({
       `),
     });
   } catch (error) {
-    console.error("Failed to send recommendation request email:", error);
+    logger.error("Failed to send recommendation request email", { err: String(error) });
   }
 }
 
@@ -225,7 +234,7 @@ export async function sendJointCounselNotificationEmail({
       `),
     });
   } catch (error) {
-    console.error("Failed to send joint counsel notification email:", error);
+    logger.error("Failed to send joint counsel notification email", { err: String(error) });
   }
 }
 
@@ -242,7 +251,8 @@ export async function sendJointCounselAssignmentEmail({
   supervisorName,
   dealName,
   initiatorName,
-  dealRoomId,
+  // dealRoomId intentionally not destructured — the email links to the
+  // supervisor portal, not the deal; callers still pass it (interface shape kept).
 }: SendJointCounselAssignmentEmailParams) {
   const portalUrl = `${process.env.NEXTAUTH_URL}/supervise`;
 
@@ -258,7 +268,7 @@ export async function sendJointCounselAssignmentEmail({
       `),
     });
   } catch (error) {
-    console.error("Failed to send joint counsel assignment email:", error);
+    logger.error("Failed to send joint counsel assignment email", { err: String(error) });
   }
 }
 
@@ -291,7 +301,7 @@ export async function sendSigningInitiatedEmail({
       `),
     });
   } catch (error) {
-    console.error("Failed to send signing initiated email:", error);
+    logger.error("Failed to send signing initiated email", { err: String(error) });
   }
 }
 
@@ -326,7 +336,7 @@ export async function sendSigningExpiringSoonEmail({
       `),
     });
   } catch (error) {
-    console.error("Failed to send signing-expiring email:", error);
+    logger.error("Failed to send signing-expiring email", { err: String(error) });
   }
 }
 
@@ -357,7 +367,7 @@ export async function sendSigningExpiredEmail({
       `),
     });
   } catch (error) {
-    console.error("Failed to send signing-expired email:", error);
+    logger.error("Failed to send signing-expired email", { err: String(error) });
   }
 }
 
@@ -390,7 +400,7 @@ export async function sendCounterpartySignedEmail({
       `),
     });
   } catch (error) {
-    console.error("Failed to send counterparty signed email:", error);
+    logger.error("Failed to send counterparty signed email", { err: String(error) });
   }
 }
 
@@ -427,6 +437,6 @@ export async function sendFirmasSigningEmail({
       `),
     });
   } catch (error) {
-    console.error("Failed to send Firmas signing email:", error);
+    logger.error("Failed to send Firmas signing email", { err: String(error) });
   }
 }

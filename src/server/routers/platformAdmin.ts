@@ -12,12 +12,13 @@ import {
 import { features } from "@/config/features";
 import { SPECIALIZATIONS, CERTIFICATIONS, EXPERT_TYPES } from "../services/experts/taxonomy";
 import { GoverningLaw } from "@prisma/client";
+import type { ExtendedPrismaClient } from "@/lib/prisma";
 
 // Helper to check 2FA and get admin record
 const requireVerified2FA = async (
   email: string,
   getCookie: (name: string) => string | undefined,
-  prisma: any
+  prisma: ExtendedPrismaClient
 ) => {
   const twoFactorVerified = getCookie("platform_admin_2fa_verified");
   if (twoFactorVerified !== "true") {
@@ -920,7 +921,7 @@ export const platformAdminRouter = createTRPCRouter({
             data: { isLawyer: false },
           }),
         ]);
-      } catch (error) {
+      } catch {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "Could not delete expert profile. The user may have active deals or vettings that reference this account.",

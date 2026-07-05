@@ -18,7 +18,6 @@ import {
   Edit,
   X,
   Send,
-  ExternalLink,
   Download,
   ShieldCheck,
   ShieldAlert,
@@ -80,7 +79,7 @@ export default function DealDetailPage() {
   const params = useParams();
   const dealId = params.id as string;
   const { data: deal } = trpc.deal.getById.useQuery({ id: dealId });
-  const contractLang = (deal as any)?.contractLanguage || "en";
+  const contractLang = deal?.contractLanguage || "en";
   const messages = useContractMessages(contractLang);
 
   if (!messages) {
@@ -209,7 +208,7 @@ function DealDetailContent({ dealId }: { dealId: string }) {
   const statusLabel = statusLabels[deal.status];
   const initiator = deal.parties.find((p) => p.role === "INITIATOR");
   const respondent = deal.parties.find((p) => p.role === "RESPONDENT");
-  const isSoloMode = (deal as any).dealMode === "SOLO";
+  const isSoloMode = deal.dealMode === "SOLO";
   const isInitiator = deal.currentUserRole === "INITIATOR";
   const canInvite = !isSoloMode && isInitiator && !respondent && deal.status === "DRAFT";
   const canNegotiate = deal.status === "DRAFT" || deal.status === "AWAITING_RESPONSE" || deal.status === "NEGOTIATING";
@@ -219,11 +218,11 @@ function DealDetailContent({ dealId }: { dealId: string }) {
   // (that flow has its own lawyer-review surface at the journey level, so
   // repeating the disclaimer per document is just noise).
   const myParty = deal.parties.find((p) => p.id === deal.currentPartyId);
-  const journeyGenerated = !!(deal as any).journeyId;
+  const journeyGenerated = !!deal.journeyId;
   const showLawyerWarning = !isLawyer &&
     !deal.lawyerVettingId &&
     !journeyGenerated &&
-    !(myParty as any)?.lawyerWarningDismissedAt &&
+    !myParty?.lawyerWarningDismissedAt &&
     ["DRAFT", "AWAITING_RESPONSE", "NEGOTIATING"].includes(deal.status);
 
   return (
@@ -259,10 +258,11 @@ function DealDetailContent({ dealId }: { dealId: string }) {
             <span>•</span>
             <span>Created {formatDate(new Date(deal.createdAt), { locale, governingLaw: deal.governingLaw })}</span>
           </div>
-          {(deal as any).lawyerVetting && (
-            <VettingBadge vetting={(deal as any).lawyerVetting} governingLaw={deal.governingLaw} />
+          {deal.lawyerVetting && (
+            <VettingBadge vetting={deal.lawyerVetting} governingLaw={deal.governingLaw} />
           )}
           {deal.status === "SIGNING" && signingRequest && (() => {
+            // eslint-disable-next-line react-hooks/purity -- intentional wall-clock read for a coarse "days elapsed/remaining" label; staleness between renders is acceptable and memoizing would not make it fresher
             const now = Date.now();
             const created = new Date(signingRequest.createdAt).getTime();
             const expires = new Date(signingRequest.expiresAt).getTime();

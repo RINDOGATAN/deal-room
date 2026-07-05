@@ -9,7 +9,6 @@ import {
   Search,
   AlertCircle,
   Loader2,
-  Check,
   X,
   FileText,
 } from "lucide-react";
@@ -226,7 +225,7 @@ export default function SupervisorsPage() {
                 )}
               </div>
               <div className="flex flex-wrap gap-1 items-center">
-                {(supervisor as any).barAdmissions?.map((ba: any) => (
+                {supervisor.barAdmissions?.map((ba) => (
                   <span
                     key={ba.id}
                     className="inline-flex items-center gap-1 text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full"
@@ -311,7 +310,7 @@ export default function SupervisorsPage() {
                 onClick={() => {
                   addBarAdmission.mutate({
                     supervisorId: admissionForm.supervisorId,
-                    jurisdiction: admissionJurisdiction as any,
+                    jurisdiction: admissionJurisdiction as "CALIFORNIA" | "ENGLAND_WALES" | "SPAIN",
                     barNumber: admissionBarNumber,
                   });
                 }}

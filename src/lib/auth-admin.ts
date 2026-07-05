@@ -3,7 +3,10 @@ import EmailProvider from "next-auth/providers/email";
 import { Resend } from "resend";
 import { PrismaClient } from "@prisma/client";
 import { createAdminAdapter } from "./admin-adapter";
-import { brand, getEmailStyles } from "@/config/brand";
+import { brand } from "@/config/brand";
+import { createLogger } from "@/lib/logger";
+
+const logger = createLogger("auth-admin");
 
 // Create a dedicated prisma instance to avoid module resolution issues
 const prisma = new PrismaClient();
@@ -31,8 +34,6 @@ export const adminAuthOptions: NextAuthOptions = {
         // NextAuth generates /api/auth/callback/email but we need /api/auth/admin/callback/email
         const adminUrl = url.replace("/api/auth/callback/", "/api/auth/admin/callback/");
 
-
-        const emailStyles = getEmailStyles();
         try {
           await resend!.emails.send({
             from: `DEALROOM <${process.env.EMAIL_FROM || "noreply@todo.law"}>`,
@@ -56,7 +57,7 @@ export const adminAuthOptions: NextAuthOptions = {
             `,
           });
         } catch (error) {
-          console.error("Failed to send admin verification email:", error);
+          logger.error("Failed to send admin verification email", { err: String(error) });
           throw new Error("Failed to send verification email");
         }
       },

@@ -15,12 +15,10 @@ import {
   Check,
   Scale,
   Globe,
-  AlertTriangle,
   Languages,
   Lock,
   Megaphone,
   Link2,
-  UserRound,
   Users,
   Download,
   ChevronDown,
@@ -259,9 +257,13 @@ export default function NewDealPage() {
     if (Object.keys(defaults).length > 0) {
       setParameterValues((prev) => ({ ...defaults, ...prev }));
     }
+    // parameterValues is read only to avoid clobbering user input; re-running on
+    // every keystroke would re-apply defaults to fields the user cleared.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [visibleParameters]);
-  const { data: billingConfig } = trpc.billing.getConfig.useQuery();
-  const selfServiceUpgrade = billingConfig?.selfServiceUpgrade ?? false;
+  // Query kept for cache warm-up of billing config used elsewhere; its
+  // selfServiceUpgrade flag is not consumed on this page today.
+  trpc.billing.getConfig.useQuery();
   const allFamilies = templates ? groupTemplatesByFamily(templates) : [];
   // Filter: only show families where at least one template supports the current platform locale
   // Sort: free templates first, locked (premium) templates at the bottom
@@ -309,6 +311,9 @@ export default function NewDealPage() {
         setSelectedType(null);
       }
     }
+    // Intentionally runs only on category change: reacting to selectedFamily/
+    // templateFamilies would clear a selection the user just made.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedCategory]);
 
   // Compute available jurisdictions/languages for the selected family

@@ -56,7 +56,7 @@ export default function SignInPage() {
       } else {
         setEmailSent(true);
       }
-    } catch (err) {
+    } catch {
       setError(t("unexpectedError"));
       setIsEmailLoading(false);
     }
@@ -83,7 +83,7 @@ export default function SignInPage() {
       } else if (result?.ok) {
         window.location.href = "/deals";
       }
-    } catch (err) {
+    } catch {
       setError(t("unexpectedError"));
       setIsEmailLoading(false);
     }
@@ -123,7 +123,7 @@ export default function SignInPage() {
       await signIn("google", {
         callbackUrl: "/deals",
       });
-    } catch (err) {
+    } catch {
       setError(t("googleSignInFailed"));
       setIsGoogleLoading(false);
     }

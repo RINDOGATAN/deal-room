@@ -57,6 +57,7 @@ describe("annex rendering", () => {
   });
 
   it("PDF: renders to a non-empty buffer", async () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- react-pdf's renderToBuffer wants ReactElement<DocumentProps>; ContractPDF returns generic JSX
     const buf = await renderToBuffer(ContractPDF({ data }) as any);
     expect(buf.length).toBeGreaterThan(1000);
   });

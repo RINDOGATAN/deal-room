@@ -42,23 +42,22 @@ ship inside each package under `node_modules/<name>/`. This table covers
 | framer-motion | 12.34.3 | MIT | https://github.com/motiondivision/motion |
 | jose | 6.1.3 | MIT | https://github.com/panva/jose |
 | lucide-react | 0.562.0 | ISC | https://lucide.dev |
-| next | 16.1.6 | MIT | https://nextjs.org |
-| next-auth | 4.24.13 | ISC | https://authjs.dev |
-| next-intl | 4.8.2 | MIT | https://next-intl.dev |
+| next | 16.2.9 | MIT | https://nextjs.org |
+| next-auth | 4.24.14 | ISC | https://authjs.dev |
+| next-intl | 4.12.0 | MIT | https://next-intl.dev |
 | next-themes | 0.4.6 | MIT | https://github.com/pacocoursey/next-themes |
-| nodemailer | 7.0.12 | MIT-0 | https://nodemailer.com |
+| nodemailer | 9.0.1 | MIT-0 | https://nodemailer.com |
 | otpauth | 9.4.1 | MIT | https://github.com/hectorm/otpauth |
 | qrcode | 1.5.4 | MIT | https://github.com/soldair/node-qrcode |
 | react | 19.2.3 | MIT | https://react.dev |
 | react-dom | 19.2.3 | MIT | https://react.dev |
 | react-hook-form | 7.71.1 | MIT | https://react-hook-form.com |
-| react-router-dom | 7.13.1 | MIT | https://github.com/remix-run/react-router |
-| resend | 6.8.0 | MIT | https://github.com/resend/resend-node |
+| resend | 6.16.0 | MIT | https://github.com/resend/resend-node |
 | sonner | 2.0.7 | MIT | https://sonner.emilkowal.ski |
 | stripe | 20.3.1 | MIT | https://github.com/stripe/stripe-node |
 | superjson | 2.2.6 | MIT | https://github.com/blitz-js/superjson |
 | tailwind-merge | 3.4.0 | MIT | https://github.com/dcastil/tailwind-merge |
-| uuid | 13.0.0 | MIT | https://github.com/uuidjs/uuid |
+| uuid | 13.0.2 | MIT | https://github.com/uuidjs/uuid |
 | zod | 4.3.5 | MIT | https://zod.dev |
 
 ## Development dependencies

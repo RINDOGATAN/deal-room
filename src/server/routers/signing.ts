@@ -10,6 +10,9 @@ import {
 } from "@/lib/email";
 import { certificationService } from "@/lib/certification-client";
 import { generateContractData } from "@/server/services/document/generator";
+import { createLogger } from "@/lib/logger";
+
+const logger = createLogger("signing");
 
 /**
  * Best-effort capture of who and where a signature came from.
@@ -283,9 +286,6 @@ export const signingRouter = createTRPCRouter({
         });
       }
 
-      const initiator = party.dealRoom.parties.find((p) => p.role === "INITIATOR");
-      const respondent = party.dealRoom.parties.find((p) => p.role === "RESPONDENT");
-
       // Begin certification ceremony (degrades gracefully without API key)
       let ceremonyId: string | null = null;
       let documentHash: string | null = null;
@@ -302,7 +302,7 @@ export const signingRouter = createTRPCRouter({
           }
         }
       } catch (error) {
-        console.error("Certification ceremony failed (continuing uncertified):", error);
+        logger.error("Certification ceremony failed (continuing uncertified)", { err: String(error) });
       }
 
       // Atomic AGREED → SIGNING transition. If two parties click "Initiate
@@ -375,7 +375,7 @@ export const signingRouter = createTRPCRouter({
               dealRoomId: input.dealRoomId,
             });
           } catch (error) {
-            console.error("Failed to send signing initiated email:", error);
+            logger.error("Failed to send signing initiated email", { err: String(error) });
           }
         }
       }
@@ -456,7 +456,7 @@ export const signingRouter = createTRPCRouter({
             party.name || ctx.session.user.name || "",
           );
         } catch (error) {
-          console.error("Certification signature recording failed:", error);
+          logger.error("Certification signature recording failed", { err: String(error) });
         }
       }
 
@@ -555,7 +555,7 @@ export const signingRouter = createTRPCRouter({
               dealRoomId: signingRequest.dealRoomId,
             });
           } catch (error) {
-            console.error("Failed to send counterparty signed email:", error);
+            logger.error("Failed to send counterparty signed email", { err: String(error) });
           }
         }
       }
@@ -802,7 +802,7 @@ export const signingRouter = createTRPCRouter({
             }
           }
         } catch (error) {
-          console.error("Certification ceremony failed (continuing uncertified):", error);
+          logger.error("Certification ceremony failed (continuing uncertified)", { err: String(error) });
         }
 
         signingRequest = await ctx.prisma.$transaction(async (tx) => {
@@ -921,7 +921,7 @@ export const signingRouter = createTRPCRouter({
             });
             emailedTo = targetEmail;
           } catch (error) {
-            console.error("Failed to send Firmas signing email:", error);
+            logger.error("Failed to send Firmas signing email", { err: String(error) });
           }
         }
       }

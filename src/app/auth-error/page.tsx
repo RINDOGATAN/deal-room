@@ -26,6 +26,7 @@ function AuthErrorContent() {
       router.replace(`/supervise/error?error=${error}`);
       return;
     }
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- must run after the cookie check above, which needs document.cookie (unavailable during render); flips off the redirect placeholder exactly once
     setRedirecting(false);
   }, [router, error]);
 

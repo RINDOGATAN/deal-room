@@ -31,6 +31,7 @@ export default function LandingPage() {
   const [locale, setLocale] = useState<"en" | "es">("en");
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- locale detection reads cookies/navigator, which must happen after hydration; running it during render would mismatch the server-rendered markup
     setLocale(detectLocale());
   }, []);
 

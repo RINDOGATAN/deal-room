@@ -1,10 +1,14 @@
 import { z } from "zod";
+import type { Prisma } from "@prisma/client";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
 import {
   sendJointCounselAssignmentEmail,
   sendJointCounselNotificationEmail,
 } from "@/lib/email";
+import { createLogger } from "@/lib/logger";
+
+const logger = createLogger("joint-counsel");
 
 export const jointCounselRouter = createTRPCRouter({
   /**
@@ -224,7 +228,7 @@ export const jointCounselRouter = createTRPCRouter({
         initiatorName: party.name || "A party",
         dealRoomId: input.dealRoomId,
       }).catch((err) =>
-        console.error("Failed to send joint counsel assignment email:", err)
+        logger.error("Failed to send joint counsel assignment email", { err: String(err) })
       );
 
       // Fire-and-forget: notify the other party
@@ -236,7 +240,7 @@ export const jointCounselRouter = createTRPCRouter({
           supervisorName: supervisor.name || supervisor.email,
           dealRoomId: input.dealRoomId,
         }).catch((err) =>
-          console.error("Failed to send joint counsel notification email:", err)
+          logger.error("Failed to send joint counsel notification email", { err: String(err) })
         );
       }
 
@@ -375,7 +379,7 @@ export const jointCounselRouter = createTRPCRouter({
 
       const supervisorId = party.dealRoom.jointCounselSupervisorId;
 
-      const operations = [
+      const operations: Prisma.PrismaPromise<unknown>[] = [
         // Set declined timestamp and clear supervisor
         ctx.prisma.dealRoom.update({
           where: { id: input.dealRoomId },
@@ -408,7 +412,7 @@ export const jointCounselRouter = createTRPCRouter({
               dealRoomId: input.dealRoomId,
               assignedBy: null,
             },
-          }) as any
+          })
         );
       }
 

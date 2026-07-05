@@ -59,7 +59,6 @@ const StartupProductPage = ({
   workflowSteps,
   valueProps,
   heroVideo,
-  accentGradient = "from-accent/20 to-accent/5",
   callbackUrl,
 }: StartupProductPageProps) => {
   const videoRef = useRef<HTMLVideoElement>(null);

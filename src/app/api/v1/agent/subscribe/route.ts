@@ -25,6 +25,9 @@ import {
   checkRateLimit,
 } from "@/server/middleware/apiKeyAuth";
 import { withIdempotency } from "@/server/middleware/idempotency";
+import { createLogger } from "@/lib/logger";
+
+const logger = createLogger("agent-api");
 
 export async function POST(req: NextRequest) {
   try {
@@ -197,7 +200,7 @@ export async function POST(req: NextRequest) {
     });
     });
   } catch (error) {
-    console.error("Error creating subscription checkout:", error);
+    logger.error("Error creating subscription checkout", { err: String(error) });
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }

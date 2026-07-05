@@ -21,6 +21,9 @@ import {
   type Specialization,
   type Certification,
 } from "@/server/services/experts/taxonomy";
+import { createLogger } from "@/lib/logger";
+
+const logger = createLogger("experts-api");
 
 function formatProfile(profile: {
   id: string;
@@ -197,7 +200,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ results, total, offset });
   } catch (error) {
-    console.error("Error searching experts:", error);
+    logger.error("Error searching experts", { err: String(error) });
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }

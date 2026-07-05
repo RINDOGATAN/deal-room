@@ -17,7 +17,6 @@ import {
   LicenseFile,
   isValidLicenseKeyFormat,
 } from "@/lib/crypto";
-import { getMachineInfo } from "./fingerprint";
 import { features } from "@/config/features";
 
 /**

@@ -13,6 +13,9 @@ import {
   ApiScopeError,
 } from "@/server/middleware/apiKeyAuth";
 import { features } from "@/config/features";
+import { createLogger } from "@/lib/logger";
+
+const logger = createLogger("agent-api");
 
 export async function GET(
   req: NextRequest,
@@ -85,7 +88,7 @@ export async function GET(
       })),
     });
   } catch (error) {
-    console.error("Error getting deal status:", error);
+    logger.error("Error getting deal status", { err: String(error) });
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

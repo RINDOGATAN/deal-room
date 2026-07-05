@@ -1,5 +1,6 @@
 import Stripe from "stripe";
 import { features } from "@/config/features";
+import type { ExtendedPrismaClient } from "@/lib/prisma";
 
 let stripeClient: Stripe | null = null;
 
@@ -136,7 +137,7 @@ export async function createConnectTransfer(params: {
 }
 
 export async function getOrCreateStripeCustomer(
-  prisma: any,
+  prisma: ExtendedPrismaClient,
   email: string,
   name?: string
 ): Promise<{ customerId: string; stripeCustomerId: string }> {

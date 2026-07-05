@@ -2,6 +2,9 @@
 
 import { useState } from "react";
 import { ExternalLink, Loader2 } from "lucide-react";
+import { createLogger } from "@/lib/logger";
+
+const logger = createLogger("billing");
 
 export function ManageBillingButton() {
   const [loading, setLoading] = useState(false);
@@ -18,7 +21,7 @@ export function ManageBillingButton() {
       if (data.url) {
         window.location.href = data.url;
       } else {
-        console.error("Portal error:", data.error);
+        logger.error("Portal error", { err: String(data.error) });
         setLoading(false);
       }
     } catch {

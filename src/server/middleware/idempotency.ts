@@ -24,6 +24,9 @@
  */
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { createLogger } from "@/lib/logger";
+
+const logger = createLogger("idempotency");
 
 export const IDEMPOTENCY_TTL_MS = 24 * 60 * 60 * 1000; // 24 hours
 const KEY_MAX_LEN = 200;
@@ -110,7 +113,7 @@ export async function withIdempotency(
       const isUnique =
         err && typeof err === "object" && "code" in err && (err as { code?: string }).code === "P2002";
       if (!isUnique) {
-        console.error("Failed to cache idempotency record:", err);
+        logger.error("Failed to cache idempotency record", { err: String(err) });
       }
     }
   }

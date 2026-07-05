@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
-import { DealRoomStatus, PartyRole, PartyStatus } from "@prisma/client";
+import { PartyRole, PartyStatus } from "@prisma/client";
 import { assertMutableStatus } from "../services/deal/mutability";
 
 export const selectionsRouter = createTRPCRouter({

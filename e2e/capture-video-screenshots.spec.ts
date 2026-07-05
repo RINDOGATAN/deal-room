@@ -27,19 +27,6 @@ const DEAL_NAME = "Acme Corp × Widgets Inc — NDA";
 // Output directory for screenshots (Remotion videos/public/)
 const SCREENSHOTS_DIR = path.resolve(__dirname, "../../todolaw/videos/public");
 
-const PARTY_A_COMPANY = {
-  legalName: "Acme Corporation",
-  address: "100 Market Street, San Francisco, CA 94105",
-  signatoryName: "Alice Johnson",
-  signatoryTitle: "Chief Executive Officer",
-};
-const PARTY_B_COMPANY = {
-  legalName: "Widgets Inc.",
-  address: "200 Broadway, New York, NY 10007",
-  signatoryName: "Bob Williams",
-  signatoryTitle: "General Counsel",
-};
-
 // ─── Timing ─────────────────────────────────────────────────
 const t0 = Date.now();
 function log(msg: string) {

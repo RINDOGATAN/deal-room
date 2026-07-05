@@ -22,6 +22,9 @@ import {
   SPECIALIZATION_LABELS,
   type Specialization,
 } from "@/server/services/experts/taxonomy";
+import { createLogger } from "@/lib/logger";
+
+const logger = createLogger("experts-api");
 
 export async function GET(req: NextRequest) {
   try {
@@ -97,7 +100,7 @@ export async function GET(req: NextRequest) {
       },
     });
   } catch (error) {
-    console.error("Error verifying expert:", error);
+    logger.error("Error verifying expert", { err: String(error) });
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }

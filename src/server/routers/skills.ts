@@ -1,4 +1,5 @@
 import { z } from "zod";
+import type { GoverningLaw } from "@prisma/client";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
 import { features } from "@/config/features";
@@ -177,7 +178,7 @@ export const skillsRouter = createTRPCRouter({
       const nativeTemplate = await ctx.prisma.contractTemplate.findFirst({
         where: {
           templateFamily: input.templateFamily,
-          nativeJurisdiction: input.jurisdiction as any,
+          nativeJurisdiction: input.jurisdiction as GoverningLaw,
           isActive: true,
         },
         select: {

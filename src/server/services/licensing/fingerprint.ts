@@ -9,7 +9,7 @@
  */
 
 import { hostname, networkInterfaces } from "os";
-import { computeMachineFingerprint, generateInstanceId, sha256 } from "@/lib/crypto";
+import { computeMachineFingerprint, generateInstanceId } from "@/lib/crypto";
 
 export interface MachineInfo {
   hostname: string;

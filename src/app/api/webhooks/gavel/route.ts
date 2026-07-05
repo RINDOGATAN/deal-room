@@ -10,6 +10,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { createHmac } from "crypto";
 import prisma from "@/lib/prisma";
 import type { Prisma } from "@prisma/client";
+import { createLogger } from "@/lib/logger";
+
+const logger = createLogger("gavel-webhook");
 
 const GAVEL_WEBHOOK_SECRET = process.env.GAVEL_WEBHOOK_SECRET;
 
@@ -29,7 +32,7 @@ export async function POST(request: NextRequest) {
     // An unset secret would otherwise leave this endpoint open to anonymous
     // dispute mutations.
     if (!GAVEL_WEBHOOK_SECRET) {
-      console.error(
+      logger.error(
         "GAVEL_WEBHOOK_SECRET is not set — refusing webhook. Configure on Vercel and redeploy.",
       );
       return NextResponse.json(
@@ -65,9 +68,7 @@ export async function POST(request: NextRequest) {
         });
 
         if (!dispute) {
-          console.warn(
-            `Gavel case.resolved for unknown case: ${event.data.caseId}`
-          );
+          logger.warn("Gavel case.resolved for unknown case", { caseId: event.data.caseId });
           break;
         }
 
@@ -80,9 +81,7 @@ export async function POST(request: NextRequest) {
           },
         });
 
-        console.log(
-          `Dispute ${dispute.id} resolved for case ${event.data.caseId}`
-        );
+        logger.info("Dispute resolved", { disputeId: dispute.id, caseId: event.data.caseId });
         break;
       }
 
@@ -92,9 +91,7 @@ export async function POST(request: NextRequest) {
         });
 
         if (!dispute) {
-          console.warn(
-            `Gavel escrow.released for unknown case: ${event.data.caseId}`
-          );
+          logger.warn("Gavel escrow.released for unknown case", { caseId: event.data.caseId });
           break;
         }
 
@@ -111,19 +108,20 @@ export async function POST(request: NextRequest) {
           },
         });
 
-        console.log(
-          `Escrow released for dispute ${dispute.id}, case ${event.data.caseId}`
-        );
+        logger.info("Escrow released for dispute", {
+          disputeId: dispute.id,
+          caseId: event.data.caseId,
+        });
         break;
       }
 
       default:
-        console.log(`Unhandled Gavel event type: ${event.type}`);
+        logger.debug("Unhandled Gavel event type", { eventType: event.type });
     }
 
     return NextResponse.json({ received: true });
   } catch (error) {
-    console.error("Gavel webhook error:", error);
+    logger.error("Gavel webhook error", { err: String(error) });
     return NextResponse.json(
       { error: "Webhook handler failed" },
       { status: 500 }

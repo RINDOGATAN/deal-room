@@ -14,6 +14,9 @@ import {
 } from "@/server/middleware/apiKeyAuth";
 import { withIdempotency } from "@/server/middleware/idempotency";
 import { features } from "@/config/features";
+import { createLogger } from "@/lib/logger";
+
+const logger = createLogger("agent-api");
 
 export async function GET(req: NextRequest) {
   try {
@@ -57,7 +60,7 @@ export async function GET(req: NextRequest) {
       })),
     });
   } catch (error) {
-    console.error("Error listing playbooks:", error);
+    logger.error("Error listing playbooks", { err: String(error) });
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }
@@ -268,7 +271,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ playbook }, { status: 201 });
     });
   } catch (error) {
-    console.error("Error creating playbook:", error);
+    logger.error("Error creating playbook", { err: String(error) });
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }

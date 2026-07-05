@@ -7,6 +7,10 @@
  * just becomes visibly inferior.
  */
 
+import { createLogger } from "@/lib/logger";
+
+const logger = createLogger("cloud-api");
+
 // ---------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------
@@ -143,15 +147,16 @@ class CloudApiGateway {
       });
 
       if (!res.ok) {
-        console.error(
-          `[CloudAPI] ${path} failed: ${res.status} ${res.statusText}`
-        );
+        logger.error(`${path} failed`, {
+          status: res.status,
+          statusText: res.statusText,
+        });
         return null;
       }
 
       return (await res.json()) as T;
     } catch (err) {
-      console.error(`[CloudAPI] ${path} error:`, err);
+      logger.error(`${path} error`, { err: String(err) });
       return null;
     }
   }

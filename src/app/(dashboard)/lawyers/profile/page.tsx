@@ -61,6 +61,7 @@ export default function LawyerProfilePage() {
 
   useEffect(() => {
     if (profile) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- hydrates the lawyer-profile edit form once from the fetched profile; the fields are user-editable afterwards so they cannot be derived during render
       setBio(profile.bio || "");
       setJurisdictions(profile.jurisdictions as GoverningLaw[]);
       setLanguages(profile.languages);

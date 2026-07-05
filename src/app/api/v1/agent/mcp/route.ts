@@ -6,13 +6,13 @@
  * Discovery-only — execution goes through existing REST endpoints.
  */
 
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { features } from "@/config/features";
 import { brand } from "@/config/brand";
 import { apiError } from "@/lib/api-response";
 
-export async function GET(req: NextRequest) {
+export async function GET() {
   try {
     if (!features.agentApi) {
       return NextResponse.json({ error: "Not available" }, { status: 404 });

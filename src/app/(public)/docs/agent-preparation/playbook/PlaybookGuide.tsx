@@ -7,7 +7,6 @@ import {
   ArrowRight,
   ChevronDown,
   CheckCircle,
-  AlertTriangle,
   Shield,
 } from "lucide-react";
 
@@ -439,13 +438,13 @@ function ClausePlaybookEntry({
                   <span className="text-primary">preferredOptionId</span>:{" "}
                   &quot;{option.code}&quot;{" "}
                   <span className="text-muted-foreground/60">
-                    // {optLabel}
+                    {"// "}{optLabel}
                   </span>
                 </p>
                 <p className="text-muted-foreground">
                   <span className="text-primary">flexibility</span>: _{" "}
                   <span className="text-muted-foreground/60">
-                    // 1 (inflexible) to 5 (very flexible)
+                    {"// 1 (inflexible) to 5 (very flexible)"}
                   </span>
                 </p>
                 <p className="text-muted-foreground">

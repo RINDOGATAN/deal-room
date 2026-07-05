@@ -1,16 +1,18 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import { apiError } from "../api-response";
 import { TRANSIENT_MESSAGE } from "../format-error";
 
+// Hoisted above the imports: the structured logger (@/lib/logger) captures
+// its console sinks at module-initialisation time, so the spy must be
+// installed before api-response (and the logger) are loaded — a spy created
+// in beforeEach would never see the logger's calls.
+const consoleErrorSpy = vi.hoisted(() =>
+  vi.spyOn(console, "error").mockImplementation(() => {}),
+);
+
 describe("apiError", () => {
-  let consoleErrorSpy: ReturnType<typeof vi.spyOn>;
-
   beforeEach(() => {
-    consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
-  });
-
-  afterEach(() => {
-    consoleErrorSpy.mockRestore();
+    consoleErrorSpy.mockClear();
   });
 
   it("returns 503 + friendly message for Neon control-plane errors", async () => {
@@ -67,7 +69,14 @@ describe("apiError", () => {
   it("logs the raw error server-side for observability", () => {
     const err = new Error("Control plane request failed");
     apiError(err, "fallback");
-    expect(consoleErrorSpy).toHaveBeenCalledWith("[api]", err);
+    // apiError now logs through the structured logger (scope "api"), which
+    // still sinks to console.error. Assert format-agnostically: one call,
+    // carrying both the scope (JSON `"scope":"api"` server-side or "[api]"
+    // browser-side) and the original error text.
+    expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
+    const logged = consoleErrorSpy.mock.calls[0].map(String).join(" ");
+    expect(logged).toMatch(/"scope":"api"|\[api\]/);
+    expect(logged).toContain("Control plane request failed");
   });
 
   it("uses default fallback when none provided", async () => {

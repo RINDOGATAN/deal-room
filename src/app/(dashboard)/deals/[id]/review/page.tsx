@@ -66,7 +66,7 @@ export default function ReviewPage() {
   const params = useParams();
   const dealId = params.id as string;
   const { data: deal } = trpc.deal.getById.useQuery({ id: dealId });
-  const contractLang = (deal as any)?.contractLanguage || "en";
+  const contractLang = deal?.contractLanguage || "en";
   const messages = useContractMessages(contractLang);
 
   if (!messages) {
@@ -106,7 +106,7 @@ function ReviewContent({ dealId }: { dealId: string }) {
   const [paramRationale, setParamRationale] = useState("");
 
   const { data: deal, isLoading: dealLoading } = trpc.deal.getById.useQuery({ id: dealId });
-  const contractLang = (deal as any)?.contractLanguage || "en";
+  const contractLang = deal?.contractLanguage || "en";
 
   // Only the heavy negotiation-state queries that we actually need on this
   // page; gating each on the deal status avoids a 7-query waterfall during
@@ -460,8 +460,8 @@ function ReviewContent({ dealId }: { dealId: string }) {
               {deal.currentRound > 0 && ` • ${t("round", { number: deal.currentRound })}`}
             </p>
           </div>
-          {(deal as any).lawyerVetting && (
-            <VettingBadge vetting={(deal as any).lawyerVetting} governingLaw={deal.governingLaw} compact />
+          {deal.lawyerVetting && (
+            <VettingBadge vetting={deal.lawyerVetting} governingLaw={deal.governingLaw} compact />
           )}
         </div>
 
@@ -658,7 +658,7 @@ function ReviewContent({ dealId }: { dealId: string }) {
                   </div>
 
                   {/* Incoming proposals for this param */}
-                  {pendingForMe.map((pp: any) => (
+                  {pendingForMe.map((pp) => (
                     <div key={pp.id} className="p-3 border border-yellow-500/30 bg-yellow-500/10 space-y-2">
                       <p className="text-sm font-medium text-yellow-200">
                         {t("incomingParameterProposal", { label })}
@@ -695,7 +695,7 @@ function ReviewContent({ dealId }: { dealId: string }) {
                   ))}
 
                   {/* My proposals for this param */}
-                  {myProposals.map((pp: any) => (
+                  {myProposals.map((pp) => (
                     <div key={pp.id} className="p-3 border border-blue-500/30 bg-blue-500/5 space-y-2">
                       <div className="flex items-center justify-between gap-2">
                         <p className="text-sm font-medium text-blue-300">

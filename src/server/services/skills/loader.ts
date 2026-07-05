@@ -1,4 +1,3 @@
-import { PrismaClient } from "@prisma/client";
 import type { ExtendedPrismaClient } from "@/lib/prisma";
 import * as fs from "fs";
 import * as path from "path";
@@ -6,9 +5,10 @@ import { z } from "zod";
 import {
   resolveLocalizedString,
   resolveLocalizedArray,
-  type LocalizedString,
-  type LocalizedStringArray,
 } from "./i18n";
+import { createLogger } from "@/lib/logger";
+
+const logger = createLogger("skills-loader");
 
 // Skills directory paths
 const BUILTIN_SKILLS_DIR = path.join(process.cwd(), "skills");
@@ -78,9 +78,6 @@ const I18nClauseOptionSchema = z.object({
   jurisdictionConfig: z.record(z.string(), z.any()).optional(),
 });
 
-// Accept either format
-const ClauseOptionSchema = z.union([LegacyClauseOptionSchema, I18nClauseOptionSchema]);
-
 // Legacy clause schema
 const LegacyClauseSchema = z.object({
   id: z.string(),
@@ -104,8 +101,6 @@ const I18nClauseSchema = z.object({
   isRequired: z.boolean().optional().default(true),
   options: z.array(I18nClauseOptionSchema).min(2),
 });
-
-const ClauseSchema = z.union([LegacyClauseSchema, I18nClauseSchema]);
 
 // Legacy clauses file
 const LegacyClausesFileSchema = z.object({
@@ -614,7 +609,7 @@ export function loadBoilerplateFromDirectory(
   const boilerplatePath = path.join(skillDir, "boilerplate.json");
 
   if (!fs.existsSync(boilerplatePath)) {
-    console.log(`No boilerplate.json found in ${skillDir}`);
+    logger.debug("No boilerplate.json found", { skillDir });
     return null;
   }
 
@@ -624,17 +619,21 @@ export function loadBoilerplateFromDirectory(
     const parsed = BoilerplateSchema.safeParse(data);
 
     if (!parsed.success) {
-      console.error(`Boilerplate validation errors in ${boilerplatePath}:`);
+      logger.error("Boilerplate validation errors", { boilerplatePath });
       parsed.error.issues.forEach((err) =>
-        console.error(`  - ${err.path.join(".")}: ${err.message}`)
+        logger.error("Boilerplate validation issue", {
+          boilerplatePath,
+          path: err.path.join("."),
+          message: err.message,
+        })
       );
       return null;
     }
 
-    console.log(`Loaded boilerplate from ${skillDir}`);
+    logger.debug("Loaded boilerplate", { skillDir });
     return parsed.data;
   } catch (e) {
-    console.error(`Error loading ${boilerplatePath}:`, e);
+    logger.error("Error loading boilerplate", { boilerplatePath, err: String(e) });
     return null;
   }
 }
@@ -657,13 +656,13 @@ export function loadManifestFromDirectory(
     const parsed = ManifestSchema.safeParse(data);
 
     if (!parsed.success) {
-      console.warn(`Manifest validation errors in ${manifestPath}:`, parsed.error.issues);
+      logger.warn("Manifest validation errors", { manifestPath, issues: parsed.error.issues });
       return null;
     }
 
     return parsed.data;
   } catch (e) {
-    console.warn(`Error loading manifest from ${manifestPath}:`, e);
+    logger.warn("Error loading manifest", { manifestPath, err: String(e) });
     return null;
   }
 }
@@ -686,13 +685,13 @@ export function loadClauseMappingsFromDirectory(
     const parsed = ClauseMappingsFileSchema.safeParse(data);
 
     if (!parsed.success) {
-      console.warn(`Clause mappings validation errors in ${mappingsPath}:`, parsed.error.issues);
+      logger.warn("Clause mappings validation errors", { mappingsPath, issues: parsed.error.issues });
       return null;
     }
 
     return parsed.data;
   } catch (e) {
-    console.warn(`Error loading clause mappings from ${mappingsPath}:`, e);
+    logger.warn("Error loading clause mappings", { mappingsPath, err: String(e) });
     return null;
   }
 }
@@ -706,7 +705,7 @@ export function loadSkillFromDirectory(
   const clausesPath = path.join(skillDir, "clauses.json");
 
   if (!fs.existsSync(clausesPath)) {
-    console.log(`No clauses.json found in ${skillDir}`);
+    logger.debug("No clauses.json found", { skillDir });
     return null;
   }
 
@@ -716,14 +715,14 @@ export function loadSkillFromDirectory(
     const validation = validateClausesFile(data);
 
     if (!validation.valid) {
-      console.error(`Validation errors in ${clausesPath}:`);
-      validation.errors.forEach((err) => console.error(`  - ${err}`));
+      logger.error("Validation errors", { clausesPath });
+      validation.errors.forEach((err) => logger.error("Validation error", { clausesPath, error: err }));
       return null;
     }
 
     if (validation.warnings.length > 0) {
-      console.warn(`Validation warnings in ${clausesPath}:`);
-      validation.warnings.forEach((warn) => console.warn(`  - ${warn}`));
+      logger.warn("Validation warnings", { clausesPath });
+      validation.warnings.forEach((warn) => logger.warn("Validation warning", { clausesPath, warning: warn }));
     }
 
     // Also load boilerplate if available
@@ -740,7 +739,7 @@ export function loadSkillFromDirectory(
       clauseMappings,
     };
   } catch (e) {
-    console.error(`Error loading ${clausesPath}:`, e);
+    logger.error("Error loading clauses", { clausesPath, err: String(e) });
     return null;
   }
 }
@@ -761,10 +760,12 @@ function scanDirectory(dir: string, skills: Map<string, SkillData>): void {
       const skillData = loadSkillFromDirectory(skillDir);
       if (skillData) {
         skills.set(skillData.clauses.contractType, skillData);
-        const familyInfo = skillData.manifest?.templateFamily ? `, family: ${skillData.manifest.templateFamily}` : '';
-        console.log(
-          `Loaded skill: ${skillData.clauses.displayName} (${skillData.clauses.clauses.length} clauses, boilerplate: ${skillData.boilerplate ? "yes" : "no"}${familyInfo})`
-        );
+        logger.debug("Loaded skill", {
+          displayName: skillData.clauses.displayName,
+          clauseCount: skillData.clauses.clauses.length,
+          boilerplate: skillData.boilerplate ? "yes" : "no",
+          family: skillData.manifest?.templateFamily,
+        });
       }
     }
   }
@@ -783,7 +784,7 @@ export function scanSkillsDirectory(): Map<string, SkillData> {
   scanDirectory(SKILLS_DIR, skills);
 
   if (skills.size === 0) {
-    console.warn(`No skills found in ${BUILTIN_SKILLS_DIR} or ${SKILLS_DIR}`);
+    logger.warn("No skills found", { builtinDir: BUILTIN_SKILLS_DIR, skillsDir: SKILLS_DIR });
   }
 
   return skills;
@@ -796,7 +797,7 @@ export function scanInstalledSkillsDirectory(): Map<string, SkillData> {
   const skills = new Map<string, SkillData>();
 
   if (!fs.existsSync(INSTALLED_SKILLS_DIR)) {
-    console.log(`Installed skills directory not found: ${INSTALLED_SKILLS_DIR}`);
+    logger.debug("Installed skills directory not found", { dir: INSTALLED_SKILLS_DIR });
     return skills;
   }
 
@@ -831,7 +832,7 @@ export function scanInstalledSkillsDirectory(): Map<string, SkillData> {
                     boilerplate = bpParsed.data;
                   }
                 } catch (e) {
-                  console.warn(`Failed to load boilerplate from ${boilerplatePath}:`, e);
+                  logger.warn("Failed to load boilerplate", { boilerplatePath, err: String(e) });
                 }
               }
 
@@ -844,10 +845,10 @@ export function scanInstalledSkillsDirectory(): Map<string, SkillData> {
                 manifest,
                 clauseMappings,
               });
-              console.log(`Loaded installed skill: ${normalized.displayName}`);
+              logger.debug("Loaded installed skill", { displayName: normalized.displayName });
             }
           } catch (e) {
-            console.warn(`Failed to load skill from ${clausesPath}:`, e);
+            logger.warn("Failed to load skill", { clausesPath, err: String(e) });
           }
         } else {
           // Recurse into subdirectory
@@ -1075,10 +1076,16 @@ export async function syncSkillsToDatabase(
             },
           });
         }
-        console.log(`Synced ${mappings.mappings.length} clause mappings for family ${mappings.family}`);
+        logger.debug("Synced clause mappings", {
+          count: mappings.mappings.length,
+          family: mappings.family,
+        });
       }
     } catch (error) {
-      console.error(`Failed to sync clause mappings for family ${mappings.family}:`, error);
+      logger.error("Failed to sync clause mappings", {
+        family: mappings.family,
+        err: String(error),
+      });
     }
   }
 

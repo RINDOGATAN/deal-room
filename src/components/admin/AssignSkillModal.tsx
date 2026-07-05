@@ -48,6 +48,7 @@ export function AssignSkillModal({
   // Reset form when modal opens with new selections
   useEffect(() => {
     if (open) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- resets the user-editable form each time the modal opens with new pre-selections; a render-time derivation would wipe in-progress edits
       setCustomerId(preSelectedCustomerId || "");
       setSkillId(preSelectedSkillId || "");
       setLicenseType("SUBSCRIPTION");
@@ -69,6 +70,7 @@ export function AssignSkillModal({
 
   // Clear jurisdictions when skill changes
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- invalidates the user's jurisdiction picks when the skill changes; the selection itself is user-owned state, not derivable during render
     setSelectedJurisdictions([]);
   }, [skillId]);
 

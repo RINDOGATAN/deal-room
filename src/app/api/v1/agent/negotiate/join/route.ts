@@ -17,6 +17,9 @@ import {
 import { withIdempotency } from "@/server/middleware/idempotency";
 import { runNegotiation } from "@/server/services/agent/negotiator";
 import { features } from "@/config/features";
+import { createLogger } from "@/lib/logger";
+
+const logger = createLogger("agent-api");
 
 export async function POST(req: NextRequest) {
   try {
@@ -150,7 +153,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(result);
     });
   } catch (error) {
-    console.error("Error joining negotiation:", error);
+    logger.error("Error joining negotiation", { err: String(error) });
 
     // If negotiation fails mid-process, try to mark as failed
     // (the negotiator itself handles most failure cases)

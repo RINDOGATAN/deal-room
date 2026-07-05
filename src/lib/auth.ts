@@ -8,6 +8,9 @@ import { getResend } from "@/lib/email";
 import { brand } from "@/config/brand";
 import { features } from "@/config/features";
 import { isTesterEmail } from "@/lib/tester";
+import { createLogger } from "@/lib/logger";
+
+const logger = createLogger("auth");
 
 const isProduction =
   process.env.NODE_ENV === "production" &&
@@ -94,7 +97,7 @@ if (features.magicLinkAuth) {
             `,
           });
         } catch (error) {
-          console.error("Failed to send verification email:", error);
+          logger.error("Failed to send verification email", { err: String(error) });
           throw new Error("Failed to send verification email");
         }
       },
@@ -275,7 +278,7 @@ export const authOptions: NextAuthOptions = {
           data: { lastLoginAt: new Date() },
         });
       } catch (err) {
-        console.error("[auth] failed to update lastLoginAt", err);
+        logger.error("failed to update lastLoginAt", { err: String(err) });
       }
     },
   },
