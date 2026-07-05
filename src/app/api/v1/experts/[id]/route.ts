@@ -21,6 +21,9 @@ import {
   type Specialization,
   type Certification,
 } from "@/server/services/experts/taxonomy";
+import { createLogger } from "@/lib/logger";
+
+const logger = createLogger("experts-api");
 
 export async function GET(
   req: NextRequest,
@@ -102,7 +105,7 @@ export async function GET(
 
     return NextResponse.json(result);
   } catch (error) {
-    console.error("Error fetching expert:", error);
+    logger.error("Error fetching expert", { err: String(error) });
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }

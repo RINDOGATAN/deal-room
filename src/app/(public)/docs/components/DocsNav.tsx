@@ -104,6 +104,7 @@ export function DocsNav({ onNavigate }: { onNavigate?: () => void }) {
   // Auto-open the section containing the active page
   useEffect(() => {
     if (activeSection) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- merges the route-derived active section into user-toggleable open/closed state; deriving during render would discard the user's manual toggles
       setOpenSections((prev) => {
         if (prev.has(activeSection)) return prev;
         const next = new Set(prev);

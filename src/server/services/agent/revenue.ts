@@ -6,6 +6,9 @@
  */
 
 import prisma from "@/lib/prisma";
+import { createLogger } from "@/lib/logger";
+
+const logger = createLogger("agent-revenue");
 
 export async function createDealRevenueEvent(params: {
   skillPackageId: string;
@@ -57,7 +60,10 @@ export async function createDealRevenueEvent(params: {
           },
         });
       } catch (err) {
-        console.error(`Failed Connect transfer for revenue event ${event.id}:`, err);
+        logger.error("Failed Connect transfer for revenue event", {
+          revenueEventId: event.id,
+          err: String(err),
+        });
       }
     }
   }

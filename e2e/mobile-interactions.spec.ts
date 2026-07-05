@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { trialLogin } from "./helpers/auth";
-import { createDealWithOptions, getClauseCount } from "./helpers/deal";
+import { createDealWithOptions } from "./helpers/deal";
 
 const TIMESTAMP = Date.now();
 

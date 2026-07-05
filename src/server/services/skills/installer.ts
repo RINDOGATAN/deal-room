@@ -11,7 +11,7 @@
 import { promises as fs } from "fs";
 import { join } from "path";
 import AdmZip from "adm-zip";
-import { SkillPackageValidator, ValidationResult } from "./validator";
+import { SkillPackageValidator } from "./validator";
 import { computePackageHash, PackageManifest } from "@/lib/crypto";
 import { prisma } from "@/lib/prisma";
 import { resolveLocalizedString, resolveLocalizedArray } from "./i18n";
@@ -253,7 +253,6 @@ export class SkillPackageInstaller {
     files: Map<string, Buffer>,
     manifest: PackageManifest
   ): Promise<InstallResult> {
-    const errors: string[] = [];
     const warnings: string[] = [];
 
     try {

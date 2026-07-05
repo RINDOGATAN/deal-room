@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { getCsrfToken } from "next-auth/react";
 import { Mail, ArrowRight, Loader2, Scale } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -45,7 +44,7 @@ export default function SupervisorSignInPage() {
           setError("Failed to send magic link. Please try again.");
         }
       }
-    } catch (err) {
+    } catch {
       setError("An unexpected error occurred.");
     } finally {
       setIsLoading(false);
@@ -61,11 +60,11 @@ export default function SupervisorSignInPage() {
           </div>
           <h1 className="text-2xl font-bold mb-2">Check Your Email</h1>
           <p className="text-muted-foreground mb-6">
-            We've sent a magic link to <span className="text-foreground font-medium">{email}</span>.
+            We&apos;ve sent a magic link to <span className="text-foreground font-medium">{email}</span>.
             Click the link in the email to sign in to the Supervisor Portal.
           </p>
           <p className="text-sm text-muted-foreground">
-            Didn't receive it?{" "}
+            Didn&apos;t receive it?{" "}
             <button
               onClick={() => setIsEmailSent(false)}
               className="text-primary hover:underline"
@@ -132,7 +131,7 @@ export default function SupervisorSignInPage() {
         </form>
 
         <p className="mt-6 text-center text-sm text-muted-foreground">
-          No password needed. We'll send you a secure link.
+          No password needed. We&apos;ll send you a secure link.
         </p>
       </div>
     </div>

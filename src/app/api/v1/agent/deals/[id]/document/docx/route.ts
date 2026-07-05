@@ -15,6 +15,9 @@ import {
 import { generateContractData, enrichWithCertification } from "@/server/services/document/generator";
 import { generateContractDocx } from "@/server/services/document/contractDocx";
 import { features } from "@/config/features";
+import { createLogger } from "@/lib/logger";
+
+const logger = createLogger("agent-api");
 
 export async function GET(
   req: NextRequest,
@@ -92,7 +95,7 @@ export async function GET(
       },
     });
   } catch (error) {
-    console.error("Error generating agent deal DOCX:", error);
+    logger.error("Error generating agent deal DOCX", { err: String(error) });
     return NextResponse.json(
       { error: "Failed to generate DOCX" },
       { status: 500 }

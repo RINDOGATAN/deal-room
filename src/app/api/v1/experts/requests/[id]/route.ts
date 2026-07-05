@@ -16,6 +16,9 @@ import {
   ApiScopeError,
 } from "@/server/middleware/apiKeyAuth";
 import { features } from "@/config/features";
+import { createLogger } from "@/lib/logger";
+
+const logger = createLogger("experts-api");
 
 export async function GET(
   req: NextRequest,
@@ -74,7 +77,7 @@ export async function GET(
       createdAt: request.createdAt,
     });
   } catch (error) {
-    console.error("Error fetching request status:", error);
+    logger.error("Error fetching request status", { err: String(error) });
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }

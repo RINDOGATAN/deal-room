@@ -7,6 +7,9 @@
 
 import { createHmac } from "crypto";
 import prisma from "@/lib/prisma";
+import { createLogger } from "@/lib/logger";
+
+const logger = createLogger("agent-webhooks");
 
 export type WebhookEventType =
   | "negotiation.pending"
@@ -59,7 +62,7 @@ async function deliverWithRetry(
       await new Promise((r) => setTimeout(r, delay));
       return deliverWithRetry(url, payload, signature, attempt + 1);
     }
-    console.error(`Webhook delivery failed after 3 attempts to ${url}:`, err);
+    logger.error("Webhook delivery failed after 3 attempts", { url, err: String(err) });
   }
 }
 

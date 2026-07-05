@@ -336,7 +336,6 @@ function PartyCard({
   sublabel,
   state,
   stake,
-  satisfaction,
   accentColor,
   borderColor,
   bgColor,

@@ -14,8 +14,6 @@ import {
   Database,
   ChevronDown,
   ChevronRight,
-  Lock,
-  Unlock,
   Sparkles,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";

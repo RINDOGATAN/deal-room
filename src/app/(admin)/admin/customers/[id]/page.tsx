@@ -2,7 +2,7 @@
 
 import { trpc } from "@/lib/trpc";
 import { useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { format } from "date-fns";
 import {
   ArrowLeft,
@@ -12,7 +12,6 @@ import {
   Building,
   Server,
   Plus,
-  Globe,
   Calendar,
   Hash,
   PauseCircle,
@@ -34,7 +33,6 @@ import Link from "next/link";
 
 export default function CustomerDetailPage() {
   const params = useParams();
-  const router = useRouter();
   const customerId = params.id as string;
 
   const [showAssignModal, setShowAssignModal] = useState(false);

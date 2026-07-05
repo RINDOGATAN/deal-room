@@ -284,6 +284,7 @@ function ExpertEditor({
 
   useEffect(() => {
     if (existingProfile) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- hydrates the expert-profile edit form once from the fetched profile; the fields are user-editable afterwards so they cannot be derived during render
       setBio(existingProfile.bio || "");
       setJurisdictions(existingProfile.jurisdictions as GoverningLaw[]);
       setLanguages(existingProfile.languages);

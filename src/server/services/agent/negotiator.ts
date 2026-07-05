@@ -11,6 +11,7 @@
 
 import prisma from "@/lib/prisma";
 import type { Prisma } from "@prisma/client";
+import { createLogger } from "@/lib/logger";
 import {
   DealRoomStatus,
   GoverningLaw,
@@ -30,6 +31,8 @@ import {
   validateSuggestionAgainstRedLines,
 } from "./redlines";
 import { fireWebhook } from "./webhooks";
+
+const logger = createLogger("agent-negotiator");
 
 async function recordNegotiationUsage(
   agentDealRoom: {
@@ -131,7 +134,9 @@ export async function runNegotiation(
       },
     });
 
-    recordNegotiationUsage(agentDealRoom, "FAILED").catch(console.error);
+    recordNegotiationUsage(agentDealRoom, "FAILED").catch((err) =>
+      logger.error("Failed to record negotiation usage (FAILED)", { err: String(err) })
+    );
 
     // Fire webhook events (fire-and-forget)
     const failedData = {
@@ -561,7 +566,9 @@ export async function runNegotiation(
     },
   });
 
-  recordNegotiationUsage(agentDealRoom, "AGREED").catch(console.error);
+  recordNegotiationUsage(agentDealRoom, "AGREED").catch((err) =>
+    logger.error("Failed to record negotiation usage (AGREED)", { err: String(err) })
+  );
 
   // Fire webhook events (fire-and-forget)
   const webhookData = {

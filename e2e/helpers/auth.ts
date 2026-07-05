@@ -1,4 +1,4 @@
-import { type Page, type Browser, expect } from "@playwright/test";
+import { type Page, type Browser } from "@playwright/test";
 
 const E2E_SECRET = process.env.E2E_CREDENTIALS_SECRET || "e2e-test-secret";
 

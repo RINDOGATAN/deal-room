@@ -38,6 +38,9 @@ import {
   sendSigningExpiringSoonEmail,
   sendSigningExpiredEmail,
 } from "@/lib/email";
+import { createLogger } from "@/lib/logger";
+
+const logger = createLogger("cron");
 
 const CRON_SECRET = process.env.CRON_SECRET;
 
@@ -50,7 +53,7 @@ export async function GET(req: NextRequest) {
   // Refuse to run if the shared secret isn't configured. Better to fail
   // the cron loudly than to leave the endpoint open to anonymous calls.
   if (!CRON_SECRET) {
-    console.error("CRON_SECRET is not set — refusing to run daily cron.");
+    logger.error("CRON_SECRET is not set — refusing to run daily cron.");
     return NextResponse.json(
       { error: "Cron is not configured on the server." },
       { status: 503 },
@@ -152,7 +155,10 @@ async function runSigningReminderJob(): Promise<JobResult> {
       ran++;
     } catch (err) {
       errors++;
-      console.error(`signingReminders: failed on request ${sr.id}:`, err);
+      logger.error("signingReminders: failed on request", {
+        requestId: sr.id,
+        err: String(err),
+      });
     }
   }
 
@@ -226,7 +232,10 @@ async function runSigningExpiryJob(): Promise<JobResult> {
       ran++;
     } catch (err) {
       errors++;
-      console.error(`signingExpiry: failed on request ${sr.id}:`, err);
+      logger.error("signingExpiry: failed on request", {
+        requestId: sr.id,
+        err: String(err),
+      });
     }
   }
 

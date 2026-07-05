@@ -1,12 +1,13 @@
 import { z } from "zod";
 import { createTRPCRouter, supervisorProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
+import type { ExtendedPrismaClient } from "@/lib/prisma";
 
 // Helper to check 2FA and get supervisor record
 const requireVerified2FA = async (
   email: string,
   getCookie: (name: string) => string | undefined,
-  prisma: any
+  prisma: ExtendedPrismaClient
 ) => {
   const twoFactorVerified = getCookie("supervisor_2fa_verified");
   if (twoFactorVerified !== "true") {

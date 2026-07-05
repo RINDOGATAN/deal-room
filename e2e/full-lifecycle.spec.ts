@@ -1,7 +1,7 @@
-import { test, expect, type Page, type Browser } from "@playwright/test";
+import { test, expect } from "@playwright/test";
 import { trialLogin, loginAs, createSecondUser } from "./helpers/auth";
 import { createDealWithOptions, getClauseCount, walkAllClauses } from "./helpers/deal";
-import { submitSelections, inviteCounterparty, proceedToSigning, signContract, downloadContractPDF, generateCompromises, acceptAllCompromises } from "./helpers/lifecycle";
+import { submitSelections, inviteCounterparty, signContract, downloadContractPDF, generateCompromises, acceptAllCompromises } from "./helpers/lifecycle";
 
 const TS = Date.now();
 
@@ -37,6 +37,7 @@ const SEED_PARAMS_ES = {
   "arbitration-language": "Español",
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- kept for the commented-out PHANTOM-PLAN-ES matrix row
 const PHANTOM_PLAN_PARAMS = {
   "company-name": "E2E Technologies, S.L.",
   "cif": "B98765432",
@@ -46,6 +47,7 @@ const PHANTOM_PLAN_PARAMS = {
   "plan-effective-date": "1 de enero de 2026",
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- kept for the commented-out PHANTOM-GRANT-ES matrix row
 const PHANTOM_GRANT_PARAMS = {
   "employee-name": "María García López",
   "phantom-count": "1.000",

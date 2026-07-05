@@ -5,6 +5,9 @@ import { PartyRole, PartyStatus, ClauseStatus, DealRoomStatus, RoundStatus, Prop
 import { calculateCompromise, globalFairnessPass, type CompromiseInput, type OptionInput, type DynamicBiasOverride } from "../services/compromise/engine";
 import { cloudApi, type BiasOverrides, type ValidationResult } from "@/lib/cloud-api";
 import { assertMutableStatus } from "../services/deal/mutability";
+import { createLogger } from "@/lib/logger";
+
+const logger = createLogger("compromise");
 
 export const compromiseRouter = createTRPCRouter({
   // Generate compromise suggestions for a deal room
@@ -85,13 +88,13 @@ export const compromiseRouter = createTRPCRouter({
           dealRoom.governingLaw
         );
       } catch (error) {
-        console.error("Failed to fetch dynamic biases (using static):", error);
+        logger.error("Failed to fetch dynamic biases (using static)", { err: String(error) });
       }
 
       const roundNumber = dealRoom.currentRound + 1;
 
       // Create negotiation round
-      const round = await ctx.prisma.negotiationRound.create({
+      await ctx.prisma.negotiationRound.create({
         data: {
           dealRoomId: input.dealRoomId,
           roundNumber,
@@ -274,7 +277,7 @@ export const compromiseRouter = createTRPCRouter({
           });
         }
       } catch (error) {
-        console.error("Cross-clause validation failed:", error);
+        logger.error("Cross-clause validation failed", { err: String(error) });
       }
 
       return { roundNumber, suggestions, validation };
@@ -1339,7 +1342,7 @@ export const compromiseRouter = createTRPCRouter({
       });
 
       // Create new negotiation round
-      const round = await ctx.prisma.negotiationRound.create({
+      await ctx.prisma.negotiationRound.create({
         data: {
           dealRoomId: input.dealRoomId,
           roundNumber,

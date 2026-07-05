@@ -20,6 +20,9 @@ import { withIdempotency } from "@/server/middleware/idempotency";
 import { checkDealCreationEntitlement } from "@/server/services/licensing/entitlement";
 import { features } from "@/config/features";
 import { fireWebhook } from "@/server/services/agent/webhooks";
+import { createLogger } from "@/lib/logger";
+
+const logger = createLogger("agent-api");
 
 export async function POST(req: NextRequest) {
   try {
@@ -205,7 +208,7 @@ export async function POST(req: NextRequest) {
     );
     });
   } catch (error) {
-    console.error("Error initiating negotiation:", error);
+    logger.error("Error initiating negotiation", { err: String(error) });
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }

@@ -14,6 +14,9 @@ import {
   ApiScopeError,
 } from "@/server/middleware/apiKeyAuth";
 import { features } from "@/config/features";
+import { createLogger } from "@/lib/logger";
+
+const logger = createLogger("agent-api");
 
 export async function GET(
   req: NextRequest,
@@ -54,7 +57,7 @@ export async function GET(
 
     return NextResponse.json({ playbook });
   } catch (error) {
-    console.error("Error getting playbook:", error);
+    logger.error("Error getting playbook", { err: String(error) });
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }
@@ -199,7 +202,7 @@ export async function PUT(
 
     return NextResponse.json({ playbook });
   } catch (error) {
-    console.error("Error updating playbook:", error);
+    logger.error("Error updating playbook", { err: String(error) });
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }
@@ -247,7 +250,7 @@ export async function DELETE(
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error("Error deleting playbook:", error);
+    logger.error("Error deleting playbook", { err: String(error) });
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }

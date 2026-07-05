@@ -26,6 +26,9 @@
  */
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { createLogger } from "@/lib/logger";
+
+const logger = createLogger("health");
 
 const VERSION = "0.1.0"; // mirrors package.json; bumped manually on releases
 
@@ -60,7 +63,7 @@ export async function GET() {
     // public response stays minimal — a status flip plus the
     // `database: "unreachable"` service marker is enough for an
     // uptime monitor to alert on without leaking internals.
-    console.error("[health] database probe failed:", e);
+    logger.error("database probe failed", { err: String(e) });
     snapshot.ok = false;
     snapshot.services.database = "unreachable";
   }

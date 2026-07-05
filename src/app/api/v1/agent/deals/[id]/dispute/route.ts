@@ -14,6 +14,9 @@ import {
 } from "@/server/middleware/apiKeyAuth";
 import { withIdempotency } from "@/server/middleware/idempotency";
 import { features } from "@/config/features";
+import { createLogger } from "@/lib/logger";
+
+const logger = createLogger("agent-api");
 
 const GAVEL_API_URL = process.env.GAVEL_API_URL || "https://gavel.todo.law/api/v1";
 const GAVEL_API_KEY = process.env.GAVEL_API_KEY;
@@ -135,7 +138,7 @@ export async function POST(
 
         if (!gavelRes.ok) {
           const errBody = await gavelRes.text();
-          console.error("Gavel API error:", errBody);
+          logger.error("Gavel API error", { err: String(errBody) });
           return NextResponse.json(
             { error: "Failed to create Gavel case" },
             { status: 502 }
@@ -149,7 +152,7 @@ export async function POST(
         gavelCaseId = gavelData.id;
         gavelCaseUrl = gavelData.url;
       } catch (err) {
-        console.error("Gavel API connection error:", err);
+        logger.error("Gavel API connection error", { err: String(err) });
         return NextResponse.json(
           { error: "Gavel service unavailable" },
           { status: 503 }
@@ -183,7 +186,7 @@ export async function POST(
     );
     });
   } catch (error) {
-    console.error("Error creating dispute:", error);
+    logger.error("Error creating dispute", { err: String(error) });
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }

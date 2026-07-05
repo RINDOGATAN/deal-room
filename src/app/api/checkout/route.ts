@@ -29,10 +29,10 @@ export async function POST(request: NextRequest) {
         isPremium: true,
       },
     });
-    const skillPackages = [...new Map(skillPackagesRaw.map((p: any) => [p.id, p])).values()];
+    const skillPackages = [...new Map(skillPackagesRaw.map((p) => [p.id, p] as const)).values()];
 
     if (skillPackages.length < skillPackageIds.length) {
-      const foundIds = new Set(skillPackages.flatMap((p: any) => [p.id, p.skillId]));
+      const foundIds = new Set(skillPackages.flatMap((p) => [p.id, p.skillId]));
       const missing = skillPackageIds.filter((id) => !foundIds.has(id));
       return NextResponse.json(
         { error: `Skill packages not found: ${missing.join(", ")}` },

@@ -9,7 +9,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { Shield, CheckCircle, AlertTriangle } from "lucide-react";
+import { Shield, AlertTriangle } from "lucide-react";
 
 interface LawyerWarningModalProps {
   dealRoomId: string;

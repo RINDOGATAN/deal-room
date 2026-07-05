@@ -94,10 +94,6 @@ function SkillCard({ skill, locale }: { skill: Skill; locale: string }) {
   const name = localizeTop(skill.displayName, skill.displayNameLocalized, locale);
   const desc = localizeTop(skill.description, skill.descriptionLocalized, locale);
 
-  // Extract party labels from boilerplate if available — we don't have boilerplate in the query,
-  // so we derive a readable name from the contractType
-  const typeSlug = skill.contractType.replace("A2A_", "").toLowerCase().replace(/_/g, "-");
-
   return (
     <div className="border border-border rounded-2xl overflow-hidden">
       {/* Header — always visible */}

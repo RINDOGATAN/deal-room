@@ -17,13 +17,9 @@ import {
   deactivateLicense,
   deactivateById,
   activateOffline,
-  isActivated,
   getCustomerActivations,
-  getActivationRequest,
   checkEntitlement,
-  checkEntitlementByLicenseKey,
   getCustomerEntitlements,
-  getDisplayFingerprint,
   getFingerprintData,
 } from "../services/licensing";
 import { isValidLicenseKeyFormat, LicenseFile } from "@/lib/crypto";
@@ -69,8 +65,8 @@ export const skillManagerRouter = createTRPCRouter({
     });
 
     // Check entitlements if authenticated
-    let entitledSkillIds = new Set<string>();
-    let entitlementMap = new Map<
+    const entitledSkillIds = new Set<string>();
+    const entitlementMap = new Map<
       string,
       { status: string; expiresAt: Date | null }
     >();
@@ -173,8 +169,6 @@ export const skillManagerRouter = createTRPCRouter({
    * List skills the current customer has access to (based on entitlements).
    */
   listAvailable: protectedProcedure.query(async ({ ctx }) => {
-    const userId = ctx.session.user.id;
-
     // Find customer by email (in a real app, User would have customerId)
     const customer = await ctx.prisma.customer.findFirst({
       where: {

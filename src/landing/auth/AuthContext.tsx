@@ -338,7 +338,7 @@ export function InlineAuthPrompt({ onAuthenticated }: { onAuthenticated?: () => 
           Magic Link
         </p>
         <p className="text-xs text-muted-foreground mb-3">
-          Enter your email and we'll send you a one-time link.
+          Enter your email and we&apos;ll send you a one-time link.
         </p>
         {magicLinkSent ? (
           <div className="text-sm text-muted-foreground">

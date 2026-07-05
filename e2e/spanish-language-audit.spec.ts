@@ -177,7 +177,7 @@ test.describe("Spanish Language Audit", () => {
     await trialLogin(page);
 
     // Create a Spanish NDA — the helper uses English card names which are matched by h3
-    const dealId = await createDealWithOptions(page, {
+    await createDealWithOptions(page, {
       contractType: "Non-Disclosure Agreement",
       jurisdiction: "Spain, EU",
       language: "Español",

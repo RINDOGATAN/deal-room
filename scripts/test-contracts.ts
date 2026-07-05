@@ -10,13 +10,9 @@
 import {
   calculateCompromise,
   globalFairnessPass,
-  type CompromiseInput,
   type OptionInput,
   type SelectionInput,
 } from "../src/server/services/compromise/engine";
-import { resolveLocalizedString } from "../src/server/services/skills/i18n";
-import { buildBoilerplateVariables } from "../src/lib/parameters";
-import type { ParameterSchema } from "../src/lib/parameters";
 import * as fs from "fs";
 import * as path from "path";
 
@@ -256,7 +252,7 @@ section("PART 1f: Dynamic Bias Overrides");
   const options = makeOptions(3);
 
   // Without overrides: A picks opt_1, B picks opt_3, equal flex → middle
-  const r1 = calculateCompromise({
+  calculateCompromise({
     partyASelection: makeSelection("opt_1", 3, 0.5),
     partyBSelection: makeSelection("opt_3", 3, -0.5),
     options,
@@ -485,6 +481,7 @@ function isI18nObject(val: unknown): val is Record<string, string> {
   return typeof val === "object" && val !== null && !Array.isArray(val) && "en" in val;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- retained ad-hoc i18n audit helper; removing it would also orphan isI18nObject
 function checkI18nCompleteness(
   obj: unknown,
   languages: string[],

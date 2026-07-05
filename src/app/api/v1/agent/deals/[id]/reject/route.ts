@@ -15,6 +15,9 @@ import {
 import { withIdempotency } from "@/server/middleware/idempotency";
 import { features } from "@/config/features";
 import { fireWebhook } from "@/server/services/agent/webhooks";
+import { createLogger } from "@/lib/logger";
+
+const logger = createLogger("agent-api");
 
 export async function POST(
   req: NextRequest,
@@ -112,7 +115,7 @@ export async function POST(
     return NextResponse.json({ rejected: true, reason: rejectReason });
     });
   } catch (error) {
-    console.error("Error rejecting deal:", error);
+    logger.error("Error rejecting deal", { err: String(error) });
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

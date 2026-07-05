@@ -138,7 +138,7 @@ export default function SupervisorDashboard() {
           <Inbox className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
           <h2 className="text-lg font-semibold mb-2">No deals assigned</h2>
           <p className="text-muted-foreground">
-            You don't have any deals assigned to supervise yet.
+            You don&apos;t have any deals assigned to supervise yet.
             <br />
             Contact your platform administrator to be assigned to deals.
           </p>

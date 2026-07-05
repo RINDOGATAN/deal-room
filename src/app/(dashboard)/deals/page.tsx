@@ -41,7 +41,6 @@ const statusColors = {
 
 export default function DealsPage() {
   const t = useTranslations("deals");
-  const tCommon = useTranslations("common");
   const locale = useLocale();
   const { data: deals, isLoading, error, refetch } = trpc.deal.list.useQuery();
 
@@ -152,6 +151,7 @@ export default function DealsPage() {
             const respondent = deal.parties.find((p) => p.role === "RESPONDENT");
 
             const pendingInvitation = deal.status === "AWAITING_RESPONSE" ? deal.invitations?.[0] : undefined;
+            // eslint-disable-next-line react-hooks/purity -- intentional wall-clock read for coarse "days waiting"/expiry labels; per-render staleness is acceptable
             const now = Date.now();
             const daysWaiting = pendingInvitation
               ? Math.floor((now - new Date(pendingInvitation.sentAt).getTime()) / (1000 * 60 * 60 * 24))

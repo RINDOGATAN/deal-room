@@ -16,6 +16,9 @@ import {
 import { withIdempotency } from "@/server/middleware/idempotency";
 import { features } from "@/config/features";
 import { fireWebhook } from "@/server/services/agent/webhooks";
+import { createLogger } from "@/lib/logger";
+
+const logger = createLogger("agent-api");
 
 export async function POST(
   req: NextRequest,
@@ -188,7 +191,7 @@ export async function POST(
     });
     });
   } catch (error) {
-    console.error("Error creating counter-proposals:", error);
+    logger.error("Error creating counter-proposals", { err: String(error) });
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

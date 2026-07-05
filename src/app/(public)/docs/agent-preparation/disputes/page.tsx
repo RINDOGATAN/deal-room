@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import {
-  Shield,
   Clock,
   Bot,
   Users,

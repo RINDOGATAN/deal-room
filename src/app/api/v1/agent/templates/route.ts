@@ -15,6 +15,9 @@ import {
 } from "@/server/middleware/apiKeyAuth";
 import { checkEntitlement } from "@/server/services/licensing/entitlement";
 import { features } from "@/config/features";
+import { createLogger } from "@/lib/logger";
+
+const logger = createLogger("agent-api");
 
 export async function GET(req: NextRequest) {
   try {
@@ -89,7 +92,7 @@ export async function GET(req: NextRequest) {
       })),
     });
   } catch (error) {
-    console.error("Error listing templates:", error);
+    logger.error("Error listing templates", { err: String(error) });
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }

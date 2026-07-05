@@ -21,6 +21,9 @@ import {
   SPECIALIZATION_LABELS,
   type Specialization,
 } from "@/server/services/experts/taxonomy";
+import { createLogger } from "@/lib/logger";
+
+const logger = createLogger("experts-api");
 
 export async function GET(req: NextRequest) {
   try {
@@ -83,7 +86,7 @@ export async function GET(req: NextRequest) {
       expertTypes: [...typeSet].sort(),
     });
   } catch (error) {
-    console.error("Error fetching expert filters:", error);
+    logger.error("Error fetching expert filters", { err: String(error) });
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }

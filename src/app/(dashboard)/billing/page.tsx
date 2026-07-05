@@ -17,6 +17,9 @@ import {
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
+import { createLogger } from "@/lib/logger";
+
+const logger = createLogger("billing");
 
 type ActivationState = "idle" | "activating" | "failed";
 
@@ -96,7 +99,7 @@ export default function BillingPage() {
             const ok = res.ok;
             if (!ok) {
               const data = await res.json().catch(() => ({}));
-              console.error("Activate failed:", res.status, data);
+              logger.error("Activate failed", { status: res.status, data });
             }
             // Invalidate queries first so when we drop the overlay
             // the UI already has fresh entitlement data.
@@ -117,7 +120,7 @@ export default function BillingPage() {
             }
           })
           .catch((err) => {
-            console.error("Activate network error:", err);
+            logger.error("Activate network error", { err: String(err) });
             setActivationState("failed");
             toast(t("confirmingFailed"));
             cleanUrl();

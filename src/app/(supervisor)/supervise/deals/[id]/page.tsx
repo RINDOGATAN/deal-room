@@ -3,8 +3,7 @@
 import { trpc } from "@/lib/trpc";
 import { formatDate, formatDateTime } from "@/lib/date";
 import Link from "next/link";
-import { useRouter, useParams } from "next/navigation";
-import { useState } from "react";
+import { useParams } from "next/navigation";
 import { toast } from "sonner";
 import {
   FileText,
@@ -40,7 +39,6 @@ const partyStatusConfig = {
 };
 
 export default function SupervisorDealDetailPage() {
-  const router = useRouter();
   const params = useParams();
   const dealId = params.id as string;
 
@@ -113,10 +111,10 @@ export default function SupervisorDealDetailPage() {
   const reviewApproved = reviewParty?.attorneyReviewApprovedAt;
 
   // Stage B — Joint Closing Counsel
-  const jointCounsel = (deal as any).jointCounselSupervisor;
+  const jointCounsel = deal.jointCounselSupervisor;
   const isJointCounsel = !!jointCounsel;
-  const jointCounselAcknowledged = !!(deal as any).jointCounselAcknowledgedAt;
-  const jointCounselPending = !!(deal as any).jointCounselRequestedAt && !jointCounselAcknowledged && !(deal as any).jointCounselDeclinedAt;
+  const jointCounselAcknowledged = !!deal.jointCounselAcknowledgedAt;
+  const jointCounselPending = !!deal.jointCounselRequestedAt && !jointCounselAcknowledged && !deal.jointCounselDeclinedAt;
 
   return (
     <div className="space-y-6">

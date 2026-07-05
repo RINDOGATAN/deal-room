@@ -1,5 +1,8 @@
 import { NextResponse } from "next/server";
 import { formatUserError, isTransientDbError } from "./format-error";
+import { createLogger } from "@/lib/logger";
+
+const logger = createLogger("api");
 
 /**
  * Sanitize an API route error into a JSON response.
@@ -13,7 +16,7 @@ export function apiError(
   error: unknown,
   fallback = "An unexpected error occurred. Please try again.",
 ): NextResponse {
-  console.error("[api]", error);
+  logger.error("API route error", { err: String(error) });
   const message = formatUserError(error, fallback);
   const status = isTransientDbError(error) ? 503 : 500;
   return NextResponse.json({ error: message }, { status });

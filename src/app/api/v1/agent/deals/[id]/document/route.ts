@@ -16,6 +16,9 @@ import {
 import { generateContractData, enrichWithCertification } from "@/server/services/document/generator";
 import { ContractPDF } from "@/server/services/document/ContractPDF";
 import { features } from "@/config/features";
+import { createLogger } from "@/lib/logger";
+
+const logger = createLogger("agent-api");
 
 export async function GET(
   req: NextRequest,
@@ -94,7 +97,7 @@ export async function GET(
       },
     });
   } catch (error) {
-    console.error("Error generating agent deal PDF:", error);
+    logger.error("Error generating agent deal PDF", { err: String(error) });
     return NextResponse.json(
       { error: "Failed to generate PDF" },
       { status: 500 }

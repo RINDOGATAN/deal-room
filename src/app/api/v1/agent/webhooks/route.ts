@@ -15,6 +15,9 @@ import {
 } from "@/server/middleware/apiKeyAuth";
 import { withIdempotency } from "@/server/middleware/idempotency";
 import { features } from "@/config/features";
+import { createLogger } from "@/lib/logger";
+
+const logger = createLogger("agent-api");
 
 const VALID_EVENTS = [
   "negotiation.pending",
@@ -97,7 +100,7 @@ export async function POST(req: NextRequest) {
     );
     });
   } catch (error) {
-    console.error("Error creating webhook:", error);
+    logger.error("Error creating webhook", { err: String(error) });
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
@@ -136,7 +139,7 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json({ webhooks: endpoints });
   } catch (error) {
-    console.error("Error listing webhooks:", error);
+    logger.error("Error listing webhooks", { err: String(error) });
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

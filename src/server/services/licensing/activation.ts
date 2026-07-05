@@ -14,7 +14,7 @@ import {
   LicenseFile,
   isValidLicenseKeyFormat,
 } from "@/lib/crypto";
-import { getMachineInfo, validateFingerprint, FingerprintData, getFingerprintData } from "./fingerprint";
+import { getMachineInfo, FingerprintData, getFingerprintData } from "./fingerprint";
 import { checkEntitlementByLicenseKey } from "./entitlement";
 
 export interface ActivationResult {

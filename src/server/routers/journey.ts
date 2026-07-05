@@ -26,6 +26,9 @@ import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { getStepPlan, type StepKey } from "@/lib/journey/steps";
 import { validateEquity } from "@/lib/journey/equity";
 import { autoAgreeSingleOptionClauses } from "../services/deal/autoAgreeSingleOption";
+import { createLogger } from "@/lib/logger";
+
+const logger = createLogger("journey");
 
 const founderInput = z.object({
   name: z.string().min(1).max(120),
@@ -493,7 +496,10 @@ export const journeyRouter = createTRPCRouter({
       }
 
       // Persist supervisorId into step status
-      const currentSteps = (journey as any).stepStatuses as Record<string, any> | null;
+      const currentSteps = journey.stepStatuses as Record<
+        string,
+        Record<string, unknown>
+      > | null;
       const previous = currentSteps?.[input.stepKey] ?? {};
       const updatedSteps = {
         ...(currentSteps ?? {}),
@@ -548,7 +554,7 @@ export const journeyRouter = createTRPCRouter({
         });
       }
 
-      const currentSteps = (journey.stepStatuses as Record<string, any>) ?? {};
+      const currentSteps = (journey.stepStatuses as Record<string, unknown>) ?? {};
       const updatedSteps = {
         ...currentSteps,
         [input.stepKey]: {
@@ -564,11 +570,13 @@ export const journeyRouter = createTRPCRouter({
 
       // Audit log — attached to the journey owner's earliest deal if any, otherwise
       // captured without a dealRoomId (auditLog.dealRoomId is required, so for
-      // steps with no deals we skip the DB audit and log via console). Since
-      // we've already guarded that no deals exist, console is fine here.
-      console.log(
-        `[journey] JOURNEY_STEP_MARKED_DONE_ELSEWHERE journey=${journey.id} step=${input.stepKey} user=${userId}`,
-      );
+      // steps with no deals we skip the DB audit and log via the app logger).
+      // Since we've already guarded that no deals exist, a log line is fine here.
+      logger.info("JOURNEY_STEP_MARKED_DONE_ELSEWHERE", {
+        journeyId: journey.id,
+        stepKey: input.stepKey,
+        userId,
+      });
 
       return { success: true };
     }),
@@ -596,7 +604,8 @@ export const journeyRouter = createTRPCRouter({
           message: "This step has generated documents; resetting is not allowed while they exist.",
         });
       }
-      const currentSteps = (journey.stepStatuses as Record<string, any>) ?? {};
+      const currentSteps =
+        (journey.stepStatuses as Record<string, Record<string, unknown>>) ?? {};
       const currentStatus = currentSteps[input.stepKey]?.status;
       if (currentStatus !== "DONE_ELSEWHERE") {
         throw new TRPCError({
@@ -626,7 +635,8 @@ export const journeyRouter = createTRPCRouter({
       if (!journey) {
         throw new TRPCError({ code: "NOT_FOUND", message: "Journey not found" });
       }
-      const currentSteps = (journey.stepStatuses as Record<string, any>) ?? {};
+      const currentSteps =
+        (journey.stepStatuses as Record<string, Record<string, unknown>>) ?? {};
       const previous = currentSteps[input.stepKey] ?? {};
       const updatedSteps = {
         ...currentSteps,

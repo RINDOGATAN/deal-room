@@ -15,6 +15,9 @@ import {
   randomBytes,
   createHmac,
 } from "crypto";
+import { createLogger } from "@/lib/logger";
+
+const logger = createLogger("crypto");
 
 // Public key for verifying skill package signatures (Ed25519)
 // In production, this would be embedded in the application or fetched from a secure source
@@ -70,7 +73,7 @@ export function verifyEd25519Signature(
 
     return verify(null, data, publicKey, signature);
   } catch (error) {
-    console.error("Signature verification failed:", error);
+    logger.error("Signature verification failed", { err: String(error) });
     return false;
   }
 }
@@ -199,7 +202,7 @@ export function verifyLicenseFile(
       publicKeyPem
     );
   } catch (error) {
-    console.error("License file verification failed:", error);
+    logger.error("License file verification failed", { err: String(error) });
     return false;
   }
 }

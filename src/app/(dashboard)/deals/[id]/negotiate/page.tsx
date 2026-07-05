@@ -71,7 +71,7 @@ export default function NegotiatePage() {
   const params = useParams();
   const dealId = params.id as string;
   const { data: deal } = trpc.deal.getById.useQuery({ id: dealId });
-  const contractLang = (deal as any)?.contractLanguage || "en";
+  const contractLang = deal?.contractLanguage || "en";
   const messages = useContractMessages(contractLang);
 
   if (!messages) {
@@ -103,7 +103,8 @@ function NegotiateContent({ dealId }: { dealId: string }) {
   const [currentClauseIndex, setCurrentClauseIndex] = useState(0);
   const [selections, setSelections] = useState<Map<string, Selection>>(new Map());
   const [expandedOption, setExpandedOption] = useState<string | null>(null);
-  const [showProsConsFor, setShowProsConsFor] = useState<string | null>(null);
+  // Value intentionally unread: only the reset side of this state is used today.
+  const [_showProsConsFor, setShowProsConsFor] = useState<string | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const { data: deal, isLoading, error, refetch: refetchDeal } = trpc.deal.getById.useQuery({ id: dealId });
@@ -121,7 +122,7 @@ function NegotiateContent({ dealId }: { dealId: string }) {
   );
   const qualityMap = new Map(qualityScores?.map((q) => [q.optionId, q]) || []);
 
-  const isSoloMode = (deal as any)?.dealMode === "SOLO";
+  const isSoloMode = deal?.dealMode === "SOLO";
 
   // Cloud Intelligence: satisfaction prediction (only when both parties have selections)
   const { data: prediction } = trpc.compromise.predictSatisfaction.useQuery(
@@ -131,7 +132,7 @@ function NegotiateContent({ dealId }: { dealId: string }) {
 
   // Parameter interpolation helper
   const paramSchema = deal?.contractTemplate?.parameterSchema as ParameterSchema | null | undefined;
-  const dealParams = (deal as any)?.parameters as Record<string, string> | undefined;
+  const dealParams = deal?.parameters as Record<string, string> | undefined;
   const interpolateLegalText = (text: string, clauseId: string) => {
     if (!paramSchema?.parameters?.length || !dealParams) return text;
     return interpolateParameters(text, dealParams, paramSchema, clauseId, deal?.contractLanguage || "en");
@@ -161,7 +162,7 @@ function NegotiateContent({ dealId }: { dealId: string }) {
   }, [savedVisible, lastSavedAt]);
   const submitSelections = trpc.deal.submitSelections.useMutation({
     onSuccess: (result) => {
-      if ((result as any).soloCompleted) {
+      if (result.soloCompleted) {
         toast.success(t("soloDocumentGenerated"));
         router.push(`/deals/${dealId}`);
       } else if (result.bothSubmitted) {
@@ -216,6 +217,7 @@ function NegotiateContent({ dealId }: { dealId: string }) {
           flexibility: sel.flexibility,
         });
       }
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- hydrates local draft state from the fetched selections query; deriving during render would restructure the draft-editing flow
       setSelections(map);
     }
   }, [existingSelections]);
@@ -285,7 +287,7 @@ function NegotiateContent({ dealId }: { dealId: string }) {
   const myNegotiateParty = deal.parties.find((p) => p.id === deal.currentPartyId);
   const showLawyerWarning = !isLawyer &&
     !deal.lawyerVettingId &&
-    !(myNegotiateParty as any)?.lawyerWarningDismissedAt &&
+    !myNegotiateParty?.lawyerWarningDismissedAt &&
     ["DRAFT", "AWAITING_RESPONSE", "NEGOTIATING"].includes(deal.status);
 
   // Detect already-submitted state
@@ -357,7 +359,7 @@ function NegotiateContent({ dealId }: { dealId: string }) {
           dealRoomId: dealId,
           selections: selectionsArray,
         });
-      } catch (e) {
+      } catch {
         // Silent save, don't block navigation
       }
     }
@@ -377,7 +379,7 @@ function NegotiateContent({ dealId }: { dealId: string }) {
           dealRoomId: dealId,
           selections: selectionsArray,
         });
-      } catch (e) {
+      } catch {
         // Silent save failure — don't block navigation
       }
     }
@@ -430,8 +432,8 @@ function NegotiateContent({ dealId }: { dealId: string }) {
               {deal.contractTemplate.displayName} • {t("clause")} <span className="metric text-foreground">{currentClauseIndex + 1}</span> {t("of")} <span className="metric">{clauses.length}</span>
             </p>
           </div>
-          {(deal as any).lawyerVetting && (
-            <VettingBadge vetting={(deal as any).lawyerVetting} governingLaw={deal.governingLaw} compact />
+          {deal.lawyerVetting && (
+            <VettingBadge vetting={deal.lawyerVetting} governingLaw={deal.governingLaw} compact />
           )}
         </div>
         <div className="flex items-center gap-4">

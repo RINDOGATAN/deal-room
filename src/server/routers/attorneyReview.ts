@@ -1,7 +1,11 @@
 import { z } from "zod";
+import type { Prisma } from "@prisma/client";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
 import { sendAttorneyReviewRequestEmail } from "@/lib/email";
+import { createLogger } from "@/lib/logger";
+
+const logger = createLogger("attorney-review");
 
 export const attorneyReviewRouter = createTRPCRouter({
   /**
@@ -207,7 +211,7 @@ export const attorneyReviewRouter = createTRPCRouter({
         partyName: party.name || "A party",
         dealRoomId: input.dealRoomId,
       }).catch((err) =>
-        console.error("Failed to send attorney review email:", err)
+        logger.error("Failed to send attorney review email", { err: String(err) })
       );
 
       return { success: true };
@@ -245,7 +249,7 @@ export const attorneyReviewRouter = createTRPCRouter({
 
       const supervisorId = party.attorneySupervisorId;
 
-      const operations = [
+      const operations: Prisma.PrismaPromise<unknown>[] = [
         // Reset party review fields
         ctx.prisma.dealRoomParty.update({
           where: { id: party.id },
@@ -279,7 +283,7 @@ export const attorneyReviewRouter = createTRPCRouter({
               dealRoomId: input.dealRoomId,
               assignedBy: null,
             },
-          }) as any
+          })
         );
       }
 

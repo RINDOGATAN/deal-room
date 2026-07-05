@@ -12,6 +12,9 @@ import {
   type ParameterSchema,
 } from "@/lib/parameters";
 import { certificationService } from "@/lib/certification-client";
+import { createLogger } from "@/lib/logger";
+
+const logger = createLogger("doc-generator");
 
 export interface PartyData {
   name: string;
@@ -646,7 +649,7 @@ export async function enrichWithCertification(
 
     return { ...data, certification: certData };
   } catch (error) {
-    console.error("Failed to enrich with certification:", error);
+    logger.error("Failed to enrich with certification", { err: String(error) });
     return data;
   }
 }

@@ -8,6 +8,9 @@ import { features } from "@/config/features";
 import { brand } from "@/config/brand";
 import { getResend } from "@/lib/email";
 import { generateDownloadToken } from "@/lib/crypto";
+import { createLogger } from "@/lib/logger";
+
+const logger = createLogger("stripe-webhook");
 
 function parseSkillPackageIds(metadata: Record<string, string> | null): string[] {
   if (!metadata) return [];
@@ -41,7 +44,7 @@ export async function POST(request: NextRequest) {
     try {
       event = verifyWebhookSignature(body, signature);
     } catch (err) {
-      console.error("Webhook signature verification failed:", err);
+      logger.error("Webhook signature verification failed", { err: String(err) });
       return NextResponse.json(
         { error: "Invalid signature" },
         { status: 400 }
@@ -93,27 +96,24 @@ export async function POST(request: NextRequest) {
           break;
 
         default:
-          console.log(`Unhandled event type: ${event.type}`);
+          logger.debug("Unhandled event type", { eventType: event.type });
       }
     } catch (handlerError) {
       // Structured log so the offending event is searchable in
       // Vercel logs without spelunking through 500-trace context.
-      console.error(
-        "[stripe-webhook] handler failed",
-        JSON.stringify({
-          eventId: event.id,
-          eventType: event.type,
-          // event.data.object shapes vary; the customer id is on most
-          // of the ones we actually handle, so this is best-effort.
-          stripeCustomerId:
-            (event.data.object as { customer?: string | { id?: string } }).customer
-              ? typeof (event.data.object as { customer?: string | { id?: string } }).customer === "string"
-                ? (event.data.object as { customer: string }).customer
-                : ((event.data.object as { customer: { id?: string } }).customer)?.id
-              : undefined,
-          error: handlerError instanceof Error ? handlerError.message : String(handlerError),
-        }),
-      );
+      logger.error("handler failed", {
+        eventId: event.id,
+        eventType: event.type,
+        // event.data.object shapes vary; the customer id is on most
+        // of the ones we actually handle, so this is best-effort.
+        stripeCustomerId:
+          (event.data.object as { customer?: string | { id?: string } }).customer
+            ? typeof (event.data.object as { customer?: string | { id?: string } }).customer === "string"
+              ? (event.data.object as { customer: string }).customer
+              : ((event.data.object as { customer: { id?: string } }).customer)?.id
+            : undefined,
+        err: handlerError instanceof Error ? handlerError.message : String(handlerError),
+      });
       // Release the claim so Stripe's next retry can re-process.
       // .catch() because the row should still be there, but if some
       // other process removed it we don't want this cleanup to mask
@@ -126,7 +126,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ received: true });
   } catch (error) {
-    console.error("[stripe-webhook] outer failure:", error);
+    logger.error("outer failure", { err: String(error) });
     return NextResponse.json(
       { error: "Webhook handler failed" },
       { status: 500 }
@@ -140,12 +140,12 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
   const skillPackageIds = parseSkillPackageIds(session.metadata as Record<string, string> | null);
 
   if (!customerId || !skillPackageIds.length) {
-    console.error("Missing metadata in checkout session:", session.id);
+    logger.error("Missing metadata in checkout session", { sessionId: session.id });
     return;
   }
 
   if (!session.subscription) {
-    console.error("No subscription in checkout session:", session.id);
+    logger.error("No subscription in checkout session", { sessionId: session.id });
     return;
   }
 
@@ -161,7 +161,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
   });
 
   if (!customer) {
-    console.error("Customer not found for checkout session:", session.id);
+    logger.error("Customer not found for checkout session", { sessionId: session.id });
     return;
   }
 
@@ -213,9 +213,10 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     });
   }
 
-  console.log(
-    `Created entitlements for customer ${customer.id}, skills: ${skillPackageIds.join(", ")}`
-  );
+  logger.info("Created entitlements for customer", {
+    customerId: customer.id,
+    skillPackageIds,
+  });
 
   // Send download links for self-hosted customers
   if (customer.type === "SELF_HOSTED" && customer.email) {
@@ -261,7 +262,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
           `,
         });
       } catch (emailErr) {
-        console.error("Failed to send download email:", emailErr);
+        logger.error("Failed to send download email", { err: String(emailErr) });
       }
     }
   }
@@ -291,7 +292,7 @@ async function handleSubscriptionChange(subscription: Stripe.Subscription) {
     });
 
     if (!byStripe) {
-      console.error("Customer not found for subscription:", subscription.id);
+      logger.error("Customer not found for subscription", { subscriptionId: subscription.id });
       return;
     }
 
@@ -369,9 +370,10 @@ async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
     data: { status: "EXPIRED" },
   });
 
-  console.log(
-    `Expired entitlements for customer ${customer.id}, skills: ${skillPackageIds.join(", ")}`
-  );
+  logger.info("Expired entitlements for customer", {
+    customerId: customer.id,
+    skillPackageIds,
+  });
 }
 
 async function handleInvoicePaymentSucceeded(invoice: Stripe.Invoice) {
@@ -455,7 +457,10 @@ async function handleInvoicePaymentSucceeded(invoice: Stripe.Invoice) {
             },
           });
         } catch (err) {
-          console.error(`Failed Stripe Connect transfer for author ${pkg.authorId}:`, err);
+          logger.error("Failed Stripe Connect transfer for author", {
+            authorId: pkg.authorId,
+            err: String(err),
+          });
         }
       }
     }
@@ -484,7 +489,9 @@ async function handlePaymentFailed(invoice: Stripe.Invoice) {
     data: { status: "SUSPENDED" },
   });
 
-  console.log(`Suspended entitlements for customer ${customer.id} due to payment failure`);
+  logger.info("Suspended entitlements for customer due to payment failure", {
+    customerId: customer.id,
+  });
 
   if (customer.email) {
     try {
@@ -509,7 +516,7 @@ async function handlePaymentFailed(invoice: Stripe.Invoice) {
         `,
       });
     } catch (emailErr) {
-      console.error("Failed to send payment failure email:", emailErr);
+      logger.error("Failed to send payment failure email", { err: String(emailErr) });
     }
   }
 }

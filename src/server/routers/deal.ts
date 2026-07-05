@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
+import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
 import { Prisma, DealRoomStatus, DealMode, PartyRole, PartyStatus, ClauseStatus, InvitationStatus, GoverningLaw } from "@prisma/client";
 import { checkDealCreationEntitlement } from "../services/licensing/entitlement";

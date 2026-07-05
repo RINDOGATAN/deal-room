@@ -12,6 +12,9 @@ import {
   ApiScopeError,
 } from "@/server/middleware/apiKeyAuth";
 import { features } from "@/config/features";
+import { createLogger } from "@/lib/logger";
+
+const logger = createLogger("agent-api");
 
 export async function DELETE(
   req: NextRequest,
@@ -50,7 +53,7 @@ export async function DELETE(
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error("Error deleting webhook:", error);
+    logger.error("Error deleting webhook", { err: String(error) });
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

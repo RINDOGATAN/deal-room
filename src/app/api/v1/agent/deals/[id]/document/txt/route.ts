@@ -15,6 +15,9 @@ import {
 import { generateContractData } from "@/server/services/document/generator";
 import { generateContractTxt } from "@/server/services/document/contractTxt";
 import { features } from "@/config/features";
+import { createLogger } from "@/lib/logger";
+
+const logger = createLogger("agent-api");
 
 export async function GET(
   req: NextRequest,
@@ -89,7 +92,7 @@ export async function GET(
       },
     });
   } catch (error) {
-    console.error("Error generating agent deal TXT:", error);
+    logger.error("Error generating agent deal TXT", { err: String(error) });
     return NextResponse.json(
       { error: "Failed to generate TXT" },
       { status: 500 }

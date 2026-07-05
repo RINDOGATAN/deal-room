@@ -18,6 +18,9 @@ import {
 } from "@/server/middleware/apiKeyAuth";
 import { features } from "@/config/features";
 import { sendRecommendationRequestEmail } from "@/lib/email";
+import { createLogger } from "@/lib/logger";
+
+const logger = createLogger("experts-api");
 
 export async function POST(
   req: NextRequest,
@@ -168,7 +171,7 @@ export async function POST(
         sourceApp: auth.customer.name,
       });
     } catch {
-      console.error("Failed to send contact request email");
+      logger.error("Failed to send contact request email");
     }
 
     return NextResponse.json(
@@ -180,7 +183,7 @@ export async function POST(
       { status: 201 }
     );
   } catch (error) {
-    console.error("Error creating contact request:", error);
+    logger.error("Error creating contact request", { err: String(error) });
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }

@@ -50,7 +50,7 @@ test.describe("Navigation & Auth", () => {
     test.setTimeout(90_000);
     await trialLogin(page);
 
-    const dealId = await createDealWithOptions(page, {
+    await createDealWithOptions(page, {
       contractType: "Data Processing Agreement",
       jurisdiction: "California, USA",
       language: "English",
