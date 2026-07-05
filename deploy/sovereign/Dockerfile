@@ -7,8 +7,13 @@
 # The app code is UNCHANGED from cloud — only env differs.
 # ============================================================================
 
+# Base image pinned by multi-arch index digest (supply-chain: a tag can move,
+# a digest cannot). To refresh after a deliberate bump:
+#   docker buildx imagetools inspect node:22-alpine   → copy the Digest line.
+ARG NODE_IMAGE=node:22-alpine@sha256:16e22a550f3863206a3f701448c45f7912c6896a62de43add43bb9c86130c3e2
+
 # ---- deps: full install (dev deps included — the builder needs them) -------
-FROM node:22-alpine AS deps
+FROM ${NODE_IMAGE} AS deps
 RUN apk add --no-cache libc6-compat openssl
 # The lockfile is written by npm 11.6; node:22's bundled npm 10 resolves it
 # differently ("Missing: … from lock file"). Pin the version that wrote it.
@@ -18,7 +23,7 @@ COPY package.json package-lock.json ./
 RUN npm ci
 
 # ---- builder: prisma client + standalone Next build (also the migrator) ----
-FROM node:22-alpine AS builder
+FROM ${NODE_IMAGE} AS builder
 RUN apk add --no-cache libc6-compat openssl
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
@@ -32,12 +37,19 @@ ARG NEXT_PUBLIC_FREE_TRIAL_ALL_SKILLS=true
 ARG NEXT_PUBLIC_BRAND_NAME=""
 ARG NEXT_PUBLIC_BRAND_ACCENT=""
 ARG NEXT_PUBLIC_BRAND_LOGO_URL=""
+# Google sign-in button (src/landing/auth) — empty = button hidden.
+ARG NEXT_PUBLIC_GOOGLE_CLIENT_ID=""
+# Firmas mobile-signing deep links. The code falls back with `??` — an empty
+# STRING would defeat it, hence the :- default below mirrors the in-code one.
+ARG NEXT_PUBLIC_FIRMAS_BASE_URL=""
 ENV NEXT_PUBLIC_LOCAL_AUTH_ENABLED=$NEXT_PUBLIC_LOCAL_AUTH_ENABLED \
     NEXT_PUBLIC_TESTER_MODE=$NEXT_PUBLIC_TESTER_MODE \
     NEXT_PUBLIC_FREE_TRIAL_ALL_SKILLS=$NEXT_PUBLIC_FREE_TRIAL_ALL_SKILLS \
     NEXT_PUBLIC_BRAND_NAME=$NEXT_PUBLIC_BRAND_NAME \
     NEXT_PUBLIC_BRAND_ACCENT=$NEXT_PUBLIC_BRAND_ACCENT \
     NEXT_PUBLIC_BRAND_LOGO_URL=$NEXT_PUBLIC_BRAND_LOGO_URL \
+    NEXT_PUBLIC_GOOGLE_CLIENT_ID=$NEXT_PUBLIC_GOOGLE_CLIENT_ID \
+    NEXT_PUBLIC_FIRMAS_BASE_URL=${NEXT_PUBLIC_FIRMAS_BASE_URL:-https://www.firmas.io} \
     NEXT_OUTPUT_STANDALONE=true \
     NEXT_TELEMETRY_DISABLED=1 \
     NODE_ENV=production
@@ -49,7 +61,7 @@ ENV DATABASE_URL=postgresql://build:build@localhost:5432/build \
 RUN npx prisma generate && npx next build
 
 # ---- runner: minimal standalone runtime -------------------------------------
-FROM node:22-alpine AS runner
+FROM ${NODE_IMAGE} AS runner
 RUN apk add --no-cache openssl
 WORKDIR /app
 ENV NODE_ENV=production \

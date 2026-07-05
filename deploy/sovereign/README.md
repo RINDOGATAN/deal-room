@@ -15,8 +15,11 @@ Posture differences from cloud, all env-driven:
 
 - **Auth:** local credentials login (email, no password, no external
   services) via `NEXT_PUBLIC_LOCAL_AUTH_ENABLED=true`. Google OAuth and
-  Resend magic links are cloud-tier options, off by default. The auth
-  cookie is host-only (`AUTH_COOKIE_DOMAIN=""`); the `.todo.law`
+  Resend magic links are cloud-tier options, off by default. Enabling
+  Google needs `GOOGLE_CLIENT_ID`/`GOOGLE_CLIENT_SECRET` (runtime) AND
+  `NEXT_PUBLIC_GOOGLE_CLIENT_ID` — the latter feeds the sign-in button and
+  is baked in at build time, so set it before building (or rebuild). The
+  auth cookie is host-only (`AUTH_COOKIE_DOMAIN=""`); the `.todo.law`
   cross-app SSO domain is cloud-only.
 - **Stripe:** off. The skill marketplace billing is the cloud tier; the
   app boots and functions fully with empty `STRIPE_*` vars, and
@@ -47,6 +50,12 @@ hardware.
 
 - **Schema after `git pull`:** `docker compose run --rm migrator` — re-runs
   `prisma migrate deploy`; the seed is skipped once the instance has users.
+  The migrator self-heals a half-initialized DB (schema present but never
+  baselined, e.g. a run that died mid-setup, or Prisma error P3005): it
+  baselines the migration history and re-runs the deploy on its own.
+- **Health:** the app container has a compose healthcheck against
+  `/api/health` (a real Postgres probe, 200/503). `docker compose ps` shows
+  `healthy`/`unhealthy`; the TLS proxy waits for `healthy` before starting.
 - **Rebuild after an update or brand/posture change:**
   `docker compose up -d --build app`. All `NEXT_PUBLIC_*` vars are baked in
   at build time — editing them in `.env` without a rebuild does nothing.
@@ -94,8 +103,11 @@ The short version:
    `./restore.sh` somewhere disposable. An untested backup is a hope, not a
    backup.
 6. **Updates:** `git pull` → `docker compose run --rm migrator` →
-   `docker compose up -d --build app`. Images are version-pinned; bump
-   deliberately, snapshot a backup first.
+   `docker compose up -d --build app`. Base images are pinned by digest
+   (`tag@sha256:…` — a tag can move, a digest cannot); bump deliberately,
+   snapshot a backup first, and refresh a pin with
+   `docker buildx imagetools inspect <image:tag>` → copy the Digest line
+   into the Dockerfile / compose file.
 
 ## Notes & limits
 

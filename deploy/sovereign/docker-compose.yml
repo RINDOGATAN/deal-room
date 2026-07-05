@@ -30,6 +30,10 @@ x-build: &app-build
     NEXT_PUBLIC_BRAND_NAME: ${NEXT_PUBLIC_BRAND_NAME:-}
     NEXT_PUBLIC_BRAND_ACCENT: ${NEXT_PUBLIC_BRAND_ACCENT:-}
     NEXT_PUBLIC_BRAND_LOGO_URL: ${NEXT_PUBLIC_BRAND_LOGO_URL:-}
+    # Google sign-in button reads this at BUILD time — without it the OAuth
+    # option silently ships broken. Empty = button hidden (local login only).
+    NEXT_PUBLIC_GOOGLE_CLIENT_ID: ${NEXT_PUBLIC_GOOGLE_CLIENT_ID:-}
+    NEXT_PUBLIC_FIRMAS_BASE_URL: ${NEXT_PUBLIC_FIRMAS_BASE_URL:-}
 
 # Env shared by migrator + app. The schema declares directUrl =
 # DATABASE_URL_UNPOOLED (a Neon/pgBouncer concern) — locally both point at
@@ -40,8 +44,12 @@ x-db-env: &db-env
 
 services:
   db:
-    image: postgres:16-alpine
+    # Digest-pinned (tag kept for humans). Refresh after a deliberate bump:
+    #   docker buildx imagetools inspect postgres:16-alpine → Digest line.
+    image: postgres:16-alpine@sha256:e013e867e712fec275706a6c51c966f0bb0c93cfa8f51000f85a15f9865a28cb
     restart: unless-stopped
+    mem_limit: 1g
+    cpus: 1
     environment:
       POSTGRES_USER: dealroom
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set in .env}
@@ -73,12 +81,24 @@ services:
       - ./migrate.sh:/migrate.sh:ro
     entrypoint: ["/bin/sh", "/migrate.sh"]
     restart: "no"
+    mem_limit: 1g
+    cpus: 1
 
   app:
     build:
       <<: *app-build
       target: runner
     restart: unless-stopped
+    mem_limit: 2g
+    cpus: 2
+    # /api/health probes Postgres and returns 200/503 — a real readiness
+    # signal, not just "process up". busybox wget ships in node:22-alpine.
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:3000/api/health || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
     depends_on:
       db:
         condition: service_healthy
@@ -128,6 +148,9 @@ services:
       CRON_SECRET: ${CRON_SECRET:-}
       TESTER_MODE_ENABLED: ${TESTER_MODE_ENABLED:-false}
       DEFAULT_LANGUAGE: ${DEFAULT_LANGUAGE:-}
+      # Stable licensing fingerprint across container recreations (optional —
+      # empty = a fresh ID is generated per process).
+      DEAL_ROOM_INSTANCE_ID: ${DEAL_ROOM_INSTANCE_ID:-}
       # Runtime copies of the build-time posture/brand vars so server-rendered
       # output matches the client bundles.
       NEXT_PUBLIC_LOCAL_AUTH_ENABLED: ${NEXT_PUBLIC_LOCAL_AUTH_ENABLED:-true}
@@ -136,6 +159,8 @@ services:
       NEXT_PUBLIC_BRAND_NAME: ${NEXT_PUBLIC_BRAND_NAME:-}
       NEXT_PUBLIC_BRAND_ACCENT: ${NEXT_PUBLIC_BRAND_ACCENT:-}
       NEXT_PUBLIC_BRAND_LOGO_URL: ${NEXT_PUBLIC_BRAND_LOGO_URL:-}
+      NEXT_PUBLIC_GOOGLE_CLIENT_ID: ${NEXT_PUBLIC_GOOGLE_CLIENT_ID:-}
+      NEXT_PUBLIC_FIRMAS_BASE_URL: ${NEXT_PUBLIC_FIRMAS_BASE_URL:-https://www.firmas.io}
     volumes:
       - skills-data:/app/data/skills/installed
     ports:
@@ -150,10 +175,15 @@ services:
   # Plain-HTTP localhost use needs none of this.
   tls:
     profiles: ["tls"]
-    image: caddy:2-alpine
+    # Digest-pinned (tag kept for humans). Refresh after a deliberate bump:
+    #   docker buildx imagetools inspect caddy:2-alpine → Digest line.
+    image: caddy:2-alpine@sha256:5f5c8640aae01df9654968d946d8f1a56c497f1dd5c5cda4cf95ab7c14d58648
     restart: unless-stopped
+    mem_limit: 256m
+    cpus: 0.5
     depends_on:
-      - app
+      app:
+        condition: service_healthy
     command: caddy reverse-proxy --from ${TLS_DOMAIN:-localhost} --to app:3000
     ports:
       - "80:80"
