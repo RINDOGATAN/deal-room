@@ -45,7 +45,10 @@ const SYSTEM_BOILERPLATE_VARS = new Set([
   "partyBSignatureBlock",
 ]);
 
-const VALID_JURISDICTIONS = new Set(["CALIFORNIA", "ENGLAND_WALES", "SPAIN"]);
+// Superset of the GoverningLaw enum: skill tags may be more specific (e.g.
+// DELAWARE). Keep in sync with SKILL_JURISDICTION_TO_GOVERNING_LAW in
+// src/lib/jurisdictions.ts, which maps tags onto the deal engine's enum.
+const VALID_JURISDICTIONS = new Set(["CALIFORNIA", "DELAWARE", "ENGLAND_WALES", "SPAIN"]);
 
 let errors = 0;
 let warnings = 0;
@@ -140,11 +143,11 @@ function checkI18nCompleteness(skill, file, doc, languages) {
 }
 
 function checkBracketLeaks(skill, file, doc) {
-  // Leftover all-caps placeholders like [PARTY_NAME], [JURISDICTION], etc.
-  // Real bracket-tokens in CLAUSE legal text use lower-case (e.g. [amount],
-  // [start date]). Boilerplate should not contain ANY brackets — clauses
-  // are the place for them.
-  const re = /\[([A-Z][A-Z0-9 _-]{1,40})\]/g;
+  // Boilerplate should not contain ANY bracket placeholders — clauses are
+  // the place for them. Catches all-caps ([PARTY_NAME]), mixed-case
+  // ([Party Name]) and lower-case ([amount]) tokens alike: any bracketed
+  // run containing a letter.
+  const re = /\[([^\[\]\n]*[A-Za-z][^\[\]\n]*)\]/g;
   walkValues(doc, "", (val, path) => {
     if (typeof val !== "string") return;
     const matches = val.match(re);
@@ -153,6 +156,52 @@ function checkBracketLeaks(skill, file, doc) {
         skill,
         file,
         `${path}: leftover bracket placeholder(s): ${[...new Set(matches)].join(", ")}`,
+      );
+    }
+  });
+}
+
+function checkClauseTokenLeaks(skill, clauses, parameters) {
+  // Bracket tokens in CLAUSE legal text are legitimate in these forms:
+  //   1. lower-case / sentence-case fill-ins and drafter notes the author
+  //      wrote deliberately (e.g. [amount], [as listed in Annex 1],
+  //      [No non-solicitation provision included]);
+  //   2. slash-separated pick-one blanks (e.g. [EEA/United Kingdom/United
+  //      States]);
+  //   3. tokens declared in parameters.json (matched case-insensitively by
+  //      src/lib/parameters.ts interpolateParameters, e.g. [DPO email]).
+  // What is NOT legitimate: undeclared LABEL-style tokens — ALL-CAPS
+  // leftovers like [NAMED COMPETITORS] or Title-Case strays like
+  // [Company Name] — which would ship verbatim in a finished document.
+  if (!clauses) return;
+  const declaredTokens = new Set(
+    (parameters?.parameters ?? [])
+      .map((p) => (typeof p.token === "string" ? p.token.toLowerCase() : null))
+      .filter(Boolean),
+  );
+  const isLeakToken = (token) => {
+    if (token.includes("/")) return false; // pick-one blank
+    const words = token.split(/\s+/).filter((w) => /[A-Za-z]/.test(w));
+    if (words.length === 0) return false;
+    if (!/[a-z]/.test(token)) return true; // ALL-CAPS label
+    return words.every((w) => /^[A-Z]/.test(w)); // Title-Case label
+  };
+  const re = /\[([^\[\]\n]*[A-Za-z][^\[\]\n]*)\]/g;
+  walkValues(clauses, "", (val, path) => {
+    if (typeof val !== "string") return;
+    let m;
+    const leaks = new Set();
+    while ((m = re.exec(val)) !== null) {
+      const token = m[1];
+      if (declaredTokens.has(token.toLowerCase())) continue; // parameter token
+      if (!isLeakToken(token)) continue;
+      leaks.add(`[${token}]`);
+    }
+    if (leaks.size > 0) {
+      logError(
+        skill,
+        "clauses.json",
+        `${path}: leaked placeholder token(s) not declared in parameters.json: ${[...leaks].join(", ")}`,
       );
     }
   });
@@ -273,6 +322,7 @@ for (const skill of skills) {
 
   if (boilerplate) checkBracketLeaks(skill, "boilerplate.json", boilerplate);
   if (boilerplate) checkBoilerplateVars(skill, boilerplate, parameters);
+  checkClauseTokenLeaks(skill, clauses, parameters);
 
   checkMetadataSanity(skill, metadata, clauses);
   checkClauseBiases(skill, clauses);

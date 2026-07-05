@@ -74,6 +74,7 @@ const TOKEN_TRANSLATIONS: Record<string, Record<string, string>> = {
   rate: { es: "tarifa" },
   "program name": { es: "nombre del programa" },
   "prescribed disclosure text": { es: "texto de divulgación prescrito" },
+  "named competitors": { es: "competidores designados" },
   "product category": { es: "categoría de producto" },
 };
 

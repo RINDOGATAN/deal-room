@@ -2201,8 +2201,8 @@
             }
           },
           "legalText": {
-            "en": "During the term of this Agreement, Provider shall not provide substantially similar services to the following competitors: [NAMED COMPETITORS]. This restriction does not survive termination.",
-            "es": "Durante la vigencia del presente Contrato, el Prestador no prestará servicios sustancialmente similares a los siguientes competidores: [NAMED COMPETITORS]. Esta restricción no sobrevive a la resolución del Contrato."
+            "en": "During the term of this Agreement, Provider shall not provide substantially similar services to the following competitors: [named competitors]. This restriction does not survive termination.",
+            "es": "Durante la vigencia del presente Contrato, el Prestador no prestará servicios sustancialmente similares a los siguientes competidores: [competidores designados]. Esta restricción no sobrevive a la resolución del Contrato."
           },
           "bias": {
             "partyA": -0.4,
