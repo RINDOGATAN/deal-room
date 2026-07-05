@@ -22,6 +22,7 @@ import { useTranslations } from "next-intl";
 
 const JURISDICTION_LABELS: Record<string, string> = {
   CALIFORNIA: "California",
+  DELAWARE: "Delaware",
   ENGLAND_WALES: "England & Wales",
   SPAIN: "Spain",
 };

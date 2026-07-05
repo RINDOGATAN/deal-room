@@ -5,6 +5,7 @@ import { Prisma, DealRoomStatus, DealMode, PartyRole, PartyStatus, ClauseStatus,
 import { checkDealCreationEntitlement } from "../services/licensing/entitlement";
 import { resolveLocalizedString, resolveLocalizedArray } from "../services/skills/i18n";
 import { validateRequiredParameters, type ParameterSchema } from "@/lib/parameters";
+import { governingLawForSkillJurisdiction } from "@/lib/jurisdictions";
 import { autoAgreeSingleOptionClauses } from "../services/deal/autoAgreeSingleOption";
 import { features } from "@/config/features";
 
@@ -347,8 +348,13 @@ export const dealRouter = createTRPCRouter({
         }
       }
 
-      // Validate jurisdiction and language constraints
-      if (template.jurisdictions.length > 0 && !template.jurisdictions.includes(input.governingLaw)) {
+      // Validate jurisdiction and language constraints. Template jurisdiction
+      // tags can be more specific than the GoverningLaw enum (e.g. DELAWARE
+      // runs under the US framework) — resolve them before comparing.
+      const templateGoverningLaws = template.jurisdictions
+        .map((j) => governingLawForSkillJurisdiction(j))
+        .filter((j): j is NonNullable<typeof j> => j !== null);
+      if (template.jurisdictions.length > 0 && !templateGoverningLaws.includes(input.governingLaw)) {
         throw new TRPCError({
           code: "BAD_REQUEST",
           message: `This contract template does not support the ${input.governingLaw} jurisdiction`,

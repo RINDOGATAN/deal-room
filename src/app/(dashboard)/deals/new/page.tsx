@@ -56,6 +56,8 @@ const contractIcons: Record<string, typeof FileText> = {
   AFFILIATE_PROGRAM: Link2,
 };
 
+import { governingLawForSkillJurisdiction } from "@/lib/jurisdictions";
+
 type GoverningLaw = "CALIFORNIA" | "ENGLAND_WALES" | "SPAIN";
 
 // Template type from the API
@@ -371,7 +373,8 @@ export default function NewDealPage() {
     if (currentTemplate?.soloModeOnly && !selectedJurisdiction && parameterValues.jurisdictions) {
       const firstJurisdiction = parameterValues.jurisdictions.split(",")[0]?.trim();
       if (firstJurisdiction) {
-        effectiveJurisdiction = firstJurisdiction as GoverningLaw;
+        effectiveJurisdiction =
+          governingLawForSkillJurisdiction(firstJurisdiction) ?? (firstJurisdiction as GoverningLaw);
       }
     }
 
@@ -635,7 +638,12 @@ export default function NewDealPage() {
                       }
                       // For soloModeOnly, auto-set jurisdiction (user picks multi-jurisdiction via parameters)
                       if (family.primaryTemplate.soloModeOnly && family.primaryTemplate.jurisdictions.length > 0) {
-                        setSelectedJurisdiction(family.primaryTemplate.jurisdictions[0] as GoverningLaw);
+                        // Jurisdiction tags may be more specific than GoverningLaw
+                        // (e.g. DELAWARE → US framework) — resolve before setting.
+                        setSelectedJurisdiction(
+                          governingLawForSkillJurisdiction(family.primaryTemplate.jurisdictions[0]) ??
+                            (family.primaryTemplate.jurisdictions[0] as GoverningLaw)
+                        );
                       } else {
                         // Reset jurisdiction when changing contract type
                         setSelectedJurisdiction(null);

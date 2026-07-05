@@ -3,7 +3,7 @@
   "parameters": [
     {
       "id": "named-competitors",
-      "token": "NAMED COMPETITORS",
+      "token": "named competitors",
       "scope": "non-compete",
       "type": "text",
       "required": false,
