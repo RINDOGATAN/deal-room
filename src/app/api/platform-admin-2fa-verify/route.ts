@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { adminAuthOptions } from "@/lib/auth-admin";
 import prisma from "@/lib/prisma";
 import { apiError } from "@/lib/api-response";
+import { verifyAdminToken } from "@/lib/totp-admin";
 
 export async function POST(request: NextRequest) {
   try {
@@ -10,6 +11,19 @@ export async function POST(request: NextRequest) {
 
     if (!session?.user?.email) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    // Require a TOTP code in the request body. The gate cookie is the second
+    // factor for /admin, so it must never be issued without a code that is
+    // verified server-side against the stored secret.
+    let code: unknown;
+    try {
+      ({ code } = await request.json());
+    } catch {
+      return NextResponse.json({ error: "Verification code required" }, { status: 400 });
+    }
+    if (typeof code !== "string" || !/^\d{6}$/.test(code)) {
+      return NextResponse.json({ error: "Verification code required" }, { status: 400 });
     }
 
     // Get platform admin by email
@@ -25,6 +39,11 @@ export async function POST(request: NextRequest) {
     // Verify that the admin has a verified 2FA secret
     if (!admin.twoFactorSecret?.verified) {
       return NextResponse.json({ error: "2FA not verified" }, { status: 400 });
+    }
+
+    // Verify the TOTP code against the stored secret before granting the gate
+    if (!verifyAdminToken(admin.twoFactorSecret.secret, code)) {
+      return NextResponse.json({ error: "Invalid verification code" }, { status: 401 });
     }
 
     const response = NextResponse.json({ success: true });

@@ -3,9 +3,23 @@ import { cookies } from "next/headers";
 import { decode } from "next-auth/jwt";
 import prisma from "@/lib/prisma";
 import { apiError } from "@/lib/api-response";
+import { verifySupervisorToken } from "@/lib/totp-supervisor";
 
 export async function POST(request: NextRequest) {
   try {
+    // Require a TOTP code in the request body. The gate cookie is the second
+    // factor for /supervise, so it must never be issued without a code that is
+    // verified server-side against the stored secret.
+    let code: unknown;
+    try {
+      ({ code } = await request.json());
+    } catch {
+      return NextResponse.json({ error: "Verification code required" }, { status: 400 });
+    }
+    if (typeof code !== "string" || !/^\d{6}$/.test(code)) {
+      return NextResponse.json({ error: "Verification code required" }, { status: 400 });
+    }
+
     const cookieStore = await cookies();
     const supervisorToken = cookieStore.get("supervisor_session")?.value;
 
@@ -41,6 +55,11 @@ export async function POST(request: NextRequest) {
     // Verify that the supervisor has a verified 2FA secret
     if (!supervisor.twoFactorSecret?.verified) {
       return NextResponse.json({ error: "2FA not verified" }, { status: 400 });
+    }
+
+    // Verify the TOTP code against the stored secret before granting the gate
+    if (!verifySupervisorToken(supervisor.twoFactorSecret.secret, code)) {
+      return NextResponse.json({ error: "Invalid verification code" }, { status: 401 });
     }
 
     const response = NextResponse.json({ success: true });

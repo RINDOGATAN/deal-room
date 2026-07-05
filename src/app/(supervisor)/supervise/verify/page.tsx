@@ -20,12 +20,12 @@ export default function SupervisorVerifyPage() {
   });
 
   const verifyMutation = trpc.supervisorTwoFactor.verify.useMutation({
-    onSuccess: () => {
-      // Set httpOnly cookie via API route
+    onSuccess: (_data, variables) => {
+      // Set httpOnly cookie via API route; it re-verifies the TOTP code server-side
       fetch("/api/supervisor-2fa-verify", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ verified: true }),
+        body: JSON.stringify({ code: variables.code }),
       }).then(() => {
         router.push("/supervise");
       });
