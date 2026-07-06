@@ -23,8 +23,14 @@ import { apiError } from "@/lib/api-response";
 
 export async function POST(req: NextRequest) {
   try {
-    if (!features.agentApi || !features.stripeEnabled) {
+    if (!features.agentApi) {
       return NextResponse.json({ error: "Not available" }, { status: 404 });
+    }
+    if (!features.stripeEnabled) {
+      return NextResponse.json(
+        { error: "Payments are disabled; all skills are free" },
+        { status: 409 }
+      );
     }
 
     const auth = await authenticateApiKey(req);

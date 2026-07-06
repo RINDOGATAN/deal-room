@@ -28,19 +28,25 @@ export const features = {
   /** Startup Quick Start — guided US Delaware C-Corp launch journey */
   startupJourney: true,
   /**
-   * Promotional unlock: all premium skills available without an entitlement.
-   * Drives usage during a launch / awareness window.
+   * All premium skills available without an entitlement.
    *
-   * Reads BOTH `FREE_TRIAL_ALL_SKILLS` (server-only) and
-   * `NEXT_PUBLIC_FREE_TRIAL_ALL_SKILLS` (server + client). The public-prefixed
-   * variant is required for the `<PromoBanner>` to render — Next.js only
-   * inlines `NEXT_PUBLIC_*` env vars into client bundles. Set both to `true`
-   * on Vercel for the banner and server gating to be consistent.
+   * True whenever EITHER holds:
+   *   1. Stripe is not configured (no STRIPE_SECRET_KEY). With payments off
+   *      there is no way to charge, so every skill is free for everyone. This
+   *      is the permanent hosted state now that premium value has moved to
+   *      downloadable LQ.AI skill installs. Free no longer depends on
+   *      remembering a promo env var: drop Stripe and skills stay unlocked.
+   *   2. A promo env var is set: `FREE_TRIAL_ALL_SKILLS` (server-only) or
+   *      `NEXT_PUBLIC_FREE_TRIAL_ALL_SKILLS` (server + client). Kept so a
+   *      free window can still be opened while Stripe remains configured.
    *
-   * Stripe checkout still functions throughout, so customers who subscribe
-   * early keep their entitlements when the promo ends.
+   * The public-prefixed promo variant is required for the `<PromoBanner>` to
+   * render, since Next.js only inlines `NEXT_PUBLIC_*` env vars into client
+   * bundles. Stripe checkout still functions whenever Stripe is configured, so
+   * customers who subscribe during a promo keep their entitlements.
    */
   allSkillsFree:
+    !process.env.STRIPE_SECRET_KEY ||
     process.env.NEXT_PUBLIC_FREE_TRIAL_ALL_SKILLS === "true" ||
     process.env.FREE_TRIAL_ALL_SKILLS === "true",
 } as const;

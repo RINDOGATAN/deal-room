@@ -39,6 +39,10 @@ history was not tracked per-release and lives only in git.
   blanks.
 
 ### Removed
+- Payments removed from the hosted deployment. With Stripe unset, all skills
+  are free for everyone and no longer depend on the `FREE_TRIAL_ALL_SKILLS`
+  promo env var. Stripe code stays dormant behind `features.stripeEnabled`
+  (reversible). Premium value moves to downloadable LQ.AI skill installs.
 - Real personal data and live credentials from seeds, docs, and tracked
   internal audit files (replaced with fictional fixtures).
 
