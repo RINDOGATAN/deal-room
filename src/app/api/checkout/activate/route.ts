@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import { getStripe, getSubscription } from "@/lib/stripe";
+import { features } from "@/config/features";
 import { apiError } from "@/lib/api-response";
 
 /**
@@ -12,6 +13,15 @@ import { apiError } from "@/lib/api-response";
  * the contract page. The webhook still fires as a backup.
  */
 export async function POST(request: NextRequest) {
+  // Payments disabled: there are no Stripe checkout sessions to activate, and
+  // getStripe() would throw. Skills are already free, so degrade cleanly.
+  if (!features.stripeEnabled) {
+    return NextResponse.json(
+      { error: "Payments are disabled; all skills are free" },
+      { status: 409 }
+    );
+  }
+
   try {
     const session = await getServerSession(authOptions);
     if (!session?.user?.email) {

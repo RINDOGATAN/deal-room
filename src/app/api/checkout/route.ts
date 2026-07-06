@@ -3,9 +3,19 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import { createCheckoutSession, getOrCreateStripeCustomer } from "@/lib/stripe";
+import { features } from "@/config/features";
 import { apiError } from "@/lib/api-response";
 
 export async function POST(request: NextRequest) {
+  // Payments disabled: never reach getStripe() (it throws). All skills are
+  // free, so there is nothing to check out. Degrade to a clean 409.
+  if (!features.stripeEnabled) {
+    return NextResponse.json(
+      { error: "Payments are disabled; all skills are free" },
+      { status: 409 }
+    );
+  }
+
   try {
     const session = await getServerSession(authOptions);
     if (!session?.user?.email) {
