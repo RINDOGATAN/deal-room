@@ -1,0 +1,65 @@
+name: CI
+
+on:
+  push:
+    branches: [main, p1-consistency]
+  pull_request:
+    branches: [main]
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+
+    # Dealroom's `build` runs `prisma migrate deploy`, which connects to a
+    # real database, so CI provisions a throwaway Postgres rather than a dummy
+    # URL. No production data is involved.
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: dealroom
+          POSTGRES_PASSWORD: dealroom
+          POSTGRES_DB: dealroom_ci
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U dealroom"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      DATABASE_URL: postgresql://dealroom:dealroom@localhost:5432/dealroom_ci
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate Prisma client
+        run: npx prisma generate
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Type-check
+        run: npx tsc --noEmit
+
+      - name: API error-handling guard
+        run: npm run check:api
+
+      - name: Skills content guard
+        run: npm run check:skills
+
+      - name: Test
+        run: npm run test:run
+
+      - name: Build
+        run: npm run build
