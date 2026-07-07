@@ -24,8 +24,8 @@ export const ManifestSchema = z.object({
   skillId: z
     .string()
     .regex(
-      /^com\.nel\.skills\.[a-z][a-z0-9-]*$/,
-      "Skill ID must match pattern: com.nel.skills.<name>"
+      /^com\.(nel|todolaw)\.skills\.[a-z0-9.-]+$/,
+      "Skill ID must match pattern: com.<nel|todolaw>.skills.<name>"
     ),
   name: z.string().min(1).max(50),
   displayName: z.string().min(1).max(100),
