@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2025-2026 Rindogatan LLC
+
 const SESSION_COOKIE_NAME = "todolaw_session";
 
 /** Read the raw todolaw_session JWT from document.cookie. */

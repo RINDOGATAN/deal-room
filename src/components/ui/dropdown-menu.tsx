@@ -1,4 +1,6 @@
 "use client"
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2025-2026 Rindogatan LLC
 
 import * as React from "react"
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu"

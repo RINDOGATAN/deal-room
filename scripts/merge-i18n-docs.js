@@ -1,4 +1,7 @@
 #!/usr/bin/env node
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2025-2026 Rindogatan LLC
+
 /**
  * Temporary script to merge docs i18n sections from agent output files
  * into en.json and es.json. Run once and delete.

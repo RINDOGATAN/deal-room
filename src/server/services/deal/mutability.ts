@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2025-2026 Rindogatan LLC
+
 /**
  * Deal mutability guard — server-side enforcement that mutations cannot
  * touch a deal once it has reached a terminal state.

@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2025-2026 Rindogatan LLC
+
 /**
  * Daily cron — runs once per day, scheduled via vercel.json.
  *
