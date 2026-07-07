@@ -16,11 +16,14 @@ Contract negotiation platform with weighted compromise algorithm.
 
 ## Skills (Open-Core Model)
 
-- **Free (6):** `skills/` — nda, msa, saas, dpa, privacy-notice, delaware-certificate-of-incorporation
-- **Premium (27):** Private `RINDOGATAN/legalskills` repo — **never commit premium skills to this repo**
-- **A2A (12):** Agent-to-Agent skills in `RINDOGATAN/legalskills` — bundled subscription, Gavel dispute resolution
+**All skills are currently free.** Payments were removed (see "Payments removed" below), so on the hosted deployment `features.allSkillsFree` is true and every skill seeds and serves without an entitlement. The "premium" tier below is the historical catalog split and a **future** paid layer (downloadable LQ.AI plug-ins / local install), not a live paywall.
+
+- **Built-in (6):** `skills/` — nda, msa, saas, dpa, privacy-notice, delaware-certificate-of-incorporation
+- **Extended (27):** Private `RINDOGATAN/legalskills` repo — **never commit these skills to this repo**. Served free today; the intended future paid path is a downloadable install, not server-side gating.
+- **A2A (12):** Agent-to-Agent skills in `RINDOGATAN/legalskills` — Gavel dispute resolution
 - 44 of 45 bilingual EN/ES (Delaware Cert of Incorporation is English-only by design), 3 jurisdictions (CALIFORNIA, ENGLAND_WALES, SPAIN)
 - Seed defaults `biasPartyA`/`biasPartyB` to `0` when missing
+- Entitlement/licensing code (`SkillEntitlement`, `skills.listTemplatesWithAccess`) still exists and stays dormant; with `allSkillsFree` true it short-circuits to `requiresLicense: false` for everyone
 
 ### Seeding Skills to Production
 
@@ -45,14 +48,15 @@ rm .env.prod
 - **Idempotency:** All 9 mutating agent POST endpoints honor an optional `Idempotency-Key` header (24h TTL, table `idempotency_records`). Replays return the cached 2xx response with an `Idempotent-Replay: true` header — described on `.well-known/agent.json` for federated discovery. Helper at `src/server/middleware/idempotency.ts`.
 - **Experts:** `/api/v1/experts/` — search, get-by-ID, filters, contact, verify. Auth: `drk_...` tokens with scopes (`experts:read`, `experts:contact`). Contact endpoint capped at 2-per-(customer, expert)-per-day; resulting `RecommendationRequest` rows expire after 30 days. Expert types are TECHNICAL/DEPLOYMENT only — the lawyer (LEGAL) directory was removed 2026-07 and every route carries an `expertTypes: { hasSome: EXPERT_TYPES }` guard so legacy LEGAL-only rows are never exposed
 - **Gavel:** Dispute escalation via `POST /api/v1/agent/deals/:id/dispute`. DRC protocol at `gavel.todo.law`. Inbound webhook at `/api/webhooks/gavel` fails closed (503) when `GAVEL_WEBHOOK_SECRET` is unset; 401 on bad signature
-- **Stripe:** Inbound webhook at `/api/webhooks/stripe` is idempotent — claims `event.id` via `stripe_webhook_events` table on first delivery, subsequent redeliveries return 200 with `{ idempotent: true }` and skip the handler
+- **Payments removed (Stripe dormant):** `features.stripeEnabled = !!process.env.STRIPE_SECRET_KEY`, so deleting `STRIPE_SECRET_KEY` turns Stripe (and `billing`, `selfServiceUpgrade`) off. With the key absent, `features.allSkillsFree` is automatically true regardless of the old `FREE_TRIAL_ALL_SKILLS` promo env. On the hosted deployment the key is deleted, so all skills are free. The commerce endpoints (`/api/checkout`, `/api/checkout/credits`, `/api/checkout/activate`, `/api/v1/agent/subscribe`) return a clean **409** `{ error: "Payments are disabled; all skills are free" }` instead of a 500. Stripe SDK and the webhook handler stay in the tree, dormant behind the flag.
+- **Stripe webhook (when enabled):** inbound webhook at `/api/webhooks/stripe` is idempotent — claims `event.id` via `stripe_webhook_events` table on first delivery, subsequent redeliveries return 200 with `{ idempotent: true }` and skip the handler
 
 ## Operations
 
-- **Health check:** `GET /api/health` — public endpoint, no auth. Returns `{ ok, time, commit, version, services: { database, databaseLatencyMs } }`. HTTP 200 when healthy, 503 when the database probe fails. `Cache-Control: no-store` so any uptime monitor reads fresh. Useful for UptimeRobot / BetterStack / a quick `curl` smoke test after deploy.
+- **Health check:** `GET /api/health` — public endpoint, no auth. Returns `{ ok, time, commit, version, services: { database, databaseLatencyMs } }`. HTTP 200 when healthy, 503 when the database probe fails. `Cache-Control: no-store` so any uptime monitor reads fresh. Useful for UptimeRobot / BetterStack / a quick `curl` smoke test after deploy. The sovereign `docker-compose.yml` wires a container healthcheck against this endpoint (`wget` to `/api/health`), so `docker compose ps` reflects real Postgres readiness.
 - **Daily cron:** `GET /api/cron/daily` — scheduled in `vercel.json` for 09:00 UTC every day. Runs three jobs: signing reminder (3 days before expiry), signing expiry (mark `EXPIRED` + revert deal to AGREED + email both parties), recommendation-request expiry (mark `CANCELLED`). Protected by `CRON_SECRET` env var — fails closed with 503 if unset.
-- **Marketplace is currently disabled** (`features.marketplace = false` in `src/config/features.ts`). Both footer links are hidden and `/marketplace` returns 404 via the layout's `notFound()` guard. Flip the flag back to `true` to restore. Disabled because the all-skills-free promo makes a priced catalog page incoherent.
-- **Promotional "all skills free" mode:** set **both** `FREE_TRIAL_ALL_SKILLS=true` and `NEXT_PUBLIC_FREE_TRIAL_ALL_SKILLS=true` on Vercel to unlock every premium skill platform-wide. The first drives server gating (entitlement short-circuit, `requiresLicense: false` from `skills.listTemplatesWithAccess`). The second is required for the client-rendered `<PromoBanner>` because Next.js only inlines `NEXT_PUBLIC_*` env vars into the browser bundle — setting only the server-side one unlocks premium skills silently with no banner. Stripe checkout still works throughout, so anyone who pre-subscribes keeps their `SkillEntitlement` records when the promo ends. Revert by unsetting both env vars and redeploying.
+- **Marketplace and billing pages disabled** while payments are off. `features.marketplace = false` (a priced catalog is incoherent when everything is free), and `features.billing` follows `STRIPE_SECRET_KEY`. Both `/marketplace` (`src/app/(dashboard)/marketplace/layout.tsx`) and `/billing` (`src/app/(dashboard)/billing/layout.tsx`) call `notFound()` when their flag is off, and the footer links are hidden. Restore by flipping `marketplace` back to `true` and/or setting `STRIPE_SECRET_KEY`.
+- **All skills free, no promo env needed.** `features.allSkillsFree` is true whenever `STRIPE_SECRET_KEY` is absent, which is the permanent hosted state. The legacy promo path (`FREE_TRIAL_ALL_SKILLS` server-only, `NEXT_PUBLIC_FREE_TRIAL_ALL_SKILLS` server + client) is retained only to open a free window while Stripe stays configured; the public-prefixed variant is what drives the client `<PromoBanner>`, since Next.js only inlines `NEXT_PUBLIC_*` into the browser bundle. With Stripe deleted, none of these are set and every skill is free by default.
 - **Tester quick-access mode:** set **both** `TESTER_MODE_ENABLED=true` (server) and `NEXT_PUBLIC_TESTER_MODE=true` (client) on Vercel to expose three one-click sign-in buttons on `/sign-in` for the fictitious users `tester-startup@todo.law`, `tester-lawyer@todo.law`, `tester-business@todo.law`. Only those three emails are accepted by the `tester` credentials provider — there's no password, the allowlist is the gate. Signed-in tester users see a floating `<TesterBar>` with a "Reset my data" button that POSTs to `/api/tester/reset` to wipe their deals, invitations, signing artefacts and audit logs (the user record itself stays so the session keeps working). Reset is opt-in to support multi-party flow testing where state needs to persist between sign-ins. Disable by unsetting both env vars.
 
 ## Commands
@@ -65,8 +69,18 @@ npm test                                            # Vitest watch mode (unit te
 npm run test:run                                    # Vitest single run (use in CI)
 npm run check:api                                   # Static guard: no raw errors leaked from /api/* routes
 npm run check:skills                                # Static guard: skill JSON shape (i18n, [BRACKET] leaks, {curly} vars, biases)
-SKILLS_DIR=/path/to/legalskills npm run check:skills # Same guard on the premium repo
+SKILLS_DIR=/path/to/legalskills npm run check:skills # Same guard on the extended repo
+npm run skills:manifest                             # Write a hash manifest of seeded skills
+npm run skills:diff                                 # Drift check: seeded DB vs. manifest (see docs/skills-sync.md)
 ```
+
+## Quality Infra (P1)
+
+- **CI:** `.github/workflows/ci.yml` runs on push to `main`/`p1-consistency` and on PRs to `main`. It provisions a throwaway `postgres:16` service (the `build` step runs `prisma migrate deploy`, which needs a real DB) and runs, in order: `lint`, `tsc --noEmit`, `check:api`, `check:skills`, `test:run`, `build`.
+- **Tests (~13, Vitest):** `src/**/__tests__/` and co-located `*.test.ts`. Cover router scoping (`server/routers/__tests__/deal.test.ts`), the 2FA verify gate (`app/api/__tests__/two-fa-verify-*.test.ts`), licensing/entitlement, feature flags, idempotency, crypto, equity/compromise, api-response and format-error. Run locally with `npm run test:run`.
+- **Sovereign migrator self-heal:** `deploy/sovereign/migrate.sh` recovers a half-initialized DB (schema present but never baselined, Prisma error **P3005**) by resolving migrations as already-applied, so the container comes up instead of crash-looping. See `deploy/sovereign/README.md`.
+- **Skills drift tooling:** `skills:manifest` / `skills:diff` (`scripts/skills-sync.mjs`) catch divergence between the seeded catalog and the tracked manifest. Doctrine in `docs/skills-sync.md`.
+- **Governance files:** `SECURITY.md`, `CONTRIBUTING.md`, `NOTICES.md`, `CHANGELOG.md` at repo root. The app footers render an AGPL §13 "Source code" offer (compliance for the AGPL-3.0-or-later license).
 
 ## Deployment
 
@@ -115,6 +129,12 @@ Current example: `/launch` (Delaware C-Corp formation) is hidden from `locale ==
 - Google Search Console verification: `src/app/google700a816d5db3f2da.html/route.ts` (inline, not static file)
 - `public/sitemap.xml` — public pages only (no auth-gated routes like `/marketplace`)
 - `public/robots.txt`, `public/llms.txt` — crawling/LLM guidance
+
+## Security
+
+- **2FA verify hardened (P0):** the admin and supervisor 2FA verify endpoints now check a server-side TOTP before setting the gate cookie, so the cookie can no longer be set without a valid code. Covered by `app/api/__tests__/two-fa-verify-*.test.ts`.
+- **Fixtures scrubbed (P0):** real PII was replaced with fictional fixtures, and a real leaked API key committed in the tree was redacted.
+- **Rotations owed (open):** Resend, NextAuth secret, Google OAuth, Neon, the `drk_` demo key (already revoked at `/admin/customers`), and webhook secrets still need rotating. **Stripe keys were deleted (payments removed), not rotated.** Nothing to rotate once the key is gone.
 
 ## Conventions
 
