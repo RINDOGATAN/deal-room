@@ -56,3 +56,6 @@ dpa-purge-test-deals.cjs
 
 # Local scratch screenshots
 /sshots/
+
+# Internal dev context (like DPO Central) — kept locally, never shipped in the downloadable bundle
+/CLAUDE.md
