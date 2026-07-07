@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2025-2026 Rindogatan LLC
+
 /**
  * Currency helper — reads the geo-IP currency cookie set by middleware.
  * US visitors get USD, everyone else gets EUR.

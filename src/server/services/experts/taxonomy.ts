@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2025-2026 Rindogatan LLC
+
 /**
  * Controlled vocabularies for the cross-product experts directory API.
  * Values are String[] in Prisma — validated here at the application layer

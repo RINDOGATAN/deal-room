@@ -35,6 +35,12 @@ licensing, or the compromise engine — not just coverage filler.
 
 ## Conventions
 
+- **Licensing**: this project is published under **AGPL-3.0-or-later**, and
+  Rindogatan also offers it under a separate commercial licence. So that both
+  are possible, every contribution is covered by the
+  [Contributor License Agreement](CLA.md) and certified per commit with the
+  [Developer Certificate of Origin](DCO.txt). Do not submit code you don't have
+  the right to license this way.
 - **Commits:** conventional-ish — `feat(scope): …`, `fix(scope): …`,
   `chore(scope): …`. Present tense, explain *why* in the body when the diff
   doesn't.
@@ -52,6 +58,25 @@ licensing, or the compromise engine — not just coverage filler.
   Obviously-fictional data only (`jane.doe@example.com`, bar number
   `#000000`).
 
+## Licensing your contribution
+
+Two things travel with every contribution:
+
+1. **Sign off each commit (DCO).** Add `Signed-off-by: Your Name
+   <you@example.com>` to every commit — `git commit -s` does it for you. This
+   certifies you wrote the code or have the right to submit it (see
+   [DCO.txt](DCO.txt)). Use your real name.
+2. **Sign the CLA once.** The first time you open a PR, accept the
+   [Contributor License Agreement](CLA.md): add your name to [AUTHORS](AUTHORS)
+   in the same PR and state in the PR description that you have read and accept
+   the CLA. The CLA grants Rindogatan the relicensing right that makes the dual
+   licence (AGPL + commercial) possible. You keep the copyright to your work; it
+   is a licence, not an assignment. Contributing on behalf of an employer? Have
+   them execute a Corporate CLA (email legal@rindogatan.com).
+
+PRs without a DCO sign-off, or from a contributor who has not accepted the CLA,
+cannot be merged.
+
 ## Pull requests
 
 1. Branch from `main`.
@@ -59,8 +84,16 @@ licensing, or the compromise engine — not just coverage filler.
 3. Describe the user-visible effect and any migration/deployment impact
    (especially anything under `deploy/sovereign/`).
 
-## Licensing of contributions
+## SPDX headers
 
-By submitting a contribution you agree it is licensed under
-AGPL-3.0-or-later, the project license. If you cannot agree to that,
-don't submit the change.
+Every source file carries a machine-readable licence header as its first lines
+(after a shebang or a `"use client"` / `"use server"` directive, if present):
+
+```ts
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2025-2026 Rindogatan LLC
+```
+
+New source files must include it. These headers survive copy-paste into other
+codebases and make the licence and its owner unambiguous. Do not remove or alter
+them. `scripts/add-spdx-headers.mjs` adds the header to any file missing it.

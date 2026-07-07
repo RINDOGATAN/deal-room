@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2025-2026 Rindogatan LLC
+
 import { getRequestConfig } from "next-intl/server";
 import { cookies, headers } from "next/headers";
 import { defaultLocale, locales, type Locale } from "./config";

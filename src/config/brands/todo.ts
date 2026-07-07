@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2025-2026 Rindogatan LLC
+
 import type { BrandConfig } from "../brand";
 
 // Sovereign/self-hosted rebrand hooks — env-only, baked into the bundle at
