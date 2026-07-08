@@ -16,6 +16,10 @@ const SOURCE =
 const COMMIT =
   process.env.NEXT_PUBLIC_COMMIT_SHA || process.env.VERCEL_GIT_COMMIT_SHA;
 const SOURCE_URL = COMMIT ? `${SOURCE}/tree/${COMMIT}` : SOURCE;
+// The source repo is not public yet; until it is, offer the source at no
+// charge on request rather than link to a URL that would 404. Set
+// NEXT_PUBLIC_SOURCE_PUBLIC=true once the repo is published.
+const SOURCE_PUBLIC = process.env.NEXT_PUBLIC_SOURCE_PUBLIC === "true";
 
 export default function LicensesPage() {
   return (
@@ -38,21 +42,41 @@ export default function LicensesPage() {
 
       <section className="space-y-3">
         <h2 className="text-xl font-semibold">Complete corresponding source code</h2>
-        <p className="text-sm text-muted-foreground leading-relaxed">
-          Under section 13 of the AGPL, users interacting with this program over
-          a network are offered the complete corresponding source code of the
-          version they are running:
-        </p>
-        <p className="text-sm">
-          <a
-            href={SOURCE_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-primary underline decoration-primary/30 hover:decoration-primary break-all"
-          >
-            {SOURCE_URL}
-          </a>
-        </p>
+        {SOURCE_PUBLIC ? (
+          <>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              Under section 13 of the AGPL, users interacting with this program
+              over a network are offered the complete corresponding source code
+              of the version they are running:
+            </p>
+            <p className="text-sm">
+              <a
+                href={SOURCE_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary underline decoration-primary/30 hover:decoration-primary break-all"
+              >
+                {SOURCE_URL}
+              </a>
+            </p>
+          </>
+        ) : (
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            Under section 13 of the AGPL, users interacting with this program
+            over a network are offered the complete corresponding source code of
+            the version they are running
+            {COMMIT ? ` (commit ${COMMIT})` : ""}, at no charge. The public
+            source repository is being finalised; until it is published, request
+            the corresponding source by emailing{" "}
+            <a
+              href="mailto:support@rindogatan.com?subject=AGPL%20corresponding%20source%20request"
+              className="text-primary underline decoration-primary/30 hover:decoration-primary"
+            >
+              support@rindogatan.com
+            </a>{" "}
+            and we will provide it.
+          </p>
+        )}
       </section>
 
       <section className="space-y-3">
