@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2025-2026 Rindogatan LLC
+
 import { useState, useRef, useEffect } from "react";
 import { signIn } from "next-auth/react";
 import { motion } from "framer-motion";

@@ -1,8 +1,12 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2025-2026 Rindogatan LLC
+
 import type { Metadata } from "next";
 import { Inter, Dancing_Script, Jost, Archivo_Black, Space_Mono } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/components/providers";
 import { Toaster } from "@/components/ui/sonner";
+import { LegalNotice } from "@/components/legal-notice";
 import { brand } from "@/config/brand";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
@@ -93,6 +97,7 @@ export default async function RootLayout({
           {children}
           <Toaster />
           </Providers>
+          <LegalNotice />
         </NextIntlClientProvider>
       </body>
     </html>

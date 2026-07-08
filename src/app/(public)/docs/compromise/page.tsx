@@ -1,4 +1,6 @@
 "use client";
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2025-2026 Rindogatan LLC
 
 import { useTranslations } from "next-intl";
 import { Scale, Calculator, BarChart3, RefreshCw } from "lucide-react";
