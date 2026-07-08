@@ -276,7 +276,7 @@ export const skillManagerRouter = createTRPCRouter({
 
       const result = await activateOffline(
         input.licenseFile as LicenseFile,
-        customer.id
+        { id: customer.id, email: customer.email }
       );
 
       if (!result.success) {

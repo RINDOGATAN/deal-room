@@ -90,7 +90,7 @@ Examples:
     const licenseFile = JSON.parse(licenseContent) as LicenseFile;
 
     console.log(`Activating with offline license file: ${licensePath}`);
-    result = await activateOffline(licenseFile, customerId);
+    result = await activateOffline(licenseFile, { id: customer.id, email: customer.email });
   }
 
   if (!result.success) {
