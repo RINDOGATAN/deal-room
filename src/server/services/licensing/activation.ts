@@ -208,7 +208,7 @@ export async function deactivateById(
  */
 export async function activateOffline(
   licenseFile: LicenseFile,
-  customerId: string
+  customer: { id: string; email: string }
 ): Promise<ActivationResult> {
   // Verify signature
   if (!verifyLicenseFile(licenseFile)) {
@@ -220,9 +220,11 @@ export async function activateOffline(
     return { success: false, error: "License file has expired" };
   }
 
-  // Verify customer ID
-  if (licenseFile.customerId !== customerId) {
-    return { success: false, error: "License file does not belong to this customer" };
+  // Verify ownership. Licences issued by the storefront are bound to the
+  // buyer's email (the only identifier shared across the two systems), so we
+  // match on email — not the app's internal customer id.
+  if (licenseFile.customerId.trim().toLowerCase() !== customer.email.trim().toLowerCase()) {
+    return { success: false, error: "License file does not belong to this account" };
   }
 
   // Get machine info
@@ -248,10 +250,12 @@ export async function activateOffline(
       return { success: false, error: "Skill package not installed" };
     }
 
-    // Create entitlement from license file
+    // Create entitlement from license file. Key it by the app's own customer
+    // id (consistent with the online path and entitlement queries), not the
+    // email carried in the licence.
     entitlement = await prisma.skillEntitlement.create({
       data: {
-        customerId: licenseFile.customerId,
+        customerId: customer.id,
         skillPackageId: skillPackage.id,
         licenseKey: licenseFile.licenseKey,
         licenseType: licenseFile.licenseType,
