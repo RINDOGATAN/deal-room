@@ -23,6 +23,7 @@ import {
   Briefcase,
   ArrowRightLeft,
   Rocket,
+  KeyRound,
 } from "lucide-react";
 import { brand } from "@/config/brand";
 import { features } from "@/config/features";
@@ -83,6 +84,7 @@ export default function DashboardLayout({
     ...(features.startupJourney && !lawyerProfile?.isLawyer && locale !== "es"
       ? [{ href: "/launch", label: t("launch"), icon: Rocket }]
       : []),
+    { href: "/skills", label: t("skills"), icon: KeyRound },
   ];
 
   return (
