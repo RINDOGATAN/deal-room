@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2025-2026 Rindogatan LLC
+
 import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from "react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { GoogleOAuthProvider, useGoogleLogin } from "@react-oauth/google";

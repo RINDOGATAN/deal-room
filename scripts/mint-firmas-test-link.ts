@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2025-2026 Rindogatan LLC
+
 /**
  * One-off: mint a Firmas test link against the production DB so the
  * Firmas integration team can curl /api/signing/firmas-bundle/<token>

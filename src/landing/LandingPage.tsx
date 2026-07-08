@@ -1,4 +1,6 @@
 "use client";
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2025-2026 Rindogatan LLC
 
 import { useState, useEffect, useCallback } from "react";
 import { Lock, Brain, Globe, FileSignature } from "lucide-react";

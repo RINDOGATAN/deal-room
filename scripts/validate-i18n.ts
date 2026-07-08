@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2025-2026 Rindogatan LLC
+
 /**
  * Validates that all bilingual skills resolve correctly in both English and Spanish.
  * Tests i18n resolution and checks for language bleed-through.

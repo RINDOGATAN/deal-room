@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2025-2026 Rindogatan LLC
+
 import { brand } from "./brand";
 
 // All features that used to be gated to brand.id === "todo" are now
