@@ -95,8 +95,7 @@ that would make Your representations in this Agreement inaccurate.
 ## 7. Governing law
 
 This Agreement is governed by the laws of the State of California, USA, without
-regard to its conflict-of-law provisions. **[Rindogatan to confirm governing
-law / venue.]**
+regard to its conflict-of-law provisions.
 
 ---
 
