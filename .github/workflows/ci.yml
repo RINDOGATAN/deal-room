@@ -30,6 +30,9 @@ jobs:
 
     env:
       DATABASE_URL: postgresql://dealroom:dealroom@localhost:5432/dealroom_ci
+      # schema.prisma uses directUrl = env("DATABASE_URL_UNPOOLED"); in CI there
+      # is no connection pooler, so the direct URL is the same throwaway Postgres.
+      DATABASE_URL_UNPOOLED: postgresql://dealroom:dealroom@localhost:5432/dealroom_ci
 
     steps:
       - uses: actions/checkout@v4
