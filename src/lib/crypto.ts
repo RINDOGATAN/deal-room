@@ -178,6 +178,32 @@ export interface LicenseFile {
 }
 
 /**
+ * Canonical signing payload: every field except `signature`, serialized in
+ * this exact key order. Shared by verify (here), the todo.law storefront signer,
+ * and DPO Central / AI Sentinel. Pinned by the cross-app golden-vector parity
+ * test — a licence signed by the storefront must hash identically here or it
+ * will not verify. `undefined` values (a perpetual licence's expiresAt) are
+ * dropped by JSON.stringify on every side, so presence — not null — changes the
+ * signed bytes.
+ */
+export function canonicalLicensePayload(
+  license: Omit<LicenseFile, "signature">
+): Buffer {
+  const licenseData = JSON.stringify({
+    licenseKey: license.licenseKey,
+    customerId: license.customerId,
+    customerName: license.customerName,
+    skillId: license.skillId,
+    jurisdictions: license.jurisdictions,
+    licenseType: license.licenseType,
+    maxActivations: license.maxActivations,
+    issuedAt: license.issuedAt,
+    expiresAt: license.expiresAt,
+  });
+  return Buffer.from(licenseData, "utf-8");
+}
+
+/**
  * Verify the signature on an offline license file.
  */
 export function verifyLicenseFile(
@@ -185,22 +211,9 @@ export function verifyLicenseFile(
   publicKeyPem?: string
 ): boolean {
   try {
-    // Create canonical string of license data (excluding signature)
-    const licenseData = JSON.stringify({
-      licenseKey: license.licenseKey,
-      customerId: license.customerId,
-      customerName: license.customerName,
-      skillId: license.skillId,
-      jurisdictions: license.jurisdictions,
-      licenseType: license.licenseType,
-      maxActivations: license.maxActivations,
-      issuedAt: license.issuedAt,
-      expiresAt: license.expiresAt,
-    });
-
     const signature = Buffer.from(license.signature, "base64");
     return verifyEd25519Signature(
-      Buffer.from(licenseData, "utf-8"),
+      canonicalLicensePayload(license),
       signature,
       publicKeyPem
     );
