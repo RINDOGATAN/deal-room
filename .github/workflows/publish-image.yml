@@ -53,3 +53,19 @@ jobs:
             NEXT_PUBLIC_APP_URL=http://localhost:8486
           cache-from: type=gha
           cache-to: type=gha,mode=max
+      # The runner image is a minimal standalone server with no Prisma CLI, so
+      # migrations run from a companion "migrator" image (the builder stage,
+      # which carries the tooling + migrate.sh + the migrations history).
+      - name: Publish migrator image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: deploy/sovereign/Dockerfile
+          target: builder
+          push: true
+          tags: |
+            ghcr.io/rindogatan/deal-room-migrator:${{ steps.version.outputs.v }}
+            ghcr.io/rindogatan/deal-room-migrator:latest
+          build-args: |
+            NODE_IMAGE=node:22-alpine
+          cache-from: type=gha
