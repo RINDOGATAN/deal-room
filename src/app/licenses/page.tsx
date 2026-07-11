@@ -16,10 +16,10 @@ const SOURCE =
 const COMMIT =
   process.env.NEXT_PUBLIC_COMMIT_SHA || process.env.VERCEL_GIT_COMMIT_SHA;
 const SOURCE_URL = COMMIT ? `${SOURCE}/tree/${COMMIT}` : SOURCE;
-// The source repo is not public yet; until it is, offer the source at no
-// charge on request rather than link to a URL that would 404. Set
-// NEXT_PUBLIC_SOURCE_PUBLIC=true once the repo is published.
-const SOURCE_PUBLIC = process.env.NEXT_PUBLIC_SOURCE_PUBLIC === "true";
+// The source repo is public, so the §13 corresponding-source link resolves by
+// default. Set NEXT_PUBLIC_SOURCE_PUBLIC=false to fall back to the offer-on-
+// request text (e.g. a white-label deployment built from a private fork).
+const SOURCE_PUBLIC = process.env.NEXT_PUBLIC_SOURCE_PUBLIC !== "false";
 
 export default function LicensesPage() {
   return (
