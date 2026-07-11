@@ -9,6 +9,7 @@
  * (round-tripped with a freshly generated key pair — no env keys needed).
  */
 import { describe, it, expect } from "vitest";
+import { createHash } from "crypto";
 import {
   isValidLicenseKeyFormat,
   generateLicenseKey,
@@ -19,6 +20,7 @@ import {
   generateEd25519KeyPair,
   signEd25519,
   verifyLicenseFile,
+  canonicalLicensePayload,
   type LicenseFile,
 } from "@/lib/crypto";
 
@@ -161,5 +163,54 @@ describe("verifyLicenseFile (Ed25519)", () => {
     const { privateKey } = generateEd25519KeyPair();
     const other = generateEd25519KeyPair();
     expect(verifyLicenseFile(signedLicense(privateKey), other.publicKey)).toBe(false);
+  });
+});
+
+// Cross-app parity: the todo.law storefront signs a licence over the canonical
+// bytes; Dealroom recomputes the SAME bytes to verify. If they disagree on one
+// byte, offline activation silently breaks. These two golden SHA-256 hashes pin
+// the byte contract identically across all four repos (todolaw signer +
+// deal-room + dpocentral + aisentinel). If a hash changes, the serialization
+// drifted — re-align field order / undefined-handling across all four, never
+// patch the hash in one repo.
+describe("canonical licence bytes — cross-app golden vectors", () => {
+  const sha256hex = (b: Buffer) => createHash("sha256").update(b).digest("hex");
+
+  const VECTOR_A: Omit<LicenseFile, "signature"> = {
+    licenseKey: "LIC-0000-1111-2222-3333",
+    customerId: "buyer@example.com",
+    customerName: "Buyer Example",
+    skillId: "com.todolaw.dealroom.saas-agreement",
+    jurisdictions: ["CALIFORNIA", "SPAIN"],
+    licenseType: "SUBSCRIPTION",
+    maxActivations: 1,
+    issuedAt: "2026-01-01T00:00:00.000Z",
+    expiresAt: "2027-01-01T00:00:00.000Z",
+  };
+  const VECTOR_A_SHA256 =
+    "842859360ab37eafed245eca38e8e0b207c4618d3daf43f1084ce46ce5118c1e";
+
+  const VECTOR_B: Omit<LicenseFile, "signature"> = {
+    licenseKey: "LIC-4444-5555-6666-7777",
+    customerId: "owner@example.com",
+    customerName: "Owner Example",
+    skillId: "com.nel.dpocentral.dpia-companion",
+    jurisdictions: ["SPAIN"],
+    licenseType: "PERPETUAL",
+    maxActivations: 3,
+    issuedAt: "2026-02-02T00:00:00.000Z",
+    // expiresAt intentionally omitted — perpetual licence
+  };
+  const VECTOR_B_SHA256 =
+    "2bc399ecab951c512959dbf159344ff2c59a81abd92496c3077a53484d95efbf";
+
+  it("vector A (subscription, expiresAt present) hashes to the pinned value", () => {
+    expect(sha256hex(canonicalLicensePayload(VECTOR_A))).toBe(VECTOR_A_SHA256);
+  });
+
+  it("vector B (perpetual) omits expiresAt and hashes to the pinned value", () => {
+    const bytes = canonicalLicensePayload(VECTOR_B);
+    expect(bytes.toString("utf-8")).not.toContain("expiresAt");
+    expect(sha256hex(bytes)).toBe(VECTOR_B_SHA256);
   });
 });
