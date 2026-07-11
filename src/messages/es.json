@@ -1523,7 +1523,14 @@
     "installedNone": "Aún no hay skills premium instaladas.",
     "loading": "Cargando…",
     "statusActive": "Activa",
-    "statusLocked": "Bloqueada"
+    "statusLocked": "Bloqueada",
+    "installTitle": "Instalar un paquete de skill",
+    "installHint": "Elige el archivo .skill que descargaste tras la compra.",
+    "chooseSkill": "Elegir paquete de skill",
+    "install": "Instalar skill",
+    "installing": "Instalando…",
+    "installed": "Skill instalada. Activa su licencia abajo.",
+    "badSkill": "Ese archivo no es un paquete .skill válido."
   },
   "supervision": {
     "title": "Supervisión y Administración",

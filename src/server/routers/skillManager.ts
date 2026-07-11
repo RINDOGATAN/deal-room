@@ -430,4 +430,42 @@ export const skillManagerRouter = createTRPCRouter({
         requestedAt: new Date().toISOString(),
       };
     }),
+
+  /**
+   * Install a premium skill package (.skill file) purchased from the marketplace.
+   * The file rides the JSON transport as base64. Populates the skill package so a
+   * licence can then be activated against it — the self-hosted equivalent of the
+   * cloud install step. Any authenticated user on a sovereign deployment may
+   * install (the deployment owner controls who has an account).
+   */
+  install: protectedProcedure
+    .input(
+      z.object({
+        fileName: z.string(),
+        dataBase64: z.string().min(1),
+      })
+    )
+    .mutation(async ({ input }) => {
+      let buffer: Buffer;
+      try {
+        buffer = Buffer.from(input.dataBase64, "base64");
+      } catch {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Could not read the uploaded file.",
+        });
+      }
+
+      const result = await defaultInstaller.installFromBuffer(buffer);
+      if (!result.success) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message:
+            result.errors.join("; ") ||
+            "That file is not a valid .skill package.",
+        });
+      }
+
+      return { success: true, skillPackageId: result.skillPackageId };
+    }),
 });
