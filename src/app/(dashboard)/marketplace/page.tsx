@@ -14,6 +14,7 @@ import {
   ShoppingCart,
   Search,
   X,
+  ExternalLink,
 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { Input } from "@/components/ui/input";
@@ -21,6 +22,13 @@ import { EnableFeatureModal } from "@/components/premium/enable-feature-modal";
 import { PromoBanner } from "@/components/PromoBanner";
 import { formatPrice } from "@/lib/currency";
 import { useTranslations } from "next-intl";
+
+// On the cloud tier, premium skills are bought in-app via Stripe. A self-hosted
+// deployment (no Stripe) buys them on the todo.law storefront instead, then
+// activates the licence on the Skills page — so surface the storefront rather
+// than a checkout that can't run here.
+const STRIPE_ENABLED = process.env.NEXT_PUBLIC_STRIPE_ENABLED === "true";
+const STOREFRONT_URL = "https://todo.law/marketplace?app=dealroom";
 
 const JURISDICTION_LABELS: Record<string, string> = {
   CALIFORNIA: "California",
@@ -189,6 +197,17 @@ export default function MarketplacePage() {
             <Package className="h-8 w-8 sm:h-10 sm:w-10 mx-auto text-muted-foreground/50 mb-2" />
           )}
           <p className="text-sm text-muted-foreground">{t("noSkillsFound")}</p>
+          {!searchQuery.trim() && !STRIPE_ENABLED && (
+            <a
+              href={STOREFRONT_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
+            >
+              {t("browseStorefront")}
+              <ExternalLink className="h-4 w-4" />
+            </a>
+          )}
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -265,7 +284,7 @@ export default function MarketplacePage() {
                       </a>
                     )}
                   </>
-                ) : (
+                ) : STRIPE_ENABLED ? (
                   <button
                     onClick={() =>
                       setEnableSkill({
@@ -280,6 +299,16 @@ export default function MarketplacePage() {
                     <ShoppingCart className="h-3.5 w-3.5" />
                     {t("enable")}
                   </button>
+                ) : (
+                  <a
+                    href={STOREFRONT_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn-brutal text-xs px-4 py-2 flex-1 flex items-center justify-center gap-2"
+                  >
+                    <ExternalLink className="h-3.5 w-3.5" />
+                    {t("getItStorefront")}
+                  </a>
                 )}
               </div>
             </div>
