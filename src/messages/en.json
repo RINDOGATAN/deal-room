@@ -1522,7 +1522,14 @@
     "installedNone": "No premium skills installed yet.",
     "loading": "Loading…",
     "statusActive": "Active",
-    "statusLocked": "Locked"
+    "statusLocked": "Locked",
+    "installTitle": "Install a skill package",
+    "installHint": "Choose the .skill file you downloaded after your purchase.",
+    "chooseSkill": "Choose skill package",
+    "install": "Install skill",
+    "installing": "Installing…",
+    "installed": "Skill installed. Activate its licence below.",
+    "badSkill": "That file isn’t a valid .skill package."
   },
   "supervision": {
     "title": "Supervision & Administration",

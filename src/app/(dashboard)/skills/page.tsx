@@ -5,7 +5,7 @@
 import { useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
-import { KeyRound, Upload, Loader2, CheckCircle2, Lock, FileCheck2, Globe } from "lucide-react";
+import { KeyRound, Upload, Loader2, CheckCircle2, Lock, FileCheck2, Globe, Package } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -27,6 +27,9 @@ export default function SkillsPage() {
   const fileRef = useRef<HTMLInputElement>(null);
   const [license, setLicense] = useState<Record<string, unknown> | null>(null);
   const [fileName, setFileName] = useState("");
+  const skillFileRef = useRef<HTMLInputElement>(null);
+  const [skillFileName, setSkillFileName] = useState("");
+  const [skillData, setSkillData] = useState<string | null>(null);
 
   const installed = trpc.skillManager.listInstalled.useQuery();
   const activate = trpc.skillManager.activateOffline.useMutation({
@@ -39,6 +42,35 @@ export default function SkillsPage() {
     },
     onError: (e) => toast.error(e.message),
   });
+
+  const install = trpc.skillManager.install.useMutation({
+    onSuccess: () => {
+      toast.success(t("installed"));
+      setSkillData(null);
+      setSkillFileName("");
+      if (skillFileRef.current) skillFileRef.current.value = "";
+      installed.refetch();
+    },
+    onError: (e) => toast.error(e.message),
+  });
+
+  // Read the .skill (a zip) as base64 so it rides the JSON transport to the
+  // install mutation. readAsDataURL gives "data:...;base64,XXXX" — keep the tail.
+  const onSkillFile = (file: File) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = String(reader.result);
+      const base64 = result.includes(",") ? result.split(",")[1] : result;
+      if (!base64) {
+        toast.error(t("badSkill"));
+        return;
+      }
+      setSkillData(base64);
+      setSkillFileName(file.name);
+    };
+    reader.onerror = () => toast.error(t("badSkill"));
+    reader.readAsDataURL(file);
+  };
 
   const onFile = (file: File) => {
     const reader = new FileReader();
@@ -65,6 +97,57 @@ export default function SkillsPage() {
         <h1 className="text-2xl font-semibold tracking-tight">{t("title")}</h1>
         <p className="mt-2 max-w-prose text-sm text-muted-foreground">{t("subtitle")}</p>
       </header>
+
+      {/* Install a purchased skill package (.skill) */}
+      <Card className="mb-6 p-6">
+        <div className="mb-1 flex items-center gap-2">
+          <Package className="h-4 w-4 text-primary" />
+          <h2 className="text-sm font-medium">{t("installTitle")}</h2>
+        </div>
+        <p className="mb-4 text-xs text-muted-foreground">{t("installHint")}</p>
+
+        <input
+          ref={skillFileRef}
+          type="file"
+          accept=".skill,application/zip"
+          className="hidden"
+          onChange={(e) => {
+            const f = e.target.files?.[0];
+            if (f) onSkillFile(f);
+          }}
+        />
+
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+          <Button type="button" variant="outline" onClick={() => skillFileRef.current?.click()}>
+            <Upload className="mr-2 h-4 w-4" />
+            {t("chooseSkill")}
+          </Button>
+          {skillFileName && (
+            <span className="inline-flex items-center gap-1.5 text-sm text-muted-foreground">
+              <FileCheck2 className="h-4 w-4 text-primary" />
+              {skillFileName}
+            </span>
+          )}
+          <div className="sm:ml-auto">
+            <Button
+              type="button"
+              disabled={!skillData || install.isPending}
+              onClick={() =>
+                skillData && install.mutate({ fileName: skillFileName, dataBase64: skillData })
+              }
+            >
+              {install.isPending ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  {t("installing")}
+                </>
+              ) : (
+                t("install")
+              )}
+            </Button>
+          </div>
+        </div>
+      </Card>
 
       {/* Activate with a licence file */}
       <Card className="p-6">
