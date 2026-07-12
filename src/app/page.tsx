@@ -13,5 +13,11 @@ export default async function HomePage() {
     redirect("/deals");
   }
 
+  // Self-hosted / local-auth builds have no marketing landing. Send logged-out
+  // visitors straight to the local sign-in.
+  if (process.env.NEXT_PUBLIC_LOCAL_AUTH_ENABLED === "true") {
+    redirect("/sign-in");
+  }
+
   return <LandingPage />;
 }
