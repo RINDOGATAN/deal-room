@@ -42,6 +42,7 @@ import {
 import { getContactMailto } from "@/config/brand";
 import { PromoBanner } from "@/components/PromoBanner";
 import { EnableFeatureModal } from "@/components/premium/enable-feature-modal";
+import { marketplaceSkillUrl } from "@/lib/marketplace";
 
 const contractIcons: Record<string, typeof FileText> = {
   NDA: Shield,
@@ -79,6 +80,8 @@ interface TemplateInfo {
   soloModeDefault: boolean;
   soloModeOnly: boolean;
   hasAccess: boolean;
+  marketplaceOnly: boolean;
+  marketplaceSlug: string | null;
   entitledJurisdictions: string[];
   expiresAt: Date | null;
 }
@@ -279,8 +282,8 @@ export default function NewDealPage() {
       family.templates.some((t) => t.languages.length === 0 || t.languages.includes(locale))
     )
     .sort((a, b) => {
-      const aLocked = a.templates.every((t) => t.requiresLicense && !t.hasAccess);
-      const bLocked = b.templates.every((t) => t.requiresLicense && !t.hasAccess);
+      const aLocked = a.templates.every((t) => t.marketplaceOnly || (t.requiresLicense && !t.hasAccess));
+      const bLocked = b.templates.every((t) => t.marketplaceOnly || (t.requiresLicense && !t.hasAccess));
       return Number(aLocked) - Number(bLocked);
     });
 
@@ -623,14 +626,26 @@ export default function NewDealPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {filteredFamilies.map((family) => {
                 const Icon = contractIcons[family.primaryTemplate.contractType] || FileText;
-                // A family is locked if ALL its templates require license and user has no access
-                const isLocked = family.templates.every((t) => t.requiresLicense && !t.hasAccess);
+                // Marketplace-only: a premium skill whose content isn't installed
+                // (self-host). Discoverable, but bought on the storefront — not the
+                // in-app $9 unlock. Locked: hosted premium the user hasn't licensed.
+                const isMarketplace = family.templates.every((t) => t.marketplaceOnly);
+                const isLocked = !isMarketplace && family.templates.every((t) => t.requiresLicense && !t.hasAccess);
+                const isUnavailable = isLocked || isMarketplace;
                 const variantCount = family.templates.length;
 
                 return (
                   <button
                     key={family.family}
                     onClick={() => {
+                      if (isMarketplace) {
+                        window.open(
+                          marketplaceSkillUrl(family.primaryTemplate.marketplaceSlug),
+                          "_blank",
+                          "noopener,noreferrer",
+                        );
+                        return;
+                      }
                       if (isLocked) {
                         if (family.primaryTemplate.skillPackageId) {
                           setEnableModalSkill({ id: family.primaryTemplate.skillPackageId, name: family.displayName });
@@ -669,21 +684,21 @@ export default function NewDealPage() {
                     }}
                     className={`
                       card-brutal text-left relative transition-colors
-                      ${isLocked
+                      ${isUnavailable
                         ? "border-warning/50 opacity-75"
                         : "hover:border-muted-foreground"
                       }
                     `}
                   >
-                    {isLocked && (
+                    {isUnavailable && (
                       <span className="absolute top-4 right-4 bg-warning/20 text-warning text-xs font-semibold px-2.5 py-0.5 rounded-full">
-                        {t("premiumSkill", { price: formatPrice(9) })}
+                        {isMarketplace ? t("premiumBadge") : t("premiumSkill", { price: formatPrice(9) })}
                       </span>
                     )}
                     <div className="flex items-start gap-4">
                       <div className={`
                         hidden sm:flex w-10 h-10 items-center justify-center rounded-xl
-                        ${isLocked
+                        ${isUnavailable
                           ? "bg-warning/20 text-warning"
                           : "bg-muted text-muted-foreground"
                         }
@@ -692,13 +707,15 @@ export default function NewDealPage() {
                       </div>
                       <div>
                         <h3 className="font-semibold">{family.displayName}</h3>
-                        <p className={`text-sm mt-1 ${isLocked ? "text-warning font-medium" : "text-muted-foreground"}`}>
-                          {isLocked
-                            ? t("clickToEnable")
-                            : t("negotiableClauses", { count: family.primaryTemplate.clauseCount })
+                        <p className={`text-sm mt-1 ${isUnavailable ? "text-warning font-medium" : "text-muted-foreground"}`}>
+                          {isMarketplace
+                            ? t("getOnMarketplace")
+                            : isLocked
+                              ? t("clickToEnable")
+                              : t("negotiableClauses", { count: family.primaryTemplate.clauseCount })
                           }
                         </p>
-                        {variantCount > 1 && !isLocked && (
+                        {variantCount > 1 && !isUnavailable && (
                           <p className="text-xs text-primary mt-1">
                             {t("jurisdictionVariants", { count: variantCount })}
                           </p>

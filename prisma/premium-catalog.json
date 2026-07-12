@@ -1,0 +1,1036 @@
+[
+  {
+    "skillId": "com.nel.skills.acta-consejo",
+    "slug": "acta-consejo",
+    "displayName": {
+      "en": "Board of Directors Minutes (Spain)",
+      "es": "Acta de Consejo de Administración"
+    },
+    "description": {
+      "en": "Minutes of a board of directors meeting under the Spanish Ley de Sociedades de Capital (arts. 245 to 250) and the Reglamento del Registro Mercantil (arts. 97 to 100), including telematic sessions and written resolutions without a meeting",
+      "es": "Acta de la reunión del consejo de administración conforme a la Ley de Sociedades de Capital (arts. 245 a 250) y al Reglamento del Registro Mercantil (arts. 97 a 100), incluidas la sesión telemática y la votación por escrito y sin sesión"
+    },
+    "category": {
+      "en": "Corporate",
+      "es": "Societario"
+    },
+    "application": "Dealroom",
+    "contractType": "ACTA_CONSEJO_ADMINISTRACION",
+    "jurisdictions": [
+      "SPAIN"
+    ],
+    "languages": [
+      "es"
+    ],
+    "clauseCount": 8,
+    "version": "1.1.0",
+    "author": "NEL Law",
+    "templateFamily": "",
+    "nativeJurisdiction": "SPAIN",
+    "format": "dealroom-clauses",
+    "compat": [
+      "TODO.LAW Suite",
+      "LQ.AI"
+    ],
+    "license": "Apache-2.0"
+  },
+  {
+    "skillId": "com.nel.skills.acta-junta",
+    "slug": "acta-junta",
+    "displayName": {
+      "en": "General Meeting Minutes (Spain)",
+      "es": "Acta de Junta General"
+    },
+    "description": {
+      "en": "Minutes of an ordinary or extraordinary general meeting of members under the Spanish Ley de Sociedades de Capital",
+      "es": "Acta de la junta general ordinaria o extraordinaria de socios conforme a la Ley de Sociedades de Capital"
+    },
+    "category": {
+      "en": "Corporate",
+      "es": "Societario"
+    },
+    "application": "Dealroom",
+    "contractType": "ACTA_JUNTA_GENERAL",
+    "jurisdictions": [
+      "SPAIN"
+    ],
+    "languages": [
+      "es"
+    ],
+    "clauseCount": 8,
+    "version": "1.0.1",
+    "author": "NEL Law",
+    "templateFamily": "",
+    "nativeJurisdiction": "SPAIN",
+    "format": "dealroom-clauses",
+    "compat": [
+      "TODO.LAW Suite",
+      "LQ.AI"
+    ],
+    "license": "Apache-2.0"
+  },
+  {
+    "skillId": "com.nel.skills.advertising-io",
+    "slug": "advertising-io",
+    "displayName": {
+      "en": "Advertising Insertion Order",
+      "es": "Orden de Inserción Publicitaria"
+    },
+    "description": {
+      "en": "Digital advertising insertion order covering pricing models, delivery guarantees, viewability standards, brand safety, audience targeting, creative approval, fraud protection, and reporting between an advertiser or agency and a publisher or ad network",
+      "es": "Orden de inserción publicitaria digital que regula los modelos de precios, garantías de entrega, estándares de visibilidad, seguridad de marca, segmentación de audiencia, aprobación de creatividades, protección contra fraude y reporting entre un anunciante o agencia y un soporte publicitario o red de publicidad"
+    },
+    "category": {
+      "en": "Marketing",
+      "es": "Marketing"
+    },
+    "application": "Dealroom",
+    "contractType": "ADVERTISING_IO",
+    "jurisdictions": [
+      "CALIFORNIA",
+      "ENGLAND_WALES",
+      "SPAIN"
+    ],
+    "languages": [
+      "en",
+      "es"
+    ],
+    "clauseCount": 12,
+    "version": "1.1.0",
+    "author": "NEL Law",
+    "templateFamily": "ADVERTISING_IO",
+    "nativeJurisdiction": "CALIFORNIA",
+    "format": "dealroom-clauses",
+    "compat": [
+      "TODO.LAW Suite",
+      "LQ.AI"
+    ],
+    "license": "Apache-2.0"
+  },
+  {
+    "skillId": "com.nel.skills.advisory",
+    "slug": "advisory-agreement",
+    "displayName": {
+      "en": "Advisory Agreement",
+      "es": "Contrato de Asesoramiento"
+    },
+    "description": {
+      "en": "Board or startup advisory agreement covering equity compensation, vesting, time commitment, scope of advisory services, confidentiality, and non-compete provisions across California, England & Wales, and Spain.",
+      "es": "Contrato de asesoramiento para consejeros o asesores de startups que regula la compensación en participaciones, consolidación (vesting), dedicación temporal, alcance de los servicios de asesoramiento, confidencialidad y pactos de no competencia conforme a la legislación de California, Inglaterra y Gales, y España."
+    },
+    "category": {
+      "en": "Team",
+      "es": "Equipo"
+    },
+    "application": "Dealroom",
+    "contractType": "ADVISORY",
+    "jurisdictions": [
+      "CALIFORNIA",
+      "ENGLAND_WALES",
+      "SPAIN"
+    ],
+    "languages": [
+      "en",
+      "es"
+    ],
+    "clauseCount": 10,
+    "version": "1.1.0",
+    "author": "NEL Law",
+    "templateFamily": "ADVISORY",
+    "nativeJurisdiction": "CALIFORNIA",
+    "format": "dealroom-clauses",
+    "compat": [
+      "TODO.LAW Suite",
+      "LQ.AI"
+    ],
+    "license": "Apache-2.0"
+  },
+  {
+    "skillId": "com.nel.skills.affiliate-program",
+    "slug": "affiliate-program",
+    "displayName": {
+      "en": "Affiliate / Referral Program Agreement",
+      "es": "Acuerdo de Programa de Afiliados / Referidos"
+    },
+    "description": {
+      "en": "Affiliate and referral program agreement covering commission structures, attribution models, payment terms, permitted marketing methods, brand usage, sub-affiliate rights, and clawback provisions between a merchant or advertiser and an affiliate or publisher",
+      "es": "Acuerdo de programa de afiliados y referidos que regula las estructuras de comisiones, modelos de atribución, condiciones de pago, métodos de marketing permitidos, uso de marca, derechos de subafiliación y disposiciones de recuperación de comisiones entre un comerciante o anunciante y un/a afiliado/a o editor/a"
+    },
+    "category": {
+      "en": "Marketing",
+      "es": "Marketing"
+    },
+    "application": "Dealroom",
+    "contractType": "AFFILIATE_PROGRAM",
+    "jurisdictions": [
+      "CALIFORNIA",
+      "ENGLAND_WALES",
+      "SPAIN"
+    ],
+    "languages": [
+      "en",
+      "es"
+    ],
+    "clauseCount": 11,
+    "version": "1.0.1",
+    "author": "NEL Law",
+    "templateFamily": "AFFILIATE_PROGRAM",
+    "nativeJurisdiction": "CALIFORNIA",
+    "format": "dealroom-clauses",
+    "compat": [
+      "TODO.LAW Suite",
+      "LQ.AI"
+    ],
+    "license": "Apache-2.0"
+  },
+  {
+    "skillId": "com.nel.skills.cesion-pi",
+    "slug": "cesion-pi",
+    "displayName": {
+      "en": "IP Assignment (Cesión de PI)",
+      "es": "Cesión de Propiedad Intelectual"
+    },
+    "description": {
+      "en": "Spanish intellectual property assignment agreement covering scope of assignment, exclusivity, moral rights (inalienable under LPI art. 14), consideration, assignor representations, pre-existing IP, duration, and dispute resolution under the Ley de Propiedad Intelectual.",
+      "es": "Contrato de cesión de propiedad intelectual conforme a la LPI que regula el ámbito de cesión, exclusividad, derechos morales (inalienables conforme al art. 14 LPI), contraprestación, garantías del cedente, PI preexistente, duración y resolución de conflictos."
+    },
+    "category": {
+      "en": "IP",
+      "es": "PI"
+    },
+    "application": "Dealroom",
+    "contractType": "CESION_PI",
+    "jurisdictions": [
+      "SPAIN"
+    ],
+    "languages": [
+      "es",
+      "en"
+    ],
+    "clauseCount": 8,
+    "version": "1.0.1",
+    "author": "NEL Law",
+    "templateFamily": "IP_ASSIGNMENT",
+    "nativeJurisdiction": "SPAIN",
+    "format": "dealroom-clauses",
+    "compat": [
+      "TODO.LAW Suite",
+      "LQ.AI"
+    ],
+    "license": "Apache-2.0"
+  },
+  {
+    "skillId": "com.nel.skills.consulting",
+    "slug": "consulting-agreement",
+    "displayName": {
+      "en": "Consulting Agreement",
+      "es": "Contrato de Consultoría"
+    },
+    "description": {
+      "en": "Independent contractor consulting agreement covering scope of work, payment terms, IP ownership, confidentiality, and contractor status (ABC test / IR35) with jurisdiction-specific provisions for California and England & Wales. For a services engagement governed by Spanish law, use the sibling skill contrato-servicios.",
+      "es": "Contrato de consultoría con profesional independiente que regula el alcance de los servicios, las condiciones de pago, la titularidad de la propiedad intelectual, la confidencialidad y el estatus del/de la consultor/a (test ABC / IR35), con disposiciones específicas para California e Inglaterra y Gales. Para un contrato de servicios sujeto a Derecho español, utilice la habilidad hermana contrato-servicios."
+    },
+    "category": {
+      "en": "Team",
+      "es": "Equipo"
+    },
+    "application": "Dealroom",
+    "contractType": "CONSULTING",
+    "jurisdictions": [
+      "CALIFORNIA",
+      "ENGLAND_WALES"
+    ],
+    "languages": [
+      "en",
+      "es"
+    ],
+    "clauseCount": 10,
+    "version": "1.1.0",
+    "author": "NEL Law",
+    "templateFamily": "CONSULTING",
+    "nativeJurisdiction": "CALIFORNIA",
+    "format": "dealroom-clauses",
+    "compat": [
+      "TODO.LAW Suite",
+      "LQ.AI"
+    ],
+    "license": "Apache-2.0"
+  },
+  {
+    "skillId": "com.nel.skills.contrato-laboral",
+    "slug": "contrato-laboral",
+    "displayName": {
+      "en": "Employment Contract (Contrato Laboral)",
+      "es": "Contrato Laboral"
+    },
+    "description": {
+      "en": "Spanish employment contract covering contract type (including fijo-discontinuo), compensation structure, probation, working hours, working-time registry (art. 34.9 ET), termination and severance, resignation notice, non-compete, IP assignment, confidentiality, and dispute resolution under the Estatuto de los Trabajadores.",
+      "es": "Contrato laboral conforme al Estatuto de los Trabajadores que regula el tipo de contrato (incluido el fijo-discontinuo), estructura retributiva, periodo de prueba, jornada laboral, registro de jornada (art. 34.9 ET), extinción e indemnización, preaviso de dimisión, no competencia, cesión de PI, confidencialidad y resolución de conflictos."
+    },
+    "category": {
+      "en": "Team",
+      "es": "Equipo"
+    },
+    "application": "Dealroom",
+    "contractType": "CONTRATO_LABORAL",
+    "jurisdictions": [
+      "SPAIN"
+    ],
+    "languages": [
+      "es",
+      "en"
+    ],
+    "clauseCount": 11,
+    "version": "1.1.0",
+    "author": "NEL Law",
+    "templateFamily": "EMPLOYMENT",
+    "nativeJurisdiction": "SPAIN",
+    "format": "dealroom-clauses",
+    "compat": [
+      "TODO.LAW Suite",
+      "LQ.AI"
+    ],
+    "license": "Apache-2.0"
+  },
+  {
+    "skillId": "com.nel.skills.contrato-servicios",
+    "slug": "contrato-servicios",
+    "displayName": {
+      "en": "Service Agreement (Contrato de Servicios)",
+      "es": "Contrato de Prestación de Servicios"
+    },
+    "description": {
+      "en": "Spanish independent contractor service agreement covering scope of services, fees and invoicing, term, independence and TRADE status, IP ownership, confidentiality, non-compete, liability, early termination, and dispute resolution under the Código Civil and LETA.",
+      "es": "Contrato de prestación de servicios profesionales conforme al Código Civil y la LETA que regula el objeto, honorarios y facturación, duración, autonomía e independencia, propiedad intelectual, confidencialidad, no competencia, responsabilidad, resolución anticipada y resolución de conflictos."
+    },
+    "category": {
+      "en": "Team",
+      "es": "Equipo"
+    },
+    "application": "Dealroom",
+    "contractType": "CONTRATO_SERVICIOS",
+    "jurisdictions": [
+      "SPAIN"
+    ],
+    "languages": [
+      "es",
+      "en"
+    ],
+    "clauseCount": 10,
+    "version": "1.1.0",
+    "author": "NEL Law",
+    "templateFamily": "CONSULTING",
+    "nativeJurisdiction": "SPAIN",
+    "format": "dealroom-clauses",
+    "compat": [
+      "TODO.LAW Suite",
+      "LQ.AI"
+    ],
+    "license": "Apache-2.0"
+  },
+  {
+    "skillId": "com.nel.skills.convertible-note",
+    "slug": "convertible-note",
+    "displayName": {
+      "en": "Convertible Note",
+      "es": "Préstamo Convertible (Convertible Note)"
+    },
+    "description": {
+      "en": "Convertible promissory note for early-stage startup financing that converts to equity upon a qualifying financing event, with provisions for interest, maturity, valuation cap, and conversion mechanics.",
+      "es": "Pagaré convertible para financiación de startups en fase inicial que se convierte en participaciones sociales ante un evento de financiación cualificada, con disposiciones sobre intereses, vencimiento, techo de valoración y mecánica de conversión."
+    },
+    "category": {
+      "en": "Investment",
+      "es": "Inversión"
+    },
+    "application": "Dealroom",
+    "contractType": "CONVERTIBLE_NOTE",
+    "jurisdictions": [
+      "CALIFORNIA",
+      "ENGLAND_WALES",
+      "SPAIN"
+    ],
+    "languages": [
+      "en",
+      "es"
+    ],
+    "clauseCount": 11,
+    "version": "1.1.0",
+    "author": "NEL Law",
+    "templateFamily": "CONVERTIBLE_NOTE",
+    "nativeJurisdiction": "CALIFORNIA",
+    "format": "dealroom-clauses",
+    "compat": [
+      "TODO.LAW Suite",
+      "LQ.AI"
+    ],
+    "license": "Apache-2.0"
+  },
+  {
+    "skillId": "com.nel.skills.data-licensing",
+    "slug": "data-licensing",
+    "displayName": {
+      "en": "Data Licensing Agreement",
+      "es": "Acuerdo de Licencia de Datos"
+    },
+    "description": {
+      "en": "Data licensing agreement covering dataset scope, permitted uses, privacy compliance, quality SLAs, audit rights, and retention obligations between a data provider or licensor and a data licensee or buyer for audience segments, analytics, and adtech data partnerships",
+      "es": "Acuerdo de licencia de datos que regula el alcance de los conjuntos de datos, usos permitidos, cumplimiento de privacidad, SLA de calidad, derechos de auditoría y obligaciones de retención entre un/a proveedor/a o licenciante de datos y un/a licenciatario/a o comprador/a de datos para segmentos de audiencia, analítica y alianzas de datos en adtech"
+    },
+    "category": {
+      "en": "Data",
+      "es": "Datos"
+    },
+    "application": "Dealroom",
+    "contractType": "DATA_LICENSING",
+    "jurisdictions": [
+      "CALIFORNIA",
+      "ENGLAND_WALES",
+      "SPAIN"
+    ],
+    "languages": [
+      "en",
+      "es"
+    ],
+    "clauseCount": 11,
+    "version": "1.0.1",
+    "author": "NEL Law",
+    "templateFamily": "DATA_LICENSING",
+    "nativeJurisdiction": "CALIFORNIA",
+    "format": "dealroom-clauses",
+    "compat": [
+      "TODO.LAW Suite",
+      "LQ.AI"
+    ],
+    "license": "Apache-2.0"
+  },
+  {
+    "skillId": "com.nel.skills.dpia-companion",
+    "slug": "dpia-companion",
+    "displayName": {
+      "en": "DPIA Companion"
+    },
+    "description": {
+      "en": ""
+    },
+    "category": {
+      "en": "Other"
+    },
+    "application": "Dealroom",
+    "contractType": "DPIA_COMPANION",
+    "jurisdictions": [
+      "SPAIN",
+      "CALIFORNIA",
+      "ENGLAND_WALES"
+    ],
+    "languages": [
+      "en",
+      "es"
+    ],
+    "clauseCount": null,
+    "version": "1.0.0",
+    "author": "NEL Law",
+    "templateFamily": "",
+    "nativeJurisdiction": "",
+    "format": "dealroom-clauses",
+    "compat": [
+      "TODO.LAW Suite",
+      "LQ.AI"
+    ],
+    "license": "proprietary"
+  },
+  {
+    "skillId": "com.nel.skills.employment",
+    "slug": "employment-agreement",
+    "displayName": {
+      "en": "Employment Agreement",
+      "es": "Contrato de Trabajo"
+    },
+    "description": {
+      "en": "Employment agreement covering compensation, equity, working conditions, termination, restrictive covenants, non-solicitation, and IP assignment with jurisdiction-specific provisions for California and England & Wales. For an employment contract governed by Spanish law, use the sibling skill contrato-laboral.",
+      "es": "Contrato de trabajo que regula la retribución, la compensación en participaciones, las condiciones laborales, la extinción del contrato, los pactos restrictivos, la no captación y la cesión de propiedad intelectual, con disposiciones específicas para California e Inglaterra y Gales. Para un contrato de trabajo sujeto a Derecho español, utilice la habilidad hermana contrato-laboral."
+    },
+    "category": {
+      "en": "Team",
+      "es": "Equipo"
+    },
+    "application": "Dealroom",
+    "contractType": "EMPLOYMENT",
+    "jurisdictions": [
+      "CALIFORNIA",
+      "ENGLAND_WALES"
+    ],
+    "languages": [
+      "en",
+      "es"
+    ],
+    "clauseCount": 11,
+    "version": "1.1.0",
+    "author": "NEL Law",
+    "templateFamily": "EMPLOYMENT",
+    "nativeJurisdiction": "CALIFORNIA",
+    "format": "dealroom-clauses",
+    "compat": [
+      "TODO.LAW Suite",
+      "LQ.AI"
+    ],
+    "license": "Apache-2.0"
+  },
+  {
+    "skillId": "com.nel.skills.equity-incentive",
+    "slug": "equity-incentive",
+    "displayName": {
+      "en": "Equity Incentive Plan",
+      "es": "Plan de Incentivos en Capital"
+    },
+    "description": {
+      "en": "Equity incentive plan for startups and growth companies covering plan type (options, RSUs, SARs), share pool, vesting, exercise pricing, post-termination windows, change of control acceleration, clawback, transferability, and tax treatment across California, England & Wales, and Spain.",
+      "es": "Plan de incentivos en capital para startups y empresas en crecimiento que regula el tipo de plan (opciones, RSU, SAR), reserva de participaciones, consolidación (vesting), precio de ejercicio, plazos tras la baja, aceleración por cambio de control, devolución, transmisibilidad y tratamiento fiscal conforme a la legislación de California, Inglaterra y Gales, y España."
+    },
+    "category": {
+      "en": "Equity",
+      "es": "Capital"
+    },
+    "application": "Dealroom",
+    "contractType": "EQUITY_INCENTIVE",
+    "jurisdictions": [
+      "CALIFORNIA",
+      "ENGLAND_WALES",
+      "SPAIN"
+    ],
+    "languages": [
+      "en",
+      "es"
+    ],
+    "clauseCount": 10,
+    "version": "1.1.0",
+    "author": "NEL Law",
+    "templateFamily": "EQUITY_INCENTIVE",
+    "nativeJurisdiction": "CALIFORNIA",
+    "format": "dealroom-clauses",
+    "compat": [
+      "TODO.LAW Suite",
+      "LQ.AI"
+    ],
+    "license": "Apache-2.0"
+  },
+  {
+    "skillId": "com.nel.skills.founders",
+    "slug": "founders-agreement",
+    "displayName": {
+      "en": "Founders Agreement",
+      "es": "Acuerdo de Fundadores"
+    },
+    "description": {
+      "en": "Agreement between co-founders establishing equity ownership, reverse vesting (with IRC §83(b) election guidance), roles, IP assignment, and departure terms for a new venture. Jurisdiction-aware for California, England & Wales, and Spain, including the California non-compete prohibition (B&P §§16600/16600.5) and Spanish pacto parasocial execution mechanics.",
+      "es": "Acuerdo entre cofundadores que establece la titularidad del capital, el reverse vesting (con guía sobre la elección IRC §83(b)), los roles, la cesión de propiedad intelectual e industrial y las condiciones de salida para un nuevo emprendimiento. Sensible a la jurisdicción para California, Inglaterra y Gales y España, incluida la prohibición californiana de pactos de no competencia (B&P §§16600/16600.5) y la mecánica de ejecución del pacto parasocial español."
+    },
+    "category": {
+      "en": "Corporate",
+      "es": "Corporativo"
+    },
+    "application": "Dealroom",
+    "contractType": "FOUNDERS",
+    "jurisdictions": [
+      "CALIFORNIA",
+      "ENGLAND_WALES",
+      "SPAIN"
+    ],
+    "languages": [
+      "en",
+      "es"
+    ],
+    "clauseCount": 10,
+    "version": "1.1.0",
+    "author": "NEL Law",
+    "templateFamily": "FOUNDERS",
+    "nativeJurisdiction": "CALIFORNIA",
+    "format": "dealroom-clauses",
+    "compat": [
+      "TODO.LAW Suite",
+      "LQ.AI"
+    ],
+    "license": "Apache-2.0"
+  },
+  {
+    "skillId": "com.nel.skills.influencer-marketing",
+    "slug": "influencer-marketing",
+    "displayName": {
+      "en": "Influencer Marketing Agreement",
+      "es": "Acuerdo de Marketing con Influencers"
+    },
+    "description": {
+      "en": "Influencer marketing agreement covering compensation, content deliverables, approval workflows, usage rights, exclusivity, regulatory disclosure requirements, and performance metrics between a brand or advertiser and a content creator or influencer",
+      "es": "Acuerdo de marketing con influencers que regula la compensación, entregables de contenido, flujos de aprobación, derechos de uso, exclusividad, requisitos de divulgación regulatoria y métricas de rendimiento entre una marca o anunciante y un/a creador/a de contenido o influencer"
+    },
+    "category": {
+      "en": "Marketing",
+      "es": "Marketing"
+    },
+    "application": "Dealroom",
+    "contractType": "INFLUENCER_MARKETING",
+    "jurisdictions": [
+      "CALIFORNIA",
+      "ENGLAND_WALES",
+      "SPAIN"
+    ],
+    "languages": [
+      "en",
+      "es"
+    ],
+    "clauseCount": 12,
+    "version": "1.1.0",
+    "author": "NEL Law",
+    "templateFamily": "INFLUENCER_MARKETING",
+    "nativeJurisdiction": "CALIFORNIA",
+    "format": "dealroom-clauses",
+    "compat": [
+      "TODO.LAW Suite",
+      "LQ.AI"
+    ],
+    "license": "Apache-2.0"
+  },
+  {
+    "skillId": "com.nel.skills.ip-assignment",
+    "slug": "ip-assignment",
+    "displayName": {
+      "en": "IP Assignment Agreement",
+      "es": "Contrato de Cesión de Propiedad Intelectual"
+    },
+    "description": {
+      "en": "Intellectual property assignment agreement for the transfer of patents, copyrights, trade secrets, and other IP rights from assignor to assignee, with jurisdiction-specific provisions for California, England & Wales, and Spain.",
+      "es": "Contrato de cesión de propiedad intelectual para la transmisión de patentes, derechos de autor, secretos empresariales y otros derechos de PI del cedente al cesionario, con disposiciones específicas para California, Inglaterra y Gales, y España."
+    },
+    "category": {
+      "en": "IP",
+      "es": "PI"
+    },
+    "application": "Dealroom",
+    "contractType": "IP_ASSIGNMENT",
+    "jurisdictions": [
+      "CALIFORNIA",
+      "ENGLAND_WALES"
+    ],
+    "languages": [
+      "en",
+      "es"
+    ],
+    "clauseCount": 8,
+    "version": "1.0.1",
+    "author": "NEL Law",
+    "templateFamily": "IP_ASSIGNMENT",
+    "nativeJurisdiction": "CALIFORNIA",
+    "format": "dealroom-clauses",
+    "compat": [
+      "TODO.LAW Suite",
+      "LQ.AI"
+    ],
+    "license": "Apache-2.0"
+  },
+  {
+    "skillId": "com.nel.skills.joint-venture",
+    "slug": "joint-venture",
+    "displayName": {
+      "en": "Joint Venture Agreement",
+      "es": "Contrato de Joint Venture"
+    },
+    "description": {
+      "en": "Joint venture agreement for collaborative business ventures covering JV structure, capital contributions, profit sharing, management control, decision-making, IP ownership, non-compete, exit mechanisms, and deadlock resolution across California, England & Wales, and Spain.",
+      "es": "Contrato de joint venture para proyectos empresariales conjuntos que regula la estructura, aportaciones de capital, reparto de beneficios, control de gestión, toma de decisiones, titularidad de la propiedad intelectual, no competencia, mecanismos de salida y resolución de bloqueos conforme a la legislación de California, Inglaterra y Gales, y España."
+    },
+    "category": {
+      "en": "Corporate",
+      "es": "Societario"
+    },
+    "application": "Dealroom",
+    "contractType": "JOINT_VENTURE",
+    "jurisdictions": [
+      "CALIFORNIA",
+      "ENGLAND_WALES",
+      "SPAIN"
+    ],
+    "languages": [
+      "en",
+      "es"
+    ],
+    "clauseCount": 10,
+    "version": "1.1.0",
+    "author": "NEL Law",
+    "templateFamily": "JOINT_VENTURE",
+    "nativeJurisdiction": "CALIFORNIA",
+    "format": "dealroom-clauses",
+    "compat": [
+      "TODO.LAW Suite",
+      "LQ.AI"
+    ],
+    "license": "Apache-2.0"
+  },
+  {
+    "skillId": "com.nel.skills.pacto-socios",
+    "slug": "pacto-socios",
+    "displayName": {
+      "en": "Shareholders' Agreement (Pacto de Socios)",
+      "es": "Pacto de Socios"
+    },
+    "description": {
+      "en": "Spanish shareholders' agreement for SL companies covering equity distribution, vesting schedules, governance structure, reserved matters, anti-dilution protections, transfer restrictions (drag-along, tag-along, ROFR), profit distribution, non-compete obligations, deadlock resolution, and exit mechanisms under the Ley de Sociedades de Capital.",
+      "es": "Pacto de socios para sociedades limitadas conforme a la Ley de Sociedades de Capital que regula la distribución de capital, vesting, gobierno societario, materias reservadas, protección antidilución, restricciones a la transmisión (arrastre, acompañamiento, derecho de adquisición preferente), distribución de beneficios, no competencia, resolución de bloqueos y mecanismos de salida."
+    },
+    "category": {
+      "en": "Corporate",
+      "es": "Corporativo"
+    },
+    "application": "Dealroom",
+    "contractType": "PACTO_SOCIOS",
+    "jurisdictions": [
+      "SPAIN"
+    ],
+    "languages": [
+      "es",
+      "en"
+    ],
+    "clauseCount": 19,
+    "version": "1.1.0",
+    "author": "NEL Law",
+    "templateFamily": "FOUNDERS",
+    "nativeJurisdiction": "SPAIN",
+    "format": "dealroom-clauses",
+    "compat": [
+      "TODO.LAW Suite",
+      "LQ.AI"
+    ],
+    "license": "Apache-2.0"
+  },
+  {
+    "skillId": "com.nel.skills.phantom-shares-grant",
+    "slug": "phantom-shares-grant",
+    "displayName": {
+      "en": "Individual Phantom Shares Grant (Spain)",
+      "es": "Asignación Individual de Phantom Shares"
+    },
+    "description": {
+      "en": "Individual phantom shares grant agreement under the master plan",
+      "es": "Contrato individual de asignación de participaciones fantasma conforme al plan marco"
+    },
+    "category": {
+      "en": "Corporate",
+      "es": "Societario"
+    },
+    "application": "Dealroom",
+    "contractType": "PHANTOM_SHARES_GRANT",
+    "jurisdictions": [
+      "SPAIN"
+    ],
+    "languages": [
+      "es"
+    ],
+    "clauseCount": 6,
+    "version": "1.1.0",
+    "author": "NEL Law",
+    "templateFamily": "",
+    "nativeJurisdiction": "SPAIN",
+    "format": "dealroom-clauses",
+    "compat": [
+      "TODO.LAW Suite",
+      "LQ.AI"
+    ],
+    "license": "Apache-2.0"
+  },
+  {
+    "skillId": "com.nel.skills.phantom-shares-plan",
+    "slug": "phantom-shares-plan",
+    "displayName": {
+      "en": "Phantom Shares Plan (Spain)",
+      "es": "Marco de Phantom Shares"
+    },
+    "description": {
+      "en": "Master phantom shares plan for Spanish companies",
+      "es": "Plan marco de participaciones fantasma (phantom shares) para la empresa"
+    },
+    "category": {
+      "en": "Corporate",
+      "es": "Societario"
+    },
+    "application": "Dealroom",
+    "contractType": "PHANTOM_SHARES_PLAN",
+    "jurisdictions": [
+      "SPAIN"
+    ],
+    "languages": [
+      "es"
+    ],
+    "clauseCount": 10,
+    "version": "1.1.0",
+    "author": "NEL Law",
+    "templateFamily": "",
+    "nativeJurisdiction": "SPAIN",
+    "format": "dealroom-clauses",
+    "compat": [
+      "TODO.LAW Suite",
+      "LQ.AI"
+    ],
+    "license": "Apache-2.0"
+  },
+  {
+    "skillId": "com.nel.skills.seed-investment",
+    "slug": "seed-investment",
+    "displayName": {
+      "en": "Seed Investment Agreement",
+      "es": "Pacto de Inversión"
+    },
+    "description": {
+      "en": "Priced equity seed investment agreement for early-stage companies, covering share issuance, investor protections, governance rights, founder obligations, and drag-along/tag-along exit mechanics. Jurisdiction-aware for California, England & Wales, and Spain, including the LSC constraints on company repurchase of unvested founder participaciones (arts. 140-141 LSC) and Spanish execution via pacto de socios and estatutos.",
+      "es": "Pacto de inversión en capital semilla con precio fijado para empresas en fase inicial, que cubre la emisión de participaciones, protecciones del inversor, derechos de gobernanza, obligaciones de los fundadores y mecánica de salida de arrastre y acompañamiento. Sensible a la jurisdicción para California, Inglaterra y Gales y España, incluidas las restricciones de la LSC a la recompra por la sociedad de participaciones no consolidadas del fundador (arts. 140-141 LSC) y la ejecución española vía pacto de socios y estatutos."
+    },
+    "category": {
+      "en": "Investment",
+      "es": "Inversión"
+    },
+    "application": "Dealroom",
+    "contractType": "SEED_INVESTMENT",
+    "jurisdictions": [
+      "CALIFORNIA",
+      "ENGLAND_WALES",
+      "SPAIN"
+    ],
+    "languages": [
+      "en",
+      "es"
+    ],
+    "clauseCount": 13,
+    "version": "1.1.0",
+    "author": "NEL Law",
+    "templateFamily": "SEED_INVESTMENT",
+    "nativeJurisdiction": "CALIFORNIA",
+    "format": "dealroom-clauses",
+    "compat": [
+      "TODO.LAW Suite",
+      "LQ.AI"
+    ],
+    "license": "Apache-2.0"
+  },
+  {
+    "skillId": "com.nel.skills.shareholders",
+    "slug": "shareholders-agreement",
+    "displayName": {
+      "en": "Shareholders Agreement",
+      "es": "Pacto de Accionistas"
+    },
+    "description": {
+      "en": "Shareholders agreement governing the relationship between majority and minority shareholders, covering board composition, share transfers, pre-emptive rights, dividends, exit mechanisms, and SHA/articles supremacy, with jurisdiction-specific provisions for California and England & Wales. Spanish-law shareholder arrangements (pactos de socios subject to the LSC) are served by the pacto-socios skill.",
+      "es": "Pacto de accionistas que regula la relación entre accionistas mayoritarios y minoritarios, incluyendo composición del consejo, transmisión de acciones, derechos de suscripción preferente, dividendos, mecanismos de salida y supremacía entre pacto y estatutos, con disposiciones específicas para California e Inglaterra y Gales. Los pactos de socios sujetos a derecho español (LSC) se sirven con la skill pacto-socios."
+    },
+    "category": {
+      "en": "Corporate",
+      "es": "Corporativo"
+    },
+    "application": "Dealroom",
+    "contractType": "SHAREHOLDERS",
+    "jurisdictions": [
+      "CALIFORNIA",
+      "ENGLAND_WALES"
+    ],
+    "languages": [
+      "en",
+      "es"
+    ],
+    "clauseCount": 13,
+    "version": "1.1.0",
+    "author": "NEL Law",
+    "templateFamily": "SHAREHOLDERS",
+    "nativeJurisdiction": "CALIFORNIA",
+    "format": "dealroom-clauses",
+    "compat": [
+      "TODO.LAW Suite",
+      "LQ.AI"
+    ],
+    "license": "Apache-2.0"
+  },
+  {
+    "skillId": "com.nel.skills.software-development",
+    "slug": "software-development",
+    "displayName": {
+      "en": "Software Development Agreement",
+      "es": "Contrato de Desarrollo de Software"
+    },
+    "description": {
+      "en": "Custom software development agreement covering development methodology, IP ownership, acceptance testing, payment structure, source code delivery, warranties, change management, liability (with EU Product Liability Directive (EU) 2024/2853 recourse allocation), open-source components, and AI-assisted development across California, England & Wales, and Spain.",
+      "es": "Contrato de desarrollo de software a medida que regula la metodología de desarrollo, titularidad de la propiedad intelectual, pruebas de aceptación, estructura de pagos, entrega del código fuente, garantías, gestión de cambios, responsabilidad (con asignación del recurso interno conforme a la Directiva (UE) 2024/2853 de responsabilidad por productos), componentes de código abierto y desarrollo asistido por IA conforme a la legislación de California, Inglaterra y Gales, y España."
+    },
+    "category": {
+      "en": "Technology",
+      "es": "Tecnología"
+    },
+    "application": "Dealroom",
+    "contractType": "SOFTWARE_DEVELOPMENT",
+    "jurisdictions": [
+      "CALIFORNIA",
+      "ENGLAND_WALES",
+      "SPAIN"
+    ],
+    "languages": [
+      "en",
+      "es"
+    ],
+    "clauseCount": 12,
+    "version": "1.1.0",
+    "author": "NEL Law",
+    "templateFamily": "SOFTWARE_DEVELOPMENT",
+    "nativeJurisdiction": "CALIFORNIA",
+    "format": "dealroom-clauses",
+    "compat": [
+      "TODO.LAW Suite",
+      "LQ.AI"
+    ],
+    "license": "Apache-2.0"
+  },
+  {
+    "skillId": "com.nel.skills.technology-license",
+    "slug": "technology-license",
+    "displayName": {
+      "en": "Technology License Agreement",
+      "es": "Contrato de Licencia de Tecnología"
+    },
+    "description": {
+      "en": "Technology licensing agreement for software, patents, or proprietary systems covering license scope, royalties, sublicensing, support, IP ownership of improvements, warranties, audit rights, insolvency-safe escrow, and export control and sanctions compliance across California, England & Wales, and Spain.",
+      "es": "Contrato de licencia de tecnología para software, patentes o sistemas propietarios que regula el alcance de la licencia, cánones, sublicencia, soporte, titularidad de las mejoras, garantías, derechos de auditoría, escrow compatible con el Derecho concursal y cumplimiento en materia de control de exportaciones y sanciones conforme a la legislación de California, Inglaterra y Gales, y España."
+    },
+    "category": {
+      "en": "IP & Tech",
+      "es": "PI y Tecnología"
+    },
+    "application": "Dealroom",
+    "contractType": "TECHNOLOGY_LICENSE",
+    "jurisdictions": [
+      "CALIFORNIA",
+      "ENGLAND_WALES",
+      "SPAIN"
+    ],
+    "languages": [
+      "en",
+      "es"
+    ],
+    "clauseCount": 11,
+    "version": "1.1.0",
+    "author": "NEL Law",
+    "templateFamily": "TECHNOLOGY_LICENSE",
+    "nativeJurisdiction": "CALIFORNIA",
+    "format": "dealroom-clauses",
+    "compat": [
+      "TODO.LAW Suite",
+      "LQ.AI"
+    ],
+    "license": "Apache-2.0"
+  },
+  {
+    "skillId": "com.nel.skills.term-sheet",
+    "slug": "term-sheet",
+    "displayName": {
+      "en": "Term Sheet",
+      "es": "Term Sheet (Carta de Intenciones)"
+    },
+    "description": {
+      "en": "Venture capital term sheet covering round economics, governance, investor rights, and protective provisions, based on the NVCA model documents (October 2025 refresh) and the UK Private Capital (formerly BVCA) model documents (February 2025 edition), with a native Spanish S.L. layer.",
+      "es": "Term sheet (carta de intenciones) de capital riesgo que cubre la economía de la ronda, la gobernanza, los derechos del inversor y las cláusulas de protección, basado en los modelos NVCA (actualización de octubre de 2025) y de UK Private Capital (antes BVCA, edición de febrero de 2025), con una capa nativa para la S.L. española."
+    },
+    "category": {
+      "en": "Investment",
+      "es": "Inversión"
+    },
+    "application": "Dealroom",
+    "contractType": "TERM_SHEET",
+    "jurisdictions": [
+      "CALIFORNIA",
+      "ENGLAND_WALES",
+      "SPAIN"
+    ],
+    "languages": [
+      "en",
+      "es"
+    ],
+    "clauseCount": 15,
+    "version": "1.1.0",
+    "author": "NEL Law",
+    "templateFamily": "TERM_SHEET",
+    "nativeJurisdiction": "CALIFORNIA",
+    "format": "dealroom-clauses",
+    "compat": [
+      "TODO.LAW Suite",
+      "LQ.AI"
+    ],
+    "license": "Apache-2.0"
+  },
+  {
+    "skillId": "com.nel.skills.vendor-risk",
+    "slug": "vendor-risk",
+    "displayName": {
+      "en": "Vendor Privacy Risk Assessment"
+    },
+    "description": {
+      "en": ""
+    },
+    "category": {
+      "en": "Other"
+    },
+    "application": "Dealroom",
+    "contractType": "VENDOR_RISK",
+    "jurisdictions": [
+      "SPAIN",
+      "CALIFORNIA",
+      "ENGLAND_WALES"
+    ],
+    "languages": [
+      "en",
+      "es"
+    ],
+    "clauseCount": null,
+    "version": "1.0.0",
+    "author": "NEL Law",
+    "templateFamily": "",
+    "nativeJurisdiction": "",
+    "format": "dealroom-clauses",
+    "compat": [
+      "TODO.LAW Suite",
+      "LQ.AI"
+    ],
+    "license": "proprietary"
+  },
+  {
+    "skillId": "com.nel.skills.white-label-reseller",
+    "slug": "white-label-reseller",
+    "displayName": {
+      "en": "White-Label / Reseller Agreement",
+      "es": "Acuerdo de Marca Blanca / Distribución"
+    },
+    "description": {
+      "en": "White-label and reseller agreement for technology platforms, covering branding rights, territory exclusivity, revenue models, support tiers, IP ownership, and data governance between a technology provider and a reseller or white-label partner",
+      "es": "Acuerdo de marca blanca y distribución para plataformas tecnológicas, que regula los derechos de marca, exclusividad territorial, modelos de ingresos, niveles de soporte, titularidad de la propiedad intelectual y gobernanza de datos entre un proveedor tecnológico y un distribuidor/a o socio/a de marca blanca"
+    },
+    "category": {
+      "en": "Distribution",
+      "es": "Distribución"
+    },
+    "application": "Dealroom",
+    "contractType": "WHITE_LABEL_RESELLER",
+    "jurisdictions": [
+      "CALIFORNIA",
+      "ENGLAND_WALES",
+      "SPAIN"
+    ],
+    "languages": [
+      "en",
+      "es"
+    ],
+    "clauseCount": 11,
+    "version": "1.0.1",
+    "author": "NEL Law",
+    "templateFamily": "WHITE_LABEL_RESELLER",
+    "nativeJurisdiction": "CALIFORNIA",
+    "format": "dealroom-clauses",
+    "compat": [
+      "TODO.LAW Suite",
+      "LQ.AI"
+    ],
+    "license": "Apache-2.0"
+  }
+]

@@ -233,8 +233,9 @@ model SkillPackage {
   revenueSharePct Int     @default(70) // 0-100, configurable per skill
 
   // Marketplace / distribution
-  packageUrl  String? // Vercel Blob URL to .skill file
-  packageSize Int? // File size in bytes
+  packageUrl      String? // Vercel Blob URL to .skill file
+  packageSize     Int? // File size in bytes
+  marketplaceSlug String? // todo.law storefront slug → /legalskills/{slug}
 
   contractTemplate  ContractTemplate?
   entitlements      SkillEntitlement[]

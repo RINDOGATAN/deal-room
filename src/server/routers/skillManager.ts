@@ -115,6 +115,7 @@ export const skillManagerRouter = createTRPCRouter({
         displayNameLocalized: pkg.contractTemplate?.displayNameLocalized ?? null,
         descriptionLocalized: pkg.contractTemplate?.descriptionLocalized ?? null,
         hasPackageFile: !!pkg.packageUrl,
+        marketplaceSlug: pkg.marketplaceSlug ?? null,
         entitlementStatus: ent?.status ?? null,
         entitlementExpiresAt: ent?.expiresAt ?? null,
         isEntitled: entitledSkillIds.has(pkg.id),

@@ -14,12 +14,18 @@ import {
   ShoppingCart,
   Search,
   X,
+  ExternalLink,
 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { Input } from "@/components/ui/input";
 import { EnableFeatureModal } from "@/components/premium/enable-feature-modal";
 import { PromoBanner } from "@/components/PromoBanner";
 import { formatPrice } from "@/lib/currency";
+import {
+  STOREFRONT_BUY,
+  MARKETPLACE_URL,
+  marketplaceSkillUrl,
+} from "@/lib/marketplace";
 import { useTranslations } from "next-intl";
 
 const JURISDICTION_LABELS: Record<string, string> = {
@@ -189,6 +195,17 @@ export default function MarketplacePage() {
             <Package className="h-8 w-8 sm:h-10 sm:w-10 mx-auto text-muted-foreground/50 mb-2" />
           )}
           <p className="text-sm text-muted-foreground">{t("noSkillsFound")}</p>
+          {!searchQuery.trim() && STOREFRONT_BUY && (
+            <a
+              href={MARKETPLACE_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
+            >
+              {t("browseStorefront")}
+              <ExternalLink className="h-4 w-4" />
+            </a>
+          )}
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -215,9 +232,11 @@ export default function MarketplacePage() {
                     </span>
                   ) : (
                     <span className="inline-block px-2.5 py-1 text-sm sm:text-xs font-bold text-primary bg-primary/5 border border-primary/20 rounded-full">
-                      {skill.priceAmount
-                        ? `${formatPrice(skill.priceAmount / 100)}/${t("month")}`
-                        : t("contactUs")}
+                      {STOREFRONT_BUY
+                        ? t("premiumBadge")
+                        : skill.priceAmount
+                          ? `${formatPrice(skill.priceAmount / 100)}/${t("month")}`
+                          : t("contactUs")}
                     </span>
                   )}
                 </div>
@@ -265,6 +284,16 @@ export default function MarketplacePage() {
                       </a>
                     )}
                   </>
+                ) : STOREFRONT_BUY ? (
+                  <a
+                    href={marketplaceSkillUrl(skill.marketplaceSlug)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn-brutal text-xs px-4 py-2 flex-1 flex items-center justify-center gap-2"
+                  >
+                    <ExternalLink className="h-3.5 w-3.5" />
+                    {t("getItStorefront")}
+                  </a>
                 ) : (
                   <button
                     onClick={() =>

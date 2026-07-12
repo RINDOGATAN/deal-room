@@ -92,6 +92,8 @@ export const skillsRouter = createTRPCRouter({
           select: {
             id: true,
             skillId: true,
+            isPremium: true,
+            marketplaceSlug: true,
           },
         },
         _count: {
@@ -162,6 +164,11 @@ export const skillsRouter = createTRPCRouter({
         soloModeSupported: t.soloModeSupported,
         soloModeDefault: t.soloModeDefault,
         soloModeOnly: t.soloModeOnly,
+        // Marketplace-only: a premium skill whose content isn't installed (no
+        // clauses). Discoverable but not usable until bought on the storefront —
+        // this flag stays true even when allSkillsFree makes everything else free.
+        marketplaceOnly: !!t.skillPackage?.isPremium && t._count.clauses === 0,
+        marketplaceSlug: t.skillPackage?.marketplaceSlug ?? null,
         // Access info for licensed skills
         hasAccess: features.allSkillsFree ? true : !requiresLicense || !!entitlement,
         entitledJurisdictions: entitlement?.jurisdictions || [],
