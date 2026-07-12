@@ -85,6 +85,11 @@ interface TemplateInfo {
 
 type DealMode = "NEGOTIATION" | "SOLO";
 
+// Self-hosted builds have no counterparty-invite path (offline, no email), so the deal
+// flow defaults to solo "configure and download" and hides the negotiate-with-counterparty
+// option. Hosted keeps both.
+const IS_SELF_HOST = process.env.NEXT_PUBLIC_LOCAL_AUTH_ENABLED === "true";
+
 // Group templates by family for display
 interface TemplateFamily {
   family: string;
@@ -223,7 +228,7 @@ export default function NewDealPage() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [parameterValues, setParameterValues] = useState<Record<string, string>>({});
   const [missingParams, setMissingParams] = useState<Set<string>>(new Set());
-  const [dealMode, setDealMode] = useState<DealMode>("NEGOTIATION");
+  const [dealMode, setDealMode] = useState<DealMode>(IS_SELF_HOST ? "SOLO" : "NEGOTIATION");
   // SOLO DPA only: which role the filling party takes (Controller vs Processor).
   // Default Processor — most processors prepare the template for a controller.
   const [fillRole, setFillRole] = useState<"CONTROLLER" | "PROCESSOR">("PROCESSOR");
@@ -638,7 +643,13 @@ export default function NewDealPage() {
                       setSelectedType(family.primaryTemplate.contractType);
                       setResolvedNativeTemplate(null);
                       // Auto-set deal mode based on template config
-                      if (family.primaryTemplate.soloModeOnly || family.primaryTemplate.soloModeDefault) {
+                      // Self-hosted has no counterparty invite, so prefer solo whenever the
+                      // template supports it.
+                      if (
+                        family.primaryTemplate.soloModeOnly ||
+                        family.primaryTemplate.soloModeDefault ||
+                        (IS_SELF_HOST && family.primaryTemplate.soloModeSupported)
+                      ) {
                         setDealMode("SOLO");
                       } else {
                         setDealMode("NEGOTIATION");
@@ -899,7 +910,7 @@ export default function NewDealPage() {
       {/* Step 4: Deal Mode (only for templates that support both modes) */}
       {selectedFamily && selectedJurisdiction && (() => {
         const currentTemplate = templates?.find((tmpl) => tmpl.contractType === selectedType);
-        const showModeSelector = currentTemplate?.soloModeSupported && !currentTemplate?.soloModeDefault && !currentTemplate?.soloModeOnly;
+        const showModeSelector = !IS_SELF_HOST && currentTemplate?.soloModeSupported && !currentTemplate?.soloModeDefault && !currentTemplate?.soloModeOnly;
         if (!showModeSelector) return null;
         return (
           <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-300">
