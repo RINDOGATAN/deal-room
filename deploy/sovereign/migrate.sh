@@ -79,4 +79,11 @@ else
   npm run db:seed
 fi
 
+# Premium-skill marketplace stubs (self-host discoverability). Idempotent +
+# additive — runs on EVERY boot, including existing installs the full seed
+# skips, so upgraded firms get the discoverable skills too. No-op when hosted
+# (SKILLS_DIR set) or when the real content is already installed.
+echo "[migrate] syncing premium-skill marketplace stubs…"
+npm run db:seed-marketplace
+
 echo "[migrate] done."

@@ -5,6 +5,7 @@ import { Prisma, PrismaClient } from "@prisma/client";
 import * as fs from "fs";
 import * as path from "path";
 import * as crypto from "crypto";
+import { seedMarketplaceStubs } from "./marketplace-stubs";
 
 const prisma = new PrismaClient();
 
@@ -819,103 +820,12 @@ async function main() {
   // catalog so they appear as locked "get it on the marketplace" items. Never on
   // hosted (SKILLS_DIR present) — there the real, purchasable skills exist.
   if (!SKILLS_DIR) {
-    await seedMarketplaceStubs();
+    await seedMarketplaceStubs(prisma);
   }
 
   console.log("\nSeed completed successfully!");
 }
 
-// ── Marketplace stubs (self-host discoverability) ──
-// Read the bundled storefront catalog (generated from todo.law/legalskills) and,
-// for each premium skill NOT already installed, create a metadata-only package +
-// zero-clause template stub. These surface in the marketplace + deals/new picker
-// as locked "get it on the marketplace" items linking to /legalskills/{slug}.
-// Zero clauses means they can never open as an empty wizard — the UI treats a
-// premium package whose template has no clauses as marketplace-only.
-async function seedMarketplaceStubs() {
-  const catalogPath = path.join(__dirname, "premium-catalog.json");
-  if (!fs.existsSync(catalogPath)) {
-    console.log("  No premium-catalog.json — skipping marketplace stubs");
-    return;
-  }
-  interface CatalogSkill {
-    skillId: string;
-    slug: string;
-    contractType: string;
-    displayName: Record<string, string>;
-    description?: Record<string, string>;
-    category?: Record<string, string>;
-    templateFamily?: string;
-    jurisdictions?: string[];
-    languages?: string[];
-    version?: string;
-  }
-  const catalog: CatalogSkill[] = JSON.parse(fs.readFileSync(catalogPath, "utf-8"));
-  const en = (v?: Record<string, string>) =>
-    v?.en ?? v?.es ?? Object.values(v ?? {})[0] ?? null;
-
-  let created = 0;
-  let linked = 0;
-  for (const skill of catalog) {
-    const displayName = en(skill.displayName) || skill.slug;
-    const description = en(skill.description);
-    const category = en(skill.category);
-
-    const existing = await prisma.skillPackage.findUnique({
-      where: { skillId: skill.skillId },
-    });
-    if (existing) {
-      // Installed content already present — just record the storefront slug.
-      await prisma.skillPackage.update({
-        where: { skillId: skill.skillId },
-        data: { marketplaceSlug: skill.slug, isPremium: true },
-      });
-      linked++;
-      continue;
-    }
-    const pkg = await prisma.skillPackage.create({
-      data: {
-        skillId: skill.skillId,
-        name: skill.contractType,
-        displayName,
-        version: skill.version || "1.0.0",
-        packageHash: `stub:${skill.slug}`,
-        jurisdictions: skill.jurisdictions ?? [],
-        languages: skill.languages ?? [],
-        isActive: true,
-        isPremium: true,
-        marketplaceSlug: skill.slug,
-        description,
-      },
-    });
-    await prisma.contractTemplate.upsert({
-      where: { contractType: skill.contractType },
-      create: {
-        contractType: skill.contractType,
-        displayName,
-        description,
-        skillPath: "",
-        skillPackageId: pkg.id,
-        templateFamily: skill.templateFamily || null,
-        jurisdictions: skill.jurisdictions ?? [],
-        languages: skill.languages ?? [],
-        displayNameLocalized:
-          (skill.displayName as Prisma.InputJsonValue) ?? Prisma.DbNull,
-        descriptionLocalized:
-          (skill.description as Prisma.InputJsonValue) ?? Prisma.DbNull,
-        category,
-        categoryLocalized:
-          (skill.category as Prisma.InputJsonValue) ?? Prisma.DbNull,
-        soloModeSupported: true,
-      },
-      update: { skillPackageId: pkg.id },
-    });
-    created++;
-  }
-  console.log(
-    `  Marketplace stubs: ${created} created, ${linked} linked (of ${catalog.length} catalogued)`,
-  );
-}
 
 main()
   .catch((e) => {
