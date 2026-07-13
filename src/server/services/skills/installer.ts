@@ -305,29 +305,37 @@ export class SkillPackageInstaller {
           },
         });
 
-        // 2. Upsert ContractTemplate
+        // 2. Upsert ContractTemplate. Reconcile onto the marketplace stub if one
+        //    exists for this package (self-host seeds a zero-clause stub keyed by
+        //    the catalog contractType). Match by the 1:1 skillPackageId so install
+        //    UNLOCKS the discoverable tile rather than creating a duplicate — even
+        //    if the catalog contractType and the package manifest.name ever diverge
+        //    (they collide on the unique skillPackageId otherwise, failing install).
+        const existingTemplate = await tx.contractTemplate.findUnique({
+          where: { skillPackageId: skillPackage.id },
+          select: { id: true },
+        });
+        const templateFields = {
+          contractType: manifest.name,
+          displayName: resolveLocalizedString(clauses.displayName, this.defaultLanguage),
+          description: clauses.description
+            ? resolveLocalizedString(clauses.description, this.defaultLanguage)
+            : null,
+          version: manifest.version,
+          boilerplate: boilerplate || undefined,
+          skillPackageId: skillPackage.id,
+        };
         const contractTemplate = await tx.contractTemplate.upsert({
-          where: { contractType: manifest.name },
+          where: existingTemplate
+            ? { id: existingTemplate.id }
+            : { contractType: manifest.name },
           create: {
-            contractType: manifest.name,
-            displayName: resolveLocalizedString(clauses.displayName, this.defaultLanguage),
-            description: clauses.description
-              ? resolveLocalizedString(clauses.description, this.defaultLanguage)
-              : null,
-            version: manifest.version,
+            ...templateFields,
             skillPath: `installed/${manifest.skillId}`,
-            boilerplate: boilerplate || undefined,
             isActive: true,
-            skillPackageId: skillPackage.id,
           },
           update: {
-            displayName: resolveLocalizedString(clauses.displayName, this.defaultLanguage),
-            description: clauses.description
-              ? resolveLocalizedString(clauses.description, this.defaultLanguage)
-              : null,
-            version: manifest.version,
-            boilerplate: boilerplate || undefined,
-            skillPackageId: skillPackage.id,
+            ...templateFields,
             updatedAt: new Date(),
           },
         });
@@ -414,7 +422,9 @@ export class SkillPackageInstaller {
       clauses: clausesArray.map((clause) => ({
         id: clause.id as string,
         title: resolveLocalizedString(clause.title, lang),
-        category: clause.category as string,
+        // category may be a localized {en,es} object (22 of the authored skills);
+        // resolve to a plain string for the String DB column.
+        category: resolveLocalizedString(clause.category, lang),
         order: clause.order as number,
         plainDescription: resolveLocalizedString(clause.plainDescription, lang),
         isRequired: (clause.isRequired as boolean) ?? true,

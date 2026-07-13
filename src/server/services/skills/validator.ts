@@ -88,12 +88,18 @@ export const ClauseSchema = z
   .object({
     id: z.string(),
     title: LocalizedStringSchema,
-    category: z.string(),
+    // Localized to match the loader/seed (loader.ts:100) — 22 of the authored
+    // skills carry a localized {en,es} category; a plain-string schema here
+    // rejects a .skill that seeds fine on hosted.
+    category: LocalizedStringSchema,
     order: z.number().int().min(1),
     plainDescription: LocalizedStringSchema,
     isRequired: z.boolean().default(true),
     legalContext: LocalizedStringSchema.optional(),
-    options: z.array(ClauseOptionSchema).min(3),
+    // Min 2 to match the loader/seed schema (loader.ts) — some authored skills
+    // have binary (2-option) clauses (e.g. advertising-io, affiliate-program).
+    // A stricter min here would reject a valid .skill that seeds fine on hosted.
+    options: z.array(ClauseOptionSchema).min(2),
   })
   .refine(
     (clause) => {
