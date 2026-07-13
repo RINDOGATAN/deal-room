@@ -23,9 +23,14 @@ import { createLogger } from "@/lib/logger";
 const logger = createLogger("crypto");
 
 // Public key for verifying skill package signatures (Ed25519)
-// In production, this would be embedded in the application or fetched from a secure source
+// In production, this would be embedded in the application or fetched from a secure source.
+// Self-host sets this via a docker .env, which can't hold a multiline PEM — so accept a
+// `\n`-escaped one-liner and restore the newlines (mirrors license signing in the storefront).
+const ENV_PUBLIC_KEY = process.env.SKILL_SIGNING_PUBLIC_KEY;
 const PUBLIC_KEY_PEM =
-  process.env.SKILL_SIGNING_PUBLIC_KEY ||
+  (ENV_PUBLIC_KEY?.includes("\\n")
+    ? ENV_PUBLIC_KEY.replace(/\\n/g, "\n")
+    : ENV_PUBLIC_KEY) ||
   `-----BEGIN PUBLIC KEY-----
 MCowBQYDK2VwAyEA7VIhH/9tFV23rRAWcQiGalDtND9AkWCJrdKxBfxF3dU=
 -----END PUBLIC KEY-----`;
