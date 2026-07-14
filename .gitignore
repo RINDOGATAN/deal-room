@@ -59,3 +59,6 @@ dpa-purge-test-deals.cjs
 
 # Internal dev context (like DPO Central) — kept locally, never shipped in the downloadable bundle
 /CLAUDE.md
+
+# Runtime skill-install output (extracted from .skill packages at install time)
+/data/skills/installed/
