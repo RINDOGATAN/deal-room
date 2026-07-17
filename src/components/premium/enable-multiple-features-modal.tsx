@@ -4,6 +4,7 @@
 
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { formatPrice } from "@/lib/currency";
 import {
   Dialog,
@@ -27,9 +28,12 @@ export function EnableMultipleFeaturesModal({
   skills,
   returnUrl,
 }: EnableMultipleFeaturesModalProps) {
+  const t = useTranslations("premium");
+  const tCommon = useTranslations("common");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const total = skills.length * 9;
+  const totalLabel = t("perMonth", { price: formatPrice(total) });
 
   const handleEnable = async () => {
     setLoading(true);
@@ -47,11 +51,11 @@ export function EnableMultipleFeaturesModal({
       if (data.url) {
         window.location.href = data.url;
       } else {
-        setError(data.error || "Something went wrong. Please try again.");
+        setError(data.error || t("genericError"));
         setLoading(false);
       }
     } catch {
-      setError("Network error. Please check your connection and try again.");
+      setError(t("networkError"));
       setLoading(false);
     }
   };
@@ -60,22 +64,24 @@ export function EnableMultipleFeaturesModal({
     <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Enable {skills.length} Features</DialogTitle>
+          <DialogTitle>{t("enableMultipleTitle", { count: skills.length })}</DialogTitle>
           <DialogDescription>
-            Add the following features to your account:
+            {t("enableMultipleDescription")}
           </DialogDescription>
         </DialogHeader>
         <ul className="my-4 space-y-1 text-sm">
           {skills.map((s) => (
             <li key={s.id} className="flex items-center justify-between">
               <span>{s.name}</span>
-              <span className="text-muted-foreground">{formatPrice(9)}/mo</span>
+              <span className="text-muted-foreground">
+                {t("perMonthShort", { price: formatPrice(9) })}
+              </span>
             </li>
           ))}
         </ul>
         <div className="border-t border-border pt-3 text-sm font-medium flex items-center justify-between">
-          <span>Monthly total</span>
-          <span>{formatPrice(total)}/month</span>
+          <span>{t("monthlyTotal")}</span>
+          <span>{totalLabel}</span>
         </div>
         {error && (
           <p className="text-sm text-destructive bg-destructive/10 px-3 py-2 rounded-xl">{error}</p>
@@ -85,7 +91,7 @@ export function EnableMultipleFeaturesModal({
             onClick={onClose}
             className="px-4 py-2 border border-border text-sm hover:bg-muted/50 rounded-full"
           >
-            Cancel
+            {tCommon("cancel")}
           </button>
           <button
             onClick={handleEnable}
@@ -95,10 +101,10 @@ export function EnableMultipleFeaturesModal({
             {loading ? (
               <span className="flex items-center gap-2">
                 <Loader2 className="h-4 w-4 animate-spin" />
-                Redirecting...
+                {t("redirecting")}
               </span>
             ) : (
-              `Subscribe — ${formatPrice(total)}/month`
+              t("subscribe", { price: totalLabel })
             )}
           </button>
         </DialogFooter>

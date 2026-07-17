@@ -1899,5 +1899,18 @@
       "ai_digest_locked": "El resumen de riesgos ya no puede regenerarse — ya se ha registrado una firma.",
       "ai_digest_no_request": "Todavía no se ha iniciado la firma — el resumen se asocia a la solicitud de firma."
     }
+  },
+  "premium": {
+    "enableTitle": "Activar {name}",
+    "enableDescription": "Añade esta skill a tu cuenta por {price}. Puedes cancelar en cualquier momento desde el portal de facturación.",
+    "enableMultipleTitle": "{count, plural, one {Activar # skill} other {Activar # skills}}",
+    "enableMultipleDescription": "Añade las siguientes skills a tu cuenta:",
+    "perMonth": "{price}/mes",
+    "perMonthShort": "{price}/mes",
+    "monthlyTotal": "Total mensual",
+    "subscribe": "Suscribirse — {price}",
+    "redirecting": "Redirigiendo...",
+    "genericError": "Algo ha ido mal. Inténtalo de nuevo.",
+    "networkError": "Error de red. Comprueba tu conexión e inténtalo de nuevo."
   }
 }

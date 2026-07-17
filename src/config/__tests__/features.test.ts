@@ -25,6 +25,7 @@ vi.mock("@/lib/prisma", () => {
 
 const ENV_KEYS = [
   "STRIPE_SECRET_KEY",
+  "NEXT_PUBLIC_STRIPE_ENABLED",
   "FREE_TRIAL_ALL_SKILLS",
   "NEXT_PUBLIC_FREE_TRIAL_ALL_SKILLS",
 ] as const;
@@ -70,6 +71,53 @@ describe("features.allSkillsFree", () => {
     const { features } = await import("@/config/features");
     expect(features.stripeEnabled).toBe(true);
     expect(features.allSkillsFree).toBe(true);
+  });
+
+  // The client-posture path: in the browser bundle STRIPE_SECRET_KEY is never
+  // inlined, so hosted clients only see NEXT_PUBLIC_STRIPE_ENABLED. That
+  // signal alone must lock premium skills — otherwise every hosted browser
+  // renders the "all free" UI while the server enforces the paywall.
+  it("locks skills from the client-inlined signal alone (browser-bundle view)", async () => {
+    setEnv({ NEXT_PUBLIC_STRIPE_ENABLED: "true" });
+    vi.resetModules();
+    const { features } = await import("@/config/features");
+    expect(features.stripeEnabled).toBe(true);
+    expect(features.billing).toBe(true);
+    expect(features.allSkillsFree).toBe(false);
+  });
+
+  it("keeps the promo override working under the client posture", async () => {
+    setEnv({
+      NEXT_PUBLIC_STRIPE_ENABLED: "true",
+      NEXT_PUBLIC_FREE_TRIAL_ALL_SKILLS: "true",
+    });
+    vi.resetModules();
+    const { features } = await import("@/config/features");
+    expect(features.allSkillsFree).toBe(true);
+    expect(features.promoBanner).toBe(true);
+  });
+});
+
+describe("features.skillInstaller", () => {
+  it("shows the .skill installer on self-host (no Stripe in either lane)", async () => {
+    setEnv({});
+    vi.resetModules();
+    const { features } = await import("@/config/features");
+    expect(features.skillInstaller).toBe(true);
+  });
+
+  it("hides the installer when Stripe is on — premium is a purchase, not an upload", async () => {
+    setEnv({ STRIPE_SECRET_KEY: "sk_test_dummy", NEXT_PUBLIC_STRIPE_ENABLED: "true" });
+    vi.resetModules();
+    const { features } = await import("@/config/features");
+    expect(features.skillInstaller).toBe(false);
+  });
+
+  it("hides the installer from the client-inlined signal alone", async () => {
+    setEnv({ NEXT_PUBLIC_STRIPE_ENABLED: "true" });
+    vi.resetModules();
+    const { features } = await import("@/config/features");
+    expect(features.skillInstaller).toBe(false);
   });
 });
 

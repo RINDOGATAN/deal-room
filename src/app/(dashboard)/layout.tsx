@@ -84,7 +84,11 @@ export default function DashboardLayout({
     ...(features.startupJourney && !lawyerProfile?.isLawyer && locale !== "es"
       ? [{ href: "/launch", label: t("launch"), icon: Rocket }]
       : []),
-    { href: "/skills", label: t("skills"), icon: KeyRound },
+    // .skill installer — self-host only. On hosted, premium is bought via
+    // Stripe checkout, so there is nothing to install or activate here.
+    ...(features.skillInstaller
+      ? [{ href: "/skills", label: t("skills"), icon: KeyRound }]
+      : []),
   ];
 
   return (

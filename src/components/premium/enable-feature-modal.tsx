@@ -4,6 +4,7 @@
 
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { formatPrice } from "@/lib/currency";
 import {
   Dialog,
@@ -31,15 +32,15 @@ interface EnableFeatureModalProps {
 }
 
 function formatSkillPrice(amount?: number, currency?: string): string {
-  // Legacy call sites: stay at €9/month so behavior doesn't change.
-  if (amount == null) return `${formatPrice(9)}/month`;
+  // Legacy call sites: stay at €9 so behavior doesn't change.
+  if (amount == null) return formatPrice(9);
 
   const major = amount / 100;
   const code = (currency ?? "eur").toLowerCase();
   const symbol = code === "usd" ? "$" : code === "gbp" ? "£" : "€";
   // Strip trailing .00 for whole amounts so "$9" not "$9.00".
   const display = Number.isInteger(major) ? major.toString() : major.toFixed(2);
-  return `${symbol}${display}/month`;
+  return `${symbol}${display}`;
 }
 
 export function EnableFeatureModal({
@@ -51,9 +52,11 @@ export function EnableFeatureModal({
   priceCurrency,
   returnUrl,
 }: EnableFeatureModalProps) {
+  const t = useTranslations("premium");
+  const tCommon = useTranslations("common");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const priceLabel = formatSkillPrice(priceAmount, priceCurrency);
+  const priceLabel = t("perMonth", { price: formatSkillPrice(priceAmount, priceCurrency) });
 
   const handleEnable = async () => {
     setLoading(true);
@@ -68,11 +71,11 @@ export function EnableFeatureModal({
       if (data.url) {
         window.location.href = data.url;
       } else {
-        setError(data.error || "Something went wrong. Please try again.");
+        setError(data.error || t("genericError"));
         setLoading(false);
       }
     } catch {
-      setError("Network error. Please check your connection and try again.");
+      setError(t("networkError"));
       setLoading(false);
     }
   };
@@ -81,10 +84,9 @@ export function EnableFeatureModal({
     <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Enable {skillName}</DialogTitle>
+          <DialogTitle>{t("enableTitle", { name: skillName })}</DialogTitle>
           <DialogDescription>
-            Add this feature to your account for {priceLabel}. You can cancel
-            anytime from the billing portal.
+            {t("enableDescription", { price: priceLabel })}
           </DialogDescription>
         </DialogHeader>
         {error && (
@@ -95,7 +97,7 @@ export function EnableFeatureModal({
             onClick={onClose}
             className="px-4 py-2 border border-border text-sm hover:bg-muted/50 rounded-full"
           >
-            Cancel
+            {tCommon("cancel")}
           </button>
           <button
             onClick={handleEnable}
@@ -105,10 +107,10 @@ export function EnableFeatureModal({
             {loading ? (
               <span className="flex items-center gap-2">
                 <Loader2 className="h-4 w-4 animate-spin" />
-                Redirecting...
+                {t("redirecting")}
               </span>
             ) : (
-              `Subscribe — ${priceLabel}`
+              t("subscribe", { price: priceLabel })
             )}
           </button>
         </DialogFooter>

@@ -1898,5 +1898,18 @@
       "ai_digest_locked": "The risk digest can no longer be regenerated — a signature has already been recorded.",
       "ai_digest_no_request": "Signing has not been initiated yet — the digest attaches to the signing request."
     }
+  },
+  "premium": {
+    "enableTitle": "Enable {name}",
+    "enableDescription": "Add this skill to your account for {price}. You can cancel anytime from the billing portal.",
+    "enableMultipleTitle": "{count, plural, one {Enable # skill} other {Enable # skills}}",
+    "enableMultipleDescription": "Add the following skills to your account:",
+    "perMonth": "{price}/month",
+    "perMonthShort": "{price}/mo",
+    "monthlyTotal": "Monthly total",
+    "subscribe": "Subscribe — {price}",
+    "redirecting": "Redirecting...",
+    "genericError": "Something went wrong. Please try again.",
+    "networkError": "Network error. Please check your connection and try again."
   }
 }
