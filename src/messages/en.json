@@ -1854,7 +1854,7 @@
       "off": "Off — no AI calls",
       "local_gateway": "Local gateway (self-hosted engine)",
       "cloud_eu": "Cloud — EU provider",
-      "cloud_us": "Cloud — US provider"
+      "cloud_us": "Cloud LLM"
     },
     "postureCard": {
       "title": "AI assistance",
@@ -1863,9 +1863,9 @@
       "engineConfigured": "Engine configured: {provider}",
       "engineNotConfigured": "No AI engine is configured on this server. AI stays inactive even if a posture is selected.",
       "laneNames": {
-        "local_gateway": "Local gateway",
+        "local_gateway": "Local",
         "cloud_eu": "Cloud EU",
-        "cloud_us": "Cloud US"
+        "cloud_us": "Cloud"
       },
       "laneNoEngine": "No engine",
       "notConfiguredWarning": "This posture needs an AI engine on the server: set LLM_GATEWAY_URL + LLM_MODEL_ALIAS (any OpenAI-compatible endpoint, e.g. a local Ollama), or an OPENAI_API_KEY / ANTHROPIC_API_KEY.",
