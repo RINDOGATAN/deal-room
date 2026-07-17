@@ -20,6 +20,7 @@ import { jointCounselRouter } from "./jointCounsel";
 import { feedbackRouter } from "./feedback";
 import { analyticsRouter } from "./analytics";
 import { journeyRouter } from "./journey";
+import { aiRouter } from "./ai";
 
 export const appRouter = createTRPCRouter({
   deal: dealRouter,
@@ -43,6 +44,7 @@ export const appRouter = createTRPCRouter({
   feedback: feedbackRouter,
   analytics: analyticsRouter,
   journey: journeyRouter,
+  ai: aiRouter,
 });
 
 export type AppRouter = typeof appRouter;

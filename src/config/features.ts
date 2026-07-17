@@ -63,4 +63,11 @@ export const features = {
    * client-inlined opt-in — never a default.
    */
   promoBanner: process.env.NEXT_PUBLIC_FREE_TRIAL_ALL_SKILLS === "true",
+  /**
+   * Embedded AI assists (capability visibility only). The real switch is the
+   * install-level AI posture (AiSettings singleton, platform-admin set,
+   * default off = zero AI calls). Set NEXT_PUBLIC_AI_ASSIST_ENABLED=false to
+   * hide even the affordances.
+   */
+  aiAssist: process.env.NEXT_PUBLIC_AI_ASSIST_ENABLED !== "false",
 } as const;

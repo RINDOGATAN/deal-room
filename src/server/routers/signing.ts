@@ -13,6 +13,13 @@ import {
 } from "@/lib/email";
 import { certificationService } from "@/lib/certification-client";
 import { generateContractData } from "@/server/services/document/generator";
+import { requireAi, assertAiRateLimit, recordGeneration } from "../services/ai/posture";
+import { chatComplete } from "../services/ai/llm-door";
+import {
+  extractRiskDigestInput,
+  buildRiskDigestSystemPrompt,
+  buildRiskDigestUserPrompt,
+} from "../services/ai/prompts/risk-digest";
 import { createLogger } from "@/lib/logger";
 
 const logger = createLogger("signing");
@@ -1164,5 +1171,134 @@ export const signingRouter = createTRPCRouter({
       });
 
       return { ok: true };
+    }),
+
+  // ============================================================
+  // OPTIONAL AI ASSIST (posture-gated; see services/ai/posture.ts)
+  // ============================================================
+
+  // Pre-signature risk digest: one shared, markdown digest of the agreed
+  // contract, persisted on the SigningRequest so BOTH parties read the same
+  // text. Regenerable while nobody has signed (status PENDING/SENT with no
+  // recorded signature); frozen once a signature exists. The prompt carries
+  // deal parameters, agreed clause texts, and party ROLE LABELS only —
+  // never party names or emails.
+  generateRiskDigest: protectedProcedure
+    .input(z.object({ dealRoomId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.session.user.id;
+
+      // Posture gate FIRST — posture off/missing means zero AI calls and
+      // no prompt building at all.
+      const settings = await requireAi(ctx.prisma);
+      await assertAiRateLimit(ctx.prisma);
+
+      const party = await ctx.prisma.dealRoomParty.findFirst({
+        where: { dealRoomId: input.dealRoomId, userId },
+        include: { dealRoom: true },
+      });
+      if (!party) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "You do not have access to this deal",
+        });
+      }
+
+      const signingRequest = await ctx.prisma.signingRequest.findFirst({
+        where: { dealRoomId: input.dealRoomId },
+        orderBy: { createdAt: "desc" },
+      });
+      if (!signingRequest) {
+        throw new TRPCError({
+          code: "PRECONDITION_FAILED",
+          message: "ai_digest_no_request",
+        });
+      }
+
+      // Regenerable only until someone signs: PENDING/SENT with no
+      // recorded signature. Afterwards the digest is frozen.
+      const signable =
+        (signingRequest.status === "PENDING" || signingRequest.status === "SENT") &&
+        !signingRequest.initiatorSignedAt &&
+        !signingRequest.respondentSignedAt;
+      if (!signable) {
+        throw new TRPCError({
+          code: "PRECONDITION_FAILED",
+          message: "ai_digest_locked",
+        });
+      }
+
+      // Same compiled contract data the document renderers use (agreed
+      // clause texts with parameters interpolated, in the contract
+      // language). extractRiskDigestInput drops every party-identifying
+      // field before anything reaches the prompt.
+      const contractData = await generateContractData(input.dealRoomId);
+      if (!contractData) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Contract data is not ready for this deal",
+        });
+      }
+
+      const dealParams =
+        (party.dealRoom.parameters as Record<string, string> | null) ?? {};
+      const digestInput = extractRiskDigestInput(contractData, dealParams);
+      const locale = contractData.language || "en";
+
+      const result = await chatComplete({
+        system: buildRiskDigestSystemPrompt(locale),
+        user: buildRiskDigestUserPrompt(digestInput),
+        maxTokens: 1200,
+        temperature: 0.3,
+      });
+
+      // Metadata-only audit row (no prompt/output text). The user explicitly
+      // requested a persisted, shared digest, so acceptance is stamped now.
+      await recordGeneration(ctx.prisma, {
+        dealRoomId: input.dealRoomId,
+        userId,
+        feature: "risk_digest",
+        entityType: "SigningRequest",
+        entityId: signingRequest.id,
+        model: result?.model ?? null,
+        posture: settings.posture,
+        promptTokens: result?.usage?.promptTokens ?? null,
+        completionTokens: result?.usage?.completionTokens ?? null,
+        totalTokens: result?.usage?.totalTokens ?? null,
+        durationMs: result?.durationMs ?? null,
+        status: result ? "ok" : "error",
+        acceptedAt: result ? new Date() : null,
+      });
+
+      if (!result) {
+        throw new TRPCError({ code: "BAD_GATEWAY", message: "ai_failed" });
+      }
+
+      const updated = await ctx.prisma.signingRequest.update({
+        where: { id: signingRequest.id },
+        data: {
+          aiRiskDigest: result.content,
+          aiRiskDigestModel: result.model,
+          aiRiskDigestAt: new Date(),
+        },
+      });
+
+      await ctx.prisma.auditLog.create({
+        data: {
+          dealRoomId: input.dealRoomId,
+          userId,
+          action: "AI_RISK_DIGEST_GENERATED",
+          details: {
+            signingRequestId: signingRequest.id,
+            model: result.model,
+          },
+        },
+      });
+
+      return {
+        aiRiskDigest: updated.aiRiskDigest,
+        aiRiskDigestModel: updated.aiRiskDigestModel,
+        aiRiskDigestAt: updated.aiRiskDigestAt,
+      };
     }),
 });

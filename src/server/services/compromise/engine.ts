@@ -52,8 +52,11 @@ export interface CompromiseResult {
  *
  * Formula: stake = ((5-flexibility)/5 × 0.6) + (|bias| × 0.4)
  * Priority is accepted for backward compatibility but not used.
+ *
+ * Exported (read-only) so the optional AI "Explain with AI" assist can show
+ * the same stake numbers the engine used — the AI never changes them.
  */
-function calculateStake(
+export function calculateStake(
   priority: number,
   flexibility: number,
   bias: number

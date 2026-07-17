@@ -5,9 +5,15 @@ import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
 import { PartyRole, PartyStatus, ClauseStatus, DealRoomStatus, RoundStatus, ProposalStatus } from "@prisma/client";
-import { calculateCompromise, globalFairnessPass, type CompromiseInput, type OptionInput, type DynamicBiasOverride } from "../services/compromise/engine";
+import { calculateCompromise, calculateStake, globalFairnessPass, type CompromiseInput, type OptionInput, type DynamicBiasOverride } from "../services/compromise/engine";
 import { cloudApi, type BiasOverrides, type ValidationResult } from "@/lib/cloud-api";
 import { assertMutableStatus } from "../services/deal/mutability";
+import { requireAi, assertAiRateLimit, recordGeneration } from "../services/ai/posture";
+import { chatComplete } from "../services/ai/llm-door";
+import {
+  buildCompromiseReasoningSystemPrompt,
+  buildCompromiseReasoningUserPrompt,
+} from "../services/ai/prompts/compromise-reasoning";
 import { createLogger } from "@/lib/logger";
 
 const logger = createLogger("compromise");
@@ -1724,5 +1730,162 @@ export const compromiseRouter = createTRPCRouter({
       });
 
       return { accepted: input.accept };
+    }),
+
+  // ============================================================
+  // OPTIONAL AI ASSIST (posture-gated; see services/ai/posture.ts)
+  // ============================================================
+
+  // "Explain with AI": draft a grounded plain-language explanation of the
+  // CURRENT deterministic compromise suggestion for one clause and persist
+  // it into the suggestion's aiReasoning/aiReasoningModel columns. This is
+  // the ONE place AI text persists directly — it is an annotation on an
+  // already-computed engine record, always shown labeled beneath the
+  // untouched deterministic `reasoning`. The AI never changes engine numbers.
+  generateAiReasoning: protectedProcedure
+    .input(z.object({ dealRoomClauseId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.session.user.id;
+
+      // Posture gate FIRST — posture off/missing means zero AI calls and
+      // no prompt building at all.
+      const settings = await requireAi(ctx.prisma);
+      await assertAiRateLimit(ctx.prisma);
+
+      const clause = await ctx.prisma.dealRoomClause.findUnique({
+        where: { id: input.dealRoomClauseId },
+        include: {
+          dealRoom: { include: { parties: true } },
+          clauseTemplate: { include: { options: { orderBy: { order: "asc" } } } },
+          selections: { include: { option: true, party: true } },
+          compromiseSuggestions: {
+            orderBy: { roundNumber: "desc" },
+            take: 1,
+            include: { suggestedOption: true },
+          },
+        },
+      });
+
+      if (!clause) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Clause not found" });
+      }
+
+      const party = clause.dealRoom.parties.find((p) => p.userId === userId);
+      if (!party) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "You do not have access to this deal room",
+        });
+      }
+
+      const suggestion = clause.compromiseSuggestions[0];
+      if (!suggestion) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "No compromise suggestion for this clause yet",
+        });
+      }
+
+      const initiator = clause.dealRoom.parties.find((p) => p.role === PartyRole.INITIATOR);
+      const respondent = clause.dealRoom.parties.find((p) => p.role === PartyRole.RESPONDENT);
+      const selectionA = clause.selections.find((s) => s.partyId === initiator?.id);
+      const selectionB = clause.selections.find((s) => s.partyId === respondent?.id);
+      if (!selectionA || !selectionB) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Both parties' selections are required",
+        });
+      }
+
+      // Prompts are built server-side from Prisma data + the SAME stake
+      // formula the engine used. Role labels only — never names/emails.
+      const locale = clause.dealRoom.contractLanguage || "en";
+      const result = await chatComplete({
+        system: buildCompromiseReasoningSystemPrompt(locale),
+        user: buildCompromiseReasoningUserPrompt({
+          clauseTitle: clause.clauseTemplate.title,
+          roundNumber: suggestion.roundNumber,
+          options: clause.clauseTemplate.options.map((o) => ({
+            label: o.label,
+            order: o.order,
+          })),
+          partyA: {
+            selectedOptionLabel: selectionA.option.label,
+            priority: selectionA.priority,
+            flexibility: selectionA.flexibility,
+            stake: calculateStake(
+              selectionA.priority,
+              selectionA.flexibility,
+              selectionA.option.biasPartyA
+            ),
+          },
+          partyB: {
+            selectedOptionLabel: selectionB.option.label,
+            priority: selectionB.priority,
+            flexibility: selectionB.flexibility,
+            stake: calculateStake(
+              selectionB.priority,
+              selectionB.flexibility,
+              selectionB.option.biasPartyB
+            ),
+          },
+          suggestion: {
+            suggestedOptionLabel: suggestion.suggestedOption.label,
+            satisfactionPartyA: suggestion.satisfactionPartyA,
+            satisfactionPartyB: suggestion.satisfactionPartyB,
+            deterministicReasoning: suggestion.reasoning,
+          },
+        }),
+        maxTokens: 800,
+        temperature: 0.3,
+      });
+
+      // Metadata-only audit row (no prompt/output text). The user explicitly
+      // requested a persisted annotation, so acceptance is stamped now.
+      await recordGeneration(ctx.prisma, {
+        dealRoomId: clause.dealRoomId,
+        userId,
+        feature: "compromise_reasoning",
+        entityType: "CompromiseSuggestion",
+        entityId: suggestion.id,
+        model: result?.model ?? null,
+        posture: settings.posture,
+        promptTokens: result?.usage?.promptTokens ?? null,
+        completionTokens: result?.usage?.completionTokens ?? null,
+        totalTokens: result?.usage?.totalTokens ?? null,
+        durationMs: result?.durationMs ?? null,
+        status: result ? "ok" : "error",
+        acceptedAt: result ? new Date() : null,
+      });
+
+      if (!result) {
+        throw new TRPCError({ code: "BAD_GATEWAY", message: "ai_failed" });
+      }
+
+      // Persist the labeled AI annotation. Engine output (suggestedOptionId,
+      // satisfaction scores, deterministic reasoning) stays untouched.
+      const updated = await ctx.prisma.compromiseSuggestion.update({
+        where: { id: suggestion.id },
+        data: { aiReasoning: result.content, aiReasoningModel: result.model },
+      });
+
+      await ctx.prisma.auditLog.create({
+        data: {
+          dealRoomId: clause.dealRoomId,
+          userId,
+          action: "AI_REASONING_GENERATED",
+          details: {
+            dealRoomClauseId: clause.id,
+            suggestionId: suggestion.id,
+            roundNumber: suggestion.roundNumber,
+            model: result.model,
+          },
+        },
+      });
+
+      return {
+        aiReasoning: updated.aiReasoning,
+        aiReasoningModel: updated.aiReasoningModel,
+      };
     }),
 });
