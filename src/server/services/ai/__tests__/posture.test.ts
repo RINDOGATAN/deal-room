@@ -38,6 +38,16 @@ const AI_ENV_KEYS = [
   "LLM_MODEL_ALIAS",
   "OPENAI_API_KEY",
   "ANTHROPIC_API_KEY",
+  // Posture-routed lane triples (suffixed variables)
+  "LLM_GATEWAY_URL_LOCAL",
+  "LLM_GATEWAY_KEY_LOCAL",
+  "LLM_MODEL_ALIAS_LOCAL",
+  "LLM_GATEWAY_URL_EU",
+  "LLM_GATEWAY_KEY_EU",
+  "LLM_MODEL_ALIAS_EU",
+  "LLM_GATEWAY_URL_US",
+  "LLM_GATEWAY_KEY_US",
+  "LLM_MODEL_ALIAS_US",
 ] as const;
 
 function configureEngine() {
@@ -123,6 +133,27 @@ describe("requireAi truth table (install-level singleton)", () => {
       await expect(requireAi(prisma)).resolves.toMatchObject({ posture });
     }
   );
+
+  it("is lane-aware: a lane-only triple satisfies ITS posture, not the others", async () => {
+    // Only the EU lane has an engine; no base triple at all.
+    vi.stubEnv("LLM_GATEWAY_URL_EU", "https://eu-gateway.example");
+    vi.stubEnv("LLM_MODEL_ALIAS_EU", "mistral-eu");
+
+    prismaMock.aiSettings.findUnique.mockResolvedValue({
+      id: AI_SETTINGS_SINGLETON_ID,
+      posture: "cloud_eu",
+    });
+    await expect(requireAi(prisma)).resolves.toMatchObject({ posture: "cloud_eu" });
+
+    prismaMock.aiSettings.findUnique.mockResolvedValue({
+      id: AI_SETTINGS_SINGLETON_ID,
+      posture: "cloud_us",
+    });
+    await expect(requireAi(prisma)).rejects.toMatchObject({
+      code: "PRECONDITION_FAILED",
+      message: "ai_not_configured",
+    });
+  });
 });
 
 describe("assertAiRateLimit (install-wide)", () => {

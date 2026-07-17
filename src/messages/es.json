@@ -341,6 +341,7 @@
     "resubmit": "Actualizar y Reenviar",
     "failedToLoad": "Error al cargar el acuerdo: {error}",
     "unverified": "Sin verificar",
+    "unverifiedTooltip": "Todavía no lo ha revisado un abogado identificado para esta jurisdicción.",
     "predictedSatisfaction": "Resultado Previsto",
     "predictedSatisfactionDescription": "Basado en negociaciones similares, esta es la satisfacción estimada para cada parte.",
     "yourSatisfaction": "Tu satisfacción estimada",
@@ -387,8 +388,8 @@
     "forYou": "Para ti",
     "forThem": "Para la otra parte",
     "readyToGenerate": "Listo para Generar Compromisos",
-    "readyToGenerateDescription": "Ambas partes han enviado sus selecciones. Genera propuestas de compromiso mediante IA basadas en la firmeza y las preferencias de cada parte.",
-    "generateCompromiseSuggestions": "Generar Propuestas de Compromiso",
+    "readyToGenerateDescription": "Ambas partes han enviado sus selecciones. Genera propuestas de compromiso basadas en la firmeza y las preferencias de cada parte.",
+    "generateCompromiseSuggestions": "Generar propuestas de compromiso",
     "counterPropose": "Contraproponer",
     "counterProposeTitle": "Contraproponer: {title}",
     "selectAlternative": "Selecciona una opción alternativa que te gustaría proponer:",
@@ -447,6 +448,7 @@
     "totalClauses": "Total de Cláusulas",
     "conflictWarnings": "Conflictos entre Cláusulas Detectados",
     "validationUnavailable": "Validación entre cláusulas no disponible",
+    "validationNotConfigured": "(no configurada en esta instalación)",
     "counterProposalBadge": "Contrapropuesta",
     "they": "Ellos:",
     "attorneyReviewInProgress": "Revisión del Abogado/a en Curso",
@@ -1792,7 +1794,13 @@
     "privacy": "Política de Privacidad",
     "terms": "Términos de Uso",
     "howItWorks": "Cómo Funciona",
-    "sourceCode": "Código fuente (AGPL-3.0)"
+    "sourceCode": "Código fuente (AGPL-3.0)",
+    "platformAdmin": "Administración de la plataforma"
+  },
+  "adminAuth": {
+    "logLinkTitle": "Consulta los registros del servidor",
+    "logLinkBody": "Esta instalación autoalojada no tiene servicio de correo electrónico. Tu enlace de acceso se ha impreso en los registros del servidor — ejecuta:",
+    "logLinkTryAgain": "Solicitar un nuevo enlace"
   },
   "onboarding": {
     "chooseRole": "¿Cómo vas a usar Dealroom?",
@@ -1836,6 +1844,8 @@
       "generating": "Redactando…",
       "insert": "Insertar borrador",
       "discard": "Descartar",
+      "cancel": "Cancelar",
+      "waitHint": "Esto puede tardar unos minutos con un modelo local.",
       "provenance": "Generado con IA ({model}) — revísalo antes de usarlo",
       "inserted": "Borrador insertado — revísalo y guárdalo",
       "offHint": "La asistencia de IA está desactivada en esta instalación. Un administrador de la plataforma puede activarla.",
@@ -1853,8 +1863,14 @@
       "postureLabel": "Postura de IA",
       "engineConfigured": "Motor configurado: {provider}",
       "engineNotConfigured": "No hay ningún motor de IA configurado en este servidor. La IA permanece inactiva aunque se seleccione una postura.",
+      "laneNames": {
+        "local_gateway": "Pasarela local",
+        "cloud_eu": "Nube UE",
+        "cloud_us": "Nube EE. UU."
+      },
+      "laneNoEngine": "Sin motor",
       "notConfiguredWarning": "Esta postura necesita un motor de IA en el servidor: configura LLM_GATEWAY_URL + LLM_MODEL_ALIAS (cualquier endpoint compatible con OpenAI, p. ej. un Ollama local) o una OPENAI_API_KEY / ANTHROPIC_API_KEY.",
-      "acknowledgment": "Estoy autorizado para activar la asistencia de IA en esta instalación. Entiendo que los datos seleccionados de los acuerdos se enviarán al motor de IA configurado, que el resultado de la IA es una ayuda que debe revisar un profesional cualificado antes de confiar en ella y que, mientras la postura esté desactivada, no se realiza ninguna llamada a IA.",
+      "acknowledgment": "Tengo autorización para activar la asistencia de IA en esta instalación. Entiendo que los datos seleccionados de los acuerdos se enviarán al motor de IA configurado, que el resultado de la IA es una ayuda que debe revisar un profesional cualificado antes de confiar en ella y que, mientras la postura esté desactivada, no se realiza ninguna llamada a IA.",
       "save": "Guardar postura",
       "saved": "Postura de IA actualizada",
       "acknowledgedBy": "Activada y confirmada por {name} el {date}",

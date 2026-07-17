@@ -37,8 +37,21 @@ export const adminAuthOptions: NextAuthOptions = {
         // NextAuth generates /api/auth/callback/email but we need /api/auth/admin/callback/email
         const adminUrl = url.replace("/api/auth/callback/", "/api/auth/admin/callback/");
 
+        // Self-hosted installs often have NO mail transport (no RESEND_API_KEY).
+        // Printing the link to the server log instead of pretending an email
+        // was sent is security-equivalent to email on a box the operator owns:
+        // only someone who can already read the server logs can see it, and
+        // the verification token stays single-use and expiring exactly as in
+        // the email flow. The sign-in UI reads /api/auth/admin/transport and
+        // tells the operator where to find the link.
+        if (!resend) {
+          // eslint-disable-next-line no-console -- intentionally console.log (not the structured logger): the link must be greppable verbatim in `docker compose logs`
+          console.log(`[admin sign-in] no mail transport — open this link: ${adminUrl}`);
+          return;
+        }
+
         try {
-          await resend!.emails.send({
+          await resend.emails.send({
             from: `DEALROOM <${process.env.EMAIL_FROM || "noreply@todo.law"}>`,
             to: email,
             subject: `Sign in to DEALROOM - Platform Admin`,

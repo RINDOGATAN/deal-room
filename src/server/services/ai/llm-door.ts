@@ -18,6 +18,15 @@
  *   3. ANTHROPIC_API_KEY                  -> api.anthropic.com
  *   4. nothing configured                 -> graceful null, zero network.
  *
+ * Posture-routed lanes (optional): a deployment may configure DIFFERENT
+ * gateway engines per confidentiality lane with suffixed variables —
+ * LLM_GATEWAY_URL_EU / LLM_GATEWAY_KEY_EU / LLM_MODEL_ALIAS_EU (cloud_eu),
+ * the _US triple (cloud_us) and the _LOCAL triple (local_gateway). When a
+ * lane-specific variable is absent, the base (unsuffixed) triple answers —
+ * so single-engine installs behave exactly as before. The caller passes the
+ * install's acknowledged posture as the lane, which makes the recorded
+ * posture and the physical traffic lane the same fact.
+ *
  * HARD RULE: this module is the ONLY file in the codebase allowed to make
  * an outbound AI call (`fetch`). Callers must gate on the install-level
  * posture (services/ai/posture.ts requireAi) BEFORE building prompts or
@@ -44,6 +53,15 @@ const logger = {
 
 export type AiProvider = "gateway" | "openai" | "anthropic";
 
+/** Confidentiality lanes a posture can route to (mirrors AiPosture minus "off"). */
+export type AiLane = "local_gateway" | "cloud_eu" | "cloud_us";
+
+const LANE_SUFFIX: Record<AiLane, string> = {
+  local_gateway: "_LOCAL",
+  cloud_eu: "_EU",
+  cloud_us: "_US",
+};
+
 export interface ChatUsage {
   promptTokens: number | null;
   completionTokens: number | null;
@@ -62,14 +80,18 @@ export interface ChatResult {
 export interface ChatParams {
   system: string;
   user: string;
-  /** Clamped to 4096. Default 1500. */
+  /** Clamped to 4096. Default 2500 (reasoning models spend tokens thinking). */
   maxTokens?: number;
   /** Default 0.3. */
   temperature?: number;
+  /** The organization's acknowledged posture; routes to that lane's engine. */
+  lane?: AiLane;
 }
 
+type ResolvedChatParams = Required<Omit<ChatParams, "lane">>;
+
 const MAX_TOKENS_CEILING = 4096;
-const DEFAULT_MAX_TOKENS = 1500;
+const DEFAULT_MAX_TOKENS = 2500;
 const DEFAULT_TEMPERATURE = 0.3;
 
 // ---------------------------------------------------------------------------
@@ -81,23 +103,32 @@ function env(name: string): string | undefined {
   return value ? value : undefined;
 }
 
-/** Which provider would answer, or null when nothing is configured. */
-export function getProvider(): AiProvider | null {
-  if (env("LLM_GATEWAY_URL") && env("LLM_MODEL_ALIAS")) return "gateway";
+/** Lane-aware gateway variable: the lane-suffixed value, else the base one. */
+function laneEnv(base: string, lane?: AiLane): string | undefined {
+  if (lane) {
+    const suffixed = env(base + LANE_SUFFIX[lane]);
+    if (suffixed) return suffixed;
+  }
+  return env(base);
+}
+
+/** Which provider would answer (for the given lane), or null when nothing is configured. */
+export function getProvider(lane?: AiLane): AiProvider | null {
+  if (laneEnv("LLM_GATEWAY_URL", lane) && laneEnv("LLM_MODEL_ALIAS", lane)) return "gateway";
   if (env("OPENAI_API_KEY")) return "openai";
   if (env("ANTHROPIC_API_KEY")) return "anthropic";
   return null;
 }
 
-/** True when an AI engine is configured (posture is checked elsewhere). */
-export function isAIConfigured(): boolean {
-  return getProvider() !== null;
+/** True when an AI engine is configured for the lane (posture is checked elsewhere). */
+export function isAIConfigured(lane?: AiLane): boolean {
+  return getProvider(lane) !== null;
 }
 
 /** Human-readable provider name for display in UI. */
-export function getAIProviderName(): string | null {
-  const provider = getProvider();
-  if (provider === "gateway") return `LLM gateway (${env("LLM_MODEL_ALIAS")})`;
+export function getAIProviderName(lane?: AiLane): string | null {
+  const provider = getProvider(lane);
+  if (provider === "gateway") return `LLM gateway (${laneEnv("LLM_MODEL_ALIAS", lane)})`;
   if (provider === "openai") return "OpenAI";
   if (provider === "anthropic") return "Anthropic";
   return null;
@@ -138,7 +169,7 @@ async function callOpenAICompatible(
   url: string,
   apiKey: string | undefined,
   model: string,
-  params: Required<ChatParams>,
+  params: ResolvedChatParams,
   label: string
 ): Promise<{ content: string; model: string; usage: ChatUsage | null } | null> {
   const response = await fetch(url, {
@@ -194,7 +225,7 @@ const ANTHROPIC_DEFAULT_MODEL = "claude-sonnet-4-20250514";
 
 async function callAnthropic(
   apiKey: string,
-  params: Required<ChatParams>
+  params: ResolvedChatParams
 ): Promise<{ content: string; model: string; usage: ChatUsage | null } | null> {
   const response = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
@@ -253,10 +284,10 @@ async function callAnthropic(
  * provider errors (they are logged without prompt/output text).
  */
 export async function chatComplete(params: ChatParams): Promise<ChatResult | null> {
-  const provider = getProvider();
+  const provider = getProvider(params.lane);
   if (!provider) return null;
 
-  const resolved: Required<ChatParams> = {
+  const resolved: ResolvedChatParams = {
     system: params.system,
     user: params.user,
     maxTokens: Math.min(Math.max(1, params.maxTokens ?? DEFAULT_MAX_TOKENS), MAX_TOKENS_CEILING),
@@ -268,11 +299,11 @@ export async function chatComplete(params: ChatParams): Promise<ChatResult | nul
     let raw: { content: string; model: string; usage: ChatUsage | null } | null = null;
 
     if (provider === "gateway") {
-      const base = env("LLM_GATEWAY_URL")!.replace(/\/+$/, "");
+      const base = laneEnv("LLM_GATEWAY_URL", params.lane)!.replace(/\/+$/, "");
       raw = await callOpenAICompatible(
         `${base}/v1/chat/completions`,
-        env("LLM_GATEWAY_KEY"),
-        env("LLM_MODEL_ALIAS")!,
+        laneEnv("LLM_GATEWAY_KEY", params.lane),
+        laneEnv("LLM_MODEL_ALIAS", params.lane)!,
         resolved,
         "LLM gateway"
       );

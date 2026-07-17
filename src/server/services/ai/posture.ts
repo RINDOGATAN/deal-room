@@ -29,7 +29,7 @@
 import { TRPCError } from "@trpc/server";
 import type { AiSettings, AiGeneration, AiPosture } from "@prisma/client";
 import type { ExtendedPrismaClient } from "@/lib/prisma";
-import { isAIConfigured } from "./llm-door";
+import { isAIConfigured, type AiLane } from "./llm-door";
 
 /** Hosted metered-key cap: generations per install per hour. */
 export const AI_RATE_LIMIT_PER_HOUR = 30;
@@ -41,11 +41,21 @@ export const AI_SETTINGS_SINGLETON_ID = "singleton";
 type PrismaLike = Pick<ExtendedPrismaClient, "aiSettings" | "aiGeneration">;
 
 /**
- * Gate an AI feature on the install's posture AND engine availability.
- * Throws PRECONDITION_FAILED ("ai_off" | "ai_not_configured") when the
- * feature must not run; returns the settings row when generation may proceed.
+ * An AiSettings row whose posture is known to be an actual lane (not "off").
+ * requireAi only ever returns this shape, so callers can pass
+ * `settings.posture` straight to the door as `lane` (posture-routed lanes:
+ * the acknowledged posture and the physical traffic lane are the same fact).
  */
-export async function requireAi(prisma: PrismaLike): Promise<AiSettings> {
+export type ActiveAiSettings = AiSettings & { posture: AiLane };
+
+/**
+ * Gate an AI feature on the install's posture AND engine availability
+ * FOR THAT POSTURE'S LANE (a lane-suffixed gateway triple, falling back to
+ * the base one — see llm-door laneEnv). Throws PRECONDITION_FAILED
+ * ("ai_off" | "ai_not_configured") when the feature must not run; returns
+ * the settings row when generation may proceed.
+ */
+export async function requireAi(prisma: PrismaLike): Promise<ActiveAiSettings> {
   const settings = await prisma.aiSettings.findUnique({
     where: { id: AI_SETTINGS_SINGLETON_ID },
   });
@@ -54,11 +64,14 @@ export async function requireAi(prisma: PrismaLike): Promise<AiSettings> {
     throw new TRPCError({ code: "PRECONDITION_FAILED", message: "ai_off" });
   }
 
-  if (!isAIConfigured()) {
+  // The off-case threw above, so the posture IS a lane.
+  const lane: AiLane = settings.posture;
+
+  if (!isAIConfigured(lane)) {
     throw new TRPCError({ code: "PRECONDITION_FAILED", message: "ai_not_configured" });
   }
 
-  return settings;
+  return settings as ActiveAiSettings;
 }
 
 /**

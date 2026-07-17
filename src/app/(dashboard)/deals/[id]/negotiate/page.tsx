@@ -749,7 +749,9 @@ function NegotiateContent({ dealId }: { dealId: string }) {
                         <div className="flex items-center gap-2 flex-wrap">
                           <p className="font-heading text-base">{option.label}</p>
                           {/* Cloud Intelligence quality badge */}
-                          <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
+                          <span
+                            title={quality?.score == null ? t("unverifiedTooltip") : undefined}
+                            className={`text-xs px-2 py-0.5 rounded-full font-medium ${
                             quality?.score != null && quality.score >= 70
                               ? "bg-green-500/10 text-green-600"
                               : quality?.score != null && quality.score >= 40

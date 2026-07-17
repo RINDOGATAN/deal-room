@@ -73,7 +73,10 @@ export function AiPostureCard() {
 
   if (!features.aiAssist || !status) return null;
 
-  const showNotConfiguredWarning = posture !== "off" && !status.configured;
+  // Lane-aware: warn about the lane the admin is ABOUT to save (the selector
+  // value), not the one already saved — each posture may have its own engine.
+  const selectedLaneStatus = posture === "off" ? null : status.lanes[posture];
+  const showNotConfiguredWarning = posture !== "off" && !selectedLaneStatus?.configured;
 
   return (
     <Card>
@@ -110,6 +113,28 @@ export function AiPostureCard() {
               ? t("postureCard.engineConfigured", { provider: status.providerName ?? "—" })
               : t("postureCard.engineNotConfigured")}
           </p>
+          {/* Per-lane engine availability (suffixed env triples fall back to the base one) */}
+          <div className="flex flex-wrap gap-1.5">
+            {(["local_gateway", "cloud_eu", "cloud_us"] as const).map((lane) => {
+              const laneStatus = status.lanes[lane];
+              return (
+                <span
+                  key={lane}
+                  className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[11px] ${
+                    laneStatus.configured
+                      ? "border-primary/40 text-foreground"
+                      : "border-border text-muted-foreground"
+                  }`}
+                >
+                  {t(`postureCard.laneNames.${lane}`)}
+                  {": "}
+                  {laneStatus.configured
+                    ? laneStatus.providerName ?? "—"
+                    : t("postureCard.laneNoEngine")}
+                </span>
+              );
+            })}
+          </div>
         </div>
 
         {showNotConfiguredWarning && (

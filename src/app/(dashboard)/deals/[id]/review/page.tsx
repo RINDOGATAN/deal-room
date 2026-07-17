@@ -393,6 +393,13 @@ function ReviewContent({ dealId }: { dealId: string }) {
   const isInitiator = deal.currentUserRole === "INITIATOR";
   const isSoloMode = (deal as { dealMode?: string }).dealMode === "SOLO";
   const pendingCounterProposalsForMe = counterProposals?.pendingForMe || [];
+  // A counterparty exists only once someone has actually joined as the
+  // respondent (an unaccepted invite leaves the party row without a user).
+  const hasCounterparty = deal.parties.some((p) => p.role === "RESPONDENT" && !!p.userId);
+  // The "generate compromises" card claims both parties have submitted — it
+  // must never show on solo deals, deals still waiting for a counterparty,
+  // or deals with nothing left pending (the agreed-state UI covers those).
+  const showGenerateCard = needsGeneration && !isSoloMode && hasCounterparty && pendingCount > 0;
 
   // Check if there are rejections that need new suggestions
   const hasRejections = suggestions.some((item) => {
@@ -624,6 +631,8 @@ function ReviewContent({ dealId }: { dealId: string }) {
       {validation && !validation.validated && !validation.conflicts.length && (
         <div className="text-xs text-muted-foreground text-center">
           {t("validationUnavailable")}
+          {/* Self-host without the cloud validator: explain instead of floating bare */}
+          {validation.configured === false && ` ${t("validationNotConfigured")}`}
         </div>
       )}
 
@@ -825,7 +834,7 @@ function ReviewContent({ dealId }: { dealId: string }) {
       )}
 
       {/* Generate Button (if needed) */}
-      {needsGeneration && (
+      {showGenerateCard && (
         <div className="card-brutal text-center py-8">
           <Scale className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
           <h2 className="text-lg font-semibold mb-2">{t("readyToGenerate")}</h2>

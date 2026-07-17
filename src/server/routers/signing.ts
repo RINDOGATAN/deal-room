@@ -1250,6 +1250,9 @@ export const signingRouter = createTRPCRouter({
         user: buildRiskDigestUserPrompt(digestInput),
         maxTokens: 1200,
         temperature: 0.3,
+        // The acknowledged posture IS the traffic lane (requireAi guarantees
+        // it is not "off").
+        lane: settings.posture,
       });
 
       // Metadata-only audit row (no prompt/output text). The user explicitly

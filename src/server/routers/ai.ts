@@ -24,7 +24,7 @@ import {
   protectedProcedure,
   adminProcedure,
 } from "../trpc";
-import { getAIProviderName, isAIConfigured } from "../services/ai/llm-door";
+import { getAIProviderName, isAIConfigured, type AiLane } from "../services/ai/llm-door";
 import {
   AI_RATE_LIMIT_PER_HOUR,
   AI_SETTINGS_SINGLETON_ID,
@@ -55,12 +55,25 @@ export const aiRouter = createTRPCRouter({
     });
 
     const posture = settings?.posture ?? "off";
-    const configured = isAIConfigured();
+    // Engine availability is lane-aware: the acknowledged posture routes to
+    // that lane's engine (suffixed env triple, falling back to the base one).
+    const lane: AiLane | undefined = posture === "off" ? undefined : posture;
+    const configured = isAIConfigured(lane);
+    const laneStatus = (l: AiLane) => ({
+      configured: isAIConfigured(l),
+      providerName: getAIProviderName(l),
+    });
 
     return {
       posture,
       configured,
-      providerName: configured ? getAIProviderName() : null,
+      providerName: configured ? getAIProviderName(lane) : null,
+      // Per-lane engine availability, for the posture card's lane tags.
+      lanes: {
+        local_gateway: laneStatus("local_gateway"),
+        cloud_eu: laneStatus("cloud_eu"),
+        cloud_us: laneStatus("cloud_us"),
+      },
       acknowledgedAt: settings?.acknowledgedAt ?? null,
       acknowledgedBy: settings?.acknowledgedByAdmin ?? null,
       // Generation can actually run only when both are true.

@@ -21,7 +21,7 @@
  * output to the DB.
  */
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Loader2, Sparkles, Check, X } from "lucide-react";
@@ -81,6 +81,8 @@ export function AiDraftPanel({
   const t = useTranslations("ai");
   const [draft, setDraft] = useState<AiDraft | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
+  // Monotonic run id: Cancel bumps it so a late-arriving result is ignored.
+  const runIdRef = useRef(0);
 
   const { data: status } = trpc.ai.getStatus.useQuery(undefined, {
     enabled: features.aiAssist,
@@ -112,21 +114,32 @@ export function AiDraftPanel({
   }
 
   const handleGenerate = async () => {
+    const runId = ++runIdRef.current;
     setIsGenerating(true);
     try {
       const result = await onGenerate();
+      if (runIdRef.current !== runId) return; // cancelled while waiting
       if (persisted) {
         onGenerated?.();
       } else if (result) {
         setDraft(result);
       }
     } catch (error: unknown) {
+      if (runIdRef.current !== runId) return; // cancelled while waiting
       const message = error instanceof Error ? error.message : undefined;
       const code = knownErrorCode(message);
       toast.error(code ? t(`errors.${code}`) : message || t("errors.ai_failed"));
     } finally {
-      setIsGenerating(false);
+      if (runIdRef.current === runId) setIsGenerating(false);
     }
+  };
+
+  // Client-side cancel only: it stops the wait (and ignores the eventual
+  // result), but the server request may still complete — and still counts
+  // against the hourly generation limit.
+  const handleCancel = () => {
+    runIdRef.current++;
+    setIsGenerating(false);
   };
 
   const handleInsert = () => {
@@ -141,20 +154,31 @@ export function AiDraftPanel({
   if (!draft) {
     return (
       <div className={className}>
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          onClick={handleGenerate}
-          disabled={disabled || isGenerating}
-        >
-          {isGenerating ? (
-            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-          ) : (
-            <Sparkles className="w-4 h-4 mr-2" />
+        <div className="flex items-center gap-2">
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={handleGenerate}
+            disabled={disabled || isGenerating}
+          >
+            {isGenerating ? (
+              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+            ) : (
+              <Sparkles className="w-4 h-4 mr-2" />
+            )}
+            {isGenerating ? t("panel.generating") : generateLabel ?? t("panel.draftWithAi")}
+          </Button>
+          {isGenerating && (
+            <Button type="button" variant="ghost" size="sm" onClick={handleCancel}>
+              <X className="w-4 h-4 mr-1.5" />
+              {t("panel.cancel")}
+            </Button>
           )}
-          {isGenerating ? t("panel.generating") : generateLabel ?? t("panel.draftWithAi")}
-        </Button>
+        </div>
+        {isGenerating && (
+          <p className="mt-1.5 text-xs text-muted-foreground">{t("panel.waitHint")}</p>
+        )}
       </div>
     );
   }

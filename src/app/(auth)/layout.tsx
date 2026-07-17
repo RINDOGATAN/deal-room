@@ -32,7 +32,7 @@ export default function AuthLayout({
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-border py-6">
+      <footer className="border-t border-border py-6 space-y-3">
         <div className="container mx-auto px-6 flex flex-col sm:flex-row items-center justify-center gap-4 text-sm text-muted-foreground">
           <a
             href={brand.links.privacy}
@@ -68,6 +68,12 @@ export default function AuthLayout({
           >
             {t("sourceCode")}
           </a>
+        </div>
+        {/* Quiet operator hint: self-hosted installs need a way to find /admin */}
+        <div className="container mx-auto px-6 text-center text-xs text-muted-foreground/70">
+          <Link href="/admin" className="hover:text-foreground transition-colors">
+            {t("platformAdmin")} → /admin
+          </Link>
         </div>
       </footer>
     </div>

@@ -437,6 +437,24 @@ export default function NewDealPage() {
     (j) => j.value === selectedJurisdiction
   );
 
+  // Dynamic wizard step numbering: steps are conditionally skipped (governing
+  // law for soloModeOnly templates, the mode selector on self-host or when a
+  // template doesn't offer both modes), so numbers are computed from what is
+  // actually rendered — never hard-coded — to avoid 3 → 5 jumps.
+  const stepTemplate = templates?.find((tmpl) => tmpl.contractType === selectedType);
+  const showGoverningLawStep = !!selectedFamily && !stepTemplate?.soloModeOnly;
+  const showModeStep =
+    !!selectedFamily &&
+    !!selectedJurisdiction &&
+    !IS_SELF_HOST &&
+    !!stepTemplate?.soloModeSupported &&
+    !stepTemplate?.soloModeDefault &&
+    !stepTemplate?.soloModeOnly;
+  const governingLawStepNumber = 2;
+  const languageStepNumber = showGoverningLawStep ? 3 : 2;
+  const modeStepNumber = languageStepNumber + 1;
+  const detailsStepNumber = showModeStep ? modeStepNumber + 1 : languageStepNumber + 1;
+
   if (isLoading) {
     return (
       <div className="max-w-3xl mx-auto space-y-8">
@@ -736,11 +754,11 @@ export default function NewDealPage() {
       </div>
 
       {/* Step 2: Governing Law Selection (hidden for soloModeOnly — uses multiSelect parameter) */}
-      {selectedFamily && !templates?.find((tmpl) => tmpl.contractType === selectedType)?.soloModeOnly && (
+      {showGoverningLawStep && (
         <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-300">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold rounded-full">
-              2
+              {governingLawStepNumber}
             </div>
             <Label className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
               {t("governingLaw")}
@@ -865,7 +883,7 @@ export default function NewDealPage() {
         <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-300">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold rounded-full">
-              {templates?.find((tmpl) => tmpl.contractType === selectedType)?.soloModeOnly ? 2 : 3}
+              {languageStepNumber}
             </div>
             <Label className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
               {t("contractLanguage")}
@@ -924,16 +942,13 @@ export default function NewDealPage() {
         </div>
       )}
 
-      {/* Step 4: Deal Mode (only for templates that support both modes) */}
-      {selectedFamily && selectedJurisdiction && (() => {
-        const currentTemplate = templates?.find((tmpl) => tmpl.contractType === selectedType);
-        const showModeSelector = !IS_SELF_HOST && currentTemplate?.soloModeSupported && !currentTemplate?.soloModeDefault && !currentTemplate?.soloModeOnly;
-        if (!showModeSelector) return null;
+      {/* Deal Mode (only for templates that support both modes) */}
+      {showModeStep && (() => {
         return (
           <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-300">
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold rounded-full">
-                4
+                {modeStepNumber}
               </div>
               <Label className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
                 {locale === "es" ? "Modo" : "Mode"}
@@ -1001,17 +1016,13 @@ export default function NewDealPage() {
         );
       })()}
 
-      {/* Step 5 (or 4): Deal Details */}
+      {/* Final step: Deal Details */}
       {selectedFamily && selectedJurisdiction && (
         <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-300">
           <div className="space-y-4">
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold rounded-full">
-                {(() => {
-                  const ct = templates?.find((tmpl) => tmpl.contractType === selectedType);
-                  if (ct?.soloModeOnly) return 3;
-                  return ct?.soloModeSupported && !ct?.soloModeDefault ? 5 : 4;
-                })()}
+                {detailsStepNumber}
               </div>
               <Label className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
                 {t("dealDetails")}

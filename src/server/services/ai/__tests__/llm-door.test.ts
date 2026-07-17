@@ -28,6 +28,16 @@ const AI_ENV_KEYS = [
   "LLM_MODEL_ALIAS",
   "OPENAI_API_KEY",
   "ANTHROPIC_API_KEY",
+  // Posture-routed lane triples (suffixed variables)
+  "LLM_GATEWAY_URL_LOCAL",
+  "LLM_GATEWAY_KEY_LOCAL",
+  "LLM_MODEL_ALIAS_LOCAL",
+  "LLM_GATEWAY_URL_EU",
+  "LLM_GATEWAY_KEY_EU",
+  "LLM_MODEL_ALIAS_EU",
+  "LLM_GATEWAY_URL_US",
+  "LLM_GATEWAY_KEY_US",
+  "LLM_MODEL_ALIAS_US",
 ] as const;
 
 beforeEach(() => {
@@ -80,6 +90,39 @@ describe("getProvider / isAIConfigured", () => {
     expect(getProvider()).toBe("gateway");
     // Trimmed alias shows up clean in the display name
     expect(getAIProviderName()).toBe("LLM gateway (llama3)");
+  });
+});
+
+describe("posture-routed lanes", () => {
+  it("routes a lane to its suffixed gateway triple", () => {
+    vi.stubEnv("LLM_GATEWAY_URL_EU", "https://eu-gateway.example");
+    vi.stubEnv("LLM_MODEL_ALIAS_EU", "mistral-eu");
+    expect(getProvider("cloud_eu")).toBe("gateway");
+    expect(getAIProviderName("cloud_eu")).toBe("LLM gateway (mistral-eu)");
+    // Other lanes see nothing (no base triple configured)
+    expect(getProvider("cloud_us")).toBeNull();
+    expect(getProvider("local_gateway")).toBeNull();
+    // ...and so does the un-laned base call
+    expect(getProvider()).toBeNull();
+  });
+
+  it("falls back to the base triple when the lane has no suffixed engine", () => {
+    vi.stubEnv("LLM_GATEWAY_URL", "http://ollama:11434");
+    vi.stubEnv("LLM_MODEL_ALIAS", "llama3");
+    vi.stubEnv("LLM_MODEL_ALIAS_US", "groq-model");
+    vi.stubEnv("LLM_GATEWAY_URL_US", "https://groq.example");
+    expect(getProvider("cloud_eu")).toBe("gateway");
+    expect(getAIProviderName("cloud_eu")).toBe("LLM gateway (llama3)");
+    expect(getAIProviderName("cloud_us")).toBe("LLM gateway (groq-model)");
+    expect(isAIConfigured("local_gateway")).toBe(true);
+  });
+
+  it("mixes suffixed and base variables within one lane's triple", () => {
+    // URL comes from the lane, alias falls back to the base value
+    vi.stubEnv("LLM_GATEWAY_URL_LOCAL", "http://ollama:11434");
+    vi.stubEnv("LLM_MODEL_ALIAS", "qwen3");
+    expect(getProvider("local_gateway")).toBe("gateway");
+    expect(getAIProviderName("local_gateway")).toBe("LLM gateway (qwen3)");
   });
 });
 

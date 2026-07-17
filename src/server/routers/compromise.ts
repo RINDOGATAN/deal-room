@@ -655,11 +655,18 @@ export const compromiseRouter = createTRPCRouter({
         throw new TRPCError({ code: "FORBIDDEN", message: "Access denied" });
       }
 
+      // `configured` lets the UI distinguish "validator not set up on this
+      // deployment" (typical self-host: no DEALROOM_CLOUD_API_KEY) from a
+      // transient validation failure.
+      const configured = cloudApi.isAvailable;
+
       if (dealRoom.clauses.length === 0) {
-        return { conflicts: [], validated: false } as ValidationResult;
+        return { conflicts: [], validated: false, configured } as ValidationResult & {
+          configured: boolean;
+        };
       }
 
-      return cloudApi.validateCompliance({
+      const result = await cloudApi.validateCompliance({
         contractType: dealRoom.contractTemplate?.contractType || "",
         jurisdiction: dealRoom.governingLaw,
         clauses: dealRoom.clauses.map((c) => ({
@@ -668,6 +675,8 @@ export const compromiseRouter = createTRPCRouter({
           optionLabel: "",
         })),
       });
+
+      return { ...result, configured };
     }),
 
   // Satisfaction prediction via Cloud Intelligence API
@@ -1838,6 +1847,9 @@ export const compromiseRouter = createTRPCRouter({
         }),
         maxTokens: 800,
         temperature: 0.3,
+        // The acknowledged posture IS the traffic lane (requireAi guarantees
+        // it is not "off").
+        lane: settings.posture,
       });
 
       // Metadata-only audit row (no prompt/output text). The user explicitly

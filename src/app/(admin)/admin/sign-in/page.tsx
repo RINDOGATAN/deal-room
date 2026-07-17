@@ -3,14 +3,18 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 import { useState } from "react";
-import { Mail, ArrowRight, Loader2, Shield } from "lucide-react";
+import { Mail, ArrowRight, Loader2, Shield, Terminal } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 export default function AdminSignInPage() {
+  const t = useTranslations("adminAuth");
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isEmailSent, setIsEmailSent] = useState(false);
+  // null = unknown (assume email until told otherwise)
+  const [emailConfigured, setEmailConfigured] = useState<boolean | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -37,6 +41,14 @@ export default function AdminSignInPage() {
       });
 
       if (response.ok || response.redirected) {
+        // Honesty check: with no mail transport the link went to the server
+        // log, not to an inbox — tell the operator where to find it.
+        try {
+          const transport = await fetch("/api/auth/admin/transport").then((r) => r.json());
+          setEmailConfigured(Boolean(transport.emailConfigured));
+        } catch {
+          setEmailConfigured(null);
+        }
         setIsEmailSent(true);
       } else {
         const data = await response.json().catch(() => ({}));
@@ -52,6 +64,33 @@ export default function AdminSignInPage() {
       setIsLoading(false);
     }
   };
+
+  // No mail transport on this install: the sign-in link was printed to the
+  // server log (see lib/auth-admin.ts) — say so instead of lying about email.
+  if (isEmailSent && emailConfigured === false) {
+    return (
+      <div className="w-full max-w-md">
+        <div className="card-brutal text-center">
+          <div className="w-16 h-16 bg-primary/20 flex items-center justify-center mx-auto mb-6">
+            <Terminal className="w-8 h-8 text-primary" />
+          </div>
+          <h1 className="text-2xl font-bold mb-2">{t("logLinkTitle")}</h1>
+          <p className="text-muted-foreground mb-4">{t("logLinkBody")}</p>
+          <pre className="text-left text-xs bg-muted/50 border border-border rounded-md p-3 overflow-x-auto mb-6">
+            {"docker compose logs app | grep 'admin sign-in'"}
+          </pre>
+          <p className="text-sm text-muted-foreground">
+            <button
+              onClick={() => setIsEmailSent(false)}
+              className="text-primary hover:underline"
+            >
+              {t("logLinkTryAgain")}
+            </button>
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   if (isEmailSent) {
     return (

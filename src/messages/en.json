@@ -340,6 +340,7 @@
     "resubmit": "Update & Resubmit",
     "failedToLoad": "Failed to load deal: {error}",
     "unverified": "Unverified",
+    "unverifiedTooltip": "Not yet reviewed by a named attorney for this jurisdiction.",
     "predictedSatisfaction": "Predicted Outcome",
     "predictedSatisfactionDescription": "Based on similar negotiations, here is the predicted satisfaction for each party.",
     "yourSatisfaction": "Your predicted satisfaction",
@@ -386,8 +387,8 @@
     "forYou": "For you",
     "forThem": "For them",
     "readyToGenerate": "Ready to Generate Compromises",
-    "readyToGenerateDescription": "Both parties have submitted their selections. Generate AI-powered compromise suggestions based on each party's firmness and preferences.",
-    "generateCompromiseSuggestions": "Generate Compromise Suggestions",
+    "readyToGenerateDescription": "Both parties have submitted their selections. Generate compromise suggestions based on each party's firmness and preferences.",
+    "generateCompromiseSuggestions": "Generate compromise suggestions",
     "counterPropose": "Counter-Propose",
     "counterProposeTitle": "Counter-Propose: {title}",
     "selectAlternative": "Select an alternative option you'd like to propose:",
@@ -446,6 +447,7 @@
     "totalClauses": "Total Clauses",
     "conflictWarnings": "Cross-Clause Conflicts Detected",
     "validationUnavailable": "Cross-clause validation unavailable",
+    "validationNotConfigured": "(not configured on this deployment)",
     "counterProposalBadge": "Counter-Proposal",
     "they": "They:",
     "attorneyReviewInProgress": "Attorney Review In Progress",
@@ -1791,7 +1793,13 @@
     "privacy": "Privacy Policy",
     "terms": "Terms of Service",
     "howItWorks": "How It Works",
-    "sourceCode": "Source code (AGPL-3.0)"
+    "sourceCode": "Source code (AGPL-3.0)",
+    "platformAdmin": "Platform administration"
+  },
+  "adminAuth": {
+    "logLinkTitle": "Check the server logs",
+    "logLinkBody": "This self-hosted install has no email service. Your sign-in link was printed to the server logs — run:",
+    "logLinkTryAgain": "Request a new link"
   },
   "onboarding": {
     "chooseRole": "How will you use Dealroom?",
@@ -1835,6 +1843,8 @@
       "generating": "Drafting…",
       "insert": "Insert draft",
       "discard": "Discard",
+      "cancel": "Cancel",
+      "waitHint": "This can take a few minutes on a local model.",
       "provenance": "AI-generated with {model} — review before use",
       "inserted": "Draft inserted — review it and save",
       "offHint": "AI assistance is off for this installation. A platform administrator can enable it.",
@@ -1852,6 +1862,12 @@
       "postureLabel": "AI posture",
       "engineConfigured": "Engine configured: {provider}",
       "engineNotConfigured": "No AI engine is configured on this server. AI stays inactive even if a posture is selected.",
+      "laneNames": {
+        "local_gateway": "Local gateway",
+        "cloud_eu": "Cloud EU",
+        "cloud_us": "Cloud US"
+      },
+      "laneNoEngine": "No engine",
       "notConfiguredWarning": "This posture needs an AI engine on the server: set LLM_GATEWAY_URL + LLM_MODEL_ALIAS (any OpenAI-compatible endpoint, e.g. a local Ollama), or an OPENAI_API_KEY / ANTHROPIC_API_KEY.",
       "acknowledgment": "I am authorized to enable AI assistance for this installation. I understand that the selected deal data will be sent to the configured AI engine, that AI output is an aid that must be reviewed by a qualified professional before relying on it, and that while the posture is Off no AI calls are made.",
       "save": "Save posture",
