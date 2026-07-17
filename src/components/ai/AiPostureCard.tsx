@@ -39,8 +39,16 @@ import { useTranslations } from "next-intl";
 import { trpc } from "@/lib/trpc";
 import { features } from "@/config/features";
 
-const POSTURES = ["off", "local_gateway", "cloud_eu", "cloud_us"] as const;
-type Posture = (typeof POSTURES)[number];
+type Posture = "off" | "local_gateway" | "cloud_eu" | "cloud_us";
+
+// Product decision (2026-07-17): the picker offers a SIMPLE choice — Off,
+// Cloud LLM, or Local gateway (the latter only meaningful on self-host).
+// "Cloud LLM" is stored as `cloud_us` (the enum keeps all four values —
+// append-only DB discipline and canonical-door parity — and with a single
+// base engine every lane routes identically, so the recorded posture and
+// the physical traffic stay the same fact). `cloud_eu` remains valid for
+// any install that already saved it and is shown only in that legacy case.
+const OFFERED_POSTURES: readonly Posture[] = ["off", "cloud_us", "local_gateway"];
 
 export function AiPostureCard() {
   const t = useTranslations("ai");
@@ -101,7 +109,10 @@ export function AiPostureCard() {
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              {POSTURES.map((p) => (
+              {(OFFERED_POSTURES.includes(posture)
+                ? OFFERED_POSTURES
+                : [...OFFERED_POSTURES, posture]
+              ).map((p) => (
                 <SelectItem key={p} value={p}>
                   {t(`posture.${p}`)}
                 </SelectItem>
@@ -113,9 +124,10 @@ export function AiPostureCard() {
               ? t("postureCard.engineConfigured", { provider: status.providerName ?? "—" })
               : t("postureCard.engineNotConfigured")}
           </p>
-          {/* Per-lane engine availability (suffixed env triples fall back to the base one) */}
+          {/* Engine availability for the two offered lanes (suffixed env
+              triples fall back to the base one) */}
           <div className="flex flex-wrap gap-1.5">
-            {(["local_gateway", "cloud_eu", "cloud_us"] as const).map((lane) => {
+            {(["cloud_us", "local_gateway"] as const).map((lane) => {
               const laneStatus = status.lanes[lane];
               return (
                 <span
