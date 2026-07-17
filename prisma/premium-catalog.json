@@ -414,7 +414,8 @@
       "en": ""
     },
     "category": {
-      "en": "Other"
+      "en": "Other",
+      "es": "Otros"
     },
     "application": "Dealroom",
     "contractType": "DPIA_COMPANION",
@@ -970,7 +971,8 @@
       "en": ""
     },
     "category": {
-      "en": "Other"
+      "en": "Other",
+      "es": "Otros"
     },
     "application": "Dealroom",
     "contractType": "VENDOR_RISK",

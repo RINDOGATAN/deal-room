@@ -543,7 +543,15 @@ export class SkillPackageInstaller {
       where: { isActive: true },
       include: {
         contractTemplate: {
-          select: { id: true, contractType: true, displayName: true },
+          select: {
+            id: true,
+            contractType: true,
+            displayName: true,
+            // Clause count distinguishes a real install from a marketplace
+            // stub (catalog row seeded with no content). Stubs must not be
+            // presented as installed skills.
+            _count: { select: { clauses: true } },
+          },
         },
         _count: { select: { entitlements: true } },
       },

@@ -73,6 +73,31 @@ describe("features.allSkillsFree", () => {
   });
 });
 
+describe("features.promoBanner", () => {
+  it("stays hidden by default — Stripe being absent is not a promo", async () => {
+    setEnv({});
+    vi.resetModules();
+    const { features } = await import("@/config/features");
+    expect(features.allSkillsFree).toBe(true);
+    expect(features.promoBanner).toBe(false);
+  });
+
+  it("shows only when the public promo env is explicitly set", async () => {
+    setEnv({ NEXT_PUBLIC_FREE_TRIAL_ALL_SKILLS: "true" });
+    vi.resetModules();
+    const { features } = await import("@/config/features");
+    expect(features.promoBanner).toBe(true);
+  });
+
+  it("ignores the server-only promo var — the banner renders client-side", async () => {
+    setEnv({ STRIPE_SECRET_KEY: "sk_test_dummy", FREE_TRIAL_ALL_SKILLS: "true" });
+    vi.resetModules();
+    const { features } = await import("@/config/features");
+    expect(features.allSkillsFree).toBe(true);
+    expect(features.promoBanner).toBe(false);
+  });
+});
+
 describe("skill-access with payments disabled", () => {
   it("resolves an entitlement check to allowed/free when Stripe is absent, without touching the DB", async () => {
     setEnv({});

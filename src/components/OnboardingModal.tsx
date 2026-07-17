@@ -136,7 +136,7 @@ export function OnboardingModal({ open, dismissible, onComplete }: OnboardingMod
             ? "..."
             : selected
               ? t("continueAs", { role: roleLabel })
-              : t("chooseRole")
+              : t("continue")
           }
         </button>
       </DialogContent>

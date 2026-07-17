@@ -3,6 +3,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { brand } from "@/config/brand";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 
@@ -11,6 +12,7 @@ export default function AuthLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const t = useTranslations("authFooter");
   return (
     <div className="min-h-screen bg-background flex flex-col">
       {/* Header */}
@@ -38,7 +40,7 @@ export default function AuthLayout({
             rel="noopener noreferrer"
             className="hover:text-foreground transition-colors"
           >
-            Privacy Policy
+            {t("privacy")}
           </a>
           <span className="hidden sm:inline">&middot;</span>
           <a
@@ -47,14 +49,14 @@ export default function AuthLayout({
             rel="noopener noreferrer"
             className="hover:text-foreground transition-colors"
           >
-            Terms of Service
+            {t("terms")}
           </a>
           <span className="hidden sm:inline">&middot;</span>
           <Link
             href="/docs/how-it-works"
             className="hover:text-foreground transition-colors"
           >
-            How It Works
+            {t("howItWorks")}
           </Link>
           <span className="hidden sm:inline">&middot;</span>
           {/* AGPL §13: offer of Corresponding Source to network users */}
@@ -64,7 +66,7 @@ export default function AuthLayout({
             rel="noopener noreferrer"
             className="hover:text-foreground transition-colors"
           >
-            Source code (AGPL-3.0)
+            {t("sourceCode")}
           </a>
         </div>
       </footer>

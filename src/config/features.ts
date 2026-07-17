@@ -52,4 +52,15 @@ export const features = {
     !process.env.STRIPE_SECRET_KEY ||
     process.env.NEXT_PUBLIC_FREE_TRIAL_ALL_SKILLS === "true" ||
     process.env.FREE_TRIAL_ALL_SKILLS === "true",
+  /**
+   * The "every premium skill is free right now" promo banner.
+   *
+   * Deliberately NOT derived from `allSkillsFree`: in the browser bundle
+   * `STRIPE_SECRET_KEY` is always absent, so `allSkillsFree` is always true
+   * client-side and would show cloud-promo language on self-hosted boxes
+   * where nothing was ever for sale. The banner only makes sense during an
+   * explicitly opened promo window, so it requires the explicit,
+   * client-inlined opt-in — never a default.
+   */
+  promoBanner: process.env.NEXT_PUBLIC_FREE_TRIAL_ALL_SKILLS === "true",
 } as const;

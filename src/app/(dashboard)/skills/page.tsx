@@ -5,8 +5,9 @@
 import { useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
-import { KeyRound, Upload, Loader2, CheckCircle2, Lock, FileCheck2, Globe, Package } from "lucide-react";
+import { KeyRound, Upload, Loader2, CheckCircle2, Lock, FileCheck2, Globe, Package, ShoppingBag } from "lucide-react";
 import { trpc } from "@/lib/trpc";
+import { marketplaceSkillUrl } from "@/lib/marketplace";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 
@@ -222,7 +223,19 @@ export default function SkillsPage() {
                       <span>v{s.version}</span>
                     </div>
                   </div>
-                  {s.isActive ? (
+                  {/* A contentless stub is a catalog entry, not an install —
+                      never present it as Installed/Active. */}
+                  {!s.contentInstalled ? (
+                    <a
+                      href={marketplaceSkillUrl()}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex shrink-0 items-center gap-1 rounded-full bg-muted px-2.5 py-1 text-xs font-medium text-muted-foreground hover:text-foreground"
+                    >
+                      <ShoppingBag className="h-3.5 w-3.5" />
+                      {t("statusMarketplace")}
+                    </a>
+                  ) : s.isActive ? (
                     <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-primary/10 px-2.5 py-1 text-xs font-medium text-primary">
                       <CheckCircle2 className="h-3.5 w-3.5" />
                       {t("statusActive")}

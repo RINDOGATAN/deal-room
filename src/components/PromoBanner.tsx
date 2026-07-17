@@ -7,12 +7,15 @@ import { useTranslations } from "next-intl";
 import { features } from "@/config/features";
 
 /**
- * Promotional banner shown while every premium skill is free.
- * Renders nothing when `features.allSkillsFree` is off.
+ * Promotional banner shown while an explicit free-skills promo window is
+ * open (`NEXT_PUBLIC_FREE_TRIAL_ALL_SKILLS=true`). Renders nothing
+ * otherwise — in particular on self-hosted deployments, where "no
+ * subscription needed during this period" would be nonsense: skills there
+ * are installed, not subscribed to.
  */
 export function PromoBanner() {
   const t = useTranslations("promo");
-  if (!features.allSkillsFree) return null;
+  if (!features.promoBanner) return null;
 
   return (
     <div className="card-brutal border-primary/40 bg-primary/5 flex items-start gap-3 py-3">

@@ -148,6 +148,11 @@ export const skillManagerRouter = createTRPCRouter({
           }
         : null,
       entitlementCount: pkg._count.entitlements,
+      // False for marketplace stubs: catalog rows whose clause content was
+      // never delivered (the .skill hasn't been installed). This is a
+      // delivery state, not an entitlement state — the UI must not show
+      // these as "Installed/Active".
+      contentInstalled: (pkg.contractTemplate?._count.clauses ?? 0) > 0,
     }));
   }),
 

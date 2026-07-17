@@ -64,6 +64,10 @@
     "signInWithCode": "Sign In with Invite Code",
     "localSignIn": "Sign in",
     "localSignInHint": "Local instance login — your email is your account. No password, no email is sent.",
+    "localSignInHintPassphrase": "Local instance login — your email is your account. No email is sent.",
+    "workspacePassphrase": "Workspace passphrase",
+    "workspacePassphraseHint": "Set when the suite was installed. Recover it on the computer that runs the suite: ./suite.sh passphrase",
+    "wrongPassphrase": "Wrong passphrase — check ./suite.sh passphrase on the host computer.",
     "unexpectedError": "An unexpected error occurred.",
     "googleSignInFailed": "Google sign-in failed.",
     "errorTitle": "Sign-in problem",
@@ -162,7 +166,7 @@
     "toUseContract": "To use this contract type, you'll need to have it enabled on your account. Get in touch with us and we'll help you get started.",
     "premiumSkill": "{price}/mo",
     "premiumBadge": "Premium",
-    "getOnMarketplace": "Get it on the todo.law marketplace",
+    "getOnMarketplace": "Skill package not installed — get it on the todo.law marketplace",
     "included": "Included",
     "clickToEnable": "Click to enable",
     "notAvailableForContract": "Not available for this contract",
@@ -1528,6 +1532,7 @@
     "loading": "Loading…",
     "statusActive": "Active",
     "statusLocked": "Locked",
+    "statusMarketplace": "Available on the marketplace",
     "installTitle": "Install a skill package",
     "installHint": "Choose the .skill file you downloaded after your purchase.",
     "chooseSkill": "Choose skill package",
@@ -1782,6 +1787,12 @@
     "privacyNotice": "Privacy Notice",
     "sourceCode": "Source code (AGPL-3.0)"
   },
+  "authFooter": {
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "howItWorks": "How It Works",
+    "sourceCode": "Source code (AGPL-3.0)"
+  },
   "onboarding": {
     "chooseRole": "How will you use Dealroom?",
     "businessOwnerTitle": "Startup Mode",
@@ -1792,6 +1803,7 @@
     "lawyerFeature1": "Full legal text and jurisdiction detail",
     "lawyerFeature2": "Receive and respond to assistance requests",
     "lawyerFeature3": "Publish a professional profile",
+    "continue": "Continue",
     "continueAs": "Continue as {role}",
     "switchRole": "Switch role",
     "roleBusiness": "Business",

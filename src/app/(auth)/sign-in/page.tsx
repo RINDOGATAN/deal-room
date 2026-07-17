@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Copyright (C) 2025-2026 Rindogatan LLC
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { signIn } from "next-auth/react";
 import { useTranslations } from "next-intl";
 import { Loader2, Mail, KeyRound, Rocket, Scale, Briefcase } from "lucide-react";
@@ -33,10 +33,25 @@ export default function SignInPage() {
   const t = useTranslations("auth");
   const [email, setEmail] = useState("");
   const [code, setCode] = useState("");
+  const [passphrase, setPassphrase] = useState("");
+  const [passphraseRequired, setPassphraseRequired] = useState(false);
   const [isEmailLoading, setIsEmailLoading] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const [emailSent, setEmailSent] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // WORKSPACE_PASSPHRASE is runtime server env (settable without a rebuild),
+  // so the client can't know about it at build time — ask the server.
+  useEffect(() => {
+    if (!LOCAL_AUTH_ON) return;
+    fetch("/api/self-host/auth-config")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((cfg) => setPassphraseRequired(!!cfg?.passphraseRequired))
+      .catch(() => {
+        // Unreachable config endpoint: leave the field hidden; a required
+        // passphrase will still be enforced server-side by authorize().
+      });
+  }, []);
 
   const handleEmailSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -101,12 +116,15 @@ export default function SignInPage() {
     try {
       const result = await signIn("local", {
         email: email.trim(),
+        passphrase,
         redirect: false,
         callbackUrl: "/deals",
       });
 
       if (result?.error) {
-        setError(t("unexpectedError"));
+        // With a passphrase gate active, a rejected credentials sign-in is
+        // almost always a wrong passphrase — say so instead of a shrug.
+        setError(passphraseRequired ? t("wrongPassphrase") : t("unexpectedError"));
         setIsEmailLoading(false);
       } else if (result?.ok) {
         window.location.href = "/deals";
@@ -193,9 +211,27 @@ export default function SignInPage() {
               />
             </div>
 
+            {passphraseRequired && (
+              <div className="space-y-2">
+                <Label htmlFor="passphrase">{t("workspacePassphrase")}</Label>
+                <Input
+                  id="passphrase"
+                  type="password"
+                  value={passphrase}
+                  onChange={(e) => setPassphrase(e.target.value)}
+                  required
+                  autoComplete="current-password"
+                  className="bg-background"
+                />
+                <p className="text-xs text-muted-foreground">
+                  {t("workspacePassphraseHint")}
+                </p>
+              </div>
+            )}
+
             <button
               type="submit"
-              disabled={isEmailLoading || !email.trim()}
+              disabled={isEmailLoading || !email.trim() || (passphraseRequired && !passphrase)}
               className="btn-brutal w-full flex items-center justify-center gap-3 py-3 disabled:opacity-50"
             >
               {isEmailLoading ? (
@@ -212,7 +248,8 @@ export default function SignInPage() {
             </button>
 
             <p className="text-center text-xs text-muted-foreground">
-              {t("localSignInHint")}
+              {/* "No password" would contradict the passphrase field. */}
+              {passphraseRequired ? t("localSignInHintPassphrase") : t("localSignInHint")}
             </p>
           </form>
         )}
