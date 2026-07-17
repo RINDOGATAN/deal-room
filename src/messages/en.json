@@ -1827,5 +1827,60 @@
     "draftDescription": "Your lawyer is still finalizing the recommended selections.",
     "approvedTooltip": "Approved by {lawyer} on {date}",
     "draftTooltip": "Draft vetting by {lawyer}"
+  },
+  "ai": {
+    "panel": {
+      "draftWithAi": "Draft with AI",
+      "explainWithAi": "Explain with AI",
+      "generating": "Drafting…",
+      "insert": "Insert draft",
+      "discard": "Discard",
+      "provenance": "AI-generated with {model} — review before use",
+      "inserted": "Draft inserted — review it and save",
+      "offHint": "AI assistance is off for this installation. A platform administrator can enable it.",
+      "notConfiguredHint": "AI assistance is enabled, but no AI engine is configured on the server. Ask your administrator to set LLM_GATEWAY_URL (or an API key)."
+    },
+    "posture": {
+      "off": "Off — no AI calls",
+      "local_gateway": "Local gateway (self-hosted engine)",
+      "cloud_eu": "Cloud — EU provider",
+      "cloud_us": "Cloud — US provider"
+    },
+    "postureCard": {
+      "title": "AI assistance",
+      "description": "Optional AI assists (compromise explanations, pre-signature risk digests). Off by default: while the posture is off, this product makes no AI calls at all.",
+      "postureLabel": "AI posture",
+      "engineConfigured": "Engine configured: {provider}",
+      "engineNotConfigured": "No AI engine is configured on this server. AI stays inactive even if a posture is selected.",
+      "notConfiguredWarning": "This posture needs an AI engine on the server: set LLM_GATEWAY_URL + LLM_MODEL_ALIAS (any OpenAI-compatible endpoint, e.g. a local Ollama), or an OPENAI_API_KEY / ANTHROPIC_API_KEY.",
+      "acknowledgment": "I am authorized to enable AI assistance for this installation. I understand that the selected deal data will be sent to the configured AI engine, that AI output is an aid that must be reviewed by a qualified professional before relying on it, and that while the posture is Off no AI calls are made.",
+      "save": "Save posture",
+      "saved": "AI posture updated",
+      "acknowledgedBy": "Enabled and acknowledged by {name} on {date}",
+      "adminOnly": "Only platform administrators can change the AI posture."
+    },
+    "compromise": {
+      "aiExplanationTitle": "AI explanation",
+      "generated": "AI explanation added beneath the suggestion"
+    },
+    "riskDigest": {
+      "title": "Pre-signature risk digest",
+      "description": "Optional AI-drafted summary of key obligations and risk points in the agreed contract. Both parties see the same digest.",
+      "generate": "Generate digest",
+      "regenerate": "Regenerate",
+      "generating": "Generating…",
+      "generatedAt": "Generated {date}",
+      "locked": "The digest is frozen once a signature has been recorded.",
+      "disclaimer": "Not legal advice — attorney review recommended.",
+      "generated": "Risk digest generated"
+    },
+    "errors": {
+      "ai_off": "AI assistance is off for this installation. A platform administrator can enable it.",
+      "ai_not_configured": "No AI engine is configured on the server. Set LLM_GATEWAY_URL (or an API key) and try again.",
+      "ai_rate_limited": "This installation has reached its hourly AI limit. Try again later.",
+      "ai_failed": "The AI engine did not return a result. Try again.",
+      "ai_digest_locked": "The risk digest can no longer be regenerated — a signature has already been recorded.",
+      "ai_digest_no_request": "Signing has not been initiated yet — the digest attaches to the signing request."
+    }
   }
 }

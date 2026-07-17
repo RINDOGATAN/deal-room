@@ -36,6 +36,7 @@ import {
 import { resolveParamString } from "@/lib/parameters";
 import { Badge } from "@/components/ui/badge";
 import { VettingBadge } from "@/components/VettingBadge";
+import { AiDraftPanel } from "@/components/ai/AiDraftPanel";
 import { useContractMessages } from "@/lib/use-contract-messages";
 
 function DownloadLinks({ dealId, className }: { dealId: string; className?: string }) {
@@ -94,6 +95,7 @@ function ReviewContent({ dealId }: { dealId: string }) {
   const t = useTranslations("review");
   const tCommon = useTranslations("common");
   const tJointCounsel = useTranslations("jointCounsel");
+  const tAi = useTranslations("ai");
 
   const [counterProposalForm, setCounterProposalForm] = useState<CounterProposalForm | null>(null);
   const [selectedOptionId, setSelectedOptionId] = useState<string>("");
@@ -185,6 +187,11 @@ function ReviewContent({ dealId }: { dealId: string }) {
       toast.error(t("toastMessages.respondFailed", { error: error.message }));
     },
   });
+
+  // Optional AI assist (posture-gated server-side): persists a labeled
+  // explanation beneath the deterministic reasoning. Errors are handled by
+  // the AiDraftPanel (mutateAsync rethrows into it).
+  const generateAiReasoning = trpc.compromise.generateAiReasoning.useMutation();
 
   const submitCounterProposal = trpc.compromise.counterPropose.useMutation({
     onSuccess: () => {
@@ -1083,10 +1090,39 @@ function ReviewContent({ dealId }: { dealId: string }) {
                 {/* Expanded Details */}
                 {isExpanded && suggestion && (
                   <>
-                    {/* Reasoning */}
+                    {/* Reasoning (deterministic — always shown, never AI-modified) */}
                     <div className="mb-4 p-4 bg-muted/20 border border-border">
                       <p className="text-sm text-muted-foreground">{suggestion.reasoning}</p>
                     </div>
+
+                    {/* Optional AI explanation (posture-gated; labeled annotation
+                        beneath the deterministic reasoning above) */}
+                    {suggestion.aiReasoning ? (
+                      <div className="mb-4 p-4 bg-primary/5 border border-primary/30">
+                        <p className="text-xs font-medium text-primary uppercase tracking-wider mb-2">
+                          {tAi("compromise.aiExplanationTitle")}
+                        </p>
+                        <p className="text-sm text-muted-foreground whitespace-pre-wrap">
+                          {suggestion.aiReasoning}
+                        </p>
+                        <p className="text-xs text-muted-foreground italic mt-2">
+                          {tAi("panel.provenance", { model: suggestion.aiReasoningModel ?? "AI" })}
+                        </p>
+                      </div>
+                    ) : (
+                      <AiDraftPanel
+                        className="mb-4"
+                        persisted
+                        generateLabel={tAi("panel.explainWithAi")}
+                        onGenerate={async () => {
+                          await generateAiReasoning.mutateAsync({ dealRoomClauseId: item.clauseId });
+                        }}
+                        onGenerated={() => {
+                          toast.success(tAi("compromise.generated"));
+                          refetch();
+                        }}
+                      />
+                    )}
 
                     {/* Outcome for this clause */}
                     {(() => {

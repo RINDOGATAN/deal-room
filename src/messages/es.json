@@ -1828,5 +1828,60 @@
     "draftDescription": "Tu abogado/a todavía está finalizando las selecciones recomendadas.",
     "approvedTooltip": "Aprobado por {lawyer} el {date}",
     "draftTooltip": "Revisión en borrador por {lawyer}"
+  },
+  "ai": {
+    "panel": {
+      "draftWithAi": "Redactar con IA",
+      "explainWithAi": "Explicar con IA",
+      "generating": "Redactando…",
+      "insert": "Insertar borrador",
+      "discard": "Descartar",
+      "provenance": "Generado con IA ({model}) — revísalo antes de usarlo",
+      "inserted": "Borrador insertado — revísalo y guárdalo",
+      "offHint": "La asistencia de IA está desactivada en esta instalación. Un administrador de la plataforma puede activarla.",
+      "notConfiguredHint": "La asistencia de IA está activada, pero no hay ningún motor de IA configurado en el servidor. Pide a tu administrador que configure LLM_GATEWAY_URL (o una clave de API)."
+    },
+    "posture": {
+      "off": "Desactivado — sin llamadas a IA",
+      "local_gateway": "Pasarela local (motor autoalojado)",
+      "cloud_eu": "Nube — proveedor de la UE",
+      "cloud_us": "Nube — proveedor de EE. UU."
+    },
+    "postureCard": {
+      "title": "Asistencia de IA",
+      "description": "Asistentes opcionales de IA (explicaciones de compromisos, resúmenes de riesgo previos a la firma). Desactivado por defecto: mientras la postura esté desactivada, este producto no realiza ninguna llamada a IA.",
+      "postureLabel": "Postura de IA",
+      "engineConfigured": "Motor configurado: {provider}",
+      "engineNotConfigured": "No hay ningún motor de IA configurado en este servidor. La IA permanece inactiva aunque se seleccione una postura.",
+      "notConfiguredWarning": "Esta postura necesita un motor de IA en el servidor: configura LLM_GATEWAY_URL + LLM_MODEL_ALIAS (cualquier endpoint compatible con OpenAI, p. ej. un Ollama local) o una OPENAI_API_KEY / ANTHROPIC_API_KEY.",
+      "acknowledgment": "Estoy autorizado para activar la asistencia de IA en esta instalación. Entiendo que los datos seleccionados de los acuerdos se enviarán al motor de IA configurado, que el resultado de la IA es una ayuda que debe revisar un profesional cualificado antes de confiar en ella y que, mientras la postura esté desactivada, no se realiza ninguna llamada a IA.",
+      "save": "Guardar postura",
+      "saved": "Postura de IA actualizada",
+      "acknowledgedBy": "Activada y confirmada por {name} el {date}",
+      "adminOnly": "Solo los administradores de la plataforma pueden cambiar la postura de IA."
+    },
+    "compromise": {
+      "aiExplanationTitle": "Explicación de la IA",
+      "generated": "Explicación de la IA añadida bajo la sugerencia"
+    },
+    "riskDigest": {
+      "title": "Resumen de riesgos previo a la firma",
+      "description": "Resumen opcional redactado con IA de las obligaciones clave y los puntos de riesgo del contrato acordado. Ambas partes ven el mismo resumen.",
+      "generate": "Generar resumen",
+      "regenerate": "Regenerar",
+      "generating": "Generando…",
+      "generatedAt": "Generado el {date}",
+      "locked": "El resumen queda congelado en cuanto se registra una firma.",
+      "disclaimer": "No es asesoramiento jurídico — se recomienda la revisión por un abogado.",
+      "generated": "Resumen de riesgos generado"
+    },
+    "errors": {
+      "ai_off": "La asistencia de IA está desactivada en esta instalación. Un administrador de la plataforma puede activarla.",
+      "ai_not_configured": "No hay ningún motor de IA configurado en el servidor. Configura LLM_GATEWAY_URL (o una clave de API) e inténtalo de nuevo.",
+      "ai_rate_limited": "Esta instalación ha alcanzado su límite horario de IA. Inténtalo de nuevo más tarde.",
+      "ai_failed": "El motor de IA no ha devuelto ningún resultado. Inténtalo de nuevo.",
+      "ai_digest_locked": "El resumen de riesgos ya no puede regenerarse — ya se ha registrado una firma.",
+      "ai_digest_no_request": "Todavía no se ha iniciado la firma — el resumen se asocia a la solicitud de firma."
+    }
   }
 }

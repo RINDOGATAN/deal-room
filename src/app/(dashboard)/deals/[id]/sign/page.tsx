@@ -26,12 +26,45 @@ import {
   ShieldAlert,
   Smartphone,
   Copy,
+  Sparkles,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { NextIntlClientProvider, useTranslations, useLocale } from "next-intl";
 import { formatDateTime } from "@/lib/date";
 import { useContractMessages } from "@/lib/use-contract-messages";
+import { AiDraftPanel } from "@/components/ai/AiDraftPanel";
+
+/**
+ * Minimal markdown-ish renderer for the AI risk digest (headings + bullets +
+ * paragraphs). Deliberately tiny — no external markdown dependency.
+ */
+function MarkdownishDigest({ text }: { text: string }) {
+  return (
+    <div className="space-y-1.5 text-sm text-muted-foreground">
+      {text.split("\n").map((rawLine, i) => {
+        const line = rawLine.trim().replace(/\*\*/g, "");
+        if (!line) return null;
+        const heading = line.match(/^#{1,4}\s+(.*)$/);
+        if (heading) {
+          return (
+            <p key={i} className="font-semibold text-foreground mt-3">
+              {heading[1]}
+            </p>
+          );
+        }
+        if (line.startsWith("- ") || line.startsWith("* ")) {
+          return (
+            <p key={i} className="pl-4 relative before:content-['•'] before:absolute before:left-1">
+              {line.slice(2)}
+            </p>
+          );
+        }
+        return <p key={i}>{line}</p>;
+      })}
+    </div>
+  );
+}
 
 function DownloadLinks({ dealId, className }: { dealId: string; className?: string }) {
   return (
@@ -75,6 +108,7 @@ function SigningContent({ dealId }: { dealId: string }) {
   const router = useRouter();
   const t = useTranslations("signing");
   const tCommon = useTranslations("common");
+  const tAi = useTranslations("ai");
   const locale = useLocale();
   const [typedSignature, setTypedSignature] = useState("");
   const [confirmChecked, setConfirmChecked] = useState(false);
@@ -167,6 +201,11 @@ function SigningContent({ dealId }: { dealId: string }) {
       toast.error(t("toastMessages.signatureFailed", { error: error.message }));
     },
   });
+
+  // Optional AI assist (posture-gated server-side): one shared pre-signature
+  // risk digest, persisted on the SigningRequest so both parties read the
+  // same text. Errors surface through the AiDraftPanel (mutateAsync rethrows).
+  const generateRiskDigest = trpc.signing.generateRiskDigest.useMutation();
 
   // Firmas hand-off: each party can self-mint a hand-off (default),
   // and the initiator can additionally mint on the respondent's
@@ -843,6 +882,86 @@ function SigningContent({ dealId }: { dealId: string }) {
           })()}
         </>
       )}
+
+      {/* Pre-signature risk digest (optional AI assist, posture-gated).
+          Shared: both parties read the same persisted digest. Regenerable
+          only while nobody has signed. */}
+      {signingRequest && (() => {
+        const digestRegenerable =
+          (signingRequest.status === "PENDING" || signingRequest.status === "SENT") &&
+          !signingRequest.initiatorSignedAt &&
+          !signingRequest.respondentSignedAt;
+        const digestPanel = (
+          <AiDraftPanel
+            persisted
+            generateLabel={
+              signingRequest.aiRiskDigest
+                ? tAi("riskDigest.regenerate")
+                : tAi("riskDigest.generate")
+            }
+            onGenerate={async () => {
+              await generateRiskDigest.mutateAsync({ dealRoomId: dealId });
+            }}
+            onGenerated={() => {
+              toast.success(tAi("riskDigest.generated"));
+              refetch();
+            }}
+          />
+        );
+
+        if (!signingRequest.aiRiskDigest) {
+          // Nothing generated yet: only offer the button while regenerable.
+          if (!digestRegenerable) return null;
+          return (
+            <div className="card-brutal">
+              <h2 className="font-semibold mb-1 flex items-center gap-2">
+                <Sparkles className="w-5 h-5 text-muted-foreground" />
+                {tAi("riskDigest.title")}
+              </h2>
+              <p className="text-sm text-muted-foreground mb-4">
+                {tAi("riskDigest.description")}
+              </p>
+              {digestPanel}
+            </div>
+          );
+        }
+
+        return (
+          <div className="card-brutal">
+            <h2 className="font-semibold mb-4 flex items-center gap-2">
+              <Sparkles className="w-5 h-5 text-muted-foreground" />
+              {tAi("riskDigest.title")}
+            </h2>
+            <MarkdownishDigest text={signingRequest.aiRiskDigest} />
+            <div className="mt-4 pt-3 border-t border-border space-y-1">
+              <p className="text-xs font-medium text-yellow-500">
+                {tAi("riskDigest.disclaimer")}
+              </p>
+              <p className="text-xs text-muted-foreground italic">
+                {tAi("panel.provenance", { model: signingRequest.aiRiskDigestModel ?? "AI" })}
+                {signingRequest.aiRiskDigestAt && (
+                  <>
+                    {" · "}
+                    {tAi("riskDigest.generatedAt", {
+                      date: formatDateTime(new Date(signingRequest.aiRiskDigestAt), {
+                        locale,
+                        governingLaw: deal?.governingLaw,
+                      }),
+                    })}
+                  </>
+                )}
+              </p>
+            </div>
+            {digestRegenerable ? (
+              <div className="mt-3">{digestPanel}</div>
+            ) : (
+              <p className="text-xs text-muted-foreground mt-3">
+                {tAi("riskDigest.locked")}
+              </p>
+            )}
+          </div>
+        );
+      })()}
 
       {/* Signing Status */}
       {signingRequest ? (
