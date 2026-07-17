@@ -58,6 +58,9 @@ model User {
   // Startup Journey (guided launch experience)
   startupJourneys StartupJourney[]
 
+  // Embedded AI (optional assists)
+  aiGenerations AiGeneration[]
+
   @@index([lastLoginAt])
   @@map("users")
 }
@@ -131,6 +134,9 @@ model PlatformAdmin {
   createdAt DateTime @default(now())
 
   twoFactorSecret AdminTwoFactor?
+
+  // Embedded AI (optional assists) — posture acknowledgments by this admin
+  aiPostureAcknowledgments AiSettings[]
 
   @@map("platform_admins")
 }
@@ -481,6 +487,7 @@ model DealRoom {
   supervisorAssignments  SupervisorAssignment[]
   agentDealRoom          AgentDealRoom?
   parameterProposals     ParameterProposal[]
+  aiGenerations          AiGeneration[]
 
   @@index([journeyId])
   @@map("deal_rooms")
@@ -586,6 +593,12 @@ model CompromiseSuggestion {
   partyAAccepted     Boolean?
   partyBAccepted     Boolean?
   createdAt          DateTime @default(now())
+
+  // Embedded AI (optional assist): AI-drafted explanation of THIS suggestion.
+  // The deterministic `reasoning` above is never touched — the AI text is an
+  // additional, clearly labeled annotation. Nullable/append-only.
+  aiReasoning      String? @db.Text
+  aiReasoningModel String?
 
   dealRoomClause  DealRoomClause @relation(fields: [dealRoomClauseId], references: [id], onDelete: Cascade)
   suggestedOption ClauseOption   @relation(fields: [suggestedOptionId], references: [id])
@@ -744,6 +757,13 @@ model SigningRequest {
   respondentFirmasToken  String?   @unique
   respondentFirmasSentAt DateTime?
   respondentSignedBundle Json?
+
+  // Embedded AI (optional assist): pre-signature risk digest, shared by both
+  // parties. Regenerable while nobody has signed; frozen afterwards.
+  // Nullable/append-only.
+  aiRiskDigest      String?   @db.Text
+  aiRiskDigestModel String?
+  aiRiskDigestAt    DateTime?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -1280,4 +1300,61 @@ model JourneyFounder {
 
   @@index([journeyId])
   @@map("journey_founders")
+}
+
+// ============================================================
+// EMBEDDED AI (optional assists — install-level posture + audit)
+// ============================================================
+
+// Install-level AI posture (Dealroom has no Organization model, so the
+// switch is a singleton row with id "singleton", set by a PlatformAdmin).
+// Default is off: with no row (or posture "off") the app makes zero AI
+// calls — the README promise stays true by default. Enabling requires a
+// named platform-admin acknowledgment (acknowledgedByAdminId/At).
+enum AiPosture {
+  off
+  local_gateway
+  cloud_eu
+  cloud_us
+}
+
+model AiSettings {
+  id                    String    @id @default("singleton")
+  posture               AiPosture @default(off)
+  acknowledgedByAdminId String?
+  acknowledgedAt        DateTime?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  acknowledgedByAdmin PlatformAdmin? @relation(fields: [acknowledgedByAdminId], references: [id], onDelete: SetNull)
+
+  @@map("ai_settings")
+}
+
+// Metadata-only audit of AI generations (who/when/feature/model/tokens/
+// duration/acceptance). NEVER stores prompt or output text. Doubles as the
+// install-wide rate-limit counter (rows per hour).
+model AiGeneration {
+  id               String    @id @default(cuid())
+  dealRoomId       String?
+  userId           String?
+  feature          String // "compromise_reasoning" | "risk_digest"
+  entityType       String? // "CompromiseSuggestion" | "SigningRequest" | ...
+  entityId         String?
+  model            String?
+  posture          AiPosture
+  promptTokens     Int?
+  completionTokens Int?
+  totalTokens      Int?
+  durationMs       Int?
+  status           String    @default("ok") // "ok" | "error"
+  acceptedAt       DateTime?
+  createdAt        DateTime  @default(now())
+
+  dealRoom DealRoom? @relation(fields: [dealRoomId], references: [id], onDelete: SetNull)
+  user     User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([createdAt])
+  @@index([dealRoomId])
+  @@map("ai_generations")
 }
