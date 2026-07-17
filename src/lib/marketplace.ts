@@ -8,13 +8,21 @@
 // instead: each premium skill deep-links to its page and is bought there, then
 // the signed .skill is installed locally. Base skills stay free either way.
 export const MARKETPLACE_URL = (
-  process.env.NEXT_PUBLIC_MARKETPLACE_URL || "https://todo.law/legalskills"
+  process.env.NEXT_PUBLIC_MARKETPLACE_URL || "https://todo.law/marketplace"
 ).replace(/\/+$/, "");
 
 // A self-hosted build has Stripe disabled at build time.
 export const STOREFRONT_BUY = process.env.NEXT_PUBLIC_STRIPE_ENABLED !== "true";
 
-/** Deep link to a skill's storefront page, or the catalogue root if unknown. */
-export function marketplaceSkillUrl(slug?: string | null): string {
-  return slug ? `${MARKETPLACE_URL}/${slug}` : MARKETPLACE_URL;
+/**
+ * Storefront link for a premium skill.
+ *
+ * The todo.law storefront has no per-skill pages — appending a slug 404s. It
+ * does support `?app=` filtering, so deep-link to the catalogue pre-filtered
+ * to Dealroom skills. The slug is accepted (and ignored) so call sites keep
+ * passing it, ready for the day the storefront grows per-skill params.
+ */
+export function marketplaceSkillUrl(_slug?: string | null): string {
+  const sep = MARKETPLACE_URL.includes("?") ? "&" : "?";
+  return `${MARKETPLACE_URL}${sep}app=dealroom`;
 }
