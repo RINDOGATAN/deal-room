@@ -29,6 +29,11 @@ import {
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  roleConfigFor,
+  type ContractRole,
+  type ContractRoleConfig,
+} from "@/lib/contractRoles";
 import type { ParameterDefinition, ParameterSchema } from "@/lib/parameters";
 import { resolveParamString } from "@/lib/parameters";
 import {
@@ -167,30 +172,32 @@ const jurisdictionMeta = [
   { value: "SPAIN" as GoverningLaw, flag: "🇪🇸", tKey: "spain" as const },
 ];
 
-/** Controller/Processor role picker for DPAs. The initiator chooses; in SOLO
- *  the other role's block is left blank, in NEGOTIATION the counterparty takes
- *  the opposite role. */
-function DpaRoleSelector({
+/** Asymmetric-role picker for contracts whose two parties take named,
+ *  non-interchangeable roles (DPA: Controller/Processor; BAA: Business
+ *  Associate/Covered Entity). The initiator chooses; in SOLO the other role's
+ *  block is left blank, in NEGOTIATION the counterparty takes the opposite
+ *  role. Config-driven (src/lib/contractRoles.ts) so a new asymmetric contract
+ *  needs only a config entry + i18n keys, not a new component. */
+function RoleSelector({
+  config,
   value,
   onChange,
   mode,
 }: {
-  value: "CONTROLLER" | "PROCESSOR";
-  onChange: (role: "CONTROLLER" | "PROCESSOR") => void;
+  config: ContractRoleConfig;
+  value: string;
+  onChange: (role: ContractRole) => void;
   mode: DealMode;
 }) {
   const t = useTranslations("newDeal");
   return (
     <div className="space-y-2">
-      <Label>{t("dpaRoleTitle")}</Label>
+      <Label>{t(config.titleKey)}</Label>
       <p className="text-xs text-muted-foreground">
-        {mode === "SOLO" ? t("dpaRoleHint") : t("dpaRoleHintNegotiation")}
+        {mode === "SOLO" ? t(config.hintKey) : t(config.hintNegotiationKey)}
       </p>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
-        {([
-          { role: "PROCESSOR" as const, title: t("dpaRoleProcessor"), desc: t("dpaRoleProcessorDescription") },
-          { role: "CONTROLLER" as const, title: t("dpaRoleController"), desc: t("dpaRoleControllerDescription") },
-        ]).map(({ role, title, desc }) => (
+        {config.options.map(({ role, titleKey, descKey }) => (
           <button
             key={role}
             type="button"
@@ -205,8 +212,8 @@ function DpaRoleSelector({
                 <Check className="w-4 h-4 text-primary-foreground" />
               </div>
             )}
-            <h3 className="font-semibold">{title}</h3>
-            <p className="text-sm text-muted-foreground mt-1">{desc}</p>
+            <h3 className="font-semibold">{t(titleKey)}</h3>
+            <p className="text-sm text-muted-foreground mt-1">{t(descKey)}</p>
           </button>
         ))}
       </div>
@@ -233,9 +240,16 @@ export default function NewDealPage() {
   const [parameterValues, setParameterValues] = useState<Record<string, string>>({});
   const [missingParams, setMissingParams] = useState<Set<string>>(new Set());
   const [dealMode, setDealMode] = useState<DealMode>(IS_SELF_HOST ? "SOLO" : "NEGOTIATION");
-  // SOLO DPA only: which role the filling party takes (Controller vs Processor).
-  // Default Processor — most processors prepare the template for a controller.
-  const [fillRole, setFillRole] = useState<"CONTROLLER" | "PROCESSOR">("PROCESSOR");
+  // Asymmetric-role contracts (DPA, BAA): which role the initiator takes. The
+  // config for the selected type supplies the default (DPA → Processor, BAA →
+  // Business Associate: the party who usually offers the template). Non-role
+  // contracts ignore this. Reset to the config default whenever the type
+  // changes (below) so the picker never carries a stale cross-contract role.
+  const roleConfig = roleConfigFor(selectedType);
+  const [fillRole, setFillRole] = useState<ContractRole>("PROCESSOR");
+  useEffect(() => {
+    if (roleConfig) setFillRole(roleConfig.defaultRole);
+  }, [roleConfig]);
   const [searchQuery, setSearchQuery] = useState(searchParams.get("q") ?? "");
 
   const { data: templates, isLoading } = trpc.skills.listTemplatesWithAccess.useQuery({ language: locale });
@@ -430,7 +444,7 @@ export default function NewDealPage() {
       dealMode,
       initiatorCompany: company.trim() || undefined,
       parameters: visibleParameters.length > 0 ? parameterValues : undefined,
-      fillRole: selectedType === "DPA" ? fillRole : undefined,
+      fillRole: roleConfig ? fillRole : undefined,
     });
   };
 
@@ -1084,12 +1098,18 @@ export default function NewDealPage() {
                 </p>
               </div>
 
-              {/* DPA: which role the initiator takes. In SOLO the other role's
-                  block is left blank; in NEGOTIATION the counterparty takes the
-                  other role. Set here so the choice flows consistently into the
-                  download, signing and generated document. */}
-              {selectedType === "DPA" && (
-                <DpaRoleSelector value={fillRole} onChange={setFillRole} mode={dealMode} />
+              {/* Asymmetric-role contracts (DPA, BAA): which role the initiator
+                  takes. In SOLO the other role's block is left blank; in
+                  NEGOTIATION the counterparty takes the other role. Set here so
+                  the choice flows consistently into the download, signing and
+                  generated document. */}
+              {roleConfig && (
+                <RoleSelector
+                  config={roleConfig}
+                  value={fillRole}
+                  onChange={setFillRole}
+                  mode={dealMode}
+                />
               )}
             </div>
           </div>

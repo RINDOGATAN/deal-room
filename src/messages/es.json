@@ -158,6 +158,13 @@
     "dpaRoleProcessorDescription": "Tratamos datos por cuenta de un responsable",
     "dpaRoleController": "Responsable",
     "dpaRoleControllerDescription": "Decidimos por qué y cómo se tratan los datos",
+    "baaRoleTitle": "Su rol en este BAA",
+    "baaRoleHint": "Elija su rol. Rellenamos su parte y dejamos en blanco el bloque de la otra parte para que lo complete — la mayoría de los proveedores preparan la plantilla para que la reciba un cliente del sector sanitario.",
+    "baaRoleHintNegotiation": "Elija su rol. La otra parte asume el rol opuesto y rellena sus propios datos cuando se una.",
+    "baaRoleBusinessAssociate": "Business Associate (socio comercial)",
+    "baaRoleBusinessAssociateDescription": "El proveedor o prestador de servicios que puede tratar PHI (información médica protegida)",
+    "baaRoleCoveredEntity": "Covered Entity (entidad cubierta)",
+    "baaRoleCoveredEntityDescription": "El prestador sanitario, plan de salud o cámara de compensación (o un business associate anterior en la cadena)",
     "selectOptionsNext": "Podrás configurarlo a continuación",
     "creating": "Creando...",
     "negotiableClauses": "{count} cláusulas negociables",
@@ -624,11 +631,13 @@
       "frozenAfterSigning": "Los datos quedan bloqueados tras firmar",
       "waitingForOtherParty": "La otra parte aún no ha enviado sus datos",
       "requiredBeforeSigning": "Confirma tus datos de ejecución arriba antes de firmar",
-      "completeAs": "Completar este ATD como",
-      "completeAsHint": "Elija su rol. Rellenamos su parte y dejamos en blanco el bloque de la otra parte para que lo complete — la mayoría de los encargados preparan la plantilla para que la reciba un responsable.",
+      "completeAs": "Completar este acuerdo como",
+      "completeAsHint": "Elija su rol. Rellenamos su parte y dejamos en blanco el bloque de la otra parte para que lo complete.",
       "role": {
         "processor": "Encargado (tratamos datos por cuenta de un responsable)",
-        "controller": "Responsable (decidimos por qué y cómo se tratan los datos)"
+        "controller": "Responsable (decidimos por qué y cómo se tratan los datos)",
+        "businessAssociate": "Business Associate (el proveedor que puede tratar PHI)",
+        "coveredEntity": "Covered Entity (el prestador sanitario, plan de salud o cámara de compensación)"
       }
     }
   },

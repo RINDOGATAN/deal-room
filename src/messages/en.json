@@ -158,6 +158,13 @@
     "dpaRoleProcessorDescription": "We process data on behalf of a controller",
     "dpaRoleController": "Controller",
     "dpaRoleControllerDescription": "We decide why and how data is processed",
+    "baaRoleTitle": "Your role in this BAA",
+    "baaRoleHint": "Pick your role. We fill your side and leave the other party's block blank for them to complete — most vendors prepare the template for a healthcare customer to receive.",
+    "baaRoleHintNegotiation": "Pick your role. The other party takes the opposite role and fills in their own details when they join.",
+    "baaRoleBusinessAssociate": "Business Associate",
+    "baaRoleBusinessAssociateDescription": "The vendor or service provider that may handle PHI",
+    "baaRoleCoveredEntity": "Covered Entity",
+    "baaRoleCoveredEntityDescription": "The healthcare provider, plan, or clearinghouse (or an upstream business associate)",
     "selectOptionsNext": "You'll select your preferred options next",
     "creating": "Creating...",
     "negotiableClauses": "{count} negotiable clauses",
@@ -623,11 +630,13 @@
       "frozenAfterSigning": "Details are locked after signing",
       "waitingForOtherParty": "The other party has not yet submitted their details",
       "requiredBeforeSigning": "Please confirm your execution details above before signing",
-      "completeAs": "Complete this DPA as",
-      "completeAsHint": "Pick your role. We fill your side and leave the other party's block blank for them to complete — most processors prepare the template for a controller to receive.",
+      "completeAs": "Complete this agreement as",
+      "completeAsHint": "Pick your role. We fill your side and leave the other party's block blank for them to complete.",
       "role": {
         "processor": "Processor (we process data for a controller)",
-        "controller": "Controller (we decide why and how data is processed)"
+        "controller": "Controller (we decide why and how data is processed)",
+        "businessAssociate": "Business Associate (the vendor that may handle PHI)",
+        "coveredEntity": "Covered Entity (the healthcare provider, plan, or clearinghouse)"
       }
     }
   },

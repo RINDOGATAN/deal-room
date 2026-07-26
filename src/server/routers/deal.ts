@@ -9,6 +9,7 @@ import { checkDealCreationEntitlement } from "../services/licensing/entitlement"
 import { resolveLocalizedString, resolveLocalizedArray } from "../services/skills/i18n";
 import { validateRequiredParameters, type ParameterSchema } from "@/lib/parameters";
 import { governingLawForSkillJurisdiction } from "@/lib/jurisdictions";
+import { roleConfigFor } from "@/lib/contractRoles";
 import { autoAgreeSingleOptionClauses } from "../services/deal/autoAgreeSingleOption";
 import { features } from "@/config/features";
 
@@ -302,7 +303,9 @@ export const dealRouter = createTRPCRouter({
         parameters: z.record(z.string(), z.string()).optional(),
         // Asymmetric-role contracts (DPA): which role the initiator takes. The
         // counterparty (if any) takes the other. Ignored for symmetric skills.
-        fillRole: z.enum(["CONTROLLER", "PROCESSOR"]).optional(),
+        fillRole: z
+          .enum(["CONTROLLER", "PROCESSOR", "BUSINESS_ASSOCIATE", "COVERED_ENTITY"])
+          .optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -426,15 +429,18 @@ export const dealRouter = createTRPCRouter({
           parameters: Object.keys(dealParameters).length > 0
             ? (dealParameters as Prisma.InputJsonValue)
             : Prisma.DbNull,
-          // Persist the Controller/Processor choice for DPAs (both solo and
-          // two-party); other skills have roles fixed by position so we leave it
-          // null. Single source of truth read by the document generator — solo
-          // leaves the other role blank, two-party swaps the counterparty into
-          // it. Default Processor (the common "processor prepares the DPA" case).
-          soloFillRole:
-            input.contractType === "DPA"
-              ? input.fillRole ?? "PROCESSOR"
-              : null,
+          // Persist the initiator's role for asymmetric-role contracts (DPA:
+          // Controller/Processor; BAA: Business Associate/Covered Entity), both
+          // solo and two-party; symmetric skills have roles fixed by position so
+          // we leave it null. Single source of truth read by the document
+          // generator — solo leaves the other role blank, two-party swaps the
+          // counterparty into it. Default per contract (DPA → Processor, BAA →
+          // Business Associate: the party who usually offers the template).
+          soloFillRole: (() => {
+            const cfg = roleConfigFor(input.contractType);
+            if (!cfg) return null;
+            return input.fillRole ?? cfg.defaultRole;
+          })(),
           status: DealRoomStatus.DRAFT,
           parties: {
             create: {

@@ -33,6 +33,7 @@ import { Input } from "@/components/ui/input";
 import { NextIntlClientProvider, useTranslations, useLocale } from "next-intl";
 import { formatDateTime } from "@/lib/date";
 import { useContractMessages } from "@/lib/use-contract-messages";
+import { roleConfigFor, type ContractRole } from "@/lib/contractRoles";
 import { AiDraftPanel } from "@/components/ai/AiDraftPanel";
 
 /**
@@ -120,14 +121,14 @@ function SigningContent({ dealId }: { dealId: string }) {
     taxId: string;
     signatoryName: string;
     signatoryTitle: string;
-    fillRole: "CONTROLLER" | "PROCESSOR";
+    fillRole: ContractRole;
   }>({
     legalName: "",
     address: "",
     taxId: "",
     signatoryName: "",
     signatoryTitle: "",
-    fillRole: "PROCESSOR",
+    fillRole: "PROCESSOR" as ContractRole,
   });
 
   const { data: deal, isLoading: dealLoading } = trpc.deal.getById.useQuery({ id: dealId });
@@ -147,7 +148,7 @@ function SigningContent({ dealId }: { dealId: string }) {
         taxId: saved.taxId || "",
         signatoryName: saved.signatoryName,
         signatoryTitle: saved.signatoryTitle,
-        fillRole: (saved as { fillRole?: "CONTROLLER" | "PROCESSOR" }).fillRole || prev.fillRole,
+        fillRole: (saved as { fillRole?: ContractRole }).fillRole || prev.fillRole,
       }));
     } else {
       setDetailsForm((prev) => ({
@@ -162,7 +163,7 @@ function SigningContent({ dealId }: { dealId: string }) {
   // soloFillRole column is the source of truth; this keeps the selector in sync
   // so the signing path agrees with whatever was chosen up front (and with the
   // direct-download path). Only fires when the value actually changes.
-  const soloFillRoleFromDeal = (deal as { soloFillRole?: "CONTROLLER" | "PROCESSOR" | null } | undefined)?.soloFillRole;
+  const soloFillRoleFromDeal = (deal as { soloFillRole?: ContractRole | null } | undefined)?.soloFillRole;
   useEffect(() => {
     if (soloFillRoleFromDeal) {
       // eslint-disable-next-line react-hooks/set-state-in-effect -- syncs the user-editable form with the server-side soloFillRole source of truth; deriving during render would drop subsequent user edits
@@ -295,10 +296,14 @@ function SigningContent({ dealId }: { dealId: string }) {
   const respondent = deal.parties.find((p) => p.role === "RESPONDENT");
   const isInitiator = deal.currentUserRole === "INITIATOR";
   const isSoloMode = deal?.dealMode === "SOLO";
-  // DPA in solo mode is the one asymmetric-role contract where the filling
-  // party must declare whether they are the Controller or the Processor; the
-  // other party's block is left blank in the output.
-  const isDpaSolo = isSoloMode && deal.contractTemplate?.contractType === "DPA";
+  // Asymmetric-role contracts in solo mode (DPA: Controller/Processor; BAA:
+  // Business Associate/Covered Entity) let the filling party declare their role
+  // at signing; the other party's block is left blank in the output. Config in
+  // src/lib/contractRoles.ts is the single source of truth.
+  const soloRoleConfig = isSoloMode
+    ? roleConfigFor(deal.contractTemplate?.contractType)
+    : undefined;
+  const isRoleSolo = !!soloRoleConfig;
 
   // Check if all clauses are agreed
   const allAgreed = deal.clauses.every((c) => c.status === "AGREED");
@@ -397,7 +402,7 @@ function SigningContent({ dealId }: { dealId: string }) {
         taxId: detailsForm.taxId.trim() || undefined,
         signatoryName: detailsForm.signatoryName.trim(),
         signatoryTitle: detailsForm.signatoryTitle.trim(),
-        ...(isDpaSolo ? { fillRole: detailsForm.fillRole } : {}),
+        ...(isRoleSolo ? { fillRole: detailsForm.fillRole } : {}),
       },
     });
   }
@@ -600,7 +605,7 @@ function SigningContent({ dealId }: { dealId: string }) {
                       taxId: saved.taxId || "",
                       signatoryName: saved.signatoryName,
                       signatoryTitle: saved.signatoryTitle,
-                      fillRole: (saved as { fillRole?: "CONTROLLER" | "PROCESSOR" }).fillRole || prev.fillRole,
+                      fillRole: (saved as { fillRole?: ContractRole }).fillRole || prev.fillRole,
                     }));
                     // Clear saved to show form again
                     submitDetails.reset();
@@ -635,7 +640,7 @@ function SigningContent({ dealId }: { dealId: string }) {
             ) : (
               // Editable form
               <div className="space-y-3">
-                {isDpaSolo && (
+                {soloRoleConfig && (
                   <div>
                     <label className="block text-sm font-medium mb-1">
                       {t("signingDetails.completeAs")}
@@ -644,7 +649,7 @@ function SigningContent({ dealId }: { dealId: string }) {
                       {t("signingDetails.completeAsHint")}
                     </p>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                      {(["PROCESSOR", "CONTROLLER"] as const).map((role) => (
+                      {soloRoleConfig.options.map(({ role, signingKey }) => (
                         <button
                           key={role}
                           type="button"
@@ -656,7 +661,7 @@ function SigningContent({ dealId }: { dealId: string }) {
                               : "border-border hover:border-primary/50"
                           }`}
                         >
-                          {t(`signingDetails.role.${role.toLowerCase()}`)}
+                          {t(`signingDetails.role.${signingKey}`)}
                         </button>
                       ))}
                     </div>
