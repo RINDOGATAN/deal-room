@@ -432,6 +432,7 @@ enum GoverningLaw {
   CALIFORNIA // California, USA
   ENGLAND_WALES // England & Wales, UK
   SPAIN // Spain, EU
+  NEW_YORK // New York, USA
 }
 
 enum PartyRole {

@@ -15,6 +15,7 @@ import { features } from "@/config/features";
 // Map GoverningLaw enum to jurisdiction strings for entitlement checking
 const GOVERNING_LAW_TO_JURISDICTION: Record<string, string> = {
   CALIFORNIA: "CALIFORNIA",
+  NEW_YORK: "NEW_YORK",
   ENGLAND_WALES: "ENGLAND_WALES",
   SPAIN: "SPAIN",
 };
@@ -294,7 +295,7 @@ export const dealRouter = createTRPCRouter({
       z.object({
         name: z.string().min(1).max(200),
         contractType: z.string(),
-        governingLaw: z.enum(["CALIFORNIA", "ENGLAND_WALES", "SPAIN"]),
+        governingLaw: z.enum(["CALIFORNIA", "NEW_YORK", "ENGLAND_WALES", "SPAIN"]),
         contractLanguage: z.enum(["en", "es"]).default("en"),
         dealMode: z.enum(["NEGOTIATION", "SOLO"]).default("NEGOTIATION"),
         initiatorCompany: z.string().optional(),

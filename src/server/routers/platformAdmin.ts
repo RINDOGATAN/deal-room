@@ -152,7 +152,7 @@ export const platformAdminRouter = createTRPCRouter({
   addBarAdmission: adminProcedure
     .input(z.object({
       supervisorId: z.string(),
-      jurisdiction: z.enum(["CALIFORNIA", "ENGLAND_WALES", "SPAIN"]),
+      jurisdiction: z.enum(["CALIFORNIA", "NEW_YORK", "ENGLAND_WALES", "SPAIN"]),
       barNumber: z.string().min(1, "Bar number is required"),
     }))
     .mutation(async ({ ctx, input }) => {
@@ -840,7 +840,7 @@ export const platformAdminRouter = createTRPCRouter({
     .input(z.object({
       userId: z.string(),
       bio: z.string().max(2000).optional(),
-      jurisdictions: z.array(z.enum(["CALIFORNIA", "ENGLAND_WALES", "SPAIN"])).default([]),
+      jurisdictions: z.array(z.enum(["CALIFORNIA", "NEW_YORK", "ENGLAND_WALES", "SPAIN"])).default([]),
       languages: z.array(z.string()).min(1),
       isPublished: z.boolean().default(false),
       title: z.string().max(200).optional(),

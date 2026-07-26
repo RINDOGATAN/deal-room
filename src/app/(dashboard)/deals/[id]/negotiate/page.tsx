@@ -34,7 +34,7 @@ import { LawyerWarningModal } from "@/components/LawyerWarningModal";
 import { VettingBadge } from "@/components/VettingBadge";
 import { useContractMessages } from "@/lib/use-contract-messages";
 
-type GoverningLaw = "CALIFORNIA" | "ENGLAND_WALES" | "SPAIN";
+type GoverningLaw = "CALIFORNIA" | "NEW_YORK" | "ENGLAND_WALES" | "SPAIN";
 
 interface JurisdictionRule {
   available: boolean;
@@ -51,12 +51,14 @@ interface RawJurisdictionRule {
 
 interface JurisdictionConfig {
   CALIFORNIA?: RawJurisdictionRule;
+  NEW_YORK?: RawJurisdictionRule;
   ENGLAND_WALES?: RawJurisdictionRule;
   SPAIN?: RawJurisdictionRule;
 }
 
 const governingLawTKey: Record<GoverningLaw, string> = {
   CALIFORNIA: "california",
+  NEW_YORK: "newYork",
   ENGLAND_WALES: "englandWales",
   SPAIN: "spain",
 };

@@ -6,7 +6,7 @@
  *
  * Skill/template jurisdiction tags are free-form strings
  * (`ContractTemplate.jurisdictions` is `String[]`) and can be more specific
- * than the `GoverningLaw` enum the deal engine runs on (CALIFORNIA,
+ * than the `GoverningLaw` enum the deal engine runs on (CALIFORNIA, NEW_YORK,
  * ENGLAND_WALES, SPAIN). Example: the Delaware Certificate of Incorporation
  * is authored against the DGCL and tagged DELAWARE, but deals created from
  * it run under the US-pragmatic GoverningLaw default, CALIFORNIA — the same
@@ -19,10 +19,11 @@
  * reject it.
  */
 
-export type GoverningLaw = "CALIFORNIA" | "ENGLAND_WALES" | "SPAIN";
+export type GoverningLaw = "CALIFORNIA" | "NEW_YORK" | "ENGLAND_WALES" | "SPAIN";
 
 export const SKILL_JURISDICTION_TO_GOVERNING_LAW: Record<string, GoverningLaw> = {
   CALIFORNIA: "CALIFORNIA",
+  NEW_YORK: "NEW_YORK",
   ENGLAND_WALES: "ENGLAND_WALES",
   SPAIN: "SPAIN",
   // Delaware corporate formations (DGCL) run under the US framework.

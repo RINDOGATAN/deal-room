@@ -64,7 +64,7 @@ export const lawyerRouter = createTRPCRouter({
     .input(
       z.object({
         bio: z.string().max(2000).optional(),
-        jurisdictions: z.array(z.enum(["CALIFORNIA", "ENGLAND_WALES", "SPAIN"])),
+        jurisdictions: z.array(z.enum(["CALIFORNIA", "NEW_YORK", "ENGLAND_WALES", "SPAIN"])),
         languages: z.array(z.string()).min(1),
         isPublished: z.boolean(),
         // Cross-product directory fields

@@ -61,6 +61,7 @@ export default function SupervisorsPage() {
 
   const jurisdictionLabels: Record<string, string> = {
     CALIFORNIA: "California",
+    NEW_YORK: "New York",
     ENGLAND_WALES: "England & Wales",
     SPAIN: "Spain",
   };
@@ -293,6 +294,7 @@ export default function SupervisorsPage() {
                 className="input-brutal w-full"
               >
                 <option value="CALIFORNIA">California, USA</option>
+                <option value="NEW_YORK">New York, USA</option>
                 <option value="ENGLAND_WALES">England & Wales, UK</option>
                 <option value="SPAIN">Spain, EU</option>
               </select>
@@ -312,7 +314,7 @@ export default function SupervisorsPage() {
                 onClick={() => {
                   addBarAdmission.mutate({
                     supervisorId: admissionForm.supervisorId,
-                    jurisdiction: admissionJurisdiction as "CALIFORNIA" | "ENGLAND_WALES" | "SPAIN",
+                    jurisdiction: admissionJurisdiction as "CALIFORNIA" | "NEW_YORK" | "ENGLAND_WALES" | "SPAIN",
                     barNumber: admissionBarNumber,
                   });
                 }}

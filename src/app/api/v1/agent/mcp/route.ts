@@ -81,7 +81,7 @@ export async function GET() {
             },
             governingLaw: {
               type: "string",
-              enum: ["CALIFORNIA", "ENGLAND_WALES", "SPAIN"],
+              enum: ["CALIFORNIA", "NEW_YORK", "ENGLAND_WALES", "SPAIN"],
             },
             contractLanguage: {
               type: "string",

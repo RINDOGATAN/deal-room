@@ -20,11 +20,12 @@ import {
   type ExpertType,
 } from "@/server/services/experts/taxonomy";
 
-type GoverningLaw = "CALIFORNIA" | "ENGLAND_WALES" | "SPAIN";
+type GoverningLaw = "CALIFORNIA" | "NEW_YORK" | "ENGLAND_WALES" | "SPAIN";
 
-const jurisdictionValues: GoverningLaw[] = ["CALIFORNIA", "ENGLAND_WALES", "SPAIN"];
+const jurisdictionValues: GoverningLaw[] = ["CALIFORNIA", "NEW_YORK", "ENGLAND_WALES", "SPAIN"];
 const jurisdictionKeys: Record<string, string> = {
   CALIFORNIA: "jurisdictionCalifornia",
+  NEW_YORK: "jurisdictionNewYork",
   ENGLAND_WALES: "jurisdictionEnglandWales",
   SPAIN: "jurisdictionSpain",
 };

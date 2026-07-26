@@ -59,7 +59,7 @@ const contractIcons: Record<string, typeof FileText> = {
 
 import { governingLawForSkillJurisdiction } from "@/lib/jurisdictions";
 
-type GoverningLaw = "CALIFORNIA" | "ENGLAND_WALES" | "SPAIN";
+type GoverningLaw = "CALIFORNIA" | "NEW_YORK" | "ENGLAND_WALES" | "SPAIN";
 
 // Template type from the API
 interface TemplateInfo {
@@ -162,6 +162,7 @@ const contractLanguageMeta = [
 
 const jurisdictionMeta = [
   { value: "CALIFORNIA" as GoverningLaw, flag: "🇺🇸", tKey: "california" as const },
+  { value: "NEW_YORK" as GoverningLaw, flag: "🇺🇸", tKey: "newYork" as const },
   { value: "ENGLAND_WALES" as GoverningLaw, flag: "🇬🇧", tKey: "englandWales" as const },
   { value: "SPAIN" as GoverningLaw, flag: "🇪🇸", tKey: "spain" as const },
 ];
@@ -1161,6 +1162,7 @@ export default function NewDealPage() {
 
 const CURRENCY_SYMBOLS: Record<string, string> = {
   CALIFORNIA: "$",
+  NEW_YORK: "$",
   ENGLAND_WALES: "£",
   SPAIN: "€",
 };
@@ -1217,6 +1219,7 @@ function ParameterField({
                 {param.optionLabels?.[opt]
                   ? resolveParamString(param.optionLabels[opt], lang)
                   : opt === "CALIFORNIA" ? `🇺🇸 ${t("jurisdictions.california")}` :
+                  opt === "NEW_YORK" ? `🇺🇸 ${t("jurisdictions.newYork")}` :
                   opt === "ENGLAND_WALES" ? `🇬🇧 ${t("jurisdictions.englandWales")}` :
                   opt === "SPAIN" ? `🇪🇸 ${t("jurisdictions.spain")}` : opt}
               </button>

@@ -36,10 +36,11 @@ const expertTypeLabels: Record<ExpertType, string> = {
   DEPLOYMENT: "Deployment",
 };
 
-type GoverningLaw = "CALIFORNIA" | "ENGLAND_WALES" | "SPAIN";
-const governingLawValues: GoverningLaw[] = ["CALIFORNIA", "ENGLAND_WALES", "SPAIN"];
+type GoverningLaw = "CALIFORNIA" | "NEW_YORK" | "ENGLAND_WALES" | "SPAIN";
+const governingLawValues: GoverningLaw[] = ["CALIFORNIA", "NEW_YORK", "ENGLAND_WALES", "SPAIN"];
 const governingLawLabels: Record<GoverningLaw, string> = {
   CALIFORNIA: "California, USA",
+  NEW_YORK: "New York, USA",
   ENGLAND_WALES: "England & Wales",
   SPAIN: "Spain",
 };

@@ -32,6 +32,7 @@ const statusColors: Record<string, string> = {
 
 const jurisdictionKeys: Record<string, string> = {
   CALIFORNIA: "jurisdictionCalifornia",
+  NEW_YORK: "jurisdictionNewYork",
   ENGLAND_WALES: "jurisdictionEnglandWales",
   SPAIN: "jurisdictionSpain",
 };

@@ -114,6 +114,10 @@ const GOVERNING_LAW_DISPLAY: Record<string, Record<string, string>> = {
     en: "State of California, United States of America",
     es: "Estado de California, EE.UU.",
   },
+  NEW_YORK: {
+    en: "State of New York, United States of America",
+    es: "Estado de Nueva York, EE.UU.",
+  },
   ENGLAND_WALES: {
     en: "England and Wales, United Kingdom",
     es: "Inglaterra y Gales, Reino Unido",
@@ -401,8 +405,8 @@ export async function generateContractData(
   const partyBAddress = respondent ? (sdB?.address || "[Address]") : "[_________________]";
   const partyASignatoryName = sdA?.signatoryName || initiator.name || "[Name]";
   const partyBSignatoryName = respondent ? (sdB?.signatoryName || respondent.name || "[Name]") : "[_________________]";
-  const partyASignatoryTitle = sdA?.signatoryTitle || "[Title]";
-  const partyBSignatoryTitle = respondent ? (sdB?.signatoryTitle || "[Title]") : "[_________________]";
+  const partyASignatoryTitle = sdA?.signatoryTitle || "[_________________]";
+  const partyBSignatoryTitle = respondent ? (sdB?.signatoryTitle || "[_________________]") : "[_________________]";
 
   // Variables for boilerplate interpolation
   const variables: Record<string, string> = {

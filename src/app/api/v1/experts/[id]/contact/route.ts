@@ -85,7 +85,7 @@ export async function POST(
     }
 
     // Validate governingLaw if provided
-    const validGoverningLaws = ["CALIFORNIA", "ENGLAND_WALES", "SPAIN"];
+    const validGoverningLaws = ["CALIFORNIA", "NEW_YORK", "ENGLAND_WALES", "SPAIN"];
     if (governingLaw && !validGoverningLaws.includes(governingLaw)) {
       return NextResponse.json(
         { error: `governingLaw must be one of: ${validGoverningLaws.join(", ")}` },
@@ -145,7 +145,7 @@ export async function POST(
       data: {
         lawyerId: id,
         contractType: subject,
-        governingLaw: (governingLaw as "CALIFORNIA" | "ENGLAND_WALES" | "SPAIN") ?? null,
+        governingLaw: (governingLaw as "CALIFORNIA" | "NEW_YORK" | "ENGLAND_WALES" | "SPAIN") ?? null,
         message: message ?? null,
         sourceApp: auth.customer.name,
         sourceCustomerId: auth.customer.id,

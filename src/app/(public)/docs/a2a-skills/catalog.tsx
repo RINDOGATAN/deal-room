@@ -85,6 +85,7 @@ const JURISDICTION_LABELS: Record<string, string> = {
   CALIFORNIA: "California",
   DELAWARE: "Delaware",
   ENGLAND_WALES: "England & Wales",
+  NEW_YORK: "New York",
   SPAIN: "Spain",
 };
 

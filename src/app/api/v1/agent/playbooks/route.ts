@@ -104,9 +104,9 @@ export async function POST(req: NextRequest) {
     }
 
     // Validate governingLaw enum
-    if (!["CALIFORNIA", "ENGLAND_WALES", "SPAIN"].includes(governingLaw)) {
+    if (!["CALIFORNIA", "NEW_YORK", "ENGLAND_WALES", "SPAIN"].includes(governingLaw)) {
       return NextResponse.json(
-        { error: "governingLaw must be CALIFORNIA, ENGLAND_WALES, or SPAIN" },
+        { error: "governingLaw must be CALIFORNIA, NEW_YORK, ENGLAND_WALES, or SPAIN" },
         { status: 400 }
       );
     }
