@@ -566,6 +566,7 @@ async function main() {
     "com.nel.skills.joint-venture",
     "com.nel.skills.software-development",
     "com.nel.skills.equity-incentive",
+    "com.nel.skills.baa-negotiator",
   ];
 
   // A2A contract skills — bundled under the A2A subscription
