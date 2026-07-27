@@ -8,7 +8,7 @@
  * using unicode box-drawing characters for structure.
  */
 
-import type { ContractData } from "./generator";
+import { buildSequentialSections, type ContractData } from "./generator";
 
 const LABELS: Record<string, Record<string, string>> = {
   en: {
@@ -122,31 +122,45 @@ export function generateContractTxt(data: ContractData): string {
     }
   }
 
-  // Negotiated Terms (Clauses)
-  if (data.clauses.length > 0) {
-    lines.push(sectionHeader(l.negotiatedTerms));
-    lines.push("");
-    for (let i = 0; i < data.clauses.length; i++) {
-      const clause = data.clauses[i];
-      lines.push(`${i + 1}. ${clause.title}`);
-      lines.push(`   [${clause.agreedOption}]`);
+  // Sequential-numbering layout (BAA): one continuous agreement — negotiable
+  // clauses and fixed standardClauses merged into a single list ordered by
+  // their true section number, each heading "N. Title".
+  const sequential = data.boilerplate?.sequentialNumbering === true;
+
+  if (sequential) {
+    for (const s of buildSequentialSections(data)) {
+      lines.push(sectionHeader(`${s.sectionNumber}. ${s.title}`));
       lines.push("");
-      // Indent legal text
-      const textLines = clause.legalText.split("\n");
-      for (const tl of textLines) {
-        lines.push(`   ${tl}`);
-      }
+      lines.push(s.body);
       lines.push("");
     }
-  }
+  } else {
+    // Negotiated Terms (Clauses)
+    if (data.clauses.length > 0) {
+      lines.push(sectionHeader(l.negotiatedTerms));
+      lines.push("");
+      for (let i = 0; i < data.clauses.length; i++) {
+        const clause = data.clauses[i];
+        lines.push(`${i + 1}. ${clause.title}`);
+        lines.push(`   [${clause.agreedOption}]`);
+        lines.push("");
+        // Indent legal text
+        const textLines = clause.legalText.split("\n");
+        for (const tl of textLines) {
+          lines.push(`   ${tl}`);
+        }
+        lines.push("");
+      }
+    }
 
-  // Standard Clauses (from boilerplate)
-  if (data.boilerplate?.standardClauses && data.boilerplate.standardClauses.length > 0) {
-    for (const sc of data.boilerplate.standardClauses) {
-      lines.push(sectionHeader(sc.title));
-      lines.push("");
-      lines.push(sc.text);
-      lines.push("");
+    // Standard Clauses (from boilerplate)
+    if (data.boilerplate?.standardClauses && data.boilerplate.standardClauses.length > 0) {
+      for (const sc of data.boilerplate.standardClauses) {
+        lines.push(sectionHeader(sc.title));
+        lines.push("");
+        lines.push(sc.text);
+        lines.push("");
+      }
     }
   }
 

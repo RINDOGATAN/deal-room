@@ -19,6 +19,7 @@ import {
   Font,
 } from "@react-pdf/renderer";
 import type { Style } from "@react-pdf/types";
+import { buildSequentialSections } from "./generator";
 import type { ContractData, CertificationData } from "./generator";
 import { brand } from "@/config/brand";
 
@@ -880,6 +881,8 @@ interface ContractPDFProps {
 
 export function ContractPDF({ data }: ContractPDFProps) {
   const hasBoilerplate = data.boilerplate !== null;
+  const sequential = data.boilerplate?.sequentialNumbering === true;
+  const sequentialSections = sequential ? buildSequentialSections(data) : [];
   let sectionNumber = 1;
   const lang = data.language || "en";
   const labels = PDF_LABELS[lang] || PDF_LABELS.en;
@@ -935,12 +938,36 @@ export function ContractPDF({ data }: ContractPDFProps) {
               </View>
             )}
 
-            {/* Standard Clauses from Boilerplate */}
-            {data.boilerplate!.standardClauses.map((clause, index) => (
-              <View key={`std-${index}`} style={styles.section}>
-                <Clause number={`${sectionNumber++}.`} title={clause.title} body={clause.text} />
-              </View>
-            ))}
+            {/* Sequential-numbering layout (BAA): one continuous agreement —
+                fixed and negotiable sections merged and ordered by true section
+                number, rendered here in place of the separate standard-clauses
+                and Negotiated-Terms blocks. */}
+            {sequential ? (
+              <>
+                {sequentialSections.map((s) => (
+                  <View key={`seq-${s.sectionNumber}`} style={styles.section}>
+                    <Clause number={`${s.sectionNumber}.`} title={s.title} body={s.body} />
+                  </View>
+                ))}
+                {/* Continue the sequence past the last numbered section (e.g. 22) for
+                    the Signatures header, which follows on the next page. */}
+                {(() => {
+                  const maxSection = sequentialSections.reduce(
+                    (m, s) => Math.max(m, s.sectionNumber),
+                    0,
+                  );
+                  sectionNumber = maxSection + 1;
+                  return null;
+                })()}
+              </>
+            ) : (
+              /* Standard Clauses from Boilerplate */
+              data.boilerplate!.standardClauses.map((clause, index) => (
+                <View key={`std-${index}`} style={styles.section}>
+                  <Clause number={`${sectionNumber++}.`} title={clause.title} body={clause.text} />
+                </View>
+              ))
+            )}
           </>
         ) : (
           <>
@@ -1061,8 +1088,10 @@ export function ContractPDF({ data }: ContractPDFProps) {
       {hasBoilerplate && (
         <Page size="A4" style={styles.page}>
           <RunningHeader title={coverTitle} dealName={data.dealName} />
-          {/* Negotiated Terms */}
-          {data.clauses.length > 0 && (
+          {/* Negotiated Terms — the grouped layout. Skipped in sequential mode,
+              where these clauses are already interleaved by section number on the
+              previous page. */}
+          {!sequential && data.clauses.length > 0 && (
             <View style={styles.section}>
               <Text style={styles.negotiatedTermsHeader}>
                 {sectionNumber++}. {labels.negotiatedTerms}

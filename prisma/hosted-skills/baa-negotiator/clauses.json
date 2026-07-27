@@ -14,12 +14,15 @@
     {
       "id": "security-incident-clock",
       "title": {
-        "en": "Section 8. Report of Security Incidents (satisfies 45 CFR 164.504(e)(2)(ii)(C) in part; satisfies 45 CFR 164.314(a)(2)(i)(C))"
+        "en": "Report of Security Incidents"
+      },
+      "satisfies": {
+        "en": "satisfies 45 CFR 164.504(e)(2)(ii)(C) in part; satisfies 45 CFR 164.314(a)(2)(i)(C)"
       },
       "category": {
         "en": "Reporting Clocks"
       },
-      "order": 1,
+      "order": 8,
       "plainDescription": {
         "en": "Sets the clock for reporting successful Security Incidents, and gives blanket, once-for-all notice of attempted but unsuccessful incidents (pings, port scans, failed log-ins, denials of service) so neither party drowns in noise. The blanket notice is valid only while no incident results in unauthorized access, use, or disclosure of PHI."
       },
@@ -139,12 +142,15 @@
     {
       "id": "breach-report-clock",
       "title": {
-        "en": "Section 9. Report of Breach (satisfies 45 CFR 164.504(e)(2)(ii)(C); tracks 45 CFR 164.410)"
+        "en": "Report of Breach"
+      },
+      "satisfies": {
+        "en": "satisfies 45 CFR 164.504(e)(2)(ii)(C); tracks 45 CFR 164.410"
       },
       "category": {
         "en": "Reporting Clocks"
       },
-      "order": 2,
+      "order": 9,
       "plainDescription": {
         "en": "Sets how fast the vendor must report a Breach of Unsecured PHI to the customer after discovery, as defined at 45 CFR 164.410(a)(2). The report must always also be without unreasonable delay; the day count is an outer limit, not an entitlement to wait."
       },
@@ -258,12 +264,15 @@
     {
       "id": "individual-access-turnaround",
       "title": {
-        "en": "Section 10. Individual Access to PHI (satisfies 45 CFR 164.504(e)(2)(ii)(E))"
+        "en": "Individual Access to PHI"
+      },
+      "satisfies": {
+        "en": "satisfies 45 CFR 164.504(e)(2)(ii)(E)"
       },
       "category": {
         "en": "Individual Rights Support"
       },
-      "order": 3,
+      "order": 10,
       "plainDescription": {
         "en": "When the vendor holds PHI in a Designated Record Set, it must hand that PHI to the customer, or to the individual at the customer's direction, fast enough for the customer to honor an individual's access request under 45 CFR 164.524. Direct requests from individuals are routed to the customer, not answered by the vendor."
       },
@@ -378,12 +387,15 @@
     {
       "id": "amendment-turnaround",
       "title": {
-        "en": "Section 11. Amendment of PHI (satisfies 45 CFR 164.504(e)(2)(ii)(F))"
+        "en": "Amendment of PHI"
+      },
+      "satisfies": {
+        "en": "satisfies 45 CFR 164.504(e)(2)(ii)(F)"
       },
       "category": {
         "en": "Individual Rights Support"
       },
-      "order": 4,
+      "order": 11,
       "plainDescription": {
         "en": "Parallel to individual access, for amendment of PHI under 45 CFR 164.526: the vendor must surface the PHI for amendment and incorporate amendments the customer directs."
       },
@@ -494,12 +506,15 @@
     {
       "id": "termination-cure-period",
       "title": {
-        "en": "Section 15. Term and Termination (satisfies the termination-for-cause authorization at 45 CFR 164.504(e)(2)(iii); §15(d) consistent with 45 CFR 164.504(e)(1)(iii))"
+        "en": "Term and Termination"
+      },
+      "satisfies": {
+        "en": "satisfies the termination-for-cause authorization at 45 CFR 164.504(e)(2)(iii); §15(d) consistent with 45 CFR 164.504(e)(1)(iii)"
       },
       "category": {
         "en": "Term and Termination"
       },
-      "order": 5,
+      "order": 15,
       "plainDescription": {
         "en": "If the vendor materially violates the BAA, the customer may terminate the BAA and the underlying services agreement unless the vendor cures within the window; if cure is not feasible, termination is immediate. Only the customer-side cure window in Section 15(b) varies across the options; the rest of the Section is fixed."
       },
@@ -614,12 +629,15 @@
     {
       "id": "phi-disposition-period",
       "title": {
-        "en": "Section 16. Return or Destruction of PHI at Termination (satisfies 45 CFR 164.504(e)(2)(ii)(J))"
+        "en": "Return or Destruction of PHI at Termination"
+      },
+      "satisfies": {
+        "en": "satisfies 45 CFR 164.504(e)(2)(ii)(J)"
       },
       "category": {
         "en": "Term and Termination"
       },
-      "order": 6,
+      "order": 16,
       "plainDescription": {
         "en": "At termination, the vendor returns or destroys all PHI it still holds, within the disposition window; if return or destruction is infeasible, protections extend to the retained PHI for as long as it is held. Only the disposition window in Section 16(a) varies across the options; the infeasibility-notice thirty days in Section 16(b) is fixed text."
       },
@@ -732,12 +750,15 @@
     {
       "id": "liability-cap",
       "title": {
-        "en": "Section 19. Indemnification; Limitation of Liability"
+        "en": "Indemnification; Limitation of Liability"
+      },
+      "satisfies": {
+        "en": ""
       },
       "category": {
         "en": "Liability"
       },
-      "order": 7,
+      "order": 19,
       "plainDescription": {
         "en": "By default, claims under the BAA live inside the services agreement's indemnities and liability cap. The negotiation is whether HIPAA-flavored liability (the vendor's Security Rule failures, impermissible use or disclosure under Section 5, vendor-caused Breaches of Unsecured PHI) stays inside the ordinary cap, gets a raised supercap, or runs uncapped for the worst conduct. Only the final sentence of Section 19(b) varies across the options; the Section 19(a) customer indemnity for Section 2 violations is fixed."
       },

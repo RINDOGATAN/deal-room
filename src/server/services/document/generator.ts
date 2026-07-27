@@ -40,6 +40,10 @@ export interface ClauseData {
   category: string;
   agreedOption: string;
   legalText: string;
+  /** True 1-based section number in the final agreement. Only consumed when the
+   *  boilerplate opts into sequential numbering (see BoilerplateData.sequentialNumbering);
+   *  ignored for the default grouped "Negotiated Terms" layout. */
+  sectionNumber?: number;
 }
 
 export interface Definition {
@@ -50,6 +54,9 @@ export interface Definition {
 export interface StandardClause {
   title: string;
   text: string;
+  /** True 1-based section number in the final agreement. Present only for
+   *  boilerplates that opt into sequential numbering; ignored otherwise. */
+  sectionNumber?: number;
 }
 
 export interface BoilerplateData {
@@ -65,6 +72,42 @@ export interface BoilerplateData {
   partyLabels?: { partyA: string; partyB: string };
   /** Annexes/Schedules rendered on their own pages AFTER the signature blocks (e.g. DPA Annex I/II). */
   annexes?: StandardClause[];
+  /** Opt-in flag (BAA): render the whole body as ONE continuous, sequentially
+   *  numbered agreement — negotiable clauses and fixed standardClauses merged
+   *  into a single list ordered by their true section number, each heading
+   *  "N. Title" with no "Negotiated Terms" group and no margin re-numbering.
+   *  Absent/false → the historical grouped layout (DPA/NDA/etc. unaffected). */
+  sequentialNumbering?: boolean;
+}
+
+/** One heading+body section in the merged, sequentially-numbered layout. */
+export interface SequentialSection {
+  sectionNumber: number;
+  title: string;
+  body: string;
+}
+
+/**
+ * Merge fixed standardClauses and negotiable clauses into a single list sorted
+ * by true section number, for the sequential-numbering (BAA) layout. Shared by
+ * all three renderers so the ordering is defined in exactly one place.
+ */
+export function buildSequentialSections(data: ContractData): SequentialSection[] {
+  const bp = data.boilerplate;
+  if (!bp) return [];
+  const merged: SequentialSection[] = [
+    ...bp.standardClauses.map((c) => ({
+      sectionNumber: c.sectionNumber ?? 0,
+      title: c.title,
+      body: c.text,
+    })),
+    ...data.clauses.map((c) => ({
+      sectionNumber: c.sectionNumber ?? 0,
+      title: c.title,
+      body: c.legalText,
+    })),
+  ];
+  return merged.sort((a, b) => a.sectionNumber - b.sectionNumber);
 }
 
 export interface CertificationData {
@@ -188,6 +231,7 @@ function processBoilerplate(
   const standardClauses = (bp.standardClauses as Array<Record<string, unknown>> || []).map((c) => ({
     title: resolveLocalizedString(c.title, language),
     text: resolve(c.text),
+    sectionNumber: typeof c.sectionNumber === "number" ? c.sectionNumber : undefined,
   }));
 
   const generalProvisions = (bp.generalProvisions as Array<Record<string, unknown>> || []).map((p) => ({
@@ -212,6 +256,7 @@ function processBoilerplate(
     jurisdictionProvision,
     jurisdictionProvisions: multiJurisdictionProvisions,
     annexes: annexes.length > 0 ? annexes : undefined,
+    sequentialNumbering: bp.sequentialNumbering === true,
     signatureBlock: resolve(bp.signatureBlock),
     partyLabels: partyLabels
       ? {
@@ -352,6 +397,7 @@ export async function generateContractData(
               ? resolveLocalizedString(selLocalized.label, language)
               : selection.option.label,
             legalText,
+            sectionNumber: clause.clauseTemplate.order,
           }, clause.clauseTemplate.clauseId);
         }
       }
@@ -381,6 +427,7 @@ export async function generateContractData(
           ? resolveLocalizedString(optLocalized.label, language)
           : agreedOption.label,
         legalText,
+        sectionNumber: clause.clauseTemplate.order,
       }, clause.clauseTemplate.clauseId);
     }
   }

@@ -152,6 +152,11 @@ const DefinitionSchema = z.object({
 const StandardClauseSchema = z.object({
   title: BoilerplateStringSchema,
   text: BoilerplateStringSchema,
+  // Sequential-numbering (BAA) metadata — the true section number and the
+  // audit-trail citation stripped out of the visible heading. Optional so
+  // every other contract's boilerplate validates unchanged.
+  sectionNumber: z.number().optional(),
+  satisfies: BoilerplateStringSchema.optional(),
 });
 
 const JurisdictionProvisionSchema = z.object({
@@ -177,6 +182,8 @@ const BoilerplateSchema = z.object({
   // Annexes/Schedules rendered on their own pages AFTER the signature blocks
   // (e.g. DPA Annex I — Description of Processing, Annex II — TOMs).
   annexes: z.array(StandardClauseSchema).optional(),
+  // Opt-in: render as ONE continuous sequentially-numbered agreement (BAA).
+  sequentialNumbering: z.boolean().optional(),
 });
 
 export type ClausesFile = z.infer<typeof ClausesFileSchema>;

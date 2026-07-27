@@ -18,6 +18,7 @@ import {
   Packer,
   ShadingType,
 } from "docx";
+import { buildSequentialSections } from "./generator";
 import type { ContractData, CertificationData } from "./generator";
 
 const LABELS: Record<string, Record<string, string>> = {
@@ -88,6 +89,7 @@ export async function generateContractDocx(
   const lang = data.language || "en";
   const labels = LABELS[lang] || LABELS.en;
   const hasBoilerplate = data.boilerplate !== null;
+  const sequential = data.boilerplate?.sequentialNumbering === true;
   let sectionNumber = 1;
 
   const children: Paragraph[] = [];
@@ -232,40 +234,85 @@ export async function generateContractDocx(
       }
     }
 
-    // Standard Clauses
-    for (const clause of bp.standardClauses) {
-      children.push(
-        new Paragraph({
-          heading: HeadingLevel.HEADING_2,
-          spacing: { before: 200, after: 100 },
-          children: [
-            new TextRun({
-              text: `${sectionNumber++}. ${clause.title}`,
-              bold: true,
-              size: 22,
-              font: "Times New Roman",
-            }),
-          ],
-        })
+    if (sequential) {
+      // Sequential-numbering layout (BAA): one continuous agreement — fixed and
+      // negotiable sections merged and ordered by true section number, each
+      // heading "N. Title". Replaces both the standard-clauses loop and the
+      // grouped Negotiated-Terms block below.
+      const sequentialSections = buildSequentialSections(data);
+      for (const s of sequentialSections) {
+        children.push(
+          new Paragraph({
+            heading: HeadingLevel.HEADING_2,
+            spacing: { before: 200, after: 100 },
+            children: [
+              new TextRun({
+                text: `${s.sectionNumber}. ${s.title}`,
+                bold: true,
+                size: 22,
+                font: "Times New Roman",
+              }),
+            ],
+          })
+        );
+        children.push(
+          new Paragraph({
+            alignment: AlignmentType.JUSTIFIED,
+            indent: { left: 360 },
+            spacing: { after: 200 },
+            children: [
+              new TextRun({
+                text: s.body,
+                size: 20,
+                font: "Times New Roman",
+              }),
+            ],
+          })
+        );
+      }
+      // Continue the sequence past the last numbered section for the Signatures
+      // header (e.g. 22).
+      const maxSection = sequentialSections.reduce(
+        (m, s) => Math.max(m, s.sectionNumber),
+        0,
       );
-      children.push(
-        new Paragraph({
-          alignment: AlignmentType.JUSTIFIED,
-          indent: { left: 360 },
-          spacing: { after: 200 },
-          children: [
-            new TextRun({
-              text: clause.text,
-              size: 20,
-              font: "Times New Roman",
-            }),
-          ],
-        })
-      );
+      sectionNumber = maxSection + 1;
+    } else {
+      // Standard Clauses
+      for (const clause of bp.standardClauses) {
+        children.push(
+          new Paragraph({
+            heading: HeadingLevel.HEADING_2,
+            spacing: { before: 200, after: 100 },
+            children: [
+              new TextRun({
+                text: `${sectionNumber++}. ${clause.title}`,
+                bold: true,
+                size: 22,
+                font: "Times New Roman",
+              }),
+            ],
+          })
+        );
+        children.push(
+          new Paragraph({
+            alignment: AlignmentType.JUSTIFIED,
+            indent: { left: 360 },
+            spacing: { after: 200 },
+            children: [
+              new TextRun({
+                text: clause.text,
+                size: 20,
+                font: "Times New Roman",
+              }),
+            ],
+          })
+        );
+      }
     }
 
-    // Negotiated Terms
-    if (data.clauses.length > 0) {
+    // Negotiated Terms — grouped layout only (skipped in sequential mode).
+    if (!sequential && data.clauses.length > 0) {
       const ntSection = sectionNumber++;
       children.push(
         new Paragraph({
