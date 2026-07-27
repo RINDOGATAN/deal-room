@@ -750,20 +750,21 @@ function NegotiateContent({ dealId }: { dealId: string }) {
                       <div>
                         <div className="flex items-center gap-2 flex-wrap">
                           <p className="font-heading text-base">{option.label}</p>
-                          {/* Cloud Intelligence quality badge */}
-                          <span
-                            title={quality?.score == null ? t("unverifiedTooltip") : undefined}
-                            className={`text-xs px-2 py-0.5 rounded-full font-medium ${
-                            quality?.score != null && quality.score >= 70
-                              ? "bg-green-500/10 text-green-600"
-                              : quality?.score != null && quality.score >= 40
-                                ? "bg-amber-500/10 text-amber-600"
-                                : quality?.score != null
-                                  ? "bg-red-500/10 text-red-600"
-                                  : "bg-secondary text-muted-foreground"
-                          }`}>
-                            {quality?.score != null ? `${quality.score}` : t("unverified")}
-                          </span>
+                          {/* Cloud Intelligence quality badge — rendered only when a
+                              score exists; no "Unverified" pill is shown otherwise. */}
+                          {quality?.score != null && (
+                            <span
+                              className={`text-xs px-2 py-0.5 rounded-full font-medium ${
+                                quality.score >= 70
+                                  ? "bg-green-500/10 text-green-600"
+                                  : quality.score >= 40
+                                    ? "bg-amber-500/10 text-amber-600"
+                                    : "bg-red-500/10 text-red-600"
+                              }`}
+                            >
+                              {quality.score}
+                            </span>
+                          )}
                           {hasWarning && (
                             <AlertTriangle className="w-4 h-4 text-warning" />
                           )}

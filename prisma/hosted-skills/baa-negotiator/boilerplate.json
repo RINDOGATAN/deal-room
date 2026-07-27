@@ -1,0 +1,71 @@
+{
+  "contractTitle": "BUSINESS ASSOCIATE AGREEMENT",
+  "preamble": "This Business Associate Agreement (this \"Agreement\") is entered into between {partyAName} (\"Company\") and the customer agreeing to the terms below (\"Customer\"), and addresses the parties' respective obligations under the Health Insurance Portability and Accountability Act of 1996, as amended, and its implementing regulations at 45 CFR Parts 160 and 164 (\"HIPAA\").",
+  "background": "Customer is a \"covered entity\" or a \"business associate\" of covered-entity clients, as those terms are defined in HIPAA. Company provides services (\"Services\") to Customer under one or more agreements (each an \"Underlying Agreement\"). The Services are not designed to, and do not require, the creation, receipt, maintenance, or transmission of Protected Health Information (\"PHI\"), and Company does not solicit or accept PHI from Customer through the Services.\n\nThe parties enter into this Agreement as a precautionary measure. Its obligations apply only if, and only to the extent that, Company in fact creates, receives, maintains, or transmits PHI on behalf of Customer, notwithstanding the parties' intention and agreement that no such event occur.",
+  "definitions": [],
+  "standardClauses": [
+    {
+      "title": "Section 1. Definitions",
+      "text": "Capitalized terms used but not otherwise defined in this Agreement have the meanings given to them in HIPAA. Without limiting the foregoing: \"PHI\" means protected health information, as defined at 45 CFR 160.103, of, or on behalf of, Customer. \"Breach,\" \"Unsecured PHI,\" \"Security Incident,\" \"Designated Record Set,\" \"Required by Law,\" and \"Subcontractor\" have the meanings given at 45 CFR 160.103, 164.103, 164.304, 164.402, and 164.501, as applicable. References to the \"Privacy Rule\" mean 45 CFR Part 164, Subpart E; references to the \"Security Rule\" mean 45 CFR Part 164, Subpart C; references to the \"Breach Notification Rule\" mean 45 CFR Part 164, Subpart D."
+    },
+    {
+      "title": "Section 2. No PHI to Be Transmitted",
+      "text": "Customer will use commercially reasonable efforts not to transmit, upload, disclose, or otherwise make available PHI to Company or through the Services, and to configure its use of the Services so that no PHI is collected by or submitted to the Services, in each case absent Company's prior written agreement. This covenant is a material term of this Agreement and of the Underlying Agreement."
+    },
+    {
+      "title": "Section 3. Inadvertent Receipt of PHI",
+      "text": "If Company discovers that PHI has been transmitted to it or through the Services in violation of Section 2, Company will: (a) notify Customer without unreasonable delay and in any event within five (5) business days of discovery; (b) delete such PHI without retaining copies, or, if Customer so requests in writing within that period, return it to Customer, except to the extent retention is required by law; and (c) have no further obligation under this Agreement with respect to such PHI once deletion or return is complete. Deletion or return pursuant to this Section satisfies Section 16 (Return or Destruction of PHI) as to the PHI concerned. The parties intend and agree that Company's receipt of PHI in violation of Section 2 does not, standing alone, establish an engagement of Company to create, receive, maintain, or transmit PHI on behalf of Customer."
+    },
+    {
+      "title": "Section 4. Compliance and Subcontractors (satisfies 45 CFR 164.504(e)(2)(ii)(D) and 45 CFR 164.504(e)(2)(ii)(H); satisfies 45 CFR 164.314(a)(2)(i)(A)-(B))",
+      "text": "To the extent Company has access to PHI and is acting as a business associate as defined in HIPAA, Company will comply with the requirements of this Agreement and applicable HIPAA requirements with respect to such PHI. Company will ensure that any Subcontractor that creates, receives, maintains, or transmits PHI on behalf of Company agrees, in writing, to restrictions and conditions at least as protective of PHI as those that apply to Company under this Agreement, consistent with 45 CFR 164.314(a)(2)(i)(B) and 45 CFR 164.504(e)(2)(ii)(D). To the extent Company is required to carry out an obligation of Customer under the Privacy Rule, Company will comply with the requirements of the Privacy Rule that apply to Customer in the performance of that obligation."
+    },
+    {
+      "title": "Section 5. Use and Disclosure of PHI (satisfies 45 CFR 164.504(e)(2)(i) and 45 CFR 164.504(e)(2)(ii)(A))",
+      "text": "Company shall not use or disclose PHI other than as permitted or required by this Agreement or as Required by Law. Company's use and disclosure of PHI shall comply with the provisions of HIPAA applicable to business associates, including 45 CFR 164.504(e). Any PHI received by Company through inadvertent transmission shall be handled solely as necessary to identify, quarantine, report, and delete or return it in accordance with Section 3, or as Required by Law. Company may use and disclose PHI, in each case only if and to the extent such PHI is in fact received by Company: (a) for the proper management and administration of Company, or to carry out its legal responsibilities, provided that any disclosure is Required by Law or Company obtains reasonable assurances from the recipient that the PHI will be held confidentially and used or further disclosed only as Required by Law or for the purposes for which it was disclosed, and that the recipient will notify Company of any instance of which it becomes aware in which the confidentiality of the PHI has been breached, consistent with 45 CFR 164.504(e)(4); and (b) to provide data aggregation services relating to the health care operations of Customer, if and to the extent expressly requested by Customer in writing. If Company is compelled by legal process to disclose PHI, Company shall, to the extent legally permitted, promptly notify Customer to allow Customer to seek a protective order or other appropriate remedy. Customer shall not request Company to use or disclose PHI in any manner that would not be permissible under HIPAA if done by Customer."
+    },
+    {
+      "title": "Section 6. Safeguards (satisfies 45 CFR 164.504(e)(2)(ii)(B); satisfies 45 CFR 164.314(a)(2)(i))",
+      "text": "Company will use appropriate safeguards, and comply with Subpart C of 45 CFR Part 164 with respect to electronic PHI, to prevent use or disclosure of PHI other than as provided for by this Agreement. Customer acknowledges that the Services are not designed to create, receive, maintain, or transmit PHI and that Company's safeguards are those appropriate to a service of that character; nothing in this sentence qualifies Company's obligation to comply with Subpart C to the extent Company in fact creates, receives, maintains, or transmits electronic PHI."
+    },
+    {
+      "title": "Section 7. Minimum Necessary",
+      "text": "To the extent required by HIPAA, including 45 CFR 164.502(b) and 45 CFR 164.514(d), Company will limit any use, disclosure of, or request for, PHI to the minimum necessary to accomplish the intended purpose."
+    },
+    {
+      "title": "Section 12. Accounting of Disclosures (satisfies 45 CFR 164.504(e)(2)(ii)(G))",
+      "text": "Company shall document disclosures of PHI, and information related to such disclosures, as would be required for Customer to respond to a request by an individual for an accounting of disclosures of PHI in accordance with 45 CFR 164.528. On written request of Customer, Company shall provide such documentation to Customer within fifteen (15) calendar days, or, if Customer so directs, provide it directly to the requesting individual. Company shall retain such documentation for the period required by 45 CFR 164.528(b)."
+    },
+    {
+      "title": "Section 13. HHS Access (satisfies 45 CFR 164.504(e)(2)(ii)(I))",
+      "text": "Company shall make its internal practices, books, and records, including policies and procedures and PHI, relating to the use and disclosure of PHI received from, or created, received, maintained, or transmitted on behalf of, Customer available to the Secretary of the U.S. Department of Health and Human Services (the \"Secretary\") for purposes of determining Customer's, or Company's, compliance with HIPAA. Company shall promptly notify Customer of any such request from the Secretary, to the extent legally permitted, and shall provide Customer with copies of any materials produced to the Secretary that concern Customer's PHI, subject to any restrictions imposed by the Secretary."
+    },
+    {
+      "title": "Section 14. Mitigation",
+      "text": "Company shall use reasonable efforts to mitigate, to the extent practicable, any harmful effect that is known to Company of a use or disclosure of PHI by Company in violation of this Agreement, consistent with 45 CFR 164.530(f)."
+    },
+    {
+      "title": "Section 17. No Third-Party Beneficiaries",
+      "text": "Nothing in this Agreement is intended, nor shall be deemed, to confer any rights or remedies on any person other than the parties and their respective successors and permitted assigns."
+    },
+    {
+      "title": "Section 18. Regulatory References; Amendment",
+      "text": "A reference in this Agreement to a section of HIPAA or its implementing regulations means the section as in effect or as amended, and for which compliance is required. The parties agree to take such action as is necessary to amend this Agreement promptly to enable each party to comply with the requirements of HIPAA, including any modifications made under the Health Information Technology for Economic and Clinical Health Act and its implementing regulations, and any subsequent final rules issued by the Secretary. If the parties are unable to agree on such amendment within sixty (60) calendar days after either party's written request, either party may terminate this Agreement on thirty (30) calendar days' written notice."
+    },
+    {
+      "title": "Section 20. Survival",
+      "text": "Sections 1, 3, 5 (as to PHI retained by Company post-termination), 12 (as to the retention period), 13, 14, 16, 17, 19, 20, and 21, and any other provision that by its nature should survive, shall survive termination or expiration of this Agreement."
+    },
+    {
+      "title": "Section 21. Miscellaneous",
+      "text": "(a) Order of Precedence. In the event of a conflict between this Agreement and the Underlying Agreement with respect to the use, disclosure, or protection of PHI or the parties' obligations under HIPAA, this Agreement controls.\n\n(b) Interpretation. Any ambiguity in this Agreement shall be resolved in favor of a meaning that permits the parties to comply with HIPAA.\n\n(c) Governing Law; Venue. This Agreement is governed by and construed in accordance with the laws of the State of California, without regard to its conflict-of-laws principles, except to the extent preempted by federal law (including HIPAA). The parties consent to the exclusive jurisdiction of [the exclusive court or arbitration forum the parties designate for disputes] for any action arising out of or relating to this Agreement, and waive any objection to venue in such forum.\n\n(d) Notices. Notices under this Agreement shall be given in accordance with the notice provisions of the Underlying Agreement, or, if none, to the addresses set forth on the signature page.\n\n(e) Entire Agreement. This Agreement, together with the Underlying Agreement, constitutes the entire agreement of the parties with respect to its subject matter and supersedes all prior discussions and agreements with respect thereto.\n\n(f) Counterparts; Electronic Signatures. This Agreement may be executed in counterparts and by electronic signature, each of which shall be deemed an original."
+    }
+  ],
+  "generalProvisions": [],
+  "jurisdictionProvisions": {},
+  "signatureBlock": "SIGNED by the parties:\n\n{partyASignatureBlock}\n\n{partyBSignatureBlock}",
+  "partyLabels": {
+    "partyA": "Company (Business Associate)",
+    "partyB": "Customer (Covered Entity or upstream Business Associate)"
+  }
+}
