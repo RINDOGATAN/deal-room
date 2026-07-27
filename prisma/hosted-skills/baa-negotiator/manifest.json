@@ -1,0 +1,19 @@
+{
+  "skillId": "com.nel.skills.baa-negotiator",
+  "name": "BAA_NEGOTIATOR",
+  "displayName": "HIPAA Business Associate Agreement Negotiator",
+  "version": "1.2.0",
+  "jurisdictions": [
+    "NEW_YORK"
+  ],
+  "languages": [
+    "en"
+  ],
+  "author": "Sergio Maldonado",
+  "license": "proprietary",
+  "lawReviewedAsOf": "2026-07-26",
+  "supervisedUse": {
+    "en": "Software work-product tooling — not legal advice. Requires supervised use by a licensed professional. Jurisdiction and currency of law must be verified by the supervising lawyer before any output is relied upon.",
+    "es": "Herramienta de software para la elaboración de producto de trabajo — no constituye asesoramiento jurídico. Requiere uso supervisado por un profesional de la abogacía colegiado. La jurisdicción y la vigencia de la normativa deben ser verificadas por el abogado supervisor antes de utilizar cualquier resultado."
+  }
+}

@@ -15,6 +15,9 @@ const nextConfig: NextConfig = {
   // every API route that can generate a document, or rendering 500s in prod.
   outputFileTracingIncludes: {
     "/api/**": ["./src/server/services/document/fonts/**"],
+    // The one-shot BAA seed route reads committed skill content at request
+    // time; force it into that function's bundle so the files exist on Vercel.
+    "/api/admin/seed-baa": ["./prisma/hosted-skills/baa-negotiator/**"],
   },
 };
 
