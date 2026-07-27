@@ -11,6 +11,11 @@ const prisma = new PrismaClient();
 
 const BUILTIN_SKILLS_DIR = path.join(__dirname, "..", "skills");
 const SKILLS_DIR = process.env.SKILLS_DIR || "";
+// Bundled premium content that ships FREE in the self-host bundle (e.g.
+// baa-negotiator). Baked into the image at prisma/hosted-skills; scanned only
+// when no external SKILLS_DIR is set (cloud sets SKILLS_DIR at the licensed
+// legalskills repo, which already carries these). See SELFHOST-BAA-BUNDLE.md.
+const HOSTED_SKILLS_DIR = path.join(__dirname, "hosted-skills");
 
 interface SkillMetadata {
   contractType: string;
@@ -223,6 +228,27 @@ async function main() {
     console.log(`Found ${externalDirs.length} external skills: ${externalDirs.join(", ")}`);
   } else if (!SKILLS_DIR) {
     console.log("No SKILLS_DIR set — seeding built-in skills only");
+  }
+
+  // 3. Self-host bundled premium content (prisma/hosted-skills/). Only when no
+  //    external SKILLS_DIR — cloud gets these from legalskills instead, so this
+  //    pass is skipped there (zero cloud impact). The premiumSkillIds loop still
+  //    marks them isPremium; the allSkillsFree gate (no Stripe on self-host)
+  //    makes them free to the self-hoster.
+  if (!SKILLS_DIR && fs.existsSync(HOSTED_SKILLS_DIR)) {
+    const hostedDirs = fs.readdirSync(HOSTED_SKILLS_DIR).filter((dir) => {
+      if (dir.startsWith(".") || dir.startsWith("_")) return false;
+      return fs.statSync(path.join(HOSTED_SKILLS_DIR, dir)).isDirectory();
+    });
+    for (const dir of hostedDirs) {
+      const existingIdx = skillEntries.findIndex((e) => e.name === dir);
+      if (existingIdx >= 0) {
+        skillEntries[existingIdx] = { name: dir, path: path.join(HOSTED_SKILLS_DIR, dir) };
+      } else {
+        skillEntries.push({ name: dir, path: path.join(HOSTED_SKILLS_DIR, dir) });
+      }
+    }
+    console.log(`Found ${hostedDirs.length} self-host bundled skills: ${hostedDirs.join(", ")}`);
   }
 
   console.log(`Total skills to process: ${skillEntries.length}`);
