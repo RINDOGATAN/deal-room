@@ -62,7 +62,7 @@ const contractIcons: Record<string, typeof FileText> = {
   AFFILIATE_PROGRAM: Link2,
 };
 
-import { governingLawForSkillJurisdiction } from "@/lib/jurisdictions";
+import { governingLawForSkillJurisdiction, JURISDICTION_DISPLAY, CONTRACT_LANGUAGE_NAMES } from "@/lib/jurisdictions";
 
 type GoverningLaw = "CALIFORNIA" | "NEW_YORK" | "ENGLAND_WALES" | "SPAIN";
 
@@ -234,7 +234,12 @@ export default function NewDealPage() {
   const [dealName, setDealName] = useState("");
   const [company, setCompany] = useState("");
   const [entitlementError, setEntitlementError] = useState<string | null>(null);
-  const [enableModalSkill, setEnableModalSkill] = useState<{ id: string; name: string } | null>(null);
+  const [enableModalSkill, setEnableModalSkill] = useState<{
+    id: string;
+    name: string;
+    jurisdictions: string[];
+    languages: string[];
+  } | null>(null);
   const [resolvedNativeTemplate, setResolvedNativeTemplate] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [parameterValues, setParameterValues] = useState<Record<string, string>>({});
@@ -538,6 +543,8 @@ export default function NewDealPage() {
           onClose={() => setEnableModalSkill(null)}
           skillPackageId={enableModalSkill.id}
           skillName={enableModalSkill.name}
+          jurisdictions={enableModalSkill.jurisdictions}
+          languages={enableModalSkill.languages}
           returnUrl="/deals/new"
         />
       )}
@@ -681,7 +688,12 @@ export default function NewDealPage() {
                       }
                       if (isLocked) {
                         if (family.primaryTemplate.skillPackageId) {
-                          setEnableModalSkill({ id: family.primaryTemplate.skillPackageId, name: family.displayName });
+                          setEnableModalSkill({
+                            id: family.primaryTemplate.skillPackageId,
+                            name: family.displayName,
+                            jurisdictions: Array.from(new Set(family.templates.flatMap((t) => t.jurisdictions))),
+                            languages: Array.from(new Set(family.templates.flatMap((t) => t.languages))),
+                          });
                         } else {
                           setEntitlementError(t("toUseContract"));
                         }
@@ -760,6 +772,41 @@ export default function NewDealPage() {
                         {family.description}
                       </p>
                     )}
+                    {/* Jurisdictions (flag + name) and contract languages (plain
+                        words) — deliberately different formats so "ES" can never
+                        be read as both Spain and Spanish. Shown on every card so
+                        coverage is clear BEFORE a premium purchase. */}
+                    {(() => {
+                      const familyJurisdictions = Array.from(
+                        new Set(family.templates.flatMap((tmpl) => tmpl.jurisdictions))
+                      );
+                      const familyLanguages = Array.from(
+                        new Set(family.templates.flatMap((tmpl) => tmpl.languages))
+                      );
+                      if (!familyJurisdictions.length && !familyLanguages.length) return null;
+                      return (
+                        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-3 text-xs text-muted-foreground">
+                          {familyJurisdictions.length > 0 && (
+                            <span className="flex flex-wrap items-center gap-x-1.5">
+                              {familyJurisdictions.map((j) => {
+                                const display = JURISDICTION_DISPLAY[j];
+                                return (
+                                  <span key={j}>
+                                    {display ? `${display.flag} ${t(`jurisdictions.${display.tKey}`)}` : j}
+                                  </span>
+                                );
+                              })}
+                            </span>
+                          )}
+                          {familyLanguages.length > 0 && (
+                            <span className="flex items-center gap-1">
+                              <Globe className="w-3 h-3" aria-hidden="true" />
+                              {familyLanguages.map((l) => CONTRACT_LANGUAGE_NAMES[l] ?? l).join(", ")}
+                            </span>
+                          )}
+                        </div>
+                      );
+                    })()}
                   </button>
                 );
               })}

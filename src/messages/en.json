@@ -200,7 +200,8 @@
       "englandWalesCourt": "Courts of England and Wales, London",
       "spain": "Spain, EU",
       "spainDescription": "Spanish civil law within EU regulatory framework",
-      "spainCourt": "Courts of Madrid, Spain"
+      "spainCourt": "Courts of Madrid, Spain",
+      "delaware": "Delaware, USA"
     },
     "allCategories": "All",
     "languages": {
@@ -1924,6 +1925,9 @@
     "subscribe": "Subscribe — {price}",
     "redirecting": "Redirecting...",
     "genericError": "Something went wrong. Please try again.",
-    "networkError": "Network error. Please check your connection and try again."
+    "networkError": "Network error. Please check your connection and try again.",
+    "availableJurisdictions": "Available jurisdictions",
+    "contractLanguages": "Contract languages",
+    "jurisdictionNotice": "This skill only generates contracts for the jurisdictions listed above. Check that yours is covered before subscribing."
   }
 }

@@ -38,3 +38,23 @@ export const SKILL_JURISDICTION_TO_GOVERNING_LAW: Record<string, GoverningLaw> =
 export function governingLawForSkillJurisdiction(tag: string): GoverningLaw | null {
   return SKILL_JURISDICTION_TO_GOVERNING_LAW[tag] ?? null;
 }
+
+/**
+ * Display metadata for jurisdiction tags: flag emoji + the i18n key under
+ * `newDeal.jurisdictions.*`. Jurisdictions and contract languages must never
+ * share a visual format (a "ES" pill can mean Spain or Spanish) — always
+ * render jurisdictions as flag + full name and languages as plain words.
+ */
+export const JURISDICTION_DISPLAY: Record<string, { flag: string; tKey: string }> = {
+  CALIFORNIA: { flag: "🇺🇸", tKey: "california" },
+  NEW_YORK: { flag: "🇺🇸", tKey: "newYork" },
+  DELAWARE: { flag: "🇺🇸", tKey: "delaware" },
+  ENGLAND_WALES: { flag: "🇬🇧", tKey: "englandWales" },
+  SPAIN: { flag: "🇪🇸", tKey: "spain" },
+};
+
+/** Contract language names, written in the language itself (no i18n needed). */
+export const CONTRACT_LANGUAGE_NAMES: Record<string, string> = {
+  en: "English",
+  es: "Español",
+};

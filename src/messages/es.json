@@ -200,7 +200,8 @@
       "englandWalesCourt": "Tribunales de Inglaterra y Gales, Londres",
       "spain": "España, UE",
       "spainDescription": "Derecho civil español dentro del marco regulatorio de la UE",
-      "spainCourt": "Tribunales de Madrid, España"
+      "spainCourt": "Tribunales de Madrid, España",
+      "delaware": "Delaware, EE.UU."
     },
     "allCategories": "Todas",
     "languages": {
@@ -1925,6 +1926,9 @@
     "subscribe": "Suscribirse — {price}",
     "redirecting": "Redirigiendo...",
     "genericError": "Algo ha ido mal. Inténtalo de nuevo.",
-    "networkError": "Error de red. Comprueba tu conexión e inténtalo de nuevo."
+    "networkError": "Error de red. Comprueba tu conexión e inténtalo de nuevo.",
+    "availableJurisdictions": "Jurisdicciones disponibles",
+    "contractLanguages": "Idiomas del contrato",
+    "jurisdictionNotice": "Esta skill solo genera contratos para las jurisdicciones indicadas arriba. Comprueba que la tuya está incluida antes de suscribirte."
   }
 }

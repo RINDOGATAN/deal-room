@@ -6,6 +6,7 @@ import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { formatPrice } from "@/lib/currency";
+import { JURISDICTION_DISPLAY, CONTRACT_LANGUAGE_NAMES } from "@/lib/jurisdictions";
 import {
   Dialog,
   DialogContent,
@@ -28,6 +29,15 @@ interface EnableFeatureModalProps {
   priceAmount?: number;
   /** ISO currency code, e.g. "eur" or "usd". Optional, see priceAmount. */
   priceCurrency?: string;
+  /**
+   * Jurisdiction tags this skill's contracts are drafted for (e.g.
+   * ["CALIFORNIA","ENGLAND_WALES"]). When provided, the modal states them
+   * before checkout so nobody pays for a skill that doesn't cover their
+   * jurisdiction.
+   */
+  jurisdictions?: string[];
+  /** Contract languages the skill can generate (e.g. ["en","es"]). */
+  languages?: string[];
   returnUrl?: string;
 }
 
@@ -50,10 +60,13 @@ export function EnableFeatureModal({
   skillName,
   priceAmount,
   priceCurrency,
+  jurisdictions,
+  languages,
   returnUrl,
 }: EnableFeatureModalProps) {
   const t = useTranslations("premium");
   const tCommon = useTranslations("common");
+  const tJurisdictions = useTranslations("newDeal.jurisdictions");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const priceLabel = t("perMonth", { price: formatSkillPrice(priceAmount, priceCurrency) });
@@ -89,6 +102,43 @@ export function EnableFeatureModal({
             {t("enableDescription", { price: priceLabel })}
           </DialogDescription>
         </DialogHeader>
+        {(jurisdictions?.length || languages?.length) ? (
+          <div className="space-y-3 border border-border rounded-xl p-3">
+            {jurisdictions && jurisdictions.length > 0 && (
+              <div>
+                <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                  {t("availableJurisdictions")}
+                </p>
+                <div className="flex flex-wrap gap-1.5 mt-1.5">
+                  {jurisdictions.map((j) => {
+                    const display = JURISDICTION_DISPLAY[j];
+                    return (
+                      <span
+                        key={j}
+                        className="text-sm bg-muted px-2.5 py-0.5 rounded-full"
+                      >
+                        {display ? `${display.flag} ${tJurisdictions(display.tKey)}` : j}
+                      </span>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+            {languages && languages.length > 0 && (
+              <div>
+                <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                  {t("contractLanguages")}
+                </p>
+                <p className="text-sm mt-1">
+                  {languages.map((l) => CONTRACT_LANGUAGE_NAMES[l] ?? l).join(", ")}
+                </p>
+              </div>
+            )}
+            {jurisdictions && jurisdictions.length > 0 && (
+              <p className="text-xs text-muted-foreground">{t("jurisdictionNotice")}</p>
+            )}
+          </div>
+        ) : null}
         {error && (
           <p className="text-sm text-destructive bg-destructive/10 px-3 py-2 rounded-xl">{error}</p>
         )}
