@@ -215,7 +215,14 @@
     "requiredFieldsLegend": "indicates a required field",
     "parameterRequired": "Please fill in all required parameters",
     "searchContracts": "Search contracts...",
-    "noContractsFound": "No contracts match your search."
+    "noContractsFound": "No contracts match your search.",
+    "setupTitle": "How do you want to set it up?",
+    "expressBadge": "Express",
+    "customSetup": "Configure everything myself",
+    "customSetupDescription": "Walk through every clause and parameter step by step.",
+    "expressCreatesReady": "The agreement is created immediately with these choices — you can still edit any clause afterwards.",
+    "advancedParameters": "{count, plural, one {Advanced setting (# optional)} other {Advanced settings (# optional)}}",
+    "advancedParametersHint": "All of these have common-practice defaults applied. Only open this if you want to change them."
   },
   "dealDetail": {
     "makeSelections": "Make Selections",

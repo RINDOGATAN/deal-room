@@ -20,6 +20,8 @@ import {
   Languages,
   Lock,
   Megaphone,
+  Zap,
+  SlidersHorizontal,
   Link2,
   Users,
   Download,
@@ -89,6 +91,7 @@ interface TemplateInfo {
   marketplaceSlug: string | null;
   entitledJurisdictions: string[];
   expiresAt: Date | null;
+  presets: { id: string; name: string; description: string }[];
 }
 
 type DealMode = "NEGOTIATION" | "SOLO";
@@ -229,6 +232,9 @@ export default function NewDealPage() {
   const locale = useLocale();
   const [selectedFamily, setSelectedFamily] = useState<string | null>(null);
   const [selectedType, setSelectedType] = useState<string | null>(null);
+  // Express setup: null = not chosen yet (when the skill offers presets),
+  // "custom" = walk the full wizard, otherwise the chosen preset id.
+  const [setupChoice, setSetupChoice] = useState<string | null>(null);
   const [selectedJurisdiction, setSelectedJurisdiction] = useState<GoverningLaw | null>(null);
   const [selectedLanguage, setSelectedLanguage] = useState<ContractLanguage>("en");
   const [dealName, setDealName] = useState("");
@@ -369,7 +375,9 @@ export default function NewDealPage() {
   const createDeal = trpc.deal.create.useMutation({
     onSuccess: (deal) => {
       toast.success(t("dealRoomCreated"));
-      router.push(`/deals/${deal.id}/negotiate`);
+      // Express presets land the deal directly on AGREED — go to the deal
+      // hub where the document is ready, not into the (finished) wizard.
+      router.push(deal.status === "AGREED" ? `/deals/${deal.id}` : `/deals/${deal.id}/negotiate`);
     },
     onError: (error) => {
       // Check if this is an entitlement/access error
@@ -450,6 +458,7 @@ export default function NewDealPage() {
       initiatorCompany: company.trim() || undefined,
       parameters: visibleParameters.length > 0 ? parameterValues : undefined,
       fillRole: roleConfig ? fillRole : undefined,
+      presetId: setupChoice && setupChoice !== "custom" ? setupChoice : undefined,
     });
   };
 
@@ -457,23 +466,42 @@ export default function NewDealPage() {
     (j) => j.value === selectedJurisdiction
   );
 
+  // Express setup: when the skill ships presets, an extra "setup" step asks
+  // preset vs. custom before anything else. A chosen preset collapses the
+  // whole wizard: jurisdiction auto-resolves (single-jurisdiction skills),
+  // language defaults to the UI locale, mode is SOLO and parameters keep
+  // their defaults — the user only names the deal and clicks create.
+  const stepTemplate = templates?.find((tmpl) => tmpl.contractType === selectedType);
+  const templatePresets = selectedFamilyGroup?.primaryTemplate.presets ?? [];
+  const hasPresets = templatePresets.length > 0;
+  const awaitingSetupChoice = !!selectedFamily && hasPresets && setupChoice === null;
+  const presetActive = !!setupChoice && setupChoice !== "custom";
+
   // Dynamic wizard step numbering: steps are conditionally skipped (governing
   // law for soloModeOnly templates, the mode selector on self-host or when a
   // template doesn't offer both modes), so numbers are computed from what is
   // actually rendered — never hard-coded — to avoid 3 → 5 jumps.
-  const stepTemplate = templates?.find((tmpl) => tmpl.contractType === selectedType);
-  const showGoverningLawStep = !!selectedFamily && !stepTemplate?.soloModeOnly;
+  const showGoverningLawStep =
+    !!selectedFamily && !stepTemplate?.soloModeOnly && !awaitingSetupChoice && !presetActive;
   const showModeStep =
     !!selectedFamily &&
     !!selectedJurisdiction &&
     !IS_SELF_HOST &&
     !!stepTemplate?.soloModeSupported &&
     !stepTemplate?.soloModeDefault &&
-    !stepTemplate?.soloModeOnly;
-  const governingLawStepNumber = 2;
-  const languageStepNumber = showGoverningLawStep ? 3 : 2;
+    !stepTemplate?.soloModeOnly &&
+    !awaitingSetupChoice &&
+    !presetActive;
+  const setupStepNumber = 2;
+  const stepOffset = hasPresets ? 1 : 0;
+  const governingLawStepNumber = 2 + stepOffset;
+  const languageStepNumber = showGoverningLawStep ? governingLawStepNumber + 1 : 2 + stepOffset;
   const modeStepNumber = languageStepNumber + 1;
-  const detailsStepNumber = showModeStep ? modeStepNumber + 1 : languageStepNumber + 1;
+  const detailsStepNumber = presetActive
+    ? 3
+    : showModeStep
+      ? modeStepNumber + 1
+      : languageStepNumber + 1;
 
   if (isLoading) {
     return (
@@ -702,6 +730,7 @@ export default function NewDealPage() {
                       setSelectedFamily(family.family);
                       setSelectedType(family.primaryTemplate.contractType);
                       setResolvedNativeTemplate(null);
+                      setSetupChoice(null);
                       // Auto-set deal mode based on template config
                       // Self-hosted has no counterparty invite, so prefer solo whenever the
                       // template supports it.
@@ -814,6 +843,110 @@ export default function NewDealPage() {
           </>
         )}
       </div>
+
+      {/* Express setup: preset vs. full wizard (only for skills that ship presets) */}
+      {selectedFamily && hasPresets && (
+        <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-300">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold rounded-full">
+              {setupStepNumber}
+            </div>
+            <Label className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
+              {t("setupTitle")}
+            </Label>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {templatePresets.map((preset) => {
+              const isSelected = setupChoice === preset.id;
+              return (
+                <button
+                  key={preset.id}
+                  onClick={() => {
+                    setSetupChoice(preset.id);
+                    setDealMode("SOLO");
+                    // Single-jurisdiction skills resolve immediately; multi-
+                    // jurisdiction ones keep the (hidden) jurisdiction from a
+                    // previous pick or fall back to the first supported one.
+                    const jurisdictions = Array.from(availableJurisdictions);
+                    if (!selectedJurisdiction && jurisdictions.length > 0) {
+                      const gl =
+                        governingLawForSkillJurisdiction(jurisdictions[0]) ??
+                        (jurisdictions[0] as GoverningLaw);
+                      setSelectedJurisdiction(gl);
+                      if (selectedFamily) resolveTemplate(selectedFamily, gl);
+                    }
+                    // Contract language follows the UI locale when supported.
+                    if (availableLanguages.has(locale)) {
+                      setSelectedLanguage(locale as ContractLanguage);
+                    } else if (availableLanguages.size > 0) {
+                      setSelectedLanguage(Array.from(availableLanguages)[0] as ContractLanguage);
+                    }
+                    if (!dealName.trim() && selectedFamilyGroup) {
+                      setDealName(selectedFamilyGroup.displayName);
+                    }
+                  }}
+                  aria-pressed={isSelected}
+                  className={`card-brutal text-left relative transition-colors ${
+                    isSelected ? "border-primary" : "hover:border-muted-foreground"
+                  }`}
+                >
+                  {isSelected && (
+                    <div className="absolute top-4 right-4 w-6 h-6 bg-primary flex items-center justify-center rounded-full">
+                      <Check className="w-4 h-4 text-primary-foreground" />
+                    </div>
+                  )}
+                  <div className="flex items-start gap-3">
+                    <div className={`w-10 h-10 flex items-center justify-center rounded-xl shrink-0 ${
+                      isSelected ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
+                    }`}>
+                      <Zap className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <h3 className="font-semibold">{preset.name}</h3>
+                        <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full font-medium">
+                          {t("expressBadge")}
+                        </span>
+                      </div>
+                      <p className="text-sm text-muted-foreground mt-1">{preset.description}</p>
+                    </div>
+                  </div>
+                </button>
+              );
+            })}
+
+            <button
+              onClick={() => setSetupChoice("custom")}
+              aria-pressed={setupChoice === "custom"}
+              className={`card-brutal text-left relative transition-colors ${
+                setupChoice === "custom" ? "border-primary" : "hover:border-muted-foreground"
+              }`}
+            >
+              {setupChoice === "custom" && (
+                <div className="absolute top-4 right-4 w-6 h-6 bg-primary flex items-center justify-center rounded-full">
+                  <Check className="w-4 h-4 text-primary-foreground" />
+                </div>
+              )}
+              <div className="flex items-start gap-3">
+                <div className={`w-10 h-10 flex items-center justify-center rounded-xl shrink-0 ${
+                  setupChoice === "custom" ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
+                }`}>
+                  <SlidersHorizontal className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="font-semibold">{t("customSetup")}</h3>
+                  <p className="text-sm text-muted-foreground mt-1">{t("customSetupDescription")}</p>
+                </div>
+              </div>
+            </button>
+          </div>
+
+          {presetActive && (
+            <p className="text-sm text-muted-foreground">{t("expressCreatesReady")}</p>
+          )}
+        </div>
+      )}
 
       {/* Step 2: Governing Law Selection (hidden for soloModeOnly — uses multiSelect parameter) */}
       {showGoverningLawStep && (
@@ -941,7 +1074,7 @@ export default function NewDealPage() {
       )}
 
       {/* Step 3 (or 2 for soloModeOnly): Contract Language Selection */}
-      {selectedFamily && selectedJurisdiction && (
+      {selectedFamily && selectedJurisdiction && !awaitingSetupChoice && !presetActive && (
         <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-300">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold rounded-full">
@@ -1079,7 +1212,7 @@ export default function NewDealPage() {
       })()}
 
       {/* Final step: Deal Details */}
-      {selectedFamily && selectedJurisdiction && (
+      {selectedFamily && selectedJurisdiction && !awaitingSetupChoice && (
         <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-300">
           <div className="space-y-4">
             <div className="flex items-center gap-3">
@@ -1111,9 +1244,32 @@ export default function NewDealPage() {
                 </div>
                 <div className="flex items-center justify-between mt-2">
                   <span className="text-muted-foreground">{t("contractLanguage")}:</span>
-                  <span className="font-medium">
-                    {t(`languages.${contractLanguageMeta.find((l) => l.value === selectedLanguage)?.tKey ?? "english"}`)}
-                  </span>
+                  {presetActive && availableLanguages.size > 1 ? (
+                    // Express path skips the language step — offer the switch inline.
+                    <span className="flex gap-1">
+                      {contractLanguageMeta
+                        .filter((l) => availableLanguages.has(l.value))
+                        .map((l) => (
+                          <button
+                            key={l.value}
+                            type="button"
+                            onClick={() => setSelectedLanguage(l.value)}
+                            aria-pressed={selectedLanguage === l.value}
+                            className={`text-xs px-2.5 py-1 rounded-full font-medium transition-colors ${
+                              selectedLanguage === l.value
+                                ? "bg-primary text-primary-foreground"
+                                : "bg-muted text-muted-foreground hover:text-foreground"
+                            }`}
+                          >
+                            {t(`languages.${l.tKey}`)}
+                          </button>
+                        ))}
+                    </span>
+                  ) : (
+                    <span className="font-medium">
+                      {t(`languages.${contractLanguageMeta.find((l) => l.value === selectedLanguage)?.tKey ?? "english"}`)}
+                    </span>
+                  )}
                 </div>
               </div>
 
@@ -1161,54 +1317,70 @@ export default function NewDealPage() {
             </div>
           </div>
 
-          {/* Deal Parameters (conditional) */}
-          {visibleParameters.length > 0 && (
-            <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-300">
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold rounded-full">
-                  {(() => {
-                    const ct = templates?.find((tmpl) => tmpl.contractType === selectedType);
-                    if (ct?.soloModeOnly) return 4;
-                    return (ct?.soloModeSupported && !ct?.soloModeDefault ? 6 : 5);
-                  })()}
+          {/* Deal Parameters (conditional). The express path hides them
+              entirely — defaults and preset overrides apply. The custom path
+              keeps required fields visible and folds all-optional ones behind
+              an "advanced" disclosure so the form is not a wall of decisions. */}
+          {visibleParameters.length > 0 && !presetActive && (() => {
+            const requiredParams = visibleParameters.filter((p) => p.required);
+            const optionalParams = visibleParameters.filter((p) => !p.required);
+            const renderParam = (param: ParameterDefinition) => (
+              <ParameterField
+                key={param.id}
+                param={param}
+                value={parameterValues[param.id] || ""}
+                onChange={(val) => {
+                  setParameterValues((prev) => ({ ...prev, [param.id]: val }));
+                  setMissingParams((prev) => { const next = new Set(prev); next.delete(param.id); return next; });
+                }}
+                jurisdiction={selectedJurisdiction!}
+                lang={locale}
+                error={missingParams.has(param.id)}
+              />
+            );
+            return (
+              <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-300">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold rounded-full">
+                    {detailsStepNumber + 1}
+                  </div>
+                  <Label className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
+                    {t("dealParameters")}
+                  </Label>
                 </div>
-                <Label className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
-                  {t("dealParameters")}
-                </Label>
-              </div>
 
-              <div className="card-brutal space-y-5">
-                <div className="flex items-baseline justify-between gap-3">
-                  <p className="text-sm text-muted-foreground">
-                    {t("dealParametersDescription")}
-                  </p>
-                  {visibleParameters.some((p) => p.required) && (
-                    <p className="text-xs text-muted-foreground shrink-0">
-                      <span className="text-destructive">*</span> {t("requiredFieldsLegend")}
+                <div className="card-brutal space-y-5">
+                  <div className="flex items-baseline justify-between gap-3">
+                    <p className="text-sm text-muted-foreground">
+                      {t("dealParametersDescription")}
                     </p>
+                    {requiredParams.length > 0 && (
+                      <p className="text-xs text-muted-foreground shrink-0">
+                        <span className="text-destructive">*</span> {t("requiredFieldsLegend")}
+                      </p>
+                    )}
+                  </div>
+                  {requiredParams.map(renderParam)}
+                  {optionalParams.length > 0 && (
+                    <details className={`group ${requiredParams.length > 0 ? "border-t border-border pt-4" : ""}`}>
+                      <summary className="flex items-center gap-2 cursor-pointer text-sm font-medium select-none">
+                        <ChevronDown className="w-4 h-4 transition-transform group-open:rotate-180" />
+                        {t("advancedParameters", { count: optionalParams.length })}
+                      </summary>
+                      <p className="text-xs text-muted-foreground mt-1 ml-6">
+                        {t("advancedParametersHint")}
+                      </p>
+                      <div className="space-y-5 mt-4">{optionalParams.map(renderParam)}</div>
+                    </details>
                   )}
                 </div>
-                {visibleParameters.map((param) => (
-                  <ParameterField
-                    key={param.id}
-                    param={param}
-                    value={parameterValues[param.id] || ""}
-                    onChange={(val) => {
-                      setParameterValues((prev) => ({ ...prev, [param.id]: val }));
-                      setMissingParams((prev) => { const next = new Set(prev); next.delete(param.id); return next; });
-                    }}
-                    jurisdiction={selectedJurisdiction!}
-                    lang={locale}
-                    error={missingParams.has(param.id)}
-                  />
-                ))}
               </div>
-            </div>
-          )}
+            );
+          })()}
 
           <div className="flex items-center justify-between gap-4 pt-4 border-t border-border">
             <p className="text-sm text-muted-foreground">
-              {t("selectOptionsNext")}
+              {presetActive ? t("expressCreatesReady") : t("selectOptionsNext")}
             </p>
             <button
               onClick={handleCreate}

@@ -215,7 +215,14 @@
     "requiredFieldsLegend": "indica un campo obligatorio",
     "parameterRequired": "Por favor, completa todos los datos obligatorios",
     "searchContracts": "Buscar contratos...",
-    "noContractsFound": "No se encontraron contratos."
+    "noContractsFound": "No se encontraron contratos.",
+    "setupTitle": "¿Cómo quieres configurarlo?",
+    "expressBadge": "Exprés",
+    "customSetup": "Configurarlo todo yo",
+    "customSetupDescription": "Revisa cada cláusula y parámetro paso a paso.",
+    "expressCreatesReady": "El acuerdo se crea de inmediato con estas opciones; después podrás editar cualquier cláusula.",
+    "advancedParameters": "{count, plural, one {Ajuste avanzado (# opcional)} other {Ajustes avanzados (# opcionales)}}",
+    "advancedParametersHint": "Todos tienen valores por defecto según la práctica habitual. Ábrelo solo si quieres cambiarlos."
   },
   "dealDetail": {
     "makeSelections": "Elegir Opciones",

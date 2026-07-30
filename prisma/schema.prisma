@@ -331,6 +331,7 @@ model ContractTemplate {
   category             String? // e.g., "corporate", "investment", "privacy"
   categoryLocalized    Json? // {"en":"Corporate","es":"Societario"}
   parameterSchema      Json? // Parameter definitions from parameters.json
+  presets              Json? // Express-setup presets from presets.json: [{id,name,description,dealMode,selections:{clauseId:optionId},parameters:{id:value}}]
   soloModeSupported    Boolean       @default(false)
   soloModeDefault      Boolean       @default(false)
   soloModeOnly         Boolean       @default(false)

@@ -293,6 +293,14 @@ async function main() {
       console.log(`  Found parameters.json (${(parameterSchema as any)?.parameters?.length || 0} parameters)`);
     }
 
+    const presetsPath = path.join(skillPath, "presets.json");
+    let presets: unknown[] | null = null;
+    if (fs.existsSync(presetsPath)) {
+      const parsed = JSON.parse(fs.readFileSync(presetsPath, "utf-8"));
+      presets = Array.isArray(parsed) ? parsed : parsed?.presets ?? null;
+      console.log(`  Found presets.json (${presets?.length || 0} presets)`);
+    }
+
     // Create or update SkillPackage if manifest exists (enables licensing)
     let skillPackage = null;
     if (manifest) {
@@ -399,6 +407,7 @@ async function main() {
         category: resolvedCategory,
         categoryLocalized: categoryLocalized as Prisma.InputJsonValue ?? Prisma.DbNull,
         parameterSchema: parameterSchema as Prisma.InputJsonValue ?? Prisma.DbNull,
+        presets: presets as Prisma.InputJsonValue ?? Prisma.DbNull,
         soloModeSupported: metadata?.soloModeSupported ?? false,
         soloModeDefault: metadata?.soloModeDefault ?? false,
         soloModeOnly: metadata?.soloModeOnly ?? false,
@@ -420,6 +429,7 @@ async function main() {
         category: resolvedCategory,
         categoryLocalized: categoryLocalized as Prisma.InputJsonValue ?? Prisma.DbNull,
         parameterSchema: parameterSchema as Prisma.InputJsonValue ?? Prisma.DbNull,
+        presets: presets as Prisma.InputJsonValue ?? Prisma.DbNull,
         soloModeSupported: metadata?.soloModeSupported ?? false,
         soloModeDefault: metadata?.soloModeDefault ?? false,
         soloModeOnly: metadata?.soloModeOnly ?? false,

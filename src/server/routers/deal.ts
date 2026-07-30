@@ -11,6 +11,7 @@ import { validateRequiredParameters, type ParameterSchema } from "@/lib/paramete
 import { governingLawForSkillJurisdiction } from "@/lib/jurisdictions";
 import { roleConfigFor } from "@/lib/contractRoles";
 import { autoAgreeSingleOptionClauses } from "../services/deal/autoAgreeSingleOption";
+import { applyPresetSelections, findPreset } from "../services/deal/applyPreset";
 import { features } from "@/config/features";
 
 // Map GoverningLaw enum to jurisdiction strings for entitlement checking
@@ -301,6 +302,10 @@ export const dealRouter = createTRPCRouter({
         dealMode: z.enum(["NEGOTIATION", "SOLO"]).default("NEGOTIATION"),
         initiatorCompany: z.string().optional(),
         parameters: z.record(z.string(), z.string()).optional(),
+        // Express setup: apply a skill-authored preset (template.presets) so
+        // the deal is created with every clause pre-selected — in SOLO mode it
+        // lands directly on AGREED with the document ready.
+        presetId: z.string().optional(),
         // Asymmetric-role contracts (DPA): which role the initiator takes. The
         // counterparty (if any) takes the other. Ignored for symmetric skills.
         fillRole: z
@@ -319,7 +324,7 @@ export const dealRouter = createTRPCRouter({
         include: {
           clauses: {
             orderBy: { order: "asc" },
-            include: { options: { select: { id: true }, orderBy: { order: "asc" } } },
+            include: { options: { select: { id: true, optionId: true }, orderBy: { order: "asc" } } },
           },
           skillPackage: true,
         },
@@ -344,7 +349,7 @@ export const dealRouter = createTRPCRouter({
           include: {
             clauses: {
               orderBy: { order: "asc" },
-              include: { options: { select: { id: true }, orderBy: { order: "asc" } } },
+              include: { options: { select: { id: true, optionId: true }, orderBy: { order: "asc" } } },
             },
             skillPackage: true,
           },
@@ -353,6 +358,16 @@ export const dealRouter = createTRPCRouter({
         if (nativeTemplate) {
           template = nativeTemplate;
         }
+      }
+
+      // Resolve the express preset (if any) before creating the deal so an
+      // unknown preset fails fast and its parameter overrides can merge in.
+      const preset = input.presetId ? findPreset(template.presets, input.presetId) : null;
+      if (input.presetId && !preset) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Unknown preset for this contract template",
+        });
       }
 
       // Validate jurisdiction and language constraints. Template jurisdiction
@@ -405,9 +420,13 @@ export const dealRouter = createTRPCRouter({
         }
       }
 
-      // Validate required parameters if template has a parameter schema
+      // Validate required parameters if template has a parameter schema.
+      // Preset parameter overrides act as defaults; explicit input wins.
       const parameterSchema = template.parameterSchema as unknown as ParameterSchema | null;
-      const dealParameters: Record<string, string> = input.parameters ?? {};
+      const dealParameters: Record<string, string> = {
+        ...(preset?.parameters ?? {}),
+        ...(input.parameters ?? {}),
+      };
       if (parameterSchema?.parameters?.length) {
         const missing = validateRequiredParameters(dealParameters, parameterSchema);
         if (missing.length > 0) {
@@ -465,12 +484,36 @@ export const dealRouter = createTRPCRouter({
         },
       });
 
-      // Auto-select + auto-agree any clauses with exactly one option. For
-      // solo deals where every clause is single-option (e.g. the Delaware
-      // Cert of Incorporation), this flips the deal to AGREED immediately
-      // so the PDF is ready without a pointless 6-click wizard.
+      // Express preset: select the preset's option on every clause. Mutually
+      // exclusive with the single-option auto-agree below (both create the
+      // initiator's PartySelection rows, which are unique per clause+party).
       const initiatorParty = dealRoom.parties[0];
-      if (initiatorParty) {
+      if (preset && initiatorParty) {
+        const { agreed, unresolvedClauseIds } = await applyPresetSelections(ctx.prisma, {
+          dealRoomId: dealRoom.id,
+          dealMode: input.dealMode as DealMode,
+          partyId: initiatorParty.id,
+          preset,
+          templateClauses: template.clauses,
+          dealClauses: dealRoom.clauses,
+        });
+        await ctx.prisma.auditLog.create({
+          data: {
+            dealRoomId: dealRoom.id,
+            userId,
+            action: "DEAL_ROOM_PRESET_APPLIED",
+            details: {
+              presetId: preset.id,
+              agreed,
+              unresolvedClauseIds,
+            },
+          },
+        });
+      } else if (initiatorParty) {
+        // Auto-select + auto-agree any clauses with exactly one option. For
+        // solo deals where every clause is single-option (e.g. the Delaware
+        // Cert of Incorporation), this flips the deal to AGREED immediately
+        // so the PDF is ready without a pointless 6-click wizard.
         const { autoAgreed } = await autoAgreeSingleOptionClauses(ctx.prisma, {
           dealRoomId: dealRoom.id,
           dealMode: input.dealMode as DealMode,

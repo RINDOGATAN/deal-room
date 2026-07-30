@@ -87,6 +87,7 @@ export const skillsRouter = createTRPCRouter({
         soloModeSupported: true,
         soloModeDefault: true,
         soloModeOnly: true,
+        presets: true,
         skillPackageId: true,
         skillPackage: {
           select: {
@@ -164,6 +165,26 @@ export const skillsRouter = createTRPCRouter({
         soloModeSupported: t.soloModeSupported,
         soloModeDefault: t.soloModeDefault,
         soloModeOnly: t.soloModeOnly,
+        // Express-setup presets, with name/description resolved to the
+        // requested language (selections stay server-side; the client only
+        // needs id + copy to render the choice).
+        presets: Array.isArray(t.presets)
+          ? (t.presets as Array<Record<string, unknown>>).map((p) => {
+              const resolve = (v: unknown): string => {
+                if (typeof v === "string") return v;
+                if (v && typeof v === "object") {
+                  const rec = v as Record<string, string>;
+                  return (language && rec[language]) || rec.en || "";
+                }
+                return "";
+              };
+              return {
+                id: String(p.id ?? ""),
+                name: resolve(p.name),
+                description: resolve(p.description),
+              };
+            })
+          : [],
         // Marketplace-only: a premium skill whose content isn't installed (no
         // clauses). Discoverable but not usable until bought on the storefront —
         // this flag stays true even when allSkillsFree makes everything else free.
