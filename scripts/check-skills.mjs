@@ -12,6 +12,10 @@
  *   - invalid JSON
  *   - i18n strings missing a declared language
  *   - leftover [BRACKET] placeholders in boilerplate
+ *   - LABEL-style [BRACKET] tokens in clause text that no parameter
+ *     declares (language-aware: a localised spelling such as [IMPORTE]
+ *     is accepted in Spanish text when `amount` is declared, because
+ *     interpolateParameters resolves it through TOKEN_TRANSLATIONS)
  *   - {curly} boilerplate variables that aren't system-provided or
  *     bridged via a parameter's `boilerplateVariable`
  *
@@ -23,10 +27,11 @@
  */
 import { readFileSync, readdirSync, statSync, existsSync } from "node:fs";
 import { join } from "node:path";
+import { fileURLToPath } from "node:url";
 
 const SKILLS_DIR = process.env.SKILLS_DIR
   ? process.env.SKILLS_DIR
-  : new URL("../skills", import.meta.url).pathname;
+  : fileURLToPath(new URL("../skills", import.meta.url));
 
 const REQUIRED_FILES = ["clauses.json", "metadata.json", "boilerplate.json"];
 
@@ -52,6 +57,80 @@ const SYSTEM_BOILERPLATE_VARS = new Set([
 // DELAWARE). Keep in sync with SKILL_JURISDICTION_TO_GOVERNING_LAW in
 // src/lib/jurisdictions.ts, which maps tags onto the deal engine's enum.
 const VALID_JURISDICTIONS = new Set(["CALIFORNIA", "DELAWARE", "ENGLAND_WALES", "NEW_YORK", "SPAIN"]);
+
+// ── Token translations (mirrors the runtime) ──────────────────────────────
+//
+// interpolateParameters() in src/lib/parameters.ts does NOT only look for the
+// English token declared in parameters.json. When rendering a non-English
+// contract it first maps that token through TOKEN_TRANSLATIONS and searches
+// for the LOCALISED spelling (case-insensitively), then also for the English
+// one. So `[IMPORTE]` in Spanish legal text is filled correctly whenever the
+// skill declares the `amount` parameter — it is not a leak.
+//
+// The map is parsed out of parameters.ts rather than duplicated here so there
+// is one source of truth. Parsing is deliberately strict: if the shape ever
+// changes and we recover nothing, we abort instead of silently reverting to
+// the old over-strict behaviour and failing valid Spanish content.
+const PARAMETERS_TS = fileURLToPath(new URL("../src/lib/parameters.ts", import.meta.url));
+
+function loadTokenTranslations() {
+  // lang -> Map<localised token (lower), English base token (lower)>
+  const byLang = new Map();
+  let source;
+  try {
+    source = readFileSync(PARAMETERS_TS, "utf8");
+  } catch {
+    console.error(`✖ check:skills: cannot read ${PARAMETERS_TS} for TOKEN_TRANSLATIONS.`);
+    process.exit(2);
+  }
+
+  const start = source.indexOf("const TOKEN_TRANSLATIONS");
+  const end = start === -1 ? -1 : source.indexOf("\n};", start);
+  if (start === -1 || end === -1) {
+    console.error(
+      "✖ check:skills: could not locate the TOKEN_TRANSLATIONS map in src/lib/parameters.ts.\n" +
+        "  The guard needs it to tell localised tokens from real leaks. Update the parser.",
+    );
+    process.exit(2);
+  }
+
+  // Entries look like:  amount: { es: "importe" },   "start date": { es: "fecha de inicio" },
+  const entryRe = /(?:"([^"\n]+)"|([A-Za-z_$][\w$]*))\s*:\s*\{([^}]*)\}/g;
+  const langRe = /([a-z]{2}(?:-[A-Z]{2})?)\s*:\s*"([^"]+)"/g;
+  for (const m of source.slice(start, end).matchAll(entryRe)) {
+    const base = (m[1] ?? m[2] ?? "").toLowerCase();
+    if (!base) continue;
+    for (const t of m[3].matchAll(langRe)) {
+      const lang = t[1];
+      if (!byLang.has(lang)) byLang.set(lang, new Map());
+      byLang.get(lang).set(t[2].toLowerCase(), base);
+    }
+  }
+
+  if (byLang.size === 0) {
+    console.error(
+      "✖ check:skills: parsed TOKEN_TRANSLATIONS but found no entries.\n" +
+        "  Refusing to run — this would flag every valid localised token as a leak.",
+    );
+    process.exit(2);
+  }
+  return byLang;
+}
+
+const TRANSLATIONS_BY_LANG = loadTokenTranslations();
+
+/**
+ * Language a walked string is written in, inferred from its path.
+ *
+ * i18n values sit under a language key ("…legalText.es"), so the trailing
+ * segment identifies the rendering language. A string with no language suffix
+ * gets no language: it is used verbatim for every contract language, so only
+ * the English token is guaranteed to interpolate and we stay strict.
+ */
+function langOfPath(path) {
+  const last = path.split(".").pop() ?? "";
+  return /^[a-z]{2}(-[A-Z]{2})?$/.test(last) ? last : null;
+}
 
 let errors = 0;
 let warnings = 0;
@@ -172,7 +251,12 @@ function checkClauseTokenLeaks(skill, clauses, parameters) {
   //   2. slash-separated pick-one blanks (e.g. [EEA/United Kingdom/United
   //      States]);
   //   3. tokens declared in parameters.json (matched case-insensitively by
-  //      src/lib/parameters.ts interpolateParameters, e.g. [DPO email]).
+  //      src/lib/parameters.ts interpolateParameters, e.g. [DPO email]);
+  //   4. the LOCALISED spelling of a declared token, inside a string written
+  //      in that language (e.g. [IMPORTE] in `legalText.es` when the skill
+  //      declares `amount` — interpolateParameters maps it through
+  //      TOKEN_TRANSLATIONS before searching). Language matters: the same
+  //      [IMPORTE] sitting in `legalText.en` really would ship verbatim.
   // What is NOT legitimate: undeclared LABEL-style tokens — ALL-CAPS
   // leftovers like [NAMED COMPETITORS] or Title-Case strays like
   // [Company Name] — which would ship verbatim in a finished document.
@@ -192,12 +276,27 @@ function checkClauseTokenLeaks(skill, clauses, parameters) {
   const re = /\[([^\[\]\n]*[A-Za-z][^\[\]\n]*)\]/g;
   walkValues(clauses, "", (val, path) => {
     if (typeof val !== "string") return;
+    const lang = langOfPath(path);
+    // Localised spellings only resolve when the text is rendered in that
+    // language, so only consult the map for non-English strings.
+    const localised =
+      lang && lang !== "en" ? TRANSLATIONS_BY_LANG.get(lang) : undefined;
     let m;
     const leaks = new Set();
+    const undeclaredBases = new Map(); // "[IMPORTE]" -> "amount"
     while ((m = re.exec(val)) !== null) {
       const token = m[1];
-      if (declaredTokens.has(token.toLowerCase())) continue; // parameter token
+      const lower = token.toLowerCase();
+      if (declaredTokens.has(lower)) continue; // parameter token
       if (!isLeakToken(token)) continue;
+      const base = localised?.get(lower);
+      if (base) {
+        // A known localised spelling. Fine if its English base is declared;
+        // otherwise it is a leak, but a much more specific one — say so.
+        if (declaredTokens.has(base)) continue;
+        undeclaredBases.set(`[${token}]`, base);
+        continue;
+      }
       leaks.add(`[${token}]`);
     }
     if (leaks.size > 0) {
@@ -205,6 +304,13 @@ function checkClauseTokenLeaks(skill, clauses, parameters) {
         skill,
         "clauses.json",
         `${path}: leaked placeholder token(s) not declared in parameters.json: ${[...leaks].join(", ")}`,
+      );
+    }
+    for (const [token, base] of undeclaredBases) {
+      logError(
+        skill,
+        "clauses.json",
+        `${path}: ${token} is the "${lang}" spelling of "${base}", but "${base}" is not declared in parameters.json — it will ship verbatim`,
       );
     }
   });
