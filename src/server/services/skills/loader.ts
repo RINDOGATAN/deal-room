@@ -110,9 +110,15 @@ const ClauseSchema = z.object({
   plainDescription: LocalizedStringSchema,
   legalContext: LocalizedStringSchema.optional(),
   isRequired: z.boolean().optional().default(true),
-  // Min 2: some authored skills have binary clauses, and England & Wales
-  // tenancy has three where the law leaves only two lawful answers.
-  options: z.array(ClauseOptionSchema).min(2),
+  // Min 1, not 2. A single-option clause is a deliberate, supported pattern:
+  // some terms are parameter-only or have exactly one lawful answer, so there
+  // is nothing to negotiate and the app auto-selects them (see
+  // src/server/services/deal/autoAgreeSingleOption.ts). Five of the six
+  // clauses in delaware-certificate-of-incorporation are authored this way,
+  // and England & Wales tenancy has three binary clauses because the law
+  // leaves only two lawful answers. A clause with NO options is still
+  // malformed and still fails.
+  options: z.array(ClauseOptionSchema).min(1),
 });
 
 const ClausesFileSchema = z.object({
@@ -520,9 +526,11 @@ export function validateClausesFile(data: unknown): ValidationResult {
       const clauseTitle = resolveLocalizedString(clause.title, DEFAULT_LANGUAGE);
       const options = clause.options as Array<Record<string, unknown>>;
 
-      // Check option count
-      if (options.length < 2) {
-        errors.push(`Clause "${clauseTitle}" has fewer than 2 options`);
+      // Check option count. A single option is legitimate (parameter-only
+      // clauses, or terms with one lawful answer — auto-selected downstream),
+      // so only an empty clause is an error.
+      if (options.length < 1) {
+        errors.push(`Clause "${clauseTitle}" has no options`);
       }
 
       // Check for unique option IDs

@@ -3,6 +3,7 @@
 
 import { describe, it, expect } from "vitest";
 import { validateClausesFile } from "./loader";
+import { ClausesFileSchema as PackagingSchema } from "./validator";
 
 /**
  * Authored skills vary along two INDEPENDENT axes: whether text is localised,
@@ -108,10 +109,56 @@ describe("loader: option format combinations", () => {
     expect((r.errors ?? []).length).toBeGreaterThan(0);
   });
 
+  it("accepts a single-option clause — parameter-only terms are not negotiations", () => {
+    // Five of the six delaware-certificate-of-incorporation clauses are
+    // authored this way, and autoAgreeSingleOption selects them automatically.
+    const r = validateClausesFile(file([PLAIN_FLAT]));
+    expect(r.errors).toEqual([]);
+    expect(r.valid).toBe(true);
+  });
+
+  it("still rejects a clause with no options at all", () => {
+    const r = validateClausesFile(file([]));
+    expect(r.valid).toBe(false);
+    expect((r.errors ?? []).length).toBeGreaterThan(0);
+  });
+
   it("still rejects an out-of-range bias in either layout", () => {
     const flat = { ...PLAIN_FLAT, biasPartyA: 5 };
     expect(validateClausesFile(file([flat, PLAIN_FLAT])).valid).toBe(false);
     const nested = { ...LOCALISED_NESTED, bias: { partyA: 5, partyB: 0 } };
     expect(validateClausesFile(file([nested, LOCALISED_NESTED])).valid).toBe(false);
+  });
+});
+
+/**
+ * The loader schema (runtime/seed) and the validator schema (.skill packaging)
+ * describe the SAME files. When they disagree, a skill either seeds but cannot
+ * be packaged, or packages but will not load — which is exactly the failure
+ * this pair of schemas produced for months. Assert they agree, so the two
+ * cannot silently drift apart again.
+ */
+describe("loader and packaging schemas agree", () => {
+  const cases: Array<[string, Record<string, unknown>[]]> = [
+    ["plain + flat", [PLAIN_FLAT]],
+    ["localised + flat", [LOCALISED_FLAT]],
+    ["localised + nested", [LOCALISED_NESTED]],
+    ["plain + nested", [PLAIN_NESTED]],
+    ["mixed layouts in one clause", [LOCALISED_FLAT, LOCALISED_NESTED]],
+    ["single-option clause", [PLAIN_FLAT]],
+  ];
+
+  for (const [name, opts] of cases) {
+    it(`both accept: ${name}`, () => {
+      const doc = file(opts);
+      expect(validateClausesFile(doc).valid).toBe(true);
+      expect(PackagingSchema.safeParse(doc).success).toBe(true);
+    });
+  }
+
+  it("both reject an option with no pros/cons/bias in either layout", () => {
+    const doc = file([option({ label: "A", plainDescription: "d", legalText: "t" })]);
+    expect(validateClausesFile(doc).valid).toBe(false);
+    expect(PackagingSchema.safeParse(doc).success).toBe(false);
   });
 });

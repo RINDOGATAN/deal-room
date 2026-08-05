@@ -58,31 +58,65 @@ const LocalizedStringArraySchema = z.union([
   z.record(z.string(), z.array(z.string())),
 ]);
 
-export const ClauseOptionSchema = z.object({
+// Pros/cons/bias come in two authored LAYOUTS, and both are first-class —
+// see the note in loader.ts. This schema previously accepted only the flat
+// one, which is the mirror of the bug loader.ts had in the other direction:
+// nda, msa, saas and delaware-certificate-of-incorporation are all authored
+// in the nested layout and were rejected here while seeding and running
+// perfectly well. Keep the two schemas agreeing about what is valid.
+const JurisdictionConfigSchema = z
+  .record(
+    z.string(),
+    z.object({
+      available: z.boolean().default(true),
+      warning: LocalizedStringSchema.optional(),
+      alternativeText: LocalizedStringSchema.optional(),
+    })
+  )
+  .optional();
+
+const ClauseOptionBaseShape = {
   id: z.string(),
   code: z.string(),
   label: LocalizedStringSchema,
   order: z.number().int().min(1),
   plainDescription: LocalizedStringSchema,
-  // Flat format: prosPartyA, consPartyA, etc.
+  legalText: LocalizedStringSchema,
+  jurisdictionConfig: JurisdictionConfigSchema,
+};
+
+// Flat layout: prosPartyA / consPartyA / biasPartyA …
+const FlatClauseOptionSchema = z.object({
+  ...ClauseOptionBaseShape,
   prosPartyA: LocalizedStringArraySchema,
   prosPartyB: LocalizedStringArraySchema,
   consPartyA: LocalizedStringArraySchema,
   consPartyB: LocalizedStringArraySchema,
-  legalText: LocalizedStringSchema,
   biasPartyA: z.number().min(-1).max(1),
   biasPartyB: z.number().min(-1).max(1),
-  jurisdictionConfig: z
-    .record(
-      z.string(),
-      z.object({
-        available: z.boolean().default(true),
-        warning: LocalizedStringSchema.optional(),
-        alternativeText: LocalizedStringSchema.optional(),
-      })
-    )
-    .optional(),
 });
+
+// Nested layout: pros.partyA / cons.partyA / bias.partyA …
+const NestedClauseOptionSchema = z.object({
+  ...ClauseOptionBaseShape,
+  pros: z.object({
+    partyA: LocalizedStringArraySchema,
+    partyB: LocalizedStringArraySchema,
+  }),
+  cons: z.object({
+    partyA: LocalizedStringArraySchema,
+    partyB: LocalizedStringArraySchema,
+  }),
+  bias: z.object({
+    partyA: z.number().min(-1).max(1),
+    partyB: z.number().min(-1).max(1),
+  }),
+});
+
+export const ClauseOptionSchema = z.union([
+  FlatClauseOptionSchema,
+  NestedClauseOptionSchema,
+]);
 
 export const ClauseSchema = z
   .object({
@@ -96,10 +130,15 @@ export const ClauseSchema = z
     plainDescription: LocalizedStringSchema,
     isRequired: z.boolean().default(true),
     legalContext: LocalizedStringSchema.optional(),
-    // Min 2 to match the loader/seed schema (loader.ts) — some authored skills
-    // have binary (2-option) clauses (e.g. advertising-io, affiliate-program).
-    // A stricter min here would reject a valid .skill that seeds fine on hosted.
-    options: z.array(ClauseOptionSchema).min(2),
+    // Min 1, matching loader.ts. Binary clauses are common (advertising-io,
+    // affiliate-program, the England & Wales tenancy), and SINGLE-option
+    // clauses are a deliberate pattern too: parameter-only terms, or terms
+    // with one lawful answer, which the app auto-selects rather than putting
+    // to a negotiation (src/server/services/deal/autoAgreeSingleOption.ts).
+    // delaware-certificate-of-incorporation has five of them and seeds fine
+    // on hosted, so a stricter min here would reject a valid, shipped .skill.
+    // An empty clause is still rejected.
+    options: z.array(ClauseOptionSchema).min(1),
   })
   .refine(
     (clause) => {
