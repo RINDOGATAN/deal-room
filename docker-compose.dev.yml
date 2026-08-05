@@ -1,0 +1,28 @@
+# Local development database — keeps `npm run dev` off the production Neon DB.
+#
+#   docker compose -f docker-compose.dev.yml up -d
+#   npx prisma migrate deploy && npx prisma db seed
+#   npm run dev
+#
+# .env.local points DATABASE_URL at this container (127.0.0.1:54329 — a
+# deliberately unusual port so nothing else on this machine collides).
+# Data persists in the dealroom-dev-db volume; `down -v` resets it.
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: dealroom
+      POSTGRES_PASSWORD: dealroom
+      POSTGRES_DB: dealroom
+    ports:
+      - "127.0.0.1:54329:5432"
+    volumes:
+      - dealroom-dev-db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dealroom"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  dealroom-dev-db:
