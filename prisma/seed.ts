@@ -30,6 +30,13 @@ interface SkillMetadata {
   soloModeDefault?: boolean;
   soloModeOnly?: boolean;
   templateFamily?: string;
+  // Read from metadata as a fallback for skills with no manifest.json (the
+  // unsigned skills in skills/ and prisma/hosted-skills/ have none). Without
+  // this, a multi-jurisdiction templateFamily groups into one card but the
+  // sibling swap in deal.create — which matches on templateFamily +
+  // nativeJurisdiction — never fires, so picking a jurisdiction silently
+  // generates another jurisdiction's document.
+  nativeJurisdiction?: string;
 }
 
 interface SkillManifestAuthor {
@@ -398,7 +405,7 @@ async function main() {
         skillPath: skillPath,
         skillPackageId: skillPackage?.id,
         templateFamily: manifest?.templateFamily || metadata?.templateFamily || null,
-        nativeJurisdiction: manifest?.nativeJurisdiction as any || null,
+        nativeJurisdiction: (manifest?.nativeJurisdiction || metadata?.nativeJurisdiction) as any || null,
         boilerplate: boilerplate as Prisma.InputJsonValue ?? Prisma.DbNull,
         jurisdictions,
         languages,
@@ -420,7 +427,7 @@ async function main() {
         skillPath: skillPath,
         skillPackageId: skillPackage?.id,
         templateFamily: manifest?.templateFamily || metadata?.templateFamily || null,
-        nativeJurisdiction: manifest?.nativeJurisdiction as any || null,
+        nativeJurisdiction: (manifest?.nativeJurisdiction || metadata?.nativeJurisdiction) as any || null,
         boilerplate: boilerplate as Prisma.InputJsonValue ?? Prisma.DbNull,
         jurisdictions,
         languages,
