@@ -1,0 +1,69 @@
+{
+  "version": 1,
+  "generatedAt": "2026-08-05T16:11:36.985Z",
+  "skills": {
+    "delaware-certificate-of-incorporation": {
+      "digest": "e4c591032bc931e9ae7ba2b756c1abcbdc66bed4dc3ccd70305dcf1a8e5119b6",
+      "files": {
+        "boilerplate.json": "bf7f1dfa03dff0d9346bd4d1dd73eef82daa09c59cc02161e5027d0361bd6a4d",
+        "clauses.json": "fb275c80ea0f5b3fbe455997e45f3f06a6e87801e7c25aeccc55656841df1f26",
+        "metadata.json": "41da7b2edf9aa14a1eebf18fda3749fce61274414d556725bf468dc6d1e6d2f4",
+        "parameters.json": "2c21a75f0354b7a5e2d17e72804d14a22ef29882d5de5c4e1eeaa205f13473a7"
+      }
+    },
+    "dpa": {
+      "digest": "75c589906d0a3a7f60b777fe66871056d48a9f33875208f57347ba19ee996da5",
+      "files": {
+        "boilerplate.json": "6b2ce58adcdbf7c52c376e41aca00d97b766aae5816a59be40c5d833906efd46",
+        "clauses.json": "33dbf146afe0125f35e8f48c2f4c00f23df86f7ded05a7fba87567afa1955240",
+        "metadata.json": "8021c3f104109d9305531846cbda480b1e0b54b2e0f71266888e55c8d7ee86b1",
+        "parameters.json": "2fd2f32c1a05ca036fac9631f5949a5cbb6971e00b4caf9bc30e98a0ad0a05f8"
+      }
+    },
+    "msa": {
+      "digest": "2571e307c2cf7f8d1ed7e55dfaccb950cf88cf990b52886f3b0191b20b98cc83",
+      "files": {
+        "SKILL.md": "47651317a93ea434d640010d26cdb783c2ee60bcfb02a3c4db5196c247577517",
+        "boilerplate.json": "91b1b1e20e62700097afa8b54d510f71e6ab9988b68ac7fbbebd5c279e191936",
+        "clauses.json": "94085b6b25cb97342aa8501833ce9447c9bcfa1333c3434c36b84e3ca9a72362",
+        "metadata.json": "21451fbfb01c39452a1cfeb6a8ebfc0a3068b46e6a914ba8c12701e1271f6700",
+        "parameters.json": "ce7f290b539455270038ee9955b6700fe81a050ff1c592a4d1c119e2369fa7ff",
+        "references/msa-template.md": "6583ba58636d757082bef3f7b94db189a5ee8bb588741c3286bbb5a6a588c5b0",
+        "references/review-checklist.md": "98f6a7d92c33c07772e2307524ee818f111a6d51fbecb4e0732be89652b3eb6f"
+      }
+    },
+    "nda": {
+      "digest": "50dfd77f83e519d7b557057e1cc0ee4c4ba92d266d360f769011a8822b6e0b71",
+      "files": {
+        "SKILL.md": "7355a2dc0f11663cdb9fb5c37a2a798e2269a8b2b3e4b06b6b8cfdb8e13ca22f",
+        "boilerplate.json": "22e6b4c94a4503b3107fab8b9cd72ecd54a0efd946710d35e20c742a95e9cad2",
+        "clauses.json": "8a117846e9d337be6fc8978498ad445b5448626638f8319c92696c0310ca2056",
+        "metadata.json": "99c0fe36f58feedac93bf38f7a2ab97a8a1c2ac0081235749dbca8b385b9ef25",
+        "parameters.json": "beb5a13d7191bf350160dab7285458dc55b39f82d3aef555d9c2c27950245d7e",
+        "references/nda-template.md": "f555988363a6e8a483410255c2d4495dd65b148d92fc979c1bff5794f57428c8",
+        "references/review-checklist.md": "3ce59e01fefb8e9f8a5716cac472ec92752f6df0aef483b8bbcb6f85452643d9"
+      }
+    },
+    "privacy-notice": {
+      "digest": "854ba0f481c0485fddb40a8cbda4c359214a0a9571a04a95fcdfbc1da0627e09",
+      "files": {
+        "boilerplate.json": "ab2eb52b61d130bf54bd1c6a7bfb9ceda8cd01ae811e398919867768d673b844",
+        "clauses.json": "57680b9bbfb9ccfc45a4880398fda5bc386e561e93b04c3b91693ab5b8b6fffe",
+        "metadata.json": "baf1dc7d037db6e01438da78c64058ba749f12173fd4b2d9ee120b01786dc49f",
+        "parameters.json": "f6a0fbad2c0143ec1af6055c6cc6d28f7e7cd1049a3b8742c093b8cb2ada1118"
+      }
+    },
+    "saas": {
+      "digest": "4b4973c5884b8cedc1ddce19aed3db326694d467d3cf670f8eacc1965e304617",
+      "files": {
+        "SKILL.md": "e808b5caf8ab3057aa64d5b4c744f6e43188bddd5bf13bfbfc22c382a429dd96",
+        "boilerplate.json": "3088f69445a6fb0ee6bfbc71ac67194cf7290638633ccca8937c3d3ed33cfc90",
+        "clauses.json": "dd94adb0e888eed4887fcf6a3b27eecde59947e8734c321ff05c21fee2ff931c",
+        "metadata.json": "f9b1971e782836a3913040ed17dcf04a30b44ec7dc40f8e62efe0dd6805c0d72",
+        "references/review-checklist.md": "1cd89ad102e4bb77ead732152281c4f73925485de65b450fb7821bde21460414",
+        "references/saas-template.md": "26cdad37118c167d1f3425c4240ea0ed776389ce623bbbc9db4ac2bc33f994c1"
+      }
+    }
+  },
+  "digest": "625eafe1f5d4341b22f6f3c12bfe57382767caa41b40d8c07505068bbd5e9b04"
+}
