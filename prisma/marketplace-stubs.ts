@@ -37,6 +37,25 @@ export async function seedMarketplaceStubs(prisma: PrismaClient): Promise<void> 
     return;
   }
   const catalog: CatalogSkill[] = JSON.parse(fs.readFileSync(catalogPath, "utf-8"));
+
+  // Hosted safety net (2026-08-05). The `!SKILLS_DIR` gate in seed.ts is about
+  // the caller's intent, but a built-in-only seed pointed at the HOSTED
+  // database (a legitimate flow for refreshing free skills) used to plant
+  // catalog-only stubs there — premium cards with no content behind them. A
+  // database that already holds double-digit real premium packages can only be
+  // the hosted catalog, so skip stubs entirely. Self-host installs sit far
+  // below the threshold (each .skill install adds one real package), and even
+  // a power user crossing it merely stops receiving NEW stubs — benign.
+  const realPremium = await prisma.skillPackage.count({
+    where: { isPremium: true, NOT: { packageHash: { startsWith: "stub:" } } },
+  });
+  if (realPremium >= 10) {
+    console.log(
+      `  Marketplace stubs: skipped — ${realPremium} real premium packages present (hosted catalog)`,
+    );
+    return;
+  }
+
   const en = (v?: Record<string, string>) =>
     v?.en ?? v?.es ?? Object.values(v ?? {})[0] ?? null;
 

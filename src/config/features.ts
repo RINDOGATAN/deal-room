@@ -32,10 +32,12 @@ export const features = {
   magicLinkAuth: brand.auth.mode === "magic-link",
   lawyerInvolvement: true,
   billing: stripeConfigured,
-  // Disabled while every premium skill is free — a /marketplace listing of
-  // priced skills contradicts the "everything's free right now" banner. Flip
-  // back to `true` to restore the footer link + the page itself.
-  marketplace: false,
+  // Re-enabled 2026-08-05 (was off during the all-skills-free promo, when a
+  // priced catalog contradicted the "everything's free" banner). Hosted shows
+  // price + Stripe "Enable"; self-host shows storefront "Get it on todo.law"
+  // links (the STOREFRONT_BUY split in src/lib/marketplace.ts). The footer
+  // link still hides during an explicit promo window (promoBanner).
+  marketplace: true,
   clientInvitations: true,
   agentApi: true,
   expertsApi: true,

@@ -26,6 +26,7 @@ import {
   getFingerprintData,
 } from "../services/licensing";
 import { isValidLicenseKeyFormat, LicenseFile } from "@/lib/crypto";
+import { features } from "@/config/features";
 
 // Schema for license file
 const LicenseFileSchema = z.object({
@@ -118,7 +119,13 @@ export const skillManagerRouter = createTRPCRouter({
         marketplaceSlug: pkg.marketplaceSlug ?? null,
         entitlementStatus: ent?.status ?? null,
         entitlementExpiresAt: ent?.expiresAt ?? null,
-        isEntitled: entitledSkillIds.has(pkg.id),
+        // With all skills free (self-host, or a hosted promo window), any
+        // package with REAL installed content is usable right now — show it
+        // as active rather than "buy it". Catalog-only stubs (packageHash
+        // "stub:…") have no content and must keep pointing at the storefront.
+        isEntitled:
+          entitledSkillIds.has(pkg.id) ||
+          (features.allSkillsFree && !pkg.packageHash.startsWith("stub:")),
       };
     });
   }),
