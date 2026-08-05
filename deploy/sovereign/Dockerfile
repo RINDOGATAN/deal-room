@@ -33,7 +33,11 @@ COPY . .
 # of these later requires: docker compose up -d --build app
 ARG NEXT_PUBLIC_LOCAL_AUTH_ENABLED=true
 ARG NEXT_PUBLIC_TESTER_MODE=false
-ARG NEXT_PUBLIC_FREE_TRIAL_ALL_SKILLS=true
+# Off by default since 2026-08-05: self-host skills are already free via the
+# Stripe-off posture (features.allSkillsFree), and baking the promo flag made
+# the cloud "free right now" banner show on sovereign installs where nothing
+# was ever for sale (and suppressed the marketplace footer link).
+ARG NEXT_PUBLIC_FREE_TRIAL_ALL_SKILLS=""
 ARG NEXT_PUBLIC_BRAND_NAME=""
 ARG NEXT_PUBLIC_BRAND_ACCENT=""
 ARG NEXT_PUBLIC_BRAND_LOGO_URL=""

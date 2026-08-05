@@ -8,8 +8,8 @@
 #                  → http://localhost:8486
 #
 # Posture switches (env only, never code): local credentials login instead of
-# Google/Resend, Stripe off (the marketplace is the cloud tier — all skills
-# are unlocked locally via FREE_TRIAL_ALL_SKILLS), host-only auth cookie via
+# Google/Resend, Stripe off (skills are free whenever Stripe is off — no
+# promo flag needed; premium content arrives via .skill installs), host-only auth cookie via
 # AUTH_COOKIE_DOMAIN="", brand via NEXT_PUBLIC_BRAND_*.
 #
 # Runbook: deploy/sovereign/README.md
@@ -26,7 +26,7 @@ x-build: &app-build
   args:
     NEXT_PUBLIC_LOCAL_AUTH_ENABLED: ${NEXT_PUBLIC_LOCAL_AUTH_ENABLED:-true}
     NEXT_PUBLIC_TESTER_MODE: ${NEXT_PUBLIC_TESTER_MODE:-false}
-    NEXT_PUBLIC_FREE_TRIAL_ALL_SKILLS: ${NEXT_PUBLIC_FREE_TRIAL_ALL_SKILLS:-true}
+    NEXT_PUBLIC_FREE_TRIAL_ALL_SKILLS: ${NEXT_PUBLIC_FREE_TRIAL_ALL_SKILLS:-}
     NEXT_PUBLIC_BRAND_NAME: ${NEXT_PUBLIC_BRAND_NAME:-}
     NEXT_PUBLIC_BRAND_ACCENT: ${NEXT_PUBLIC_BRAND_ACCENT:-}
     NEXT_PUBLIC_BRAND_LOGO_URL: ${NEXT_PUBLIC_BRAND_LOGO_URL:-}
@@ -117,8 +117,9 @@ services:
       STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET:-}
       STRIPE_PRICE_ID: ${STRIPE_PRICE_ID:-}
       STRIPE_PRICE_ID_USD: ${STRIPE_PRICE_ID_USD:-}
-      # All premium skills unlocked locally (no marketplace billing).
-      FREE_TRIAL_ALL_SKILLS: ${NEXT_PUBLIC_FREE_TRIAL_ALL_SKILLS:-true}
+      # Promo flag passthrough, off by default — self-host is already all-free
+      # via the Stripe-off posture (features.allSkillsFree).
+      FREE_TRIAL_ALL_SKILLS: ${NEXT_PUBLIC_FREE_TRIAL_ALL_SKILLS:-}
       # Optional cloud mailer (magic links, deal invitations, signing
       # notifications). Empty = emails are skipped with a log line; the
       # local credentials login needs no mailer.
@@ -155,7 +156,7 @@ services:
       # output matches the client bundles.
       NEXT_PUBLIC_LOCAL_AUTH_ENABLED: ${NEXT_PUBLIC_LOCAL_AUTH_ENABLED:-true}
       NEXT_PUBLIC_TESTER_MODE: ${NEXT_PUBLIC_TESTER_MODE:-false}
-      NEXT_PUBLIC_FREE_TRIAL_ALL_SKILLS: ${NEXT_PUBLIC_FREE_TRIAL_ALL_SKILLS:-true}
+      NEXT_PUBLIC_FREE_TRIAL_ALL_SKILLS: ${NEXT_PUBLIC_FREE_TRIAL_ALL_SKILLS:-}
       NEXT_PUBLIC_BRAND_NAME: ${NEXT_PUBLIC_BRAND_NAME:-}
       NEXT_PUBLIC_BRAND_ACCENT: ${NEXT_PUBLIC_BRAND_ACCENT:-}
       NEXT_PUBLIC_BRAND_LOGO_URL: ${NEXT_PUBLIC_BRAND_LOGO_URL:-}

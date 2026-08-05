@@ -22,8 +22,10 @@ Posture differences from cloud, all env-driven:
   auth cookie is host-only (`AUTH_COOKIE_DOMAIN=""`); the `.todo.law`
   cross-app SSO domain is cloud-only.
 - **Stripe:** off. The skill marketplace billing is the cloud tier; the
-  app boots and functions fully with empty `STRIPE_*` vars, and
-  `FREE_TRIAL_ALL_SKILLS=true` unlocks every premium skill locally.
+  app boots and functions fully with empty `STRIPE_*` vars. With Stripe
+  off every installed skill is free automatically (`features.allSkillsFree`)
+  — no promo flag needed. Premium content arrives as `.skill` installs
+  bought on the todo.law storefront.
 - **Cloud services:** `DEALROOM_CLOUD_API_*` (intelligence/certification),
   `GAVEL_*` (disputes), `FIRMAS_*` (mobile signing) all degrade
   gracefully when empty — the app runs, those features are visibly off.
