@@ -10,6 +10,7 @@ import {
   sendSigningInitiatedEmail,
   sendCounterpartySignedEmail,
   sendFirmasSigningEmail,
+  sendSigningNudgeEmail,
 } from "@/lib/email";
 import { certificationService } from "@/lib/certification-client";
 import { generateContractData } from "@/server/services/document/generator";
@@ -196,6 +197,102 @@ export const signingRouter = createTRPCRouter({
       });
 
       return signingRequest;
+    }),
+
+  /**
+   * Manual stall nudge. Once the counterparty has been sitting on an active
+   * signing for a while (the UI gates the button at 7 days), either party can
+   * email them a reminder. One nudge per 72 hours per signing request —
+   * enforced server-side via SigningRequest.manualReminderSentAt so the
+   * button cannot be turned into a harassment lever.
+   */
+  sendReminder: protectedProcedure
+    .input(z.object({ dealRoomId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const signingRequest = await ctx.prisma.signingRequest.findFirst({
+        where: { dealRoomId: input.dealRoomId },
+        orderBy: { createdAt: "desc" },
+        include: {
+          dealRoom: {
+            include: { parties: { include: { user: true } } },
+          },
+        },
+      });
+
+      if (!signingRequest) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Signing request not found" });
+      }
+
+      const me = signingRequest.dealRoom.parties.find(
+        (p) => p.userId === ctx.session.user.id
+      );
+      if (!me) {
+        throw new TRPCError({ code: "FORBIDDEN", message: "You are not a party to this deal" });
+      }
+
+      if (signingRequest.dealRoom.dealMode === "SOLO") {
+        throw new TRPCError({ code: "BAD_REQUEST", message: "Solo deals have no counterparty to remind" });
+      }
+
+      if (!["PENDING", "SENT", "PARTIALLY_SIGNED"].includes(signingRequest.status)) {
+        throw new TRPCError({ code: "BAD_REQUEST", message: "This signing is no longer awaiting anyone" });
+      }
+
+      const other = signingRequest.dealRoom.parties.find((p) => p.id !== me.id);
+      if (!other) {
+        throw new TRPCError({ code: "BAD_REQUEST", message: "No counterparty on this deal" });
+      }
+
+      // A recorded signature implies submitted details (recordSignature gates
+      // on them), so a signed counterparty has nothing left to be nudged for.
+      const otherSigned =
+        other.role === "INITIATOR"
+          ? signingRequest.initiatorSignedAt
+          : signingRequest.respondentSignedAt;
+      if (otherSigned) {
+        throw new TRPCError({ code: "BAD_REQUEST", message: "The other party has already signed" });
+      }
+
+      const COOLDOWN_MS = 72 * 60 * 60 * 1000;
+      if (
+        signingRequest.manualReminderSentAt &&
+        Date.now() - signingRequest.manualReminderSentAt.getTime() < COOLDOWN_MS
+      ) {
+        throw new TRPCError({
+          code: "TOO_MANY_REQUESTS",
+          message: "A reminder was already sent recently — you can send another once 72 hours have passed",
+        });
+      }
+
+      const to = other.user?.email ?? other.email;
+      if (!to) {
+        throw new TRPCError({ code: "BAD_REQUEST", message: "The other party has no email on file" });
+      }
+
+      await sendSigningNudgeEmail({
+        to,
+        partyName: other.user?.name ?? other.name ?? "there",
+        senderName: ctx.session.user.name || ctx.session.user.email || "Your counterparty",
+        dealName: signingRequest.dealRoom.name,
+        dealRoomId: input.dealRoomId,
+      });
+
+      const sentAt = new Date();
+      await ctx.prisma.signingRequest.update({
+        where: { id: signingRequest.id },
+        data: { manualReminderSentAt: sentAt },
+      });
+
+      await ctx.prisma.auditLog.create({
+        data: {
+          dealRoomId: input.dealRoomId,
+          userId: ctx.session.user.id,
+          action: "SIGNING_REMINDER_SENT",
+          details: { remindedRole: other.role },
+        },
+      });
+
+      return { success: true, sentAt };
     }),
 
   initiate: protectedProcedure

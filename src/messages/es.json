@@ -546,6 +546,12 @@
     "undoSignature": "Deshacer mi firma",
     "undoingSignature": "Deshaciendo…",
     "waitingForOtherParty": "Esperando que la otra parte firme...",
+    "stall": {
+      "waitingSince": "La otra parte tiene esto pendiente desde el {date} ({days} días).",
+      "sendReminder": "Enviar un recordatorio",
+      "reminderSent": "Recordatorio enviado",
+      "cooldown": "Se envió un recordatorio el {date}. Podrás enviar otro cuando hayan pasado 72 horas."
+    },
     "yourSignature": "Tu firma:",
     "downloadContractPdf": "Descargar PDF del Contrato",
     "downloadContractDocx": "Descargar DOCX del Contrato",

@@ -545,6 +545,12 @@
     "undoSignature": "Undo my signature",
     "undoingSignature": "Undoing…",
     "waitingForOtherParty": "Waiting for the other party to sign...",
+    "stall": {
+      "waitingSince": "The other party has been holding this up since {date} ({days} days).",
+      "sendReminder": "Send a reminder",
+      "reminderSent": "Reminder sent",
+      "cooldown": "A reminder was sent on {date}. You can send another once 72 hours have passed."
+    },
     "yourSignature": "Your signature:",
     "downloadContractPdf": "Download Contract PDF",
     "downloadContractDocx": "Download Contract DOCX",

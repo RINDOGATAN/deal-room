@@ -27,6 +27,7 @@ import {
   Smartphone,
   Copy,
   Sparkles,
+  BellRing,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -35,6 +36,77 @@ import { formatDateTime } from "@/lib/date";
 import { useContractMessages } from "@/lib/use-contract-messages";
 import { roleConfigFor, type ContractRole } from "@/lib/contractRoles";
 import { AiDraftPanel } from "@/components/ai/AiDraftPanel";
+
+/**
+ * Stall notice + manual reminder. Renders only once the counterparty has been
+ * sitting on an active signing for 7+ days. The 72-hour cooldown mirrors the
+ * server rule (signing.sendReminder) so the button state is honest, but the
+ * server is what enforces it.
+ */
+function SigningStallNotice({
+  dealId,
+  since,
+  manualReminderSentAt,
+  onSent,
+  governingLaw,
+}: {
+  dealId: string;
+  since: Date;
+  manualReminderSentAt: Date | null;
+  onSent: () => void;
+  governingLaw?: string;
+}) {
+  const t = useTranslations("signing");
+  const locale = useLocale();
+  // Captured once per mount — day-granularity thresholds don't need a ticking
+  // clock, and the react-hooks/purity rule bans Date.now() in render.
+  const [now] = useState(() => Date.now());
+  const sendReminder = trpc.signing.sendReminder.useMutation({
+    onSuccess: () => {
+      toast.success(t("stall.reminderSent"));
+      onSent();
+    },
+    onError: (e) => toast.error(e.message),
+  });
+
+  const daysWaiting = Math.floor((now - since.getTime()) / 86_400_000);
+  if (daysWaiting < 7) return null;
+
+  const cooldownActive =
+    !!manualReminderSentAt &&
+    now - manualReminderSentAt.getTime() < 72 * 60 * 60 * 1000;
+
+  return (
+    <div className="mt-4 max-w-md mx-auto p-4 border border-warning/40 bg-warning/5 rounded-xl text-center">
+      <p className="text-sm text-muted-foreground mb-3">
+        {t("stall.waitingSince", {
+          days: daysWaiting,
+          date: formatDateTime(since, { locale, governingLaw }),
+        })}
+      </p>
+      {cooldownActive ? (
+        <p className="text-xs text-muted-foreground">
+          {t("stall.cooldown", {
+            date: formatDateTime(manualReminderSentAt, { locale, governingLaw }),
+          })}
+        </p>
+      ) : (
+        <button
+          onClick={() => sendReminder.mutate({ dealRoomId: dealId })}
+          disabled={sendReminder.isPending}
+          className="btn-brutal text-xs px-4 py-2 inline-flex items-center gap-2 disabled:opacity-50"
+        >
+          {sendReminder.isPending ? (
+            <Loader2 className="w-3.5 h-3.5 animate-spin" />
+          ) : (
+            <BellRing className="w-3.5 h-3.5" />
+          )}
+          {t("stall.sendReminder")}
+        </button>
+      )}
+    </div>
+  );
+}
 
 /**
  * Minimal markdown-ish renderer for the AI risk digest (headings + bullets +
@@ -807,6 +879,19 @@ function SigningContent({ dealId }: { dealId: string }) {
                   <p className="text-sm text-muted-foreground">
                     {t("signingDetails.waitingForOtherParty")}
                   </p>
+                  {signingRequest && !isSoloMode && (
+                    <SigningStallNotice
+                      dealId={dealId}
+                      since={new Date(signingRequest.createdAt)}
+                      manualReminderSentAt={
+                        signingRequest.manualReminderSentAt
+                          ? new Date(signingRequest.manualReminderSentAt)
+                          : null
+                      }
+                      onSent={() => refetch()}
+                      governingLaw={deal?.governingLaw}
+                    />
+                  )}
                 </div>
               )}
             </div>
@@ -1091,6 +1176,19 @@ function SigningContent({ dealId }: { dealId: string }) {
                             : t("waitingForOtherParty")}
                         </p>
                       </div>
+                      {!otherPartyHasSigned && !isSoloMode && (
+                        <SigningStallNotice
+                          dealId={dealId}
+                          since={new Date(currentPartyHasSigned)}
+                          manualReminderSentAt={
+                            signingRequest.manualReminderSentAt
+                              ? new Date(signingRequest.manualReminderSentAt)
+                              : null
+                          }
+                          onSent={() => refetch()}
+                          governingLaw={deal?.governingLaw}
+                        />
+                      )}
                       {currentPartySignature && (
                         <div className="max-w-md mx-auto">
                           <p className="text-xs text-muted-foreground mb-2 text-center">{t("yourSignature")}</p>

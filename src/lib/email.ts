@@ -308,6 +308,45 @@ export async function sendSigningInitiatedEmail({
   }
 }
 
+interface SendSigningNudgeEmailParams {
+  to: string;
+  partyName: string;
+  senderName: string;
+  dealName: string;
+  dealRoomId: string;
+}
+
+/**
+ * Manual nudge a party sends from the sign page when the counterparty has
+ * stalled (no details / no signature for a week). Distinct from the cron's
+ * expiring-soon email: this one is human-initiated and names the sender.
+ */
+export async function sendSigningNudgeEmail({
+  to,
+  partyName,
+  senderName,
+  dealName,
+  dealRoomId,
+}: SendSigningNudgeEmailParams) {
+  const dealUrl = `${process.env.NEXTAUTH_URL}/deals/${dealRoomId}/sign`;
+
+  try {
+    await getResend().emails.send({
+      from: emailFrom(),
+      to,
+      subject: `Reminder from ${senderName}: ${dealName} is waiting for you`,
+      html: emailWrapper("Contract Signing", `
+        <p style="color: #e5e5e5; font-size: 15px; line-height: 1.6; margin: 0 0 16px;">Dear <strong style="color: ${brand.colors.foreground};">${partyName}</strong>,</p>
+        ${emailParagraph(`<strong style="color: ${brand.colors.foreground};">${senderName}</strong> is waiting on you to complete the signing for <strong style="color: ${brand.colors.foreground};">${dealName}</strong>. Add your execution details and sign to finish the deal.`)}
+        ${emailButton(dealUrl, "Complete Signing")}
+        ${emailMuted("If you have already signed, no action is needed.")}
+      `),
+    });
+  } catch (error) {
+    logger.error("Failed to send signing nudge email", { err: String(error) });
+  }
+}
+
 interface SendSigningExpiringSoonEmailParams {
   to: string;
   partyName: string;

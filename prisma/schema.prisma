@@ -737,6 +737,10 @@ model SigningRequest {
   // reminder email. Prevents a duplicate reminder if the cron runs
   // slightly off schedule.
   expiryReminderSentAt  DateTime?
+  // Stamp for the manual "send reminder" nudge a party can trigger from the
+  // sign page once the counterparty has stalled. Enforces the 72h cooldown
+  // between nudges (separate from the one-shot cron reminder above).
+  manualReminderSentAt  DateTime?
 
   // ── Firmas hand-off (per-party, 2026-05-16) ─────────────────────
   // Either party can self-mint a Firmas hand-off — initiator wants
