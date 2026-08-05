@@ -57,6 +57,12 @@ export interface StandardClause {
   /** True 1-based section number in the final agreement. Present only for
    *  boilerplates that opt into sequential numbering; ignored otherwise. */
   sectionNumber?: number;
+  /** Statutory citation for this clause ("LAU 29/1994 art. 9", "Housing Act
+   *  2004 ss. 212-215"), rendered as a small line under the body. Used by
+   *  skills whose standard clauses reproduce mandatory law — it shows the
+   *  reader the app is restating the statute rather than inventing terms.
+   *  Optional: skills without it render exactly as before. */
+  source?: string;
 }
 
 export interface BoilerplateData {
@@ -232,6 +238,9 @@ function processBoilerplate(
     title: resolveLocalizedString(c.title, language),
     text: resolve(c.text),
     sectionNumber: typeof c.sectionNumber === "number" ? c.sectionNumber : undefined,
+    // Authored as a plain string today (a citation rarely translates), but
+    // resolved through the same helper so a future localised one just works.
+    source: c.source ? resolveLocalizedString(c.source, language) || undefined : undefined,
   }));
 
   const generalProvisions = (bp.generalProvisions as Array<Record<string, unknown>> || []).map((p) => ({

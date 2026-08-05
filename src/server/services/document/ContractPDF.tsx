@@ -189,6 +189,15 @@ const styles = StyleSheet.create({
     lineHeight: 1.6,
     marginLeft: 30,
   },
+  // Statutory citation under a standard clause. Deliberately quiet: it is
+  // provenance, not operative text, and must not compete with the clause body.
+  clauseSource: {
+    fontSize: 7.5,
+    fontStyle: "italic",
+    color: "#555555",
+    marginLeft: 30,
+    marginTop: 4,
+  },
   // Body for a section-level article (governing law, regulatory provisions):
   // full width under the section header, no hanging number column.
   articleBody: {
@@ -697,10 +706,13 @@ function Clause({
   number,
   title,
   body,
+  source,
 }: {
   number: string;
   title: string;
   body: string;
+  /** Statutory citation, printed small under the body (standard clauses only). */
+  source?: string;
 }) {
   return (
     <View style={styles.clauseItem}>
@@ -709,6 +721,7 @@ function Clause({
         <Text style={styles.clauseTitle}>{title}</Text>
       </View>
       <ParagraphText style={styles.clauseBody}>{body}</ParagraphText>
+      {source ? <Text style={styles.clauseSource}>{source}</Text> : null}
     </View>
   );
 }
@@ -964,7 +977,12 @@ export function ContractPDF({ data }: ContractPDFProps) {
               /* Standard Clauses from Boilerplate */
               data.boilerplate!.standardClauses.map((clause, index) => (
                 <View key={`std-${index}`} style={styles.section}>
-                  <Clause number={`${sectionNumber++}.`} title={clause.title} body={clause.text} />
+                  <Clause
+                    number={`${sectionNumber++}.`}
+                    title={clause.title}
+                    body={clause.text}
+                    source={clause.source}
+                  />
                 </View>
               ))
             )}

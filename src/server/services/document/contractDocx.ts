@@ -298,7 +298,7 @@ export async function generateContractDocx(
           new Paragraph({
             alignment: AlignmentType.JUSTIFIED,
             indent: { left: 360 },
-            spacing: { after: 200 },
+            spacing: { after: clause.source ? 40 : 200 },
             children: [
               new TextRun({
                 text: clause.text,
@@ -308,6 +308,24 @@ export async function generateContractDocx(
             ],
           })
         );
+        // Statutory citation, small and italic under the body.
+        if (clause.source) {
+          children.push(
+            new Paragraph({
+              indent: { left: 360 },
+              spacing: { after: 200 },
+              children: [
+                new TextRun({
+                  text: clause.source,
+                  size: 15,
+                  italics: true,
+                  color: "555555",
+                  font: "Times New Roman",
+                }),
+              ],
+            })
+          );
+        }
       }
     }
 

@@ -159,6 +159,10 @@ export function generateContractTxt(data: ContractData): string {
         lines.push(sectionHeader(sc.title));
         lines.push("");
         lines.push(sc.text);
+        if (sc.source) {
+          lines.push("");
+          lines.push(`   [${sc.source}]`);
+        }
         lines.push("");
       }
     }
