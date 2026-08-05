@@ -7,12 +7,18 @@
     "en": "Delaware C-Corp Certificate of Incorporation — the document filed with the Secretary of State to bring the company into existence under the Delaware General Corporation Law."
   },
   "version": "1.0",
-  "languages": ["en"],
+  "languages": [
+    "en"
+  ],
   "clauses": [
     {
       "id": "name",
-      "title": { "en": "Corporate name" },
-      "category": { "en": "Identity" },
+      "title": {
+        "en": "Corporate name"
+      },
+      "category": {
+        "en": "Identity"
+      },
       "order": 1,
       "plainDescription": {
         "en": "The legal name under which the company will be incorporated in Delaware. Must end in a corporate indicator such as 'Inc.', 'Corporation', or 'Company'."
@@ -25,30 +31,57 @@
         {
           "id": "name-standard",
           "code": "standard",
-          "label": { "en": "Use the company name as entered" },
+          "label": {
+            "en": "Use the company name as entered"
+          },
           "order": 1,
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "plainDescription": {
             "en": "Uses the company name exactly as you entered it when starting this journey."
           },
           "pros": {
-            "partyA": { "en": ["Matches your brand exactly"] },
-            "partyB": { "en": ["Matches your brand exactly"] }
+            "partyA": {
+              "en": [
+                "Matches your brand exactly"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Matches your brand exactly"
+              ]
+            }
           },
           "cons": {
-            "partyA": { "en": ["Confirm the Secretary of State's name availability before filing"] },
-            "partyB": { "en": ["Confirm the Secretary of State's name availability before filing"] }
+            "partyA": {
+              "en": [
+                "Confirm the Secretary of State's name availability before filing"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Confirm the Secretary of State's name availability before filing"
+              ]
+            }
           },
           "legalText": {
             "en": "FIRST: The name of this corporation is [company-name]."
           },
-          "bias": { "partyA": 0, "partyB": 0 }
+          "bias": {
+            "partyA": 0,
+            "partyB": 0
+          }
         }
       ]
     },
     {
       "id": "registered-office",
-      "title": { "en": "Registered office and agent" },
-      "category": { "en": "Identity" },
+      "title": {
+        "en": "Registered office and agent"
+      },
+      "category": {
+        "en": "Identity"
+      },
       "order": 2,
       "plainDescription": {
         "en": "Every Delaware corporation must have a registered agent in Delaware to accept service of process. Most startups use a commercial registered agent service."
@@ -61,30 +94,57 @@
         {
           "id": "registered-standard",
           "code": "standard",
-          "label": { "en": "Use the registered agent as entered" },
+          "label": {
+            "en": "Use the registered agent as entered"
+          },
           "order": 1,
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "plainDescription": {
             "en": "Uses the registered agent and address you provided. Common choices: Harvard Business Services, Corporation Service Company, CT Corporation."
           },
           "pros": {
-            "partyA": { "en": ["Standard commercial registered agent covers statutory requirements"] },
-            "partyB": { "en": ["Standard commercial registered agent covers statutory requirements"] }
+            "partyA": {
+              "en": [
+                "Standard commercial registered agent covers statutory requirements"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Standard commercial registered agent covers statutory requirements"
+              ]
+            }
           },
           "cons": {
-            "partyA": { "en": ["Annual registered-agent fee (~$50–$300)"] },
-            "partyB": { "en": ["Annual registered-agent fee (~$50–$300)"] }
+            "partyA": {
+              "en": [
+                "Annual registered-agent fee (~$50–$300)"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Annual registered-agent fee (~$50–$300)"
+              ]
+            }
           },
           "legalText": {
             "en": "SECOND: The address of the corporation's registered office in the State of Delaware is [registered-agent]. The corporation's registered agent at that address is so designated in accordance with 8 Del. C. § 102(a)(2)."
           },
-          "bias": { "partyA": 0, "partyB": 0 }
+          "bias": {
+            "partyA": 0,
+            "partyB": 0
+          }
         }
       ]
     },
     {
       "id": "purpose",
-      "title": { "en": "Corporate purpose" },
-      "category": { "en": "Governance" },
+      "title": {
+        "en": "Corporate purpose"
+      },
+      "category": {
+        "en": "Governance"
+      },
       "order": 3,
       "plainDescription": {
         "en": "Most modern Delaware C-Corps use a broad, all-purpose statement so the corporation can engage in any lawful business without amending the certificate later."
@@ -97,30 +157,61 @@
         {
           "id": "purpose-broad",
           "code": "broad",
-          "label": { "en": "Any lawful business or activity (standard)" },
+          "label": {
+            "en": "Any lawful business or activity (standard)"
+          },
           "order": 1,
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "plainDescription": {
             "en": "Engages in any lawful act or activity. Gives maximum flexibility without needing to amend the certificate as the business evolves."
           },
           "pros": {
-            "partyA": { "en": ["Maximum business flexibility", "Standard for venture-backed startups", "No need to amend when pivoting"] },
-            "partyB": { "en": ["Maximum business flexibility", "Standard for venture-backed startups", "No need to amend when pivoting"] }
+            "partyA": {
+              "en": [
+                "Maximum business flexibility",
+                "Standard for venture-backed startups",
+                "No need to amend when pivoting"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Maximum business flexibility",
+                "Standard for venture-backed startups",
+                "No need to amend when pivoting"
+              ]
+            }
           },
           "cons": {
-            "partyA": { "en": ["None — this is the default for modern Delaware C-Corps"] },
-            "partyB": { "en": ["None — this is the default for modern Delaware C-Corps"] }
+            "partyA": {
+              "en": [
+                "None — this is the default for modern Delaware C-Corps"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "None — this is the default for modern Delaware C-Corps"
+              ]
+            }
           },
           "legalText": {
             "en": "THIRD: The purpose of the corporation is to engage in any lawful act or activity for which corporations may be organized under the General Corporation Law of the State of Delaware."
           },
-          "bias": { "partyA": 0, "partyB": 0 }
+          "bias": {
+            "partyA": 0,
+            "partyB": 0
+          }
         }
       ]
     },
     {
       "id": "authorized-shares",
-      "title": { "en": "Authorized shares" },
-      "category": { "en": "Capitalization" },
+      "title": {
+        "en": "Authorized shares"
+      },
+      "category": {
+        "en": "Capitalization"
+      },
       "order": 4,
       "plainDescription": {
         "en": "How many shares of Common Stock can the corporation issue? This sets the ceiling — you can issue up to this number without amending the certificate, but amending later requires a board + shareholder vote."
@@ -133,8 +224,12 @@
         {
           "id": "shares-standard-10m",
           "code": "10m",
-          "label": { "en": "10,000,000 shares (standard)" },
+          "label": {
+            "en": "10,000,000 shares (standard)"
+          },
           "order": 2,
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "plainDescription": {
             "en": "The YC / NVCA standard. Leaves room for founders (typically 5-7M), an option pool (typically 1-2M), a seed round, and a Series A without amending the certificate."
           },
@@ -155,25 +250,50 @@
             }
           },
           "cons": {
-            "partyA": { "en": ["Marginally larger-sounding cap table on day one (investors care about issued, not authorized)"] },
-            "partyB": { "en": ["Marginally larger-sounding cap table on day one (investors care about issued, not authorized)"] }
+            "partyA": {
+              "en": [
+                "Marginally larger-sounding cap table on day one (investors care about issued, not authorized)"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Marginally larger-sounding cap table on day one (investors care about issued, not authorized)"
+              ]
+            }
           },
           "legalText": {
             "en": "FOURTH: The total number of shares of stock the corporation shall have authority to issue is 10,000,000 shares of Common Stock, each having a par value of $[par-value] per share."
           },
-          "bias": { "partyA": 0, "partyB": 0 }
+          "bias": {
+            "partyA": 0,
+            "partyB": 0
+          }
         },
         {
           "id": "shares-conservative-5m",
           "code": "5m",
-          "label": { "en": "5,000,000 shares (conservative)" },
+          "label": {
+            "en": "5,000,000 shares (conservative)"
+          },
           "order": 1,
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "plainDescription": {
             "en": "Tighter ceiling. Fine for a bootstrapped or lifestyle business, or a founder team that doesn't expect institutional rounds. If you later raise a priced round, you'll almost certainly need to amend the certificate."
           },
           "pros": {
-            "partyA": { "en": ["Simpler-looking cap table", "Less nominal dilution headroom on paper"] },
-            "partyB": { "en": ["Simpler-looking cap table", "Less nominal dilution headroom on paper"] }
+            "partyA": {
+              "en": [
+                "Simpler-looking cap table",
+                "Less nominal dilution headroom on paper"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Simpler-looking cap table",
+                "Less nominal dilution headroom on paper"
+              ]
+            }
           },
           "cons": {
             "partyA": {
@@ -194,13 +314,20 @@
           "legalText": {
             "en": "FOURTH: The total number of shares of stock the corporation shall have authority to issue is 5,000,000 shares of Common Stock, each having a par value of $[par-value] per share."
           },
-          "bias": { "partyA": 0, "partyB": 0 }
+          "bias": {
+            "partyA": 0,
+            "partyB": 0
+          }
         },
         {
           "id": "shares-flexible-20m",
           "code": "20m",
-          "label": { "en": "20,000,000 shares (flexible)" },
+          "label": {
+            "en": "20,000,000 shares (flexible)"
+          },
           "order": 3,
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "plainDescription": {
             "en": "Extra headroom. Sensible if you expect several priced rounds over the first few years or want to avoid amending the certificate. No real downside at typical low par values."
           },
@@ -221,20 +348,35 @@
             }
           },
           "cons": {
-            "partyA": { "en": ["Non-standard — some investors will ask why you deviated from 10M"] },
-            "partyB": { "en": ["Non-standard — some investors will ask why you deviated from 10M"] }
+            "partyA": {
+              "en": [
+                "Non-standard — some investors will ask why you deviated from 10M"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Non-standard — some investors will ask why you deviated from 10M"
+              ]
+            }
           },
           "legalText": {
             "en": "FOURTH: The total number of shares of stock the corporation shall have authority to issue is 20,000,000 shares of Common Stock, each having a par value of $[par-value] per share."
           },
-          "bias": { "partyA": 0, "partyB": 0 }
+          "bias": {
+            "partyA": 0,
+            "partyB": 0
+          }
         }
       ]
     },
     {
       "id": "director-liability",
-      "title": { "en": "Director liability limitation" },
-      "category": { "en": "Governance" },
+      "title": {
+        "en": "Director liability limitation"
+      },
+      "category": {
+        "en": "Governance"
+      },
       "order": 5,
       "plainDescription": {
         "en": "Delaware law allows the certificate to limit directors' personal liability for monetary damages arising from breaches of fiduciary duty, except for breaches of the duty of loyalty, intentional misconduct, or improper distributions."
@@ -247,30 +389,59 @@
         {
           "id": "liability-standard",
           "code": "standard",
-          "label": { "en": "Limit director liability to the fullest extent permitted by DGCL" },
+          "label": {
+            "en": "Limit director liability to the fullest extent permitted by DGCL"
+          },
           "order": 1,
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "plainDescription": {
             "en": "Exculpates directors for monetary damages except in the narrow cases DGCL § 102(b)(7) disallows (duty of loyalty, intentional misconduct, etc.)."
           },
           "pros": {
-            "partyA": { "en": ["Standard for Delaware C-Corps", "Helps recruit independent directors"] },
-            "partyB": { "en": ["Standard for Delaware C-Corps", "Helps recruit independent directors"] }
+            "partyA": {
+              "en": [
+                "Standard for Delaware C-Corps",
+                "Helps recruit independent directors"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Standard for Delaware C-Corps",
+                "Helps recruit independent directors"
+              ]
+            }
           },
           "cons": {
-            "partyA": { "en": ["None — this is the market standard"] },
-            "partyB": { "en": ["None — this is the market standard"] }
+            "partyA": {
+              "en": [
+                "None — this is the market standard"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "None — this is the market standard"
+              ]
+            }
           },
           "legalText": {
             "en": "FIFTH: To the fullest extent permitted by the General Corporation Law of the State of Delaware as it now exists or as it may be amended, no director of this corporation shall be personally liable to the corporation or its stockholders for monetary damages arising from a breach of fiduciary duty as a director. Any repeal or modification of this provision shall be prospective only and shall not adversely affect any right or protection of a director existing at the time of such repeal or modification."
           },
-          "bias": { "partyA": 0, "partyB": 0 }
+          "bias": {
+            "partyA": 0,
+            "partyB": 0
+          }
         }
       ]
     },
     {
       "id": "incorporator",
-      "title": { "en": "Incorporator" },
-      "category": { "en": "Identity" },
+      "title": {
+        "en": "Incorporator"
+      },
+      "category": {
+        "en": "Identity"
+      },
       "order": 6,
       "plainDescription": {
         "en": "The person signing the certificate into existence. Usually a single founder or the company's outside counsel. The incorporator's job ends once the initial board is elected."
@@ -283,23 +454,46 @@
         {
           "id": "incorporator-standard",
           "code": "standard",
-          "label": { "en": "Use the named incorporator" },
+          "label": {
+            "en": "Use the named incorporator"
+          },
           "order": 1,
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "plainDescription": {
             "en": "Uses the founder flagged as incorporator (or the primary founder by default)."
           },
           "pros": {
-            "partyA": { "en": ["Single-signer convenience; common pattern for early-stage formation"] },
-            "partyB": { "en": ["Single-signer convenience; common pattern for early-stage formation"] }
+            "partyA": {
+              "en": [
+                "Single-signer convenience; common pattern for early-stage formation"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Single-signer convenience; common pattern for early-stage formation"
+              ]
+            }
           },
           "cons": {
-            "partyA": { "en": ["Incorporator's role ends at initial board election — they don't retain special authority afterward"] },
-            "partyB": { "en": ["Incorporator's role ends at initial board election — they don't retain special authority afterward"] }
+            "partyA": {
+              "en": [
+                "Incorporator's role ends at initial board election — they don't retain special authority afterward"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Incorporator's role ends at initial board election — they don't retain special authority afterward"
+              ]
+            }
           },
           "legalText": {
             "en": "SIXTH: The name and mailing address of the incorporator is [incorporator], c/o the registered office set forth in Article SECOND."
           },
-          "bias": { "partyA": 0, "partyB": 0 }
+          "bias": {
+            "partyA": 0,
+            "partyB": 0
+          }
         }
       ]
     }

@@ -43,6 +43,8 @@
             "es": "2 años"
           },
           "order": 1,
+          "biasPartyA": -0.3,
+          "biasPartyB": 0.3,
           "plainDescription": {
             "en": "Confidentiality obligations last 2 years after termination - standard for most business discussions.",
             "es": "Las obligaciones de confidencialidad se extienden durante 2 años tras la resolución del acuerdo, lo cual es habitual en la mayoría de las relaciones comerciales."
@@ -114,6 +116,8 @@
             "es": "3 años"
           },
           "order": 2,
+          "biasPartyA": -0.1,
+          "biasPartyB": 0.1,
           "plainDescription": {
             "en": "Confidentiality obligations last 3 years - balanced protection for sensitive industries.",
             "es": "Las obligaciones de confidencialidad se extienden durante 3 años, ofreciendo una protección equilibrada para sectores sensibles."
@@ -183,6 +187,8 @@
             "es": "5 años"
           },
           "order": 3,
+          "biasPartyA": 0.2,
+          "biasPartyB": -0.2,
           "plainDescription": {
             "en": "Confidentiality obligations last 5 years - strong protection for highly sensitive information.",
             "es": "Las obligaciones de confidencialidad se extienden durante 5 años, proporcionando una protección sólida para información altamente sensible."
@@ -252,6 +258,8 @@
             "es": "Perpetua (Secretos empresariales)"
           },
           "order": 4,
+          "biasPartyA": 0.4,
+          "biasPartyB": -0.4,
           "plainDescription": {
             "en": "Confidentiality obligations continue indefinitely for information qualifying as trade secrets.",
             "es": "Las obligaciones de confidencialidad se mantienen de forma indefinida respecto a la información que constituya secreto empresarial."
@@ -346,6 +354,8 @@
             "es": "Estricta (Solo por exigencia legal)"
           },
           "order": 1,
+          "biasPartyA": 0.4,
+          "biasPartyB": -0.4,
           "plainDescription": {
             "en": "Only disclose when legally compelled by court order or government authority, with prior notice to the disclosing party.",
             "es": "Divulgación únicamente cuando sea legalmente exigida por resolución judicial o requerimiento de autoridad pública, con notificación previa a la Parte Divulgante."
@@ -415,6 +425,8 @@
             "es": "Estándar (+ asesores profesionales)"
           },
           "order": 2,
+          "biasPartyA": 0.1,
+          "biasPartyB": -0.1,
           "plainDescription": {
             "en": "Legal requirements plus disclosure to lawyers, accountants, and financial advisors bound by professional confidentiality duties.",
             "es": "Exigencias legales, además de divulgación a abogados, auditores y asesores financieros sujetos a deber profesional de confidencialidad."
@@ -484,6 +496,8 @@
             "es": "Ampliada (+ empleados y contratistas)"
           },
           "order": 3,
+          "biasPartyA": -0.2,
+          "biasPartyB": 0.2,
           "plainDescription": {
             "en": "Includes advisors plus employees and contractors who need to know for the business purpose, bound by written confidentiality agreements.",
             "es": "Incluye a asesores, así como a empleados y contratistas que necesiten conocer la información para el fin comercial previsto, sujetos a acuerdos escritos de confidencialidad."
@@ -551,6 +565,8 @@
             "es": "Amplia (+ sociedades vinculadas y socios)"
           },
           "order": 4,
+          "biasPartyA": -0.4,
+          "biasPartyB": 0.4,
           "plainDescription": {
             "en": "Includes all above plus affiliated companies and potential business partners under written confidentiality terms.",
             "es": "Incluye todas las anteriores, además de sociedades vinculadas y potenciales socios comerciales sujetos a compromisos escritos de confidencialidad."
@@ -643,6 +659,8 @@
             "es": "Restrictiva (Solo información marcada)"
           },
           "order": 1,
+          "biasPartyA": -0.4,
+          "biasPartyB": 0.4,
           "plainDescription": {
             "en": "Only information explicitly marked as 'Confidential' or 'Proprietary' at the time of disclosure is protected.",
             "es": "Solo se protege la información expresamente marcada como «Confidencial» o «Reservada» en el momento de su divulgación."
@@ -712,6 +730,8 @@
             "es": "Estándar (Marcada + comprensión razonable)"
           },
           "order": 2,
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "plainDescription": {
             "en": "Information that is marked as confidential OR would reasonably be understood to be confidential given its nature.",
             "es": "Información marcada como confidencial O que, por su naturaleza, pueda razonablemente considerarse como tal."
@@ -781,6 +801,8 @@
             "es": "Amplia (Toda información no pública)"
           },
           "order": 3,
+          "biasPartyA": 0.4,
+          "biasPartyB": -0.4,
           "plainDescription": {
             "en": "All non-public information disclosed by either party, regardless of marking, is considered confidential.",
             "es": "Toda información no pública divulgada por cualquiera de las partes, con independencia de su marcado, se considerará confidencial."
@@ -873,6 +895,8 @@
             "es": "Estricta (Devolver o destruir todo)"
           },
           "order": 1,
+          "biasPartyA": 0.3,
+          "biasPartyB": -0.3,
           "plainDescription": {
             "en": "All confidential information must be returned or destroyed within 10 business days, with written certification.",
             "es": "Toda la Información Confidencial debe devolverse o destruirse en el plazo de 10 días hábiles, con certificación escrita."
@@ -942,6 +966,8 @@
             "es": "Estándar (Con excepción de archivo legal)"
           },
           "order": 2,
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "plainDescription": {
             "en": "Return or destroy all information, but may retain one archival copy for legal compliance purposes.",
             "es": "Devolver o destruir toda la información, con posibilidad de conservar una copia de archivo a efectos de cumplimiento normativo."
@@ -1011,6 +1037,8 @@
             "es": "Flexible (Con excepción de copias de seguridad)"
           },
           "order": 3,
+          "biasPartyA": -0.3,
+          "biasPartyB": 0.3,
           "plainDescription": {
             "en": "Return or destroy accessible copies, but automatic backup copies may be retained if not accessed except for recovery.",
             "es": "Devolver o destruir las copias accesibles, pero las copias de seguridad automáticas podrán conservarse siempre que no se acceda a ellas salvo para fines de recuperación."
@@ -1103,6 +1131,8 @@
             "es": "Tribunales por defecto (Según ley aplicable)"
           },
           "order": 1,
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "jurisdictionDefault": true,
           "plainDescription": {
             "en": "Disputes resolved in courts of the governing law jurisdiction: San Francisco (California), London (England & Wales), or Madrid (Spain).",
@@ -1173,6 +1203,8 @@
             "es": "Tribunales de Delaware (Neutral - EE. UU.)"
           },
           "order": 2,
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "plainDescription": {
             "en": "Disputes resolved in Delaware courts, known for sophisticated commercial law and business-friendly judiciary.",
             "es": "Controversias resueltas ante los tribunales de Delaware, reconocidos por su sofisticado derecho mercantil y su judicatura favorable a la actividad empresarial."
@@ -1250,6 +1282,8 @@
             "es": "Arbitraje JAMS"
           },
           "order": 3,
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "plainDescription": {
             "en": "Private arbitration under JAMS (Judicial Arbitration and Mediation Services) rules - popular with technology companies and startups.",
             "es": "Arbitraje privado conforme al reglamento de JAMS (Judicial Arbitration and Mediation Services), habitual entre empresas tecnológicas y startups."
@@ -1331,6 +1365,8 @@
             "es": "Arbitraje CCI"
           },
           "order": 4,
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "plainDescription": {
             "en": "International arbitration under ICC (International Chamber of Commerce) rules - the gold standard for cross-border disputes.",
             "es": "Arbitraje internacional conforme al reglamento de la CCI (Cámara de Comercio Internacional), referencia en materia de controversias transfronterizas."
@@ -1400,6 +1436,8 @@
             "es": "Arbitraje AAA"
           },
           "order": 5,
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "plainDescription": {
             "en": "Arbitration under AAA (American Arbitration Association) Commercial Rules - well-established with extensive arbitrator network.",
             "es": "Arbitraje conforme al Reglamento Comercial de la AAA (Asociación Americana de Arbitraje), consolidado y con una amplia red de árbitros."
@@ -1479,6 +1517,8 @@
             "es": "Arbitraje LCIA"
           },
           "order": 6,
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "plainDescription": {
             "en": "Arbitration under LCIA (London Court of International Arbitration) rules - preferred for UK and international commercial disputes.",
             "es": "Arbitraje conforme al reglamento de la LCIA (Corte de Arbitraje Internacional de Londres), preferido para controversias comerciales del Reino Unido e internacionales."
@@ -1556,6 +1596,8 @@
             "es": "Tribunales españoles"
           },
           "order": 7,
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "jurisdictionConfig": {
             "CALIFORNIA": {
               "available": false
@@ -1633,6 +1675,8 @@
             "es": "Mediación previa + tribunales españoles"
           },
           "order": 8,
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "jurisdictionConfig": {
             "CALIFORNIA": {
               "available": false
@@ -1710,6 +1754,8 @@
             "es": "Arbitraje de la Corte de Arbitraje de Madrid (CAM)"
           },
           "order": 9,
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "jurisdictionConfig": {
             "CALIFORNIA": {
               "available": false
@@ -1810,6 +1856,8 @@
             "es": "Estándar (Medidas cautelares disponibles)"
           },
           "order": 1,
+          "biasPartyA": 0.2,
+          "biasPartyB": -0.2,
           "plainDescription": {
             "en": "The disclosing party may seek injunctive relief for breach without proving actual damages, acknowledging confidential information is unique.",
             "es": "La Parte Divulgante podrá solicitar medidas cautelares por incumplimiento sin necesidad de acreditar daños efectivos, reconociendo el carácter único de la Información Confidencial."
@@ -1879,6 +1927,8 @@
             "es": "Reforzado (+ sin exigencia de caución)"
           },
           "order": 2,
+          "biasPartyA": 0.4,
+          "biasPartyB": -0.4,
           "plainDescription": {
             "en": "Injunctive relief available without proving damages AND without requirement to post a bond.",
             "es": "Medidas cautelares disponibles sin necesidad de acreditar daños NI de prestar caución."
@@ -1946,6 +1996,8 @@
             "es": "Equilibrado (Todos los recursos legales)"
           },
           "order": 3,
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "plainDescription": {
             "en": "Either party may pursue any legal remedies available, including damages and injunctive relief where appropriate.",
             "es": "Cualquiera de las partes podrá ejercer todos los recursos legales disponibles, incluida la indemnización por daños y las medidas cautelares cuando proceda."
@@ -2034,6 +2086,8 @@
             "es": "1 año"
           },
           "order": 1,
+          "biasPartyA": -0.2,
+          "biasPartyB": 0.2,
           "plainDescription": {
             "en": "Agreement remains in effect for 1 year, with option to extend by mutual agreement.",
             "es": "El acuerdo permanecerá en vigor durante 1 año, con posibilidad de prórroga por mutuo acuerdo."
@@ -2105,6 +2159,8 @@
             "es": "2 años"
           },
           "order": 2,
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "plainDescription": {
             "en": "Agreement remains in effect for 2 years, providing a reasonable window for business discussions.",
             "es": "El acuerdo permanecerá en vigor durante 2 años, proporcionando un plazo razonable para las negociaciones comerciales."
@@ -2174,6 +2230,8 @@
             "es": "3 años"
           },
           "order": 3,
+          "biasPartyA": 0.2,
+          "biasPartyB": -0.2,
           "plainDescription": {
             "en": "Agreement remains in effect for 3 years, suitable for complex or long-term business discussions.",
             "es": "El acuerdo permanecerá en vigor durante 3 años, adecuado para negociaciones comerciales complejas o de larga duración."
@@ -2264,6 +2322,8 @@
             "es": "Sin cláusula de no captación"
           },
           "order": 1,
+          "biasPartyA": -0.2,
+          "biasPartyB": 0.2,
           "plainDescription": {
             "en": "No restrictions on hiring or recruiting each other's employees.",
             "es": "Sin restricciones sobre la contratación o captación de empleados de la otra parte."
@@ -2345,6 +2405,8 @@
             "es": "Solo durante la vigencia del acuerdo"
           },
           "order": 2,
+          "biasPartyA": 0.1,
+          "biasPartyB": -0.1,
           "plainDescription": {
             "en": "Parties agree not to solicit each other's employees while the NDA is in effect, but may do so after termination.",
             "es": "Las partes se comprometen a no captar a los empleados de la otra parte mientras el acuerdo de confidencialidad esté en vigor, pudiendo hacerlo tras su resolución."
@@ -2428,6 +2490,8 @@
             "es": "Ampliada (Vigencia + 1 año posterior)"
           },
           "order": 3,
+          "biasPartyA": 0.3,
+          "biasPartyB": -0.3,
           "plainDescription": {
             "en": "Non-solicitation applies during the agreement term and for 1 year after termination.",
             "es": "La prohibición de captación se aplica durante la vigencia del acuerdo y durante 1 año después de su resolución."
@@ -2534,6 +2598,8 @@
             "es": "Cesión no permitida"
           },
           "order": 1,
+          "biasPartyA": 0.2,
+          "biasPartyB": -0.2,
           "plainDescription": {
             "en": "Neither party may assign this agreement to any third party without written consent.",
             "es": "Ninguna de las partes podrá ceder este acuerdo a terceros sin consentimiento previo por escrito."
@@ -2599,6 +2665,8 @@
             "es": "Solo a sociedades vinculadas"
           },
           "order": 2,
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "plainDescription": {
             "en": "Assignment allowed to affiliates (entities under common control) without consent, but not to third parties.",
             "es": "Cesión permitida a sociedades vinculadas (entidades bajo control común) sin necesidad de consentimiento, pero no a terceros."
@@ -2664,6 +2732,8 @@
             "es": "Sociedades vinculadas + fusión/adquisición"
           },
           "order": 3,
+          "biasPartyA": -0.2,
+          "biasPartyB": 0.2,
           "plainDescription": {
             "en": "Assignment allowed to affiliates or in connection with a merger, acquisition, or sale of substantially all assets.",
             "es": "Cesión permitida a sociedades vinculadas o en el marco de una fusión, adquisición o venta de la totalidad o parte sustancial de los activos."

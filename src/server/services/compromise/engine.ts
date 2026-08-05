@@ -78,17 +78,17 @@ function calculateSatisfaction(
   originalOptionOrder: number,
   suggestedOptionOrder: number,
   totalOptions: number,
-  suggestedBias: number,
-  partyIsA: boolean
+  suggestedBias: number
 ): number {
   // Base satisfaction from option distance
   const maxDistance = totalOptions - 1;
   const distance = Math.abs(originalOptionOrder - suggestedOptionOrder);
   const distanceSatisfaction = maxDistance > 0 ? 1 - distance / maxDistance : 1;
 
-  // Bias adjustment - positive bias for this party increases satisfaction
-  const relevantBias = partyIsA ? suggestedBias : -suggestedBias;
-  const biasAdjustment = relevantBias * 0.15; // ±15% based on bias
+  // Bias adjustment — callers pass the bias in THIS party's own frame
+  // (biasPartyA for A, biasPartyB for B), so a positive value always means
+  // the suggested option favors this party and increases their satisfaction.
+  const biasAdjustment = suggestedBias * 0.15; // ±15% based on bias
 
   // Calculate final satisfaction (0-100)
   const satisfaction = Math.max(
@@ -203,16 +203,14 @@ export function calculateCompromise(input: CompromiseInput): CompromiseResult {
     optionA.order,
     suggestedOption.order,
     effectiveOptions.length,
-    suggestedOption.biasPartyA,
-    true
+    suggestedOption.biasPartyA
   );
 
   const satisfactionPartyB = calculateSatisfaction(
     optionB.order,
     suggestedOption.order,
     options.length,
-    suggestedOption.biasPartyB,
-    false
+    suggestedOption.biasPartyB
   );
 
   return {
@@ -287,16 +285,14 @@ export function globalFairnessPass(
       s.partyAOptionOrder,
       adjustedOption.order,
       s.options.length,
-      adjustedOption.biasPartyA,
-      true
+      adjustedOption.biasPartyA
     );
 
     const newSatisfactionB = calculateSatisfaction(
       s.partyBOptionOrder,
       adjustedOption.order,
       s.options.length,
-      adjustedOption.biasPartyB,
-      false
+      adjustedOption.biasPartyB
     );
 
     return {

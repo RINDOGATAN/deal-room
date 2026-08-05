@@ -43,6 +43,8 @@
             "es": "15 días netos"
           },
           "order": 1,
+          "biasPartyA": 0.4,
+          "biasPartyB": -0.4,
           "plainDescription": {
             "en": "Client must pay invoices within 15 days of receipt. Fast payment improves provider cash flow.",
             "es": "El Cliente debe abonar las facturas en un plazo de 15 días desde su recepción. El pago rápido mejora el flujo de caja del Prestador."
@@ -110,6 +112,8 @@
             "es": "30 días netos"
           },
           "order": 2,
+          "biasPartyA": 0.1,
+          "biasPartyB": -0.1,
           "plainDescription": {
             "en": "Client must pay invoices within 30 days - the most common business standard.",
             "es": "El Cliente debe abonar las facturas en un plazo de 30 días, el estándar más habitual en el ámbito empresarial."
@@ -175,6 +179,8 @@
             "es": "45 días netos"
           },
           "order": 3,
+          "biasPartyA": -0.2,
+          "biasPartyB": 0.2,
           "plainDescription": {
             "en": "Client has 45 days to pay invoices, providing extended payment flexibility.",
             "es": "El Cliente dispone de 45 días para abonar las facturas, lo que proporciona mayor flexibilidad de pago."
@@ -238,6 +244,8 @@
             "es": "60 días netos"
           },
           "order": 4,
+          "biasPartyA": -0.4,
+          "biasPartyB": 0.4,
           "plainDescription": {
             "en": "Client has 60 days to pay invoices - maximum flexibility for client, longer wait for provider.",
             "es": "El Cliente dispone de 60 días para abonar las facturas: máxima flexibilidad para el Cliente y mayor espera para el Prestador."
@@ -328,6 +336,8 @@
             "es": "El Cliente es titular de todo el trabajo realizado"
           },
           "order": 1,
+          "biasPartyA": -0.4,
+          "biasPartyB": 0.4,
           "plainDescription": {
             "en": "Client owns all intellectual property in work created specifically for them. Provider assigns all rights to client.",
             "es": "El Cliente ostenta la titularidad de toda la propiedad intelectual sobre el trabajo creado específicamente para él. El Prestador cede todos los derechos al Cliente."
@@ -395,6 +405,8 @@
             "es": "El Prestador retiene la titularidad; el Cliente obtiene licencia"
           },
           "order": 2,
+          "biasPartyA": 0.4,
+          "biasPartyB": -0.4,
           "plainDescription": {
             "en": "Provider retains ownership but grants client a perpetual, royalty-free license to use the work for internal business purposes.",
             "es": "El Prestador conserva la titularidad pero concede al Cliente una licencia perpetua y libre de cánones para utilizar el trabajo con fines empresariales internos."
@@ -466,6 +478,8 @@
             "es": "Cotitularidad"
           },
           "order": 3,
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "plainDescription": {
             "en": "Both parties jointly own the work product and can each use, license, or exploit it independently.",
             "es": "Ambas partes son cotitulares del trabajo realizado y pueden usarlo, licenciarlo o explotarlo de forma independiente."
@@ -554,6 +568,8 @@
             "es": "Honorarios de 12 meses"
           },
           "order": 1,
+          "biasPartyA": 0.1,
+          "biasPartyB": -0.1,
           "plainDescription": {
             "en": "Each party's liability capped at fees paid in the 12 months before the claim arose.",
             "es": "La responsabilidad de cada parte se limita a los honorarios abonados en los 12 meses anteriores al nacimiento de la reclamación."
@@ -615,6 +631,8 @@
             "es": "Honorarios de la Orden de Trabajo aplicable"
           },
           "order": 2,
+          "biasPartyA": 0.3,
+          "biasPartyB": -0.3,
           "plainDescription": {
             "en": "Liability capped at fees paid under the specific Statement of Work that gave rise to the claim.",
             "es": "La responsabilidad se limita a los honorarios abonados en virtud de la Orden de Trabajo específica que dio origen a la reclamación."
@@ -676,6 +694,8 @@
             "es": "2x honorarios anuales"
           },
           "order": 3,
+          "biasPartyA": -0.3,
+          "biasPartyB": 0.3,
           "plainDescription": {
             "en": "Liability capped at twice the annual fees, providing greater protection for significant damages.",
             "es": "La responsabilidad se limita al doble de los honorarios anuales, lo que proporciona mayor protección frente a daños significativos."
@@ -758,6 +778,8 @@
             "es": "Sin resolución por conveniencia"
           },
           "order": 1,
+          "biasPartyA": 0.3,
+          "biasPartyB": -0.3,
           "plainDescription": {
             "en": "Neither party can terminate without cause. Agreement continues for full term or until material breach.",
             "es": "Ninguna de las partes puede resolver el Contrato sin causa justificada. El Contrato permanece vigente durante todo su plazo o hasta que se produzca un incumplimiento esencial."
@@ -823,6 +845,8 @@
             "es": "Mutua con 30 días de preaviso"
           },
           "order": 2,
+          "biasPartyA": -0.3,
+          "biasPartyB": 0.3,
           "plainDescription": {
             "en": "Either party can terminate the agreement with 30 days written notice, without needing to show cause.",
             "es": "Cualquiera de las partes puede resolver el Contrato con 30 días de preaviso por escrito, sin necesidad de justificar causa alguna."
@@ -886,6 +910,8 @@
             "es": "Mutua con 60 días de preaviso"
           },
           "order": 3,
+          "biasPartyA": -0.1,
+          "biasPartyB": 0.1,
           "plainDescription": {
             "en": "Either party can terminate with 60 days written notice, allowing more transition time.",
             "es": "Cualquiera de las partes puede resolver el Contrato con 60 días de preaviso por escrito, lo que permite un mayor plazo de transición."
@@ -970,6 +996,8 @@
             "es": "30 días"
           },
           "order": 1,
+          "biasPartyA": 0.3,
+          "biasPartyB": -0.3,
           "plainDescription": {
             "en": "Provider warrants deliverables for 30 days following delivery or acceptance.",
             "es": "El Prestador garantiza los entregables durante 30 días desde su entrega o aceptación."
@@ -1031,6 +1059,8 @@
             "es": "60 días"
           },
           "order": 2,
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "plainDescription": {
             "en": "Provider warrants deliverables for 60 days - a balanced standard warranty period.",
             "es": "El Prestador garantiza los entregables durante 60 días, un período de garantía estándar y equilibrado."
@@ -1092,6 +1122,8 @@
             "es": "90 días"
           },
           "order": 3,
+          "biasPartyA": -0.3,
+          "biasPartyB": 0.3,
           "plainDescription": {
             "en": "Provider warrants deliverables for 90 days, providing extended protection for the client.",
             "es": "El Prestador garantiza los entregables durante 90 días, lo que proporciona una protección ampliada al Cliente."
@@ -1178,6 +1210,8 @@
             "es": "Solo infracción de propiedad intelectual"
           },
           "order": 1,
+          "biasPartyA": 0.4,
+          "biasPartyB": -0.4,
           "plainDescription": {
             "en": "Provider indemnifies client only for third-party IP infringement claims related to deliverables.",
             "es": "El Prestador indemniza al Cliente únicamente por reclamaciones de terceros relativas a infracciones de propiedad intelectual relacionadas con los entregables."
@@ -1239,6 +1273,8 @@
             "es": "Estándar mutua (PI + negligencia)"
           },
           "order": 2,
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "plainDescription": {
             "en": "Each party indemnifies the other for IP infringement, gross negligence, and confidentiality breaches.",
             "es": "Cada parte indemniza a la otra por infracciones de propiedad intelectual, negligencia grave e incumplimiento de las obligaciones de confidencialidad."
@@ -1300,6 +1336,8 @@
             "es": "Indemnización amplia del Prestador"
           },
           "order": 3,
+          "biasPartyA": -0.4,
+          "biasPartyB": 0.4,
           "plainDescription": {
             "en": "Provider broadly indemnifies client for IP infringement, negligence, confidentiality breaches, and compliance violations.",
             "es": "El Prestador indemniza ampliamente al Cliente por infracciones de propiedad intelectual, negligencia, incumplimiento de confidencialidad e infracciones normativas."
@@ -1386,6 +1424,8 @@
             "es": "3 años tras la resolución"
           },
           "order": 1,
+          "biasPartyA": 0.1,
+          "biasPartyB": -0.1,
           "plainDescription": {
             "en": "Confidentiality obligations survive for 3 years after the agreement ends.",
             "es": "Las obligaciones de confidencialidad perduran durante 3 años tras la finalización del Contrato."
@@ -1447,6 +1487,8 @@
             "es": "5 años tras la resolución"
           },
           "order": 2,
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "plainDescription": {
             "en": "Confidentiality obligations survive for 5 years, providing extended protection.",
             "es": "Las obligaciones de confidencialidad perduran durante 5 años, proporcionando una protección ampliada."
@@ -1504,6 +1546,8 @@
             "es": "Perpetua"
           },
           "order": 3,
+          "biasPartyA": -0.2,
+          "biasPartyB": 0.2,
           "plainDescription": {
             "en": "Confidentiality obligations continue indefinitely for all confidential information.",
             "es": "Las obligaciones de confidencialidad se mantienen indefinidamente para toda la información confidencial."
@@ -1586,6 +1630,8 @@
             "es": "Estándar (1 M$/2 M$)"
           },
           "order": 1,
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "plainDescription": {
             "en": "Provider maintains $1M per occurrence / $2M aggregate general liability and $1M professional liability.",
             "es": "El Prestador mantiene un seguro de responsabilidad civil general de 1 M$ por siniestro / 2 M$ agregado y un seguro de responsabilidad profesional de 1 M$."
@@ -1647,6 +1693,8 @@
             "es": "Ampliado (2 M$/5 M$)"
           },
           "order": 2,
+          "biasPartyA": -0.3,
+          "biasPartyB": 0.3,
           "plainDescription": {
             "en": "Provider maintains $2M per occurrence / $5M aggregate general liability and $2M professional liability.",
             "es": "El Prestador mantiene un seguro de responsabilidad civil general de 2 M$ por siniestro / 5 M$ agregado y un seguro de responsabilidad profesional de 2 M$."
@@ -1708,6 +1756,8 @@
             "es": "Básico (sin mínimo)"
           },
           "order": 3,
+          "biasPartyA": 0.3,
+          "biasPartyB": -0.3,
           "plainDescription": {
             "en": "Provider maintains commercially reasonable insurance with no specific minimums required.",
             "es": "El Prestador mantiene un seguro comercialmente razonable sin requisitos mínimos específicos."
@@ -1790,6 +1840,8 @@
             "es": "Órdenes de cambio formales por escrito"
           },
           "order": 1,
+          "biasPartyA": 0.2,
+          "biasPartyB": -0.2,
           "plainDescription": {
             "en": "All scope changes require a formal written change order signed by both parties before work begins.",
             "es": "Todos los cambios de alcance requieren una orden de cambio formal por escrito firmada por ambas partes antes del inicio de los trabajos."
@@ -1859,6 +1911,8 @@
             "es": "Aprobación por correo electrónico aceptable"
           },
           "order": 2,
+          "biasPartyA": -0.2,
+          "biasPartyB": 0.2,
           "plainDescription": {
             "en": "Scope changes can be approved via email from authorized representatives, then documented.",
             "es": "Los cambios de alcance pueden aprobarse por correo electrónico de los representantes autorizados y documentarse posteriormente."
@@ -1922,6 +1976,8 @@
             "es": "Basado en umbrales (cambios menores informales)"
           },
           "order": 3,
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "plainDescription": {
             "en": "Small changes (under a threshold) can be approved informally; larger changes require formal change orders.",
             "es": "Los cambios menores (por debajo de un umbral) pueden aprobarse de manera informal; los cambios de mayor envergadura requieren órdenes de cambio formales."
@@ -2008,6 +2064,8 @@
             "es": "Sin restricciones"
           },
           "order": 1,
+          "biasPartyA": 0.4,
+          "biasPartyB": -0.4,
           "plainDescription": {
             "en": "Provider has no restrictions on working with client's competitors or clients.",
             "es": "El Prestador no tiene restricción alguna para trabajar con competidores o clientes del Cliente."
@@ -2081,6 +2139,8 @@
             "es": "Solo no elusión"
           },
           "order": 2,
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "plainDescription": {
             "en": "Provider cannot directly solicit or contract with client's customers discovered through the engagement.",
             "es": "El Prestador no puede captar ni contratar directamente con los clientes del Cliente que haya conocido a través del encargo."
@@ -2154,6 +2214,8 @@
             "es": "No competencia plena (durante la vigencia)"
           },
           "order": 3,
+          "biasPartyA": -0.4,
+          "biasPartyB": 0.4,
           "plainDescription": {
             "en": "Provider cannot work with named competitors during the agreement term. Restrictions end at termination.",
             "es": "El Prestador no puede trabajar con competidores designados durante la vigencia del Contrato. Las restricciones cesan con la resolución."
@@ -2254,6 +2316,8 @@
             "es": "Tribunales por defecto (según la ley aplicable)"
           },
           "order": 1,
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "jurisdictionDefault": true,
           "plainDescription": {
             "en": "Disputes resolved in courts of the governing law jurisdiction: San Francisco (California), London (England & Wales), or Madrid (Spain).",
@@ -2324,6 +2388,8 @@
             "es": "Tribunales de Delaware (neutral - EE. UU.)"
           },
           "order": 2,
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "plainDescription": {
             "en": "Disputes resolved in Delaware courts, known for sophisticated commercial law and business-friendly judiciary.",
             "es": "Las controversias se resuelven ante los tribunales de Delaware, reconocidos por su sofisticado derecho mercantil y su judicatura favorable al ámbito empresarial."
@@ -2393,6 +2459,8 @@
             "es": "Arbitraje JAMS"
           },
           "order": 3,
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "plainDescription": {
             "en": "Private arbitration under JAMS rules - popular with technology companies and professional services firms.",
             "es": "Arbitraje privado conforme al reglamento de JAMS, frecuente en empresas tecnológicas y de servicios profesionales."
@@ -2466,6 +2534,8 @@
             "es": "Arbitraje CCI"
           },
           "order": 4,
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "plainDescription": {
             "en": "International arbitration under ICC rules - the gold standard for cross-border services disputes.",
             "es": "Arbitraje internacional conforme al reglamento de la CCI, la referencia para controversias transfronterizas en materia de servicios."
@@ -2535,6 +2605,8 @@
             "es": "Arbitraje AAA"
           },
           "order": 5,
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "plainDescription": {
             "en": "Arbitration under AAA Commercial Rules - well-established with extensive arbitrator network for services disputes.",
             "es": "Arbitraje conforme al Reglamento Comercial de la AAA, bien consolidado y con una amplia red de árbitros para controversias en materia de servicios."
@@ -2606,6 +2678,8 @@
             "es": "Arbitraje LCIA"
           },
           "order": 6,
+          "biasPartyA": 0,
+          "biasPartyB": 0,
           "plainDescription": {
             "en": "Arbitration under LCIA rules - preferred for UK and international professional services disputes.",
             "es": "Arbitraje conforme al reglamento de la LCIA, preferido para controversias de servicios profesionales en el Reino Unido e internacionales."
