@@ -41,30 +41,48 @@ const LocalizedStringArraySchema = z.union([
 // SCHEMA DEFINITIONS (with i18n support)
 // ============================================================
 
-// Legacy format (flat strings)
-const LegacyClauseOptionSchema = z.object({
-  id: z.string(),
-  code: z.string(),
-  label: z.string(),
-  order: z.number(),
-  plainDescription: z.string(),
-  prosPartyA: z.array(z.string()),
-  consPartyA: z.array(z.string()),
-  prosPartyB: z.array(z.string()),
-  consPartyB: z.array(z.string()),
-  legalText: z.string(),
-  biasPartyA: z.number().min(-1).max(1),
-  biasPartyB: z.number().min(-1).max(1),
-  jurisdictionConfig: z.record(z.string(), z.any()).optional(),
-});
+// Authored skills vary along TWO INDEPENDENT axes, and the schemas below keep
+// them independent on purpose:
+//
+//   1. Localisation — every text value is either a plain string or a
+//      { "en": …, "es": … } object. LocalizedStringSchema accepts both.
+//   2. Party-field layout — pros/cons/bias are either FLAT
+//      (prosPartyA, biasPartyA) or NESTED (pros.partyA, bias.partyA).
+//
+// These used to be modelled as one either/or union — "legacy" meaning plain +
+// flat, "i18n" meaning localised + nested — which silently rejected the two
+// mixed combinations that real skills actually use. Localised + flat is the
+// common one: the baked DPA skill and the whole residential-tenancy family are
+// authored that way, and every one of them failed validation here while
+// passing the packaging validator, which never coupled the axes.
+//
+// Only the layout genuinely needs a union; localisation is handled field by
+// field. Both layouts are first-class and neither is deprecated.
 
-// New i18n format (nested pros/cons with localized strings)
-const I18nClauseOptionSchema = z.object({
+const ClauseOptionBaseShape = {
   id: z.string(),
   code: z.string(),
   label: LocalizedStringSchema,
   order: z.number(),
   plainDescription: LocalizedStringSchema,
+  legalText: LocalizedStringSchema,
+  jurisdictionConfig: z.record(z.string(), z.any()).optional(),
+};
+
+// Flat layout: prosPartyA / consPartyA / biasPartyA …
+const FlatClauseOptionSchema = z.object({
+  ...ClauseOptionBaseShape,
+  prosPartyA: LocalizedStringArraySchema,
+  consPartyA: LocalizedStringArraySchema,
+  prosPartyB: LocalizedStringArraySchema,
+  consPartyB: LocalizedStringArraySchema,
+  biasPartyA: z.number().min(-1).max(1),
+  biasPartyB: z.number().min(-1).max(1),
+});
+
+// Nested layout: pros.partyA / cons.partyA / bias.partyA …
+const NestedClauseOptionSchema = z.object({
+  ...ClauseOptionBaseShape,
   pros: z.object({
     partyA: LocalizedStringArraySchema,
     partyB: LocalizedStringArraySchema,
@@ -73,28 +91,18 @@ const I18nClauseOptionSchema = z.object({
     partyA: LocalizedStringArraySchema,
     partyB: LocalizedStringArraySchema,
   }),
-  legalText: LocalizedStringSchema,
   bias: z.object({
     partyA: z.number().min(-1).max(1),
     partyB: z.number().min(-1).max(1),
   }),
-  jurisdictionConfig: z.record(z.string(), z.any()).optional(),
 });
 
-// Legacy clause schema
-const LegacyClauseSchema = z.object({
-  id: z.string(),
-  title: z.string(),
-  category: z.string(),
-  order: z.number(),
-  plainDescription: z.string(),
-  legalContext: z.string().optional(),
-  isRequired: z.boolean().optional().default(true),
-  options: z.array(LegacyClauseOptionSchema).min(2),
-});
+const ClauseOptionSchema = z.union([
+  FlatClauseOptionSchema,
+  NestedClauseOptionSchema,
+]);
 
-// I18n clause schema
-const I18nClauseSchema = z.object({
+const ClauseSchema = z.object({
   id: z.string(),
   title: LocalizedStringSchema,
   category: LocalizedStringSchema,
@@ -102,29 +110,19 @@ const I18nClauseSchema = z.object({
   plainDescription: LocalizedStringSchema,
   legalContext: LocalizedStringSchema.optional(),
   isRequired: z.boolean().optional().default(true),
-  options: z.array(I18nClauseOptionSchema).min(2),
+  // Min 2: some authored skills have binary clauses, and England & Wales
+  // tenancy has three where the law leaves only two lawful answers.
+  options: z.array(ClauseOptionSchema).min(2),
 });
 
-// Legacy clauses file
-const LegacyClausesFileSchema = z.object({
-  contractType: z.string(),
-  displayName: z.string(),
-  description: z.string().optional(),
-  version: z.string().optional().default("1.0"),
-  clauses: z.array(LegacyClauseSchema),
-});
-
-// I18n clauses file
-const I18nClausesFileSchema = z.object({
+const ClausesFileSchema = z.object({
   contractType: z.string(),
   displayName: LocalizedStringSchema,
   description: LocalizedStringSchema.optional(),
   version: z.string().optional().default("1.0"),
   languages: z.array(z.string()).optional(),
-  clauses: z.array(I18nClauseSchema),
+  clauses: z.array(ClauseSchema),
 });
-
-const ClausesFileSchema = z.union([LegacyClausesFileSchema, I18nClausesFileSchema]);
 
 const MetadataSchema = z.object({
   contractType: z.string(),
@@ -285,45 +283,30 @@ function normalizeOption(
 ): NormalizedClauseOption {
   const opt = option as Record<string, unknown>;
 
-  if (isI18nOption(option)) {
-    // New i18n format
-    const pros = opt.pros as Record<string, unknown>;
-    const cons = opt.cons as Record<string, unknown>;
-    const bias = opt.bias as Record<string, number>;
+  // Only the party-field LAYOUT branches here. Every text value goes through
+  // the resolvers regardless, because a flat-layout option may still hold
+  // localised values — the old flat branch cast them straight to string/
+  // string[], which handed `{ es: [...] }` to callers expecting an array.
+  const nested = isI18nOption(option);
+  const pros = (opt.pros ?? {}) as Record<string, unknown>;
+  const cons = (opt.cons ?? {}) as Record<string, unknown>;
+  const bias = (opt.bias ?? {}) as Record<string, number>;
 
-    return {
-      id: opt.id as string,
-      code: opt.code as string,
-      label: resolveLocalizedString(opt.label, language),
-      order: opt.order as number,
-      plainDescription: resolveLocalizedString(opt.plainDescription, language),
-      prosPartyA: resolveLocalizedArray(pros.partyA, language),
-      consPartyA: resolveLocalizedArray(cons.partyA, language),
-      prosPartyB: resolveLocalizedArray(pros.partyB, language),
-      consPartyB: resolveLocalizedArray(cons.partyB, language),
-      legalText: resolveLocalizedString(opt.legalText, language),
-      biasPartyA: bias.partyA,
-      biasPartyB: bias.partyB,
-      jurisdictionConfig: opt.jurisdictionConfig as Record<string, unknown> | undefined,
-    };
-  } else {
-    // Legacy flat format
-    return {
-      id: opt.id as string,
-      code: opt.code as string,
-      label: opt.label as string,
-      order: opt.order as number,
-      plainDescription: opt.plainDescription as string,
-      prosPartyA: opt.prosPartyA as string[],
-      consPartyA: opt.consPartyA as string[],
-      prosPartyB: opt.prosPartyB as string[],
-      consPartyB: opt.consPartyB as string[],
-      legalText: opt.legalText as string,
-      biasPartyA: opt.biasPartyA as number,
-      biasPartyB: opt.biasPartyB as number,
-      jurisdictionConfig: opt.jurisdictionConfig as Record<string, unknown> | undefined,
-    };
-  }
+  return {
+    id: opt.id as string,
+    code: opt.code as string,
+    label: resolveLocalizedString(opt.label, language),
+    order: opt.order as number,
+    plainDescription: resolveLocalizedString(opt.plainDescription, language),
+    prosPartyA: resolveLocalizedArray(nested ? pros.partyA : opt.prosPartyA, language),
+    consPartyA: resolveLocalizedArray(nested ? cons.partyA : opt.consPartyA, language),
+    prosPartyB: resolveLocalizedArray(nested ? pros.partyB : opt.prosPartyB, language),
+    consPartyB: resolveLocalizedArray(nested ? cons.partyB : opt.consPartyB, language),
+    legalText: resolveLocalizedString(opt.legalText, language),
+    biasPartyA: (nested ? bias.partyA : opt.biasPartyA) as number,
+    biasPartyB: (nested ? bias.partyB : opt.biasPartyB) as number,
+    jurisdictionConfig: opt.jurisdictionConfig as Record<string, unknown> | undefined,
+  };
 }
 
 /**
@@ -493,23 +476,32 @@ function getOptionArray(
   option: Record<string, unknown>,
   field: "prosPartyA" | "consPartyA" | "prosPartyB" | "consPartyB"
 ): unknown[] {
-  // Legacy format
-  if (Array.isArray(option[field])) {
-    return option[field] as unknown[];
-  }
+  // Accept a plain array, or a localised { en: [...], es: [...] } object in
+  // any language. Previously only a bare array counted as the flat layout, so
+  // a flat option holding localised values fell through to the nested lookup,
+  // found nothing, and reported "has no prosPartyA" for content that was in
+  // fact present — a false warning on every localised flat skill.
+  const asArray = (val: unknown): unknown[] | null => {
+    if (Array.isArray(val)) return val;
+    if (val && typeof val === "object") {
+      const first = Object.values(val as Record<string, unknown>).find((v) =>
+        Array.isArray(v),
+      );
+      if (Array.isArray(first)) return first;
+    }
+    return null;
+  };
 
-  // New format: pros.partyA, cons.partyA, etc.
-  if (field.startsWith("pros")) {
-    const pros = option.pros as Record<string, unknown> | undefined;
-    const party = field.endsWith("A") ? "partyA" : "partyB";
-    const val = pros?.[party];
-    return Array.isArray(val) ? val : [];
-  } else {
-    const cons = option.cons as Record<string, unknown> | undefined;
-    const party = field.endsWith("A") ? "partyA" : "partyB";
-    const val = cons?.[party];
-    return Array.isArray(val) ? val : [];
-  }
+  // Flat layout
+  const flat = asArray(option[field]);
+  if (flat) return flat;
+
+  // Nested layout: pros.partyA, cons.partyA, etc.
+  const group = option[field.startsWith("pros") ? "pros" : "cons"] as
+    | Record<string, unknown>
+    | undefined;
+  const party = field.endsWith("A") ? "partyA" : "partyB";
+  return asArray(group?.[party]) ?? [];
 }
 
 /**
