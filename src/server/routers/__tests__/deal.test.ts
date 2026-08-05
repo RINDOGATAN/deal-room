@@ -33,7 +33,7 @@ const mocks = vi.hoisted(() => ({
     dealRoomParty: { findFirst: vi.fn(), update: vi.fn() },
     dealRoomClause: { update: vi.fn() },
     invitation: { findMany: vi.fn(), update: vi.fn() },
-    auditLog: { create: vi.fn() },
+    auditLog: { create: vi.fn(), findMany: vi.fn() },
   },
   checkDealCreationEntitlement: vi.fn(),
   autoAgreeSingleOptionClauses: vi.fn(),
@@ -162,6 +162,68 @@ describe("deal.getById", () => {
     const result = await callerFor(alice).getById({ id: "deal-1" });
     expect(result.currentUserRole).toBe("INITIATOR");
     expect(result.currentPartyId).toBe("p-alice");
+  });
+});
+
+// --- deal.getTimeline -----------------------------------------------------------
+
+describe("deal.getTimeline", () => {
+  it("throws FORBIDDEN when the caller is not a party", async () => {
+    mocks.prisma.dealRoom.findUnique.mockResolvedValue({
+      id: "deal-1",
+      parties: [{ userId: "user-bob" }],
+    });
+    await expect(
+      callerFor(alice).getTimeline({ id: "deal-1" }),
+    ).rejects.toMatchObject({ code: "FORBIDDEN" });
+    expect(mocks.prisma.auditLog.findMany).not.toHaveBeenCalled();
+  });
+
+  it("returns whitelisted events with actor names, oldest first", async () => {
+    mocks.prisma.dealRoom.findUnique.mockResolvedValue({
+      id: "deal-1",
+      parties: [{ userId: "user-alice" }],
+    });
+    mocks.prisma.auditLog.findMany.mockResolvedValue([
+      {
+        id: "a-1",
+        action: "DEAL_ROOM_CREATED",
+        createdAt: new Date("2026-08-01T10:00:00Z"),
+        user: { name: "Alice", email: "a@example.test" },
+      },
+      {
+        id: "a-2",
+        action: "SIGNATURE_RECORDED",
+        createdAt: new Date("2026-08-02T10:00:00Z"),
+        user: { name: null, email: "b@example.test" },
+      },
+    ]);
+
+    const events = await callerFor(alice).getTimeline({ id: "deal-1" });
+
+    expect(events).toEqual([
+      {
+        id: "a-1",
+        action: "DEAL_ROOM_CREATED",
+        at: new Date("2026-08-01T10:00:00Z"),
+        actor: "Alice",
+      },
+      {
+        id: "a-2",
+        action: "SIGNATURE_RECORDED",
+        at: new Date("2026-08-02T10:00:00Z"),
+        actor: "b@example.test", // falls back to email when the name is unset
+      },
+    ]);
+
+    // The query itself must carry the whitelist and ascending order — the
+    // audit table also holds AI/assistive rows that must never surface.
+    const args = mocks.prisma.auditLog.findMany.mock.calls[0][0];
+    expect(args.where.action.in).toEqual(
+      expect.arrayContaining(["DEAL_ROOM_CREATED", "DEAL_COMPLETED"]),
+    );
+    expect(args.where.action.in).not.toContain("AI_RISK_DIGEST_GENERATED");
+    expect(args.orderBy).toEqual({ createdAt: "asc" });
   });
 });
 

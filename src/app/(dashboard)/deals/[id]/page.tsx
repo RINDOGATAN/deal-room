@@ -7,7 +7,7 @@ import Link from "next/link";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 import { NextIntlClientProvider, useTranslations, useLocale } from "next-intl";
-import { formatDate } from "@/lib/date";
+import { formatDate, formatDateTime } from "@/lib/date";
 import {
   FileText,
   Clock,
@@ -25,6 +25,7 @@ import {
   ShieldAlert,
   PenTool,
   Hourglass,
+  History,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
@@ -97,6 +98,49 @@ export default function DealDetailPage() {
     <NextIntlClientProvider locale={contractLang} messages={messages}>
       <DealDetailContent dealId={dealId} />
     </NextIntlClientProvider>
+  );
+}
+
+/**
+ * Deal history timeline — a curated, party-visible feed derived from the
+ * audit log (deal.getTimeline). Chronological top to bottom; each entry is
+ * an action label plus who did it and when. Hidden entirely while empty.
+ */
+function DealTimeline({ dealId, governingLaw }: { dealId: string; governingLaw?: string }) {
+  const t = useTranslations("dealDetail");
+  const locale = useLocale();
+  const { data: events } = trpc.deal.getTimeline.useQuery({ id: dealId });
+
+  if (!events || events.length === 0) return null;
+
+  return (
+    <div className="card-brutal">
+      <div className="flex items-center gap-2 mb-4">
+        <History className="w-4 h-4 text-muted-foreground" aria-hidden="true" />
+        <h2 className="font-semibold">{t("history.title")}</h2>
+      </div>
+      <ol className="space-y-0">
+        {events.map((e, i) => (
+          <li key={e.id} className="flex gap-3">
+            <div className="flex flex-col items-center">
+              <span className="w-2.5 h-2.5 rounded-full bg-primary/60 mt-1.5 flex-shrink-0" />
+              {i < events.length - 1 && <span className="w-px flex-1 bg-border" />}
+            </div>
+            <div className="pb-4 min-w-0">
+              <p className="text-sm">
+                {t(`history.events.${e.action}`)}
+                {e.actor && (
+                  <span className="text-muted-foreground"> — {e.actor}</span>
+                )}
+              </p>
+              <p className="text-xs text-muted-foreground">
+                {formatDateTime(new Date(e.at), { locale, governingLaw })}
+              </p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
   );
 }
 
@@ -732,6 +776,9 @@ function DealDetailContent({ dealId }: { dealId: string }) {
           })}
         </div>
       </div>
+
+      {/* Deal history timeline */}
+      <DealTimeline dealId={dealId} governingLaw={deal.governingLaw} />
 
       {/* Actions */}
       {deal.status !== "COMPLETED" && deal.status !== "CANCELLED" && (

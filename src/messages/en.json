@@ -297,6 +297,40 @@
       "signNow": "Sign contract",
       "waitingForThemToSign": "Waiting for {name} to sign",
       "youAlreadySigned": "You've signed. The contract will be finalized once they sign too."
+    },
+    "history": {
+      "title": "Deal history",
+      "events": {
+        "DEAL_ROOM_CREATED": "Deal created",
+        "DEAL_ROOM_PRESET_APPLIED": "Express preset applied",
+        "DEAL_ROOM_AUTO_AGREED": "All clauses auto-agreed",
+        "DEAL_ROOM_CANCELLED": "Deal cancelled",
+        "INVITATION_SENT": "Invitation sent to the counterparty",
+        "INVITATION_ACCEPTED": "Invitation accepted",
+        "INVITATION_AUTO_ACCEPTED": "Invitation accepted",
+        "SELECTIONS_SUBMITTED": "Clause selections submitted",
+        "PARAMETER_PROPOSAL_SUBMITTED": "Parameter change proposed",
+        "COMPROMISE_GENERATED": "Compromise suggestions generated",
+        "COMPROMISE_REGENERATED": "Compromise suggestions regenerated",
+        "COMPROMISE_ACCEPTED": "Compromise accepted",
+        "COMPROMISE_REJECTED": "Compromise rejected",
+        "COUNTER_PROPOSAL_SUBMITTED": "Counter-proposal submitted",
+        "COUNTER_PROPOSAL_ACCEPTED": "Counter-proposal accepted",
+        "COUNTER_PROPOSAL_REJECTED": "Counter-proposal rejected",
+        "ATTORNEY_REVIEW_REQUESTED": "Attorney review requested",
+        "ATTORNEY_REVIEW_APPROVED": "Attorney review approved",
+        "ATTORNEY_REVIEW_CANCELLED": "Attorney review cancelled",
+        "JOINT_COUNSEL_REQUESTED": "Joint closing counsel requested",
+        "JOINT_COUNSEL_ACKNOWLEDGED": "Joint closing counsel acknowledged",
+        "JOINT_COUNSEL_DECLINED": "Joint closing counsel declined",
+        "SIGNING_INITIATED": "Signing initiated",
+        "SIGNING_DETAILS_SUBMITTED": "Execution details submitted",
+        "SIGNATURE_RECORDED": "Signature recorded",
+        "SIGNATURE_UNDONE": "Signature withdrawn",
+        "SIGNING_REMINDER_SENT": "Signing reminder sent",
+        "SIGNING_EXPIRED": "Signing expired",
+        "DEAL_COMPLETED": "Deal completed — contract signed by all parties"
+      }
     }
   },
   "negotiate": {

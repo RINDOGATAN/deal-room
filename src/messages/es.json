@@ -298,6 +298,40 @@
       "signNow": "Firmar contrato",
       "waitingForThemToSign": "Esperando a que {name} firme",
       "youAlreadySigned": "Ya has firmado. El contrato se finalizará cuando la otra parte firme también."
+    },
+    "history": {
+      "title": "Historial del acuerdo",
+      "events": {
+        "DEAL_ROOM_CREATED": "Acuerdo creado",
+        "DEAL_ROOM_PRESET_APPLIED": "Configuración exprés aplicada",
+        "DEAL_ROOM_AUTO_AGREED": "Todas las cláusulas acordadas automáticamente",
+        "DEAL_ROOM_CANCELLED": "Acuerdo cancelado",
+        "INVITATION_SENT": "Invitación enviada a la otra parte",
+        "INVITATION_ACCEPTED": "Invitación aceptada",
+        "INVITATION_AUTO_ACCEPTED": "Invitación aceptada",
+        "SELECTIONS_SUBMITTED": "Selecciones de cláusulas enviadas",
+        "PARAMETER_PROPOSAL_SUBMITTED": "Cambio de parámetro propuesto",
+        "COMPROMISE_GENERATED": "Sugerencias de compromiso generadas",
+        "COMPROMISE_REGENERATED": "Sugerencias de compromiso regeneradas",
+        "COMPROMISE_ACCEPTED": "Compromiso aceptado",
+        "COMPROMISE_REJECTED": "Compromiso rechazado",
+        "COUNTER_PROPOSAL_SUBMITTED": "Contrapropuesta enviada",
+        "COUNTER_PROPOSAL_ACCEPTED": "Contrapropuesta aceptada",
+        "COUNTER_PROPOSAL_REJECTED": "Contrapropuesta rechazada",
+        "ATTORNEY_REVIEW_REQUESTED": "Revisión de abogado/a solicitada",
+        "ATTORNEY_REVIEW_APPROVED": "Revisión de abogado/a aprobada",
+        "ATTORNEY_REVIEW_CANCELLED": "Revisión de abogado/a cancelada",
+        "JOINT_COUNSEL_REQUESTED": "Asesoría conjunta de cierre solicitada",
+        "JOINT_COUNSEL_ACKNOWLEDGED": "Asesoría conjunta de cierre confirmada",
+        "JOINT_COUNSEL_DECLINED": "Asesoría conjunta de cierre rechazada",
+        "SIGNING_INITIATED": "Firma iniciada",
+        "SIGNING_DETAILS_SUBMITTED": "Datos de firma enviados",
+        "SIGNATURE_RECORDED": "Firma registrada",
+        "SIGNATURE_UNDONE": "Firma retirada",
+        "SIGNING_REMINDER_SENT": "Recordatorio de firma enviado",
+        "SIGNING_EXPIRED": "Firma caducada",
+        "DEAL_COMPLETED": "Acuerdo completado: contrato firmado por todas las partes"
+      }
     }
   },
   "negotiate": {

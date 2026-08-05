@@ -22,6 +22,43 @@ const GOVERNING_LAW_TO_JURISDICTION: Record<string, string> = {
   SPAIN: "SPAIN",
 };
 
+/**
+ * Audit actions that surface on the deal-history timeline, in no particular
+ * order (events sort by timestamp). Every entry needs a
+ * `dealDetail.history.events.<ACTION>` label in both message files.
+ */
+const TIMELINE_ACTIONS = [
+  "DEAL_ROOM_CREATED",
+  "DEAL_ROOM_PRESET_APPLIED",
+  "DEAL_ROOM_AUTO_AGREED",
+  "DEAL_ROOM_CANCELLED",
+  "INVITATION_SENT",
+  "INVITATION_ACCEPTED",
+  "INVITATION_AUTO_ACCEPTED",
+  "SELECTIONS_SUBMITTED",
+  "PARAMETER_PROPOSAL_SUBMITTED",
+  "COMPROMISE_GENERATED",
+  "COMPROMISE_REGENERATED",
+  "COMPROMISE_ACCEPTED",
+  "COMPROMISE_REJECTED",
+  "COUNTER_PROPOSAL_SUBMITTED",
+  "COUNTER_PROPOSAL_ACCEPTED",
+  "COUNTER_PROPOSAL_REJECTED",
+  "ATTORNEY_REVIEW_REQUESTED",
+  "ATTORNEY_REVIEW_APPROVED",
+  "ATTORNEY_REVIEW_CANCELLED",
+  "JOINT_COUNSEL_REQUESTED",
+  "JOINT_COUNSEL_ACKNOWLEDGED",
+  "JOINT_COUNSEL_DECLINED",
+  "SIGNING_INITIATED",
+  "SIGNING_DETAILS_SUBMITTED",
+  "SIGNATURE_RECORDED",
+  "SIGNATURE_UNDONE",
+  "SIGNING_REMINDER_SENT",
+  "SIGNING_EXPIRED",
+  "DEAL_COMPLETED",
+] as const;
+
 export const dealRouter = createTRPCRouter({
   // Get parameter schema for a contract type (used by deal creation wizard)
   getParameterSchema: protectedProcedure
@@ -289,6 +326,52 @@ export const dealRouter = createTRPCRouter({
         currentUserRole: currentParty?.role,
         currentPartyId: currentParty?.id,
       };
+    }),
+
+  // Curated deal history for the timeline on /deals/[id]. Derived entirely
+  // from the audit log — no new writes anywhere. The whitelist keeps it to
+  // user-meaningful milestones (assistive AI events, skill downloads and
+  // journey plumbing are deliberately absent). Labels are i18n'd client-side
+  // by action name, so adding an action here requires the matching
+  // dealDetail.history.events.<ACTION> keys in en.json + es.json.
+  getTimeline: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const userId = ctx.session.user.id;
+
+      const dealRoom = await ctx.prisma.dealRoom.findUnique({
+        where: { id: input.id },
+        select: { id: true, parties: { select: { userId: true } } },
+      });
+
+      if (!dealRoom) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Deal room not found" });
+      }
+      if (!dealRoom.parties.some((p) => p.userId === userId)) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "You do not have access to this deal room",
+        });
+      }
+
+      const events = await ctx.prisma.auditLog.findMany({
+        where: { dealRoomId: input.id, action: { in: [...TIMELINE_ACTIONS] } },
+        orderBy: { createdAt: "asc" },
+        take: 200,
+        select: {
+          id: true,
+          action: true,
+          createdAt: true,
+          user: { select: { name: true, email: true } },
+        },
+      });
+
+      return events.map((e) => ({
+        id: e.id,
+        action: e.action,
+        at: e.createdAt,
+        actor: e.user?.name ?? e.user?.email ?? null,
+      }));
     }),
 
   // Create a new deal room
