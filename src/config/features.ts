@@ -92,6 +92,17 @@ export const features = {
    */
   skillInstaller: !stripeConfigured,
   /**
+   * Local-credentials auth — the self-host posture signal.
+   *
+   * True on sovereign/suite installs (the published image bakes
+   * `NEXT_PUBLIC_LOCAL_AUTH_ENABLED=true`), false on hosted. Public-prefixed
+   * so it inlines into the browser bundle and both lanes agree. Beyond auth
+   * itself, this drives the solo-first experience: with no external mailer
+   * there is no counterparty invite, so deal creation defaults to SOLO
+   * wherever the skill supports it.
+   */
+  localAuth: process.env.NEXT_PUBLIC_LOCAL_AUTH_ENABLED === "true",
+  /**
    * Embedded AI assists (capability visibility only). The real switch is the
    * install-level AI posture (AiSettings singleton, platform-admin set,
    * default off = zero AI calls). Set NEXT_PUBLIC_AI_ASSIST_ENABLED=false to

@@ -8,6 +8,7 @@ import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 import { useTranslations, useLocale } from "next-intl";
 import { formatPrice } from "@/lib/currency";
+import { features } from "@/config/features";
 import {
   FileText,
   Shield,
@@ -99,7 +100,7 @@ type DealMode = "NEGOTIATION" | "SOLO";
 // Self-hosted builds have no counterparty-invite path (offline, no email), so the deal
 // flow defaults to solo "configure and download" and hides the negotiate-with-counterparty
 // option. Hosted keeps both.
-const IS_SELF_HOST = process.env.NEXT_PUBLIC_LOCAL_AUTH_ENABLED === "true";
+const IS_SELF_HOST = features.localAuth;
 
 // Group templates by family for display
 interface TemplateFamily {

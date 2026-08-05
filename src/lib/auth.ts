@@ -48,7 +48,7 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
 // (NEXT_PUBLIC_LOCAL_AUTH_ENABLED=true): email-only find-or-create, no
 // external OAuth or mailer. Only safe behind the firm's own network —
 // never enable on an internet-facing instance.
-if (process.env.NEXT_PUBLIC_LOCAL_AUTH_ENABLED === "true") {
+if (features.localAuth) {
   providers.push(
     CredentialsProvider({
       id: "local",

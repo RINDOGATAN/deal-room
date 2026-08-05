@@ -17,7 +17,7 @@ const TESTER_MODE_ON = process.env.NEXT_PUBLIC_TESTER_MODE === "true";
 // Sovereign/self-hosted posture: local credentials login replaces the
 // cloud sign-in options (magic link / Google). Baked in at build time;
 // cloud builds leave the var unset, so nothing changes there.
-const LOCAL_AUTH_ON = process.env.NEXT_PUBLIC_LOCAL_AUTH_ENABLED === "true";
+const LOCAL_AUTH_ON = features.localAuth;
 
 const TESTER_PERSONAS: Array<{
   email: (typeof TESTER_EMAILS)[number];

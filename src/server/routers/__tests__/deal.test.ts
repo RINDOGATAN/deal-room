@@ -342,12 +342,51 @@ describe("deal.create", () => {
     expect(data.clauses.create).toHaveLength(2);
     expect(data.soloFillRole).toBeNull(); // only DPAs persist a fill role
     expect(data.status).toBe("DRAFT");
+    // Hosted posture (localAuth off in the features mock): an omitted
+    // dealMode means two-party negotiation.
+    expect(data.dealMode).toBe("NEGOTIATION");
 
     expect(mocks.prisma.auditLog.create).toHaveBeenCalledWith(
       expect.objectContaining({
         data: expect.objectContaining({ action: "DEAL_ROOM_CREATED" }),
       }),
     );
+  });
+});
+
+// --- Self-host posture: omitted dealMode defaults to SOLO ------------------------
+
+describe("deal.create under the self-host (local-auth) posture", () => {
+  it("defaults an omitted dealMode to SOLO", async () => {
+    // The dealMode default is baked into the input schema at module load, so
+    // the router must be re-imported under a localAuth features mock. The
+    // other module mocks re-apply on re-import and share the same mock fns.
+    vi.resetModules();
+    vi.doMock("@/config/features", () => ({
+      features: { allSkillsFree: true, localAuth: true },
+    }));
+    const { dealRouter: selfHostRouter } = await import("@/server/routers/deal");
+
+    mocks.prisma.contractTemplate.findUnique.mockResolvedValue(freeTemplate);
+    mocks.prisma.dealRoom.create.mockResolvedValue({
+      id: "deal-solo",
+      parties: [{ id: "p-alice" }],
+      clauses: [],
+    });
+
+    const ctx = createInnerTRPCContext({
+      session: alice,
+      adminSession: null,
+      supervisorSession: null,
+      getCookie: () => undefined,
+    });
+    await selfHostRouter.createCaller(ctx).create(validCreateInput);
+
+    const data = mocks.prisma.dealRoom.create.mock.calls[0][0].data;
+    expect(data.dealMode).toBe("SOLO");
+
+    vi.doUnmock("@/config/features");
+    vi.resetModules();
   });
 });
 

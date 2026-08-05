@@ -299,7 +299,11 @@ export const dealRouter = createTRPCRouter({
         contractType: z.string(),
         governingLaw: z.enum(["CALIFORNIA", "NEW_YORK", "ENGLAND_WALES", "SPAIN"]),
         contractLanguage: z.enum(["en", "es"]).default("en"),
-        dealMode: z.enum(["NEGOTIATION", "SOLO"]).default("NEGOTIATION"),
+        // Self-host (local auth) has no counterparty invite, so an omitted
+        // mode means SOLO there; hosted keeps the two-party default.
+        dealMode: z
+          .enum(["NEGOTIATION", "SOLO"])
+          .default(features.localAuth ? "SOLO" : "NEGOTIATION"),
         initiatorCompany: z.string().optional(),
         parameters: z.record(z.string(), z.string()).optional(),
         // Express setup: apply a skill-authored preset (template.presets) so

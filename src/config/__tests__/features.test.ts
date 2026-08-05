@@ -28,6 +28,7 @@ const ENV_KEYS = [
   "NEXT_PUBLIC_STRIPE_ENABLED",
   "FREE_TRIAL_ALL_SKILLS",
   "NEXT_PUBLIC_FREE_TRIAL_ALL_SKILLS",
+  "NEXT_PUBLIC_LOCAL_AUTH_ENABLED",
 ] as const;
 
 const ORIGINAL: Record<string, string | undefined> = Object.fromEntries(
@@ -143,6 +144,22 @@ describe("features.promoBanner", () => {
     const { features } = await import("@/config/features");
     expect(features.allSkillsFree).toBe(true);
     expect(features.promoBanner).toBe(false);
+  });
+});
+
+describe("features.localAuth", () => {
+  it("is off by default — hosted deployments never enable local credentials", async () => {
+    setEnv({});
+    vi.resetModules();
+    const { features } = await import("@/config/features");
+    expect(features.localAuth).toBe(false);
+  });
+
+  it("turns on with the baked self-host env var (drives the solo-first flow)", async () => {
+    setEnv({ NEXT_PUBLIC_LOCAL_AUTH_ENABLED: "true" });
+    vi.resetModules();
+    const { features } = await import("@/config/features");
+    expect(features.localAuth).toBe(true);
   });
 });
 
