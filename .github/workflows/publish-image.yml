@@ -60,9 +60,9 @@ jobs:
           p="${{ matrix.platform }}"
           echo "pair=${p//\//-}" >> "$GITHUB_OUTPUT"
       # The runner image is a minimal standalone server with no Prisma CLI, so
-      # migrations run from a companion "migrator" image (the builder stage,
-      # which carries the tooling + migrate.sh + the migrations history). Both
-      # builds share build-args so the builder stage layer-caches identically.
+      # migrations run from a companion "migrator" image (a dedicated slim
+      # stage: prisma CLI + generated client + tsx + migrations + seeds —
+      # ~300 MB instead of the old 1.8 GB builder stage).
       - id: build-app
         uses: docker/build-push-action@v6
         with:
@@ -81,7 +81,7 @@ jobs:
         with:
           context: .
           file: deploy/sovereign/Dockerfile
-          target: builder
+          target: migrator
           platforms: ${{ matrix.platform }}
           build-args: |
             NODE_IMAGE=node:22-alpine

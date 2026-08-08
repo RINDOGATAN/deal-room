@@ -2,8 +2,9 @@
 # ============================================================================
 # Dealroom — sovereign image (deploy/sovereign/docker-compose.yml).
 # Multi-stage: deps → builder (prisma generate + standalone next build) →
-# runner (minimal). The `builder` stage doubles as the one-shot migrator
-# (it has the prisma CLI, tsx, the migrations and the seed).
+# runner (minimal app) + migrator (minimal one-shot migrate/seed image —
+# prisma CLI, generated client, tsx, migrations, seeds and skills only; NOT
+# the app build, so `suite.sh update` re-downloads MBs, not GBs).
 # The app code is UNCHANGED from cloud — only env differs.
 # ============================================================================
 
@@ -63,9 +64,48 @@ ENV NEXT_PUBLIC_LOCAL_AUTH_ENABLED=$NEXT_PUBLIC_LOCAL_AUTH_ENABLED \
 # prisma generate needs no live DB; give next build a placeholder so nothing
 # dials out during static generation. (The repo's `npm run build` also runs
 # `prisma migrate deploy` — that belongs to the migrator service, not here.)
+# Separate RUN steps: a failed/changed app build never invalidates or gates
+# the generated Prisma client layer.
 ENV DATABASE_URL=postgresql://build:build@localhost:5432/build \
     DATABASE_URL_UNPOOLED=postgresql://build:build@localhost:5432/build
-RUN npx prisma generate && npx next build
+RUN npx prisma generate
+RUN npx next build
+
+# ---- migrator: minimal one-shot migrate/seed image --------------------------
+# Published as ghcr.io/rindogatan/deal-room-migrator. Contains ONLY what
+# deploy/sovereign/migrate.sh needs: the prisma CLI + generated client (npx
+# prisma db push / migrate resolve / migrate deploy), tsx (runs prisma/seed.ts
+# and seed-marketplace.ts via `npm run db:seed*`), the prisma/ directory
+# (schema + append-only migrations + seeds + hosted-skills + catalog), and
+# skills/ (seed.ts scans ../skills relative to prisma/). Layers are ordered
+# most-stable-first so a typical release re-downloads only the small
+# migrations/seed layers, not the toolchain.
+FROM ${NODE_IMAGE} AS migrator
+RUN apk add --no-cache libc6-compat openssl
+WORKDIR /app
+# 1. Toolchain, pinned to the versions the lockfile resolves — installed
+#    explicitly instead of copying the app's full node_modules (dev deps and
+#    all). A scratch package.json keeps npm from installing the app's tree;
+#    --ignore-scripts skips @prisma/client's postinstall generate (we generate
+#    against the real schema in the next layer).
+COPY package-lock.json /tmp/package-lock.json
+RUN echo '{}' > package.json && \
+    v() { node -p "require('/tmp/package-lock.json').packages['node_modules/$1'].version"; } && \
+    npm install --no-save --ignore-scripts --no-audit --no-fund \
+      "prisma@$(v prisma)" "@prisma/client@$(v @prisma/client)" "tsx@$(v tsx)" && \
+    rm -rf package.json /tmp/package-lock.json /root/.npm /tmp/node-compile-cache
+# 2. Generated client — changes only when the schema changes. Engine caches
+#    are removed in the same RUN so they never fatten the layer.
+COPY prisma/schema.prisma ./prisma/schema.prisma
+RUN npx prisma generate && rm -rf /root/.cache /tmp/node-compile-cache
+# 3. The churn layers: migrations, seeds, skills, the migrate script, and the
+#    real package.json (migrate.sh calls `npm run db:seed*`). Kept last and
+#    small. The kit compose runs this image with working_dir /app and
+#    entrypoint `sh deploy/sovereign/migrate.sh` — paths must not move.
+COPY package.json ./package.json
+COPY prisma ./prisma
+COPY skills ./skills
+COPY deploy/sovereign/migrate.sh ./deploy/sovereign/migrate.sh
 
 # ---- runner: minimal standalone runtime -------------------------------------
 FROM ${NODE_IMAGE} AS runner
