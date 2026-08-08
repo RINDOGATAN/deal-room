@@ -59,6 +59,30 @@ export async function seedMarketplaceStubs(prisma: PrismaClient): Promise<void> 
   const en = (v?: Record<string, string>) =>
     v?.en ?? v?.es ?? Object.values(v ?? {})[0] ?? null;
 
+  // Prune stubs whose skill left the Dealroom catalog (e.g. dpia-companion
+  // and vendor-risk, re-homed to DPO Central on 2026-08-08). Only ever
+  // touches catalog-only rows — real installs carry a content hash, not
+  // "stub:" — and only templates no deal ever referenced (a zero-clause stub
+  // can never open a wizard, so that is all of them in practice).
+  const catalogIds = catalog.map((s) => s.skillId);
+  const strays = await prisma.skillPackage.findMany({
+    where: { packageHash: { startsWith: "stub:" }, skillId: { notIn: catalogIds } },
+    include: { contractTemplate: { include: { _count: { select: { dealRooms: true } } } } },
+  });
+  let pruned = 0;
+  for (const stray of strays) {
+    if (stray.contractTemplate && stray.contractTemplate._count.dealRooms === 0) {
+      await prisma.contractTemplate.delete({ where: { id: stray.contractTemplate.id } });
+    }
+    if (!stray.contractTemplate || stray.contractTemplate._count.dealRooms === 0) {
+      await prisma.skillPackage.delete({ where: { id: stray.id } });
+      pruned++;
+    }
+  }
+  if (pruned > 0) {
+    console.log(`  Marketplace stubs: pruned ${pruned} no-longer-catalogued stub(s)`);
+  }
+
   let created = 0;
   let linked = 0;
   for (const skill of catalog) {

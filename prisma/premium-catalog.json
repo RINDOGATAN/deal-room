@@ -23,16 +23,15 @@
       "es"
     ],
     "clauseCount": 8,
-    "version": "1.1.0",
-    "author": "NEL Law",
+    "version": "1.1.2",
+    "author": "Sergio Maldonado",
     "templateFamily": "",
     "nativeJurisdiction": "SPAIN",
     "format": "dealroom-clauses",
     "compat": [
       "TODO.LAW Suite",
       "LQ.AI"
-    ],
-    "license": "Apache-2.0"
+    ]
   },
   {
     "skillId": "com.nel.skills.acta-junta",
@@ -58,16 +57,15 @@
       "es"
     ],
     "clauseCount": 8,
-    "version": "1.0.1",
-    "author": "NEL Law",
+    "version": "1.0.2",
+    "author": "Sergio Maldonado",
     "templateFamily": "",
     "nativeJurisdiction": "SPAIN",
     "format": "dealroom-clauses",
     "compat": [
       "TODO.LAW Suite",
       "LQ.AI"
-    ],
-    "license": "Apache-2.0"
+    ]
   },
   {
     "skillId": "com.nel.skills.advertising-io",
@@ -97,15 +95,14 @@
     ],
     "clauseCount": 12,
     "version": "1.1.0",
-    "author": "NEL Law",
+    "author": "Sergio Maldonado",
     "templateFamily": "ADVERTISING_IO",
     "nativeJurisdiction": "CALIFORNIA",
     "format": "dealroom-clauses",
     "compat": [
       "TODO.LAW Suite",
       "LQ.AI"
-    ],
-    "license": "Apache-2.0"
+    ]
   },
   {
     "skillId": "com.nel.skills.advisory",
@@ -135,15 +132,14 @@
     ],
     "clauseCount": 10,
     "version": "1.1.0",
-    "author": "NEL Law",
+    "author": "Sergio Maldonado",
     "templateFamily": "ADVISORY",
     "nativeJurisdiction": "CALIFORNIA",
     "format": "dealroom-clauses",
     "compat": [
       "TODO.LAW Suite",
       "LQ.AI"
-    ],
-    "license": "Apache-2.0"
+    ]
   },
   {
     "skillId": "com.nel.skills.affiliate-program",
@@ -173,15 +169,48 @@
     ],
     "clauseCount": 11,
     "version": "1.0.1",
-    "author": "NEL Law",
+    "author": "Sergio Maldonado",
     "templateFamily": "AFFILIATE_PROGRAM",
     "nativeJurisdiction": "CALIFORNIA",
     "format": "dealroom-clauses",
     "compat": [
       "TODO.LAW Suite",
       "LQ.AI"
+    ]
+  },
+  {
+    "skillId": "com.nel.skills.baa-negotiator",
+    "slug": "baa-negotiator",
+    "displayName": {
+      "en": "HIPAA BAA Negotiator",
+      "es": "Negociador de BAA (HIPAA)"
+    },
+    "description": {
+      "en": "Two-party negotiation companion for HIPAA Business Associate Agreements under 45 CFR Parts 160 and 164: sixteen trade-off cards explaining every negotiable point to both sides with the regulatory floor marked, plain-language favor indicators on every rung, an attested springing no-PHI-by-design base template, an instrument screen asking whether a BAA is even the right instrument, a GDPR-rider exposure check, and the official HHS sample provisions mapped card by card.",
+      "es": "Asistente de negociación bilateral para Acuerdos de Socio Comercial (BAA) de la HIPAA conforme a 45 CFR partes 160 y 164: dieciséis fichas de negociación que explican cada punto negociable a las dos partes con el mínimo regulatorio señalado, indicadores en lenguaje llano de a quién favorece cada opción, una plantilla base atestada de activación condicionada (sin PHI por diseño), un filtro previo que valida si el BAA es siquiera el instrumento adecuado, una comprobación de exposición al RGPD y las cláusulas modelo oficiales del HHS asignadas ficha a ficha."
+    },
+    "category": {
+      "en": "Privacy & Data Protection",
+      "es": "Privacidad y Protección de Datos"
+    },
+    "application": "Dealroom",
+    "contractType": "BAA_NEGOTIATOR",
+    "jurisdictions": [
+      "CALIFORNIA"
     ],
-    "license": "Apache-2.0"
+    "languages": [
+      "en"
+    ],
+    "clauseCount": 7,
+    "version": "1.2.0",
+    "author": "Sergio Maldonado",
+    "templateFamily": "",
+    "nativeJurisdiction": "",
+    "format": "dealroom-clauses",
+    "compat": [
+      "TODO.LAW Suite",
+      "LQ.AI"
+    ]
   },
   {
     "skillId": "com.nel.skills.cesion-pi",
@@ -208,16 +237,15 @@
       "en"
     ],
     "clauseCount": 8,
-    "version": "1.0.1",
-    "author": "NEL Law",
+    "version": "1.0.2",
+    "author": "Sergio Maldonado",
     "templateFamily": "IP_ASSIGNMENT",
     "nativeJurisdiction": "SPAIN",
     "format": "dealroom-clauses",
     "compat": [
       "TODO.LAW Suite",
       "LQ.AI"
-    ],
-    "license": "Apache-2.0"
+    ]
   },
   {
     "skillId": "com.nel.skills.consulting",
@@ -245,16 +273,15 @@
       "es"
     ],
     "clauseCount": 10,
-    "version": "1.1.0",
-    "author": "NEL Law",
+    "version": "1.1.1",
+    "author": "Sergio Maldonado",
     "templateFamily": "CONSULTING",
     "nativeJurisdiction": "CALIFORNIA",
     "format": "dealroom-clauses",
     "compat": [
       "TODO.LAW Suite",
       "LQ.AI"
-    ],
-    "license": "Apache-2.0"
+    ]
   },
   {
     "skillId": "com.nel.skills.contrato-laboral",
@@ -282,15 +309,14 @@
     ],
     "clauseCount": 11,
     "version": "1.1.0",
-    "author": "NEL Law",
+    "author": "Sergio Maldonado",
     "templateFamily": "EMPLOYMENT",
     "nativeJurisdiction": "SPAIN",
     "format": "dealroom-clauses",
     "compat": [
       "TODO.LAW Suite",
       "LQ.AI"
-    ],
-    "license": "Apache-2.0"
+    ]
   },
   {
     "skillId": "com.nel.skills.contrato-servicios",
@@ -318,15 +344,14 @@
     ],
     "clauseCount": 10,
     "version": "1.1.0",
-    "author": "NEL Law",
+    "author": "Sergio Maldonado",
     "templateFamily": "CONSULTING",
     "nativeJurisdiction": "SPAIN",
     "format": "dealroom-clauses",
     "compat": [
       "TODO.LAW Suite",
       "LQ.AI"
-    ],
-    "license": "Apache-2.0"
+    ]
   },
   {
     "skillId": "com.nel.skills.convertible-note",
@@ -355,16 +380,15 @@
       "es"
     ],
     "clauseCount": 11,
-    "version": "1.1.0",
-    "author": "NEL Law",
+    "version": "1.1.1",
+    "author": "Sergio Maldonado",
     "templateFamily": "CONVERTIBLE_NOTE",
     "nativeJurisdiction": "CALIFORNIA",
     "format": "dealroom-clauses",
     "compat": [
       "TODO.LAW Suite",
       "LQ.AI"
-    ],
-    "license": "Apache-2.0"
+    ]
   },
   {
     "skillId": "com.nel.skills.data-licensing",
@@ -374,8 +398,8 @@
       "es": "Acuerdo de Licencia de Datos"
     },
     "description": {
-      "en": "Data licensing agreement covering dataset scope, permitted uses, privacy compliance, quality SLAs, audit rights, and retention obligations between a data provider or licensor and a data licensee or buyer for audience segments, analytics, and adtech data partnerships",
-      "es": "Acuerdo de licencia de datos que regula el alcance de los conjuntos de datos, usos permitidos, cumplimiento de privacidad, SLA de calidad, derechos de auditoría y obligaciones de retención entre un/a proveedor/a o licenciante de datos y un/a licenciatario/a o comprador/a de datos para segmentos de audiencia, analítica y alianzas de datos en adtech"
+      "en": "Data licensing agreement covering dataset scope, permitted uses (including AI/model training), privacy compliance with CCPA sale/share and California Delete Act (DROP) machinery, EU Data Act B2B data terms, quality SLAs, audit rights, retention obligations, and current cross-border transfer mechanisms (EU SCCs, IDTA/UK Addendum, EU-US DPF) between a data provider or licensor and a data licensee or buyer for audience segments, analytics, and adtech data partnerships",
+      "es": "Acuerdo de licencia de datos que regula el alcance de los conjuntos de datos, usos permitidos (incluido el entrenamiento de modelos de IA), cumplimiento de privacidad con la mecánica de venta/compartición de la CCPA y de la Delete Act de California (DROP), términos de datos B2B del Reglamento de Datos de la UE, SLA de calidad, derechos de auditoría, obligaciones de retención y mecanismos vigentes de transferencia transfronteriza (CCT de la UE, IDTA/Addendum del RU, MPD UE-EE. UU.) entre un/a proveedor/a o licenciante de datos y un/a licenciatario/a o comprador/a de datos para segmentos de audiencia, analítica y alianzas de datos en adtech"
     },
     "category": {
       "en": "Data",
@@ -392,53 +416,16 @@
       "en",
       "es"
     ],
-    "clauseCount": 11,
-    "version": "1.0.1",
-    "author": "NEL Law",
+    "clauseCount": 12,
+    "version": "1.1.1",
+    "author": "Sergio Maldonado",
     "templateFamily": "DATA_LICENSING",
     "nativeJurisdiction": "CALIFORNIA",
     "format": "dealroom-clauses",
     "compat": [
       "TODO.LAW Suite",
       "LQ.AI"
-    ],
-    "license": "Apache-2.0"
-  },
-  {
-    "skillId": "com.nel.skills.dpia-companion",
-    "slug": "dpia-companion",
-    "displayName": {
-      "en": "DPIA Companion"
-    },
-    "description": {
-      "en": ""
-    },
-    "category": {
-      "en": "Other",
-      "es": "Otros"
-    },
-    "application": "Dealroom",
-    "contractType": "DPIA_COMPANION",
-    "jurisdictions": [
-      "SPAIN",
-      "CALIFORNIA",
-      "ENGLAND_WALES"
-    ],
-    "languages": [
-      "en",
-      "es"
-    ],
-    "clauseCount": null,
-    "version": "1.0.0",
-    "author": "NEL Law",
-    "templateFamily": "",
-    "nativeJurisdiction": "",
-    "format": "dealroom-clauses",
-    "compat": [
-      "TODO.LAW Suite",
-      "LQ.AI"
-    ],
-    "license": "proprietary"
+    ]
   },
   {
     "skillId": "com.nel.skills.employment",
@@ -466,16 +453,15 @@
       "es"
     ],
     "clauseCount": 11,
-    "version": "1.1.0",
-    "author": "NEL Law",
+    "version": "1.1.1",
+    "author": "Sergio Maldonado",
     "templateFamily": "EMPLOYMENT",
     "nativeJurisdiction": "CALIFORNIA",
     "format": "dealroom-clauses",
     "compat": [
       "TODO.LAW Suite",
       "LQ.AI"
-    ],
-    "license": "Apache-2.0"
+    ]
   },
   {
     "skillId": "com.nel.skills.equity-incentive",
@@ -504,16 +490,15 @@
       "es"
     ],
     "clauseCount": 10,
-    "version": "1.1.0",
-    "author": "NEL Law",
+    "version": "1.1.1",
+    "author": "Sergio Maldonado",
     "templateFamily": "EQUITY_INCENTIVE",
     "nativeJurisdiction": "CALIFORNIA",
     "format": "dealroom-clauses",
     "compat": [
       "TODO.LAW Suite",
       "LQ.AI"
-    ],
-    "license": "Apache-2.0"
+    ]
   },
   {
     "skillId": "com.nel.skills.founders",
@@ -543,15 +528,14 @@
     ],
     "clauseCount": 10,
     "version": "1.1.0",
-    "author": "NEL Law",
+    "author": "Sergio Maldonado",
     "templateFamily": "FOUNDERS",
     "nativeJurisdiction": "CALIFORNIA",
     "format": "dealroom-clauses",
     "compat": [
       "TODO.LAW Suite",
       "LQ.AI"
-    ],
-    "license": "Apache-2.0"
+    ]
   },
   {
     "skillId": "com.nel.skills.influencer-marketing",
@@ -581,15 +565,14 @@
     ],
     "clauseCount": 12,
     "version": "1.1.0",
-    "author": "NEL Law",
+    "author": "Sergio Maldonado",
     "templateFamily": "INFLUENCER_MARKETING",
     "nativeJurisdiction": "CALIFORNIA",
     "format": "dealroom-clauses",
     "compat": [
       "TODO.LAW Suite",
       "LQ.AI"
-    ],
-    "license": "Apache-2.0"
+    ]
   },
   {
     "skillId": "com.nel.skills.ip-assignment",
@@ -610,23 +593,23 @@
     "contractType": "IP_ASSIGNMENT",
     "jurisdictions": [
       "CALIFORNIA",
-      "ENGLAND_WALES"
+      "ENGLAND_WALES",
+      "SPAIN"
     ],
     "languages": [
       "en",
       "es"
     ],
     "clauseCount": 8,
-    "version": "1.0.1",
-    "author": "NEL Law",
+    "version": "1.1.1",
+    "author": "Sergio Maldonado",
     "templateFamily": "IP_ASSIGNMENT",
     "nativeJurisdiction": "CALIFORNIA",
     "format": "dealroom-clauses",
     "compat": [
       "TODO.LAW Suite",
       "LQ.AI"
-    ],
-    "license": "Apache-2.0"
+    ]
   },
   {
     "skillId": "com.nel.skills.joint-venture",
@@ -656,15 +639,14 @@
     ],
     "clauseCount": 10,
     "version": "1.1.0",
-    "author": "NEL Law",
+    "author": "Sergio Maldonado",
     "templateFamily": "JOINT_VENTURE",
     "nativeJurisdiction": "CALIFORNIA",
     "format": "dealroom-clauses",
     "compat": [
       "TODO.LAW Suite",
       "LQ.AI"
-    ],
-    "license": "Apache-2.0"
+    ]
   },
   {
     "skillId": "com.nel.skills.pacto-socios",
@@ -674,8 +656,8 @@
       "es": "Pacto de Socios"
     },
     "description": {
-      "en": "Spanish shareholders' agreement for SL companies covering equity distribution, vesting schedules, governance structure, reserved matters, anti-dilution protections, transfer restrictions (drag-along, tag-along, ROFR), profit distribution, non-compete obligations, deadlock resolution, and exit mechanisms under the Ley de Sociedades de Capital.",
-      "es": "Pacto de socios para sociedades limitadas conforme a la Ley de Sociedades de Capital que regula la distribución de capital, vesting, gobierno societario, materias reservadas, protección antidilución, restricciones a la transmisión (arrastre, acompañamiento, derecho de adquisición preferente), distribución de beneficios, no competencia, resolución de bloqueos y mecanismos de salida."
+      "en": "Spanish shareholders' agreement for SL companies covering equity distribution, vesting schedules, governance structure, voting structure and founder control (plural-vote participaciones under art. 188.1 LSC, vote syndication, non-voting participaciones), reserved matters, anti-dilution protections, transfer restrictions (drag-along, tag-along, ROFR), profit distribution, non-compete obligations, deadlock resolution, enforcement bridge (cláusula penal, call option, prestación accesoria with exclusion), term of the pacto, and exit mechanisms under the Ley de Sociedades de Capital.",
+      "es": "Pacto de socios para sociedades limitadas conforme a la Ley de Sociedades de Capital que regula la distribución de capital, vesting, gobierno societario, estructura de voto y control del fundador (participaciones de voto plural ex art. 188.1 LSC, sindicación de voto, participaciones sin voto), materias reservadas, protección antidilución, restricciones a la transmisión (arrastre, acompañamiento, derecho de adquisición preferente), distribución de beneficios, no competencia, resolución de bloqueos, refuerzo del pacto (cláusula penal, opción de compra, prestación accesoria con exclusión), duración del pacto y mecanismos de salida."
     },
     "category": {
       "en": "Corporate",
@@ -690,17 +672,16 @@
       "es",
       "en"
     ],
-    "clauseCount": 19,
-    "version": "1.1.0",
-    "author": "NEL Law",
-    "templateFamily": "FOUNDERS",
+    "clauseCount": 23,
+    "version": "1.3.0",
+    "author": "Sergio Maldonado",
+    "templateFamily": "",
     "nativeJurisdiction": "SPAIN",
     "format": "dealroom-clauses",
     "compat": [
       "TODO.LAW Suite",
       "LQ.AI"
-    ],
-    "license": "Apache-2.0"
+    ]
   },
   {
     "skillId": "com.nel.skills.phantom-shares-grant",
@@ -726,16 +707,15 @@
       "es"
     ],
     "clauseCount": 6,
-    "version": "1.1.0",
-    "author": "NEL Law",
+    "version": "1.1.1",
+    "author": "Sergio Maldonado",
     "templateFamily": "",
     "nativeJurisdiction": "SPAIN",
     "format": "dealroom-clauses",
     "compat": [
       "TODO.LAW Suite",
       "LQ.AI"
-    ],
-    "license": "Apache-2.0"
+    ]
   },
   {
     "skillId": "com.nel.skills.phantom-shares-plan",
@@ -761,16 +741,117 @@
       "es"
     ],
     "clauseCount": 10,
-    "version": "1.1.0",
-    "author": "NEL Law",
+    "version": "1.1.1",
+    "author": "Sergio Maldonado",
     "templateFamily": "",
     "nativeJurisdiction": "SPAIN",
     "format": "dealroom-clauses",
     "compat": [
       "TODO.LAW Suite",
       "LQ.AI"
+    ]
+  },
+  {
+    "skillId": "com.todolaw.skills.residential-tenancy.es",
+    "slug": "residential-tenancy-es",
+    "displayName": {
+      "es": "Contrato de Arrendamiento de Vivienda"
+    },
+    "description": {
+      "es": "Contrato de arrendamiento de vivienda habitual conforme a la Ley de Arrendamientos Urbanos (LAU)"
+    },
+    "category": {
+      "es": "Inmobiliario"
+    },
+    "application": "Dealroom",
+    "contractType": "RESIDENTIAL_TENANCY_ES",
+    "jurisdictions": [
+      "SPAIN"
     ],
-    "license": "Apache-2.0"
+    "languages": [
+      "es"
+    ],
+    "clauseCount": 7,
+    "version": "1.0",
+    "author": {
+      "name": "TODO.LAW",
+      "email": "skills@todo.law"
+    },
+    "templateFamily": "RESIDENTIAL_TENANCY",
+    "nativeJurisdiction": "SPAIN",
+    "format": "dealroom-clauses",
+    "compat": [
+      "TODO.LAW Suite",
+      "LQ.AI"
+    ]
+  },
+  {
+    "skillId": "com.todolaw.skills.residential-tenancy.gb",
+    "slug": "residential-tenancy-gb",
+    "displayName": {
+      "en": "Assured Periodic Tenancy Agreement"
+    },
+    "description": {
+      "en": "Periodic assured tenancy for residential property in England & Wales under the Housing Act 1988 as amended by the Renters' Rights Act 2025 (in force 1 May 2026). Fixed-term assured shorthold tenancies are abolished; all new tenancies are periodic from commencement."
+    },
+    "category": {
+      "en": "Property"
+    },
+    "application": "Dealroom",
+    "contractType": "RESIDENTIAL_TENANCY_GB",
+    "jurisdictions": [
+      "ENGLAND_WALES"
+    ],
+    "languages": [
+      "en"
+    ],
+    "clauseCount": 6,
+    "version": "1.0",
+    "author": {
+      "name": "TODO.LAW",
+      "email": "skills@todo.law"
+    },
+    "templateFamily": "RESIDENTIAL_TENANCY",
+    "nativeJurisdiction": "ENGLAND_WALES",
+    "format": "dealroom-clauses",
+    "compat": [
+      "TODO.LAW Suite",
+      "LQ.AI"
+    ]
+  },
+  {
+    "skillId": "com.todolaw.skills.residential-tenancy.us-ca",
+    "slug": "residential-tenancy-us",
+    "displayName": {
+      "en": "California Residential Lease Agreement"
+    },
+    "description": {
+      "en": "A standard rental agreement for California. It covers how long you rent, how much you pay, your deposit, pets, and what happens if you need to leave early."
+    },
+    "category": {
+      "en": "Property"
+    },
+    "application": "Dealroom",
+    "contractType": "RESIDENTIAL_TENANCY_US_CA",
+    "jurisdictions": [
+      "CALIFORNIA"
+    ],
+    "languages": [
+      "en"
+    ],
+    "clauseCount": 7,
+    "version": "1.0",
+    "author": {
+      "name": "TODO.LAW",
+      "email": "skills@todo.law"
+    },
+    "templateFamily": "RESIDENTIAL_TENANCY",
+    "nativeJurisdiction": "CALIFORNIA",
+    "format": "dealroom-clauses",
+    "compat": [
+      "TODO.LAW Suite",
+      "LQ.AI"
+    ]
   },
   {
     "skillId": "com.nel.skills.seed-investment",
@@ -799,16 +880,15 @@
       "es"
     ],
     "clauseCount": 13,
-    "version": "1.1.0",
-    "author": "NEL Law",
+    "version": "1.1.1",
+    "author": "Sergio Maldonado",
     "templateFamily": "SEED_INVESTMENT",
     "nativeJurisdiction": "CALIFORNIA",
     "format": "dealroom-clauses",
     "compat": [
       "TODO.LAW Suite",
       "LQ.AI"
-    ],
-    "license": "Apache-2.0"
+    ]
   },
   {
     "skillId": "com.nel.skills.shareholders",
@@ -836,16 +916,15 @@
       "es"
     ],
     "clauseCount": 13,
-    "version": "1.1.0",
-    "author": "NEL Law",
+    "version": "1.1.1",
+    "author": "Sergio Maldonado",
     "templateFamily": "SHAREHOLDERS",
     "nativeJurisdiction": "CALIFORNIA",
     "format": "dealroom-clauses",
     "compat": [
       "TODO.LAW Suite",
       "LQ.AI"
-    ],
-    "license": "Apache-2.0"
+    ]
   },
   {
     "skillId": "com.nel.skills.software-development",
@@ -874,16 +953,15 @@
       "es"
     ],
     "clauseCount": 12,
-    "version": "1.1.0",
-    "author": "NEL Law",
+    "version": "1.1.1",
+    "author": "Sergio Maldonado",
     "templateFamily": "SOFTWARE_DEVELOPMENT",
     "nativeJurisdiction": "CALIFORNIA",
     "format": "dealroom-clauses",
     "compat": [
       "TODO.LAW Suite",
       "LQ.AI"
-    ],
-    "license": "Apache-2.0"
+    ]
   },
   {
     "skillId": "com.nel.skills.technology-license",
@@ -912,16 +990,15 @@
       "es"
     ],
     "clauseCount": 11,
-    "version": "1.1.0",
-    "author": "NEL Law",
+    "version": "1.1.1",
+    "author": "Sergio Maldonado",
     "templateFamily": "TECHNOLOGY_LICENSE",
     "nativeJurisdiction": "CALIFORNIA",
     "format": "dealroom-clauses",
     "compat": [
       "TODO.LAW Suite",
       "LQ.AI"
-    ],
-    "license": "Apache-2.0"
+    ]
   },
   {
     "skillId": "com.nel.skills.term-sheet",
@@ -950,52 +1027,15 @@
       "es"
     ],
     "clauseCount": 15,
-    "version": "1.1.0",
-    "author": "NEL Law",
+    "version": "1.1.1",
+    "author": "Sergio Maldonado",
     "templateFamily": "TERM_SHEET",
     "nativeJurisdiction": "CALIFORNIA",
     "format": "dealroom-clauses",
     "compat": [
       "TODO.LAW Suite",
       "LQ.AI"
-    ],
-    "license": "Apache-2.0"
-  },
-  {
-    "skillId": "com.nel.skills.vendor-risk",
-    "slug": "vendor-risk",
-    "displayName": {
-      "en": "Vendor Privacy Risk Assessment"
-    },
-    "description": {
-      "en": ""
-    },
-    "category": {
-      "en": "Other",
-      "es": "Otros"
-    },
-    "application": "Dealroom",
-    "contractType": "VENDOR_RISK",
-    "jurisdictions": [
-      "SPAIN",
-      "CALIFORNIA",
-      "ENGLAND_WALES"
-    ],
-    "languages": [
-      "en",
-      "es"
-    ],
-    "clauseCount": null,
-    "version": "1.0.0",
-    "author": "NEL Law",
-    "templateFamily": "",
-    "nativeJurisdiction": "",
-    "format": "dealroom-clauses",
-    "compat": [
-      "TODO.LAW Suite",
-      "LQ.AI"
-    ],
-    "license": "proprietary"
+    ]
   },
   {
     "skillId": "com.nel.skills.white-label-reseller",
@@ -1025,14 +1065,13 @@
     ],
     "clauseCount": 11,
     "version": "1.0.1",
-    "author": "NEL Law",
+    "author": "Sergio Maldonado",
     "templateFamily": "WHITE_LABEL_RESELLER",
     "nativeJurisdiction": "CALIFORNIA",
     "format": "dealroom-clauses",
     "compat": [
       "TODO.LAW Suite",
       "LQ.AI"
-    ],
-    "license": "Apache-2.0"
+    ]
   }
 ]

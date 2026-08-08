@@ -9,6 +9,14 @@ history was not tracked per-release and lives only in git.
 
 ## [Unreleased]
 
+### Fixed
+- Self-host marketplace catalog snapshot regenerated from the storefront:
+  adds the residential-tenancy family and BAA Negotiator, drops
+  dpia-companion and vendor-risk (DPO Central skills that briefly rode the
+  Dealroom catalog). The stub seeder now also prunes catalog-only stubs
+  whose skill has left the catalog, so existing self-host installs clean
+  themselves up on next boot.
+
 ## [0.1.22] — 2026-08-08
 
 ### Added
