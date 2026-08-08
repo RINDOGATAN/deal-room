@@ -81,6 +81,7 @@ const TOKEN_TRANSLATIONS: Record<string, Record<string, string>> = {
   "product category": { es: "categoría de producto" },
   "governing law": { es: "ley aplicable" },
   "competent courts": { es: "tribunales competentes" },
+  territory: { es: "territorio" },
 };
 
 // ── Helpers ────────────────────────────────────────────
@@ -199,6 +200,39 @@ export function buildBoilerplateVariables(
     }
   }
   return vars;
+}
+
+/**
+ * Find declared parameters whose [token] still sits unfilled in the given
+ * clause texts — i.e. the deal never recorded a value (and the schema has no
+ * default), so the finished document would ship with a visible fill-in blank.
+ * Used by the sign page to warn before signing. Clause options are chosen
+ * after deal creation, so the creation wizard cannot catch these (e.g. the
+ * "custom governing law and courts" option selected without its two fields).
+ */
+export function findUnfilledParameterTokens(
+  clauses: Array<{ legalText: string; clauseId: string }>,
+  params: Record<string, string>,
+  schema: ParameterSchema | null | undefined,
+  lang: string = "en"
+): ParameterDefinition[] {
+  if (!schema?.parameters?.length || !clauses.length) return [];
+  const missing: ParameterDefinition[] = [];
+  for (const param of schema.parameters) {
+    const value = (params[param.id] ?? param.default ?? "").trim();
+    if (value) continue;
+    const tokens = [param.token.toLowerCase()];
+    const localized =
+      lang !== "en" ? TOKEN_TRANSLATIONS[param.token.toLowerCase()]?.[lang] : undefined;
+    if (localized) tokens.push(localized.toLowerCase());
+    const present = clauses.some(
+      (c) =>
+        (param.scope === "*" || param.scope === c.clauseId) &&
+        tokens.some((tk) => c.legalText.toLowerCase().includes(`[${tk}]`))
+    );
+    if (present) missing.push(param);
+  }
+  return missing;
 }
 
 /**

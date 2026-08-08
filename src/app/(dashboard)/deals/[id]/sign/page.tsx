@@ -3,7 +3,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 import { useParams, useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 import {
@@ -34,6 +34,11 @@ import { Input } from "@/components/ui/input";
 import { NextIntlClientProvider, useTranslations, useLocale } from "next-intl";
 import { formatDateTime } from "@/lib/date";
 import { useContractMessages } from "@/lib/use-contract-messages";
+import {
+  findUnfilledParameterTokens,
+  resolveParamString,
+  type ParameterSchema,
+} from "@/lib/parameters";
 import { roleConfigFor, type ContractRole } from "@/lib/contractRoles";
 import { AiDraftPanel } from "@/components/ai/AiDraftPanel";
 
@@ -207,6 +212,36 @@ function SigningContent({ dealId }: { dealId: string }) {
   const { data: signingRequest, isLoading: signingLoading, refetch } = trpc.signing.getRequest.useQuery({ dealRoomId: dealId });
   const { data: reviewStatus } = trpc.attorneyReview.getReviewStatus.useQuery({ dealRoomId: dealId });
   const { data: signingDetails, isLoading: detailsLoading, refetch: refetchDetails } = trpc.signing.getSigningDetails.useQuery({ dealRoomId: dealId });
+
+  // Declared-parameter [tokens] still unfilled in the agreed texts — the
+  // document would print a visible blank for each (e.g. the custom
+  // law/forum option chosen without its two free-text fields). Clause
+  // options are picked after creation, so the wizard cannot catch this.
+  const unfilledParams = useMemo(() => {
+    if (!deal) return [];
+    const schema = deal.contractTemplate?.parameterSchema as unknown as ParameterSchema | null;
+    const lang = deal.contractLanguage || "en";
+    const agreedTexts = deal.clauses
+      .filter((c) => c.status === "AGREED")
+      .map((c) => {
+        const opt =
+          c.clauseTemplate.options.find((o) => o.id === c.agreedOptionId) ??
+          c.selections[0]?.option;
+        if (!opt) return null;
+        const loc = opt.localizedContent as { legalText?: Record<string, string> } | null;
+        return {
+          legalText: loc?.legalText?.[lang] || opt.legalText,
+          clauseId: c.clauseTemplate.clauseId,
+        };
+      })
+      .filter((x): x is { legalText: string; clauseId: string } => !!x);
+    return findUnfilledParameterTokens(
+      agreedTexts,
+      (deal.parameters as Record<string, string>) || {},
+      schema,
+      lang
+    );
+  }, [deal]);
 
   // Pre-fill form from saved details or party info
   useEffect(() => {
@@ -590,6 +625,24 @@ function SigningContent({ dealId }: { dealId: string }) {
           </div>
         </div>
       </div>
+
+      {/* Unfilled fill-in blanks warning */}
+      {unfilledParams.length > 0 && (
+        <div className="card-brutal border-warning/50 bg-warning/10">
+          <div className="flex items-start gap-3">
+            <AlertCircle className="w-5 h-5 text-warning mt-0.5 flex-shrink-0" />
+            <div>
+              <p className="font-semibold text-warning">{t("unfilledBlanksTitle")}</p>
+              <p className="text-sm mt-1">{t("unfilledBlanksBody")}</p>
+              <ul className="text-sm mt-2 list-disc pl-5">
+                {unfilledParams.map((p) => (
+                  <li key={p.id}>{resolveParamString(p.label, locale)}</li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Execution Details Alert */}
       {!ownDetailsConfirmed && (

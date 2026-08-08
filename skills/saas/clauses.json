@@ -2530,6 +2530,71 @@
             "partyA": 0,
             "partyB": 0
           }
+        },
+        {
+          "id": "dispute-custom",
+          "code": "custom-law-forum",
+          "label": {
+            "en": "Custom governing law and courts (specify below)",
+            "es": "Ley aplicable y tribunales personalizados (especificar abajo)"
+          },
+          "order": 7,
+          "biasPartyA": 0,
+          "biasPartyB": 0,
+          "plainDescription": {
+            "en": "Apply the law and courts you specify in the deal details — e.g. keep an EU/UK-inspired contract under your home state's law and courts.",
+            "es": "Aplica la ley y los tribunales que especifique en los detalles del acuerdo — p. ej. mantener un contrato de inspiración europea bajo la ley y los tribunales de su propio estado."
+          },
+          "pros": {
+            "partyA": {
+              "en": [
+                "Familiar law and forum for both parties",
+                "Avoids litigating in a foreign court system"
+              ],
+              "es": [
+                "Ley y foro familiares para ambas partes",
+                "Evita litigar en un sistema judicial extranjero"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "Familiar law and forum for both parties",
+                "Predictable procedure and costs"
+              ],
+              "es": [
+                "Ley y foro familiares para ambas partes",
+                "Procedimiento y costes previsibles"
+              ]
+            }
+          },
+          "cons": {
+            "partyA": {
+              "en": [
+                "The chosen courts may be less experienced with this contract type",
+                "Requires care that the choice is valid where you operate"
+              ],
+              "es": [
+                "Los tribunales elegidos pueden tener menos experiencia con este tipo de contrato",
+                "Exige verificar que la elección sea válida donde opera"
+              ]
+            },
+            "partyB": {
+              "en": [
+                "The chosen courts may be less experienced with this contract type"
+              ],
+              "es": [
+                "Los tribunales elegidos pueden tener menos experiencia con este tipo de contrato"
+              ]
+            }
+          },
+          "legalText": {
+            "en": "This Agreement is governed by the laws of [governing law], without prejudice to any mandatory application of data protection, consumer or other laws to its subject matter. Any dispute arising out of or relating to this Agreement shall be subject to the exclusive jurisdiction of [competent courts], and each Party irrevocably submits to that jurisdiction.",
+            "es": "El presente Contrato se rige por [ley aplicable], sin perjuicio de la aplicación imperativa de las normas de protección de datos, de consumo u otras que correspondan a su objeto. Toda controversia derivada del presente Contrato o relacionada con él quedará sometida a la jurisdicción exclusiva de [tribunales competentes], a la que cada Parte se somete irrevocablemente."
+          },
+          "bias": {
+            "partyA": 0,
+            "partyB": 0
+          }
         }
       ]
     }

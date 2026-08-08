@@ -11,9 +11,10 @@
  * rendering unconditionally (every pre-existing skill).
  */
 import { describe, it, expect } from "vitest";
-import { processBoilerplate } from "./generator";
+import { processBoilerplate, buildTransferAddendaSections } from "./generator";
 import {
   buildBoilerplateVariables,
+  findUnfilledParameterTokens,
   interpolateParameters,
   type ParameterSchema,
 } from "@/lib/parameters";
@@ -180,5 +181,105 @@ describe("custom governing law/courts clause tokens", () => {
     const out = interpolateParameters(EN, {}, SCHEMA, "governing-law-jurisdiction", "en");
     expect(out).toContain("[governing law]");
     expect(out).toContain("[competent courts]");
+  });
+});
+
+describe("findUnfilledParameterTokens (sign-page blanks warning)", () => {
+  const AGREED = [
+    {
+      legalText: "Governed by the laws of [governing law]; disputes before [competent courts].",
+      clauseId: "governing-law-jurisdiction",
+    },
+    { legalText: "No tokens here.", clauseId: "data-transfer" },
+  ];
+
+  it("reports declared params whose tokens sit unfilled in agreed text", () => {
+    const missing = findUnfilledParameterTokens(AGREED, {}, SCHEMA, "en");
+    expect(missing.map((p) => p.id)).toEqual(["custom-governing-law", "custom-courts"]);
+  });
+
+  it("stays silent when values are present", () => {
+    const missing = findUnfilledParameterTokens(
+      AGREED,
+      { "custom-governing-law": "Delaware", "custom-courts": "New York" },
+      SCHEMA,
+      "en",
+    );
+    expect(missing).toEqual([]);
+  });
+
+  it("treats a schema default as a value (include-tia never flags)", () => {
+    const texts = [{ legalText: "See [transfer impact assessment].", clauseId: "x" }];
+    expect(findUnfilledParameterTokens(texts, {}, SCHEMA, "en")).toEqual([]);
+  });
+
+  it("matches the localized Spanish spelling of a declared token", () => {
+    const texts = [
+      { legalText: "Se rige por [ley aplicable].", clauseId: "governing-law-jurisdiction" },
+    ];
+    expect(findUnfilledParameterTokens(texts, {}, SCHEMA, "es").map((p) => p.id)).toEqual([
+      "custom-governing-law",
+    ]);
+  });
+
+  it("respects clause scope — tokens in unrelated clauses don't flag", () => {
+    const texts = [{ legalText: "Mentions [governing law].", clauseId: "data-transfer" }];
+    expect(findUnfilledParameterTokens(texts, {}, SCHEMA, "en")).toEqual([]);
+  });
+});
+
+describe("UK Addendum / Swiss adaptations sections (Annex III §6–7)", () => {
+  it("defaults to incorporating both when the deal recorded nothing", () => {
+    const out = buildTransferAddendaSections({}, "en");
+    expect(out).toContain("6. UNITED KINGDOM TRANSFERS");
+    expect(out).toContain("incorporate by reference the International Data Transfer Addendum");
+    expect(out).toContain("7. SWISS TRANSFERS");
+    expect(out).toContain("FDPIC");
+  });
+
+  it("UK declined: falls back to the execute-separately notice", () => {
+    const out = buildTransferAddendaSections({ "include-uk-addendum": "no" }, "en");
+    expect(out).toContain("execute separately");
+    expect(out).not.toContain("Table 1");
+  });
+
+  it("Swiss declined: §7 is omitted entirely", () => {
+    const out = buildTransferAddendaSections({ "include-swiss-adaptations": "no" }, "en");
+    expect(out).not.toContain("SWISS");
+    expect(out).toContain("6. UNITED KINGDOM TRANSFERS");
+  });
+
+  it("Spanish rendering carries both sections", () => {
+    const out = buildTransferAddendaSections({}, "es");
+    expect(out).toContain("6. TRANSFERENCIAS DEL REINO UNIDO");
+    expect(out).toContain("UK Addendum");
+    expect(out).toContain("7. TRANSFERENCIAS SUIZAS");
+    expect(out).toContain("PFPDT");
+  });
+
+  it("interpolates into an annex without leaving the placeholder behind", () => {
+    const bp = processBoilerplate(
+      {
+        contractTitle: "DPA",
+        preamble: "P.",
+        signatureBlock: "S.",
+        annexes: [
+          {
+            title: "Annex III",
+            showIf: [{ variable: "processorEstablishment", in: ["US"] }],
+            text: "5. PRECEDENCE\nText.\n\n{transferAddendaSections}",
+          },
+        ],
+      },
+      "SPAIN",
+      {
+        processorEstablishment: "US",
+        transferAddendaSections: buildTransferAddendaSections({}, "en"),
+      },
+      "en",
+    );
+    const annex = bp?.annexes?.[0];
+    expect(annex?.text).not.toContain("{transferAddendaSections}");
+    expect(annex?.text).toContain("7. SWISS TRANSFERS");
   });
 });

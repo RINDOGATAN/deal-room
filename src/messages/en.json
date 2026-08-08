@@ -558,6 +558,8 @@
     "eSignature": "E-Signature",
     "notReadyForSigning": "Not Ready for Signing",
     "allClausesMustBeAgreed": "All clauses must be agreed upon by both parties before the contract can be signed.",
+    "unfilledBlanksTitle": "This document contains unfilled blanks",
+    "unfilledBlanksBody": "The agreed terms reference details that were never filled in, so the document will show a blank where each belongs. You can still sign and complete them by hand, or recreate the deal with these fields filled in:",
     "returnToReview": "Return to Review",
     "contractSummary": "Contract Summary",
     "partyA": "the initiator",

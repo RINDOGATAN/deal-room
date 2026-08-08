@@ -59,6 +59,7 @@ const SYSTEM_BOILERPLATE_VARS = new Set([
   "dpfStatement",
   "tiaSafeguardsList",
   "tiaConclusion",
+  "transferAddendaSections",
 ]);
 
 // Superset of the GoverningLaw enum: skill tags may be more specific (e.g.
@@ -408,8 +409,12 @@ function listSkills(dir) {
       if (entry.startsWith("_") || entry.startsWith(".")) return false;
       const full = join(dir, entry);
       if (!statSync(full).isDirectory()) return false;
-      // Heuristic: a skill dir contains at least one of the required files.
-      return REQUIRED_FILES.some((f) => existsSync(join(full, f)));
+      // A skill dir is one the seeder would load: prisma/seed.ts skips any
+      // dir without clauses.json, so the guard scopes the same way. Catalog
+      // /document-only skills (metadata + parameters, no clauses — e.g.
+      // legalskills' dpia-companion) are storefront data, not seedable
+      // negotiation templates, and must not be flagged here.
+      return existsSync(join(full, "clauses.json"));
     })
     .sort();
 }

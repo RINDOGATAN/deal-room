@@ -559,6 +559,8 @@
     "eSignature": "Firma Electrónica",
     "notReadyForSigning": "Aún No Se Puede Firmar",
     "allClausesMustBeAgreed": "Todas las cláusulas deben ser acordadas por ambas partes antes de poder firmar el contrato.",
+    "unfilledBlanksTitle": "Este documento contiene espacios sin rellenar",
+    "unfilledBlanksBody": "Los términos acordados hacen referencia a datos que no se llegaron a rellenar, por lo que el documento mostrará un espacio en blanco donde corresponda. Puede firmar igualmente y completarlos a mano, o volver a crear el acuerdo con estos campos rellenados:",
     "returnToReview": "Volver a Revisión",
     "contractSummary": "Resumen del Contrato",
     "partyA": "la parte iniciadora",

@@ -191,6 +191,43 @@ function interpolateText(
 }
 
 /**
+ * Compose the closing sections of the DPA's SCC-incorporation annex
+ * ({transferAddendaSections}): §6 United Kingdom — either incorporating the
+ * ICO's International Data Transfer Addendum by reference (Part 1 tables
+ * completed by cross-reference to this DPA, Table 4 electing that either
+ * party may end it under its Section 19) or, when declined, the historical
+ * "execute separately" notice — and, when elected, §7 Swiss FADP
+ * adaptations. Both operative sections are drafted to apply only to the
+ * extent transfers subject to the UK GDPR / FADP exist, so including them
+ * in a purely EU-facing DPA is inert (the big-vendor DPA convention).
+ * Exported for unit tests.
+ */
+export function buildTransferAddendaSections(
+  dealParams: Record<string, string>,
+  language: string
+): string {
+  const isES = language === "es";
+  const ukIncorporated = (dealParams["include-uk-addendum"] || "yes") === "yes";
+  const swiss = (dealParams["include-swiss-adaptations"] || "yes") === "yes";
+
+  const uk = ukIncorporated
+    ? (isES
+        ? "6. TRANSFERENCIAS DEL REINO UNIDO\nRespecto de las transferencias de Datos Personales sujetas al RGPD del Reino Unido, las partes incorporan por referencia el Anexo de Transferencia Internacional de Datos a las Cláusulas Contractuales Tipo de la Comisión Europea, emitido por el Information Commissioner del Reino Unido al amparo del artículo 119A de la Data Protection Act 2018 (versión B1.0, en vigor desde el 21 de marzo de 2022) (el «UK Addendum»), cuya Parte 2 (Cláusulas Obligatorias) modifica en consecuencia las Cláusulas Contractuales Tipo. A los efectos de la Parte 1 del UK Addendum: la Tabla 1 (Partes) se completa con la información del preámbulo y del Anexo I de este acuerdo; la Tabla 2 (CCT, Módulos y Cláusulas seleccionadas) se remite a las Cláusulas Contractuales Tipo tal como quedan incorporadas y completadas en este Anexo; la Tabla 3 (Información de los Apéndices) se completa con los Anexos I y II de este acuerdo y los Subencargados autorizados conforme a este acuerdo; y en la Tabla 4 (terminación cuando cambie el Addendum aprobado), cualquiera de las partes podrá poner fin al UK Addendum conforme a su Sección 19. Respecto de dichas transferencias, la autoridad de control competente es el Information Commissioner del Reino Unido. Esta Sección se aplica únicamente en la medida en que existan transferencias sujetas al RGPD del Reino Unido."
+        : "6. UNITED KINGDOM TRANSFERS\nIn respect of transfers of Personal Data subject to the UK GDPR, the parties incorporate by reference the International Data Transfer Addendum to the EU Commission Standard Contractual Clauses issued by the UK Information Commissioner under section 119A of the Data Protection Act 2018 (version B1.0, in force 21 March 2022) (the \"UK Addendum\"), whose Part 2 (Mandatory Clauses) amends the Standard Contractual Clauses accordingly. For the purposes of Part 1 of the UK Addendum: Table 1 (Parties) is completed with the information in the preamble and Annex I of this DPA; Table 2 (Selected SCCs, Modules and Selected Clauses) refers to the Standard Contractual Clauses as incorporated and completed in this Annex; Table 3 (Appendix Information) is completed with Annexes I and II of this DPA and the Sub-processors authorised under this DPA; and for Table 4 (ending when the Approved Addendum changes), either party may end the UK Addendum as set out in its Section 19. In respect of such transfers, the competent supervisory authority is the UK Information Commissioner. This Section applies only to the extent transfers subject to the UK GDPR take place.")
+    : (isES
+        ? "6. TRANSFERENCIAS DEL REINO UNIDO\nLas transferencias sujetas al RGPD del Reino Unido no quedan cubiertas por este Anexo; requieren el Anexo de Transferencias Internacionales de Datos del Reino Unido (UK Addendum), que las partes suscribirán por separado cuando proceda."
+        : "6. UNITED KINGDOM TRANSFERS\nTransfers subject to the UK GDPR are not covered by this Annex; they require the UK International Data Transfer Addendum, which the parties shall execute separately where applicable.");
+
+  const ch = swiss
+    ? (isES
+        ? "\n\n7. TRANSFERENCIAS SUIZAS\nRespecto de las transferencias de Datos Personales sujetas a la Ley Federal suiza de Protección de Datos («LPD»), las Cláusulas Contractuales Tipo se aplican con las siguientes adaptaciones: (a) las referencias al RGPD se entenderán hechas, en lo que respecta a dichas transferencias, a la LPD; (b) la autoridad de control competente conforme a la Cláusula 13 es el Encargado Federal suizo de Protección de Datos y Transparencia (PFPDT); (c) las referencias a un Estado miembro de la UE no se interpretarán en el sentido de impedir que los Interesados con residencia habitual en Suiza ejerzan sus derechos en su lugar de residencia habitual, conforme a la Cláusula 18, letra c); y (d) la ley aplicable y el foro elegidos conforme a las Cláusulas 17 y 18 permanecen inalterados. Esta Sección se aplica únicamente en la medida en que existan transferencias sujetas a la LPD."
+        : "\n\n7. SWISS TRANSFERS\nIn respect of transfers of Personal Data subject to the Swiss Federal Act on Data Protection (\"FADP\"), the Standard Contractual Clauses apply with the following adaptations: (a) references to the GDPR shall, insofar as such transfers are concerned, be read as references to the FADP; (b) the competent supervisory authority under Clause 13 is the Swiss Federal Data Protection and Information Commissioner (FDPIC); (c) references to an EU Member State shall not be interpreted as preventing Data Subjects habitually resident in Switzerland from enforcing their rights in their place of habitual residence, in accordance with Clause 18(c); and (d) the governing law and forum elected under Clauses 17 and 18 remain unchanged. This Section applies only to the extent transfers subject to the FADP take place.")
+    : "";
+
+  return uk + ch;
+}
+
+/**
  * Process boilerplate data with variable interpolation.
  * Exported for unit tests (annex showIf filtering); production callers stay in this module.
  */
@@ -369,11 +406,14 @@ export async function generateContractData(
       ? `El presente Acuerdo se rige e interpreta de conformidad con la legislación de ${govLawDisplay}. `
       : `This Agreement is governed by and construed in accordance with the laws of ${govLawDisplay}. `;
   let governingLawArticle: { title: string; text: string } | undefined;
-  const pushClause = (entry: ClauseData, clauseId: string) => {
+  const pushClause = (entry: ClauseData, clauseId: string, optionCode?: string) => {
     if (clauseId === "governing-law-jurisdiction") {
       governingLawArticle = { title: entry.title, text: entry.legalText };
     } else if (clauseId === "dispute-resolution") {
-      governingLawArticle = { title: entry.title, text: govLawLead + entry.legalText };
+      // The custom law/forum option states its own free-text governing law,
+      // so the jurisdiction-derived lead sentence would contradict it.
+      const lead = optionCode === "custom-law-forum" ? "" : govLawLead;
+      governingLawArticle = { title: entry.title, text: lead + entry.legalText };
     } else {
       clauses.push(entry);
     }
@@ -424,7 +464,7 @@ export async function generateContractData(
               : selection.option.label,
             legalText,
             sectionNumber: clause.clauseTemplate.order,
-          }, clause.clauseTemplate.clauseId);
+          }, clause.clauseTemplate.clauseId, selection.option.code);
         }
       }
       continue;
@@ -454,7 +494,7 @@ export async function generateContractData(
           : agreedOption.label,
         legalText,
         sectionNumber: clause.clauseTemplate.order,
-      }, clause.clauseTemplate.clauseId);
+      }, clause.clauseTemplate.clauseId, agreedOption.code);
     }
   }
 
@@ -588,6 +628,8 @@ export async function generateContractData(
       : (isES
           ? "Las partes hacen constar que las medidas suplementarias adoptadas son de carácter contractual y organizativo. Conforme a las Recomendaciones 01/2020 del CEPD, tales medidas no bastan por sí solas para impedir el acceso de las autoridades públicas del país de destino. Las partes documentan el riesgo residual correspondiente, se comprometen a evaluar la adopción de medidas técnicas adicionales y revisarán esta evaluación al menos cada doce (12) meses, suspendiendo la transferencia si el riesgo dejara de ser aceptable."
           : "The parties record that the supplementary measures adopted are contractual and organizational in nature. In line with EDPB Recommendations 01/2020, such measures cannot by themselves prevent access by public authorities of the destination country. The parties document the corresponding residual risk, undertake to evaluate the adoption of additional technical measures, and will review this assessment at least every twelve (12) months, suspending the transfer should the risk cease to be acceptable.");
+
+    variables.transferAddendaSections = buildTransferAddendaSections(dealParams, language);
   }
 
   // Asymmetric-role contract (DPA: Controller vs Processor; BAA: Business

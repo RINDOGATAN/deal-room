@@ -18,6 +18,11 @@ const CROSS_APP_COOKIES = [
   "__Secure-dealroom.callback-url",
   "dealroom.session-token",
   "dealroom.callback-url",
+  // DPO Central self-host posture (same collision fix, its repo)
+  "__Secure-dpocentral.session-token",
+  "__Secure-dpocentral.callback-url",
+  "dpocentral.session-token",
+  "dpocentral.callback-url",
   // AI Sentinel (NextAuth v4, unique prefix)
   "__Secure-aisentinel.session-token",
   "__Secure-aisentinel.callback-url",

@@ -194,6 +194,50 @@
       }
     },
     {
+      "id": "include-uk-addendum",
+      "token": "uk addendum",
+      "scope": "*",
+      "type": "choice",
+      "required": false,
+      "default": "yes",
+      "boilerplateVariable": "includeUkAddendum",
+      "label": {
+        "en": "Incorporate the UK Addendum for UK data transfers?",
+        "es": "¿Incorporar el Anexo del Reino Unido (UK Addendum) para transferencias de datos del RU?"
+      },
+      "hint": {
+        "en": "Only relevant when the Processor is outside the EEA. Incorporates the ICO's International Data Transfer Addendum to the EU SCCs by reference, applying only to transfers subject to the UK GDPR — harmless if none exist. Choose No to state instead that the parties will execute it separately when needed.",
+        "es": "Solo relevante cuando el Encargado está fuera del EEE. Incorpora por referencia el Anexo de Transferencia Internacional de Datos de la ICO a las CCT de la UE, aplicable únicamente a transferencias sujetas al RGPD del Reino Unido — inocuo si no existen. Elija No para indicar que las partes lo suscribirán por separado cuando sea necesario."
+      },
+      "options": ["no", "yes"],
+      "optionLabels": {
+        "no": { "en": "No — execute separately if needed", "es": "No — suscribir por separado si es necesario" },
+        "yes": { "en": "Yes — incorporate by reference", "es": "Sí — incorporar por referencia" }
+      }
+    },
+    {
+      "id": "include-swiss-adaptations",
+      "token": "swiss adaptations",
+      "scope": "*",
+      "type": "choice",
+      "required": false,
+      "default": "yes",
+      "boilerplateVariable": "includeSwissAdaptations",
+      "label": {
+        "en": "Include Swiss FADP adaptations to the SCCs?",
+        "es": "¿Incluir las adaptaciones suizas (LPD) a las CCT?"
+      },
+      "hint": {
+        "en": "Only relevant when the Processor is outside the EEA. Adapts the SCCs for transfers subject to the Swiss Federal Act on Data Protection (FDPIC as supervisory authority, Swiss data subjects' rights preserved), applying only to the extent such transfers exist.",
+        "es": "Solo relevante cuando el Encargado está fuera del EEE. Adapta las CCT para transferencias sujetas a la Ley Federal suiza de Protección de Datos (el PFPDT como autoridad de control, preservando los derechos de los interesados suizos), aplicándose solo en la medida en que existan tales transferencias."
+      },
+      "options": ["no", "yes"],
+      "optionLabels": {
+        "no": { "en": "No", "es": "No" },
+        "yes": { "en": "Yes — include adaptations", "es": "Sí — incluir adaptaciones" }
+      }
+    },
+    {
       "id": "custom-governing-law",
       "token": "governing law",
       "scope": "governing-law-jurisdiction",
@@ -210,7 +254,8 @@
       "placeholder": {
         "en": "e.g. the State of Delaware and applicable United States federal law",
         "es": "p. ej. el Derecho del Estado de Delaware y el Derecho federal de los Estados Unidos aplicable"
-      }
+      },
+      "negotiable": true
     },
     {
       "id": "custom-courts",
@@ -229,7 +274,8 @@
       "placeholder": {
         "en": "e.g. the state and federal courts located in New York County, New York",
         "es": "p. ej. los tribunales estatales y federales del condado de Nueva York (Nueva York)"
-      }
+      },
+      "negotiable": true
     }
   ]
 }

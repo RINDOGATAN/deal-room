@@ -1479,7 +1479,9 @@ function ParameterField({
                   : "bg-muted/50 text-muted-foreground border-border hover:border-muted-foreground"
               }`}
             >
-              {opt}
+              {param.optionLabels?.[opt]
+                ? resolveParamString(param.optionLabels[opt], lang)
+                : opt}
             </button>
           ))}
         </div>

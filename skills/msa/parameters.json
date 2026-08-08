@@ -11,6 +11,28 @@
       "hint": { "en": "Comma-separated list of competitors the provider cannot serve during the term", "es": "Lista de competidores separada por comas a los que el proveedor no puede prestar servicios durante la vigencia" },
       "placeholder": { "en": "e.g. Competitor A, Competitor B", "es": "p. ej. Competidor A, Competidor B" },
       "negotiable": true
+    },
+    {
+      "id": "custom-governing-law",
+      "token": "governing law",
+      "scope": "dispute-resolution",
+      "type": "text",
+      "required": false,
+      "label": { "en": "Custom governing law (optional)", "es": "Ley aplicable personalizada (opcional)" },
+      "hint": { "en": "Only used if you select the \"Custom governing law and courts\" option on the Dispute resolution clause — apply the law your business knows instead of the jurisdiction default.", "es": "Solo se usa si selecciona la opción «Ley aplicable y tribunales personalizados» en la cláusula de resolución de controversias — aplique el Derecho que su empresa conoce en lugar del predeterminado de la jurisdicción." },
+      "placeholder": { "en": "e.g. the State of Delaware and applicable United States federal law", "es": "p. ej. el Derecho del Estado de Delaware y el Derecho federal de los Estados Unidos aplicable" },
+      "negotiable": true
+    },
+    {
+      "id": "custom-courts",
+      "token": "competent courts",
+      "scope": "dispute-resolution",
+      "type": "text",
+      "required": false,
+      "label": { "en": "Custom courts / forum (optional)", "es": "Tribunales o foro personalizados (opcional)" },
+      "hint": { "en": "Only used with the \"Custom governing law and courts\" option.", "es": "Solo se usa con la opción «Ley aplicable y tribunales personalizados»." },
+      "placeholder": { "en": "e.g. the state and federal courts located in New York County, New York", "es": "p. ej. los tribunales estatales y federales del condado de Nueva York (Nueva York)" },
+      "negotiable": true
     }
   ]
 }
