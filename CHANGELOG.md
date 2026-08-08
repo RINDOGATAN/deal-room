@@ -9,6 +9,8 @@ history was not tracked per-release and lives only in git.
 
 ## [Unreleased]
 
+## [0.1.23] — 2026-08-08
+
 ### Fixed
 - Self-host marketplace catalog snapshot regenerated from the storefront:
   adds the residential-tenancy family and BAA Negotiator, drops
