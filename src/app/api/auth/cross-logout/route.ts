@@ -12,6 +12,12 @@ const CROSS_APP_COOKIES = [
   "__Secure-next-auth.callback-url",
   "next-auth.session-token",
   "next-auth.callback-url",
+  // Dealroom self-host posture (unique prefix — avoids the localhost
+  // cross-app cookie collision on the suite)
+  "__Secure-dealroom.session-token",
+  "__Secure-dealroom.callback-url",
+  "dealroom.session-token",
+  "dealroom.callback-url",
   // AI Sentinel (NextAuth v4, unique prefix)
   "__Secure-aisentinel.session-token",
   "__Secure-aisentinel.callback-url",

@@ -244,6 +244,16 @@ if (process.env.E2E_CREDENTIALS_SECRET) {
   );
 }
 
+// Cookie naming: browsers scope cookies per host, NOT per port, and the
+// self-hosted suite runs all three apps on localhost with one shared
+// NEXTAUTH_SECRET. With the NextAuth default names, signing in to a sibling
+// app (DPO Central, AI Sentinel) overwrites this app's session cookie with a
+// token whose user id only exists in the sibling's database — every DB write
+// then dies on a foreign-key violation. Scope our cookies with an app prefix
+// on the local-auth posture (the convention AI Sentinel already uses). Hosted
+// keeps the default names, which the *.todo.law cross-app SSO cookie expects.
+const cookiePrefix = features.localAuth ? "dealroom." : "next-auth.";
+
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma) as NextAuthOptions["adapter"],
   providers,
@@ -253,8 +263,8 @@ export const authOptions: NextAuthOptions = {
   cookies: {
     sessionToken: {
       name: isProduction
-        ? `__Secure-next-auth.session-token`
-        : `next-auth.session-token`,
+        ? `__Secure-${cookiePrefix}session-token`
+        : `${cookiePrefix}session-token`,
       options: {
         httpOnly: true,
         sameSite: "lax",
@@ -265,8 +275,8 @@ export const authOptions: NextAuthOptions = {
     },
     callbackUrl: {
       name: isProduction
-        ? `__Secure-next-auth.callback-url`
-        : `next-auth.callback-url`,
+        ? `__Secure-${cookiePrefix}callback-url`
+        : `${cookiePrefix}callback-url`,
       options: {
         sameSite: "lax",
         path: "/",
@@ -276,8 +286,8 @@ export const authOptions: NextAuthOptions = {
     },
     csrfToken: {
       name: isProduction
-        ? `__Host-next-auth.csrf-token`
-        : `next-auth.csrf-token`,
+        ? `__Host-${cookiePrefix}csrf-token`
+        : `${cookiePrefix}csrf-token`,
       options: {
         httpOnly: true,
         sameSite: "lax",
@@ -324,6 +334,38 @@ export const authOptions: NextAuthOptions = {
           select: { role: true },
         });
         token.role = dbUser?.role ?? null;
+      }
+      // Self-host guard: a decoded token can carry a user id that does not
+      // exist in this app's database — a sibling suite app's cookie minted
+      // under the shared NEXTAUTH_SECRET before the per-app cookie prefix, or
+      // a cookie that outlived a database wipe. Re-anchor the token by email
+      // (the same find-or-create the local sign-in provider performs) so the
+      // session always maps to a real local user instead of failing every
+      // write with a foreign-key violation.
+      if (features.localAuth && token.sub && !user) {
+        const known = await prisma.user.findUnique({
+          where: { id: token.sub },
+          select: { id: true },
+        });
+        if (!known) {
+          const email = token.email?.trim().toLowerCase();
+          let localUser = email
+            ? await prisma.user.findUnique({ where: { email } })
+            : null;
+          if (!localUser && email) {
+            localUser = await prisma.user
+              .create({ data: { email, emailVerified: new Date() } })
+              .catch(() => prisma.user.findUnique({ where: { email } }));
+          }
+          if (localUser) {
+            token.sub = localUser.id;
+            token.role = localUser.role ?? null;
+          } else {
+            // No email to re-anchor with — surface as signed out rather than
+            // letting an unresolvable id reach the database layer.
+            token.sub = undefined;
+          }
+        }
       }
       return token;
     },
