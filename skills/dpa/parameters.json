@@ -134,15 +134,15 @@
       "scope": "*",
       "type": "choice",
       "required": false,
-      "default": "no",
+      "default": "yes",
       "boilerplateVariable": "includeTia",
       "label": {
         "en": "Attach a Transfer Impact Assessment (Annex IV)?",
         "es": "¿Adjuntar una Evaluación de Impacto de las Transferencias (Anexo IV)?"
       },
       "hint": {
-        "en": "Only relevant when the Processor is established outside the EEA. Documents the assessment required by Clause 14 of the Standard Contractual Clauses, following the EDPB's six-step framework.",
-        "es": "Solo relevante cuando el Encargado está establecido fuera del EEE. Documenta la evaluación exigida por la Cláusula 14 de las Cláusulas Contractuales Tipo, siguiendo el marco de seis pasos del CEPD."
+        "en": "Attached by default whenever the Processor is established outside the EEA (it is ignored otherwise): Clause 14 of the Standard Contractual Clauses requires this assessment. Choose No only if you maintain the assessment as a separate internal document.",
+        "es": "Se adjunta por defecto cuando el Encargado está establecido fuera del EEE (en otro caso se ignora): la Cláusula 14 de las Cláusulas Contractuales Tipo exige esta evaluación. Elija No solo si mantiene la evaluación como documento interno separado."
       },
       "options": ["no", "yes"],
       "optionLabels": {
@@ -191,6 +191,44 @@
         "contract-no-backdoor": { "en": "Contractual — warranty of no back doors and no bulk-access orders received", "es": "Contractual — garantía de ausencia de puertas traseras y de órdenes de acceso masivo" },
         "org-request-policy": { "en": "Organizational — documented government-request handling policy with legal review", "es": "Organizativa — política documentada de gestión de solicitudes gubernamentales con revisión jurídica" },
         "org-audits-review": { "en": "Organizational — independent audits (ISO 27001/SOC 2) and scheduled TIA reviews", "es": "Organizativa — auditorías independientes (ISO 27001/SOC 2) y revisiones periódicas de la evaluación" }
+      }
+    },
+    {
+      "id": "custom-governing-law",
+      "token": "governing law",
+      "scope": "governing-law-jurisdiction",
+      "type": "text",
+      "required": false,
+      "label": {
+        "en": "Custom governing law (optional)",
+        "es": "Ley aplicable personalizada (opcional)"
+      },
+      "hint": {
+        "en": "Only used if you select the \"Custom governing law and courts\" option on the Governing law clause. Lets you keep this DPA's GDPR/UK-inspired substance while applying the law your business knows — for example, a US company choosing its home state's law.",
+        "es": "Solo se usa si selecciona la opción «Ley aplicable y tribunales personalizados» en la cláusula de ley aplicable. Permite mantener el contenido de este acuerdo, inspirado en el RGPD, aplicando el Derecho que su empresa conoce — por ejemplo, una empresa estadounidense que elige el Derecho de su propio estado."
+      },
+      "placeholder": {
+        "en": "e.g. the State of Delaware and applicable United States federal law",
+        "es": "p. ej. el Derecho del Estado de Delaware y el Derecho federal de los Estados Unidos aplicable"
+      }
+    },
+    {
+      "id": "custom-courts",
+      "token": "competent courts",
+      "scope": "governing-law-jurisdiction",
+      "type": "text",
+      "required": false,
+      "label": {
+        "en": "Custom courts / forum (optional)",
+        "es": "Tribunales o foro personalizados (opcional)"
+      },
+      "hint": {
+        "en": "Only used with the \"Custom governing law and courts\" option. Note: if the DPA incorporates the EU Standard Contractual Clauses (Annex III), disputes under the SCCs themselves stay with the EU forum designated there — that election is mandatory under the SCCs.",
+        "es": "Solo se usa con la opción «Ley aplicable y tribunales personalizados». Nota: si el acuerdo incorpora las Cláusulas Contractuales Tipo de la UE (Anexo III), los litigios derivados de las propias CCT permanecen ante el foro de la UE allí designado — esa elección es obligatoria según las CCT."
+      },
+      "placeholder": {
+        "en": "e.g. the state and federal courts located in New York County, New York",
+        "es": "p. ej. los tribunales estatales y federales del condado de Nueva York (Nueva York)"
       }
     }
   ]

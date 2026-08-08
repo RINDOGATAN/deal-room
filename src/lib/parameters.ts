@@ -79,6 +79,8 @@ const TOKEN_TRANSLATIONS: Record<string, Record<string, string>> = {
   "prescribed disclosure text": { es: "texto de divulgación prescrito" },
   "named competitors": { es: "competidores designados" },
   "product category": { es: "categoría de producto" },
+  "governing law": { es: "ley aplicable" },
+  "competent courts": { es: "tribunales competentes" },
 };
 
 // ── Helpers ────────────────────────────────────────────
@@ -188,8 +190,12 @@ export function buildBoilerplateVariables(
   if (!schema?.parameters?.length) return vars;
 
   for (const param of schema.parameters) {
-    if (param.boilerplateVariable && params[param.id]) {
-      vars[param.boilerplateVariable] = params[param.id];
+    // Schema defaults stand in for values the deal never recorded (agent-API
+    // deals and deals created before the parameter existed), so conditional
+    // boilerplate keyed on these variables behaves the same on every path.
+    const value = params[param.id] || param.default;
+    if (param.boilerplateVariable && value) {
+      vars[param.boilerplateVariable] = value;
     }
   }
   return vars;

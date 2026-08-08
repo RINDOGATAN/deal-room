@@ -4323,6 +4323,76 @@
               "available": false
             }
           }
+        },
+        {
+          "id": "glj-custom",
+          "code": "custom",
+          "order": 8,
+          "label": {
+            "en": "Custom governing law and courts (specify below)",
+            "es": "Ley aplicable y tribunales personalizados (especificar abajo)"
+          },
+          "plainDescription": {
+            "en": "Keep this DPA's substance but apply the law and courts you specify in the deal details — e.g. a US company using a GDPR- or ICO-inspired DPA under Delaware law and New York courts.",
+            "es": "Mantiene el contenido de este acuerdo pero aplica la ley y los tribunales que especifique en los detalles del acuerdo — p. ej. una empresa estadounidense que usa un acuerdo inspirado en el RGPD con Derecho de Delaware y tribunales de Nueva York."
+          },
+          "prosPartyA": {
+            "en": [
+              "Familiar law and forum for both parties",
+              "Avoids litigating in a foreign court system",
+              "Data protection laws still apply on their own terms"
+            ],
+            "es": [
+              "Ley y foro familiares para ambas partes",
+              "Evita litigar en un sistema judicial extranjero",
+              "Las normas de protección de datos siguen aplicándose por sus propios términos"
+            ]
+          },
+          "consPartyA": {
+            "en": [
+              "The chosen courts may be less experienced with GDPR concepts",
+              "Requires care that the choice is valid where you operate"
+            ],
+            "es": [
+              "Los tribunales elegidos pueden tener menos experiencia con conceptos del RGPD",
+              "Exige verificar que la elección sea válida donde opera"
+            ]
+          },
+          "prosPartyB": {
+            "en": [
+              "Familiar law and forum for both parties",
+              "Avoids litigating in a foreign court system"
+            ],
+            "es": [
+              "Ley y foro familiares para ambas partes",
+              "Evita litigar en un sistema judicial extranjero"
+            ]
+          },
+          "consPartyB": {
+            "en": [
+              "The chosen courts may be less experienced with GDPR concepts"
+            ],
+            "es": [
+              "Los tribunales elegidos pueden tener menos experiencia con conceptos del RGPD"
+            ]
+          },
+          "legalText": {
+            "en": "This Data Processing Agreement is governed by the laws of [governing law], without prejudice to the mandatory application of the EU GDPR, the UK GDPR, the CCPA/CPRA or other data protection laws to the processing concerned, which apply to each party by their own terms. Any dispute arising out of or relating to this Agreement shall be subject to the exclusive jurisdiction of [competent courts], and each party irrevocably submits to that jurisdiction. Where the Standard Contractual Clauses are incorporated by reference under Annex III, the governing law and forum designated in that Annex for the Standard Contractual Clauses remain unaffected, as required by those Clauses.",
+            "es": "El presente Acuerdo de Encargo de Tratamiento se rige por [ley aplicable], sin perjuicio de la aplicación imperativa del RGPD de la UE, del RGPD del Reino Unido, de la CCPA/CPRA o de otras normas de protección de datos al tratamiento de que se trate, que se aplican a cada parte por sus propios términos. Cualquier controversia derivada del presente Acuerdo o relacionada con él quedará sometida a la jurisdicción exclusiva de [tribunales competentes], a la que ambas partes se someten irrevocablemente. Cuando las Cláusulas Contractuales Tipo se incorporen por referencia conforme al Anexo III, la ley aplicable y el foro designados en dicho Anexo para las Cláusulas Contractuales Tipo no se verán afectados, tal como exigen dichas Cláusulas."
+          },
+          "biasPartyA": 0,
+          "biasPartyB": 0,
+          "jurisdictionConfig": {
+            "CALIFORNIA": {
+              "available": true
+            },
+            "ENGLAND_WALES": {
+              "available": true
+            },
+            "SPAIN": {
+              "available": true
+            }
+          }
         }
       ]
     }

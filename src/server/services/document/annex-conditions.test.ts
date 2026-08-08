@@ -12,6 +12,11 @@
  */
 import { describe, it, expect } from "vitest";
 import { processBoilerplate } from "./generator";
+import {
+  buildBoilerplateVariables,
+  interpolateParameters,
+  type ParameterSchema,
+} from "@/lib/parameters";
 
 const RAW = {
   contractTitle: "DPA",
@@ -95,5 +100,85 @@ describe("annex showIf", () => {
     expect(annexIV?.text).toContain("Essentially equivalent protection ensured.");
     const annexIII = bp?.annexes?.find((a) => a.title.startsWith("Annex III"));
     expect(annexIII?.text).toContain("the United States of America");
+  });
+});
+
+const SCHEMA: ParameterSchema = {
+  version: "1.0",
+  parameters: [
+    {
+      id: "include-tia",
+      token: "transfer impact assessment",
+      scope: "*",
+      type: "choice",
+      required: false,
+      default: "yes",
+      boilerplateVariable: "includeTia",
+      label: "TIA?",
+    },
+    {
+      id: "custom-governing-law",
+      token: "governing law",
+      scope: "governing-law-jurisdiction",
+      type: "text",
+      required: false,
+      label: "Custom governing law",
+    },
+    {
+      id: "custom-courts",
+      token: "competent courts",
+      scope: "governing-law-jurisdiction",
+      type: "text",
+      required: false,
+      label: "Custom courts",
+    },
+  ],
+};
+
+describe("boilerplate variables schema defaults", () => {
+  it("falls back to the schema default when the deal never recorded the parameter", () => {
+    expect(buildBoilerplateVariables({}, SCHEMA)).toEqual({ includeTia: "yes" });
+  });
+
+  it("an explicit deal value wins over the default", () => {
+    expect(buildBoilerplateVariables({ "include-tia": "no" }, SCHEMA)).toEqual({
+      includeTia: "no",
+    });
+  });
+});
+
+describe("custom governing law/courts clause tokens", () => {
+  const EN =
+    "This Agreement is governed by the laws of [governing law]. Disputes go to [competent courts].";
+  const ES =
+    "Este Acuerdo se rige por el Derecho de [ley aplicable]. Las controversias se someten a [tribunales competentes].";
+  const params = {
+    "custom-governing-law": "the State of Delaware",
+    "custom-courts": "the courts of New York County, New York",
+  };
+
+  it("fills both tokens in English clause text, scoped to the clause", () => {
+    const out = interpolateParameters(EN, params, SCHEMA, "governing-law-jurisdiction", "en");
+    expect(out).toBe(
+      "This Agreement is governed by the laws of the State of Delaware. Disputes go to the courts of New York County, New York.",
+    );
+  });
+
+  it("fills the localised Spanish spellings via TOKEN_TRANSLATIONS", () => {
+    const out = interpolateParameters(ES, params, SCHEMA, "governing-law-jurisdiction", "es");
+    expect(out).not.toContain("[ley aplicable]");
+    expect(out).not.toContain("[tribunales competentes]");
+    expect(out).toContain("the State of Delaware");
+  });
+
+  it("does not apply the clause-scoped tokens to other clauses", () => {
+    const out = interpolateParameters(EN, params, SCHEMA, "data-transfer", "en");
+    expect(out).toContain("[governing law]");
+  });
+
+  it("leaves visible fill-in blanks when the custom option is chosen but the fields are empty", () => {
+    const out = interpolateParameters(EN, {}, SCHEMA, "governing-law-jurisdiction", "en");
+    expect(out).toContain("[governing law]");
+    expect(out).toContain("[competent courts]");
   });
 });
