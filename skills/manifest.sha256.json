@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-08-05T16:11:36.985Z",
+  "generatedAt": "2026-08-08T02:13:59.019Z",
   "skills": {
     "delaware-certificate-of-incorporation": {
       "digest": "e4c591032bc931e9ae7ba2b756c1abcbdc66bed4dc3ccd70305dcf1a8e5119b6",
@@ -12,12 +12,12 @@
       }
     },
     "dpa": {
-      "digest": "75c589906d0a3a7f60b777fe66871056d48a9f33875208f57347ba19ee996da5",
+      "digest": "a5c48de61595381fa75eda453a93f2936002451fdf4fd2e5efeaba119665e643",
       "files": {
-        "boilerplate.json": "6b2ce58adcdbf7c52c376e41aca00d97b766aae5816a59be40c5d833906efd46",
-        "clauses.json": "33dbf146afe0125f35e8f48c2f4c00f23df86f7ded05a7fba87567afa1955240",
+        "boilerplate.json": "e60b3f48d8846687e398eda97f8e27d9729614749f90c22fc4d9a3c1acc208fc",
+        "clauses.json": "8011c4d017d72e1bef7017366d40fd31c57f413cfaaa7ed37eedb32bc5dee0c8",
         "metadata.json": "8021c3f104109d9305531846cbda480b1e0b54b2e0f71266888e55c8d7ee86b1",
-        "parameters.json": "2fd2f32c1a05ca036fac9631f5949a5cbb6971e00b4caf9bc30e98a0ad0a05f8"
+        "parameters.json": "ae540e9227bb3a868f4283f0ab5b0c9c84bc4ae3cf0146193097eb69752da041"
       }
     },
     "msa": {
@@ -65,5 +65,5 @@
       }
     }
   },
-  "digest": "625eafe1f5d4341b22f6f3c12bfe57382767caa41b40d8c07505068bbd5e9b04"
+  "digest": "daf3cd46029c775ca314df24448e07420979cfc6988094e15fde7de10f4e2a68"
 }

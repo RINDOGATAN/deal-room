@@ -51,6 +51,14 @@ const SYSTEM_BOILERPLATE_VARS = new Set([
   "partyBShortName",
   "partyASignatureBlock",
   "partyBSignatureBlock",
+  // DPA international-transfer variables, derived by the generator from the
+  // processor-establishment / DPF / TIA parameters (see the transfer block in
+  // src/server/services/document/generator.ts) rather than mapped 1:1 from a
+  // single parameter's boilerplateVariable.
+  "processorEstablishmentDisplay",
+  "dpfStatement",
+  "tiaSafeguardsList",
+  "tiaConclusion",
 ]);
 
 // Superset of the GoverningLaw enum: skill tags may be more specific (e.g.

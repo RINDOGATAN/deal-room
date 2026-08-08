@@ -81,6 +81,117 @@
         "en": "e.g. Vehicle registration numbers; loyalty-card history",
         "es": "p. ej. Matrículas de vehículos; historial de tarjeta de fidelización"
       }
+    },
+    {
+      "id": "processor-establishment",
+      "token": "processor establishment",
+      "scope": "*",
+      "type": "choice",
+      "required": true,
+      "default": "EEA",
+      "boilerplateVariable": "processorEstablishment",
+      "label": {
+        "en": "Where is the Processor established?",
+        "es": "¿Dónde está establecido el Encargado?"
+      },
+      "hint": {
+        "en": "If the Processor is established outside the EEA (for example, in the United States), the agreement incorporates the EU Standard Contractual Clauses (Module Two) by reference as Annex III.",
+        "es": "Si el Encargado está establecido fuera del EEE (por ejemplo, en Estados Unidos), el acuerdo incorpora por referencia las Cláusulas Contractuales Tipo de la UE (Módulo Dos) como Anexo III."
+      },
+      "options": ["EEA", "UK", "US", "OTHER"],
+      "optionLabels": {
+        "EEA": { "en": "EEA (European Economic Area)", "es": "EEE (Espacio Económico Europeo)" },
+        "UK": { "en": "United Kingdom", "es": "Reino Unido" },
+        "US": { "en": "United States", "es": "Estados Unidos" },
+        "OTHER": { "en": "Other country outside the EEA", "es": "Otro país fuera del EEE" }
+      }
+    },
+    {
+      "id": "processor-dpf-certified",
+      "token": "dpf certification",
+      "scope": "*",
+      "type": "choice",
+      "required": false,
+      "default": "no",
+      "boilerplateVariable": "processorDpfCertified",
+      "label": {
+        "en": "Does the Processor hold an active EU-U.S. Data Privacy Framework certification?",
+        "es": "¿Dispone el Encargado de una certificación activa en el Marco de Privacidad de Datos UE-EE.UU.?"
+      },
+      "hint": {
+        "en": "Only relevant for US-established processors. Verify at dataprivacyframework.gov. With an active certification, transfers rely on the 2023 adequacy decision and the SCCs are agreed as a fallback.",
+        "es": "Solo relevante para encargados establecidos en EE.UU. Verifíquelo en dataprivacyframework.gov. Con certificación activa, las transferencias se amparan en la decisión de adecuación de 2023 y las CCT quedan pactadas como mecanismo subsidiario."
+      },
+      "options": ["no", "yes"],
+      "optionLabels": {
+        "no": { "en": "No / not verified", "es": "No / sin verificar" },
+        "yes": { "en": "Yes — active certification verified", "es": "Sí — certificación activa verificada" }
+      }
+    },
+    {
+      "id": "include-tia",
+      "token": "transfer impact assessment",
+      "scope": "*",
+      "type": "choice",
+      "required": false,
+      "default": "no",
+      "boilerplateVariable": "includeTia",
+      "label": {
+        "en": "Attach a Transfer Impact Assessment (Annex IV)?",
+        "es": "¿Adjuntar una Evaluación de Impacto de las Transferencias (Anexo IV)?"
+      },
+      "hint": {
+        "en": "Only relevant when the Processor is established outside the EEA. Documents the assessment required by Clause 14 of the Standard Contractual Clauses, following the EDPB's six-step framework.",
+        "es": "Solo relevante cuando el Encargado está establecido fuera del EEE. Documenta la evaluación exigida por la Cláusula 14 de las Cláusulas Contractuales Tipo, siguiendo el marco de seis pasos del CEPD."
+      },
+      "options": ["no", "yes"],
+      "optionLabels": {
+        "no": { "en": "No", "es": "No" },
+        "yes": { "en": "Yes — attach as Annex IV", "es": "Sí — adjuntar como Anexo IV" }
+      }
+    },
+    {
+      "id": "tia-safeguards",
+      "token": "supplementary measures",
+      "scope": "*",
+      "type": "multiSelect",
+      "required": false,
+      "label": {
+        "en": "Which supplementary measures are in place? (for the Transfer Impact Assessment)",
+        "es": "¿Qué medidas suplementarias existen? (para la Evaluación de Impacto de las Transferencias)"
+      },
+      "hint": {
+        "en": "Select every measure the Processor actually applies. Note: under EDPB guidance, contractual and organizational measures alone cannot support an unqualified conclusion — at least one technical measure is needed.",
+        "es": "Seleccione todas las medidas que el Encargado aplica realmente. Nota: según el CEPD, las medidas contractuales y organizativas por sí solas no permiten una conclusión sin reservas — se necesita al menos una medida técnica."
+      },
+      "options": [
+        "tech-encryption-transit",
+        "tech-encryption-rest",
+        "tech-eu-held-keys",
+        "tech-client-side-encryption",
+        "tech-pseudonymization",
+        "tech-eu-residency",
+        "tech-split-processing",
+        "contract-transparency-reports",
+        "contract-notify-challenge",
+        "contract-no-backdoor",
+        "org-request-policy",
+        "org-audits-review"
+      ],
+      "optionLabels": {
+        "tech-encryption-transit": { "en": "Technical — encryption in transit (TLS 1.2+)", "es": "Técnica — cifrado en tránsito (TLS 1.2+)" },
+        "tech-encryption-rest": { "en": "Technical — encryption at rest with strong algorithms", "es": "Técnica — cifrado en reposo con algoritmos robustos" },
+        "tech-eu-held-keys": { "en": "Technical — encryption keys held in the EEA / by the Controller (HYOK/EKM)", "es": "Técnica — claves de cifrado custodiadas en el EEE o por el Responsable (HYOK/EKM)" },
+        "tech-client-side-encryption": { "en": "Technical — client-side / end-to-end encryption (processor never holds plaintext)", "es": "Técnica — cifrado en cliente o de extremo a extremo (el encargado nunca accede al texto en claro)" },
+        "tech-pseudonymization": { "en": "Technical — pseudonymization before transfer, re-identification keys kept in the EEA", "es": "Técnica — seudonimización previa a la transferencia, con claves de reidentificación en el EEE" },
+        "tech-eu-residency": { "en": "Technical — data stored and processed in EEA regions", "es": "Técnica — datos almacenados y tratados en regiones del EEE" },
+        "tech-split-processing": { "en": "Technical — split or multi-party processing across jurisdictions", "es": "Técnica — tratamiento fragmentado o multiparte entre jurisdicciones" },
+        "contract-transparency-reports": { "en": "Contractual — transparency reporting on government requests", "es": "Contractual — informes de transparencia sobre solicitudes gubernamentales" },
+        "contract-notify-challenge": { "en": "Contractual — duty to notify and challenge government access requests", "es": "Contractual — obligación de notificar e impugnar solicitudes de acceso gubernamentales" },
+        "contract-no-backdoor": { "en": "Contractual — warranty of no back doors and no bulk-access orders received", "es": "Contractual — garantía de ausencia de puertas traseras y de órdenes de acceso masivo" },
+        "org-request-policy": { "en": "Organizational — documented government-request handling policy with legal review", "es": "Organizativa — política documentada de gestión de solicitudes gubernamentales con revisión jurídica" },
+        "org-audits-review": { "en": "Organizational — independent audits (ISO 27001/SOC 2) and scheduled TIA reviews", "es": "Organizativa — auditorías independientes (ISO 27001/SOC 2) y revisiones periódicas de la evaluación" }
+      }
     }
   ]
 }

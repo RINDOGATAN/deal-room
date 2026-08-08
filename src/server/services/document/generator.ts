@@ -191,9 +191,10 @@ function interpolateText(
 }
 
 /**
- * Process boilerplate data with variable interpolation
+ * Process boilerplate data with variable interpolation.
+ * Exported for unit tests (annex showIf filtering); production callers stay in this module.
  */
-function processBoilerplate(
+export function processBoilerplate(
   rawBoilerplate: Record<string, unknown> | null,
   governingLawKey: string,
   variables: Record<string, string>,
@@ -248,10 +249,26 @@ function processBoilerplate(
     text: resolve(p.text),
   }));
 
-  const annexes = (bp.annexes as Array<Record<string, unknown>> || []).map((a) => ({
-    title: resolveLocalizedString(a.title, language),
-    text: resolve(a.text),
-  }));
+  // Conditional annexes: an annex may declare `showIf` — one condition or an
+  // array (ANDed) of `{ variable, in }` — evaluated against the interpolation
+  // variables (which include every deal parameter that declares a
+  // boilerplateVariable). Absent showIf keeps today's always-render behaviour.
+  // Used by the DPA to attach the SCC-incorporation annex only for third-country
+  // processors and the TIA annex only when the parties opted in.
+  const annexVisible = (a: Record<string, unknown>): boolean => {
+    if (!a.showIf) return true;
+    const conditions = Array.isArray(a.showIf) ? a.showIf : [a.showIf];
+    return (conditions as Array<{ variable?: string; in?: string[] }>).every(
+      (c) => !!c.variable && Array.isArray(c.in) && c.in.includes(variables[c.variable] ?? "")
+    );
+  };
+
+  const annexes = (bp.annexes as Array<Record<string, unknown>> || [])
+    .filter(annexVisible)
+    .map((a) => ({
+      title: resolveLocalizedString(a.title, language),
+      text: resolve(a.text),
+    }));
 
   const partyLabels = bp.partyLabels as Record<string, unknown> | undefined;
 
@@ -511,6 +528,66 @@ export async function generateContractData(
       : (language === "es"
           ? "(según se describa con más detalle en el contrato principal)"
           : "(as further described in the principal agreement)");
+  }
+
+  // DPA international transfers (Annex III/IV). Derived variables for the
+  // SCC-incorporation and Transfer Impact Assessment annexes:
+  //  - {processorEstablishmentDisplay}: localized wording for the recorded
+  //    place of establishment.
+  //  - {dpfStatement}: the operative transfer-mechanism paragraph —
+  //    DPF-adequacy-primary with SCC fallback when the parties recorded an
+  //    active Data Privacy Framework certification, SCC-primary otherwise.
+  //  - {tiaSafeguardsList}: lettered localized list of the supplementary
+  //    measures selected in the TIA builder.
+  //  - {tiaConclusion}: EDPB-aligned conclusion. Contractual/organizational
+  //    measures alone cannot support an unqualified essential-equivalence
+  //    finding (Recommendations 01/2020, Annex 2) — without at least one
+  //    technical measure the conclusion documents residual risk instead.
+  const establishment = (dealParams["processor-establishment"] || "").trim();
+  if (establishment) {
+    const isES = language === "es";
+    const estDisplay: Record<string, { en: string; es: string }> = {
+      EEA: { en: "the European Economic Area", es: "el Espacio Económico Europeo" },
+      UK: { en: "the United Kingdom", es: "el Reino Unido" },
+      US: { en: "the United States of America", es: "los Estados Unidos de América" },
+      OTHER: { en: "a third country outside the EEA", es: "un tercer país fuera del EEE" },
+    };
+    variables.processorEstablishmentDisplay =
+      (estDisplay[establishment] ?? estDisplay.OTHER)[isES ? "es" : "en"];
+
+    const dpfCertified = (dealParams["processor-dpf-certified"] || "") === "yes";
+    variables.dpfStatement = dpfCertified
+      ? (isES
+          ? "El Encargado ha declarado que mantiene una certificación activa en el Marco de Privacidad de Datos UE-EE.UU. (EU-U.S. Data Privacy Framework, «DPF»; registro verificable en dataprivacyframework.gov). Mientras dicha certificación permanezca activa y cubra las categorías de datos tratadas, las transferencias se amparan en la decisión de adecuación de la Comisión Europea de 10 de julio de 2023. Las Cláusulas Contractuales Tipo incorporadas en este Anexo se pactan como mecanismo subsidiario y surtirán efectos automáticamente si la certificación caduca, se retira o la decisión de adecuación deja de ser válida."
+          : "The Processor has declared that it maintains an active certification under the EU-U.S. Data Privacy Framework (\"DPF\"; verifiable at dataprivacyframework.gov). For so long as that certification remains active and covers the categories of data processed, transfers rely on the European Commission's adequacy decision of 10 July 2023. The Standard Contractual Clauses incorporated in this Annex are agreed as a fallback mechanism and shall take effect automatically if the certification lapses, is withdrawn, or the adequacy decision ceases to be valid.")
+      : (isES
+          ? "El Encargado no ha declarado una certificación activa en el Marco de Privacidad de Datos UE-EE.UU. En consecuencia, las Cláusulas Contractuales Tipo incorporadas en este Anexo constituyen el mecanismo de transferencia aplicable con arreglo al artículo 46, apartado 2, letra c), del RGPD."
+          : "The Processor has not declared an active certification under the EU-U.S. Data Privacy Framework. Accordingly, the Standard Contractual Clauses incorporated in this Annex constitute the applicable transfer mechanism under Article 46(2)(c) GDPR.");
+
+    const sgParam = parameterSchema?.parameters?.find((p) => p.id === "tia-safeguards");
+    const sgKeys = (dealParams["tia-safeguards"] || "")
+      .split(",").map((s) => s.trim()).filter(Boolean);
+    if (sgParam) {
+      const sgLabels = sgKeys.map((k) =>
+        sgParam.optionLabels?.[k]
+          ? resolveLocalizedString(sgParam.optionLabels[k], language)
+          : k
+      );
+      const letters = "abcdefghijklmnopqrstuvwxyz";
+      variables.tiaSafeguardsList = sgLabels.length
+        ? sgLabels.map((l, i) => `(${letters[i] || i + 1}) ${l};`).join("\n")
+        : (isES
+            ? "(no se han seleccionado medidas suplementarias específicas)"
+            : "(no specific supplementary measures selected)");
+    }
+    const hasTechnicalMeasure = sgKeys.some((k) => k.startsWith("tech-"));
+    variables.tiaConclusion = hasTechnicalMeasure
+      ? (isES
+          ? "Teniendo en cuenta las circunstancias de la transferencia, la legislación y la práctica del país de destino y las medidas suplementarias adoptadas (incluidas medidas técnicas), las partes concluyen que los datos personales transferidos gozarán de un nivel de protección esencialmente equivalente al garantizado en el EEE. Esta evaluación se revisará al menos cada doce (12) meses y ante cualquier cambio relevante de derecho o de práctica, y la transferencia se suspenderá si dicho nivel dejara de estar garantizado."
+          : "Having regard to the circumstances of the transfer, the law and practice of the destination country and the supplementary measures adopted (including technical measures), the parties conclude that the personal data transferred will enjoy a level of protection essentially equivalent to that guaranteed within the EEA. This assessment will be reviewed at least every twelve (12) months and upon any material change of law or practice, and the transfer will be suspended if that level of protection can no longer be ensured.")
+      : (isES
+          ? "Las partes hacen constar que las medidas suplementarias adoptadas son de carácter contractual y organizativo. Conforme a las Recomendaciones 01/2020 del CEPD, tales medidas no bastan por sí solas para impedir el acceso de las autoridades públicas del país de destino. Las partes documentan el riesgo residual correspondiente, se comprometen a evaluar la adopción de medidas técnicas adicionales y revisarán esta evaluación al menos cada doce (12) meses, suspendiendo la transferencia si el riesgo dejara de ser aceptable."
+          : "The parties record that the supplementary measures adopted are contractual and organizational in nature. In line with EDPB Recommendations 01/2020, such measures cannot by themselves prevent access by public authorities of the destination country. The parties document the corresponding residual risk, undertake to evaluate the adoption of additional technical measures, and will review this assessment at least every twelve (12) months, suspending the transfer should the risk cease to be acceptable.");
   }
 
   // Asymmetric-role contract (DPA: Controller vs Processor; BAA: Business
