@@ -9,6 +9,13 @@ name: Publish image
 # out of the box for a firm running the suite on one machine. Custom-domain
 # deployments still build from source until per-deployment NEXT_PUBLIC config is
 # moved to runtime (tracked separately).
+#
+# Each platform builds NATIVELY (amd64 on ubuntu-latest, arm64 on GitHub's free
+# arm runners) and pushes by digest; a merge job stitches the multi-arch
+# manifests. No QEMU: emulated arm64 `npm ci` hangs indefinitely on the
+# post-July-2026 runner images (AI Sentinel's v0.2.0 release stalled three
+# times, including with binfmt pinned to qemu-v8.1.5), and native arm is
+# faster anyway. Ported from aisentinel 30f403b.
 
 on:
   push:
@@ -25,13 +32,86 @@ permissions:
 
 env:
   IMAGE: ghcr.io/rindogatan/deal-room
+  MIGRATOR_IMAGE: ghcr.io/rindogatan/deal-room-migrator
 
 jobs:
-  publish:
-    runs-on: ubuntu-latest
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: linux/amd64
+            runner: ubuntu-latest
+          - platform: linux/arm64
+            runner: ubuntu-24.04-arm
+    runs-on: ${{ matrix.runner }}
+    # Native builds finish in well under this; fail fast rather than hang.
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
-      - uses: docker/setup-qemu-action@v3   # arm64 emulation, so images run on Apple Silicon too
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - id: platform
+        run: |
+          p="${{ matrix.platform }}"
+          echo "pair=${p//\//-}" >> "$GITHUB_OUTPUT"
+      # The runner image is a minimal standalone server with no Prisma CLI, so
+      # migrations run from a companion "migrator" image (the builder stage,
+      # which carries the tooling + migrate.sh + the migrations history). Both
+      # builds share build-args so the builder stage layer-caches identically.
+      - id: build-app
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: deploy/sovereign/Dockerfile
+          target: runner
+          platforms: ${{ matrix.platform }}
+          build-args: |
+            NODE_IMAGE=node:22-alpine
+            NEXT_PUBLIC_APP_URL=http://localhost:8486
+          cache-from: type=gha,scope=app-${{ steps.platform.outputs.pair }}
+          cache-to: type=gha,mode=max,scope=app-${{ steps.platform.outputs.pair }}
+          outputs: type=image,name=${{ env.IMAGE }},push-by-digest=true,name-canonical=true,push=true
+      - id: build-migrator
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: deploy/sovereign/Dockerfile
+          target: builder
+          platforms: ${{ matrix.platform }}
+          build-args: |
+            NODE_IMAGE=node:22-alpine
+            NEXT_PUBLIC_APP_URL=http://localhost:8486
+          cache-from: type=gha,scope=app-${{ steps.platform.outputs.pair }}
+          outputs: type=image,name=${{ env.MIGRATOR_IMAGE }},push-by-digest=true,name-canonical=true,push=true
+      - name: Export digests
+        run: |
+          mkdir -p "${{ runner.temp }}/digests/app" "${{ runner.temp }}/digests/migrator"
+          app="${{ steps.build-app.outputs.digest }}"
+          mig="${{ steps.build-migrator.outputs.digest }}"
+          touch "${{ runner.temp }}/digests/app/${app#sha256:}"
+          touch "${{ runner.temp }}/digests/migrator/${mig#sha256:}"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: digests-${{ steps.platform.outputs.pair }}
+          path: ${{ runner.temp }}/digests/*
+          if-no-files-found: error
+          retention-days: 1
+
+  merge:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: ${{ runner.temp }}/digests
+          pattern: digests-*
+          merge-multiple: true
       - uses: docker/setup-buildx-action@v3
       - uses: docker/login-action@v3
         with:
@@ -40,35 +120,16 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       - id: version
         run: echo "v=${{ github.event.inputs.version || github.ref_name }}" >> "$GITHUB_OUTPUT"
-      - uses: docker/build-push-action@v6
-        with:
-          context: .
-          file: deploy/sovereign/Dockerfile
-          target: runner
-          platforms: linux/amd64,linux/arm64
-          push: true
-          tags: |
-            ${{ env.IMAGE }}:${{ steps.version.outputs.v }}
-            ${{ env.IMAGE }}:latest
-          build-args: |
-            NODE_IMAGE=node:22-alpine
-            NEXT_PUBLIC_APP_URL=http://localhost:8486
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-      # The runner image is a minimal standalone server with no Prisma CLI, so
-      # migrations run from a companion "migrator" image (the builder stage,
-      # which carries the tooling + migrate.sh + the migrations history).
-      - name: Publish migrator image
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          file: deploy/sovereign/Dockerfile
-          target: builder
-          platforms: linux/amd64,linux/arm64
-          push: true
-          tags: |
-            ghcr.io/rindogatan/deal-room-migrator:${{ steps.version.outputs.v }}
-            ghcr.io/rindogatan/deal-room-migrator:latest
-          build-args: |
-            NODE_IMAGE=node:22-alpine
-          cache-from: type=gha
+      - name: Create multi-arch manifests
+        working-directory: ${{ runner.temp }}/digests
+        run: |
+          docker buildx imagetools create \
+            -t "$IMAGE:${{ steps.version.outputs.v }}" -t "$IMAGE:latest" \
+            $(cd app && printf "$IMAGE@sha256:%s " *)
+          docker buildx imagetools create \
+            -t "$MIGRATOR_IMAGE:${{ steps.version.outputs.v }}" -t "$MIGRATOR_IMAGE:latest" \
+            $(cd migrator && printf "$MIGRATOR_IMAGE@sha256:%s " *)
+      - name: Verify manifests
+        run: |
+          docker buildx imagetools inspect "$IMAGE:${{ steps.version.outputs.v }}"
+          docker buildx imagetools inspect "$MIGRATOR_IMAGE:${{ steps.version.outputs.v }}"
