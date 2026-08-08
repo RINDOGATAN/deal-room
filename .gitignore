@@ -62,3 +62,6 @@ dpa-purge-test-deals.cjs
 
 # Runtime skill-install output (extracted from .skill packages at install time)
 /data/skills/installed/
+
+# Local reference material (user-downloaded examples), never repo content
+/DPA/
