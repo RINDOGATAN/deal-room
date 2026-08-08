@@ -548,87 +548,13 @@
       "isRequired": true,
       "options": [
         {
-          "id": "subproc-specific",
-          "code": "specific",
-          "label": {
-            "en": "Specific prior written approval",
-            "es": "Aprobación previa específica por escrito"
-          },
-          "order": 1,
-          "plainDescription": {
-            "en": "Controller must approve each sub-processor individually before engagement. No general authorization.",
-            "es": "El responsable debe aprobar cada subencargado individualmente antes de su contratación. Sin autorización general."
-          },
-          "prosPartyA": {
-            "en": [
-              "Maximum control over data supply chain",
-              "Approve each vendor individually",
-              "Full visibility into sub-processing"
-            ],
-            "es": [
-              "Máximo control sobre la cadena de suministro de datos",
-              "Aprobar cada proveedor individualmente",
-              "Visibilidad total del subtratamiento"
-            ]
-          },
-          "consPartyA": {
-            "en": [
-              "Administrative burden of approving each request",
-              "May slow processor operations"
-            ],
-            "es": [
-              "Carga administrativa de aprobar cada solicitud",
-              "Puede ralentizar las operaciones del encargado"
-            ]
-          },
-          "prosPartyB": {
-            "en": [
-              "Clear approval framework",
-              "No ambiguity about authorized vendors"
-            ],
-            "es": [
-              "Marco de aprobación claro",
-              "Sin ambigüedad sobre proveedores autorizados"
-            ]
-          },
-          "consPartyB": {
-            "en": [
-              "Must wait for approval before adding vendors",
-              "Operational delays",
-              "Cannot quickly respond to infrastructure needs"
-            ],
-            "es": [
-              "Debe esperar aprobación antes de agregar proveedores",
-              "Retrasos operativos",
-              "No puede responder rápidamente a necesidades de infraestructura"
-            ]
-          },
-          "legalText": {
-            "en": "The Processor shall not engage any Sub-processor without the prior specific written authorization of the Controller. The Processor shall submit a written request identifying the proposed Sub-processor, the processing to be performed, and the safeguards in place. The Controller shall respond within fifteen (15) business days. The Processor shall ensure that any Sub-processor agreement imposes data protection obligations no less protective than those in this Agreement.",
-            "es": "El Encargado no contratará a ningún Subencargado sin la autorización previa específica por escrito del Responsable. El Encargado presentará una solicitud por escrito identificando al Subencargado propuesto, el tratamiento a realizar y las garantías aplicadas. El Responsable responderá en un plazo de quince (15) días hábiles. El Encargado se asegurará de que cualquier acuerdo con un Subencargado imponga obligaciones de protección de datos no menos protectoras que las del presente Acuerdo."
-          },
-          "biasPartyA": 0.5,
-          "biasPartyB": -0.5,
-          "jurisdictionConfig": {
-            "CALIFORNIA": {
-              "available": true
-            },
-            "ENGLAND_WALES": {
-              "available": true
-            },
-            "SPAIN": {
-              "available": true
-            }
-          }
-        },
-        {
           "id": "subproc-general-30d",
           "code": "general-30d",
           "label": {
             "en": "General authorization — 30-day objection",
             "es": "Autorización general — 30 días para objeción"
           },
-          "order": 2,
+          "order": 1,
           "plainDescription": {
             "en": "Controller gives general authorization. Processor must notify 30 days before adding a new sub-processor. Controller may object within that period.",
             "es": "El responsable otorga autorización general. El encargado debe notificar 30 días antes de agregar un nuevo subencargado. El responsable puede objetar dentro de ese período."
@@ -678,11 +604,85 @@
             ]
           },
           "legalText": {
-            "en": "The Controller provides general written authorization for the Processor to engage Sub-processors. The Processor shall notify the Controller at least thirty (30) days in advance of any intended changes to Sub-processors, providing sufficient detail for the Controller to assess the change. The Controller may object to such changes on reasonable data protection grounds within the notice period. If the Controller objects, the parties shall negotiate in good faith to resolve the concern. The Processor shall ensure each Sub-processor is bound by data protection obligations no less protective than those in this Agreement.",
-            "es": "El Responsable otorga autorización general por escrito para que el Encargado contrate Subencargados. El Encargado notificará al Responsable con al menos treinta (30) días de antelación cualquier cambio previsto en los Subencargados, proporcionando detalle suficiente para que el Responsable evalúe el cambio. El Responsable podrá objetar dichos cambios por motivos razonables de protección de datos dentro del período de notificación. Si el Responsable objeta, las partes negociarán de buena fe para resolver la preocupación. El Encargado se asegurará de que cada Subencargado esté sujeto a obligaciones de protección de datos no menos protectoras que las del presente Acuerdo."
+            "en": "The Controller provides general written authorization for the Processor to engage Sub-processors. The Processor shall notify the Controller at least thirty (30) days in advance of any intended changes to Sub-processors, providing sufficient detail for the Controller to assess the change. The Controller may object to such changes on reasonable data protection grounds within the notice period. If the Controller objects, the parties shall negotiate in good faith to resolve the concern. The Processor shall ensure each Sub-processor is bound by data protection obligations no less protective than those in this Agreement. The Processor shall maintain an up-to-date list of Sub-processors, available to the Controller at any time on request. The Sub-processors engaged as at the Effective Date are: [initial sub-processor list].",
+            "es": "El Responsable otorga autorización general por escrito para que el Encargado contrate Subencargados. El Encargado notificará al Responsable con al menos treinta (30) días de antelación cualquier cambio previsto en los Subencargados, proporcionando detalle suficiente para que el Responsable evalúe el cambio. El Responsable podrá objetar dichos cambios por motivos razonables de protección de datos dentro del período de notificación. Si el Responsable objeta, las partes negociarán de buena fe para resolver la preocupación. El Encargado se asegurará de que cada Subencargado esté sujeto a obligaciones de protección de datos no menos protectoras que las del presente Acuerdo. El Encargado mantendrá una lista actualizada de Subencargados, disponible para el Responsable en todo momento previa solicitud. Los Subencargados contratados a la Fecha de Efectividad son: [lista inicial de subencargados]."
           },
           "biasPartyA": 0.1,
           "biasPartyB": -0.1,
+          "jurisdictionConfig": {
+            "CALIFORNIA": {
+              "available": true
+            },
+            "ENGLAND_WALES": {
+              "available": true
+            },
+            "SPAIN": {
+              "available": true
+            }
+          }
+        },
+        {
+          "id": "subproc-specific",
+          "code": "specific",
+          "label": {
+            "en": "Specific prior written approval",
+            "es": "Aprobación previa específica por escrito"
+          },
+          "order": 2,
+          "plainDescription": {
+            "en": "Controller must approve each sub-processor individually before engagement. No general authorization.",
+            "es": "El responsable debe aprobar cada subencargado individualmente antes de su contratación. Sin autorización general."
+          },
+          "prosPartyA": {
+            "en": [
+              "Maximum control over data supply chain",
+              "Approve each vendor individually",
+              "Full visibility into sub-processing"
+            ],
+            "es": [
+              "Máximo control sobre la cadena de suministro de datos",
+              "Aprobar cada proveedor individualmente",
+              "Visibilidad total del subtratamiento"
+            ]
+          },
+          "consPartyA": {
+            "en": [
+              "Administrative burden of approving each request",
+              "May slow processor operations"
+            ],
+            "es": [
+              "Carga administrativa de aprobar cada solicitud",
+              "Puede ralentizar las operaciones del encargado"
+            ]
+          },
+          "prosPartyB": {
+            "en": [
+              "Clear approval framework",
+              "No ambiguity about authorized vendors"
+            ],
+            "es": [
+              "Marco de aprobación claro",
+              "Sin ambigüedad sobre proveedores autorizados"
+            ]
+          },
+          "consPartyB": {
+            "en": [
+              "Must wait for approval before adding vendors",
+              "Operational delays",
+              "Cannot quickly respond to infrastructure needs"
+            ],
+            "es": [
+              "Debe esperar aprobación antes de agregar proveedores",
+              "Retrasos operativos",
+              "No puede responder rápidamente a necesidades de infraestructura"
+            ]
+          },
+          "legalText": {
+            "en": "The Processor shall not engage any Sub-processor without the prior specific written authorization of the Controller. The Processor shall submit a written request identifying the proposed Sub-processor, the processing to be performed, and the safeguards in place. The Controller shall respond within fifteen (15) business days. If the Controller has not responded within that period, the Processor may issue a written reminder allowing a further five (5) business days; if the Controller still does not respond, the request shall be deemed approved. If the Controller objects, it shall state its data protection grounds, and the parties shall cooperate in good faith to agree an alternative; if no alternative is agreed within thirty (30) days of the objection, either party may terminate the affected Services on written notice without penalty. The Processor shall ensure that any Sub-processor agreement imposes data protection obligations no less protective than those in this Agreement. The Sub-processors engaged as at the Effective Date are: [initial sub-processor list].",
+            "es": "El Encargado no contratará a ningún Subencargado sin la autorización previa específica por escrito del Responsable. El Encargado presentará una solicitud por escrito identificando al Subencargado propuesto, el tratamiento a realizar y las garantías aplicadas. El Responsable responderá en un plazo de quince (15) días hábiles. Si el Responsable no responde en dicho plazo, el Encargado podrá remitir un recordatorio por escrito concediendo cinco (5) días hábiles adicionales; si el Responsable sigue sin responder, la solicitud se entenderá aprobada. Si el Responsable se opone, indicará sus motivos de protección de datos y las partes cooperarán de buena fe para acordar una alternativa; si no se acuerda ninguna en el plazo de treinta (30) días desde la oposición, cualquiera de las partes podrá resolver los Servicios afectados mediante notificación por escrito y sin penalización. El Encargado se asegurará de que cualquier acuerdo con un Subencargado imponga obligaciones de protección de datos no menos protectoras que las del presente Acuerdo. Los Subencargados contratados a la Fecha de Efectividad son: [lista inicial de subencargados]."
+          },
+          "biasPartyA": 0.5,
+          "biasPartyB": -0.5,
           "jurisdictionConfig": {
             "CALIFORNIA": {
               "available": true
@@ -750,8 +750,8 @@
             ]
           },
           "legalText": {
-            "en": "The Controller provides general written authorization for the Processor to engage Sub-processors. The Processor shall notify the Controller at least fourteen (14) days in advance of any intended changes to Sub-processors. The Controller may object on reasonable data protection grounds within the notice period. If no objection is raised, the change shall be deemed approved. The Processor shall ensure each Sub-processor is bound by data protection obligations no less protective than those in this Agreement.",
-            "es": "El Responsable otorga autorización general por escrito para que el Encargado contrate Subencargados. El Encargado notificará al Responsable con al menos catorce (14) días de antelación cualquier cambio previsto en los Subencargados. El Responsable podrá objetar por motivos razonables de protección de datos dentro del período de notificación. Si no se presenta objeción, el cambio se considerará aprobado. El Encargado se asegurará de que cada Subencargado esté sujeto a obligaciones de protección de datos no menos protectoras que las del presente Acuerdo."
+            "en": "The Controller provides general written authorization for the Processor to engage Sub-processors. The Processor shall notify the Controller at least fourteen (14) days in advance of any intended changes to Sub-processors. The Controller may object on reasonable data protection grounds within the notice period. If no objection is raised, the change shall be deemed approved. The Processor shall ensure each Sub-processor is bound by data protection obligations no less protective than those in this Agreement. The Processor shall maintain an up-to-date list of Sub-processors, available to the Controller at any time on request. The Sub-processors engaged as at the Effective Date are: [initial sub-processor list].",
+            "es": "El Responsable otorga autorización general por escrito para que el Encargado contrate Subencargados. El Encargado notificará al Responsable con al menos catorce (14) días de antelación cualquier cambio previsto en los Subencargados. El Responsable podrá objetar por motivos razonables de protección de datos dentro del período de notificación. Si no se presenta objeción, el cambio se considerará aprobado. El Encargado se asegurará de que cada Subencargado esté sujeto a obligaciones de protección de datos no menos protectoras que las del presente Acuerdo. El Encargado mantendrá una lista actualizada de Subencargados, disponible para el Responsable en todo momento previa solicitud. Los Subencargados contratados a la Fecha de Efectividad son: [lista inicial de subencargados]."
           },
           "biasPartyA": -0.2,
           "biasPartyB": 0.2,
@@ -824,8 +824,8 @@
             ]
           },
           "legalText": {
-            "en": "The Processor may engage Sub-processors as necessary for the provision of the Services. The Processor shall maintain an up-to-date list of Sub-processors and shall notify the Controller of any changes. The Processor shall ensure each Sub-processor is bound by written data protection obligations no less protective than those in this Agreement.",
-            "es": "El Encargado podrá contratar Subencargados según sea necesario para la prestación de los Servicios. El Encargado mantendrá una lista actualizada de Subencargados y notificará al Responsable de cualquier cambio. El Encargado se asegurará de que cada Subencargado esté sujeto a obligaciones de protección de datos por escrito no menos protectoras que las del presente Acuerdo."
+            "en": "The Processor may engage Sub-processors as necessary for the provision of the Services. The Processor shall maintain an up-to-date list of Sub-processors and shall notify the Controller of any changes. The Processor shall ensure each Sub-processor is bound by written data protection obligations no less protective than those in this Agreement. The Sub-processors engaged as at the Effective Date are: [initial sub-processor list].",
+            "es": "El Encargado podrá contratar Subencargados según sea necesario para la prestación de los Servicios. El Encargado mantendrá una lista actualizada de Subencargados y notificará al Responsable de cualquier cambio. El Encargado se asegurará de que cada Subencargado esté sujeto a obligaciones de protección de datos por escrito no menos protectoras que las del presente Acuerdo. Los Subencargados contratados a la Fecha de Efectividad son: [lista inicial de subencargados]."
           },
           "biasPartyA": -0.5,
           "biasPartyB": 0.5,
@@ -1009,8 +1009,8 @@
             ]
           },
           "legalText": {
-            "en": "The Processor may transfer Personal Data outside the EEA or United Kingdom only where such transfer is subject to the standard contractual clauses for the transfer of personal data to third countries annexed to Commission Implementing Decision (EU) 2021/914 of 4 June 2021 (Module Two: controller to processor), the full official text of which is currently located at https://todo.law/legal/sccs/eu-c2p and authentically published at https://eur-lex.europa.eu/eli/dec_impl/2021/914/oj. Where the Processor is established outside the EEA, those clauses are incorporated into this Agreement by reference on the terms set out in Annex III. For transfers from the United Kingdom, the UK International Data Transfer Addendum shall apply. The Processor shall conduct a transfer impact assessment prior to any new transfer and shall implement supplementary measures where required; where the parties have elected to document that assessment in this Agreement, it is set out in Annex IV.",
-            "es": "El Encargado solo podrá transferir Datos Personales fuera del EEE o del Reino Unido cuando la transferencia esté sujeta a las cláusulas contractuales tipo para la transferencia de datos personales a terceros países anexas a la Decisión de Ejecución (UE) 2021/914 de la Comisión, de 4 de junio de 2021 (Módulo Dos: de responsable a encargado), cuyo texto oficial completo se encuentra actualmente en https://todo.law/legal/sccs/eu-c2p y cuya publicación auténtica está disponible en https://eur-lex.europa.eu/eli/dec_impl/2021/914/oj. Cuando el Encargado esté establecido fuera del EEE, dichas cláusulas quedan incorporadas a este Acuerdo por referencia en los términos del Anexo III. Para las transferencias desde el Reino Unido se aplicará el Anexo de Transferencias Internacionales de Datos del Reino Unido (UK Addendum). El Encargado realizará una evaluación de impacto de la transferencia antes de cualquier transferencia nueva y aplicará medidas suplementarias cuando resulte necesario; cuando las partes hayan optado por documentar dicha evaluación en este Acuerdo, esta figura en el Anexo IV."
+            "en": "The Processor may transfer Personal Data outside the EEA or United Kingdom only where such transfer is subject to the standard contractual clauses for the transfer of personal data to third countries annexed to Commission Implementing Decision (EU) 2021/914 of 4 June 2021 (Module Two: controller to processor), the full official text of which is currently located at https://todo.law/legal/sccs/eu-c2p and authentically published at https://eur-lex.europa.eu/eli/dec_impl/2021/914/oj. Where the Processor is established outside the EEA, those clauses are incorporated into this Agreement by reference on the terms set out in Annex III. For transfers subject to the UK GDPR to countries without UK adequacy regulations, the UK International Data Transfer Addendum applies — where Annex III forms part of this Agreement, on the terms set out in that Annex; otherwise the parties shall execute it separately. The Processor shall conduct a transfer impact assessment prior to any new transfer and shall implement supplementary measures where required; where the parties have elected to document that assessment in this Agreement, it is set out in Annex IV.",
+            "es": "El Encargado solo podrá transferir Datos Personales fuera del EEE o del Reino Unido cuando la transferencia esté sujeta a las cláusulas contractuales tipo para la transferencia de datos personales a terceros países anexas a la Decisión de Ejecución (UE) 2021/914 de la Comisión, de 4 de junio de 2021 (Módulo Dos: de responsable a encargado), cuyo texto oficial completo se encuentra actualmente en https://todo.law/legal/sccs/eu-c2p y cuya publicación auténtica está disponible en https://eur-lex.europa.eu/eli/dec_impl/2021/914/oj. Cuando el Encargado esté establecido fuera del EEE, dichas cláusulas quedan incorporadas a este Acuerdo por referencia en los términos del Anexo III. Para las transferencias sujetas al RGPD del Reino Unido a países sin normativa de adecuación del Reino Unido, se aplicará el Anexo de Transferencias Internacionales de Datos del Reino Unido (UK Addendum) — cuando el Anexo III forme parte de este Acuerdo, en los términos allí previstos; en otro caso, las partes lo suscribirán por separado. El Encargado realizará una evaluación de impacto de la transferencia antes de cualquier transferencia nueva y aplicará medidas suplementarias cuando resulte necesario; cuando las partes hayan optado por documentar dicha evaluación en este Acuerdo, esta figura en el Anexo IV."
           },
           "biasPartyA": 0.2,
           "biasPartyB": -0.2,
@@ -1543,8 +1543,8 @@
         "es": "¿Con qué rapidez debe el encargado notificar al responsable una brecha de datos personales, y qué información debe proporcionar?"
       },
       "legalContext": {
-        "en": "GDPR Article 33 requires controllers to notify supervisory authorities within 72 hours of becoming aware of a breach. This means processors must notify controllers promptly enough for controllers to meet this deadline. CCPA does not impose a specific breach notification timeline on service providers but California Civil Code §1798.82 requires consumer notification 'in the most expedient time possible'.",
-        "es": "El artículo 33 del RGPD exige a los responsables notificar a las autoridades de control en un plazo de 72 horas desde que tengan conocimiento de una brecha. Esto significa que los encargados deben notificar a los responsables con suficiente rapidez para que estos cumplan este plazo. La CCPA no impone un plazo específico de notificación de brechas a los proveedores de servicios, pero el Código Civil de California §1798.82 exige la notificación al consumidor 'en el tiempo más rápido posible'."
+        "en": "GDPR Article 33 requires controllers to notify supervisory authorities within 72 hours of becoming aware of a breach. This means processors must notify controllers promptly enough for controllers to meet this deadline. CCPA does not impose a specific breach notification timeline on service providers but California Civil Code §1798.82 requires consumer notification 'in the most expedient time possible'. Before choosing a window, check the commitments you have already made elsewhere — your incident-response policy, cyber-insurance terms, or other agreements may promise a shorter window than the one you select here; inconsistent windows across documents are a common audit finding.",
+        "es": "El artículo 33 del RGPD exige a los responsables notificar a las autoridades de control en un plazo de 72 horas desde que tengan conocimiento de una brecha. Esto significa que los encargados deben notificar a los responsables con suficiente rapidez para que estos cumplan este plazo. La CCPA no impone un plazo específico de notificación de brechas a los proveedores de servicios, pero el Código Civil de California §1798.82 exige la notificación al consumidor 'en el tiempo más rápido posible'. Antes de elegir un plazo, revise los compromisos ya asumidos en otros documentos — su política de respuesta a incidentes, su póliza de ciberseguro u otros contratos pueden prometer un plazo más corto que el que seleccione aquí; los plazos incoherentes entre documentos son un hallazgo de auditoría habitual."
       },
       "isRequired": true,
       "options": [
@@ -1605,8 +1605,8 @@
             ]
           },
           "legalText": {
-            "en": "The Processor shall notify the Controller without undue delay and in any event within twenty-four (24) hours of becoming aware of a Personal Data breach. The notification shall include: (a) the nature of the breach including, where possible, the categories and approximate number of data subjects and records affected; (b) the likely consequences of the breach; (c) the measures taken or proposed to address the breach; and (d) the contact point for further information. Where full details are not available within the notification period, the Processor shall provide information in phases as it becomes available.",
-            "es": "El Encargado notificará al Responsable sin dilación indebida y en cualquier caso en un plazo de veinticuatro (24) horas desde que tenga conocimiento de una brecha de Datos Personales. La notificación incluirá: (a) la naturaleza de la brecha incluyendo, cuando sea posible, las categorías y número aproximado de interesados y registros afectados; (b) las consecuencias probables de la brecha; (c) las medidas adoptadas o propuestas para abordar la brecha; y (d) el punto de contacto para más información. Cuando los detalles completos no estén disponibles dentro del período de notificación, el Encargado proporcionará la información por fases a medida que esté disponible."
+            "en": "The Processor shall notify the Controller without undue delay and in any event within twenty-four (24) hours of becoming aware of a Personal Data breach. The notification shall include: (a) the nature of the breach including, where possible, the categories and approximate number of data subjects and records affected; (b) the likely consequences of the breach; (c) the measures taken or proposed to address the breach; and (d) the contact point for further information. Where full details are not available within the notification period, the Processor shall provide information in phases as it becomes available. As between the parties, the Controller is responsible for assessing the risk arising from a Personal Data Breach and for any notifications to supervisory authorities and Data Subjects; the Processor's obligation to notify the Controller under this clause is not conditioned on the outcome of any internal risk assessment by the Processor.",
+            "es": "El Encargado notificará al Responsable sin dilación indebida y en cualquier caso en un plazo de veinticuatro (24) horas desde que tenga conocimiento de una brecha de Datos Personales. La notificación incluirá: (a) la naturaleza de la brecha incluyendo, cuando sea posible, las categorías y número aproximado de interesados y registros afectados; (b) las consecuencias probables de la brecha; (c) las medidas adoptadas o propuestas para abordar la brecha; y (d) el punto de contacto para más información. Cuando los detalles completos no estén disponibles dentro del período de notificación, el Encargado proporcionará la información por fases a medida que esté disponible. Entre las partes, corresponde al Responsable evaluar el riesgo derivado de una Violación de Datos Personales y realizar, en su caso, las notificaciones a las autoridades de control y a los Interesados; la obligación del Encargado de notificar al Responsable conforme a esta cláusula no está condicionada al resultado de ninguna evaluación interna del riesgo por parte del Encargado."
           },
           "biasPartyA": 0.5,
           "biasPartyB": -0.5,
@@ -1677,8 +1677,8 @@
             ]
           },
           "legalText": {
-            "en": "The Processor shall notify the Controller without undue delay and in any event within forty-eight (48) hours of becoming aware of a Personal Data breach. The notification shall include the nature of the breach, the categories and approximate number of data subjects affected, the likely consequences, and the measures taken or proposed to mitigate the breach. The Processor shall provide supplementary information as it becomes available.",
-            "es": "El Encargado notificará al Responsable sin dilación indebida y en cualquier caso en un plazo de cuarenta y ocho (48) horas desde que tenga conocimiento de una brecha de Datos Personales. La notificación incluirá la naturaleza de la brecha, las categorías y número aproximado de interesados afectados, las consecuencias probables y las medidas adoptadas o propuestas para mitigar la brecha. El Encargado proporcionará información complementaria a medida que esté disponible."
+            "en": "The Processor shall notify the Controller without undue delay and in any event within forty-eight (48) hours of becoming aware of a Personal Data breach. The notification shall include the nature of the breach, the categories and approximate number of data subjects affected, the likely consequences, and the measures taken or proposed to mitigate the breach. The Processor shall provide supplementary information as it becomes available. As between the parties, the Controller is responsible for assessing the risk arising from a Personal Data Breach and for any notifications to supervisory authorities and Data Subjects; the Processor's obligation to notify the Controller under this clause is not conditioned on the outcome of any internal risk assessment by the Processor.",
+            "es": "El Encargado notificará al Responsable sin dilación indebida y en cualquier caso en un plazo de cuarenta y ocho (48) horas desde que tenga conocimiento de una brecha de Datos Personales. La notificación incluirá la naturaleza de la brecha, las categorías y número aproximado de interesados afectados, las consecuencias probables y las medidas adoptadas o propuestas para mitigar la brecha. El Encargado proporcionará información complementaria a medida que esté disponible. Entre las partes, corresponde al Responsable evaluar el riesgo derivado de una Violación de Datos Personales y realizar, en su caso, las notificaciones a las autoridades de control y a los Interesados; la obligación del Encargado de notificar al Responsable conforme a esta cláusula no está condicionada al resultado de ninguna evaluación interna del riesgo por parte del Encargado."
           },
           "biasPartyA": 0.2,
           "biasPartyB": -0.2,
@@ -1751,8 +1751,8 @@
             ]
           },
           "legalText": {
-            "en": "The Processor shall notify the Controller without undue delay and in any event within seventy-two (72) hours of becoming aware of a Personal Data breach. The notification shall include all information required under Article 33(3) of the GDPR or equivalent applicable law. The Processor shall cooperate with the Controller in investigating and remediating the breach and in fulfilling the Controller's notification obligations to supervisory authorities and data subjects.",
-            "es": "El Encargado notificará al Responsable sin dilación indebida y en cualquier caso en un plazo de setenta y dos (72) horas desde que tenga conocimiento de una brecha de Datos Personales. La notificación incluirá toda la información requerida conforme al artículo 33(3) del RGPD o la normativa aplicable equivalente. El Encargado cooperará con el Responsable en la investigación y remediación de la brecha y en el cumplimiento de las obligaciones de notificación del Responsable a las autoridades de control y a los interesados."
+            "en": "The Processor shall notify the Controller without undue delay and in any event within seventy-two (72) hours of becoming aware of a Personal Data breach. The notification shall include all information required under Article 33(3) of the GDPR or equivalent applicable law. The Processor shall cooperate with the Controller in investigating and remediating the breach and in fulfilling the Controller's notification obligations to supervisory authorities and data subjects. As between the parties, the Controller is responsible for assessing the risk arising from a Personal Data Breach and for any notifications to supervisory authorities and Data Subjects; the Processor's obligation to notify the Controller under this clause is not conditioned on the outcome of any internal risk assessment by the Processor.",
+            "es": "El Encargado notificará al Responsable sin dilación indebida y en cualquier caso en un plazo de setenta y dos (72) horas desde que tenga conocimiento de una brecha de Datos Personales. La notificación incluirá toda la información requerida conforme al artículo 33(3) del RGPD o la normativa aplicable equivalente. El Encargado cooperará con el Responsable en la investigación y remediación de la brecha y en el cumplimiento de las obligaciones de notificación del Responsable a las autoridades de control y a los interesados. Entre las partes, corresponde al Responsable evaluar el riesgo derivado de una Violación de Datos Personales y realizar, en su caso, las notificaciones a las autoridades de control y a los Interesados; la obligación del Encargado de notificar al Responsable conforme a esta cláusula no está condicionada al resultado de ninguna evaluación interna del riesgo por parte del Encargado."
           },
           "biasPartyA": -0.2,
           "biasPartyB": 0.2,
@@ -1837,8 +1837,8 @@
             ]
           },
           "legalText": {
-            "en": "The Processor shall notify the Controller without undue delay after becoming aware of a Personal Data breach. The Processor shall provide sufficient information to enable the Controller to fulfil its obligations to notify the competent supervisory authority and affected data subjects where required. The Processor shall cooperate with the Controller and take reasonable steps to assist in the investigation, mitigation, and remediation of the breach.",
-            "es": "El Encargado notificará al Responsable sin dilación indebida tras tener conocimiento de una brecha de Datos Personales. El Encargado proporcionará información suficiente para permitir al Responsable cumplir sus obligaciones de notificación a la autoridad de control competente y a los interesados afectados cuando sea necesario. El Encargado cooperará con el Responsable y tomará medidas razonables para asistir en la investigación, mitigación y remediación de la brecha."
+            "en": "The Processor shall notify the Controller without undue delay after becoming aware of a Personal Data breach. The Processor shall provide sufficient information to enable the Controller to fulfil its obligations to notify the competent supervisory authority and affected data subjects where required. The Processor shall cooperate with the Controller and take reasonable steps to assist in the investigation, mitigation, and remediation of the breach. As between the parties, the Controller is responsible for assessing the risk arising from a Personal Data Breach and for any notifications to supervisory authorities and Data Subjects; the Processor's obligation to notify the Controller under this clause is not conditioned on the outcome of any internal risk assessment by the Processor.",
+            "es": "El Encargado notificará al Responsable sin dilación indebida tras tener conocimiento de una brecha de Datos Personales. El Encargado proporcionará información suficiente para permitir al Responsable cumplir sus obligaciones de notificación a la autoridad de control competente y a los interesados afectados cuando sea necesario. El Encargado cooperará con el Responsable y tomará medidas razonables para asistir en la investigación, mitigación y remediación de la brecha. Entre las partes, corresponde al Responsable evaluar el riesgo derivado de una Violación de Datos Personales y realizar, en su caso, las notificaciones a las autoridades de control y a los Interesados; la obligación del Encargado de notificar al Responsable conforme a esta cláusula no está condicionada al resultado de ninguna evaluación interna del riesgo por parte del Encargado."
           },
           "biasPartyA": -0.4,
           "biasPartyB": 0.4,
@@ -2181,8 +2181,8 @@
             ]
           },
           "legalText": {
-            "en": "The Processor shall make available to the Controller all information necessary to demonstrate compliance with this Agreement and applicable data protection law. The Controller or its appointed third-party auditor may conduct audits, including on-site inspections of the Processor's facilities, systems, and records relevant to the processing of Personal Data, upon thirty (30) days' prior written notice. The Processor shall cooperate fully with such audits and provide reasonable access during normal business hours. Audits shall be conducted no more than once per year unless a data breach or material compliance concern has been identified.",
-            "es": "El Encargado pondrá a disposición del Responsable toda la información necesaria para demostrar el cumplimiento del presente Acuerdo y la normativa de protección de datos aplicable. El Responsable o su auditor externo designado podrá realizar auditorías, incluidas inspecciones in situ de las instalaciones, sistemas y registros del Encargado relacionados con el tratamiento de Datos Personales, con un preaviso por escrito de treinta (30) días. El Encargado cooperará plenamente con dichas auditorías y proporcionará acceso razonable durante el horario laboral habitual. Las auditorías se realizarán como máximo una vez al año salvo que se haya identificado una brecha de datos o una preocupación material de cumplimiento."
+            "en": "The Processor shall make available to the Controller all information necessary to demonstrate compliance with this Agreement and applicable data protection law. The Controller or its appointed third-party auditor may conduct audits, including on-site inspections of the Processor's facilities, systems, and records relevant to the processing of Personal Data, upon thirty (30) days' prior written notice. The Processor shall cooperate fully with such audits and provide reasonable access during normal business hours. Audits shall be conducted no more than once per year unless a data breach or material compliance concern has been identified. The Processor may, in the ordinary course, satisfy information and audit requests by making available its then-current independent audit reports or certifications (SOC 2 Type II, ISO 27001, or equivalent), which the parties agree satisfies Article 28(3)(h) GDPR, save where a competent supervisory authority requires an audit or a Personal Data Breach or documented compliance concern justifies one.",
+            "es": "El Encargado pondrá a disposición del Responsable toda la información necesaria para demostrar el cumplimiento del presente Acuerdo y la normativa de protección de datos aplicable. El Responsable o su auditor externo designado podrá realizar auditorías, incluidas inspecciones in situ de las instalaciones, sistemas y registros del Encargado relacionados con el tratamiento de Datos Personales, con un preaviso por escrito de treinta (30) días. El Encargado cooperará plenamente con dichas auditorías y proporcionará acceso razonable durante el horario laboral habitual. Las auditorías se realizarán como máximo una vez al año salvo que se haya identificado una brecha de datos o una preocupación material de cumplimiento. El Encargado podrá, en el curso ordinario, atender las solicitudes de información y auditoría poniendo a disposición sus informes de auditoría independientes o certificaciones vigentes (SOC 2 Tipo II, ISO 27001 o equivalente), lo que las partes acuerdan que satisface el artículo 28.3.h) del RGPD, salvo cuando una autoridad de control competente exija una auditoría o cuando una Violación de Datos Personales o una duda de cumplimiento documentada la justifique."
           },
           "biasPartyA": 0.5,
           "biasPartyB": -0.5,
@@ -2760,6 +2760,74 @@
                 "en": "GDPR Art 28(3)(g) requires deletion or return — AEPD may scrutinize whether anonymization meets the threshold to fall outside GDPR scope",
                 "es": "El Art. 28(3)(g) del RGPD exige la supresión o devolución — la AEPD puede escrutar si la anonimización cumple el umbral para quedar fuera del ámbito del RGPD"
               }
+            }
+          }
+        },
+        {
+          "id": "deletion-backup-rotation",
+          "code": "backup-rotation",
+          "label": {
+            "en": "Delete in 30 days; backups deemed deleted on rotation",
+            "es": "Supresión en 30 días; copias de seguridad suprimidas al rotar"
+          },
+          "order": 5,
+          "plainDescription": {
+            "en": "Production data is deleted within 30 days. Data on immutable backup media is deemed deleted when the backup rotation cycle completes (180 days at most), cannot be restored except for disaster recovery, and stays protected in the interim. The only honest option for companies running immutable backups.",
+            "es": "Los datos de producción se suprimen en 30 días. Los datos en soportes de copia inmutables se consideran suprimidos al completarse el ciclo de rotación (máximo 180 días), no pueden restaurarse salvo para recuperación ante desastres y siguen protegidos entretanto. La única opción honesta para empresas con copias de seguridad inmutables."
+          },
+          "prosPartyA": {
+            "en": [
+              "Honest about what backup technology can actually do",
+              "Backup data locked away from any other use",
+              "Hard 180-day outer limit"
+            ],
+            "es": [
+              "Honesta sobre lo que la tecnología de copias permite realmente",
+              "Los datos en copia quedan vetados para cualquier otro uso",
+              "Límite máximo firme de 180 días"
+            ]
+          },
+          "consPartyA": {
+            "en": [
+              "Copies persist on backup media for up to 180 days after termination"
+            ],
+            "es": [
+              "Persisten copias en soportes de seguridad hasta 180 días tras la terminación"
+            ]
+          },
+          "prosPartyB": {
+            "en": [
+              "Compatible with immutable/rotational backup architectures",
+              "No engineering work to purge individual datasets from backups"
+            ],
+            "es": [
+              "Compatible con arquitecturas de copia inmutables o rotativas",
+              "Sin trabajo de ingeniería para purgar conjuntos de datos individuales de las copias"
+            ]
+          },
+          "consPartyB": {
+            "en": [
+              "Continued DPA obligations over backup media until rotation completes"
+            ],
+            "es": [
+              "Obligaciones continuadas del ATD sobre los soportes de copia hasta completar la rotación"
+            ]
+          },
+          "legalText": {
+            "en": "Upon termination or expiry of the Principal Agreement, the Processor shall securely delete all Personal Data from production systems within thirty (30) days, the Controller being responsible for exporting any required data before termination using the Processor's standard export tools. Personal Data residing on immutable or rotational backup media shall be deemed deleted upon completion of the Processor's standard backup rotation cycle, and in any event no later than one hundred and eighty (180) days after termination. Until actual destruction, such backup data shall not be restored to production or otherwise processed except where strictly necessary for disaster recovery, and the protections of this Agreement shall continue to apply to it. The Processor shall confirm completion of deletion in writing upon the Controller's request.",
+            "es": "A la terminación o expiración del Acuerdo Principal, el Encargado suprimirá de forma segura todos los Datos Personales de los sistemas de producción en un plazo de treinta (30) días, siendo responsabilidad del Responsable exportar los datos que necesite antes de la terminación mediante las herramientas estándar de exportación del Encargado. Los Datos Personales que residan en soportes de copia de seguridad inmutables o rotativos se considerarán suprimidos al completarse el ciclo estándar de rotación de copias del Encargado y, en todo caso, en un plazo máximo de ciento ochenta (180) días desde la terminación. Hasta su destrucción efectiva, dichos datos de copia no se restaurarán a producción ni se tratarán de otro modo, salvo cuando sea estrictamente necesario para la recuperación ante desastres, y las protecciones del presente Acuerdo seguirán aplicándose a ellos. El Encargado confirmará por escrito la finalización de la supresión a solicitud del Responsable."
+          },
+          "biasPartyA": -0.2,
+          "biasPartyB": 0.2,
+          "jurisdictionConfig": {
+            "CALIFORNIA": {
+              "available": true
+            },
+            "ENGLAND_WALES": {
+              "available": true
+            },
+            "SPAIN": {
+              "available": true
             }
           }
         }
@@ -4382,6 +4450,163 @@
           },
           "biasPartyA": 0,
           "biasPartyB": 0,
+          "jurisdictionConfig": {
+            "CALIFORNIA": {
+              "available": true
+            },
+            "ENGLAND_WALES": {
+              "available": true
+            },
+            "SPAIN": {
+              "available": true
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "government-access-requests",
+      "title": {
+        "en": "Government access requests",
+        "es": "Solicitudes de acceso gubernamentales"
+      },
+      "category": {
+        "en": "Transfers",
+        "es": "Transferencias"
+      },
+      "order": 15,
+      "plainDescription": {
+        "en": "How must the processor react if a public authority demands access to the personal data?",
+        "es": "¿Cómo debe reaccionar el encargado si una autoridad pública exige acceso a los datos personales?"
+      },
+      "legalContext": {
+        "en": "EDPB Recommendations 01/2020 (Annex 2, use cases 6–7) identify notification, legality review, challenge, minimal disclosure and transparency reporting as the standard contractual supplementary measures for third-country transfers. Where adopted, they also support the Transfer Impact Assessment's conclusion. Clause 15 of the EU SCCs imposes a baseline notification duty; this clause strengthens it contractually.",
+        "es": "Las Recomendaciones 01/2020 del CEPD (Anexo 2, casos de uso 6–7) identifican la notificación, la revisión de legalidad, la impugnación, la divulgación mínima y los informes de transparencia como las medidas suplementarias contractuales estándar para transferencias a terceros países. Cuando se adoptan, respaldan además la conclusión de la Evaluación de Impacto de las Transferencias. La Cláusula 15 de las CCT de la UE impone un deber básico de notificación; esta cláusula lo refuerza contractualmente."
+      },
+      "isRequired": false,
+      "options": [
+        {
+          "id": "gov-access-full",
+          "code": "commitments",
+          "label": {
+            "en": "Full commitments (notify, challenge, minimal disclosure, transparency)",
+            "es": "Compromisos completos (notificar, impugnar, divulgación mínima, transparencia)"
+          },
+          "order": 1,
+          "plainDescription": {
+            "en": "The processor must notify the controller of any government request (or seek a waiver of a gag order), review its legality and challenge it where there are grounds, disclose the minimum possible, document every request, and report aggregate figures. Includes a no-back-doors warranty.",
+            "es": "El encargado debe notificar al responsable cualquier solicitud gubernamental (o intentar levantar la prohibición de hacerlo), revisar su legalidad e impugnarla cuando haya motivos, divulgar lo mínimo posible, documentar cada solicitud e informar de cifras agregadas. Incluye una garantía de ausencia de puertas traseras."
+          },
+          "prosPartyA": {
+            "en": [
+              "Standard EDPB contractual supplementary measure",
+              "Supports the Transfer Impact Assessment's conclusion",
+              "Visibility into government access attempts"
+            ],
+            "es": [
+              "Medida suplementaria contractual estándar del CEPD",
+              "Respalda la conclusión de la Evaluación de Impacto de las Transferencias",
+              "Visibilidad sobre los intentos de acceso gubernamental"
+            ]
+          },
+          "consPartyA": {
+            "en": [
+              "Challenge duties depend on the processor's diligence"
+            ],
+            "es": [
+              "Los deberes de impugnación dependen de la diligencia del encargado"
+            ]
+          },
+          "prosPartyB": {
+            "en": [
+              "Matches what major cloud providers already commit to publicly",
+              "Aggregate reporting can reuse existing transparency reports"
+            ],
+            "es": [
+              "Coincide con lo que los grandes proveedores de nube ya se comprometen públicamente",
+              "El informe agregado puede reutilizar los informes de transparencia existentes"
+            ]
+          },
+          "consPartyB": {
+            "en": [
+              "Operational burden of legality review and documentation",
+              "Warranty exposure if a bulk-access order is ever received"
+            ],
+            "es": [
+              "Carga operativa de la revisión de legalidad y la documentación",
+              "Exposición por la garantía si alguna vez se recibe una orden de acceso masivo"
+            ]
+          },
+          "legalText": {
+            "en": "If the Processor receives a legally binding request from a public authority for access to or disclosure of Personal Data processed under this DPA, the Processor shall:\n\n(a) promptly notify the Controller of the request, unless legally prohibited from doing so; where so prohibited, the Processor shall use its best efforts to obtain a waiver of the prohibition so as to communicate as much information as possible, as soon as possible, and shall document those efforts;\n\n(b) review the legality of the request and, where after careful assessment it concludes that there are reasonable grounds to consider the request unlawful under the laws of the destination country or applicable international commitments, challenge the request and seek interim measures suspending its effects until the competent judicial authority has decided on its merits;\n\n(c) where disclosure cannot lawfully be resisted, disclose only the minimum amount of Personal Data permissible when responding, based on a reasonable interpretation of the request;\n\n(d) document each request received and its handling, and make that documentation available to the Controller on request, save where and to the extent legally prohibited; and\n\n(e) at least annually, publish or make available to the Controller aggregate transparency information regarding the number and types of government access requests received in respect of the services.\n\nThe Processor warrants that: (i) it has not purposefully created back doors or similar programming that could be used by a public authority to access the systems processing Personal Data; (ii) it has not purposefully created or changed its business processes in a manner that facilitates such access; and (iii) as at the date of this DPA, it has not received any order requiring the disclosure of Personal Data on a generalised or bulk basis, and applicable law does not require it to create or maintain back doors, hand over encryption keys wholesale, or facilitate bulk access to Personal Data.",
+            "es": "Si el Encargado recibe una solicitud jurídicamente vinculante de una autoridad pública de acceso a Datos Personales tratados en virtud del presente ATD, o de su divulgación, el Encargado deberá:\n\n(a) notificar sin demora la solicitud al Responsable, salvo que tenga legalmente prohibido hacerlo; en caso de prohibición, el Encargado hará sus mejores esfuerzos para obtener el levantamiento de la prohibición con el fin de comunicar cuanta más información y lo antes posible, y documentará dichos esfuerzos;\n\n(b) revisar la legalidad de la solicitud y, cuando tras una evaluación cuidadosa concluya que existen motivos razonables para considerarla ilícita conforme al Derecho del país de destino o a los compromisos internacionales aplicables, impugnarla y solicitar medidas cautelares que suspendan sus efectos hasta que la autoridad judicial competente resuelva sobre el fondo;\n\n(c) cuando no pueda oponerse lícitamente a la divulgación, divulgar únicamente la cantidad mínima de Datos Personales admisible al responder, sobre la base de una interpretación razonable de la solicitud;\n\n(d) documentar cada solicitud recibida y su tramitación, y poner dicha documentación a disposición del Responsable cuando la solicite, salvo en la medida en que esté legalmente prohibido; y\n\n(e) al menos una vez al año, publicar o poner a disposición del Responsable información agregada de transparencia sobre el número y los tipos de solicitudes gubernamentales de acceso recibidas en relación con los servicios.\n\nEl Encargado garantiza que: (i) no ha creado deliberadamente puertas traseras ni programación similar que pueda ser utilizada por una autoridad pública para acceder a los sistemas que tratan Datos Personales; (ii) no ha creado ni modificado deliberadamente sus procesos de negocio de forma que faciliten dicho acceso; y (iii) a la fecha del presente ATD, no ha recibido ninguna orden que exija la divulgación de Datos Personales de forma generalizada o masiva, y el Derecho aplicable no le exige crear o mantener puertas traseras, entregar claves de cifrado de forma indiscriminada ni facilitar el acceso masivo a Datos Personales."
+          },
+          "biasPartyA": 0.2,
+          "biasPartyB": -0.2,
+          "jurisdictionConfig": {
+            "CALIFORNIA": {
+              "available": true
+            },
+            "ENGLAND_WALES": {
+              "available": true
+            },
+            "SPAIN": {
+              "available": true
+            }
+          }
+        },
+        {
+          "id": "gov-access-none",
+          "code": "none",
+          "label": {
+            "en": "No specific commitments",
+            "es": "Sin compromisos específicos"
+          },
+          "order": 2,
+          "plainDescription": {
+            "en": "The DPA contains no clause on government access requests beyond what the incorporated Standard Contractual Clauses already require. If a Transfer Impact Assessment is attached, it cannot rely on contractual supplementary measures.",
+            "es": "El ATD no contiene ninguna cláusula sobre solicitudes de acceso gubernamentales más allá de lo que ya exigen las Cláusulas Contractuales Tipo incorporadas. Si se adjunta una Evaluación de Impacto de las Transferencias, esta no podrá apoyarse en medidas suplementarias contractuales."
+          },
+          "prosPartyA": {
+            "en": [
+              "Simpler document"
+            ],
+            "es": [
+              "Documento más sencillo"
+            ]
+          },
+          "consPartyA": {
+            "en": [
+              "Weakens the Transfer Impact Assessment for third-country processors",
+              "No contractual visibility into government requests"
+            ],
+            "es": [
+              "Debilita la Evaluación de Impacto de las Transferencias para encargados de terceros países",
+              "Sin visibilidad contractual sobre solicitudes gubernamentales"
+            ]
+          },
+          "prosPartyB": {
+            "en": [
+              "No additional operational duties"
+            ],
+            "es": [
+              "Sin deberes operativos adicionales"
+            ]
+          },
+          "consPartyB": {
+            "en": [
+              "Controllers transferring to third countries may insist on commitments"
+            ],
+            "es": [
+              "Los responsables que transfieren a terceros países pueden exigir compromisos"
+            ]
+          },
+          "legalText": {
+            "en": "",
+            "es": ""
+          },
+          "biasPartyA": -0.2,
+          "biasPartyB": 0.2,
           "jurisdictionConfig": {
             "CALIFORNIA": {
               "available": true

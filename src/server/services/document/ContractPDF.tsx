@@ -746,10 +746,14 @@ function AnnexBody({ text }: { text: string }) {
   return (
     <>
       {lines.map((line, i) => {
-        const subhead = /^\d+\.\s+[A-Z0-9 ,/&()-]+$/.test(line);
+        // Subheads may be numbered ("6. UNITED KINGDOM TRANSFERS") or bare
+        // ("BASELINE MEASURES" — the conditionally composed Annex II sections
+        // carry no numbers so hidden sections never leave gaps), and Spanish
+        // headings carry accented capitals ("REGISTRO Y SUPERVISIÓN").
+        const subhead = /^(\d+\.\s+)?[A-Z0-9ÁÉÍÓÚÜÑ ,/&()—-]+$/.test(line) && /[A-ZÁÉÍÓÚÜÑ]{3}/.test(line);
         if (subhead) {
           return (
-            <Text key={i} style={styles.annexSubhead}>
+            <Text key={i} style={styles.annexSubhead} minPresenceAhead={40}>
               {line}
             </Text>
           );
@@ -761,7 +765,10 @@ function AnnexBody({ text }: { text: string }) {
           const label = dash > -1 ? rest.slice(0, dash).trim() : null;
           const desc = dash > -1 ? rest.slice(dash) : rest;
           return (
-            <View key={i} style={styles.annexItemRow}>
+            // minPresenceAhead keeps the "(a)" marker and the first line of
+            // its item together across page breaks (A-7): if less than ~two
+            // lines of space remain, the whole row moves to the next page.
+            <View key={i} style={styles.annexItemRow} minPresenceAhead={24}>
               <Text style={styles.annexItemMarker}>{item[1]}</Text>
               <Text style={styles.annexItemBody}>
                 {label ? (

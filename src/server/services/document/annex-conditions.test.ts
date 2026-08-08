@@ -11,7 +11,11 @@
  * rendering unconditionally (every pre-existing skill).
  */
 import { describe, it, expect } from "vitest";
-import { processBoilerplate, buildTransferAddendaSections } from "./generator";
+import {
+  processBoilerplate,
+  buildTransferAddendaSections,
+  buildTiaImporterStatements,
+} from "./generator";
 import {
   buildBoilerplateVariables,
   findUnfilledParameterTokens,
@@ -225,6 +229,97 @@ describe("findUnfilledParameterTokens (sign-page blanks warning)", () => {
   it("respects clause scope — tokens in unrelated clauses don't flag", () => {
     const texts = [{ legalText: "Mentions [governing law].", clauseId: "data-transfer" }];
     expect(findUnfilledParameterTokens(texts, {}, SCHEMA, "en")).toEqual([]);
+  });
+});
+
+describe("annex sections + contains operator (B-2 confirmable TOMs)", () => {
+  const RAW_SECTIONS = {
+    contractTitle: "DPA",
+    preamble: "P.",
+    signatureBlock: "S.",
+    annexes: [
+      {
+        title: "Annex II",
+        text: "Baseline: {processingPurpose}",
+        sections: [
+          {
+            showIf: [{ variable: "tomsConfirmed", contains: "toms-network" }],
+            text: "NETWORK SECURITY",
+          },
+          {
+            showIf: [{ variable: "tomsConfirmed", contains: "toms-logging" }],
+            text: "LOGGING",
+          },
+          {
+            showIf: [{ variable: "tomsPhysical", in: ["provider-managed"] }],
+            text: "PHYSICAL (PROVIDER)",
+          },
+        ],
+      },
+    ],
+  };
+
+  function annexText(variables: Record<string, string>): string {
+    const bp = processBoilerplate(RAW_SECTIONS, "SPAIN", variables, "en");
+    return bp?.annexes?.[0]?.text ?? "";
+  }
+
+  it("renders only the baseline when nothing is confirmed", () => {
+    const text = annexText({ processingPurpose: "x" });
+    expect(text).toBe("Baseline: x");
+  });
+
+  it("adds exactly the confirmed sections, in authored order", () => {
+    const text = annexText({
+      processingPurpose: "x",
+      tomsConfirmed: "toms-logging,toms-network",
+      tomsPhysical: "provider-managed",
+    });
+    expect(text).toBe(
+      "Baseline: x\n\nNETWORK SECURITY\n\nLOGGING\n\nPHYSICAL (PROVIDER)",
+    );
+  });
+
+  it("contains does not substring-match across option keys", () => {
+    const text = annexText({ processingPurpose: "x", tomsConfirmed: "toms-network-extra" });
+    expect(text).toBe("Baseline: x");
+  });
+
+  it("in-operator sections still work alongside contains sections", () => {
+    const text = annexText({ processingPurpose: "x", tomsPhysical: "own-facilities" });
+    expect(text).toBe("Baseline: x");
+  });
+});
+
+describe("TIA importer statements (B-6 — the TIA answers what it poses)", () => {
+  it("hosted service defaults to the likely-ECSP conclusion", () => {
+    const { tiaEcspStatement } = buildTiaImporterStatements({}, "en");
+    expect(tiaEcspStatement).toContain("remote computing service");
+    expect(tiaEcspStatement).toContain("18 U.S.C. § 2711");
+  });
+
+  it("non-hosted importer records reduced exposure", () => {
+    const { tiaEcspStatement } = buildTiaImporterStatements(
+      { "tia-importer-hosted": "no" },
+      "en",
+    );
+    expect(tiaEcspStatement).toContain("unlikely to qualify");
+  });
+
+  it("unknown request history proceeds conservatively; declared none is documented", () => {
+    expect(buildTiaImporterStatements({}, "en").tiaRequestHistoryStatement).toContain(
+      "proceeds conservatively",
+    );
+    expect(
+      buildTiaImporterStatements({ "tia-gov-requests-received": "none" }, "en")
+        .tiaRequestHistoryStatement,
+    ).toContain("has not received any government request");
+  });
+
+  it("renders Spanish variants", () => {
+    const es = buildTiaImporterStatements({ "tia-gov-requests-received": "some" }, "es");
+    expect(es.tiaEcspStatement).toContain("remote computing service");
+    expect(es.tiaRequestHistoryStatement).toContain("informes de transparencia");
   });
 });
 

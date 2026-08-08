@@ -82,6 +82,7 @@ const TOKEN_TRANSLATIONS: Record<string, Record<string, string>> = {
   "governing law": { es: "ley aplicable" },
   "competent courts": { es: "tribunales competentes" },
   territory: { es: "territorio" },
+  "initial sub-processor list": { es: "lista inicial de subencargados" },
 };
 
 // ── Helpers ────────────────────────────────────────────

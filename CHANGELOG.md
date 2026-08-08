@@ -9,6 +9,50 @@ history was not tracked per-release and lives only in git.
 
 ## [Unreleased]
 
+## [0.1.24] — 2026-08-08
+
+DPA hardening from our own law firm's QA pass over generated wizard output
+(16 of 19 checklist items; see `feedback/dpa-wizard-recommendations-2026-08-08.md`).
+
+### Added
+- **Government access requests clause** (EDPB Rec. 01/2020 contractual
+  supplementary measures: notify + gag-waiver efforts, legality review +
+  challenge, minimum disclosure, documentation + aggregate transparency,
+  no-back-doors warranty). The TIA's contractual measures now derive from
+  this clause being agreed — unbacked checkbox claims are gone.
+- **Annex II (TOMs) is now individually confirmable:** a modest, verifiable
+  baseline always renders; stronger measures (encryption at rest, MFA +
+  quarterly reviews, network security, 12-month logging, backup/DR,
+  personnel screening, annual testing) appear only when the user confirms
+  their audit evidence supports them. Physical security defaults to the
+  provider-managed variant (validated via annual SOC 2/ISO review) — most
+  SaaS processors cannot truthfully claim badge readers as their own.
+- **TIA answers what it poses:** the wizard asks whether the importer hosts
+  customer data (18 U.S.C. § 2711 analysis) and about its government-request
+  history, and Annex IV §2 renders documented conclusions.
+- Wizard cross-validation: contradictory TIA selections (pseudonymization
+  vs identifying categories; EEA residency with a third-country importer)
+  must be explicitly confirmed before the deal can be created.
+- Sub-processor flow: every authorization option records the initial
+  sub-processor list (the sign page warns when it is left blank); general
+  authorization lists first as the SaaS default; specific authorization
+  gained reminder → deemed-approval → escalation mechanics.
+- Deletion clause option for immutable backups (deemed deletion on rotation,
+  180-day outer limit); breach clause risk-allocation sentence (processor's
+  notice unconditional on internal triage); audit clause ordinary-course
+  limb (SOC 2/ISO reports satisfy Art. 28(3)(h)).
+
+### Fixed
+- Custom governing law now feeds the cover page and every occurrence from
+  one variable — cover and body can no longer name different states.
+- "Principal Agreement" is defined (and the BAA defines and cross-references
+  its "Underlying Agreement"); mirrored precedence carve-outs for PHI/
+  coexisting agreements on both documents.
+- Login emails never render as party or signatory names.
+- Annex list markers and subheads no longer orphan at page breaks; accented
+  Spanish annex subheads style correctly.
+- SCC citation wording signals the todo.law mirror is deliberate.
+
 ## [0.1.23] — 2026-08-08
 
 ### Fixed

@@ -60,6 +60,8 @@ const SYSTEM_BOILERPLATE_VARS = new Set([
   "tiaSafeguardsList",
   "tiaConclusion",
   "transferAddendaSections",
+  "tiaEcspStatement",
+  "tiaRequestHistoryStatement",
 ]);
 
 // Superset of the GoverningLaw enum: skill tags may be more specific (e.g.

@@ -83,6 +83,82 @@
       }
     },
     {
+      "id": "subprocessor-list",
+      "token": "initial sub-processor list",
+      "scope": "subprocessor-approval",
+      "type": "textarea",
+      "required": false,
+      "negotiable": true,
+      "label": {
+        "en": "Initial sub-processor list",
+        "es": "Lista inicial de subencargados"
+      },
+      "hint": {
+        "en": "The sub-processors already engaged when the DPA takes effect (e.g. your cloud host, email provider, analytics). Any cloud-hosted service has at least one. This list completes SCC Annex III for international transfers; leaving it empty leaves a visible blank in the document.",
+        "es": "Los subencargados ya contratados cuando el ATD surte efectos (p. ej., su proveedor de nube, de correo, de analítica). Cualquier servicio alojado en la nube tiene al menos uno. Esta lista completa el Anexo III de las CCT para transferencias internacionales; dejarla vacía deja un espacio en blanco visible en el documento."
+      },
+      "placeholder": {
+        "en": "e.g. Amazon Web Services EMEA SARL (cloud hosting, EU-West); Postmark (transactional email, US)",
+        "es": "p. ej. Amazon Web Services EMEA SARL (alojamiento en la nube, UE-Oeste); Postmark (correo transaccional, EE. UU.)"
+      }
+    },
+    {
+      "id": "toms-confirmed",
+      "token": "confirmed security measures",
+      "scope": "*",
+      "type": "multiSelect",
+      "required": false,
+      "boilerplateVariable": "tomsConfirmed",
+      "label": {
+        "en": "Which additional security measures can the Processor evidence? (Annex II)",
+        "es": "¿Qué medidas de seguridad adicionales puede acreditar el Encargado? (Anexo II)"
+      },
+      "hint": {
+        "en": "Annex II is incorporated into the SCCs as their Annex II, so its statements are warranties, not aspirations. Select only measures the Processor's latest SOC 2 / ISO 27001 / audit evidence actually supports — unselected areas stay at the modest baseline (TLS in transit, role-based access, unique credentials, confidentiality and training, documented security programme).",
+        "es": "El Anexo II se incorpora a las CCT como su Anexo II, por lo que sus afirmaciones son garantías, no aspiraciones. Seleccione solo las medidas que la evidencia de auditoría más reciente del Encargado (SOC 2 / ISO 27001) realmente respalde — las áreas no seleccionadas se quedan en la base modesta (TLS en tránsito, acceso por roles, credenciales únicas, confidencialidad y formación, programa de seguridad documentado)."
+      },
+      "options": [
+        "toms-encryption-rest",
+        "toms-access-reviews",
+        "toms-network",
+        "toms-logging",
+        "toms-backup-dr",
+        "toms-personnel-checks",
+        "toms-testing"
+      ],
+      "optionLabels": {
+        "toms-encryption-rest": { "en": "Encryption at rest (AES-256) with managed key rotation", "es": "Cifrado en reposo (AES-256) con rotación de claves gestionada" },
+        "toms-access-reviews": { "en": "MFA everywhere + at-least-quarterly access reviews", "es": "MFA generalizada + revisiones de acceso al menos trimestrales" },
+        "toms-network": { "en": "Network security: IDS/IPS, segmentation, monthly scans, annual pen tests", "es": "Seguridad de red: IDS/IPS, segmentación, análisis mensuales, pentests anuales" },
+        "toms-logging": { "en": "Access logging with 12-month tamper-protected retention and alerting", "es": "Registro de accesos con conservación de 12 meses a prueba de manipulación y alertas" },
+        "toms-backup-dr": { "en": "Geo-separated backups, annual restore tests, documented DR plan (RTO/RPO)", "es": "Copias geoseparadas, pruebas anuales de restauración, plan de recuperación documentado (RTO/RPO)" },
+        "toms-personnel-checks": { "en": "Personnel background checks (where lawful) and disciplinary procedures", "es": "Verificación de antecedentes del personal (donde sea lícito) y procedimientos disciplinarios" },
+        "toms-testing": { "en": "At-least-annual effectiveness testing, DPIAs and corrective action plans", "es": "Pruebas de eficacia al menos anuales, EIPD y planes de acción correctiva" }
+      }
+    },
+    {
+      "id": "toms-physical",
+      "token": "physical security model",
+      "scope": "*",
+      "type": "choice",
+      "required": false,
+      "default": "provider-managed",
+      "boilerplateVariable": "tomsPhysical",
+      "label": {
+        "en": "Who operates the physical data-center security?",
+        "es": "¿Quién gestiona la seguridad física de los centros de datos?"
+      },
+      "hint": {
+        "en": "Most SaaS processors run on cloud infrastructure and cannot truthfully claim badge readers and cameras as their own measures — the provider-managed wording states physical security is the infrastructure provider's, validated through at least annual review of its SOC 2 / ISO 27001 reports.",
+        "es": "La mayoría de los encargados SaaS operan sobre infraestructura en la nube y no pueden afirmar con veracidad que los lectores de tarjetas y las cámaras son medidas propias — la redacción de gestión por el proveedor indica que la seguridad física corresponde al proveedor de infraestructura, validada mediante la revisión al menos anual de sus informes SOC 2 / ISO 27001."
+      },
+      "options": ["provider-managed", "own-facilities"],
+      "optionLabels": {
+        "provider-managed": { "en": "Cloud/infrastructure provider's data centers (validated via audit reports)", "es": "Centros de datos del proveedor de nube/infraestructura (validados mediante informes de auditoría)" },
+        "own-facilities": { "en": "The Processor's own facilities (badge access, surveillance)", "es": "Instalaciones propias del Encargado (acceso con tarjeta, videovigilancia)" }
+      }
+    },
+    {
       "id": "processor-establishment",
       "token": "processor establishment",
       "scope": "*",
@@ -161,8 +237,8 @@
         "es": "¿Qué medidas suplementarias existen? (para la Evaluación de Impacto de las Transferencias)"
       },
       "hint": {
-        "en": "Select every measure the Processor actually applies. Note: under EDPB guidance, contractual and organizational measures alone cannot support an unqualified conclusion — at least one technical measure is needed.",
-        "es": "Seleccione todas las medidas que el Encargado aplica realmente. Nota: según el CEPD, las medidas contractuales y organizativas por sí solas no permiten una conclusión sin reservas — se necesita al menos una medida técnica."
+        "en": "Select every measure the Processor actually applies. Contractual measures are not asked here: they follow automatically from agreeing the \"Government access requests\" clause with full commitments. Note: under EDPB guidance, contractual and organizational measures alone cannot support an unqualified conclusion — at least one technical measure is needed.",
+        "es": "Seleccione todas las medidas que el Encargado aplica realmente. Las medidas contractuales no se preguntan aquí: se derivan automáticamente de pactar la cláusula «Solicitudes de acceso gubernamentales» con compromisos completos. Nota: según el CEPD, las medidas contractuales y organizativas por sí solas no permiten una conclusión sin reservas — se necesita al menos una medida técnica."
       },
       "options": [
         "tech-encryption-transit",
@@ -172,9 +248,6 @@
         "tech-pseudonymization",
         "tech-eu-residency",
         "tech-split-processing",
-        "contract-transparency-reports",
-        "contract-notify-challenge",
-        "contract-no-backdoor",
         "org-request-policy",
         "org-audits-review"
       ],
@@ -186,9 +259,6 @@
         "tech-pseudonymization": { "en": "Technical — pseudonymization before transfer, re-identification keys kept in the EEA", "es": "Técnica — seudonimización previa a la transferencia, con claves de reidentificación en el EEE" },
         "tech-eu-residency": { "en": "Technical — data stored and processed in EEA regions", "es": "Técnica — datos almacenados y tratados en regiones del EEE" },
         "tech-split-processing": { "en": "Technical — split or multi-party processing across jurisdictions", "es": "Técnica — tratamiento fragmentado o multiparte entre jurisdicciones" },
-        "contract-transparency-reports": { "en": "Contractual — transparency reporting on government requests", "es": "Contractual — informes de transparencia sobre solicitudes gubernamentales" },
-        "contract-notify-challenge": { "en": "Contractual — duty to notify and challenge government access requests", "es": "Contractual — obligación de notificar e impugnar solicitudes de acceso gubernamentales" },
-        "contract-no-backdoor": { "en": "Contractual — warranty of no back doors and no bulk-access orders received", "es": "Contractual — garantía de ausencia de puertas traseras y de órdenes de acceso masivo" },
         "org-request-policy": { "en": "Organizational — documented government-request handling policy with legal review", "es": "Organizativa — política documentada de gestión de solicitudes gubernamentales con revisión jurídica" },
         "org-audits-review": { "en": "Organizational — independent audits (ISO 27001/SOC 2) and scheduled TIA reviews", "es": "Organizativa — auditorías independientes (ISO 27001/SOC 2) y revisiones periódicas de la evaluación" }
       }
@@ -235,6 +305,50 @@
       "optionLabels": {
         "no": { "en": "No", "es": "No" },
         "yes": { "en": "Yes — include adaptations", "es": "Sí — incluir adaptaciones" }
+      }
+    },
+    {
+      "id": "tia-importer-hosted",
+      "token": "importer hosted service",
+      "scope": "*",
+      "type": "choice",
+      "required": false,
+      "default": "yes",
+      "label": {
+        "en": "Does the Processor store or host customer data as a service? (for the TIA)",
+        "es": "¿El Encargado almacena o aloja datos de clientes como servicio? (para la EIT)"
+      },
+      "hint": {
+        "en": "Hosted/cloud services are likely \"remote computing services\" under 18 U.S.C. § 2711, which brings the provider within potential reach of FISA 702 directives — the Transfer Impact Assessment records a documented conclusion either way.",
+        "es": "Los servicios alojados o en la nube son probablemente «remote computing services» según 18 U.S.C. § 2711, lo que sitúa al proveedor al alcance potencial de las directivas de la FISA 702 — la Evaluación de Impacto de las Transferencias documenta una conclusión en ambos casos."
+      },
+      "options": ["yes", "no", "unknown"],
+      "optionLabels": {
+        "yes": { "en": "Yes — hosted/cloud service", "es": "Sí — servicio alojado o en la nube" },
+        "no": { "en": "No — no hosted storage or communications for third parties", "es": "No — sin almacenamiento ni comunicaciones alojadas para terceros" },
+        "unknown": { "en": "Not determined", "es": "Sin determinar" }
+      }
+    },
+    {
+      "id": "tia-gov-requests-received",
+      "token": "government requests history",
+      "scope": "*",
+      "type": "choice",
+      "required": false,
+      "default": "unknown",
+      "label": {
+        "en": "Has the Processor received government access requests to date? (for the TIA)",
+        "es": "¿Ha recibido el Encargado solicitudes de acceso gubernamentales hasta la fecha? (para la EIT)"
+      },
+      "hint": {
+        "en": "Ask the Processor directly — its answer becomes a documented statement in the Transfer Impact Assessment and feeds the risk-based conclusion.",
+        "es": "Pregunte directamente al Encargado — su respuesta se convierte en una declaración documentada en la Evaluación de Impacto de las Transferencias y alimenta la conclusión basada en el riesgo."
+      },
+      "options": ["none", "some", "unknown"],
+      "optionLabels": {
+        "none": { "en": "No requests received (declared by the Processor)", "es": "Ninguna solicitud recibida (declarado por el Encargado)" },
+        "some": { "en": "Yes — requests have been received", "es": "Sí — se han recibido solicitudes" },
+        "unknown": { "en": "Not determined", "es": "Sin determinar" }
       }
     },
     {

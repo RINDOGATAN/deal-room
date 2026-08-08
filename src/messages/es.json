@@ -211,6 +211,13 @@
       "spanishDescription": "Texto del contrato en español"
     },
     "dealParameters": "Datos del Acuerdo",
+    "tiaWarnings": {
+      "title": "Revise sus selecciones de la Evaluación de Impacto de las Transferencias",
+      "pseudonymizationVsCategories": "Ha seleccionado «seudonimización previa a la transferencia» y, a la vez, transfiere datos directamente identificativos (datos de contacto, identificativos, financieros o credenciales). Una transferencia seudonimizada implica que el importador no recibe datos directamente identificativos — deseleccione una de las dos opciones o confirme que es intencionado (p. ej., solo una parte de los datos se seudonimiza).",
+      "euResidencyThirdCountry": "Ha seleccionado «datos almacenados y tratados en regiones del EEE» para un encargado establecido fuera del EEE. Es posible (infraestructura alojada en el EEE), y el documento lo hará constar en el Anexo I — confirme que refleja la práctica real.",
+      "confirmLabel": "Confirmo que las medidas seleccionadas reflejan la práctica real y acreditable del Encargado.",
+      "confirmRequired": "Revise y confirme las advertencias de la Evaluación de Impacto de las Transferencias antes de continuar."
+    },
     "dealParametersDescription": "Introduce los valores específicos del acuerdo. Aparecerán en el texto del contrato.",
     "requiredFieldsLegend": "indica un campo obligatorio",
     "parameterRequired": "Por favor, completa todos los datos obligatorios",

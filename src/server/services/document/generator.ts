@@ -228,6 +228,52 @@ export function buildTransferAddendaSections(
 }
 
 /**
+ * Documented importer-status conclusions for the Transfer Impact
+ * Assessment's Section 2 ({tiaEcspStatement} / {tiaRequestHistoryStatement}).
+ * The TIA must answer what it poses: instead of stating that the parties
+ * "have considered" the importer's ECSP status and request history without
+ * recording an outcome, these render the wizard's direct answers as
+ * conclusions — with a prudent-assumption fallback when undetermined.
+ * Exported for unit tests.
+ */
+export function buildTiaImporterStatements(
+  dealParams: Record<string, string>,
+  language: string
+): { tiaEcspStatement: string; tiaRequestHistoryStatement: string } {
+  const isES = language === "es";
+  const hosted = (dealParams["tia-importer-hosted"] || "yes").trim();
+  const history = (dealParams["tia-gov-requests-received"] || "unknown").trim();
+
+  const ecsp =
+    hosted === "no"
+      ? (isES
+          ? "El importador de datos no presta a terceros servicios alojados de almacenamiento o comunicaciones, por lo que es improbable que pueda calificarse como «electronic communication service provider» a los efectos de la FISA 702; la exposición residual se reduce en consecuencia, sin perjuicio de que los análisis anteriores de la EO 12333 y de la CLOUD Act siguen siendo pertinentes."
+          : "The data importer does not provide hosted storage or communications services to third parties and is therefore unlikely to qualify as an \"electronic communication service provider\" within the meaning of FISA 702; the residual exposure is correspondingly reduced, although the EO 12333 and CLOUD Act analyses above remain relevant.")
+      : hosted === "yes"
+        ? (isES
+            ? "El importador de datos almacena o aloja datos de clientes como servicio, por lo que probablemente pueda calificarse como proveedor de «remote computing service» en el sentido del 18 U.S.C. § 2711 y, en consecuencia, como «electronic communication service provider» potencialmente sujeto a directivas dictadas al amparo de la FISA 702; la evaluación siguiente asume, por tanto, que el importador queda dentro del alcance de dicha potestad."
+            : "The data importer stores or hosts customer data as a service and is therefore likely to qualify as a provider of \"remote computing service\" within the meaning of 18 U.S.C. § 2711, and consequently as an \"electronic communication service provider\" potentially subject to directives under FISA 702; the assessment below therefore assumes that the importer falls within the scope of that authority.")
+        : (isES
+            ? "Las partes no han podido determinar de forma concluyente si el importador puede calificarse como «electronic communication service provider» a los efectos de la FISA 702; la evaluación siguiente parte, por prudencia, de la hipótesis de que sí puede serlo."
+            : "The parties could not conclusively determine whether the importer qualifies as an \"electronic communication service provider\" within the meaning of FISA 702; the assessment below therefore proceeds on the prudent assumption that it may.");
+
+  const req =
+    history === "none"
+      ? (isES
+          ? "El importador de datos ha declarado que, a la fecha de esta evaluación, no ha recibido ninguna solicitud gubernamental de acceso a datos personales tratados por cuenta de sus clientes; esta declaración queda documentada y se renovará en cada revisión de la presente evaluación."
+          : "The data importer has declared that, as at the date of this assessment, it has not received any government request for access to personal data processed for its customers; that declaration is documented here and will be refreshed at each review of this assessment.")
+      : history === "some"
+        ? (isES
+            ? "El importador de datos ha recibido solicitudes gubernamentales de acceso en el pasado; las partes han tenido en cuenta su tramitación de dichas solicitudes y sus informes de transparencia al alcanzar la conclusión del apartado 4."
+            : "The data importer has received government access requests in the past; the parties have taken the importer's handling of those requests and its transparency reporting into account in reaching the conclusion in Section 4.")
+        : (isES
+            ? "No se ha dispuesto de información fiable sobre el historial de solicitudes gubernamentales de acceso del importador; la evaluación procede de forma conservadora y esta carencia se abordará en la próxima revisión."
+            : "No reliable information on the importer's history of government access requests was available; the assessment proceeds conservatively and this gap will be addressed at the next review.");
+
+  return { tiaEcspStatement: ecsp, tiaRequestHistoryStatement: req };
+}
+
+/**
  * Process boilerplate data with variable interpolation.
  * Exported for unit tests (annex showIf filtering); production callers stay in this module.
  */
@@ -286,26 +332,46 @@ export function processBoilerplate(
     text: resolve(p.text),
   }));
 
-  // Conditional annexes: an annex may declare `showIf` — one condition or an
-  // array (ANDed) of `{ variable, in }` — evaluated against the interpolation
-  // variables (which include every deal parameter that declares a
-  // boilerplateVariable). Absent showIf keeps today's always-render behaviour.
-  // Used by the DPA to attach the SCC-incorporation annex only for third-country
-  // processors and the TIA annex only when the parties opted in.
-  const annexVisible = (a: Record<string, unknown>): boolean => {
-    if (!a.showIf) return true;
-    const conditions = Array.isArray(a.showIf) ? a.showIf : [a.showIf];
-    return (conditions as Array<{ variable?: string; in?: string[] }>).every(
-      (c) => !!c.variable && Array.isArray(c.in) && c.in.includes(variables[c.variable] ?? "")
-    );
+  // Conditional annexes and sections: an annex (or one of its `sections`)
+  // may declare `showIf` — one condition or an array (ANDed) of either
+  // `{ variable, in: [...] }` (exact match) or `{ variable, contains: "x" }`
+  // (membership in a comma-joined multiselect value) — evaluated against the
+  // interpolation variables (which include every deal parameter that
+  // declares a boilerplateVariable). Absent showIf keeps the always-render
+  // behaviour. Used by the DPA for the SCC/TIA annexes and to compose
+  // Annex II from a modest baseline plus individually confirmed measures.
+  const conditionsMet = (showIf: unknown): boolean => {
+    if (!showIf) return true;
+    const conditions = Array.isArray(showIf) ? showIf : [showIf];
+    return (
+      conditions as Array<{ variable?: string; in?: string[]; contains?: string }>
+    ).every((c) => {
+      if (!c.variable) return false;
+      const value = variables[c.variable] ?? "";
+      if (Array.isArray(c.in)) return c.in.includes(value);
+      if (typeof c.contains === "string") {
+        return value
+          .split(",")
+          .map((s) => s.trim())
+          .includes(c.contains);
+      }
+      return false;
+    });
   };
 
   const annexes = (bp.annexes as Array<Record<string, unknown>> || [])
-    .filter(annexVisible)
-    .map((a) => ({
-      title: resolveLocalizedString(a.title, language),
-      text: resolve(a.text),
-    }));
+    .filter((a) => conditionsMet(a.showIf))
+    .map((a) => {
+      const parts: string[] = [];
+      if (a.text) parts.push(resolve(a.text));
+      for (const s of (a.sections as Array<Record<string, unknown>> | undefined) ?? []) {
+        if (conditionsMet(s.showIf)) parts.push(resolve(s.text));
+      }
+      return {
+        title: resolveLocalizedString(a.title, language),
+        text: parts.join("\n\n"),
+      };
+    });
 
   const partyLabels = bp.partyLabels as Record<string, unknown> | undefined;
 
@@ -387,6 +453,27 @@ export async function generateContractData(
   // Parameter interpolation setup
   const parameterSchema = deal.contractTemplate.parameterSchema as ParameterSchema | null;
   const dealParams = (deal.parameters as Record<string, string>) || {};
+
+  // A custom law/forum option replaces the jurisdiction-derived governing
+  // law (deal.governingLaw then only records which clause library was
+  // used). Every rendering of "the governing law" — the cover page, the
+  // {governingLaw} boilerplate variable and the body article — must read
+  // the parties' free-text choice, or the cover and the governing-law
+  // section would name different laws.
+  const customLawAgreed = deal.clauses.some(
+    (c) =>
+      ["governing-law-jurisdiction", "dispute-resolution"].includes(
+        c.clauseTemplate.clauseId
+      ) &&
+      c.status === "AGREED" &&
+      !!c.agreedOptionId &&
+      ["custom", "custom-law-forum"].includes(
+        c.clauseTemplate.options.find((o) => o.id === c.agreedOptionId)?.code ?? ""
+      )
+  );
+  const customGoverningLaw = customLawAgreed
+    ? (dealParams["custom-governing-law"] || "").trim()
+    : "";
 
   // Compile clauses with agreed options
   const clauses: ClauseData[] = [];
@@ -509,16 +596,24 @@ export async function generateContractData(
   const sdA = initiator.signingDetails as { legalName?: string; address?: string; taxId?: string; signatoryName?: string; signatoryTitle?: string } | null;
   const sdB = respondent?.signingDetails as { legalName?: string; address?: string; taxId?: string; signatoryName?: string; signatoryTitle?: string } | null;
 
-  // Build party names with signing details → company → name fallback
-  const partyAName = sdA?.legalName || initiator.company || initiator.name || initiator.email;
+  // Build party names with signing details → company → name fallback.
+  // A login email is never a party or signatory name: a signable document
+  // with "alice@example.com" on the signature line reads as an assembly
+  // artifact, so emails fall through to the fill-in placeholder instead.
+  const namePlaceholder = "[_________________]";
+  const nonEmail = (v?: string | null) => (v && !v.includes("@") ? v : undefined);
+  const partyAName =
+    sdA?.legalName || initiator.company || nonEmail(initiator.name) || namePlaceholder;
   const partyBName = respondent
-    ? (sdB?.legalName || respondent.company || respondent.name || respondent.email)
-    : "[_________________]";
+    ? sdB?.legalName || respondent.company || nonEmail(respondent.name) || namePlaceholder
+    : namePlaceholder;
 
   const partyAAddress = sdA?.address || "[Address]";
-  const partyBAddress = respondent ? (sdB?.address || "[Address]") : "[_________________]";
-  const partyASignatoryName = sdA?.signatoryName || initiator.name || "[Name]";
-  const partyBSignatoryName = respondent ? (sdB?.signatoryName || respondent.name || "[Name]") : "[_________________]";
+  const partyBAddress = respondent ? (sdB?.address || "[Address]") : namePlaceholder;
+  const partyASignatoryName = sdA?.signatoryName || nonEmail(initiator.name) || namePlaceholder;
+  const partyBSignatoryName = respondent
+    ? sdB?.signatoryName || nonEmail(respondent.name) || namePlaceholder
+    : namePlaceholder;
   const partyASignatoryTitle = sdA?.signatoryTitle || "[_________________]";
   const partyBSignatoryTitle = respondent ? (sdB?.signatoryTitle || "[_________________]") : "[_________________]";
 
@@ -526,6 +621,7 @@ export async function generateContractData(
   const variables: Record<string, string> = {
     effectiveDate,
     governingLaw:
+      customGoverningLaw ||
       GOVERNING_LAW_DISPLAY[deal.governingLaw]?.[language] ||
       GOVERNING_LAW_DISPLAY[deal.governingLaw]?.en ||
       deal.governingLaw,
@@ -566,8 +662,8 @@ export async function generateContractData(
     variables.dataCategoriesList = labels.length
       ? labels.map((l, i) => `(${letters[i] || i + 1}) ${l};`).join("\n")
       : (language === "es"
-          ? "(según se describa con más detalle en el contrato principal)"
-          : "(as further described in the principal agreement)");
+          ? "(según se describa con más detalle en el Acuerdo Principal)"
+          : "(as further described in the Principal Agreement)");
   }
 
   // DPA international transfers (Annex III/IV). Derived variables for the
@@ -605,20 +701,51 @@ export async function generateContractData(
           : "The Processor has not declared an active certification under the EU-U.S. Data Privacy Framework. Accordingly, the Standard Contractual Clauses incorporated in this Annex constitute the applicable transfer mechanism under Article 46(2)(c) GDPR.");
 
     const sgParam = parameterSchema?.parameters?.find((p) => p.id === "tia-safeguards");
+    // Contractual supplementary measures are representations about the DPA's
+    // own content, so they are DERIVED from the agreed government-access
+    // clause rather than read from wizard checkboxes: a checked box without
+    // the clause would make Annex IV assert commitments the document doesn't
+    // contain. Technical/organizational selections pass through as answered.
     const sgKeys = (dealParams["tia-safeguards"] || "")
-      .split(",").map((s) => s.trim()).filter(Boolean);
+      .split(",").map((s) => s.trim()).filter(Boolean)
+      .filter((k) => !k.startsWith("contract-"));
+    const govClause = deal.clauses.find(
+      (c) =>
+        c.clauseTemplate.clauseId === "government-access-requests" &&
+        c.status === "AGREED" &&
+        c.agreedOptionId
+    );
+    const govCommitments =
+      govClause?.clauseTemplate.options.find((o) => o.id === govClause.agreedOptionId)
+        ?.code === "commitments";
     if (sgParam) {
       const sgLabels = sgKeys.map((k) =>
         sgParam.optionLabels?.[k]
           ? resolveLocalizedString(sgParam.optionLabels[k], language)
           : k
       );
+      if (govCommitments) {
+        sgLabels.push(
+          isES
+            ? "Contractual — compromisos sobre solicitudes de acceso gubernamentales recogidos en la cláusula «Solicitudes de acceso gubernamentales» de este ATD (notificación e impugnación, divulgación mínima, documentación e informes agregados de transparencia; garantía de ausencia de puertas traseras y de órdenes de acceso masivo recibidas)"
+            : "Contractual — government-access commitments under the \"Government access requests\" clause of this DPA (notification and challenge, minimum disclosure, documentation and aggregate transparency reporting; warranty of no back doors and no bulk-access orders received)"
+        );
+      }
       const letters = "abcdefghijklmnopqrstuvwxyz";
       variables.tiaSafeguardsList = sgLabels.length
         ? sgLabels.map((l, i) => `(${letters[i] || i + 1}) ${l};`).join("\n")
         : (isES
             ? "(no se han seleccionado medidas suplementarias específicas)"
             : "(no specific supplementary measures selected)");
+    }
+    // EEA data residency is a statement about where processing happens, so
+    // when claimed it must surface in the processing description (Annex I §2
+    // and Annex IV §1), not only as a TIA bullet.
+    if (sgKeys.includes("tech-eu-residency") && variables.processingPurpose) {
+      variables.processingPurpose +=
+        (isES
+          ? "\nTodo el almacenamiento y tratamiento de los Datos Personales se realiza en regiones de centros de datos situadas en el EEE."
+          : "\nAll storage and processing of the Personal Data takes place in data-center regions located within the EEA.");
     }
     const hasTechnicalMeasure = sgKeys.some((k) => k.startsWith("tech-"));
     variables.tiaConclusion = hasTechnicalMeasure
@@ -630,6 +757,7 @@ export async function generateContractData(
           : "The parties record that the supplementary measures adopted are contractual and organizational in nature. In line with EDPB Recommendations 01/2020, such measures cannot by themselves prevent access by public authorities of the destination country. The parties document the corresponding residual risk, undertake to evaluate the adoption of additional technical measures, and will review this assessment at least every twelve (12) months, suspending the transfer should the risk cease to be acceptable.");
 
     variables.transferAddendaSections = buildTransferAddendaSections(dealParams, language);
+    Object.assign(variables, buildTiaImporterStatements(dealParams, language));
   }
 
   // Asymmetric-role contract (DPA: Controller vs Processor; BAA: Business
@@ -756,6 +884,7 @@ export async function generateContractData(
     dealName: deal.name,
     contractType: deal.contractTemplate.displayName,
     governingLaw:
+      customGoverningLaw ||
       GOVERNING_LAW_DISPLAY[deal.governingLaw]?.[language] ||
       GOVERNING_LAW_DISPLAY[deal.governingLaw]?.en ||
       deal.governingLaw,

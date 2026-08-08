@@ -211,6 +211,13 @@
       "spanishDescription": "Texto del contrato en español"
     },
     "dealParameters": "Deal Parameters",
+    "tiaWarnings": {
+      "title": "Check your Transfer Impact Assessment selections",
+      "pseudonymizationVsCategories": "You selected \"pseudonymization before transfer\" while also transferring directly identifying data (contact, identification, financial or credential data). A pseudonymized transfer means the importer receives no directly identifying data — deselect one of the two, or confirm this is intentional (e.g. only part of the data is pseudonymized).",
+      "euResidencyThirdCountry": "You selected \"data stored and processed in EEA regions\" for a processor established outside the EEA. That is possible (EEA-hosted infrastructure), and the document will state it in Annex I — confirm it reflects actual practice.",
+      "confirmLabel": "I confirm the selected measures reflect the Processor's actual, evidenceable practice.",
+      "confirmRequired": "Please review and confirm the Transfer Impact Assessment warnings before continuing."
+    },
     "dealParametersDescription": "Fill in the deal-specific values below. These will appear in the contract text.",
     "requiredFieldsLegend": "indicates a required field",
     "parameterRequired": "Please fill in all required parameters",

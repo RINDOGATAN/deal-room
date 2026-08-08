@@ -29,6 +29,7 @@ import {
   ChevronDown,
   Search,
   X,
+  AlertTriangle,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -39,6 +40,7 @@ import {
 } from "@/lib/contractRoles";
 import type { ParameterDefinition, ParameterSchema } from "@/lib/parameters";
 import { resolveParamString } from "@/lib/parameters";
+import { validateTiaSelections } from "@/lib/dpa-checks";
 import {
   Dialog,
   DialogContent,
@@ -282,6 +284,18 @@ export default function NewDealPage() {
     );
   }, [parameterSchema, selectedJurisdiction]);
 
+  // TIA cross-validation (DPA): selections that contradict other answers
+  // must be explicitly confirmed before the deal can be created.
+  const tiaWarnings = useMemo(
+    () => validateTiaSelections(parameterValues),
+    [parameterValues]
+  );
+  const [tiaConfirmed, setTiaConfirmed] = useState(false);
+  useEffect(() => {
+    // Any change to the warning set invalidates a previous confirmation.
+    setTiaConfirmed(false);
+  }, [tiaWarnings.join(",")]); // eslint-disable-line react-hooks/exhaustive-deps
+
   // Pre-fill default values when the applicable parameter set changes
   useEffect(() => {
     if (!visibleParameters.length) return;
@@ -447,6 +461,12 @@ export default function NewDealPage() {
         toast.error(`${t("parameterRequired")}: ${missingLabels}`);
         return;
       }
+    }
+
+    // TIA contradictions require an explicit confirmation (B-1 hardening)
+    if (tiaWarnings.length > 0 && !tiaConfirmed) {
+      toast.error(t("tiaWarnings.confirmRequired"));
+      return;
     }
     setMissingParams(new Set());
 
@@ -1378,6 +1398,34 @@ export default function NewDealPage() {
               </div>
             );
           })()}
+
+          {/* TIA cross-validation warnings (DPA): shown when supplementary
+              -measure selections contradict other answers; creation is gated
+              behind the confirmation checkbox while any are present. */}
+          {tiaWarnings.length > 0 && (
+            <div className="card-brutal border-warning/50 bg-warning/10 space-y-3">
+              <div className="flex items-start gap-3">
+                <AlertTriangle className="w-5 h-5 text-warning mt-0.5 flex-shrink-0" />
+                <div className="space-y-2">
+                  <p className="font-semibold text-warning">{t("tiaWarnings.title")}</p>
+                  <ul className="text-sm list-disc pl-5 space-y-1">
+                    {tiaWarnings.map((w) => (
+                      <li key={w}>{t(`tiaWarnings.${w}`)}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+              <label className="flex items-start gap-2 text-sm cursor-pointer pl-8">
+                <input
+                  type="checkbox"
+                  checked={tiaConfirmed}
+                  onChange={(e) => setTiaConfirmed(e.target.checked)}
+                  className="mt-0.5"
+                />
+                <span>{t("tiaWarnings.confirmLabel")}</span>
+              </label>
+            </div>
+          )}
 
           <div className="flex items-center justify-between gap-4 pt-4 border-t border-border">
             <p className="text-sm text-muted-foreground">
