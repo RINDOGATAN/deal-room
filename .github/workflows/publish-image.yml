@@ -70,8 +70,9 @@ jobs:
           file: deploy/sovereign/Dockerfile
           target: runner
           platforms: ${{ matrix.platform }}
+          # No NODE_IMAGE override: the Dockerfile's digest-pinned default
+          # applies, so published images build from an immutable base.
           build-args: |
-            NODE_IMAGE=node:22-alpine
             NEXT_PUBLIC_APP_URL=http://localhost:8486
           cache-from: type=gha,scope=app-${{ steps.platform.outputs.pair }}
           cache-to: type=gha,mode=max,scope=app-${{ steps.platform.outputs.pair }}
@@ -83,9 +84,8 @@ jobs:
           file: deploy/sovereign/Dockerfile
           target: migrator
           platforms: ${{ matrix.platform }}
-          build-args: |
-            NODE_IMAGE=node:22-alpine
-            NEXT_PUBLIC_APP_URL=http://localhost:8486
+          # No build-args: the migrator stage declares no NEXT_PUBLIC ARGs and
+          # the digest-pinned NODE_IMAGE default applies.
           cache-from: type=gha,scope=app-${{ steps.platform.outputs.pair }}
           outputs: type=image,name=${{ env.MIGRATOR_IMAGE }},push-by-digest=true,name-canonical=true,push=true
       - name: Export digests
