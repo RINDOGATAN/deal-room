@@ -111,7 +111,11 @@ export async function createSoloDealFromFacts(
   const parameterSchema = template.parameterSchema as unknown as ParameterSchema | null;
   const parameters = input.parameters ?? {};
   if (parameterSchema?.parameters?.length) {
-    const missing = validateRequiredParameters(parameters, parameterSchema);
+    const missing = validateRequiredParameters(
+      parameters,
+      parameterSchema,
+      input.governingLaw
+    );
     if (missing.length > 0) {
       return {
         ok: false,

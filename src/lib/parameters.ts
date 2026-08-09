@@ -241,14 +241,26 @@ export function findUnfilledParameterTokens(
 
 /**
  * Validate required parameters are present. Returns list of missing param ids.
+ *
+ * Jurisdiction-aware when `governingLaw` is given: a parameter scoped via
+ * `jurisdictions` to other governing laws is never collected by the wizard
+ * for this deal, so requiring it server-side would make creation impossible
+ * (the NDA's Spain-only forum city blocked every California/England NDA).
  */
 export function validateRequiredParameters(
   params: Record<string, string>,
-  schema: ParameterSchema | null | undefined
+  schema: ParameterSchema | null | undefined,
+  governingLaw?: string
 ): string[] {
   if (!schema?.parameters?.length) return [];
 
   return schema.parameters
+    .filter(
+      (p) =>
+        !governingLaw ||
+        !p.jurisdictions?.length ||
+        p.jurisdictions.includes(governingLaw)
+    )
     .filter((p) => p.required && !params[p.id]?.trim())
     .map((p) => p.id);
 }

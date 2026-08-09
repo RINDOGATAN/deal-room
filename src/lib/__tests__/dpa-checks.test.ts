@@ -3,6 +3,39 @@
 
 import { describe, it, expect } from "vitest";
 import { dealHasTia, validateTiaSelections } from "../dpa-checks";
+import { validateRequiredParameters, type ParameterSchema } from "../parameters";
+
+describe("validateRequiredParameters — jurisdiction awareness", () => {
+  const SCHEMA: ParameterSchema = {
+    version: "1.0",
+    parameters: [
+      { id: "always", token: "a", scope: "*", type: "text", required: true, label: "A" },
+      {
+        id: "spain-only",
+        token: "b",
+        scope: "*",
+        type: "text",
+        required: true,
+        jurisdictions: ["SPAIN"],
+        label: "B",
+      },
+    ],
+  };
+
+  it("does not require jurisdiction-scoped params for other governing laws", () => {
+    expect(validateRequiredParameters({ always: "x" }, SCHEMA, "CALIFORNIA")).toEqual([]);
+  });
+
+  it("still requires them for their own jurisdiction", () => {
+    expect(validateRequiredParameters({ always: "x" }, SCHEMA, "SPAIN")).toEqual([
+      "spain-only",
+    ]);
+  });
+
+  it("keeps legacy behavior when no governing law is passed", () => {
+    expect(validateRequiredParameters({ always: "x" }, SCHEMA)).toEqual(["spain-only"]);
+  });
+});
 
 describe("dealHasTia (standalone TIA download visibility)", () => {
   it("true for US-processor DPA with TIA defaulted or included", () => {

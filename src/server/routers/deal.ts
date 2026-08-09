@@ -515,7 +515,11 @@ export const dealRouter = createTRPCRouter({
         ...(input.parameters ?? {}),
       };
       if (parameterSchema?.parameters?.length) {
-        const missing = validateRequiredParameters(dealParameters, parameterSchema);
+        const missing = validateRequiredParameters(
+          dealParameters,
+          parameterSchema,
+          input.governingLaw
+        );
         if (missing.length > 0) {
           throw new TRPCError({
             code: "BAD_REQUEST",

@@ -62,19 +62,22 @@ test.describe("New Deal — Smoke Permutations", () => {
       await page.locator(`text=${scenario.language}`).first().click();
       await page.waitForTimeout(500);
 
-      // Step 4: Mode selector (skipped for soloModeOnly types)
+      // Step 4: Mode selector (skipped for soloModeOnly types). On the
+      // self-host posture (NEXT_PUBLIC_LOCAL_AUTH_ENABLED) the wizard hides
+      // this step entirely and defaults to SOLO — detect and adapt so the
+      // spec validates both postures instead of only hosted.
       if (!scenario.soloModeOnly) {
         const soloOption = page.locator("text=Configure & download").or(page.locator("text=Configurar y descargar"));
         const negoOption = page.locator("text=Negotiate with counterparty").or(page.locator("text=Negociar con contraparte"));
-        await expect(soloOption).toBeVisible({ timeout: 5000 });
-        await expect(negoOption).toBeVisible({ timeout: 5000 });
-
-        if (scenario.mode === "solo") {
-          await soloOption.click();
-        } else {
-          await negoOption.click();
+        if (await soloOption.isVisible().catch(() => false)) {
+          await expect(negoOption).toBeVisible({ timeout: 5000 });
+          if (scenario.mode === "solo") {
+            await soloOption.click();
+          } else {
+            await negoOption.click();
+          }
+          await page.waitForTimeout(500);
         }
-        await page.waitForTimeout(500);
       }
 
       // Step 5: Fill deal name
