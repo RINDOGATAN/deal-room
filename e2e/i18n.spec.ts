@@ -10,8 +10,8 @@ test.describe("Internationalization", () => {
       await page.locator("button").filter({ has: page.locator("svg.lucide-menu") }).click();
     }
 
-    // Language switcher should show "EN"
-    const langButton = page.locator("button", { hasText: "EN" });
+    // The switcher shows the TARGET locale: "ES" while browsing in English
+    const langButton = page.locator("button", { hasText: "ES" }).last();
     await expect(langButton).toBeVisible();
 
     // Navigation should be in English
@@ -26,19 +26,19 @@ test.describe("Internationalization", () => {
       await page.locator("button").filter({ has: page.locator("svg.lucide-menu") }).click();
     }
 
-    // Click the language switcher to switch to ES
-    const langButton = page.locator("button", { hasText: "EN" });
+    // The switcher shows the TARGET locale — click "ES" to switch to Spanish
+    const langButton = page.locator("button", { hasText: "ES" }).last();
     await langButton.click();
 
     // Wait for the page to refresh with Spanish locale
     // "My Deals" should become "Mis Acuerdos"
     await expect(page.locator("text=Mis Acuerdos").first()).toBeVisible({ timeout: 10_000 });
 
-    // Language button should now show "ES"
+    // The switcher now offers the way back: "EN"
     if (isMobile) {
       await page.locator("button").filter({ has: page.locator("svg.lucide-menu") }).click();
     }
-    await expect(page.locator("button", { hasText: "ES" }).first()).toBeVisible();
+    await expect(page.locator("button", { hasText: "EN" }).last()).toBeVisible();
   });
 
   test("switch back to EN works", async ({ page }) => {
@@ -50,14 +50,14 @@ test.describe("Internationalization", () => {
     if (isMobile) {
       await page.locator("button").filter({ has: page.locator("svg.lucide-menu") }).click();
     }
-    await page.locator("button", { hasText: "EN" }).click();
+    await page.locator("button", { hasText: "ES" }).last().click();
     await expect(page.locator("text=Mis Acuerdos").first()).toBeVisible({ timeout: 10_000 });
 
-    // Now switch back to EN
+    // Now switch back to EN (the switcher offers "EN" while in Spanish)
     if (isMobile) {
       await page.locator("button").filter({ has: page.locator("svg.lucide-menu") }).click();
     }
-    await page.locator("button", { hasText: "ES" }).first().click();
+    await page.locator("button", { hasText: "EN" }).last().click();
     await expect(page.locator("text=My Deals").first()).toBeVisible({ timeout: 10_000 });
   });
 });

@@ -9,6 +9,20 @@ history was not tracked per-release and lives only in git.
 
 ## [Unreleased]
 
+## [0.1.30] — 2026-08-09
+
+### Fixed
+- **NDA creation outside Spain works again.** A required parameter scoped to
+  one governing law (the NDA's Spain-only forum city) failed server-side
+  validation for every other jurisdiction since 2026-06-28 — the wizard
+  correctly never collects it there. Required-parameter validation is now
+  jurisdiction-aware in both the wizard and the agent fact intake.
+- E2E suite overhauled to match the current product: posture-aware mode
+  step, the DPA's required parameters filled by the shared helpers,
+  target-locale language-switcher expectations, unambiguous submit
+  locators, and premium-dependent specs self-skip on built-in-only
+  catalogs. 78 scenarios green locally on desktop and mobile.
+
 ## [0.1.29] — 2026-08-09
 
 ### Fixed

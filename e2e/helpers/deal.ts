@@ -109,6 +109,23 @@ export async function createDealWithOptions(
     }
   }
 
+  // Required DPA parameters (added 2026-08): fill sane defaults whenever the
+  // fields are present so journey specs that predate them keep working.
+  const purpose = page.locator("#param-processing-purpose");
+  const hasPurpose = await purpose
+    .waitFor({ state: "visible", timeout: 2_000 })
+    .then(() => true)
+    .catch(() => false);
+  if (hasPurpose) {
+    await purpose.fill("E2E: providing the contracted service.");
+    const categoryCard = page
+      .locator('button:has-text("Contact details"), button:has-text("Datos de contacto")')
+      .first();
+    if (await categoryCard.isVisible().catch(() => false)) {
+      await categoryCard.click();
+    }
+  }
+
   // Submit
   const continueButton = page.locator("button", { hasText: /continue|continuar/i });
   await expect(continueButton).toBeEnabled({ timeout: 10_000 });
@@ -172,10 +189,12 @@ export async function walkAllClauses(
     await radioCircle.click();
 
     if (isLast) {
-      // On the last clause, verify submit button is visible
+      // On the last clause, verify the FINAL submit button is visible.
+      // Precise phrases only: a loose /submit/ also matches the walker's
+      // "Skip to Submit" shortcut and trips strict mode.
       const submitButton = page.locator(
         "button",
-        { hasText: /submit|enviar|confirm.*generate|confirmar.*generar/i },
+        { hasText: /Submit All Selections|Confirm.*Generate|Enviar todas|Confirmar.*generar/i },
       );
       await expect(submitButton).toBeVisible({ timeout: 10_000 });
     } else {

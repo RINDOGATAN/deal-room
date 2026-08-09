@@ -10,6 +10,9 @@ async function createDealAndNavigate(page: import("@playwright/test").Page) {
   await page.locator("h3", { hasText: "Data Processing Agreement" }).first().click();
   await page.locator("text=California, USA").click();
   await page.locator("input#dealName").fill(`E2E Negotiate ${Date.now()}`);
+  // Required DPA parameters (2026-08): purpose + at least one data category
+  await page.locator("#param-processing-purpose").fill("E2E: providing the contracted service.");
+  await page.locator('button:has-text("Contact details")').first().click();
   await page.locator("button", { hasText: "Continue" }).click();
   await page.waitForURL("**/negotiate", { timeout: 15_000 });
 }
