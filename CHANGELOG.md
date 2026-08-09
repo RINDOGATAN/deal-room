@@ -9,6 +9,24 @@ history was not tracked per-release and lives only in git.
 
 ## [Unreleased]
 
+## [0.1.27] — 2026-08-09
+
+### Added
+- **Agent solo fact intake** (`POST /api/v1/agent/deals`, schema
+  `dealroom.solo-intake/1`): create an agreed SOLO deal from a fact
+  package — parameters plus clause selections by authored code — and get
+  the finished document set back in one call. This is the integration seam
+  for suite apps: DPO Central holds the customer's stack knowledge and
+  submits facts; Dealroom holds the contract know-how and returns the DPA,
+  DOCX/TXT, and the standalone TIA. Invalid or jurisdiction-unavailable
+  selections fail loudly with a 422; `Idempotency-Key` makes retries safe;
+  `selectionPolicy: "defaults"` fills unspecified clauses with the
+  jurisdiction baseline.
+- Agent API: `GET /deals/:id/tia` downloads the standalone Transfer Impact
+  Assessment (`?whitelabel=1` supported, like the document routes).
+- Migration: `AgentDealRoom.initiatorPlaybookId` is now nullable — solo
+  fact-intake deals have no playbook.
+
 ## [0.1.26] — 2026-08-09
 
 Second law-firm QA pass: every answer is a fact in a shared model, and the

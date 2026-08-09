@@ -992,7 +992,9 @@ model AgentDealRoom {
   negotiationToken     String          @unique
   initiatorCustomerId  String
   respondentCustomerId String?
-  initiatorPlaybookId  String
+  // Nullable since the solo fact-intake flow (deals created from a fact
+  // package rather than a negotiation) — those deals have no playbook.
+  initiatorPlaybookId  String?
   respondentPlaybookId String?
   status               AgentDealStatus @default(PENDING_RESPONDENT)
   contractType         String
@@ -1013,7 +1015,7 @@ model AgentDealRoom {
   attestingAttorneyName String? // e.g. "John Doe, Esq."
 
   dealRoom           DealRoom?     @relation(fields: [dealRoomId], references: [id])
-  initiatorPlaybook  Playbook      @relation("initiatorPlaybook", fields: [initiatorPlaybookId], references: [id])
+  initiatorPlaybook  Playbook?     @relation("initiatorPlaybook", fields: [initiatorPlaybookId], references: [id])
   respondentPlaybook Playbook?     @relation("respondentPlaybook", fields: [respondentPlaybookId], references: [id])
   dispute            AgentDispute?
 

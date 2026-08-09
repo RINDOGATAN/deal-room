@@ -541,6 +541,96 @@ Respondent joins with the token and their playbook. The server resolves the nego
 
 ### Deals
 
+#### Create Solo Deal (fact intake)
+
+```
+POST /deals
+Scope: negotiate
+Content-Type: application/json
+Idempotency-Key: <recommended>
+```
+
+Creates an **agreed SOLO deal from a fact package** — the integration seam
+for suite apps (DPO Central) that hold the customer's stack knowledge while
+Dealroom holds the contract know-how. One call returns the finished
+document set: contract PDF/DOCX/TXT plus the standalone Transfer Impact
+Assessment for DPAs with third-country processors.
+
+**Request body** (schema `dealroom.solo-intake/1`):
+
+```json
+{
+  "schema": "dealroom.solo-intake/1",
+  "contractType": "DPA",
+  "governingLaw": "SPAIN",
+  "language": "en",
+  "dealName": "Acme Corp DPA",
+  "initiatorCompany": "Acme Corp S.L.",
+  "fillRole": "PROCESSOR",
+  "selectionPolicy": "defaults",
+  "selections": {
+    "breach-notification": "72h",
+    "subprocessor-approval": "general-30d",
+    "government-access-requests": "commitments"
+  },
+  "parameters": {
+    "processing-purpose": "Providing the contracted SaaS analytics service.",
+    "data-categories": "contact-details,usage-technical",
+    "processor-establishment": "US",
+    "subprocessor-list": "AWS EMEA SARL (cloud hosting, EU-West)"
+  }
+}
+```
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `contractType` | string | Yes | Template contract type (e.g. `DPA`) |
+| `governingLaw` | string | Yes | Must be offered by the template |
+| `dealName` | string | Yes | Human-readable deal name |
+| `language` | string | No | Contract language, default `en` |
+| `fillRole` | string | No | Asymmetric-role contracts (DPA: `PROCESSOR`/`CONTROLLER`) |
+| `parameters` | object | No | Wizard parameters by authored id; required ones enforced |
+| `selections` | object | No | `clauseId` → option **code** or authored optionId |
+| `selectionPolicy` | string | No | `explicit` (default) or `defaults` — fill unspecified clauses with the jurisdiction baseline |
+
+Clause/option identifiers are skill-authored and stable across reseeds;
+introspect the catalog via `GET /templates/:contractType`. Unknown clauses,
+unknown options, or options unavailable in the chosen jurisdiction fail
+with `422` listing them. Missing required parameters fail with `422`.
+
+**Response:** `201 Created`
+
+```json
+{
+  "agentDealRoomId": "cmlkzopbt0015s5rahyf2e0ah",
+  "status": "AGREED",
+  "unresolvedClauseIds": [],
+  "documents": {
+    "pdf": "/api/v1/agent/deals/…/document",
+    "docx": "/api/v1/agent/deals/…/document/docx",
+    "txt": "/api/v1/agent/deals/…/document/txt",
+    "tia": "/api/v1/agent/deals/…/tia"
+  }
+}
+```
+
+With `selectionPolicy: "explicit"`, unspecified multi-option clauses are
+returned in `unresolvedClauseIds`, the deal stays `NEGOTIATING`, and
+`documents` is `null` until the clauses are resolved in the UI.
+
+#### Download Transfer Impact Assessment
+
+```
+GET /deals/:id/tia
+Scope: deals:read
+```
+
+Produces the DPA's Annex IV as its own PDF, on demand (the SCC Clause 14
+production duty). Supports `?whitelabel=1` to strip platform branding.
+`404` when the deal carries no TIA annex (EEA processor or TIA declined).
+The contract downloads (`/document`, `/document/docx`, `/document/txt`)
+also accept `?whitelabel=1` on the PDF variant.
+
 #### List Deals
 
 ```

@@ -150,8 +150,19 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    // Run the negotiation
-    const result = await runNegotiation(updatedDeal);
+    // Run the negotiation. Deals reached via /negotiate always carry an
+    // initiator playbook — the column is only nullable for the solo
+    // fact-intake flow, which never lands here.
+    if (!updatedDeal.initiatorPlaybook) {
+      return NextResponse.json(
+        { error: "Deal has no initiator playbook" },
+        { status: 400 }
+      );
+    }
+    const result = await runNegotiation({
+      ...updatedDeal,
+      initiatorPlaybook: updatedDeal.initiatorPlaybook,
+    });
 
     return NextResponse.json(result);
     });
