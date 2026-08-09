@@ -677,6 +677,15 @@ async function main() {
     console.log("  Deactivated retired Vetted Contracts feature package");
   }
 
+  // Skills-only refresh (self-host boots on existing installs): the catalog
+  // above is upserted by stable identifiers — the same operation hosted
+  // reseeds run against live data — but demo users, fixtures and sample
+  // customers must never be (re)planted into a firm's production database.
+  if (process.env.SEED_SKILLS_ONLY === "true") {
+    console.log("SEED_SKILLS_ONLY — skill catalog refreshed; skipping demo/fixture seeding.");
+    return;
+  }
+
   // ── Seed pre-approved supervisory attorney (fictional fixture) ──
   const supervisor = await prisma.supervisor.upsert({
     where: { email: "alex@example-firm.test" },

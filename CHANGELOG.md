@@ -9,6 +9,19 @@ history was not tracked per-release and lives only in git.
 
 ## [Unreleased]
 
+## [0.1.29] — 2026-08-09
+
+### Fixed
+- **Self-host installs now receive skill-content updates.** The sovereign
+  migrator seeded the skill catalog only on first boot, so existing installs
+  kept the contract content they were born with — all of this week's DPA
+  evolution never reached upgraded firms. Existing installs now refresh the
+  built-in catalog on every boot via a skills-only seed mode
+  (`SEED_SKILLS_ONLY`) that upserts by stable identifiers — the same
+  operation hosted reseeds run against live data — while demo users,
+  fixtures and sample customers are never (re)planted into a firm's
+  database.
+
 ## [0.1.28] — 2026-08-09
 
 ### Changed

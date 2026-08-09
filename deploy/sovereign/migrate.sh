@@ -73,7 +73,13 @@ else
 fi
 
 if node -e "const{PrismaClient}=require('@prisma/client');const p=new PrismaClient();p.user.count().then(c=>process.exit(c>0?0:1)).catch(()=>process.exit(1))"; then
-  echo "[migrate] existing users found — skipping seed."
+  # Existing install: refresh the BUILT-IN skill catalog so upgrades ship
+  # contract-content improvements, not just code. The seed upserts by
+  # stable identifiers (the same operation hosted reseeds run against live
+  # data), and SEED_SKILLS_ONLY skips demo users, fixtures and sample
+  # customers — nothing is ever (re)planted into a firm's database.
+  echo "[migrate] existing users found — refreshing skill catalog (skills only)…"
+  SEED_SKILLS_ONLY=true npm run db:seed
 else
   echo "[migrate] first boot — seeding skill catalog + demo data…"
   npm run db:seed
