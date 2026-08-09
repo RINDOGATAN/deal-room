@@ -1391,7 +1391,29 @@ export default function NewDealPage() {
                       <p className="text-xs text-muted-foreground mt-1 ml-6">
                         {t("advancedParametersHint")}
                       </p>
-                      <div className="space-y-5 mt-4">{optionalParams.map(renderParam)}</div>
+                      <div className="space-y-5 mt-4">
+                        {(() => {
+                          // Consecutive params sharing a `group` render under
+                          // one mini-heading (the DPA's eleven optional
+                          // questions read as five short sections, not a wall)
+                          let lastGroup: string | undefined;
+                          return optionalParams.map((p) => {
+                            const g = resolveParamString(p.group ?? "", locale) || undefined;
+                            const heading = g && g !== lastGroup ? g : undefined;
+                            lastGroup = g;
+                            return (
+                              <div key={p.id} className="space-y-5">
+                                {heading && (
+                                  <p className="text-xs font-medium uppercase tracking-wider text-primary/80 border-b border-border pb-1.5 pt-1">
+                                    {heading}
+                                  </p>
+                                )}
+                                {renderParam(p)}
+                              </div>
+                            );
+                          });
+                        })()}
+                      </div>
                     </details>
                   )}
                 </div>
@@ -1415,15 +1437,27 @@ export default function NewDealPage() {
                   </ul>
                 </div>
               </div>
-              <label className="flex items-start gap-2 text-sm cursor-pointer pl-8">
-                <input
-                  type="checkbox"
-                  checked={tiaConfirmed}
-                  onChange={(e) => setTiaConfirmed(e.target.checked)}
-                  className="mt-0.5"
-                />
-                <span>{t("tiaWarnings.confirmLabel")}</span>
-              </label>
+              <button
+                type="button"
+                onClick={() => setTiaConfirmed(!tiaConfirmed)}
+                aria-pressed={tiaConfirmed}
+                className={`sm:ml-8 w-full sm:w-auto rounded-xl border px-3 py-2.5 min-h-[44px] text-left text-sm flex items-start gap-2.5 transition-colors ${
+                  tiaConfirmed
+                    ? "border-primary bg-primary/10"
+                    : "border-warning/50 bg-background/40 hover:border-muted-foreground"
+                }`}
+              >
+                <span
+                  className={`mt-0.5 w-5 h-5 flex-shrink-0 flex items-center justify-center rounded-md border transition-colors ${
+                    tiaConfirmed ? "bg-primary border-primary" : "border-border bg-background"
+                  }`}
+                >
+                  {tiaConfirmed && <Check className="w-3.5 h-3.5 text-primary-foreground" />}
+                </span>
+                <span className={tiaConfirmed ? "text-foreground" : "text-muted-foreground"}>
+                  {t("tiaWarnings.confirmLabel")}
+                </span>
+              </button>
             </div>
           )}
 
@@ -1476,6 +1510,68 @@ function ParameterField({
   const placeholder = resolveParamString(param.placeholder, lang);
   const currencySymbol = CURRENCY_SYMBOLS[jurisdiction] || "$";
 
+  const optionLabelFor = (opt: string): string =>
+    param.optionLabels?.[opt]
+      ? resolveParamString(param.optionLabels[opt], lang)
+      : opt === "CALIFORNIA" ? `🇺🇸 ${t("jurisdictions.california")}` :
+        opt === "NEW_YORK" ? `🇺🇸 ${t("jurisdictions.newYork")}` :
+        opt === "ENGLAND_WALES" ? `🇬🇧 ${t("jurisdictions.englandWales")}` :
+        opt === "SPAIN" ? `🇪🇸 ${t("jurisdictions.spain")}` : opt;
+
+  // Short option sets stay as compact pills; anything wordy (the DPA's
+  // sentence-length choices) switches to the app's selectable-card style —
+  // left-aligned text with a radio/checkbox indicator, one column on
+  // mobile, two from sm up. Pills with multi-line text read as blobs.
+  const resolvedLabels = (param.options ?? []).map(optionLabelFor);
+  const useCards =
+    resolvedLabels.some((l) => l.length > 20) || resolvedLabels.length > 6;
+
+  const optionCard = (
+    opt: string,
+    isSelected: boolean,
+    onClick: () => void,
+    multi: boolean
+  ) => (
+    <button
+      key={opt}
+      type="button"
+      onClick={onClick}
+      aria-pressed={isSelected}
+      className={`rounded-xl border px-3 py-2.5 min-h-[44px] text-left text-sm flex items-start gap-2.5 transition-colors ${
+        isSelected
+          ? "border-primary bg-primary/10"
+          : "border-border bg-muted/30 hover:border-muted-foreground"
+      }`}
+    >
+      <span
+        className={`mt-0.5 w-5 h-5 flex-shrink-0 flex items-center justify-center border transition-colors ${
+          multi ? "rounded-md" : "rounded-full"
+        } ${isSelected ? "bg-primary border-primary" : "border-border bg-background"}`}
+      >
+        {isSelected && <Check className="w-3.5 h-3.5 text-primary-foreground" />}
+      </span>
+      <span className={isSelected ? "text-foreground" : "text-muted-foreground"}>
+        {optionLabelFor(opt)}
+      </span>
+    </button>
+  );
+
+  const optionPill = (opt: string, isSelected: boolean, onClick: () => void) => (
+    <button
+      key={opt}
+      type="button"
+      onClick={onClick}
+      aria-pressed={isSelected}
+      className={`px-3 py-2.5 min-h-[44px] rounded-full text-sm border transition-colors ${
+        isSelected
+          ? "bg-primary text-primary-foreground border-primary"
+          : "bg-muted/50 text-muted-foreground border-border hover:border-muted-foreground"
+      }`}
+    >
+      {optionLabelFor(opt)}
+    </button>
+  );
+
   return (
     <div className="space-y-1.5">
       <Label htmlFor={`param-${param.id}`}>
@@ -1483,55 +1579,37 @@ function ParameterField({
         {param.required && <span className="text-destructive ml-1">*</span>}
       </Label>
       {param.type === "multiSelect" && param.options ? (
-        <div className="flex flex-wrap gap-2">
+        <div
+          className={
+            useCards ? "grid grid-cols-1 sm:grid-cols-2 gap-2" : "flex flex-wrap gap-2"
+          }
+        >
           {param.options.map((opt) => {
             const selected = value.split(",").filter(Boolean);
             const isSelected = selected.includes(opt);
-            return (
-              <button
-                key={opt}
-                type="button"
-                onClick={() => {
-                  const current = value.split(",").filter(Boolean);
-                  const next = isSelected
-                    ? current.filter((v) => v !== opt)
-                    : [...current, opt];
-                  onChange(next.join(","));
-                }}
-                className={`px-3 py-2.5 min-h-[44px] rounded-full text-sm border transition-colors ${
-                  isSelected
-                    ? "bg-primary text-primary-foreground border-primary"
-                    : "bg-muted/50 text-muted-foreground border-border hover:border-muted-foreground"
-                }`}
-              >
-                {param.optionLabels?.[opt]
-                  ? resolveParamString(param.optionLabels[opt], lang)
-                  : opt === "CALIFORNIA" ? `🇺🇸 ${t("jurisdictions.california")}` :
-                  opt === "NEW_YORK" ? `🇺🇸 ${t("jurisdictions.newYork")}` :
-                  opt === "ENGLAND_WALES" ? `🇬🇧 ${t("jurisdictions.englandWales")}` :
-                  opt === "SPAIN" ? `🇪🇸 ${t("jurisdictions.spain")}` : opt}
-              </button>
-            );
+            const toggle = () => {
+              const current = value.split(",").filter(Boolean);
+              const next = isSelected
+                ? current.filter((v) => v !== opt)
+                : [...current, opt];
+              onChange(next.join(","));
+            };
+            return useCards
+              ? optionCard(opt, isSelected, toggle, true)
+              : optionPill(opt, isSelected, toggle);
           })}
         </div>
       ) : param.type === "choice" && param.options ? (
-        <div className="flex flex-wrap gap-2">
-          {param.options.map((opt) => (
-            <button
-              key={opt}
-              type="button"
-              onClick={() => onChange(opt)}
-              className={`px-3 py-2.5 min-h-[44px] rounded-full text-sm border transition-colors ${
-                value === opt
-                  ? "bg-primary text-primary-foreground border-primary"
-                  : "bg-muted/50 text-muted-foreground border-border hover:border-muted-foreground"
-              }`}
-            >
-              {param.optionLabels?.[opt]
-                ? resolveParamString(param.optionLabels[opt], lang)
-                : opt}
-            </button>
-          ))}
+        <div
+          className={
+            useCards ? "grid grid-cols-1 sm:grid-cols-2 gap-2" : "flex flex-wrap gap-2"
+          }
+        >
+          {param.options.map((opt) =>
+            useCards
+              ? optionCard(opt, value === opt, () => onChange(opt), false)
+              : optionPill(opt, value === opt, () => onChange(opt))
+          )}
         </div>
       ) : param.type === "textarea" ? (
         <textarea

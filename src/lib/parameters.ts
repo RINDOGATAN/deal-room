@@ -36,6 +36,9 @@ export interface ParameterDefinition {
   boilerplateVariable?: string; // also inject into {curly} boilerplate
   negotiable?: boolean; // if true, counterparty can propose changes during review
   jurisdictions?: string[]; // if set, only collected for these governing-law jurisdictions
+  /** Optional section heading (i18n) — consecutive parameters sharing a
+   *  group render under one mini-heading in the wizard's advanced list. */
+  group?: string | Record<string, string>;
 }
 
 export interface ParameterSchema {

@@ -50,17 +50,50 @@
         "children-data"
       ],
       "optionLabels": {
-        "contact-details": { "en": "Contact details", "es": "Datos de contacto" },
-        "identification-data": { "en": "Identification data", "es": "Datos identificativos" },
-        "financial-data": { "en": "Financial / payment data", "es": "Datos financieros y de pago" },
-        "account-credentials": { "en": "Account & login credentials", "es": "Credenciales de cuenta y acceso" },
-        "usage-technical": { "en": "Usage, device & technical data (incl. IP)", "es": "Datos de uso, dispositivo y técnicos (incl. IP)" },
-        "location-data": { "en": "Location data", "es": "Datos de localización" },
-        "professional-data": { "en": "Professional / employment data", "es": "Datos profesionales y de empleo" },
-        "marketing-comms": { "en": "Marketing & communications", "es": "Marketing y comunicaciones" },
-        "support-content": { "en": "Customer-support content", "es": "Contenido de atención al cliente" },
-        "special-category": { "en": "Special-category data (health, biometric, etc.)", "es": "Categorías especiales de datos (salud, biometría, etc.)" },
-        "children-data": { "en": "Children's data", "es": "Datos de menores" }
+        "contact-details": {
+          "en": "Contact details",
+          "es": "Datos de contacto"
+        },
+        "identification-data": {
+          "en": "Identification data",
+          "es": "Datos identificativos"
+        },
+        "financial-data": {
+          "en": "Financial / payment data",
+          "es": "Datos financieros y de pago"
+        },
+        "account-credentials": {
+          "en": "Account & login credentials",
+          "es": "Credenciales de cuenta y acceso"
+        },
+        "usage-technical": {
+          "en": "Usage, device & technical data (incl. IP)",
+          "es": "Datos de uso, dispositivo y técnicos (incl. IP)"
+        },
+        "location-data": {
+          "en": "Location data",
+          "es": "Datos de localización"
+        },
+        "professional-data": {
+          "en": "Professional / employment data",
+          "es": "Datos profesionales y de empleo"
+        },
+        "marketing-comms": {
+          "en": "Marketing & communications",
+          "es": "Marketing y comunicaciones"
+        },
+        "support-content": {
+          "en": "Customer-support content",
+          "es": "Contenido de atención al cliente"
+        },
+        "special-category": {
+          "en": "Special-category data (health, biometric, etc.)",
+          "es": "Categorías especiales de datos (salud, biometría, etc.)"
+        },
+        "children-data": {
+          "en": "Children's data",
+          "es": "Datos de menores"
+        }
       }
     },
     {
@@ -80,6 +113,10 @@
       "placeholder": {
         "en": "e.g. Vehicle registration numbers; loyalty-card history",
         "es": "p. ej. Matrículas de vehículos; historial de tarjeta de fidelización"
+      },
+      "group": {
+        "en": "Scope of processing",
+        "es": "Alcance del tratamiento"
       }
     },
     {
@@ -101,6 +138,10 @@
       "placeholder": {
         "en": "e.g. Direct identifiers (names, emails) — only pseudonymous user IDs are transferred; payment card data; special-category data",
         "es": "p. ej. Identificadores directos (nombres, correos) — solo se transfieren IDs de usuario seudónimos; datos de tarjetas de pago; categorías especiales de datos"
+      },
+      "group": {
+        "en": "Scope of processing",
+        "es": "Alcance del tratamiento"
       }
     },
     {
@@ -121,6 +162,10 @@
       "placeholder": {
         "en": "e.g. Amazon Web Services EMEA SARL (cloud hosting, EU-West); Postmark (transactional email, US)",
         "es": "p. ej. Amazon Web Services EMEA SARL (alojamiento en la nube, UE-Oeste); Postmark (correo transaccional, EE. UU.)"
+      },
+      "group": {
+        "en": "Sub-processors",
+        "es": "Subencargados"
       }
     },
     {
@@ -148,13 +193,38 @@
         "toms-testing"
       ],
       "optionLabels": {
-        "toms-encryption-rest": { "en": "Encryption at rest (AES-256) with managed key rotation", "es": "Cifrado en reposo (AES-256) con rotación de claves gestionada" },
-        "toms-access-reviews": { "en": "MFA everywhere + at-least-quarterly access reviews", "es": "MFA generalizada + revisiones de acceso al menos trimestrales" },
-        "toms-network": { "en": "Network security: IDS/IPS, segmentation, monthly scans, annual pen tests", "es": "Seguridad de red: IDS/IPS, segmentación, análisis mensuales, pentests anuales" },
-        "toms-logging": { "en": "Access logging with 12-month tamper-protected retention and alerting", "es": "Registro de accesos con conservación de 12 meses a prueba de manipulación y alertas" },
-        "toms-backup-dr": { "en": "Geo-separated backups, annual restore tests, documented DR plan (RTO/RPO)", "es": "Copias geoseparadas, pruebas anuales de restauración, plan de recuperación documentado (RTO/RPO)" },
-        "toms-personnel-checks": { "en": "Personnel background checks (where lawful) and disciplinary procedures", "es": "Verificación de antecedentes del personal (donde sea lícito) y procedimientos disciplinarios" },
-        "toms-testing": { "en": "At-least-annual effectiveness testing, DPIAs and corrective action plans", "es": "Pruebas de eficacia al menos anuales, EIPD y planes de acción correctiva" }
+        "toms-encryption-rest": {
+          "en": "Encryption at rest (AES-256) with managed key rotation",
+          "es": "Cifrado en reposo (AES-256) con rotación de claves gestionada"
+        },
+        "toms-access-reviews": {
+          "en": "MFA everywhere + at-least-quarterly access reviews",
+          "es": "MFA generalizada + revisiones de acceso al menos trimestrales"
+        },
+        "toms-network": {
+          "en": "Network security: IDS/IPS, segmentation, monthly scans, annual pen tests",
+          "es": "Seguridad de red: IDS/IPS, segmentación, análisis mensuales, pentests anuales"
+        },
+        "toms-logging": {
+          "en": "Access logging with 12-month tamper-protected retention and alerting",
+          "es": "Registro de accesos con conservación de 12 meses a prueba de manipulación y alertas"
+        },
+        "toms-backup-dr": {
+          "en": "Geo-separated backups, annual restore tests, documented DR plan (RTO/RPO)",
+          "es": "Copias geoseparadas, pruebas anuales de restauración, plan de recuperación documentado (RTO/RPO)"
+        },
+        "toms-personnel-checks": {
+          "en": "Personnel background checks (where lawful) and disciplinary procedures",
+          "es": "Verificación de antecedentes del personal (donde sea lícito) y procedimientos disciplinarios"
+        },
+        "toms-testing": {
+          "en": "At-least-annual effectiveness testing, DPIAs and corrective action plans",
+          "es": "Pruebas de eficacia al menos anuales, EIPD y planes de acción correctiva"
+        }
+      },
+      "group": {
+        "en": "Security measures (Annex II)",
+        "es": "Medidas de seguridad (Anexo II)"
       }
     },
     {
@@ -182,13 +252,38 @@
         "toms-testing"
       ],
       "optionLabels": {
-        "toms-encryption-rest": { "en": "Encryption at rest", "es": "Cifrado en reposo" },
-        "toms-access-reviews": { "en": "MFA + access reviews", "es": "MFA + revisiones de acceso" },
-        "toms-network": { "en": "Network security", "es": "Seguridad de red" },
-        "toms-logging": { "en": "Logging and monitoring", "es": "Registro y supervisión" },
-        "toms-backup-dr": { "en": "Backups and disaster recovery", "es": "Copias de seguridad y recuperación" },
-        "toms-personnel-checks": { "en": "Personnel screening", "es": "Verificación del personal" },
-        "toms-testing": { "en": "Testing and assessment", "es": "Pruebas y evaluación" }
+        "toms-encryption-rest": {
+          "en": "Encryption at rest",
+          "es": "Cifrado en reposo"
+        },
+        "toms-access-reviews": {
+          "en": "MFA + access reviews",
+          "es": "MFA + revisiones de acceso"
+        },
+        "toms-network": {
+          "en": "Network security",
+          "es": "Seguridad de red"
+        },
+        "toms-logging": {
+          "en": "Logging and monitoring",
+          "es": "Registro y supervisión"
+        },
+        "toms-backup-dr": {
+          "en": "Backups and disaster recovery",
+          "es": "Copias de seguridad y recuperación"
+        },
+        "toms-personnel-checks": {
+          "en": "Personnel screening",
+          "es": "Verificación del personal"
+        },
+        "toms-testing": {
+          "en": "Testing and assessment",
+          "es": "Pruebas y evaluación"
+        }
+      },
+      "group": {
+        "en": "Security measures (Annex II)",
+        "es": "Medidas de seguridad (Anexo II)"
       }
     },
     {
@@ -207,10 +302,23 @@
         "en": "Most SaaS processors run on cloud infrastructure and cannot truthfully claim badge readers and cameras as their own measures — the provider-managed wording states physical security is the infrastructure provider's, validated through at least annual review of its SOC 2 / ISO 27001 reports.",
         "es": "La mayoría de los encargados SaaS operan sobre infraestructura en la nube y no pueden afirmar con veracidad que los lectores de tarjetas y las cámaras son medidas propias — la redacción de gestión por el proveedor indica que la seguridad física corresponde al proveedor de infraestructura, validada mediante la revisión al menos anual de sus informes SOC 2 / ISO 27001."
       },
-      "options": ["provider-managed", "own-facilities"],
+      "options": [
+        "provider-managed",
+        "own-facilities"
+      ],
       "optionLabels": {
-        "provider-managed": { "en": "Cloud/infrastructure provider's data centers (validated via audit reports)", "es": "Centros de datos del proveedor de nube/infraestructura (validados mediante informes de auditoría)" },
-        "own-facilities": { "en": "The Processor's own facilities (badge access, surveillance)", "es": "Instalaciones propias del Encargado (acceso con tarjeta, videovigilancia)" }
+        "provider-managed": {
+          "en": "Cloud/infrastructure provider's data centers (validated via audit reports)",
+          "es": "Centros de datos del proveedor de nube/infraestructura (validados mediante informes de auditoría)"
+        },
+        "own-facilities": {
+          "en": "The Processor's own facilities (badge access, surveillance)",
+          "es": "Instalaciones propias del Encargado (acceso con tarjeta, videovigilancia)"
+        }
+      },
+      "group": {
+        "en": "Security measures (Annex II)",
+        "es": "Medidas de seguridad (Anexo II)"
       }
     },
     {
@@ -229,12 +337,29 @@
         "en": "If the Processor is established outside the EEA (for example, in the United States), the agreement incorporates the EU Standard Contractual Clauses (Module Two) by reference as Annex III.",
         "es": "Si el Encargado está establecido fuera del EEE (por ejemplo, en Estados Unidos), el acuerdo incorpora por referencia las Cláusulas Contractuales Tipo de la UE (Módulo Dos) como Anexo III."
       },
-      "options": ["EEA", "UK", "US", "OTHER"],
+      "options": [
+        "EEA",
+        "UK",
+        "US",
+        "OTHER"
+      ],
       "optionLabels": {
-        "EEA": { "en": "EEA (European Economic Area)", "es": "EEE (Espacio Económico Europeo)" },
-        "UK": { "en": "United Kingdom", "es": "Reino Unido" },
-        "US": { "en": "United States", "es": "Estados Unidos" },
-        "OTHER": { "en": "Other country outside the EEA", "es": "Otro país fuera del EEE" }
+        "EEA": {
+          "en": "EEA (European Economic Area)",
+          "es": "EEE (Espacio Económico Europeo)"
+        },
+        "UK": {
+          "en": "United Kingdom",
+          "es": "Reino Unido"
+        },
+        "US": {
+          "en": "United States",
+          "es": "Estados Unidos"
+        },
+        "OTHER": {
+          "en": "Other country outside the EEA",
+          "es": "Otro país fuera del EEE"
+        }
       }
     },
     {
@@ -253,10 +378,23 @@
         "en": "Only relevant for US-established processors. Verify at dataprivacyframework.gov. With an active certification, transfers rely on the 2023 adequacy decision and the SCCs are agreed as a fallback.",
         "es": "Solo relevante para encargados establecidos en EE.UU. Verifíquelo en dataprivacyframework.gov. Con certificación activa, las transferencias se amparan en la decisión de adecuación de 2023 y las CCT quedan pactadas como mecanismo subsidiario."
       },
-      "options": ["no", "yes"],
+      "options": [
+        "no",
+        "yes"
+      ],
       "optionLabels": {
-        "no": { "en": "No / not verified", "es": "No / sin verificar" },
-        "yes": { "en": "Yes — active certification verified", "es": "Sí — certificación activa verificada" }
+        "no": {
+          "en": "No / not verified",
+          "es": "No / sin verificar"
+        },
+        "yes": {
+          "en": "Yes — active certification verified",
+          "es": "Sí — certificación activa verificada"
+        }
+      },
+      "group": {
+        "en": "International transfers & TIA (Annexes III–IV)",
+        "es": "Transferencias internacionales y EIT (Anexos III–IV)"
       }
     },
     {
@@ -275,10 +413,23 @@
         "en": "Attached by default whenever the Processor is established outside the EEA (it is ignored otherwise): Clause 14 of the Standard Contractual Clauses requires this assessment. Choose No only if you maintain the assessment as a separate internal document.",
         "es": "Se adjunta por defecto cuando el Encargado está establecido fuera del EEE (en otro caso se ignora): la Cláusula 14 de las Cláusulas Contractuales Tipo exige esta evaluación. Elija No solo si mantiene la evaluación como documento interno separado."
       },
-      "options": ["no", "yes"],
+      "options": [
+        "no",
+        "yes"
+      ],
       "optionLabels": {
-        "no": { "en": "No", "es": "No" },
-        "yes": { "en": "Yes — attach as Annex IV", "es": "Sí — adjuntar como Anexo IV" }
+        "no": {
+          "en": "No",
+          "es": "No"
+        },
+        "yes": {
+          "en": "Yes — attach as Annex IV",
+          "es": "Sí — adjuntar como Anexo IV"
+        }
+      },
+      "group": {
+        "en": "International transfers & TIA (Annexes III–IV)",
+        "es": "Transferencias internacionales y EIT (Anexos III–IV)"
       }
     },
     {
@@ -307,15 +458,46 @@
         "org-audits-review"
       ],
       "optionLabels": {
-        "tech-encryption-transit": { "en": "Technical — encryption in transit (TLS 1.2+)", "es": "Técnica — cifrado en tránsito (TLS 1.2+)" },
-        "tech-encryption-rest": { "en": "Technical — encryption at rest with strong algorithms", "es": "Técnica — cifrado en reposo con algoritmos robustos" },
-        "tech-eu-held-keys": { "en": "Technical — encryption keys held in the EEA / by the Controller (HYOK/EKM)", "es": "Técnica — claves de cifrado custodiadas en el EEE o por el Responsable (HYOK/EKM)" },
-        "tech-client-side-encryption": { "en": "Technical — client-side / end-to-end encryption (processor never holds plaintext)", "es": "Técnica — cifrado en cliente o de extremo a extremo (el encargado nunca accede al texto en claro)" },
-        "tech-pseudonymization": { "en": "Technical — pseudonymization before transfer, re-identification keys kept in the EEA", "es": "Técnica — seudonimización previa a la transferencia, con claves de reidentificación en el EEE" },
-        "tech-eu-residency": { "en": "Technical — data stored and processed in EEA regions", "es": "Técnica — datos almacenados y tratados en regiones del EEE" },
-        "tech-split-processing": { "en": "Technical — split or multi-party processing across jurisdictions", "es": "Técnica — tratamiento fragmentado o multiparte entre jurisdicciones" },
-        "org-request-policy": { "en": "Organizational — documented government-request handling policy with legal review", "es": "Organizativa — política documentada de gestión de solicitudes gubernamentales con revisión jurídica" },
-        "org-audits-review": { "en": "Organizational — independent audits (ISO 27001/SOC 2) and scheduled TIA reviews", "es": "Organizativa — auditorías independientes (ISO 27001/SOC 2) y revisiones periódicas de la evaluación" }
+        "tech-encryption-transit": {
+          "en": "Technical — encryption in transit (TLS 1.2+)",
+          "es": "Técnica — cifrado en tránsito (TLS 1.2+)"
+        },
+        "tech-encryption-rest": {
+          "en": "Technical — encryption at rest with strong algorithms",
+          "es": "Técnica — cifrado en reposo con algoritmos robustos"
+        },
+        "tech-eu-held-keys": {
+          "en": "Technical — encryption keys held in the EEA / by the Controller (HYOK/EKM)",
+          "es": "Técnica — claves de cifrado custodiadas en el EEE o por el Responsable (HYOK/EKM)"
+        },
+        "tech-client-side-encryption": {
+          "en": "Technical — client-side / end-to-end encryption (processor never holds plaintext)",
+          "es": "Técnica — cifrado en cliente o de extremo a extremo (el encargado nunca accede al texto en claro)"
+        },
+        "tech-pseudonymization": {
+          "en": "Technical — pseudonymization before transfer, re-identification keys kept in the EEA",
+          "es": "Técnica — seudonimización previa a la transferencia, con claves de reidentificación en el EEE"
+        },
+        "tech-eu-residency": {
+          "en": "Technical — data stored and processed in EEA regions",
+          "es": "Técnica — datos almacenados y tratados en regiones del EEE"
+        },
+        "tech-split-processing": {
+          "en": "Technical — split or multi-party processing across jurisdictions",
+          "es": "Técnica — tratamiento fragmentado o multiparte entre jurisdicciones"
+        },
+        "org-request-policy": {
+          "en": "Organizational — documented government-request handling policy with legal review",
+          "es": "Organizativa — política documentada de gestión de solicitudes gubernamentales con revisión jurídica"
+        },
+        "org-audits-review": {
+          "en": "Organizational — independent audits (ISO 27001/SOC 2) and scheduled TIA reviews",
+          "es": "Organizativa — auditorías independientes (ISO 27001/SOC 2) y revisiones periódicas de la evaluación"
+        }
+      },
+      "group": {
+        "en": "International transfers & TIA (Annexes III–IV)",
+        "es": "Transferencias internacionales y EIT (Anexos III–IV)"
       }
     },
     {
@@ -334,10 +516,23 @@
         "en": "Only relevant when the Processor is outside the EEA. Incorporates the ICO's International Data Transfer Addendum to the EU SCCs by reference, applying only to transfers subject to the UK GDPR — harmless if none exist. Choose No to state instead that the parties will execute it separately when needed.",
         "es": "Solo relevante cuando el Encargado está fuera del EEE. Incorpora por referencia el Anexo de Transferencia Internacional de Datos de la ICO a las CCT de la UE, aplicable únicamente a transferencias sujetas al RGPD del Reino Unido — inocuo si no existen. Elija No para indicar que las partes lo suscribirán por separado cuando sea necesario."
       },
-      "options": ["no", "yes"],
+      "options": [
+        "no",
+        "yes"
+      ],
       "optionLabels": {
-        "no": { "en": "No — execute separately if needed", "es": "No — suscribir por separado si es necesario" },
-        "yes": { "en": "Yes — incorporate by reference", "es": "Sí — incorporar por referencia" }
+        "no": {
+          "en": "No — execute separately if needed",
+          "es": "No — suscribir por separado si es necesario"
+        },
+        "yes": {
+          "en": "Yes — incorporate by reference",
+          "es": "Sí — incorporar por referencia"
+        }
+      },
+      "group": {
+        "en": "International transfers & TIA (Annexes III–IV)",
+        "es": "Transferencias internacionales y EIT (Anexos III–IV)"
       }
     },
     {
@@ -356,10 +551,23 @@
         "en": "Only relevant when the Processor is outside the EEA. Adapts the SCCs for transfers subject to the Swiss Federal Act on Data Protection (FDPIC as supervisory authority, Swiss data subjects' rights preserved), applying only to the extent such transfers exist.",
         "es": "Solo relevante cuando el Encargado está fuera del EEE. Adapta las CCT para transferencias sujetas a la Ley Federal suiza de Protección de Datos (el PFPDT como autoridad de control, preservando los derechos de los interesados suizos), aplicándose solo en la medida en que existan tales transferencias."
       },
-      "options": ["no", "yes"],
+      "options": [
+        "no",
+        "yes"
+      ],
       "optionLabels": {
-        "no": { "en": "No", "es": "No" },
-        "yes": { "en": "Yes — include adaptations", "es": "Sí — incluir adaptaciones" }
+        "no": {
+          "en": "No",
+          "es": "No"
+        },
+        "yes": {
+          "en": "Yes — include adaptations",
+          "es": "Sí — incluir adaptaciones"
+        }
+      },
+      "group": {
+        "en": "International transfers & TIA (Annexes III–IV)",
+        "es": "Transferencias internacionales y EIT (Anexos III–IV)"
       }
     },
     {
@@ -377,11 +585,28 @@
         "en": "Hosted/cloud services are likely \"remote computing services\" under 18 U.S.C. § 2711, which brings the provider within potential reach of FISA 702 directives — the Transfer Impact Assessment records a documented conclusion either way.",
         "es": "Los servicios alojados o en la nube son probablemente «remote computing services» según 18 U.S.C. § 2711, lo que sitúa al proveedor al alcance potencial de las directivas de la FISA 702 — la Evaluación de Impacto de las Transferencias documenta una conclusión en ambos casos."
       },
-      "options": ["yes", "no", "unknown"],
+      "options": [
+        "yes",
+        "no",
+        "unknown"
+      ],
       "optionLabels": {
-        "yes": { "en": "Yes — hosted/cloud service", "es": "Sí — servicio alojado o en la nube" },
-        "no": { "en": "No — no hosted storage or communications for third parties", "es": "No — sin almacenamiento ni comunicaciones alojadas para terceros" },
-        "unknown": { "en": "Not determined", "es": "Sin determinar" }
+        "yes": {
+          "en": "Yes — hosted/cloud service",
+          "es": "Sí — servicio alojado o en la nube"
+        },
+        "no": {
+          "en": "No — no hosted storage or communications for third parties",
+          "es": "No — sin almacenamiento ni comunicaciones alojadas para terceros"
+        },
+        "unknown": {
+          "en": "Not determined",
+          "es": "Sin determinar"
+        }
+      },
+      "group": {
+        "en": "International transfers & TIA (Annexes III–IV)",
+        "es": "Transferencias internacionales y EIT (Anexos III–IV)"
       }
     },
     {
@@ -399,11 +624,28 @@
         "en": "Ask the Processor directly — its answer becomes a documented statement in the Transfer Impact Assessment and feeds the risk-based conclusion.",
         "es": "Pregunte directamente al Encargado — su respuesta se convierte en una declaración documentada en la Evaluación de Impacto de las Transferencias y alimenta la conclusión basada en el riesgo."
       },
-      "options": ["none", "some", "unknown"],
+      "options": [
+        "none",
+        "some",
+        "unknown"
+      ],
       "optionLabels": {
-        "none": { "en": "No requests received (declared by the Processor)", "es": "Ninguna solicitud recibida (declarado por el Encargado)" },
-        "some": { "en": "Yes — requests have been received", "es": "Sí — se han recibido solicitudes" },
-        "unknown": { "en": "Not determined", "es": "Sin determinar" }
+        "none": {
+          "en": "No requests received (declared by the Processor)",
+          "es": "Ninguna solicitud recibida (declarado por el Encargado)"
+        },
+        "some": {
+          "en": "Yes — requests have been received",
+          "es": "Sí — se han recibido solicitudes"
+        },
+        "unknown": {
+          "en": "Not determined",
+          "es": "Sin determinar"
+        }
+      },
+      "group": {
+        "en": "International transfers & TIA (Annexes III–IV)",
+        "es": "Transferencias internacionales y EIT (Anexos III–IV)"
       }
     },
     {
@@ -421,11 +663,28 @@
         "en": "Ask the Processor directly — its declared breach history becomes a documented statement in the Transfer Impact Assessment's assessment of the importer's practices.",
         "es": "Pregunte directamente al Encargado — su historial declarado de violaciones se convierte en una declaración documentada en la evaluación de las prácticas del importador dentro de la EIT."
       },
-      "options": ["none", "some", "unknown"],
+      "options": [
+        "none",
+        "some",
+        "unknown"
+      ],
       "optionLabels": {
-        "none": { "en": "None requiring authority notification (declared)", "es": "Ninguna que exigiera notificación a la autoridad (declarado)" },
-        "some": { "en": "Yes — breaches have occurred", "es": "Sí — se han producido violaciones" },
-        "unknown": { "en": "Not determined", "es": "Sin determinar" }
+        "none": {
+          "en": "None requiring authority notification (declared)",
+          "es": "Ninguna que exigiera notificación a la autoridad (declarado)"
+        },
+        "some": {
+          "en": "Yes — breaches have occurred",
+          "es": "Sí — se han producido violaciones"
+        },
+        "unknown": {
+          "en": "Not determined",
+          "es": "Sin determinar"
+        }
+      },
+      "group": {
+        "en": "International transfers & TIA (Annexes III–IV)",
+        "es": "Transferencias internacionales y EIT (Anexos III–IV)"
       }
     },
     {
@@ -446,7 +705,11 @@
         "en": "e.g. the State of Delaware and applicable United States federal law",
         "es": "p. ej. el Derecho del Estado de Delaware y el Derecho federal de los Estados Unidos aplicable"
       },
-      "negotiable": true
+      "negotiable": true,
+      "group": {
+        "en": "Governing law & forum",
+        "es": "Ley aplicable y foro"
+      }
     },
     {
       "id": "custom-courts",
@@ -466,7 +729,11 @@
         "en": "e.g. the state and federal courts located in New York County, New York",
         "es": "p. ej. los tribunales estatales y federales del condado de Nueva York (Nueva York)"
       },
-      "negotiable": true
+      "negotiable": true,
+      "group": {
+        "en": "Governing law & forum",
+        "es": "Ley aplicable y foro"
+      }
     }
   ]
 }

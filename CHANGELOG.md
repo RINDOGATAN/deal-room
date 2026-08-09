@@ -9,6 +9,22 @@ history was not tracked per-release and lives only in git.
 
 ## [Unreleased]
 
+## [0.1.28] — 2026-08-09
+
+### Changed
+- **Deal wizard option controls redesigned** for the DPA's wordy choices
+  (and any future skill's): options whose labels read as sentences now
+  render as the app's selectable cards — left-aligned text with a radio
+  circle (single choice) or checkbox square (multi-select) — in a
+  responsive grid (one column on mobile, two from small screens up), with
+  44 px minimum touch targets. Short option sets keep the compact pills.
+- The DPA's sixteen optional questions are grouped under five mini-headings
+  (Scope of processing, Sub-processors, Security measures, International
+  transfers & TIA, Governing law & forum) via a new optional `group` field
+  on parameters — usable by any skill.
+- The TIA cross-validation confirmation is a proper tappable control
+  instead of a bare checkbox.
+
 ## [0.1.27] — 2026-08-09
 
 ### Added
