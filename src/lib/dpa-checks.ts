@@ -24,6 +24,23 @@ export type DpaWarningId =
   | "pseudonymizationVsCategories"
   | "euResidencyThirdCountry";
 
+/**
+ * Whether a deal carries a Transfer Impact Assessment annex — drives the
+ * standalone TIA download link. Mirrors the annex's showIf conditions:
+ * third-country processor plus include-tia not declined (its schema default
+ * is "yes", so an absent value counts as included).
+ */
+export function dealHasTia(
+  contractType: string | null | undefined,
+  params: Record<string, string> | null | undefined
+): boolean {
+  if (contractType !== "DPA") return false;
+  const p = params ?? {};
+  const establishment = (p["processor-establishment"] || "").trim();
+  if (establishment !== "US" && establishment !== "OTHER") return false;
+  return (p["include-tia"] || "yes").trim() !== "no";
+}
+
 export function validateTiaSelections(
   values: Record<string, string>
 ): DpaWarningId[] {

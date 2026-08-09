@@ -899,6 +899,78 @@ interface ContractPDFProps {
   data: ContractData;
 }
 
+/**
+ * Standalone Transfer Impact Assessment (the DPA's Annex IV) — produced on
+ * demand so the assessment can be handed to a supervisory authority under
+ * Clause 14 of the SCCs without disclosing the entire signed contract.
+ * Renders nothing but the assessment: a header identifying the parties and
+ * the agreement it belongs to, then the annex body verbatim.
+ */
+export function TiaPDF({ data, producedOn }: { data: ContractData; producedOn: string }) {
+  const lang = data.language === "es" ? "es" : "en";
+  const isES = lang === "es";
+  const annex = data.boilerplate?.annexes?.find((a) =>
+    /^(Annex IV|Anexo IV)/.test(a.title)
+  );
+  const docTitle = isES
+    ? "EVALUACIÓN DE IMPACTO DE LAS TRANSFERENCIAS"
+    : "TRANSFER IMPACT ASSESSMENT";
+  const meta: Array<[string, string]> = [
+    [isES ? "Exportador de datos (Responsable)" : "Data exporter (Controller)", data.partyA.name],
+    [
+      isES ? "Importador de datos (Encargado)" : "Data importer (Processor)",
+      data.partyB?.name ?? "[_________________]",
+    ],
+    [
+      isES ? "Acuerdo al que pertenece" : "Belongs to",
+      isES
+        ? `Anexo IV del Acuerdo de encargo de tratamiento «${data.dealName}», con fecha ${formatDate(data.createdAt, lang)}`
+        : `Annex IV to the Data Processing Agreement "${data.dealName}", dated ${formatDate(data.createdAt, lang)}`,
+    ],
+    [isES ? "Documento producido el" : "Produced on", producedOn],
+  ];
+  const purpose = isES
+    ? "Este documento reproduce, sin modificaciones, la Evaluación de Impacto de las Transferencias pactada como Anexo IV del acuerdo indicado, para su puesta a disposición de la autoridad de control competente cuando lo solicite, conforme a la Cláusula 14 de las Cláusulas Contractuales Tipo incorporadas a dicho acuerdo."
+    : "This document reproduces, without modification, the Transfer Impact Assessment agreed as Annex IV of the agreement identified above, for disclosure to the competent supervisory authority on request in accordance with Clause 14 of the Standard Contractual Clauses incorporated into that agreement.";
+
+  return (
+    <Document title={`${docTitle} - ${data.dealName}`} author={brand.name} subject={docTitle}>
+      <Page size="A4" style={styles.page}>
+        <RunningHeader title={docTitle} dealName={data.dealName} />
+        <View style={styles.annexHeader}>
+          <Text style={styles.annexKicker}>
+            {isES ? "Anexo IV — documento autónomo" : "Annex IV — standalone production"}
+          </Text>
+          <Text style={styles.annexTitle}>
+            {isES ? "Evaluación de Impacto de las Transferencias" : "Transfer Impact Assessment"}
+          </Text>
+        </View>
+        {meta.map(([k, v], i) => (
+          <Text key={i} style={styles.annexPara}>
+            {k}: {v}
+          </Text>
+        ))}
+        <Text style={styles.annexPara}>{purpose}</Text>
+        <AnnexBody text={annex?.text ?? ""} />
+        {/* No cover page in this document, so the shared footer's page-number
+            offset would misnumber it — plain footer instead. */}
+        <View style={styles.runFooter} fixed>
+          <Text style={styles.runFootText}>{brand.name.toUpperCase()}</Text>
+          <Text style={styles.runFootText}></Text>
+          <Text
+            style={styles.runFootText}
+            render={({ pageNumber, totalPages }) =>
+              isES
+                ? `Página ${pageNumber} de ${totalPages}`
+                : `Page ${pageNumber} of ${totalPages}`
+            }
+          />
+        </View>
+      </Page>
+    </Document>
+  );
+}
+
 export function ContractPDF({ data }: ContractPDFProps) {
   const hasBoilerplate = data.boilerplate !== null;
   const sequential = data.boilerplate?.sequentialNumbering === true;

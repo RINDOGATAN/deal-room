@@ -2,7 +2,22 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 import { describe, it, expect } from "vitest";
-import { validateTiaSelections } from "../dpa-checks";
+import { dealHasTia, validateTiaSelections } from "../dpa-checks";
+
+describe("dealHasTia (standalone TIA download visibility)", () => {
+  it("true for US-processor DPA with TIA defaulted or included", () => {
+    expect(dealHasTia("DPA", { "processor-establishment": "US" })).toBe(true);
+    expect(dealHasTia("DPA", { "processor-establishment": "OTHER", "include-tia": "yes" })).toBe(true);
+  });
+
+  it("false when TIA declined, EEA/UK processor, other contract types, or no params", () => {
+    expect(dealHasTia("DPA", { "processor-establishment": "US", "include-tia": "no" })).toBe(false);
+    expect(dealHasTia("DPA", { "processor-establishment": "EEA" })).toBe(false);
+    expect(dealHasTia("DPA", { "processor-establishment": "UK" })).toBe(false);
+    expect(dealHasTia("MSA", { "processor-establishment": "US" })).toBe(false);
+    expect(dealHasTia("DPA", null)).toBe(false);
+  });
+});
 
 describe("validateTiaSelections (B-1 wizard cross-validation)", () => {
   it("flags pseudonymization claimed alongside directly identifying categories", () => {

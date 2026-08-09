@@ -34,12 +34,13 @@ import {
   Settings2,
 } from "lucide-react";
 import { resolveParamString } from "@/lib/parameters";
+import { dealHasTia } from "@/lib/dpa-checks";
 import { Badge } from "@/components/ui/badge";
 import { VettingBadge } from "@/components/VettingBadge";
 import { AiDraftPanel } from "@/components/ai/AiDraftPanel";
 import { useContractMessages } from "@/lib/use-contract-messages";
 
-function DownloadLinks({ dealId, className }: { dealId: string; className?: string }) {
+function DownloadLinks({ dealId, className, showTia }: { dealId: string; className?: string; showTia?: boolean }) {
   return (
     <div className={`flex items-center gap-1.5 text-xs text-muted-foreground ${className ?? ""}`}>
       <Download className="w-3.5 h-3.5 flex-shrink-0" />
@@ -48,6 +49,12 @@ function DownloadLinks({ dealId, className }: { dealId: string; className?: stri
       <a href={`/api/deals/${dealId}/document/docx`} className="hover:text-foreground underline underline-offset-2">DOCX</a>
       <span aria-hidden>·</span>
       <a href={`/api/deals/${dealId}/document/txt`} className="hover:text-foreground underline underline-offset-2">TXT</a>
+      {showTia && (
+        <>
+          <span aria-hidden>·</span>
+          <a href={`/api/deals/${dealId}/tia`} className="hover:text-foreground underline underline-offset-2">TIA</a>
+        </>
+      )}
     </div>
   );
 }
@@ -1495,7 +1502,13 @@ function ReviewContent({ dealId }: { dealId: string }) {
                 <p className="text-sm text-muted-foreground mb-3">
                   {t("downloadContractDescription")}
                 </p>
-                <DownloadLinks dealId={dealId} />
+                <DownloadLinks
+                  dealId={dealId}
+                  showTia={dealHasTia(
+                    deal?.contractTemplate?.contractType,
+                    deal?.parameters as Record<string, string> | null
+                  )}
+                />
               </div>
             </div>
           </div>

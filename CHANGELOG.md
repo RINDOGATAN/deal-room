@@ -9,6 +9,21 @@ history was not tracked per-release and lives only in git.
 
 ## [Unreleased]
 
+## [0.1.25] — 2026-08-09
+
+### Added
+- **Standalone Transfer Impact Assessment export** (`GET /api/deals/[id]/tia`
+  + a "TIA" download link on the deal and review pages): produces the DPA's
+  Annex IV as its own PDF on demand, with a header identifying the parties
+  and the agreement it belongs to — so the assessment can be handed to a
+  supervisory authority under Clause 14 of the SCCs without disclosing the
+  entire signed contract. 404s cleanly for deals without a TIA annex.
+
+### Removed
+- The sibling-document engine design was retracted: interrelated documents
+  belong to firm-side tooling, not Dealroom — Dealroom's product is the
+  isolated contract with its intertwined annexes.
+
 ## [0.1.24] — 2026-08-08
 
 DPA hardening from our own law firm's QA pass over generated wizard output
