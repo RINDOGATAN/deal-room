@@ -78,8 +78,9 @@ export async function GET(
       { year: "numeric", month: "long", day: "numeric" }
     );
 
+    const whiteLabel = request.nextUrl.searchParams.get("whitelabel") === "1";
     const pdfBuffer = await renderToBuffer(
-      TiaPDF({ data: contractData, producedOn })
+      TiaPDF({ data: contractData, producedOn, whiteLabel })
     );
 
     // Same slug rules as the contract download, TIA-prefixed

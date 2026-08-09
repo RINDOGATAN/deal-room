@@ -232,6 +232,16 @@
     "advancedParametersHint": "Todos tienen valores por defecto según la práctica habitual. Ábrelo solo si quieres cambiarlos."
   },
   "dealDetail": {
+    "obligationsLedger": "Obligaciones continuadas",
+    "obligationsLedgerDescription": "Deberes recurrentes y por evento que este documento crea, derivados de los términos acordados. Inclúyalos en su calendario de cumplimiento.",
+    "obligationFrequency": {
+      "annual": "Anual",
+      "quarterly": "Trimestral",
+      "monthly": "Mensual",
+      "twelveMonthly": "Cada 12 meses",
+      "event": "Por evento",
+      "continuous": "Continua"
+    },
     "makeSelections": "Elegir Opciones",
     "continueNegotiation": "Continuar Negociación",
     "reviewCompromises": "Revisar Compromisos",

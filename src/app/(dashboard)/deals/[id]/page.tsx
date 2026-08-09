@@ -44,6 +44,7 @@ import {
 } from "@/components/ui/dialog";
 import { useContractMessages } from "@/lib/use-contract-messages";
 import { dealHasTia } from "@/lib/dpa-checks";
+import { buildObligationsLedger } from "@/lib/obligations";
 
 function DownloadLinks({ dealId, className, showTia }: { dealId: string; className?: string; showTia?: boolean }) {
   return (
@@ -60,6 +61,14 @@ function DownloadLinks({ dealId, className, showTia }: { dealId: string; classNa
           <a href={`/api/deals/${dealId}/tia`} className="hover:text-foreground underline underline-offset-2">TIA</a>
         </>
       )}
+      <span aria-hidden>·</span>
+      <a
+        href={`/api/deals/${dealId}/document?whitelabel=1`}
+        title="PDF without platform branding — for signature-ready finals"
+        className="hover:text-foreground underline underline-offset-2"
+      >
+        White-label
+      </a>
     </div>
   );
 }
@@ -732,6 +741,49 @@ function DealDetailContent({ dealId }: { dealId: string }) {
           )}
         </div>}
       </div>
+
+      {/* Obligations ledger — the recurring / event-driven duties the agreed
+          document creates, derived from agreed option codes + parameters
+          (the same fact model the generator uses). DPA-only for now. */}
+      {["AGREED", "SIGNING", "COMPLETED"].includes(deal.status) &&
+        (() => {
+          const ledger = buildObligationsLedger({
+            contractType: deal.contractTemplate?.contractType,
+            parameters: deal.parameters as Record<string, string> | null,
+            agreed: deal.clauses
+              .filter((c) => c.status === "AGREED" && c.agreedOptionId)
+              .map((c) => ({
+                clauseId: c.clauseTemplate.clauseId,
+                code:
+                  c.clauseTemplate.options.find((o) => o.id === c.agreedOptionId)
+                    ?.code ?? "",
+              }))
+              .filter((a) => a.code),
+            lang: locale,
+          });
+          if (ledger.length === 0) return null;
+          return (
+            <div className="card-brutal">
+              <div className="flex items-baseline gap-3 mb-1">
+                <h2 className="font-semibold">{t("obligationsLedger")}</h2>
+                <span className="metric text-primary">{ledger.length}</span>
+              </div>
+              <p className="text-xs text-muted-foreground mb-3">
+                {t("obligationsLedgerDescription")}
+              </p>
+              <ul className="space-y-2">
+                {ledger.map((o) => (
+                  <li key={o.id} className="flex items-start gap-2 text-sm">
+                    <span className="shrink-0 px-2 py-0.5 rounded-full text-xs bg-muted text-muted-foreground min-w-[5.5rem] text-center">
+                      {t(`obligationFrequency.${o.frequency}`)}
+                    </span>
+                    <span>{o.text}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          );
+        })()}
 
       {/* Clauses Summary */}
       <div className="card-brutal">

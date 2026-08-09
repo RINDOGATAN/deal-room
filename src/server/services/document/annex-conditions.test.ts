@@ -289,6 +289,35 @@ describe("annex sections + contains operator (B-2 confirmable TOMs)", () => {
     const text = annexText({ processingPurpose: "x", tomsPhysical: "own-facilities" });
     expect(text).toBe("Baseline: x");
   });
+
+  it("present-operator sections render only when the free-text answer exists", () => {
+    const bp = (vars: Record<string, string>) =>
+      processBoilerplate(
+        {
+          contractTitle: "DPA",
+          preamble: "P.",
+          signatureBlock: "S.",
+          annexes: [
+            {
+              title: "Annex I",
+              text: "Scope.",
+              sections: [
+                {
+                  showIf: [{ variable: "dataExcluded", present: true }],
+                  text: "EXCLUDED: {dataExcluded}",
+                },
+              ],
+            },
+          ],
+        },
+        "SPAIN",
+        vars,
+        "en",
+      )?.annexes?.[0]?.text;
+    expect(bp({})).toBe("Scope.");
+    expect(bp({ dataExcluded: "   " })).toBe("Scope.");
+    expect(bp({ dataExcluded: "payment card data" })).toBe("Scope.\n\nEXCLUDED: payment card data");
+  });
 });
 
 describe("TIA importer statements (B-6 — the TIA answers what it poses)", () => {
@@ -320,6 +349,18 @@ describe("TIA importer statements (B-6 — the TIA answers what it poses)", () =
     const es = buildTiaImporterStatements({ "tia-gov-requests-received": "some" }, "es");
     expect(es.tiaEcspStatement).toContain("remote computing service");
     expect(es.tiaRequestHistoryStatement).toContain("informes de transparencia");
+  });
+
+  it("breach history: declared-none documented, some considered, unknown conservative", () => {
+    expect(
+      buildTiaImporterStatements({ "tia-breach-history": "none" }, "en").tiaBreachHistoryStatement,
+    ).toContain("no personal data breach");
+    expect(
+      buildTiaImporterStatements({ "tia-breach-history": "some" }, "en").tiaBreachHistoryStatement,
+    ).toContain("handling, remediation");
+    expect(
+      buildTiaImporterStatements({}, "en").tiaBreachHistoryStatement,
+    ).toContain("next review");
   });
 });
 

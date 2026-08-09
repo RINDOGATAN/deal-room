@@ -811,13 +811,15 @@ function RunningHeader({ title, dealName }: { title: string; dealName: string })
 function RunningFooter({
   labels,
   certified,
+  whiteLabel,
 }: {
   labels: Record<string, string>;
   certified: boolean;
+  whiteLabel?: boolean;
 }) {
   return (
     <View style={styles.runFooter} fixed>
-      <Text style={styles.runFootText}>{brand.name.toUpperCase()}</Text>
+      <Text style={styles.runFootText}>{whiteLabel ? "" : brand.name.toUpperCase()}</Text>
       <Text style={styles.runFootText}>
         {certified ? `✓ ${labels.certifiedBy}` : ""}
       </Text>
@@ -833,11 +835,13 @@ function RunningFooter({
 
 /** Full-page cover sheet: brand bar, title, parties, key metadata. */
 function CoverPage({
+  whiteLabel,
   data,
   hasBoilerplate,
   labels,
   lang,
 }: {
+  whiteLabel?: boolean;
   data: ContractData;
   hasBoilerplate: boolean;
   labels: Record<string, string>;
@@ -863,7 +867,7 @@ function CoverPage({
     <Page size="A4" style={styles.coverPage}>
       <View style={styles.coverTopBar} />
       <View style={styles.coverBody}>
-        <Text style={styles.coverBrand}>{brand.name}</Text>
+        <Text style={styles.coverBrand}>{whiteLabel ? " " : brand.name}</Text>
         <Text style={styles.coverKicker}>{labels.confidential}</Text>
 
         <Text style={styles.coverTitle}>{title}</Text>
@@ -888,7 +892,7 @@ function CoverPage({
 
         <View style={styles.coverFootRow}>
           <Text style={styles.coverFootText}>{data.dealName}</Text>
-          <Text style={styles.coverFootText}>{brand.name.toUpperCase()}</Text>
+          <Text style={styles.coverFootText}>{whiteLabel ? "" : brand.name.toUpperCase()}</Text>
         </View>
       </View>
     </Page>
@@ -897,6 +901,8 @@ function CoverPage({
 
 interface ContractPDFProps {
   data: ContractData;
+  /** Strip platform branding from every page (signature-ready finals). */
+  whiteLabel?: boolean;
 }
 
 /**
@@ -906,7 +912,15 @@ interface ContractPDFProps {
  * Renders nothing but the assessment: a header identifying the parties and
  * the agreement it belongs to, then the annex body verbatim.
  */
-export function TiaPDF({ data, producedOn }: { data: ContractData; producedOn: string }) {
+export function TiaPDF({
+  data,
+  producedOn,
+  whiteLabel,
+}: {
+  data: ContractData;
+  producedOn: string;
+  whiteLabel?: boolean;
+}) {
   const lang = data.language === "es" ? "es" : "en";
   const isES = lang === "es";
   const annex = data.boilerplate?.annexes?.find((a) =>
@@ -934,7 +948,11 @@ export function TiaPDF({ data, producedOn }: { data: ContractData; producedOn: s
     : "This document reproduces, without modification, the Transfer Impact Assessment agreed as Annex IV of the agreement identified above, for disclosure to the competent supervisory authority on request in accordance with Clause 14 of the Standard Contractual Clauses incorporated into that agreement.";
 
   return (
-    <Document title={`${docTitle} - ${data.dealName}`} author={brand.name} subject={docTitle}>
+    <Document
+      title={`${docTitle} - ${data.dealName}`}
+      author={whiteLabel ? undefined : brand.name}
+      subject={docTitle}
+    >
       <Page size="A4" style={styles.page}>
         <RunningHeader title={docTitle} dealName={data.dealName} />
         <View style={styles.annexHeader}>
@@ -955,7 +973,7 @@ export function TiaPDF({ data, producedOn }: { data: ContractData; producedOn: s
         {/* No cover page in this document, so the shared footer's page-number
             offset would misnumber it — plain footer instead. */}
         <View style={styles.runFooter} fixed>
-          <Text style={styles.runFootText}>{brand.name.toUpperCase()}</Text>
+          <Text style={styles.runFootText}>{whiteLabel ? "" : brand.name.toUpperCase()}</Text>
           <Text style={styles.runFootText}></Text>
           <Text
             style={styles.runFootText}
@@ -971,7 +989,7 @@ export function TiaPDF({ data, producedOn }: { data: ContractData; producedOn: s
   );
 }
 
-export function ContractPDF({ data }: ContractPDFProps) {
+export function ContractPDF({ data, whiteLabel }: ContractPDFProps) {
   const hasBoilerplate = data.boilerplate !== null;
   const sequential = data.boilerplate?.sequentialNumbering === true;
   const sequentialSections = sequential ? buildSequentialSections(data) : [];
@@ -986,11 +1004,11 @@ export function ContractPDF({ data }: ContractPDFProps) {
   return (
     <Document
       title={`${data.contractType} - ${data.dealName}`}
-      author={brand.name}
+      author={whiteLabel ? undefined : brand.name}
       subject={data.contractType}
     >
       {/* Cover sheet */}
-      <CoverPage data={data} hasBoilerplate={hasBoilerplate} labels={labels} lang={lang} />
+      <CoverPage data={data} hasBoilerplate={hasBoilerplate} labels={labels} lang={lang} whiteLabel={whiteLabel} />
 
       {/* Page 1: Preamble, Definitions, Standard Clauses */}
       <Page size="A4" style={styles.page}>
@@ -1178,7 +1196,7 @@ export function ContractPDF({ data }: ContractPDFProps) {
           </>
         )}
 
-        <RunningFooter labels={labels} certified={certified} />
+        <RunningFooter labels={labels} certified={certified} whiteLabel={whiteLabel} />
       </Page>
 
       {/* Page 2: Negotiated Terms, General Provisions, Jurisdiction, Signature (boilerplate contracts only) */}
@@ -1306,7 +1324,7 @@ export function ContractPDF({ data }: ContractPDFProps) {
             </View>
           )}
 
-          <RunningFooter labels={labels} certified={certified} />
+          <RunningFooter labels={labels} certified={certified} whiteLabel={whiteLabel} />
         </Page>
       )}
 
@@ -1332,7 +1350,7 @@ export function ContractPDF({ data }: ContractPDFProps) {
                 )}
               </View>
               <AnnexBody text={annex.text} />
-              <RunningFooter labels={labels} certified={certified} />
+              <RunningFooter labels={labels} certified={certified} whiteLabel={whiteLabel} />
             </Page>
           );
         })}

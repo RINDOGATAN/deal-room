@@ -62,6 +62,8 @@ const SYSTEM_BOILERPLATE_VARS = new Set([
   "transferAddendaSections",
   "tiaEcspStatement",
   "tiaRequestHistoryStatement",
+  "tiaBreachHistoryStatement",
+  "tomsInheritedList",
 ]);
 
 // Superset of the GoverningLaw enum: skill tags may be more specific (e.g.
@@ -398,6 +400,87 @@ function checkClauseBiases(skill, clauses) {
 
 // ── Main ──────────────────────────────────────────────────────────────────
 
+// Known defined-term class that keeps recurring undeclared (the QA pass
+// found "Principal Agreement" used across the DPA with no §1 definition).
+// Any usage of these terms in legal text requires a matching entry in
+// boilerplate.definitions — either language counts, since definitions are
+// bilingual objects.
+const KNOWN_DEFINED_TERMS = [
+  "Principal Agreement",
+  "Underlying Agreement",
+  "Acuerdo Principal",
+  "Contrato Principal",
+];
+
+function collectStrings(node, out) {
+  if (typeof node === "string") out.push(node);
+  else if (Array.isArray(node)) node.forEach((v) => collectStrings(v, out));
+  else if (node && typeof node === "object")
+    Object.values(node).forEach((v) => collectStrings(v, out));
+}
+
+function checkDefinedTermUsage(skill, clauses, boilerplate) {
+  if (!boilerplate) return;
+  const defined = new Set();
+  for (const d of boilerplate.definitions ?? []) {
+    const term = d.term;
+    if (typeof term === "string") defined.add(term);
+    else if (term && typeof term === "object")
+      Object.values(term).forEach((t) => defined.add(t));
+  }
+  const texts = [];
+  collectStrings(clauses, texts);
+  // Definition bodies may legitimately mention sibling documents' terms
+  // (e.g. the BAA's "Underlying Agreement" definition cross-references the
+  // DPA's "Principal Agreement") — scan operative text only.
+  const { definitions: _defs, ...operative } = boilerplate;
+  collectStrings(operative, texts);
+  const missing = new Set();
+  for (const term of KNOWN_DEFINED_TERMS) {
+    if (defined.has(term)) continue;
+    if (texts.some((t) => t.includes(term))) missing.add(term);
+  }
+  // A skill that never uses any of these terms needs no definitions at all.
+  for (const term of missing) {
+    logError(
+      skill,
+      "boilerplate.json",
+      `defined term "${term}" is used in legal text but boilerplate.definitions never defines it`,
+    );
+  }
+}
+
+// Roman/arabic annex references in legal text must point at an annex that
+// exists in boilerplate.annexes (conditional annexes count — they exist for
+// the states their showIf allows). "Annex 1" and "Annex I" are the same
+// reference; the generator renders whatever the boilerplate titles say.
+const ROMAN = { i: 1, ii: 2, iii: 3, iv: 4, v: 5, vi: 6, vii: 7, viii: 8, ix: 9, x: 10 };
+
+function annexRefNumber(token) {
+  const t = token.toLowerCase();
+  if (/^\d+$/.test(t)) return parseInt(t, 10);
+  return ROMAN[t] ?? null;
+}
+
+function checkAnnexReferences(skill, clauses, boilerplate) {
+  const annexCount = boilerplate?.annexes?.length ?? 0;
+  const texts = [];
+  collectStrings(clauses, texts);
+  collectStrings(boilerplate, texts);
+  const re = /\b(?:Annex|Anexo)\s+([0-9]+|[IVXivx]+)\b/g;
+  const dangling = new Set();
+  for (const t of texts) {
+    let m;
+    while ((m = re.exec(t)) !== null) {
+      const n = annexRefNumber(m[1]);
+      if (n !== null && n > annexCount) dangling.add(`${m[0]} (only ${annexCount} annex(es) defined)`);
+    }
+  }
+  for (const ref of dangling) {
+    logError(skill, "clauses/boilerplate", `dangling cross-reference: ${ref}`);
+  }
+}
+
 function listSkills(dir) {
   if (!existsSync(dir)) {
     console.error(`✖ SKILLS_DIR does not exist: ${dir}`);
@@ -450,6 +533,8 @@ for (const skill of skills) {
 
   checkMetadataSanity(skill, metadata, clauses);
   checkClauseBiases(skill, clauses);
+  checkDefinedTermUsage(skill, clauses, boilerplate);
+  checkAnnexReferences(skill, clauses, boilerplate);
 }
 
 console.log("");

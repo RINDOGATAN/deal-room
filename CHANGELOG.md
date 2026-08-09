@@ -9,6 +9,40 @@ history was not tracked per-release and lives only in git.
 
 ## [Unreleased]
 
+## [0.1.26] — 2026-08-09
+
+Second law-firm QA pass: every answer is a fact in a shared model, and the
+documents draw from it.
+
+### Added
+- **Negative-scope drafting:** an optional "expressly out of scope" free-text
+  answer renders as its own Annex I section (and flows into SCC Annex I by
+  reference) — narrowing what is processed is the strongest safeguard a
+  processor can offer.
+- **Per-control attribution:** confirmed security measures can be marked as
+  inherited from cloud sub-processors; Annex II attributes them explicitly
+  and states the validation mechanism (annual review of the provider's audit
+  reports) that makes the reliance legitimate. Only measures also confirmed
+  count.
+- **Breach-history confirmation** joins the TIA's documented facts, and the
+  TIA gains an explicit procedural-steps section (EDPB step 6) — the
+  often-omitted part recording that the measures need no authority
+  authorisation and how contractual measures are implemented.
+- **Obligations ledger:** the deal page lists the recurring and event-driven
+  duties the agreed document creates (transparency reports, TIA reviews,
+  access reviews, breach windows, sub-processor notices…), derived from the
+  same fact model the generator uses.
+- **White-label output:** `?whitelabel=1` on the PDF and TIA downloads (and a
+  "White-label" link) strips platform branding for signature-ready finals —
+  substance untouched.
+- `check:skills` now fails on known defined terms used without a definition
+  and on annex cross-references whose target annex does not exist.
+
+### Fixed
+- The SCC citation in the transfer clause now matches Annex III's "mirrored
+  for convenience" wording in both languages.
+- BAA: forum fill-in placeholder replaced with self-contained wording.
+
 ## [0.1.25] — 2026-08-09
 
 ### Added

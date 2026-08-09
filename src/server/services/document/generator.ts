@@ -239,10 +239,15 @@ export function buildTransferAddendaSections(
 export function buildTiaImporterStatements(
   dealParams: Record<string, string>,
   language: string
-): { tiaEcspStatement: string; tiaRequestHistoryStatement: string } {
+): {
+  tiaEcspStatement: string;
+  tiaRequestHistoryStatement: string;
+  tiaBreachHistoryStatement: string;
+} {
   const isES = language === "es";
   const hosted = (dealParams["tia-importer-hosted"] || "yes").trim();
   const history = (dealParams["tia-gov-requests-received"] || "unknown").trim();
+  const breaches = (dealParams["tia-breach-history"] || "unknown").trim();
 
   const ecsp =
     hosted === "no"
@@ -270,7 +275,24 @@ export function buildTiaImporterStatements(
             ? "No se ha dispuesto de información fiable sobre el historial de solicitudes gubernamentales de acceso del importador; la evaluación procede de forma conservadora y esta carencia se abordará en la próxima revisión."
             : "No reliable information on the importer's history of government access requests was available; the assessment proceeds conservatively and this gap will be addressed at the next review.");
 
-  return { tiaEcspStatement: ecsp, tiaRequestHistoryStatement: req };
+  const brk =
+    breaches === "none"
+      ? (isES
+          ? "El importador ha declarado asimismo que no ha sufrido ninguna violación de datos personales que afectara a datos de clientes y exigiera notificación a una autoridad de control; esta declaración queda documentada y se renovará en cada revisión."
+          : "The importer has further declared that it has suffered no personal data breach affecting customer data that required notification to a supervisory authority; that declaration is documented here and will be refreshed at each review.")
+      : breaches === "some"
+        ? (isES
+            ? "El importador ha sufrido violaciones de datos personales en el pasado; las partes han tenido en cuenta su gestión, remediación y comunicación de dichos incidentes al evaluar sus prácticas."
+            : "The importer has suffered personal data breaches in the past; the parties have taken its handling, remediation and communication of those incidents into account in assessing its practices.")
+        : (isES
+            ? "No se ha dispuesto de información fiable sobre el historial de violaciones de datos del importador; esta carencia se abordará en la próxima revisión."
+            : "No reliable information on the importer's breach history was available; this gap will be addressed at the next review.");
+
+  return {
+    tiaEcspStatement: ecsp,
+    tiaRequestHistoryStatement: req,
+    tiaBreachHistoryStatement: brk,
+  };
 }
 
 /**
@@ -344,7 +366,12 @@ export function processBoilerplate(
     if (!showIf) return true;
     const conditions = Array.isArray(showIf) ? showIf : [showIf];
     return (
-      conditions as Array<{ variable?: string; in?: string[]; contains?: string }>
+      conditions as Array<{
+        variable?: string;
+        in?: string[];
+        contains?: string;
+        present?: boolean;
+      }>
     ).every((c) => {
       if (!c.variable) return false;
       const value = variables[c.variable] ?? "";
@@ -355,6 +382,8 @@ export function processBoilerplate(
           .map((s) => s.trim())
           .includes(c.contains);
       }
+      // `present: true` — render only when a free-text answer exists
+      if (c.present === true) return value.trim() !== "";
       return false;
     });
   };
@@ -664,6 +693,32 @@ export async function generateContractData(
       : (language === "es"
           ? "(según se describa con más detalle en el Acuerdo Principal)"
           : "(as further described in the Principal Agreement)");
+  }
+
+  // Annex II inherited-controls attribution: only measures BOTH confirmed
+  // and marked inherited count — an inherited claim over an unconfirmed
+  // control would attribute a measure the document never asserts. Override
+  // {tomsInherited} with the intersection so the section's presence
+  // condition reflects it, then build the lettered list from the confirmed
+  // controls' full labels.
+  const tomsParam = parameterSchema?.parameters?.find((p) => p.id === "toms-confirmed");
+  const confirmedToms = (dealParams["toms-confirmed"] || "")
+    .split(",").map((s) => s.trim()).filter(Boolean);
+  const inheritedToms = (dealParams["toms-inherited"] || "")
+    .split(",").map((s) => s.trim()).filter(Boolean)
+    .filter((k) => confirmedToms.includes(k));
+  variables.tomsInherited = inheritedToms.join(",");
+  if (inheritedToms.length && tomsParam) {
+    const itLetters = "abcdefghijklmnopqrstuvwxyz";
+    variables.tomsInheritedList = inheritedToms
+      .map((k, i) =>
+        `(${itLetters[i] || i + 1}) ${
+          tomsParam.optionLabels?.[k]
+            ? resolveLocalizedString(tomsParam.optionLabels[k], language)
+            : k
+        };`
+      )
+      .join("\n");
   }
 
   // DPA international transfers (Annex III/IV). Derived variables for the

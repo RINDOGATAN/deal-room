@@ -232,6 +232,16 @@
     "advancedParametersHint": "All of these have common-practice defaults applied. Only open this if you want to change them."
   },
   "dealDetail": {
+    "obligationsLedger": "Ongoing obligations",
+    "obligationsLedgerDescription": "Recurring and event-driven duties this document creates, derived from the agreed terms. Keep them in your compliance calendar.",
+    "obligationFrequency": {
+      "annual": "Annual",
+      "quarterly": "Quarterly",
+      "monthly": "Monthly",
+      "twelveMonthly": "Every 12 mo.",
+      "event": "On event",
+      "continuous": "Continuous"
+    },
     "makeSelections": "Make Selections",
     "continueNegotiation": "Continue Negotiation",
     "reviewCompromises": "Review Compromises",

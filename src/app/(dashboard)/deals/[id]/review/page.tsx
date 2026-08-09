@@ -55,6 +55,14 @@ function DownloadLinks({ dealId, className, showTia }: { dealId: string; classNa
           <a href={`/api/deals/${dealId}/tia`} className="hover:text-foreground underline underline-offset-2">TIA</a>
         </>
       )}
+      <span aria-hidden>·</span>
+      <a
+        href={`/api/deals/${dealId}/document?whitelabel=1`}
+        title="PDF without platform branding — for signature-ready finals"
+        className="hover:text-foreground underline underline-offset-2"
+      >
+        White-label
+      </a>
     </div>
   );
 }

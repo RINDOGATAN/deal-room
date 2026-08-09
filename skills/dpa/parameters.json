@@ -83,6 +83,27 @@
       }
     },
     {
+      "id": "data-excluded",
+      "token": "excluded data",
+      "scope": "*",
+      "type": "textarea",
+      "required": false,
+      "negotiable": true,
+      "boilerplateVariable": "dataExcluded",
+      "label": {
+        "en": "Data expressly OUT of scope (optional — the strongest safeguard)",
+        "es": "Datos expresamente FUERA del alcance (opcional — la salvaguarda más fuerte)"
+      },
+      "hint": {
+        "en": "State what the Processor never receives — e.g. only pseudonymous identifiers transfer while raw identities stay with the Controller; cohort-level events only; transient technical data purged on session end. Narrowing scope precisely is the strongest safeguard a processor can offer: data never received cannot be transferred or compromised. Rendered in Annex I and incorporated into SCC Annex I by reference.",
+        "es": "Indique lo que el Encargado nunca recibe — p. ej., solo se transfieren identificadores seudónimos mientras las identidades reales permanecen con el Responsable; solo eventos a nivel de cohorte; datos técnicos transitorios que se purgan al cerrar la sesión. Delimitar el alcance con precisión es la salvaguarda más fuerte que un encargado puede ofrecer: los datos que nunca se reciben no pueden transferirse ni verse comprometidos. Se recoge en el Anexo I y se incorpora por referencia al Anexo I de las CCT."
+      },
+      "placeholder": {
+        "en": "e.g. Direct identifiers (names, emails) — only pseudonymous user IDs are transferred; payment card data; special-category data",
+        "es": "p. ej. Identificadores directos (nombres, correos) — solo se transfieren IDs de usuario seudónimos; datos de tarjetas de pago; categorías especiales de datos"
+      }
+    },
+    {
       "id": "subprocessor-list",
       "token": "initial sub-processor list",
       "scope": "subprocessor-approval",
@@ -134,6 +155,40 @@
         "toms-backup-dr": { "en": "Geo-separated backups, annual restore tests, documented DR plan (RTO/RPO)", "es": "Copias geoseparadas, pruebas anuales de restauración, plan de recuperación documentado (RTO/RPO)" },
         "toms-personnel-checks": { "en": "Personnel background checks (where lawful) and disciplinary procedures", "es": "Verificación de antecedentes del personal (donde sea lícito) y procedimientos disciplinarios" },
         "toms-testing": { "en": "At-least-annual effectiveness testing, DPIAs and corrective action plans", "es": "Pruebas de eficacia al menos anuales, EIPD y planes de acción correctiva" }
+      }
+    },
+    {
+      "id": "toms-inherited",
+      "token": "inherited security measures",
+      "scope": "*",
+      "type": "multiSelect",
+      "required": false,
+      "boilerplateVariable": "tomsInherited",
+      "label": {
+        "en": "Which of the confirmed measures are inherited from cloud sub-processors?",
+        "es": "¿Cuáles de las medidas confirmadas se heredan de subencargados en la nube?"
+      },
+      "hint": {
+        "en": "Controls your infrastructure provider operates (e.g. encryption at rest on the cloud platform, its network security) rather than your own team. Annex II will attribute them explicitly and state the validation mechanism — annual review of the provider's audit reports — which is what makes the reliance legitimate. Only selections also confirmed above are used.",
+        "es": "Controles que opera su proveedor de infraestructura (p. ej., el cifrado en reposo de la plataforma en la nube, su seguridad de red) y no su propio equipo. El Anexo II los atribuirá expresamente e indicará el mecanismo de validación — revisión anual de los informes de auditoría del proveedor — que es lo que legitima esa confianza. Solo se usan las selecciones también confirmadas arriba."
+      },
+      "options": [
+        "toms-encryption-rest",
+        "toms-access-reviews",
+        "toms-network",
+        "toms-logging",
+        "toms-backup-dr",
+        "toms-personnel-checks",
+        "toms-testing"
+      ],
+      "optionLabels": {
+        "toms-encryption-rest": { "en": "Encryption at rest", "es": "Cifrado en reposo" },
+        "toms-access-reviews": { "en": "MFA + access reviews", "es": "MFA + revisiones de acceso" },
+        "toms-network": { "en": "Network security", "es": "Seguridad de red" },
+        "toms-logging": { "en": "Logging and monitoring", "es": "Registro y supervisión" },
+        "toms-backup-dr": { "en": "Backups and disaster recovery", "es": "Copias de seguridad y recuperación" },
+        "toms-personnel-checks": { "en": "Personnel screening", "es": "Verificación del personal" },
+        "toms-testing": { "en": "Testing and assessment", "es": "Pruebas y evaluación" }
       }
     },
     {
@@ -348,6 +403,28 @@
       "optionLabels": {
         "none": { "en": "No requests received (declared by the Processor)", "es": "Ninguna solicitud recibida (declarado por el Encargado)" },
         "some": { "en": "Yes — requests have been received", "es": "Sí — se han recibido solicitudes" },
+        "unknown": { "en": "Not determined", "es": "Sin determinar" }
+      }
+    },
+    {
+      "id": "tia-breach-history",
+      "token": "breach history",
+      "scope": "*",
+      "type": "choice",
+      "required": false,
+      "default": "unknown",
+      "label": {
+        "en": "Has the Processor suffered notifiable personal data breaches? (for the TIA)",
+        "es": "¿Ha sufrido el Encargado violaciones de datos personales notificables? (para la EIT)"
+      },
+      "hint": {
+        "en": "Ask the Processor directly — its declared breach history becomes a documented statement in the Transfer Impact Assessment's assessment of the importer's practices.",
+        "es": "Pregunte directamente al Encargado — su historial declarado de violaciones se convierte en una declaración documentada en la evaluación de las prácticas del importador dentro de la EIT."
+      },
+      "options": ["none", "some", "unknown"],
+      "optionLabels": {
+        "none": { "en": "None requiring authority notification (declared)", "es": "Ninguna que exigiera notificación a la autoridad (declarado)" },
+        "some": { "en": "Yes — breaches have occurred", "es": "Sí — se han producido violaciones" },
         "unknown": { "en": "Not determined", "es": "Sin determinar" }
       }
     },

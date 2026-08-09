@@ -65,9 +65,11 @@ export async function GET(
     // Enrich with certification data if available
     contractData = await enrichWithCertification(dealRoomId, contractData);
 
-    // Generate PDF
+    // Generate PDF (?whitelabel=1 strips platform branding for
+    // signature-ready finals — substance is untouched)
+    const whiteLabel = request.nextUrl.searchParams.get("whitelabel") === "1";
     const pdfBuffer = await renderToBuffer(
-      ContractPDF({ data: contractData })
+      ContractPDF({ data: contractData, whiteLabel })
     );
 
     const filename = buildContractFilename(contractData, "pdf");
