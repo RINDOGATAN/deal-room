@@ -46,7 +46,7 @@ export interface ParameterSchema {
 // ── Token translation map ──────────────────────────────
 // Maps English tokens → localized equivalents for multilingual clause text.
 
-const TOKEN_TRANSLATIONS: Record<string, Record<string, string>> = {
+export const TOKEN_TRANSLATIONS: Record<string, Record<string, string>> = {
   amount: { es: "importe" },
   number: { es: "número" },
   price: { es: "precio" },

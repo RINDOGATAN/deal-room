@@ -36,7 +36,8 @@
     "skill:build": "tsx scripts/build-skill-packages.ts",
     "skill:upload": "tsx --env-file=.env.local scripts/upload-skill-packages.ts",
     "test:e2e": "playwright test",
-    "test:e2e:ui": "playwright test --ui"
+    "test:e2e:ui": "playwright test --ui",
+    "pack:dpo": "tsx --tsconfig tsconfig.json scripts/export-contract-pack.ts"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
