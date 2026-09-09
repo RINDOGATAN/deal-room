@@ -11,7 +11,6 @@ import { getResend } from "@/lib/email";
 import { brand } from "@/config/brand";
 import { features } from "@/config/features";
 import { isTesterEmail } from "@/lib/tester";
-import { verifyWorkspacePassphrase } from "@/lib/workspace-passphrase";
 import { createLogger } from "@/lib/logger";
 
 const logger = createLogger("auth");
@@ -55,23 +54,10 @@ if (features.localAuth) {
       name: "Local Login",
       credentials: {
         email: { label: "Email", type: "email" },
-        passphrase: { label: "Workspace passphrase", type: "password" },
       },
       async authorize(credentials) {
         const email = credentials?.email?.trim().toLowerCase();
         if (!email) return null;
-
-        // Optional workspace passphrase gate. Read at call time (runtime
-        // env, NOT NEXT_PUBLIC) so the operator can set or rotate it without
-        // a rebuild. Unset/empty keeps today's behaviour exactly — an
-        // update never locks an existing deployment out.
-        const required = (process.env.WORKSPACE_PASSPHRASE ?? "").trim();
-        if (required) {
-          if (!credentials?.passphrase) return null;
-          if (!verifyWorkspacePassphrase(credentials.passphrase, required)) {
-            return null;
-          }
-        }
 
         let user = await prisma.user.findUnique({ where: { email } });
         if (!user) {
