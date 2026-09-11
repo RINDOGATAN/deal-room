@@ -9,6 +9,8 @@ history was not tracked per-release and lives only in git.
 
 ## [Unreleased]
 
+## [0.1.33] - 2026-09-11
+
 ### Fixed
 - **Skill updates now remove what a skill dropped.** The catalog refresh added
   and updated clauses and options but never removed any, so a clause dropped
