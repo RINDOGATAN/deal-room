@@ -12,12 +12,14 @@
  */
 
 import { promises as fs } from "fs";
-import { join } from "path";
+import { join, resolve, sep } from "path";
 import AdmZip from "adm-zip";
 import { SkillPackageValidator } from "./validator";
 import { computePackageHash, PackageManifest } from "@/lib/crypto";
 import { prisma } from "@/lib/prisma";
 import { resolveLocalizedString, resolveLocalizedArray } from "./i18n";
+import type { PrismaClient } from "@prisma/client";
+import { describeReconcile, reconcileSkillClauses } from "../../../../prisma/skill-reconcile";
 
 interface ExtractedPackage {
   files: Map<string, Buffer>;
@@ -340,50 +342,82 @@ export class SkillPackageInstaller {
           },
         });
 
-        // 3. Delete existing clauses for this template
-        await tx.clauseTemplate.deleteMany({
-          where: { contractTemplateId: contractTemplate.id },
-        });
-
-        // 4. Create clause templates and options
+        // 3. Write the clauses and options this version contains. Upserted by
+        //    clauseId / optionId rather than deleted and recreated: a delete
+        //    fails once a deal references the clause (foreign key), which used
+        //    to make every upgrade of a skill already in use fail outright.
         for (const clause of resolvedContent.clauses) {
-          const clauseTemplate = await tx.clauseTemplate.create({
-            data: {
+          const clauseFields = {
+            title: clause.title,
+            category: clause.category,
+            order: clause.order,
+            plainDescription: clause.plainDescription,
+            legalContext: clause.legalContext,
+            isRequired: clause.isRequired,
+            retiredAt: null,
+          };
+          const clauseTemplate = await tx.clauseTemplate.upsert({
+            where: {
+              contractTemplateId_clauseId: {
+                contractTemplateId: contractTemplate.id,
+                clauseId: clause.id,
+              },
+            },
+            create: {
               contractTemplateId: contractTemplate.id,
               clauseId: clause.id,
-              title: clause.title,
-              category: clause.category,
-              order: clause.order,
-              plainDescription: clause.plainDescription,
-              legalContext: clause.legalContext,
-              isRequired: clause.isRequired,
+              ...clauseFields,
             },
+            update: clauseFields,
           });
 
-          // Create options
           for (const option of clause.options) {
-            await tx.clauseOption.create({
-              data: {
+            const optionFields = {
+              code: option.code,
+              label: option.label,
+              order: option.order,
+              plainDescription: option.plainDescription,
+              prosPartyA: option.prosPartyA,
+              consPartyA: option.consPartyA,
+              prosPartyB: option.prosPartyB,
+              consPartyB: option.consPartyB,
+              legalText: option.legalText,
+              biasPartyA: option.biasPartyA,
+              biasPartyB: option.biasPartyB,
+              jurisdictionConfig: option.jurisdictionConfig
+                ? JSON.parse(JSON.stringify(option.jurisdictionConfig))
+                : undefined,
+              retiredAt: null,
+            };
+            await tx.clauseOption.upsert({
+              where: {
+                clauseTemplateId_optionId: {
+                  clauseTemplateId: clauseTemplate.id,
+                  optionId: option.id,
+                },
+              },
+              create: {
                 clauseTemplateId: clauseTemplate.id,
                 optionId: option.id,
-                code: option.code,
-                label: option.label,
-                order: option.order,
-                plainDescription: option.plainDescription,
-                prosPartyA: option.prosPartyA,
-                consPartyA: option.consPartyA,
-                prosPartyB: option.prosPartyB,
-                consPartyB: option.consPartyB,
-                legalText: option.legalText,
-                biasPartyA: option.biasPartyA,
-                biasPartyB: option.biasPartyB,
-                jurisdictionConfig: option.jurisdictionConfig
-                  ? JSON.parse(JSON.stringify(option.jurisdictionConfig))
-                  : undefined,
+                ...optionFields,
               },
+              update: optionFields,
             });
           }
         }
+
+        // 4. Drop what this version no longer contains — within this package's
+        //    own template only. Rows an existing deal still uses are retired,
+        //    not deleted, so that deal keeps its text.
+        // The cast bridges the extended client's transaction type (the Neon
+        // retry wrapper) to the plain one the seed also uses; same models.
+        const pruned = await reconcileSkillClauses(tx as unknown as PrismaClient, contractTemplate.id, {
+          clauses: resolvedContent.clauses.map((c) => ({
+            id: c.id,
+            options: c.options.map((o) => ({ id: o.id })),
+          })),
+        });
+        warnings.push(...describeReconcile(pruned));
 
         return { skillPackage, contractTemplate };
       });
@@ -462,12 +496,18 @@ export class SkillPackageInstaller {
     skillId: string,
     files: Map<string, Buffer>
   ): Promise<void> {
-    const targetDir = join(this.skillsDir, "installed", skillId.replace(/\./g, "/"));
+    const targetDir = resolve(join(this.skillsDir, "installed", skillId.replace(/\./g, "/")));
 
     await fs.mkdir(targetDir, { recursive: true });
 
     for (const [path, content] of files) {
-      const filePath = join(targetDir, path);
+      const filePath = resolve(join(targetDir, path));
+      // Entry names come from the archive. They are checked against the signed
+      // manifest before we get here, so this only closes the door behind that:
+      // nothing is ever written outside the skill's own folder.
+      if (filePath !== targetDir && !filePath.startsWith(targetDir + sep)) {
+        throw new Error(`Refusing to write package file outside its folder: ${path}`);
+      }
       const fileDir = join(filePath, "..");
       await fs.mkdir(fileDir, { recursive: true });
       await fs.writeFile(filePath, content);

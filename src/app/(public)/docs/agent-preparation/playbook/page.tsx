@@ -3,6 +3,7 @@
 
 import prisma from "@/lib/prisma";
 import { PlaybookGuide } from "./PlaybookGuide";
+import { LIVE_ROWS } from "@/lib/clause-retirement";
 
 export const dynamic = "force-dynamic";
 
@@ -14,9 +15,11 @@ export default async function PlaybookGuidePage() {
     },
     include: {
       clauses: {
+        where: LIVE_ROWS,
         orderBy: { order: "asc" },
         include: {
           options: {
+            where: LIVE_ROWS,
             orderBy: { order: "asc" },
           },
         },

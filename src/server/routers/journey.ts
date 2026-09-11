@@ -30,6 +30,7 @@ import { getStepPlan, type StepKey } from "@/lib/journey/steps";
 import { validateEquity } from "@/lib/journey/equity";
 import { autoAgreeSingleOptionClauses } from "../services/deal/autoAgreeSingleOption";
 import { createLogger } from "@/lib/logger";
+import { LIVE_ROWS } from "@/lib/clause-retirement";
 
 const logger = createLogger("journey");
 
@@ -312,8 +313,9 @@ export const journeyRouter = createTRPCRouter({
           where: { contractType: d.contractType },
           include: {
             clauses: {
+              where: LIVE_ROWS,
               orderBy: { order: "asc" },
-              include: { options: { orderBy: { order: "asc" } } },
+              include: { options: { where: LIVE_ROWS, orderBy: { order: "asc" } } },
             },
           },
         });

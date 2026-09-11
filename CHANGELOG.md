@@ -9,6 +9,42 @@ history was not tracked per-release and lives only in git.
 
 ## [Unreleased]
 
+### Fixed
+- **Skill updates now remove what a skill dropped.** The catalog refresh added
+  and updated clauses and options but never removed any, so a clause dropped
+  from a skill kept being attached to every new deal and a renamed option was
+  offered twice. The refresh now also prunes: a clause or option the skill no
+  longer contains is deleted when nothing uses it, and retired when an existing
+  deal still references it. A retired row is kept, so that deal keeps its
+  clause, its selections and its agreed text; new deals no longer receive it,
+  and it is offered only to the deals that already use it. A row that reappears
+  in the skill becomes live again. Pruning covers built-in skills only: premium
+  and firm-installed skills are never touched by the refresh.
+- **Upgrading a skill that is already in use no longer fails.** Installing a
+  newer version of a `.skill` package deleted and recreated its clauses, which
+  the database refuses once a deal references them (foreign key), so the
+  install failed outright with "Database installation failed". Clauses and
+  options are now upserted, and the same prune-or-retire rule applies within
+  that package.
+
+### Added
+- **A fresh-versus-upgraded check for releases** (`scripts/upgrade-check.sh`).
+  It runs the migrator over a restored backup and over an empty database, then
+  compares schema, migration history, per-table row counts and the skill
+  catalog, and fails on any difference that is not the site's own data or a
+  skill it installed itself. Documented, with the rest of the release routine,
+  in `docs/releasing.md`.
+- `SEED_PRUNE_DRY_RUN=true` reports what the prune would remove or retire
+  without writing anything.
+
+### Security
+- **adm-zip 0.6.1**, which closes the remaining moderate advisory
+  (GHSA-vwc7-r8mq-g2x9, extraction following symlinks in the destination).
+  Dealroom never used the affected extraction call — skill packages are read in
+  memory — so this clears the alert rather than fixing an exposure. The
+  installer, which does write the verified package files to disk itself, now
+  also refuses any entry whose path would land outside the skill's own folder.
+
 ## [0.1.32] - 2026-09-11
 
 ### Security

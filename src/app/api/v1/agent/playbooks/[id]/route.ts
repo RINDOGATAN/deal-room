@@ -18,6 +18,7 @@ import {
 } from "@/server/middleware/apiKeyAuth";
 import { features } from "@/config/features";
 import { createLogger } from "@/lib/logger";
+import { LIVE_ROWS } from "@/lib/clause-retirement";
 
 const logger = createLogger("agent-api");
 
@@ -130,7 +131,7 @@ export async function PUT(
       const template = await prisma.contractTemplate.findUnique({
         where: { contractType: existing.contractType },
         include: {
-          clauses: { include: { options: true } },
+          clauses: { where: LIVE_ROWS, include: { options: { where: LIVE_ROWS } } },
         },
       });
 

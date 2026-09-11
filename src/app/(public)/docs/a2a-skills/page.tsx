@@ -3,6 +3,7 @@
 
 import prisma from "@/lib/prisma";
 import { A2aSkillsCatalog } from "./catalog";
+import { LIVE_ROWS } from "@/lib/clause-retirement";
 
 export const dynamic = "force-dynamic";
 
@@ -14,9 +15,11 @@ export default async function A2aSkillsPage() {
     },
     include: {
       clauses: {
+        where: LIVE_ROWS,
         orderBy: { order: "asc" },
         include: {
           options: {
+            where: LIVE_ROWS,
             orderBy: { order: "asc" },
           },
         },

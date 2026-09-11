@@ -6,6 +6,7 @@ import type { GoverningLaw } from "@prisma/client";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
 import { features } from "@/config/features";
+import { LIVE_ROWS } from "@/lib/clause-retirement";
 
 export const skillsRouter = createTRPCRouter({
   // List all available contract templates with licensing info
@@ -31,7 +32,7 @@ export const skillsRouter = createTRPCRouter({
         skillPackageId: true, // Include to check if licensed
         _count: {
           select: {
-            clauses: true,
+            clauses: { where: LIVE_ROWS },
           },
         },
       },
@@ -98,7 +99,7 @@ export const skillsRouter = createTRPCRouter({
           },
         },
         _count: {
-          select: { clauses: true },
+          select: { clauses: { where: LIVE_ROWS } },
         },
       },
       orderBy: { displayName: "asc" },
@@ -257,9 +258,11 @@ export const skillsRouter = createTRPCRouter({
         where: { contractType: input.contractType },
         include: {
           clauses: {
+            where: LIVE_ROWS,
             orderBy: { order: "asc" },
             include: {
               options: {
+                where: LIVE_ROWS,
                 orderBy: { order: "asc" },
               },
             },
@@ -285,6 +288,7 @@ export const skillsRouter = createTRPCRouter({
         where: { contractType: input.contractType },
         include: {
           clauses: {
+            where: LIVE_ROWS,
             select: {
               category: true,
             },

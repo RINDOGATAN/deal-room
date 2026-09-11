@@ -353,18 +353,22 @@ model ContractTemplate {
 }
 
 model ClauseTemplate {
-  id                 String   @id @default(cuid())
+  id                 String    @id @default(cuid())
   contractTemplateId String
   clauseId           String // e.g., "data-retention"
   title              String
   category           String // e.g., "Privacy", "Liability", "Term"
   order              Int
-  plainDescription   String   @db.Text
-  legalContext       String?  @db.Text
-  isRequired         Boolean  @default(true)
+  plainDescription   String    @db.Text
+  legalContext       String?   @db.Text
+  isRequired         Boolean   @default(true)
   localizedContent   Json? // {"title":{"en":"...","es":"..."},"plainDescription":{...},"legalContext":{...}}
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt
+  // Set by the built-in skill refresh when the skill no longer contains this
+  // clause but existing deals still use it: kept so those deals keep their
+  // text, left out of new deals. Null = live. See prisma/skill-reconcile.ts.
+  retiredAt          DateTime?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
 
   contractTemplate      ContractTemplate       @relation(fields: [contractTemplateId], references: [id], onDelete: Cascade)
   options               ClauseOption[]
@@ -376,24 +380,27 @@ model ClauseTemplate {
 }
 
 model ClauseOption {
-  id                 String   @id @default(cuid())
+  id                 String    @id @default(cuid())
   clauseTemplateId   String
   optionId           String // e.g., "opt-30d"
   code               String // e.g., "30-days"
   label              String // e.g., "30 Days"
   order              Int
-  plainDescription   String   @db.Text
+  plainDescription   String    @db.Text
   prosPartyA         String[] // Array of pros for Party A
   consPartyA         String[] // Array of cons for Party A
   prosPartyB         String[] // Array of pros for Party B
   consPartyB         String[] // Array of cons for Party B
-  legalText          String   @db.Text
+  legalText          String    @db.Text
   biasPartyA         Float // -1 to 1, how much this option favors Party A
   biasPartyB         Float // -1 to 1, how much this option favors Party B
   jurisdictionConfig Json? // Jurisdiction-specific availability and warnings
   localizedContent   Json? // {"label":{...},"plainDescription":{...},"prosPartyA":{...},...,"legalText":{...}}
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt
+  // As ClauseTemplate.retiredAt: a withdrawn option that existing deals still
+  // reference. Offered only to the deals that already use it.
+  retiredAt          DateTime?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
 
   clauseTemplate        ClauseTemplate         @relation(fields: [clauseTemplateId], references: [id], onDelete: Cascade)
   partySelections       PartySelection[]

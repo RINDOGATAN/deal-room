@@ -15,6 +15,7 @@ import {
   buildCompromiseReasoningUserPrompt,
 } from "../services/ai/prompts/compromise-reasoning";
 import { createLogger } from "@/lib/logger";
+import { offerableOptionsWhere } from "@/lib/clause-retirement";
 
 const logger = createLogger("compromise");
 
@@ -36,6 +37,7 @@ export const compromiseRouter = createTRPCRouter({
               clauseTemplate: {
                 include: {
                   options: {
+                    where: offerableOptionsWhere(input.dealRoomId),
                     orderBy: { order: "asc" },
                   },
                 },
@@ -307,6 +309,7 @@ export const compromiseRouter = createTRPCRouter({
               clauseTemplate: {
                 include: {
                   options: {
+                    where: offerableOptionsWhere(input.dealRoomId),
                     orderBy: { order: "asc" },
                   },
                 },
@@ -693,7 +696,7 @@ export const compromiseRouter = createTRPCRouter({
           clauses: {
             include: {
               clauseTemplate: {
-                include: { options: true },
+                include: { options: { where: offerableOptionsWhere(input.dealRoomId) } },
               },
               selections: true,
             },
@@ -1295,6 +1298,7 @@ export const compromiseRouter = createTRPCRouter({
               clauseTemplate: {
                 include: {
                   options: {
+                    where: offerableOptionsWhere(input.dealRoomId),
                     orderBy: { order: "asc" },
                   },
                 },

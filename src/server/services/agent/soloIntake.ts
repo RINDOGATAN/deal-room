@@ -32,6 +32,7 @@ import {
 import type { ExtendedPrismaClient } from "@/lib/prisma";
 import { applyPresetSelections } from "@/server/services/deal/applyPreset";
 import { roleConfigFor } from "@/lib/contractRoles";
+import { LIVE_ROWS } from "@/lib/clause-retirement";
 import {
   validateRequiredParameters,
   type ParameterSchema,
@@ -84,7 +85,12 @@ export async function createSoloDealFromFacts(
 ): Promise<SoloIntakeResult> {
   const template = await prisma.contractTemplate.findUnique({
     where: { contractType: input.contractType },
-    include: { clauses: { include: { options: { orderBy: { order: "asc" } } } } },
+    include: {
+      clauses: {
+        where: LIVE_ROWS,
+        include: { options: { where: LIVE_ROWS, orderBy: { order: "asc" } } },
+      },
+    },
   });
   if (!template || !template.isActive) {
     return { ok: false, status: 404, error: `Unknown contract type: ${input.contractType}` };

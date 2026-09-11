@@ -34,6 +34,7 @@ import {
   validateSuggestionAgainstRedLines,
 } from "./redlines";
 import { fireWebhook } from "./webhooks";
+import { LIVE_ROWS } from "@/lib/clause-retirement";
 
 const logger = createLogger("agent-negotiator");
 
@@ -170,8 +171,9 @@ export async function runNegotiation(
     where: { contractType: agentDealRoom.contractType },
     include: {
       clauses: {
+        where: LIVE_ROWS,
         include: {
-          options: { orderBy: { order: "asc" } },
+          options: { where: LIVE_ROWS, orderBy: { order: "asc" } },
         },
         orderBy: { order: "asc" },
       },
@@ -270,7 +272,8 @@ export async function runNegotiation(
         include: {
           clauseTemplate: {
             include: {
-              options: { orderBy: { order: "asc" } },
+              // A deal created moments ago: only live options apply.
+              options: { where: LIVE_ROWS, orderBy: { order: "asc" } },
             },
           },
         },

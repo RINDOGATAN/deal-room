@@ -10,6 +10,7 @@ import { resolveLocalizedString, resolveLocalizedArray } from "../services/skill
 import { validateRequiredParameters, type ParameterSchema } from "@/lib/parameters";
 import { governingLawForSkillJurisdiction } from "@/lib/jurisdictions";
 import { roleConfigFor } from "@/lib/contractRoles";
+import { LIVE_ROWS, offerableOptionsWhere } from "@/lib/clause-retirement";
 import { autoAgreeSingleOptionClauses } from "../services/deal/autoAgreeSingleOption";
 import { applyPresetSelections, findPreset } from "../services/deal/applyPreset";
 import { features } from "@/config/features";
@@ -230,6 +231,7 @@ export const dealRouter = createTRPCRouter({
               clauseTemplate: {
                 include: {
                   options: {
+                    where: offerableOptionsWhere(input.id),
                     orderBy: { order: "asc" },
                   },
                 },
@@ -410,8 +412,15 @@ export const dealRouter = createTRPCRouter({
         where: { contractType: input.contractType },
         include: {
           clauses: {
+            where: LIVE_ROWS,
             orderBy: { order: "asc" },
-            include: { options: { select: { id: true, optionId: true }, orderBy: { order: "asc" } } },
+            include: {
+              options: {
+                where: LIVE_ROWS,
+                select: { id: true, optionId: true },
+                orderBy: { order: "asc" },
+              },
+            },
           },
           skillPackage: true,
         },
@@ -435,8 +444,15 @@ export const dealRouter = createTRPCRouter({
           },
           include: {
             clauses: {
+              where: LIVE_ROWS,
               orderBy: { order: "asc" },
-              include: { options: { select: { id: true, optionId: true }, orderBy: { order: "asc" } } },
+              include: {
+                options: {
+                  where: LIVE_ROWS,
+                  select: { id: true, optionId: true },
+                  orderBy: { order: "asc" },
+                },
+              },
             },
             skillPackage: true,
           },

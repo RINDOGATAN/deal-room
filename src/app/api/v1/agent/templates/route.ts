@@ -19,6 +19,7 @@ import {
 import { checkEntitlement } from "@/server/services/licensing/entitlement";
 import { features } from "@/config/features";
 import { createLogger } from "@/lib/logger";
+import { LIVE_ROWS } from "@/lib/clause-retirement";
 
 const logger = createLogger("agent-api");
 
@@ -48,6 +49,7 @@ export async function GET(req: NextRequest) {
       include: {
         skillPackage: true,
         clauses: {
+          where: LIVE_ROWS,
           orderBy: { order: "asc" },
           select: {
             clauseId: true,

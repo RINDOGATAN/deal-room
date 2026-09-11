@@ -6,6 +6,7 @@ import * as fs from "fs";
 import * as path from "path";
 import * as crypto from "crypto";
 import { seedMarketplaceStubs } from "./marketplace-stubs";
+import { describeReconcile, reconcileSkillClauses } from "./skill-reconcile";
 
 const prisma = new PrismaClient();
 
@@ -16,6 +17,8 @@ const SKILLS_DIR = process.env.SKILLS_DIR || "";
 // when no external SKILLS_DIR is set (cloud sets SKILLS_DIR at the licensed
 // legalskills repo, which already carries these). See SELFHOST-BAA-BUNDLE.md.
 const HOSTED_SKILLS_DIR = path.join(__dirname, "hosted-skills");
+// Report what the built-in prune would remove or retire, without writing.
+const PRUNE_DRY_RUN = process.env.SEED_PRUNE_DRY_RUN === "true";
 
 interface SkillMetadata {
   contractType: string;
@@ -202,7 +205,9 @@ async function main() {
   console.log("Starting database seed...");
 
   // Build combined skill entries: scan built-in skills first, then external/proprietary
-  const skillEntries: { name: string; path: string }[] = [];
+  // `builtin` marks skills read from this repo's skills/ directory: the only
+  // ones whose removed clauses and options the seed prunes.
+  const skillEntries: { name: string; path: string; builtin: boolean }[] = [];
 
   // 1. Built-in skills (repo root /skills/)
   if (fs.existsSync(BUILTIN_SKILLS_DIR)) {
@@ -211,7 +216,7 @@ async function main() {
       return fs.statSync(fullPath).isDirectory();
     });
     for (const dir of builtinDirs) {
-      skillEntries.push({ name: dir, path: path.join(BUILTIN_SKILLS_DIR, dir) });
+      skillEntries.push({ name: dir, path: path.join(BUILTIN_SKILLS_DIR, dir), builtin: true });
     }
     console.log(`Found ${builtinDirs.length} built-in skills: ${builtinDirs.join(", ")}`);
   }
@@ -227,9 +232,9 @@ async function main() {
       // External skills override built-in skills with same name
       const existingIdx = skillEntries.findIndex((e) => e.name === dir);
       if (existingIdx >= 0) {
-        skillEntries[existingIdx] = { name: dir, path: path.join(SKILLS_DIR, dir) };
+        skillEntries[existingIdx] = { name: dir, path: path.join(SKILLS_DIR, dir), builtin: false };
       } else {
-        skillEntries.push({ name: dir, path: path.join(SKILLS_DIR, dir) });
+        skillEntries.push({ name: dir, path: path.join(SKILLS_DIR, dir), builtin: false });
       }
     }
     console.log(`Found ${externalDirs.length} external skills: ${externalDirs.join(", ")}`);
@@ -250,9 +255,9 @@ async function main() {
     for (const dir of hostedDirs) {
       const existingIdx = skillEntries.findIndex((e) => e.name === dir);
       if (existingIdx >= 0) {
-        skillEntries[existingIdx] = { name: dir, path: path.join(HOSTED_SKILLS_DIR, dir) };
+        skillEntries[existingIdx] = { name: dir, path: path.join(HOSTED_SKILLS_DIR, dir), builtin: false };
       } else {
-        skillEntries.push({ name: dir, path: path.join(HOSTED_SKILLS_DIR, dir) });
+        skillEntries.push({ name: dir, path: path.join(HOSTED_SKILLS_DIR, dir), builtin: false });
       }
     }
     console.log(`Found ${hostedDirs.length} self-host bundled skills: ${hostedDirs.join(", ")}`);
@@ -475,6 +480,7 @@ async function main() {
           legalContext: resolveString(clause.legalContext),
           isRequired: clause.isRequired ?? true,
           localizedContent: clauseLocalized as Prisma.InputJsonValue ?? Prisma.DbNull,
+          retiredAt: null,
         },
       });
 
@@ -520,11 +526,24 @@ async function main() {
             biasPartyB: option.biasPartyB ?? 0,
             jurisdictionConfig: option.jurisdictionConfig as Prisma.InputJsonValue | undefined,
             localizedContent: optionLocalized as Prisma.InputJsonValue ?? Prisma.DbNull,
+            retiredAt: null,
           },
         });
       }
 
       console.log(`    - ${resolveString(clause.title)} (${clause.options.length} options)`);
+    }
+
+    // Prune clauses and options this skill no longer contains. Built-in skills
+    // only: a template linked to a skill package (premium, or installed by the
+    // firm under the same contract type) is never pruned by the refresh.
+    if (entry.builtin && !template.skillPackageId) {
+      const outcome = await reconcileSkillClauses(prisma, template.id, clausesData, {
+        dryRun: PRUNE_DRY_RUN,
+      });
+      for (const line of describeReconcile(outcome)) {
+        console.log(`  ${PRUNE_DRY_RUN ? "[dry run] would have " : ""}${line}`);
+      }
     }
 
     // Process clause mappings if file exists
