@@ -9,6 +9,17 @@ history was not tracked per-release and lives only in git.
 
 ## [Unreleased]
 
+## [0.1.31] - 2026-09-11
+
+### Removed
+- **The workspace passphrase on self-hosted sign-in.** It was one shared
+  secret typed by everyone at every sign-in: it controlled who got in but
+  recorded nothing about who acted. Per-user accounts already carry identity,
+  so attribution is unaffected. The suite kit stopped passing
+  `WORKSPACE_PASSPHRASE` in v0.1.13; this release removes the field, the
+  server-side check and the endpoint the sign-in page polled. An install that
+  still sets the variable is unaffected: it is ignored.
+
 ## [0.1.30] — 2026-08-09
 
 ### Fixed
