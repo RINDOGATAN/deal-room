@@ -7,7 +7,10 @@ const E2E_SECRET = process.env.E2E_CREDENTIALS_SECRET || "e2e-test-secret";
  * Uses page.request to POST credentials, then copies cookies to the browser.
  *
  * REQUIRES: E2E_CREDENTIALS_SECRET must be set on the target server
- * for the CredentialsProvider to be registered.
+ * for the CredentialsProvider to be registered. The provider is never
+ * registered on hosted production (VERCEL_ENV=production); a local
+ * `next start` build also needs ALLOW_TEST_AUTH_PROVIDERS=true. Run the
+ * specs against `next dev`, a Vercel preview, or such an opted-in build.
  */
 export async function loginAs(page: Page, email: string) {
   // Get CSRF token
