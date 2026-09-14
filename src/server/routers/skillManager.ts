@@ -15,6 +15,7 @@ import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 import { defaultInstaller } from "../services/skills/installer";
+import { checkPublicRateLimit } from "../middleware/public-rate-limit";
 import {
   activateLicense,
   deactivateLicense,
@@ -458,7 +459,18 @@ export const skillManagerRouter = createTRPCRouter({
         dataBase64: z.string().min(1),
       })
     )
-    .mutation(async ({ input }) => {
+    .mutation(async ({ ctx, input }) => {
+      const limit = await checkPublicRateLimit(
+        "skill-install",
+        ctx.session.user.id,
+      );
+      if (!limit.allowed) {
+        throw new TRPCError({
+          code: "TOO_MANY_REQUESTS",
+          message: "Too many installs. Please wait and try again.",
+        });
+      }
+
       let buffer: Buffer;
       try {
         buffer = Buffer.from(input.dataBase64, "base64");

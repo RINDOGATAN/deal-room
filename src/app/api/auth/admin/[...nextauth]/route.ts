@@ -3,7 +3,9 @@
 
 import NextAuth from "next-auth";
 import { adminAuthOptions } from "@/lib/auth-admin";
+import { withAuthRateLimit } from "@/server/middleware/public-rate-limit";
 
-const handler = NextAuth(adminAuthOptions);
+// Magic-link POSTs are rate limited per client IP.
+const handler = withAuthRateLimit("admin", NextAuth(adminAuthOptions));
 
 export { handler as GET, handler as POST };

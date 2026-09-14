@@ -30,6 +30,11 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { createLogger } from "@/lib/logger";
+import {
+  checkPublicRateLimit,
+  clientIp,
+  tooManyRequests,
+} from "@/server/middleware/public-rate-limit";
 
 const logger = createLogger("health");
 
@@ -46,7 +51,12 @@ interface HealthSnapshot {
   };
 }
 
-export async function GET() {
+export async function GET(request: Request) {
+  // Per-IP limit. Fails open, so an unreachable database still reaches the
+  // probe below and reports 503 rather than a limiter error.
+  const limit = await checkPublicRateLimit("health", clientIp(request.headers));
+  if (!limit.allowed) return tooManyRequests(limit);
+
   const start = Date.now();
   const snapshot: HealthSnapshot = {
     ok: true,

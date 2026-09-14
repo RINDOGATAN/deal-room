@@ -8,6 +8,11 @@ import prisma from "@/lib/prisma";
 import { checkEntitlement } from "@/server/services/licensing";
 import { verifyDownloadToken } from "@/lib/crypto";
 import { apiError } from "@/lib/api-response";
+import {
+  checkPublicRateLimit,
+  clientIp,
+  tooManyRequests,
+} from "@/server/middleware/public-rate-limit";
 
 export async function GET(
   request: NextRequest,
@@ -16,6 +21,12 @@ export async function GET(
   const { skillId } = await params;
 
   try {
+    const limit = await checkPublicRateLimit(
+      "skill-download",
+      clientIp(request.headers),
+    );
+    if (!limit.allowed) return tooManyRequests(limit);
+
     // Auth: session OR signed download token
     let customerId: string | null = null;
 
