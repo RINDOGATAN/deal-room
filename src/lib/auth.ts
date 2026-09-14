@@ -12,8 +12,18 @@ import { brand } from "@/config/brand";
 import { features } from "@/config/features";
 import { isTesterEmail } from "@/lib/tester";
 import { createLogger } from "@/lib/logger";
+import { resolveAuthProviderPolicy } from "@/lib/auth-provider-policy";
 
 const logger = createLogger("auth");
+
+// Passwordless providers (local, tester, e2e) are refused on hosted
+// production whatever the env vars say — see auth-provider-policy.ts.
+const providerPolicy = resolveAuthProviderPolicy(process.env);
+if (providerPolicy.refused.length > 0) {
+  logger.error("passwordless sign-in providers refused on a production build", {
+    refused: providerPolicy.refused.join(","),
+  });
+}
 
 const isProduction =
   process.env.NODE_ENV === "production" &&
@@ -47,7 +57,7 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
 // (NEXT_PUBLIC_LOCAL_AUTH_ENABLED=true): email-only find-or-create, no
 // external OAuth or mailer. Only safe behind the firm's own network —
 // never enable on an internet-facing instance.
-if (features.localAuth) {
+if (features.localAuth && providerPolicy.local) {
   providers.push(
     CredentialsProvider({
       id: "local",
@@ -156,7 +166,7 @@ if (features.inviteCodeAuth) {
 // switch. No password needed; the allowlist is the gate. Set
 // `TESTER_MODE_ENABLED=true` (server) and `NEXT_PUBLIC_TESTER_MODE=true`
 // (client) on Vercel to enable, unset to disable.
-if (process.env.TESTER_MODE_ENABLED === "true") {
+if (providerPolicy.tester) {
   providers.push(
     CredentialsProvider({
       id: "tester",
@@ -201,7 +211,8 @@ if (process.env.TESTER_MODE_ENABLED === "true") {
 }
 
 // E2E test credentials provider — only active when E2E_CREDENTIALS_SECRET is set
-if (process.env.E2E_CREDENTIALS_SECRET) {
+// and the build policy allows it
+if (providerPolicy.e2e) {
   providers.push(
     CredentialsProvider({
       id: "e2e-credentials",

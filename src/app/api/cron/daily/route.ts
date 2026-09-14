@@ -4,7 +4,7 @@
 /**
  * Daily cron — runs once per day, scheduled via vercel.json.
  *
- * Three jobs run in sequence. Each job is independent — if one fails,
+ * Four jobs run in sequence. Each job is independent — if one fails,
  * the others still run, and the failure is reported in the response so
  * Vercel's cron logs surface it.
  *
@@ -29,6 +29,11 @@
  *    For RecommendationRequests past expiresAt that are still PENDING
  *    or ACCEPTED, mark them CANCELLED. No emails — the requester sees
  *    the badge change on next page load.
+ *
+ * 4. Rate-limit counter purge
+ *    Deletes rate_limit_counters rows whose window has closed. The public
+ *    limits (sign-in, magic links, health) write one row per client per
+ *    window, so without the purge the table grows without bound.
  *
  * Auth: caller must present the CRON_SECRET as a Bearer token. Vercel's
  * scheduled function runner sets this automatically when the env var
@@ -73,6 +78,7 @@ export async function GET(req: NextRequest) {
     const reminderJob = await runSigningReminderJob();
     const signingExpiryJob = await runSigningExpiryJob();
     const vettingExpiryJob = await runVettingExpiryJob();
+    const rateLimitPurgeJob = await runRateLimitPurgeJob();
 
     return NextResponse.json({
       ok: true,
@@ -81,6 +87,7 @@ export async function GET(req: NextRequest) {
         signingReminders: reminderJob,
         signingExpiry: signingExpiryJob,
         vettingExpiry: vettingExpiryJob,
+        rateLimitPurge: rateLimitPurgeJob,
       },
     });
   } catch (error) {
@@ -257,6 +264,18 @@ async function runVettingExpiryJob(): Promise<JobResult> {
       expiresAt: { lt: now },
     },
     data: { status: "CANCELLED" },
+  });
+
+  return { ran: result.count, errors: 0 };
+}
+
+// ────────────────────────────────────────────────────────────
+// Job 4 — rate-limit counter purge
+// ────────────────────────────────────────────────────────────
+
+async function runRateLimitPurgeJob(): Promise<JobResult> {
+  const result = await prisma.rateLimitCounter.deleteMany({
+    where: { expiresAt: { lt: new Date() } },
   });
 
   return { ran: result.count, errors: 0 };

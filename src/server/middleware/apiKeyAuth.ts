@@ -101,7 +101,12 @@ export function computeBucket(
   return { windowStart, expiresAt: new Date(windowStart + windowMs) };
 }
 
-async function claimSlot(
+/**
+ * Claim one slot in the fixed-bucket counter for `key`. Shared by the
+ * agent-API limits below and the public-route limits in
+ * `public-rate-limit.ts` (sign-in, magic links, skill install, health).
+ */
+export async function claimSlot(
   key: string,
   limit: number,
   windowMs: number,

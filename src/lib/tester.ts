@@ -12,7 +12,13 @@
  *
  * Intended for UX testing across the three personas (startup founder,
  * lawyer, business owner) without burning real magic links.
+ *
+ * Never available on hosted production (VERCEL_ENV=production), nor on any
+ * other production build without ALLOW_TEST_AUTH_PROVIDERS=true — see
+ * auth-provider-policy.ts.
  */
+
+import { resolveAuthProviderPolicy } from "@/lib/auth-provider-policy";
 
 export const TESTER_EMAILS = [
   "tester-startup@todo.law",
@@ -32,5 +38,6 @@ export function isTesterEmail(email: string | null | undefined): email is Tester
  * routes and the auth provider; never the client.
  */
 export function isTesterModeServer(): boolean {
-  return process.env.TESTER_MODE_ENABLED === "true";
+  // Same gate as the sign-in provider: never on hosted production.
+  return resolveAuthProviderPolicy(process.env).tester;
 }
