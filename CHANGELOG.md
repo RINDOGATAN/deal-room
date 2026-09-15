@@ -9,6 +9,17 @@ history was not tracked per-release and lives only in git.
 
 ## [Unreleased]
 
+### Changed
+- **The agent dispute endpoint refuses honestly when Gavel is not configured.**
+  `POST /api/v1/agent/deals/:id/dispute` used to answer `201 Created` and store
+  a `placeholder_<timestamp>` case when `GAVEL_API_KEY` was unset, so a caller
+  could not tell that no arbitration had been opened. It now answers
+  `503 { "error": "gavel_not_configured" }` and stores nothing when either
+  `GAVEL_API_URL` or `GAVEL_API_KEY` is missing or empty. Both variables are
+  required; the former built-in default for the URL is gone. Route tests cover
+  the outbound case payload and the refusal; the public API documentation
+  states the 503 and its meaning.
+
 ## [0.1.33] - 2026-09-11
 
 ### Fixed

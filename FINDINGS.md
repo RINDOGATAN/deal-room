@@ -36,6 +36,17 @@ feature.
 
 ## 2. "arbitration by Gavel" in the Dealroom for agents line
 
+**Resolved on the tree side (cycle 9, 2026-09-15, branch `gavel/honest-refusal`).**
+The dispute route now refuses with `503 { "error": "gavel_not_configured" }`
+and stores nothing when `GAVEL_API_KEY` or `GAVEL_API_URL` is missing or empty;
+the placeholder case is gone. `src/app/api/__tests__/agent-dispute-route.test.ts`
+asserts the outbound case payload with the key set (mocked fetch) and the 503
+refusal without it. The public documentation (`/docs/agent-api`, section
+"Disputes", and `docs/agent-api.md`) states the 503 and its meaning. Still open
+on the owner's side: whether the key is set on the hosted deployment, which
+decides whether the storefront line can say "arbitration by Gavel" without
+qualification. The original entry follows for the record.
+
 **The line says**: "Agents closing deals with each other under rules you set,
 with arbitration by Gavel when they disagree." The button links to
 `/docs/agent-api` on the product domain.
