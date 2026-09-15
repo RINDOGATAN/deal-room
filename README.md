@@ -108,7 +108,7 @@ Supervisors access their portal at `/supervise` and can only view deals assigned
 
 | Document | Description |
 |----------|-------------|
-| [deployment.md](docs/deployment.md) | Multi-brand architecture, Vercel setup, environment variables |
+| [deployment.md](docs/deployment.md) | Hosted (Vercel) and self-hosted postures, environment variables |
 | [administration.md](docs/administration.md) | Two-level admin system, deal lifecycle, signing |
 | [lawyer-involvement.md](docs/lawyer-involvement.md) | Three stages of lawyer involvement (EN) |
 | [intervencion-abogado.md](docs/intervencion-abogado.md) | Tres fases de intervención de abogado/a (ES) |
@@ -129,7 +129,7 @@ src/
 ├── components/            # React components
 ├── config/
 │   ├── brand.ts           # Brand router
-│   ├── brands/            # Per-brand config (todo.ts, northend.ts)
+│   ├── brands/            # Brand config (todo.ts; single brand since May 2026)
 │   └── features.ts        # Feature flags
 ├── lib/                   # Shared utilities
 └── server/
