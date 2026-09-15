@@ -3,10 +3,11 @@
 
 // Marketplace stubs (self-host discoverability).
 //
-// Reads the bundled storefront catalog (generated from todo.law/legalskills) and,
+// Reads the bundled storefront catalog (generated from todo.law/marketplace) and,
 // for each premium skill NOT already installed, creates a metadata-only package +
 // zero-clause template stub. These surface in the marketplace + deals/new picker
-// as locked "get it on the marketplace" items linking to /legalskills/{slug}.
+// as locked "get it on the marketplace" items linking to the todo.law storefront
+// (`marketplaceSkillUrl` in src/lib/marketplace.ts: /marketplace?app=dealroom).
 // Zero clauses means they can never open as an empty wizard — the UI treats a
 // premium package whose template has no clauses as marketplace-only.
 //
