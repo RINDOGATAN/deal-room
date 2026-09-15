@@ -598,6 +598,21 @@ export default function AgentApiPage() {
               </tbody>
             </table>
           </div>
+          <div className="p-4 border border-amber-500/30 bg-amber-500/5 rounded-xl space-y-2">
+            <p className="text-sm font-medium">{t("disputesNotConfiguredTitle")}</p>
+            <p className="text-sm text-muted-foreground">
+              {t("disputesNotConfiguredDesc")}
+            </p>
+            <pre className="text-xs bg-muted/50 p-3 rounded-lg overflow-x-auto">
+{`HTTP/1.1 503 Service Unavailable
+Content-Type: application/json
+
+{ "error": "gavel_not_configured" }`}
+            </pre>
+            <p className="text-sm text-muted-foreground">
+              {t("disputesNotConfiguredMeaning")}
+            </p>
+          </div>
         </div>
       </div>
 

@@ -1853,6 +1853,9 @@
     "sectionDisputes": "Disputes",
     "disputesDesc": "When a deal fails or a party alleges breach, either party can escalate to arbitration via the Gavel dispute resolution platform.",
     "purposeDispute": "Escalate a deal to arbitration",
+    "disputesNotConfiguredTitle": "When arbitration is not available: 503 gavel_not_configured",
+    "disputesNotConfiguredDesc": "The hand-off to Gavel is only made when the deployment has been configured with a Gavel service address and key. When it has not, the endpoint refuses the request with HTTP 503 and the body below. Nothing is stored: no dispute record is created and no case is opened.",
+    "disputesNotConfiguredMeaning": "Meaning: the deal was accepted for dispute in principle, but no arbitration exists. Do not retry automatically; the answer will not change until the operator configures Gavel. Resolve the dispute by other means or contact the operator. A 503 with a different body means Gavel is configured but could not be reached, and a retry later may succeed.",
     "versioning": "Versioning",
     "versioningDesc1": "The API uses",
     "versioningDesc2": "versioning. Breaking changes will be introduced under a new version prefix."

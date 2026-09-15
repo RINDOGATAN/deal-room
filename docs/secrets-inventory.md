@@ -41,7 +41,7 @@ rows marked "2026-08-05" are covered by that rotation. "Unknown" means no record
 | `STRIPE_SECRET_KEY` | Hosted | Live Stripe account: checkout, subscriptions, refunds. Also switches the paywall on | Owner (Stripe dashboard) | 2026-08-05 |
 | `STRIPE_WEBHOOK_SECRET` | Hosted | Verifies inbound `/api/webhooks/stripe` events | Owner (Stripe dashboard) | 2026-08-05 |
 | `CRON_SECRET` | Hosted; kit .env | Calls `/api/cron/daily` (signing reminders, expiry, purges). Unset = 503 | Owner; customer | 2026-08-05 |
-| `GAVEL_API_KEY` | Hosted; kit .env (optional) | Files disputes with the Gavel service | Owner | 2026-08-05 |
+| `GAVEL_API_KEY` | Hosted; kit .env (optional) | Files disputes with the Gavel service. Needs `GAVEL_API_URL` alongside; either unset = dispute endpoint 503 `gavel_not_configured` | Owner | 2026-08-05 |
 | `GAVEL_WEBHOOK_SECRET` | Hosted; kit .env (optional) | Verifies inbound `/api/webhooks/gavel`. Unset = 503 | Owner | 2026-08-05 |
 | `DEALROOM_CLOUD_API_KEY` | Hosted; kit .env (optional) | Dealroom Cloud intelligence API (biases, quality, certification) | Owner | 2026-08-05 |
 | `DOWNLOAD_TOKEN_SECRET` | Hosted; kit .env (optional) | Signs short-lived skill download tokens | Owner; customer | Unknown |

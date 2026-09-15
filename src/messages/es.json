@@ -1854,6 +1854,9 @@
     "sectionDisputes": "Disputas",
     "disputesDesc": "Cuando una operación falla o una parte alega incumplimiento, cualquiera de las partes puede escalar a arbitraje a través de la plataforma de resolución de disputas Gavel.",
     "purposeDispute": "Escalar una operación a arbitraje",
+    "disputesNotConfiguredTitle": "Cuando el arbitraje no está disponible: 503 gavel_not_configured",
+    "disputesNotConfiguredDesc": "La remisión a Gavel solo se realiza cuando la instalación tiene configuradas la dirección y la clave del servicio Gavel. Si no es así, el punto de acceso rechaza la petición con HTTP 503 y el cuerpo que se muestra a continuación. No se guarda nada: no se crea ningún registro de disputa ni se abre ningún caso.",
+    "disputesNotConfiguredMeaning": "Significado: la operación admite disputa en principio, pero no existe ningún arbitraje. No reintente de forma automática; la respuesta no cambiará hasta que el operador configure Gavel. Resuelva la disputa por otras vías o póngase en contacto con el operador. Un 503 con un cuerpo distinto significa que Gavel está configurado pero no se ha podido contactar, y un reintento posterior puede tener éxito.",
     "versioning": "Versionado",
     "versioningDesc1": "La API utiliza versionado",
     "versioningDesc2": ". Los cambios incompatibles se introducirán bajo un nuevo prefijo de versión."

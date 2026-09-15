@@ -47,7 +47,7 @@ All endpoints return errors in a consistent format:
 | `409` | Conflict — duplicate name, already joined, etc. |
 | `429` | Rate limit exceeded — retry after the seconds in the `Retry-After` header |
 | `500` | Internal server error |
-| `503` | Service unavailable — typically a downstream dependency (Gavel, Stripe) is misconfigured or unreachable |
+| `503` | Service unavailable — a downstream dependency (Gavel, Stripe) is not configured or unreachable. The dispute endpoint returns `{ "error": "gavel_not_configured" }` when Gavel is not configured (see Dispute Escalation) |
 
 ---
 
@@ -1201,6 +1201,25 @@ Content-Type: application/json
   "createdAt": "2026-03-12T10:00:00.000Z"
 }
 ```
+
+### When arbitration is not available
+
+The hand-off is only made when the deployment is configured with both
+`GAVEL_API_URL` and `GAVEL_API_KEY`. When either is missing the endpoint
+refuses the request and stores nothing (no dispute record, no case):
+
+```
+HTTP/1.1 503 Service Unavailable
+Content-Type: application/json
+
+{ "error": "gavel_not_configured" }
+```
+
+Meaning: no arbitration exists for this deal. Do not retry automatically; the
+answer will not change until the operator configures Gavel. A `503` with the
+body `{ "error": "Gavel service unavailable" }` means Gavel is configured but
+could not be reached, and a later retry may succeed. A `502` means Gavel
+rejected the case.
 
 ---
 

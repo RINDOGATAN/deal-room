@@ -6,6 +6,10 @@
  *
  * POST /api/v1/agent/deals/:id/dispute
  * Escalate a deal to Gavel ADR when negotiation fails or breach alleged.
+ *
+ * Requires GAVEL_API_URL and GAVEL_API_KEY. When either is missing the route
+ * answers 503 `{ "error": "gavel_not_configured" }` and stores nothing, so a
+ * caller can never mistake an unconfigured deployment for an opened case.
  */
 
 import { NextRequest, NextResponse } from "next/server";
@@ -18,11 +22,9 @@ import {
 import { withIdempotency } from "@/server/middleware/idempotency";
 import { features } from "@/config/features";
 import { createLogger } from "@/lib/logger";
+import { getGavelConfig, GAVEL_NOT_CONFIGURED_BODY } from "@/lib/gavel";
 
 const logger = createLogger("agent-api");
-
-const GAVEL_API_URL = process.env.GAVEL_API_URL || "https://gavel.todo.law/api/v1";
-const GAVEL_API_KEY = process.env.GAVEL_API_KEY;
 
 export async function POST(
   req: NextRequest,
@@ -45,6 +47,17 @@ export async function POST(
         return NextResponse.json({ error: e.message }, { status: 403 });
       }
       throw e;
+    }
+
+    // Refuse honestly when the arbitration service is not configured. This
+    // runs before any read or write so nothing is stored and no placeholder
+    // case can ever be returned as if arbitration had been opened.
+    const gavel = getGavelConfig();
+    if (!gavel) {
+      logger.warn("Dispute refused: Gavel is not configured", {
+        customerId: auth.customer.id,
+      });
+      return NextResponse.json(GAVEL_NOT_CONFIGURED_BODY, { status: 503 });
     }
 
     return await withIdempotency(req, auth.customer.id, async () => {
@@ -98,13 +111,13 @@ export async function POST(
     let gavelCaseId: string;
     let gavelCaseUrl: string | undefined;
 
-    if (GAVEL_API_KEY) {
+    {
       try {
-        const gavelRes = await fetch(`${GAVEL_API_URL}/cases`, {
+        const gavelRes = await fetch(`${gavel.apiUrl}/cases`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${GAVEL_API_KEY}`,
+            Authorization: `Bearer ${gavel.apiKey}`,
           },
           body: JSON.stringify({
             type: "contract_dispute",
@@ -152,6 +165,13 @@ export async function POST(
           id: string;
           url?: string;
         };
+        if (!gavelData?.id) {
+          logger.error("Gavel API returned no case id");
+          return NextResponse.json(
+            { error: "Failed to create Gavel case" },
+            { status: 502 }
+          );
+        }
         gavelCaseId = gavelData.id;
         gavelCaseUrl = gavelData.url;
       } catch (err) {
@@ -161,10 +181,6 @@ export async function POST(
           { status: 503 }
         );
       }
-    } else {
-      // Gavel not configured — create a placeholder dispute
-      gavelCaseId = `placeholder_${Date.now()}`;
-      gavelCaseUrl = undefined;
     }
 
     // Create AgentDispute record

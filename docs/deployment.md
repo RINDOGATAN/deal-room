@@ -63,7 +63,7 @@ STRIPE_PRICE_ID_USD
 ### Optional services
 
 ```
-GAVEL_API_URL, GAVEL_API_KEY, GAVEL_WEBHOOK_SECRET     # dispute escalation
+GAVEL_API_URL, GAVEL_API_KEY, GAVEL_WEBHOOK_SECRET     # dispute escalation (URL + key both required; else 503 gavel_not_configured)
 DEALROOM_CLOUD_API_URL, DEALROOM_CLOUD_API_KEY         # cloud intelligence
 FIRMAS_BASE_URL, FIRMAS_ISSUER, NEXT_PUBLIC_FIRMAS_BASE_URL  # verified signing
 DOWNLOAD_TOKEN_SECRET                                  # signed skill downloads
