@@ -21,6 +21,7 @@ import { Input } from "@/components/ui/input";
 import { EnableFeatureModal } from "@/components/premium/enable-feature-modal";
 import { PromoBanner } from "@/components/PromoBanner";
 import { formatPrice } from "@/lib/currency";
+import { features } from "@/config/features";
 import {
   STOREFRONT_BUY,
   MARKETPLACE_URL,
@@ -102,7 +103,9 @@ export default function MarketplacePage() {
     <div className="space-y-8">
       <div>
         <h1 className="text-2xl font-bold">{t("title")}</h1>
-        <p className="text-muted-foreground">{t("subtitle")}</p>
+        <p className="text-muted-foreground">
+          {features.hostedPilot ? t("subtitlePilot") : t("subtitle")}
+        </p>
       </div>
 
       <PromoBanner />

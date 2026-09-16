@@ -680,7 +680,7 @@ Contract skills are maintained in a separate private repository (`legalskills`) 
 | `com.nel.skills.advertising-io` | Advertising Insertion Order | 6 | Pricing, delivery, viewability, brand safety, fraud protection |
 | `com.nel.skills.affiliate-program` | Affiliate / Referral Program Agreement | 5 | Commissions, attribution, clawback, disclosure, exclusivity |
 
-All premium skills are priced at €9/mo. Licensed skills require Platform Admin to assign entitlements to customers before use.
+Premium skills are €60 a year each in the kit (your own instance, offline licence). On the hosted pilot (dealroom.todo.law) every premium skill is available to every account at no cost and nothing is sold. Where in-app billing is on (neither of those), licensed skills require an entitlement before use.
 
 ### Skill Categories
 
@@ -1101,7 +1101,7 @@ Included in the open-source repo (`skills/` directory). English only, basic juri
 
 ### Premium Skills
 
-Require `SkillEntitlement` + active Stripe subscription (€9/mo per skill). All bilingual EN/ES, all support CALIFORNIA, ENGLAND_WALES, and SPAIN jurisdictions.
+Free for every account on the hosted pilot; €60 a year each in the kit (offline licence). All bilingual EN/ES, all support CALIFORNIA, ENGLAND_WALES, and SPAIN jurisdictions.
 
 #### Corporate & Equity
 
@@ -1301,7 +1301,7 @@ Equity incentive plan for startups and growth companies covering plan type (ISO/
 
 ### Agent-to-Agent (A2A) Skills
 
-12 skills for autonomous agent interactions. Bundled under the A2A subscription (€9/mo standard, €60/mo premium). All bilingual EN/ES, 3 jurisdictions. Every skill includes Gavel automated arbitration as the default dispute resolution option.
+12 skills for autonomous agent interactions. Free with weekly limits on the hosted pilot; €60 a year each in the kit. All bilingual EN/ES, 3 jurisdictions. Every skill includes Gavel automated arbitration as the default dispute resolution option.
 
 | Skill | Contract Type | Clauses | Party A / Party B |
 |-------|--------------|---------|-------------------|

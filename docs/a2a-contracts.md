@@ -105,14 +105,16 @@ See [agent-api.md](./agent-api.md) for full endpoint documentation.
 
 ---
 
-## Subscription Model
+## Usage Limits
 
-A2A skills are sold as a bundle, not individually.
+Since 2026-09-16 nothing is sold on the hosted pilot (dealroom.todo.law):
+A2A skills are available there at no cost, within the weekly limits below.
+For your own instance, premium skills are €60 a year each in the kit.
 
-| Tier | Price | Invocations | Detection |
-|------|-------|-------------|-----------|
-| **Standard** | €9 / $9 per month | 5 per skill per week | Default for all A2A subscribers |
-| **Premium** | €60 / $60 per month | 300 total per week | `premiumA2A` flag in customer metadata |
+| Tier | Invocations | Detection |
+|------|-------------|-----------|
+| **Standard** | 5 per skill per week | Default for every customer |
+| **Extended** | 300 total per week | `premiumA2A` flag in customer metadata (set by an administrator) |
 
 **Rate limit enforcement:**
 - Applied at the negotiate endpoint for contract types with the `A2A_` prefix
@@ -280,7 +282,7 @@ A2A skills live in the private `RINDOGATAN/legalskills` repository and are seede
 DATABASE_URL="<unpooled URL>" SKILLS_DIR=/path/to/legalskills npx prisma db seed
 ```
 
-All 12 A2A skill IDs are registered in `prisma/seed.ts` and marked as premium with the standard €9/month Stripe price.
+All 12 A2A skill IDs are registered in `prisma/seed.ts` and marked as premium. The seeded catalog price is used only where in-app billing is on; the hosted pilot ignores it and sells nothing.
 
 ### Rate Limiting
 

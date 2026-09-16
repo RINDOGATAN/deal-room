@@ -11,6 +11,21 @@ Dealroom uses a "free coffee machine, paid capsules" model:
 - **Skills are proprietary** - contract templates (NDA, DPA, MSA, etc.) are sold as licensed packages
 - **Jurisdictions are tiered** - customers pay for specific jurisdictions they need
 
+### Where premium skills are sold (since 2026-09-16)
+
+- **Hosted pilot (dealroom.todo.law):** free and capped. Every skill,
+  premium ones included, is available to every account; nothing is sold
+  there. Limits per account: one organisation, 90 days of editing from the
+  first sign-in (then read-only, export always available), 10 deals, 3
+  startup journeys. No security certification: for real client data, run
+  your own instance (https://www.todo.law/run).
+- **The kit (your own instance):** no caps. Premium skills are **€60 a year
+  each in the kit**, bought on the todo.law storefront and activated offline
+  with a licence file (see "Offline Activation" below).
+
+The Stripe, subscription and online-activation paths described below remain
+in the code for other deployments but are switched off on the hosted pilot.
+
 ---
 
 ## Taster vs Premium Skills
@@ -96,14 +111,14 @@ The signature ensures packages haven't been tampered with. Only packages signed 
 | Type | Duration | Use Case |
 |------|----------|----------|
 | **Trial** | Time-limited (e.g., 14 days) | Evaluation before purchase |
-| **Subscription** | Renewable (monthly/yearly) | SaaS customers |
+| **Subscription** | Renewable (yearly: €60 per skill in the kit) | Self-hosted kit |
 | **Perpetual** | Forever | Self-hosted enterprises |
 
 ### Customer Types
 
 | Type | Validation | Use Case |
 |------|------------|----------|
-| **SaaS** | API call to license server | Cloud-hosted customers |
+| **SaaS** | API call to license server | Not used on the hosted pilot (nothing is sold there) |
 | **Self-Hosted** | Cryptographic license file | Air-gapped/on-premise deployments |
 
 ### Jurisdiction Tiers

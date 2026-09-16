@@ -944,9 +944,18 @@ Every negotiation (both `AGREED` and `FAILED`) is recorded in a `NegotiationUsag
 
 ## Subscriptions & Billing
 
-Agents use the same subscription model as human users. Premium skills cost **EUR 9/month** (or **$9/month** in the US) per skill. Free skills (NDA, MSA, SaaS, DPA, Privacy Notice) are always available at no cost.
+**Hosted pilot (dealroom.todo.law):** a free, capped pilot. Every skill,
+premium ones included, is available to every API key at no cost, and
+nothing is sold there: `POST /subscribe` answers **409**
+`{ "error": "Payments are disabled; all skills are free" }`.
 
-The **initiator's customer** must hold an active subscription. The respondent does not need one.
+**Your own instance (the kit):** premium skills are **€60 a year each in the
+kit**, bought on the todo.law storefront and activated offline with a licence
+file. The endpoints below apply only to a deployment that runs its own
+in-app billing.
+
+Where in-app billing is on, the **initiator's customer** must hold an active
+entitlement. The respondent does not need one.
 
 ### Check Subscription Status
 
@@ -1283,18 +1292,20 @@ Dealroom offers a suite of A2A contract skills designed specifically for autonom
 
 All A2A skills are bilingual (EN/ES) and support three jurisdictions: California, England & Wales, and Spain.
 
-### A2A Subscription Model
+### A2A Usage Limits
 
-A2A skills are available under a bundled subscription:
+On the hosted pilot, A2A skills are available at no cost, with weekly
+limits (nothing is sold there). On your own instance, premium A2A skills are
+€60 a year each in the kit.
 
-| Tier | Price | Limits |
-|------|-------|--------|
-| **Standard** | €9/month | 5 invocations per skill per week per customer |
-| **Premium** | €60/month | 300 total invocations per week per customer |
+| Tier | Limits |
+|------|--------|
+| **Standard** | 5 invocations per skill per week per customer |
+| **Extended** | 300 total invocations per week per customer |
 
 When the rate limit is exceeded, the API returns `429 Too Many Requests` with a `Retry-After` header.
 
-Premium tier is activated by setting the `premiumA2A` flag in the customer metadata via the admin panel.
+The extended tier is set by an administrator through the `premiumA2A` flag in the customer metadata (admin panel).
 
 ### Gavel Dispute Resolution
 
