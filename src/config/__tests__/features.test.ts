@@ -29,6 +29,10 @@ const ENV_KEYS = [
   "FREE_TRIAL_ALL_SKILLS",
   "NEXT_PUBLIC_FREE_TRIAL_ALL_SKILLS",
   "NEXT_PUBLIC_LOCAL_AUTH_ENABLED",
+  // Cleared so these Stripe cases never run under the hosted pilot posture.
+  "VERCEL_ENV",
+  "AUTH_COOKIE_DOMAIN",
+  "NEXT_PUBLIC_HOSTED_PILOT",
 ] as const;
 
 const ORIGINAL: Record<string, string | undefined> = Object.fromEntries(
