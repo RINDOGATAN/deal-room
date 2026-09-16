@@ -6,6 +6,10 @@ import { signIn } from "next-auth/react";
 import { motion } from "framer-motion";
 import { ArrowRight, Check, Loader2 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import { features as appFeatures } from "@/config/features";
+import { PILOT_RUN_URL } from "@/lib/pilot";
+
+const hostedPilot = appFeatures.hostedPilot;
 
 export interface Feature {
   id: string;
@@ -157,6 +161,22 @@ const StartupProductPage = ({
     signIn("google", { callbackUrl });
   };
 
+  // Hosted pilot: the same sentence as the site-wide banner, fixed here.
+  const pilotNotice = hostedPilot ? (
+    <p data-testid="pilot-signup-notice" className="text-xs text-muted-foreground font-body mt-4 text-center">
+      {tAuth("pilot.notice")}{" "}
+      <a
+        href={PILOT_RUN_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-accent underline decoration-accent/40 hover:decoration-accent"
+      >
+        {tAuth("pilot.run")}
+      </a>
+      .
+    </p>
+  ) : null;
+
   const googleDivider = (
     <>
       <div className="flex items-center gap-4 my-5">
@@ -278,6 +298,7 @@ const StartupProductPage = ({
                       >
                         {tAuth("login.newHere")}
                       </button>
+                      {pilotNotice}
                     </div>
                   ) : (
                     <div className="relative animate-fade-in">
@@ -311,6 +332,7 @@ const StartupProductPage = ({
                       >
                         {t("hero.login")}
                       </button>
+                      {pilotNotice}
                     </div>
                   )}
                 </div>

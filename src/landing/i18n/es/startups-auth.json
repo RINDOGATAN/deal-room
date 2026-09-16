@@ -8,5 +8,7 @@
   "login.magicLink": "Enviar enlace mágico",
   "login.newHere": "¿Primera vez? Regístrate",
   "or": "o",
-  "continueWithGoogle": "Continuar con Google"
+  "continueWithGoogle": "Continuar con Google",
+  "pilot.notice": "Piloto alojado: gratuito, con límites y sin certificación de seguridad. Para datos reales de clientes,",
+  "pilot.run": "ejecuta tu propia instancia"
 }

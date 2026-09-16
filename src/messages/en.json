@@ -89,6 +89,24 @@
     "allSkillsFreeTitle": "Every premium skill is free right now",
     "allSkillsFreeDescription": "We've unlocked the entire catalog so you can try any contract type. No subscription needed during this period."
   },
+  "pilot": {
+    "banner": "Hosted pilot: free, capped, no security certification. For real client data, <run>run your own instance</run>.",
+    "dismiss": "Dismiss",
+    "settingsTitle": "Settings",
+    "settingsNav": "Settings",
+    "sectionTitle": "Hosted pilot",
+    "sectionIntro": "This hosted service is a free pilot. Every contract skill is available, with the limits below. Premium skills are sold only for your own instance, at €60 a year each.",
+    "counter": "Pilot: {days, plural, one {# day left} other {# days left}}, {used} of {limit} deals",
+    "counterEnded": "Pilot: editing period ended, {used} of {limit} deals",
+    "journeys": "Startup journeys: {used} of {limit}",
+    "organisations": "Organisations: {used} of {limit} (one per account)",
+    "editUntil": "You can edit until {date}. After that, this account becomes read-only and you can still export everything you created.",
+    "readOnly": "The {days}-day pilot has ended, so this account is read-only. To keep working, <run>run your own instance</run> or <export>export what you created</export>.",
+    "capDeals": "You have reached the pilot limit of {limit} deals. To keep working, <run>run your own instance</run> or <export>export what you created</export>.",
+    "capJourneys": "You have reached the pilot limit of {limit} startup journeys. To keep working, <run>run your own instance</run> or <export>export what you created</export>.",
+    "exportButton": "Export everything I created (JSON)",
+    "runButton": "Run your own instance"
+  },
   "tester": {
     "modeLabel": "Tester mode",
     "personaStartup": "Startup Founder",

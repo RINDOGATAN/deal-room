@@ -11,6 +11,7 @@ import { Label } from "@/components/ui/label";
 import { brand } from "@/config/brand";
 import { features } from "@/config/features";
 import { TESTER_EMAILS } from "@/lib/tester";
+import { PilotSignupNotice } from "@/components/pilot/PilotNotice";
 
 const TESTER_MODE_ON = process.env.NEXT_PUBLIC_TESTER_MODE === "true";
 
@@ -396,7 +397,8 @@ export default function SignInPage() {
           </div>
         )}
 
-        <div className="mt-6 pt-6 border-t border-border text-center">
+        <div className="mt-6 pt-6 border-t border-border text-center space-y-3">
+          <PilotSignupNotice />
           <p className="text-xs text-muted-foreground">
             {t.rich("bySigningIn", {
               termsLink: (chunks) => (
