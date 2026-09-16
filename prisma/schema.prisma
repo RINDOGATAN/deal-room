@@ -31,6 +31,9 @@ model User {
   role          UserRole?
   onboardedAt   DateTime?
   lastLoginAt   DateTime?
+  // Hosted pilot: start of the account's 90-day edit window (first sign-in
+  // while the pilot runs). Null on the kit, which has no caps.
+  pilotStartedAt DateTime?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 

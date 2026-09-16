@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Copyright (C) 2025-2026 Rindogatan LLC
 
+import { features } from "@/config/features";
+
 // Storefront deep links for premium skills.
 //
 // On the cloud tier premium skills are bought in-app via Stripe. A self-hosted
@@ -11,8 +13,9 @@ export const MARKETPLACE_URL = (
   process.env.NEXT_PUBLIC_MARKETPLACE_URL || "https://todo.law/marketplace"
 ).replace(/\/+$/, "");
 
-// A self-hosted build has Stripe disabled at build time.
-export const STOREFRONT_BUY = process.env.NEXT_PUBLIC_STRIPE_ENABLED !== "true";
+// No in-app checkout: a self-hosted build, and the hosted pilot (where
+// nothing is sold and the storefront is the kit's shop).
+export const STOREFRONT_BUY = !features.stripeEnabled;
 
 /**
  * Storefront link for a premium skill.

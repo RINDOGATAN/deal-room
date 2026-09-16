@@ -116,7 +116,9 @@ export const skillManagerRouter = createTRPCRouter({
         categoryLocalized: pkg.contractTemplate?.categoryLocalized ?? null,
         displayNameLocalized: pkg.contractTemplate?.displayNameLocalized ?? null,
         descriptionLocalized: pkg.contractTemplate?.descriptionLocalized ?? null,
-        hasPackageFile: !!pkg.packageUrl,
+        // The hosted pilot delivers no kit packages (they are sold on the
+        // storefront, for the kit only).
+        hasPackageFile: !!pkg.packageUrl && !features.hostedPilot,
         marketplaceSlug: pkg.marketplaceSlug ?? null,
         entitlementStatus: ent?.status ?? null,
         entitlementExpiresAt: ent?.expiresAt ?? null,

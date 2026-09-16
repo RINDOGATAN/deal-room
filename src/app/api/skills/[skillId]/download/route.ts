@@ -8,6 +8,7 @@ import prisma from "@/lib/prisma";
 import { checkEntitlement } from "@/server/services/licensing";
 import { verifyDownloadToken } from "@/lib/crypto";
 import { apiError } from "@/lib/api-response";
+import { features } from "@/config/features";
 import {
   checkPublicRateLimit,
   clientIp,
@@ -19,6 +20,15 @@ export async function GET(
   { params }: { params: Promise<{ skillId: string }> }
 ) {
   const { skillId } = await params;
+
+  // The hosted pilot makes every skill usable in the browser but sells and
+  // delivers no kit packages: those come from the storefront, with a licence.
+  if (features.hostedPilot) {
+    return NextResponse.json(
+      { error: "Skill packages are not delivered by the hosted pilot" },
+      { status: 404 }
+    );
+  }
 
   try {
     const limit = await checkPublicRateLimit(

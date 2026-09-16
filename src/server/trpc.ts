@@ -10,6 +10,9 @@ import { decode } from "next-auth/jwt";
 import { authOptions } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import { formatUserError } from "@/lib/format-error";
+import { features } from "@/config/features";
+import { pilotMutationExempt } from "@/lib/pilot";
+import { PilotCapError, assertPilotCanEdit } from "@/server/services/pilot";
 
 interface CreateContextOptions {
   session: Session | null;
@@ -123,6 +126,9 @@ const t = initTRPC.context<typeof createTRPCContext>().create({
         ...shape.data,
         zodError:
           error.cause instanceof ZodError ? error.cause.flatten() : null,
+        // Hosted pilot cap reached: the interface shows its own translation.
+        pilotCap:
+          error.cause instanceof PilotCapError ? error.cause.reason : null,
       },
     };
   },
@@ -146,7 +152,21 @@ const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
   });
 });
 
-export const protectedProcedure = t.procedure.use(enforceUserIsAuthed);
+// Hosted pilot: after the 90-day edit window the account is read-only.
+// Queries always pass; mutations are refused except the few in
+// `pilotAllowsMutation`. The export is a plain GET route and never passes
+// through here. No-op on the kit.
+const enforcePilotEditWindow = t.middleware(async ({ ctx, next, type, path }) => {
+  const userId = ctx.session?.user?.id;
+  if (features.hostedPilot && type === "mutation" && userId && !pilotMutationExempt(path)) {
+    await assertPilotCanEdit(ctx.prisma, userId);
+  }
+  return next();
+});
+
+export const protectedProcedure = t.procedure
+  .use(enforceUserIsAuthed)
+  .use(enforcePilotEditWindow);
 
 // Admin procedure - requires admin session
 const enforceAdminIsAuthed = t.middleware(({ ctx, next }) => {
@@ -195,4 +215,6 @@ const enforceUserIsLawyer = t.middleware(async ({ ctx, next }) => {
   });
 });
 
-export const lawyerProcedure = t.procedure.use(enforceUserIsLawyer);
+export const lawyerProcedure = t.procedure
+  .use(enforceUserIsLawyer)
+  .use(enforcePilotEditWindow);

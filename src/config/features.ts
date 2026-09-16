@@ -2,6 +2,20 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 import { brand } from "./brand";
+import { isHostedPilotEnv } from "@/lib/pilot";
+
+/**
+ * Hosted pilot posture (2026-09-16): the hosted build is a free, capped
+ * pilot where nothing is sold, so it switches Stripe off in the app even if
+ * the Stripe variables are still set on the deployment. Server code reads
+ * `VERCEL_ENV`; the browser bundle reads `NEXT_PUBLIC_HOSTED_PILOT`, which
+ * `next.config.ts` inlines at build time. The kit never matches.
+ */
+const hostedPilot = isHostedPilotEnv({
+  NEXT_PUBLIC_HOSTED_PILOT: process.env.NEXT_PUBLIC_HOSTED_PILOT,
+  VERCEL_ENV: process.env.VERCEL_ENV,
+  AUTH_COOKIE_DOMAIN: process.env.AUTH_COOKIE_DOMAIN,
+});
 
 /**
  * Stripe posture, readable on BOTH sides of the bundle split.
@@ -18,14 +32,21 @@ import { brand } from "./brand";
  * a client-flag-only misconfiguration fails with a clear error, not a crash.
  */
 const stripeConfigured =
-  !!process.env.STRIPE_SECRET_KEY ||
-  process.env.NEXT_PUBLIC_STRIPE_ENABLED === "true";
+  !hostedPilot &&
+  (!!process.env.STRIPE_SECRET_KEY ||
+    process.env.NEXT_PUBLIC_STRIPE_ENABLED === "true");
 
 // All features that used to be gated to brand.id === "todo" are now
 // always on — the second brand was retired on 2026-05-02. The flag
 // shape is kept (rather than inlining `true`) so call-site reads
 // like `features.marketplace` stay self-documenting.
 export const features = {
+  /**
+   * Hosted pilot: every skill free for every account, with caps (one
+   * organisation per account, 90 days of editing, record ceilings — see
+   * `src/lib/pilot.ts`) and a banner that says so. False on the kit.
+   */
+  hostedPilot,
   stripeEnabled: stripeConfigured,
   selfServiceUpgrade: stripeConfigured,
   inviteCodeAuth: brand.auth.mode === "invite-code",
@@ -89,10 +110,10 @@ export const features = {
   /**
    * The /skills page: offline .skill install + licence-file activation. This
    * is the self-host premium path (buy on the todo.law storefront, install
-   * locally). On hosted, premium is a Stripe subscription — there is nothing
-   * to upload — so the page and its nav link hide whenever Stripe is on.
+   * locally). The page and its nav link hide whenever Stripe is on, and on
+   * the hosted pilot, where every skill is already available.
    */
-  skillInstaller: !stripeConfigured,
+  skillInstaller: !stripeConfigured && !hostedPilot,
   /**
    * Local-credentials auth — the self-host posture signal.
    *
