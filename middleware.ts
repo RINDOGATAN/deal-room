@@ -1,7 +1,23 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { localeCleanupSetCookies } from "@/lib/locale-cookie";
 
 export function middleware(request: NextRequest) {
+  const response = route(request);
+
+  // Collapse duplicate / legacy language cookies into the single shared
+  // `locale` cookie. Never writes a default when the visitor has not chosen.
+  for (const cookie of localeCleanupSetCookies(
+    request.headers.get("cookie"),
+    request.nextUrl.hostname,
+  )) {
+    response.headers.append("Set-Cookie", cookie);
+  }
+
+  return response;
+}
+
+function route(request: NextRequest) {
   const path = request.nextUrl.pathname;
 
   // Set currency cookie based on geo-IP (US → USD, else EUR)
