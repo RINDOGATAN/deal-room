@@ -18,21 +18,27 @@ export function middleware(request: NextRequest) {
 }
 
 function route(request: NextRequest) {
-  const path = request.nextUrl.pathname;
+  // The access checks decide the response first, so no visitor (not even
+  // one on a first request, with no cookies yet) can skip them.
+  const response = gate(request);
 
-  // Set currency cookie based on geo-IP (US → USD, else EUR)
-  const hasCurrency = request.cookies.has("currency");
-  if (!hasCurrency) {
+  // Set currency cookie based on geo-IP (US → USD, else EUR), on whatever
+  // response the gate produced, redirects included.
+  if (!request.cookies.has("currency")) {
     const country = request.headers.get("x-vercel-ip-country") || "";
     const currency = country === "US" ? "USD" : "EUR";
-    const response = NextResponse.next();
     response.cookies.set("currency", currency, {
       path: "/",
       maxAge: 60 * 60 * 24 * 30, // 30 days
       sameSite: "lax",
     });
-    return response;
   }
+
+  return response;
+}
+
+function gate(request: NextRequest) {
+  const path = request.nextUrl.pathname;
 
   // Supervisor portal protection
   if (path.startsWith("/supervise")) {
