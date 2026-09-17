@@ -2,31 +2,21 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 import { getRequestConfig } from "next-intl/server";
-import { cookies, headers } from "next/headers";
-import { defaultLocale, locales, type Locale } from "./config";
+import { headers } from "next/headers";
+import { defaultLocale, type Locale } from "./config";
+import { resolveChosenLocale } from "@/lib/locale-cookie";
 
-function isLocale(v: string | undefined): v is Locale {
-  return locales.includes(v as Locale);
+/**
+ * The visitor's chosen locale: the LAST `locale` value in the Cookie header
+ * (legacy `NEXT_LOCALE` as fallback), else English. Read from the raw header
+ * so duplicate cookies resolve by the shared rule, not by parser order.
+ */
+export function localeFromCookieHeader(cookieHeader: string | null | undefined): Locale {
+  return resolveChosenLocale(cookieHeader) ?? defaultLocale;
 }
 
 export default getRequestConfig(async () => {
-  const cookieStore = await cookies();
-
-  // 1. Dashboard cookie (set by LanguageSwitcher)
-  const nextLocale = cookieStore.get("NEXT_LOCALE")?.value;
-  // 2. Landing page cookie (set by setLocaleCookie on landing pages)
-  const landingLocale = cookieStore.get("locale")?.value;
-  // 3. Browser Accept-Language header
-  const acceptLang = (await headers()).get("accept-language");
-  const browserLocale = acceptLang?.match(/\b(es)\b/) ? "es" : undefined;
-
-  const locale: Locale = isLocale(nextLocale)
-    ? nextLocale
-    : isLocale(landingLocale)
-      ? landingLocale
-      : isLocale(browserLocale)
-        ? browserLocale
-        : defaultLocale;
+  const locale = localeFromCookieHeader((await headers()).get("cookie"));
 
   return {
     locale,
