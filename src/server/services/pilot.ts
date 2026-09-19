@@ -33,10 +33,12 @@ function pilotError(reason: PilotCapReason): TRPCError {
 }
 
 /**
- * When the account's pilot started. The clock starts at the first sign-in
- * while the pilot runs; an account that has not signed in since (a session
- * that predates the pilot) starts now. Accounts older than the pilot are
- * therefore not locked on the day it goes live.
+ * The account's first sign-in while the pilot runs (`users.pilotStartedAt`,
+ * written by the sign-in event in `auth.ts`). The account's creation date
+ * and any sign-in before the pilot (`lastLoginAt`) are never used. A session
+ * that predates the pilot has no pilot sign-in yet, so its first
+ * authenticated request is recorded as that sign-in. The edit window itself
+ * opens at `pilotWindowStart()`: this date, or the deployment date if later.
  */
 export async function ensurePilotStartedAt(
   prisma: ExtendedPrismaClient,
@@ -105,12 +107,12 @@ export async function getPilotStatus(
       journeys: { used: 0, limit: PILOT_CAPS.journeys },
     };
   }
-  const startedAt = await ensurePilotStartedAt(prisma, userId, now);
-  const window = pilotEditWindow(startedAt, now);
+  const firstSignInAt = await ensurePilotStartedAt(prisma, userId, now);
+  const window = pilotEditWindow(firstSignInAt, now);
   const counts = await countPilotRecords(prisma, userId);
   return {
     hosted: true,
-    startedAt,
+    startedAt: window.startedAt,
     endsAt: window.endsAt,
     daysLeft: window.daysLeft,
     readOnly: window.readOnly,
@@ -127,8 +129,8 @@ export async function isPilotReadOnly(
   now: Date = new Date(),
 ): Promise<boolean> {
   if (!features.hostedPilot) return false;
-  const startedAt = await ensurePilotStartedAt(prisma, userId, now);
-  return pilotEditWindow(startedAt, now).readOnly;
+  const firstSignInAt = await ensurePilotStartedAt(prisma, userId, now);
+  return pilotEditWindow(firstSignInAt, now).readOnly;
 }
 
 /** Throws FORBIDDEN when the account is past its edit window. */

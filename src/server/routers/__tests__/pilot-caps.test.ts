@@ -7,7 +7,7 @@
  * Same harness as deal.test.ts (module-mocked prisma, createCaller), with
  * the features mock set to the hosted pilot.
  */
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import type { Session } from "next-auth";
 
 const mocks = vi.hoisted(() => ({
@@ -53,7 +53,7 @@ import { dealRouter } from "@/server/routers/deal";
 import { journeyRouter } from "@/server/routers/journey";
 import { pilotRouter } from "@/server/routers/pilot";
 import { PilotCapError } from "@/server/services/pilot";
-import { PILOT_CAPS } from "@/lib/pilot";
+import { PILOT_CAPS, PILOT_LIVE_AT } from "@/lib/pilot";
 
 const DAY = 24 * 60 * 60 * 1000;
 
@@ -108,8 +108,17 @@ async function expectPilotCap(promise: Promise<unknown>, reason: string) {
   expect((error?.cause as PilotCapError).reason).toBe(reason);
 }
 
+// Well after the deployment date, so "days ago" means days into the window.
+const TODAY = new Date("2027-03-01T12:00:00Z");
+
+afterEach(() => {
+  vi.useRealTimers();
+});
+
 beforeEach(() => {
   vi.clearAllMocks();
+  vi.useFakeTimers({ toFake: ["Date"] });
+  vi.setSystemTime(TODAY);
   pilotStarted(1);
   mocks.prisma.user.updateMany.mockResolvedValue({ count: 0 });
   mocks.prisma.dealRoom.count.mockResolvedValue(0);
@@ -214,5 +223,34 @@ describe("90-day switch to read-only", () => {
       data: { pilotStartedAt: expect.any(Date) },
     });
     expect(status).toMatchObject({ readOnly: false, daysLeft: 90 });
+    expect(status.startedAt).toEqual(TODAY);
+  });
+});
+
+describe("clock rule: first sign-in, never before the deployment date", () => {
+  it("counts a sign-in before the deployment date from the deployment date", async () => {
+    // Signed in on 20 September 2026; 89 days after 1 October 2026.
+    vi.setSystemTime(new Date(PILOT_LIVE_AT.getTime() + 89 * DAY));
+    mocks.prisma.user.findUnique.mockResolvedValue({
+      pilotStartedAt: new Date("2026-09-20T10:00:00Z"),
+    });
+    const status = await pilot().status();
+    expect(status.startedAt).toEqual(PILOT_LIVE_AT);
+    expect(status).toMatchObject({ readOnly: false, daysLeft: 1 });
+  });
+
+  it("shows the full 90 days before the deployment date", async () => {
+    vi.setSystemTime(new Date("2026-09-20T10:00:00Z"));
+    mocks.prisma.user.findUnique.mockResolvedValue({ pilotStartedAt: new Date() });
+    const status = await pilot().status();
+    expect(status).toMatchObject({ readOnly: false, daysLeft: 90 });
+    expect(status.endsAt).toEqual(new Date(PILOT_LIVE_AT.getTime() + 90 * DAY));
+  });
+
+  it("counters show the days left from the first sign-in", async () => {
+    pilotStarted(30);
+    const status = await pilot().status();
+    expect(status).toMatchObject({ readOnly: false, daysLeft: 60 });
+    expect(status.startedAt).toEqual(new Date(TODAY.getTime() - 30 * DAY));
   });
 });

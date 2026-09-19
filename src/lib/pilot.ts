@@ -55,18 +55,43 @@ export const PILOT_EXPORT_PATH = "/api/account/export";
 const DAY_MS = 24 * 60 * 60 * 1000;
 
 export interface PilotEditWindow {
+  /** When the window opened (or opens, before the deployment date). */
+  startedAt: Date;
   /** Whole days of editing left (0 once the window has closed). */
   daysLeft: number;
   readOnly: boolean;
   endsAt: Date;
 }
 
-/** The 90-day edit window that starts at the account's first sign-in. */
-export function pilotEditWindow(startedAt: Date, now: Date = new Date()): PilotEditWindow {
+/**
+ * The pilot's deployment date. No edit window starts before it, whatever
+ * the recorded first sign-in says. Same date across the suite (DPO Central
+ * and AI Sentinel apply the same floor).
+ */
+export const PILOT_LIVE_AT = new Date("2026-10-01T00:00:00Z");
+
+/**
+ * One clock rule across the suite: the window opens at the account's first
+ * sign-in after the pilot went live, and never before the deployment date.
+ * The account's creation date plays no part.
+ */
+export function pilotWindowStart(firstSignInAt: Date, liveAt: Date = PILOT_LIVE_AT): Date {
+  return firstSignInAt.getTime() > liveAt.getTime() ? firstSignInAt : liveAt;
+}
+
+/** The 90-day edit window, opened by `pilotWindowStart(firstSignInAt)`. */
+export function pilotEditWindow(
+  firstSignInAt: Date,
+  now: Date = new Date(),
+  liveAt: Date = PILOT_LIVE_AT,
+): PilotEditWindow {
+  const startedAt = pilotWindowStart(firstSignInAt, liveAt);
   const endsAt = new Date(startedAt.getTime() + PILOT_CAPS.editDays * DAY_MS);
   const remainingMs = endsAt.getTime() - now.getTime();
   return {
-    daysLeft: remainingMs > 0 ? Math.ceil(remainingMs / DAY_MS) : 0,
+    startedAt,
+    // Before the deployment date the window has not opened yet: all 90 left.
+    daysLeft: remainingMs > 0 ? Math.min(PILOT_CAPS.editDays, Math.ceil(remainingMs / DAY_MS)) : 0,
     readOnly: remainingMs <= 0,
     endsAt,
   };
