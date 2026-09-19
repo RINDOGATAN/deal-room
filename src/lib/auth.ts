@@ -301,6 +301,13 @@ export const authOptions: NextAuthOptions = {
           where: { id: user.id },
           data: { lastLoginAt: new Date() },
         });
+        // Hosted pilot: the first sign-in starts the 90-day edit window.
+        if (features.hostedPilot) {
+          await prisma.user.updateMany({
+            where: { id: user.id, pilotStartedAt: null },
+            data: { pilotStartedAt: new Date() },
+          });
+        }
       } catch (err) {
         logger.error("failed to update lastLoginAt", { err: String(err) });
       }

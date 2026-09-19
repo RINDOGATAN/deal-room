@@ -211,7 +211,7 @@ export async function GET() {
       {
         name: "subscribe",
         description:
-          "Subscribe to premium skills. Returns a Stripe Checkout URL to complete payment in a browser. Entitlements activate automatically after payment.",
+          "Subscribe to premium skills on a deployment with in-app billing. The hosted pilot (dealroom.todo.law) sells nothing and answers 409: every skill is already available there. Premium skills for your own instance are 60 a year each in the kit (in your currency), on the todo.law storefront.",
         inputSchema: {
           type: "object",
           properties: {

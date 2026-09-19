@@ -6,6 +6,11 @@ import { signIn } from "next-auth/react";
 import { motion } from "framer-motion";
 import { ArrowRight, Check, Loader2 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import { features as appFeatures } from "@/config/features";
+import { PILOT_RUN_URL } from "@/lib/pilot";
+import { useCurrency } from "@/hooks/useCurrency";
+
+const hostedPilot = appFeatures.hostedPilot;
 
 export interface Feature {
   id: string;
@@ -66,6 +71,7 @@ const StartupProductPage = ({
 }: StartupProductPageProps) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [cardMode, setCardMode] = useState<"signup" | "login" | "sent">("signup");
+  const currency = useCurrency();
   const [emailInput, setEmailInput] = useState("");
   const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
@@ -156,6 +162,22 @@ const StartupProductPage = ({
   const handleGoogleSignIn = () => {
     signIn("google", { callbackUrl });
   };
+
+  // Hosted pilot: the same sentence as the site-wide banner, fixed here.
+  const pilotNotice = hostedPilot ? (
+    <p data-testid="pilot-signup-notice" className="text-xs text-muted-foreground font-body mt-4 text-center">
+      {tAuth("pilot.notice")}{" "}
+      <a
+        href={PILOT_RUN_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-accent underline decoration-accent/40 hover:decoration-accent"
+      >
+        {tAuth("pilot.run")}
+      </a>
+      .
+    </p>
+  ) : null;
 
   const googleDivider = (
     <>
@@ -278,6 +300,7 @@ const StartupProductPage = ({
                       >
                         {tAuth("login.newHere")}
                       </button>
+                      {pilotNotice}
                     </div>
                   ) : (
                     <div className="relative animate-fade-in">
@@ -311,6 +334,7 @@ const StartupProductPage = ({
                       >
                         {t("hero.login")}
                       </button>
+                      {pilotNotice}
                     </div>
                   )}
                 </div>
@@ -448,7 +472,7 @@ const StartupProductPage = ({
               <span className="text-accent">{t("cta.heading.accent")}</span>
               {t("cta.heading.suffix")}
             </h2>
-            <p className="text-lg text-muted-foreground mb-8 max-w-xl mx-auto font-body">{t("cta.text")}</p>
+            <p className="text-lg text-muted-foreground mb-8 max-w-xl mx-auto font-body">{t(currency === "EUR" ? "cta.textEur" : "cta.text")}</p>
             <button
               onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
               className="btn-primary text-base px-10 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02]"

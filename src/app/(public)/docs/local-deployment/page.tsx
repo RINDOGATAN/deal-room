@@ -3,6 +3,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 import { useTranslations } from "next-intl";
+import { useKitPrice } from "@/hooks/useCurrency";
 import {
   Store,
   Download,
@@ -18,10 +19,11 @@ import {
 
 export default function LocalDeploymentPage() {
   const t = useTranslations("localDeployment");
+  const price = useKitPrice();
 
   const flowSteps = [
     { icon: Store, label: t("flowBrowse"), sub: t("flowBrowseSub") },
-    { icon: CreditCard, label: t("flowPurchase"), sub: t("flowPurchaseSub") },
+    { icon: CreditCard, label: t("flowPurchase"), sub: t("flowPurchaseSub", { price }) },
     { icon: Download, label: t("flowDownload"), sub: t("flowDownloadSub") },
     { icon: Terminal, label: t("flowInstall"), sub: t("flowInstallSub") },
     { icon: ShieldCheck, label: t("flowActivate"), sub: t("flowActivateSub") },
@@ -32,7 +34,7 @@ export default function LocalDeploymentPage() {
       {/* Header */}
       <div>
         <h1 className="text-3xl font-bold mb-4">{t("title")}</h1>
-        <p className="text-lg text-muted-foreground">{t("subtitle")}</p>
+        <p className="text-lg text-muted-foreground">{t("subtitle", { price })}</p>
       </div>
 
       {/* Overview Flow — visual pipeline */}
@@ -116,7 +118,7 @@ export default function LocalDeploymentPage() {
           </div>
           <h2 className="text-xl font-bold">{t("step2Title")}</h2>
         </div>
-        <p className="text-muted-foreground">{t("step2Desc")}</p>
+        <p className="text-muted-foreground">{t("step2Desc", { price })}</p>
 
         <div className="border border-border p-6 rounded-2xl space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

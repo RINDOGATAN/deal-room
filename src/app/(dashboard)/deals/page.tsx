@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { features } from "@/config/features";
+import { PilotCapNotice } from "@/components/pilot/PilotNotice";
 
 const statusIcons = {
   DRAFT: FileText,
@@ -108,6 +109,8 @@ export default function DealsPage() {
           {t("newDeal")}
         </Link>
       </div>
+
+      <PilotCapNotice kind="deals" />
 
       {deals?.length === 0 ? (
         <div className="space-y-4">

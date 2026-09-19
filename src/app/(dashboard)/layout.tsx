@@ -24,6 +24,7 @@ import {
   ArrowRightLeft,
   Rocket,
   KeyRound,
+  Settings,
 } from "lucide-react";
 import { brand } from "@/config/brand";
 import { features } from "@/config/features";
@@ -45,6 +46,7 @@ export default function DashboardLayout({
   const tCommon = useTranslations("common");
   const tFooter = useTranslations("footer");
   const tOnboarding = useTranslations("onboarding");
+  const tPilot = useTranslations("pilot");
   const locale = useLocale();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [showOnboardingOverride, setShowOnboardingOverride] = useState(false);
@@ -88,6 +90,10 @@ export default function DashboardLayout({
     // Stripe checkout, so there is nothing to install or activate here.
     ...(features.skillInstaller
       ? [{ href: "/skills", label: t("skills"), icon: KeyRound }]
+      : []),
+    // Hosted pilot counters (days left, ceilings). No such page on the kit.
+    ...(features.hostedPilot
+      ? [{ href: "/settings", label: tPilot("settingsNav"), icon: Settings }]
       : []),
   ];
 

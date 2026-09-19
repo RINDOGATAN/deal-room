@@ -8,10 +8,29 @@ Two-party async contract negotiation platform with weighted compromise algorithm
 
 - **Contract Negotiation** — Structured clause-by-clause negotiation workflow
 - **Weighted Compromise** — Algorithm suggests fair compromises based on party firmness and option bias
-- **Skills Marketplace** — Licensed contract templates (NDA, DPA, MSA, etc.)
+- **Contract Skills** — Built-in templates (NDA, DPA, MSA, etc.) plus premium skills for your own instance
 - **Multilingual Support** — Cross-language negotiation (Party A in English, Party B in Spanish)
 - **Two-Level Admin** — Platform admins manage marketplace; supervisors monitor deals
 - **Self-Hostable** — AGPL-licensed sovereign kit for running on your own hardware (see below)
+
+## Hosted pilot and the kit
+
+- **Hosted ([dealroom.todo.law](https://dealroom.todo.law)) is a free, capped
+  pilot.** Every skill is available to every account and nothing is sold
+  there. Limits per account: one organisation (an account is its own
+  organisation), 90 days of editing from the first sign-in (then read-only;
+  the export at `/api/account/export` always works), 10 deals and 3 startup
+  journeys. A banner on every page says so. It has no security
+  certification: for real client data, run your own instance
+  (<https://www.todo.law/run>).
+- **The kit (self-hosted) has no caps.** Premium skills are sold only for
+  the kit: 60 a year each in the kit (in your currency) on the todo.law
+  storefront, installed and
+  activated offline with a licence file.
+
+The pilot switches on when the build runs on Vercel production
+(`VERCEL_ENV=production`) or with `AUTH_COOKIE_DOMAIN=.todo.law`; the rules
+live in `src/lib/pilot.ts`.
 
 > **Note:** the earlier dual-brand system (todo.law + northend.law) was retired
 > in May 2026; the codebase now ships a single brand (`src/config/brand.ts`
@@ -81,7 +100,7 @@ EMAIL_FROM=noreply@yourdomain.com
 GOOGLE_CLIENT_ID=...
 GOOGLE_CLIENT_SECRET=...
 SKILLS_DIR=/path/to/skills          # Optional: premium skills directory
-STRIPE_SECRET_KEY=...               # Optional: enables billing
+STRIPE_SECRET_KEY=...               # Optional: in-app billing (ignored on the hosted pilot)
 ```
 
 ## Administration
@@ -165,7 +184,7 @@ Each party sets a **firmness** level (1–5) per clause; the UI shows firmness w
 
 | Role | Portal | Access |
 |------|--------|--------|
-| Platform Admin | `/admin` | Manage marketplace, customers, supervisors |
+| Platform Admin | `/admin` | Manage skill catalog, customers, supervisors |
 | Supervisor | `/supervise` | Monitor assigned deals only |
 | User | `/deals` | Own negotiations only |
 
