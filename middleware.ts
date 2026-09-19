@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { localeCleanupSetCookies } from "@/lib/locale-cookie";
 import { currencyForCountry } from "@/lib/currency";
+import { isHostedPilotEnv } from "@/lib/pilot";
 
 export function middleware(request: NextRequest) {
   const response = route(request);
@@ -37,8 +38,27 @@ function route(request: NextRequest) {
   return response;
 }
 
+/**
+ * Hosted pilot: nothing is sold, so the billing page must not be reachable.
+ * The `notFound()` in `(dashboard)/billing/layout.tsx` still answers 200
+ * under the client dashboard layout, so the pilot redirects here instead,
+ * to Settings (the pilot's account page). Read per request: the kit never
+ * matches and keeps the layout's own gate.
+ */
+function hostedPilot() {
+  return isHostedPilotEnv({
+    NEXT_PUBLIC_HOSTED_PILOT: process.env.NEXT_PUBLIC_HOSTED_PILOT,
+    VERCEL_ENV: process.env.VERCEL_ENV,
+    AUTH_COOKIE_DOMAIN: process.env.AUTH_COOKIE_DOMAIN,
+  });
+}
+
 function gate(request: NextRequest) {
   const path = request.nextUrl.pathname;
+
+  if ((path === "/billing" || path.startsWith("/billing/")) && hostedPilot()) {
+    return NextResponse.redirect(new URL("/settings", request.url));
+  }
 
   // Supervisor portal protection
   if (path.startsWith("/supervise")) {
