@@ -1,22 +1,44 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { localeCleanupSetCookies } from "@/lib/locale-cookie";
 
 export function middleware(request: NextRequest) {
-  const path = request.nextUrl.pathname;
+  const response = route(request);
 
-  // Set currency cookie based on geo-IP (US → USD, else EUR)
-  const hasCurrency = request.cookies.has("currency");
-  if (!hasCurrency) {
+  // Collapse duplicate / legacy language cookies into the single shared
+  // `locale` cookie. Never writes a default when the visitor has not chosen.
+  for (const cookie of localeCleanupSetCookies(
+    request.headers.get("cookie"),
+    request.nextUrl.hostname,
+  )) {
+    response.headers.append("Set-Cookie", cookie);
+  }
+
+  return response;
+}
+
+function route(request: NextRequest) {
+  // The access checks decide the response first, so no visitor (not even
+  // one on a first request, with no cookies yet) can skip them.
+  const response = gate(request);
+
+  // Set currency cookie based on geo-IP (US → USD, else EUR), on whatever
+  // response the gate produced, redirects included.
+  if (!request.cookies.has("currency")) {
     const country = request.headers.get("x-vercel-ip-country") || "";
     const currency = country === "US" ? "USD" : "EUR";
-    const response = NextResponse.next();
     response.cookies.set("currency", currency, {
       path: "/",
       maxAge: 60 * 60 * 24 * 30, // 30 days
       sameSite: "lax",
     });
-    return response;
   }
+
+  return response;
+}
+
+function gate(request: NextRequest) {
+  const path = request.nextUrl.pathname;
 
   // Supervisor portal protection
   if (path.startsWith("/supervise")) {

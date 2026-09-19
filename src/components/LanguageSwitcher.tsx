@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { Globe } from "lucide-react";
 import { locales, localeNames, type Locale } from "@/i18n/config";
+import { isLocale, writeLocaleCookie } from "@/lib/locale-cookie";
 
 export function LanguageSwitcher() {
   const locale = useLocale() as Locale;
@@ -14,8 +15,7 @@ export function LanguageSwitcher() {
   const [isPending, startTransition] = useTransition();
 
   const switchLocale = (newLocale: Locale) => {
-    // Set the cookie
-    document.cookie = `NEXT_LOCALE=${newLocale};path=/;max-age=31536000;samesite=lax`;
+    writeLocaleCookie(newLocale);
 
     // Refresh the page to apply the new locale
     startTransition(() => {
@@ -44,10 +44,9 @@ export function LanguageSelect() {
   const [isPending, startTransition] = useTransition();
 
   const switchLocale = (newLocale: string) => {
-    if (!locales.includes(newLocale as Locale)) return;
+    if (!isLocale(newLocale)) return;
 
-    // Set the cookie
-    document.cookie = `NEXT_LOCALE=${newLocale};path=/;max-age=31536000;samesite=lax`;
+    writeLocaleCookie(newLocale);
 
     // Refresh the page to apply the new locale
     startTransition(() => {

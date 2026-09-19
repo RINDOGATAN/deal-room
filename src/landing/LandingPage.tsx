@@ -11,22 +11,14 @@ import en from "./i18n/en/dealroom-startups.json";
 import es from "./i18n/es/dealroom-startups.json";
 import authEn from "./i18n/en/startups-auth.json";
 import authEs from "./i18n/es/startups-auth.json";
+import { cleanUpLocaleCookie, readLocaleCookie, writeLocaleCookie } from "@/lib/locale-cookie";
 
 function detectLocale(): "en" | "es" {
   if (typeof window === "undefined") return "en";
   const params = new URLSearchParams(window.location.search);
   const lang = params.get("lang");
   if (lang === "es" || lang === "en") return lang;
-  const match = document.cookie.match(/(?:^|; )locale=([^;]*)/);
-  if (match?.[1] === "es") return "es";
-  return "en";
-}
-
-function setLocaleCookie(locale: string) {
-  const maxAge = 365 * 24 * 60 * 60;
-  const domain = window.location.hostname.endsWith(".todo.law") ? ";domain=.todo.law" : "";
-  document.cookie = `locale=${locale};path=/;max-age=${maxAge};SameSite=Lax${domain}`;
-  document.cookie = `NEXT_LOCALE=${locale};path=/;max-age=${maxAge};SameSite=Lax${domain}`;
+  return readLocaleCookie() ?? "en";
 }
 
 export default function LandingPage() {
@@ -35,15 +27,14 @@ export default function LandingPage() {
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect -- locale detection reads cookies/navigator, which must happen after hydration; running it during render would mismatch the server-rendered markup
     setLocale(detectLocale());
+    cleanUpLocaleCookie();
   }, []);
 
   const toggleLocale = useCallback(() => {
-    setLocale((prev) => {
-      const next = prev === "en" ? "es" : "en";
-      setLocaleCookie(next);
-      return next;
-    });
-  }, []);
+    const next = locale === "en" ? "es" : "en";
+    writeLocaleCookie(next);
+    setLocale(next);
+  }, [locale]);
 
   const dict = locale === "es" ? es : en;
   const authDict = locale === "es" ? authEs : authEn;
