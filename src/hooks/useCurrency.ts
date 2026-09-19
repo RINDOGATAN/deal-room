@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Copyright (C) 2025-2026 Rindogatan LLC
 
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 import { useTranslations } from "next-intl";
 import { getCurrency, type Currency } from "@/lib/currency";
 
@@ -12,12 +12,12 @@ import { getCurrency, type Currency } from "@/lib/currency";
  * set by the middleware switches a known non-US visitor to euros on load.
  */
 export function useCurrency(): Currency {
-  const [currency, setCurrency] = useState<Currency>("USD");
-  useEffect(() => {
-    setCurrency(getCurrency());
-  }, []);
-  return currency;
+  // The cookie does not change while the page is open, so nothing to subscribe to.
+  return useSyncExternalStore(noSubscription, getCurrency, serverCurrency);
 }
+
+const noSubscription = () => () => {};
+const serverCurrency = (): Currency => "USD";
 
 /** Kit premium price, one of the pair `pilot.kitPriceUSD` / `pilot.kitPriceEUR`. */
 export function useKitPrice(): string {
