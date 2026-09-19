@@ -21,6 +21,7 @@ import { Input } from "@/components/ui/input";
 import { EnableFeatureModal } from "@/components/premium/enable-feature-modal";
 import { PromoBanner } from "@/components/PromoBanner";
 import { formatPrice } from "@/lib/currency";
+import { useKitPrice } from "@/hooks/useCurrency";
 import { features } from "@/config/features";
 import {
   STOREFRONT_BUY,
@@ -44,6 +45,7 @@ const LANGUAGE_LABELS: Record<string, string> = {
 
 export default function MarketplacePage() {
   const t = useTranslations("marketplace");
+  const kitPrice = useKitPrice();
   const router = useRouter();
   const [jurisdictionFilter, setJurisdictionFilter] = useState<string | null>(null);
   const [languageFilter, setLanguageFilter] = useState<string | null>(null);
@@ -104,7 +106,7 @@ export default function MarketplacePage() {
       <div>
         <h1 className="text-2xl font-bold">{t("title")}</h1>
         <p className="text-muted-foreground">
-          {features.hostedPilot ? t("subtitlePilot") : t("subtitle")}
+          {features.hostedPilot ? t("subtitlePilot", { price: kitPrice }) : t("subtitle")}
         </p>
       </div>
 

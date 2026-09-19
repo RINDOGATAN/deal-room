@@ -109,7 +109,7 @@ See [agent-api.md](./agent-api.md) for full endpoint documentation.
 
 Since 2026-09-16 nothing is sold on the hosted pilot (dealroom.todo.law):
 A2A skills are available there at no cost, within the weekly limits below.
-For your own instance, premium skills are €60 a year each in the kit.
+For your own instance, premium skills are 60 a year each in the kit (in your currency).
 
 | Tier | Invocations | Detection |
 |------|-------------|-----------|

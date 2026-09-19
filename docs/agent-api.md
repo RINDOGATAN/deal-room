@@ -949,8 +949,8 @@ premium ones included, is available to every API key at no cost, and
 nothing is sold there: `POST /subscribe` answers **409**
 `{ "error": "Payments are disabled; all skills are free" }`.
 
-**Your own instance (the kit):** premium skills are **€60 a year each in the
-kit**, bought on the todo.law storefront and activated offline with a licence
+**Your own instance (the kit):** premium skills are **60 a year each in the
+kit (in your currency)**, bought on the todo.law storefront and activated offline with a licence
 file. The endpoints below apply only to a deployment that runs its own
 in-app billing.
 
@@ -1296,7 +1296,7 @@ All A2A skills are bilingual (EN/ES) and support three jurisdictions: California
 
 On the hosted pilot, A2A skills are available at no cost, with weekly
 limits (nothing is sold there). On your own instance, premium A2A skills are
-€60 a year each in the kit.
+60 a year each in the kit (in your currency).
 
 | Tier | Limits |
 |------|--------|

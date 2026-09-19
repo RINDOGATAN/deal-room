@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { localeCleanupSetCookies } from "@/lib/locale-cookie";
+import { currencyForCountry } from "@/lib/currency";
 
 export function middleware(request: NextRequest) {
   const response = route(request);
@@ -22,11 +23,10 @@ function route(request: NextRequest) {
   // one on a first request, with no cookies yet) can skip them.
   const response = gate(request);
 
-  // Set currency cookie based on geo-IP (US → USD, else EUR), on whatever
-  // response the gate produced, redirects included.
+  // Set currency cookie based on geo-IP (a known non-US country → EUR,
+  // otherwise USD), on whatever response the gate produced, redirects included.
   if (!request.cookies.has("currency")) {
-    const country = request.headers.get("x-vercel-ip-country") || "";
-    const currency = country === "US" ? "USD" : "EUR";
+    const currency = currencyForCountry(request.headers.get("x-vercel-ip-country"));
     response.cookies.set("currency", currency, {
       path: "/",
       maxAge: 60 * 60 * 24 * 30, // 30 days

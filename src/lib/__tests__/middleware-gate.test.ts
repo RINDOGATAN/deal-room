@@ -46,9 +46,19 @@ describe("middleware gate, first visit (no cookies)", () => {
     expect(res.headers.get("x-middleware-next")).toBe("1");
     expect(redirectTarget(res)).toBeNull();
     const currency = res.headers.getSetCookie().find((c) => c.startsWith("currency="));
-    expect(currency).toMatch(/^currency=EUR; /);
+    // No country header: the visitor is not known to be outside the US.
+    expect(currency).toMatch(/^currency=USD; /);
     expect(currency).toMatch(/Path=\//);
     expect(currency).toMatch(/Max-Age=2592000/);
+  });
+
+  it("sets EUR only for a visitor known to be outside the US", () => {
+    const res = middleware(
+      new NextRequest("https://dealroom.todo.law/deals", {
+        headers: { "x-vercel-ip-country": "ES" },
+      }),
+    );
+    expect(res.headers.getSetCookie().some((c) => c.startsWith("currency=EUR"))).toBe(true);
   });
 
   it("sets USD for a US visitor on a redirect too", () => {

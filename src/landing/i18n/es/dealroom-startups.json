@@ -78,7 +78,8 @@
   "cta.heading.prefix": "¿Listo para cerrar tu próximo ",
   "cta.heading.accent": "acuerdo",
   "cta.heading.suffix": "?",
-  "cta.text": "Pruébalo en el piloto alojado gratuito, con límites y sin certificación de seguridad. Para datos reales de clientes, ejecuta tu propia instancia, donde las skills premium cuestan 60 € al año cada una en el kit.",
+  "cta.text": "Pruébalo en el piloto alojado gratuito, con límites y sin certificación de seguridad. Para datos reales de clientes, ejecuta tu propia instancia, donde las skills premium cuestan 60 $ al año cada una en el kit.",
+  "cta.textEur": "Pruébalo en el piloto alojado gratuito, con límites y sin certificación de seguridad. Para datos reales de clientes, ejecuta tu propia instancia, donde las skills premium cuestan 60 € al año cada una en el kit.",
   "cta.button": "Lanzar Dealroom",
 
   "footer.tagline": "Plataforma de negociación de contratos",

@@ -3,6 +3,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 import { useTranslations } from "next-intl";
+import { useKitPrice } from "@/hooks/useCurrency";
 import {
   Bot,
   Key,
@@ -25,6 +26,7 @@ import {
 
 export default function AgentApiPage() {
   const t = useTranslations("agentApi");
+  const price = useKitPrice();
 
   const scopes = [
     { scope: "templates:read", desc: t("scopeTemplatesRead") },
@@ -174,7 +176,7 @@ export default function AgentApiPage() {
       {/* Entitlements */}
       <div className="space-y-4">
         <h2 className="text-xl font-bold">{t("entitlements")}</h2>
-        <p className="text-muted-foreground">{t("entitlementsDesc")}</p>
+        <p className="text-muted-foreground">{t("entitlementsDesc", { price })}</p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="card-brutal p-5">
@@ -198,7 +200,7 @@ export default function AgentApiPage() {
         </div>
 
         <div className="p-3 border border-primary/30 bg-primary/5 rounded-xl text-sm">
-          {t("entitlementPricing")}
+          {t("entitlementPricing", { price })}
         </div>
       </div>
 

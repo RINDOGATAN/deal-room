@@ -19,8 +19,8 @@ Dealroom uses a "free coffee machine, paid capsules" model:
   first sign-in (then read-only, export always available), 10 deals, 3
   startup journeys. No security certification: for real client data, run
   your own instance (https://www.todo.law/run).
-- **The kit (your own instance):** no caps. Premium skills are **€60 a year
-  each in the kit**, bought on the todo.law storefront and activated offline
+- **The kit (your own instance):** no caps. Premium skills are **60 a year
+  each in the kit (in your currency)**, bought on the todo.law storefront and activated offline
   with a licence file (see "Offline Activation" below).
 
 The Stripe, subscription and online-activation paths described below remain
@@ -111,7 +111,7 @@ The signature ensures packages haven't been tampered with. Only packages signed 
 | Type | Duration | Use Case |
 |------|----------|----------|
 | **Trial** | Time-limited (e.g., 14 days) | Evaluation before purchase |
-| **Subscription** | Renewable (yearly: €60 per skill in the kit) | Self-hosted kit |
+| **Subscription** | Renewable (yearly: 60 per skill in the kit, in your currency) | Self-hosted kit |
 | **Perpetual** | Forever | Self-hosted enterprises |
 
 ### Customer Types

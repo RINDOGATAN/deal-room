@@ -15,12 +15,18 @@ history was not tracked per-release and lives only in git.
   every skill is available to every account and nothing is sold; Stripe is off
   in the app whatever the variables say, and kit skill packages are not
   delivered. Per account: one organisation, 90 days of editing from the first
-  sign-in (then read-only), 10 deals, 3 startup journeys. A dismissible banner
-  on every page and the sign-up screens say so in English and Spanish;
+  sign-in (then read-only), 10 deals, 3 startup journeys. The window opens at
+  the account's first sign-in while the pilot runs, never before the
+  deployment date (1 October 2026), and never from the account's creation
+  date: the same clock rule as the other suite apps. A dismissible banner
+  on every page and the sign-up screens say so in English and Spanish ("90
+  days of editing from your first sign-in, then read-only with export");
   `/settings` shows the days left and the ceilings; a reached cap names both
-  ways out (your own instance, and the new `GET /api/account/export`). Copy
-  and docs now describe premium skills as €60 a year each in the kit. New
-  column `users.pilotStartedAt` (additive migration). The self-hosted kit is
+  ways out (your own instance, and the new `GET /api/account/export`). The
+  kit price follows the storefront currency rule: dollars unless the visitor
+  is known to be outside the US, euros only then (the `currency` cookie now
+  defaults to USD when the country is unknown). New column
+  `users.pilotStartedAt` (additive migration). The self-hosted kit is
   unchanged: no caps, no banner.
 - **The agent dispute endpoint refuses honestly when Gavel is not configured.**
   `POST /api/v1/agent/deals/:id/dispute` used to answer `201 Created` and store

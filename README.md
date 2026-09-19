@@ -24,7 +24,8 @@ Two-party async contract negotiation platform with weighted compromise algorithm
   certification: for real client data, run your own instance
   (<https://www.todo.law/run>).
 - **The kit (self-hosted) has no caps.** Premium skills are sold only for
-  the kit: €60 a year each on the todo.law storefront, installed and
+  the kit: 60 a year each in the kit (in your currency) on the todo.law
+  storefront, installed and
   activated offline with a licence file.
 
 The pilot switches on when the build runs on Vercel production

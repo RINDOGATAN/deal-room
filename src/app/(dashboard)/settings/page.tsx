@@ -7,10 +7,12 @@ import { useLocale, useTranslations } from "next-intl";
 import { trpc } from "@/lib/trpc";
 import { PILOT_EXPORT_PATH, PILOT_RUN_URL } from "@/lib/pilot";
 import { PilotCapMessage } from "@/components/pilot/PilotNotice";
+import { useKitPrice } from "@/hooks/useCurrency";
 
 export default function SettingsPage() {
   const t = useTranslations("pilot");
   const locale = useLocale();
+  const kitPrice = useKitPrice();
   const { data, isLoading } = trpc.pilot.status.useQuery();
 
   if (isLoading || !data) {
@@ -37,7 +39,8 @@ export default function SettingsPage() {
 
       <section className="card-brutal p-6 space-y-4" data-testid="pilot-settings">
         <h2 className="text-lg font-semibold">{t("sectionTitle")}</h2>
-        <p className="text-sm text-muted-foreground">{t("sectionIntro")}</p>
+        <p className="text-sm text-muted-foreground">{t("sectionIntro", { price: kitPrice })}</p>
+        <p className="text-sm font-medium" data-testid="pilot-rule">{t("rule")}</p>
 
         <p className="text-base font-medium" data-testid="pilot-counter">
           {data.readOnly

@@ -25,7 +25,7 @@ For every variable, what it unlocks and who rotates it, see
 | Sign-in | Magic link (Resend) and Google OAuth | Local email-only credentials (`NEXT_PUBLIC_LOCAL_AUTH_ENABLED=true`, baked into the image) |
 | Posture | **Free, capped pilot** (since 2026-09-16): on when `VERCEL_ENV=production` (or `AUTH_COOKIE_DOMAIN=.todo.law`); banner on every page; per account 1 organisation, 90 days of editing then read-only, 10 deals, 3 journeys; export at `/api/account/export` | No caps, no banner |
 | Payments | None. The pilot switches Stripe off in the app even if Stripe variables are still set | Stripe off: neither set, every skill is free (`features.allSkillsFree`) |
-| Premium skills | All available to every account at no cost; nothing is sold | €60 a year each in the kit: `.skill` file bought on the storefront, installed on `/skills` |
+| Premium skills | All available to every account at no cost; nothing is sold | 60 a year each in the kit (in your currency): `.skill` file bought on the storefront, installed on `/skills` |
 | Default deal mode | Two-party | Solo |
 | Migrations | `prisma migrate deploy` in the Vercel build | Migrator container (`deploy/sovereign/migrate.sh`), which also refreshes the built-in skill catalog on every boot |
 | Daily cron | `vercel.json`, 09:00 UTC, `CRON_SECRET` bearer | Host cron calling `/api/cron/daily` (see `deploy/sovereign/README.md`) |
