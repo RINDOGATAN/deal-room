@@ -48,6 +48,26 @@ describe("PilotBanner", () => {
     expect(html).toContain('aria-label="Cerrar"');
   });
 
+  it("states the suite-wide clock rule in both languages", () => {
+    expect(render(true)).toContain(
+      "90 days of editing from your first sign-in, then read-only with export.",
+    );
+    expect(render(true, "es")).toContain(
+      "90 días de edición desde tu primer inicio de sesión; después, solo lectura con exportación.",
+    );
+  });
+
+  it("uses the same rule sentence on the landing sign-up card and in Settings", () => {
+    const landing = (locale: string) =>
+      JSON.parse(
+        readFileSync(path.resolve(__dirname, `../../../landing/i18n/${locale}/startups-auth.json`), "utf8"),
+      ) as Record<string, string>;
+    expect(landing("en")["pilot.notice"]).toContain(en.pilot.rule.replace(/\.$/, ""));
+    expect(landing("es")["pilot.notice"]).toContain(es.pilot.rule.replace(/\.$/, ""));
+    expect(en.pilot.banner).toContain(en.pilot.rule);
+    expect(es.pilot.banner).toContain(es.pilot.rule);
+  });
+
   it("renders nothing on the kit", () => {
     expect(render(false)).toBe("");
     expect(render(false, "es")).toBe("");
