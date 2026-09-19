@@ -30,6 +30,10 @@ fixes ship in a new tag, and self-hosters receive it with `./suite.sh update`.
   with the local email-only provider, which is meant for a private network.
   The customer manages secrets, TLS, backups and exposure to the internet.
 
+`docs/security.md` sets out each control per posture, and
+`docs/migrations.md` the forward-only migration rule and how an upgrade is
+rehearsed.
+
 ## What is implemented in this build
 
 - **Authentication:** NextAuth. Hosted: magic-link email sign-in and Google
