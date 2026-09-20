@@ -64,7 +64,7 @@ export function AnalyticsPanel() {
           <p className="text-xs text-muted-foreground">{t("avgDays")}</p>
         </div>
         <div className="text-center p-3 bg-secondary/30 rounded-lg">
-          <Target className="w-4 h-4 text-green-500 mx-auto mb-1" />
+          <Target className="w-4 h-4 text-success mx-auto mb-1" />
           <p className="text-2xl font-bold">
             {isAvailable
               ? `${Math.round((activity.completedDeals / Math.max(activity.totalDeals, 1)) * 100)}%`
@@ -73,14 +73,14 @@ export function AnalyticsPanel() {
           <p className="text-xs text-muted-foreground">{t("completionRate")}</p>
         </div>
         <div className="text-center p-3 bg-secondary/30 rounded-lg">
-          <BarChart3 className="w-4 h-4 text-blue-500 mx-auto mb-1" />
+          <BarChart3 className="w-4 h-4 text-info mx-auto mb-1" />
           <p className="text-2xl font-bold">
             {isAvailable ? activity.totalDeals : TEASER_DATA.totalDeals}
           </p>
           <p className="text-xs text-muted-foreground">{t("totalDeals")}</p>
         </div>
         <div className="text-center p-3 bg-secondary/30 rounded-lg">
-          <Clock className="w-4 h-4 text-amber-500 mx-auto mb-1" />
+          <Clock className="w-4 h-4 text-warning mx-auto mb-1" />
           <p className="text-2xl font-bold">
             {isAvailable ? activity.activeDeals : 12}
           </p>

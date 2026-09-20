@@ -196,7 +196,7 @@ export default function LocalDeploymentPage() {
               </span>
             </p>
             <p>
-              <span className="text-amber-400">signature.sig</span>
+              <span className="text-warning">signature.sig</span>
               <span className="text-muted-foreground ml-4">
                 {t("signatureComment")}
               </span>
@@ -350,7 +350,7 @@ export default function LocalDeploymentPage() {
               </span>
             </div>
             <div className="flex items-center gap-3 text-sm">
-              <span className="w-2 h-2 rounded-full bg-amber-400" />
+              <span className="w-2 h-2 rounded-full bg-warning-mark" />
               <span className="font-medium w-20">{t("stateTaster")}</span>
               <span className="text-muted-foreground">
                 {t("stateTasterDesc")}

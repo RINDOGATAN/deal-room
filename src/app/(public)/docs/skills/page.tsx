@@ -136,12 +136,12 @@ export default function SkillsPage() {
 
           {/* Options */}
           <div className="space-y-3">
-            <div className="p-4 border border-blue-400/30 bg-blue-400/5 rounded-xl">
+            <div className="p-4 border border-info-mark bg-info-surface rounded-xl">
               <div className="flex items-center justify-between mb-2">
                 <span className="font-medium">
                   {t("exampleOptionATitle")}
                 </span>
-                <span className="text-xs px-2 py-0.5 bg-blue-400/20 text-blue-400 border border-blue-400/30 rounded-full">
+                <span className="text-xs px-2 py-0.5 bg-info-surface text-info border border-info-mark rounded-full">
                   {t("favorsPartyA")}
                 </span>
               </div>
@@ -159,7 +159,7 @@ export default function SkillsPage() {
                   </ul>
                 </div>
                 <div>
-                  <p className="text-amber-400 font-medium mb-1">
+                  <p className="text-warning font-medium mb-1">
                     {t("consForA")}
                   </p>
                   <ul className="text-muted-foreground space-y-0.5">
@@ -183,12 +183,12 @@ export default function SkillsPage() {
               </p>
             </div>
 
-            <div className="p-4 border border-orange-400/30 bg-orange-400/5 rounded-xl">
+            <div className="p-4 border border-warning-mark bg-warning-surface rounded-xl">
               <div className="flex items-center justify-between mb-2">
                 <span className="font-medium">
                   {t("exampleOptionCTitle")}
                 </span>
-                <span className="text-xs px-2 py-0.5 bg-orange-400/20 text-orange-400 border border-orange-400/30 rounded-full">
+                <span className="text-xs px-2 py-0.5 bg-warning-surface text-warning border border-warning-mark rounded-full">
                   {t("favorsPartyB")}
                 </span>
               </div>
@@ -273,8 +273,8 @@ export default function SkillsPage() {
 
         <div className="card-brutal p-5">
           <div className="flex items-center gap-6">
-            <div className="flex-1 p-4 border border-blue-400/30 bg-blue-400/5 rounded-xl">
-              <p className="text-xs text-blue-400 mb-1">
+            <div className="flex-1 p-4 border border-info-mark bg-info-surface rounded-xl">
+              <p className="text-xs text-info mb-1">
                 {t("multilingualPartyALabel")}
               </p>
               <p className="font-medium">{t("multilingualPartyAOption")}</p>
@@ -283,8 +283,8 @@ export default function SkillsPage() {
               </p>
             </div>
             <div className="text-muted-foreground">=</div>
-            <div className="flex-1 p-4 border border-orange-400/30 bg-orange-400/5 rounded-xl">
-              <p className="text-xs text-orange-400 mb-1">
+            <div className="flex-1 p-4 border border-warning-mark bg-warning-surface rounded-xl">
+              <p className="text-xs text-warning mb-1">
                 {t("multilingualPartyBLabel")}
               </p>
               <p className="font-medium">{t("multilingualPartyBOption")}</p>

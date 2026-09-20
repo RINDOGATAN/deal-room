@@ -51,10 +51,10 @@ export default function AgentPreparationPage() {
             </p>
           </div>
 
-          <div className="border border-blue-500/30 bg-blue-500/5 p-6 rounded-2xl">
+          <div className="border border-info-mark bg-info-surface p-6 rounded-2xl">
             <div className="flex items-center gap-3 mb-3">
-              <Code className="w-5 h-5 text-blue-500" />
-              <h3 className="font-bold text-blue-500">
+              <Code className="w-5 h-5 text-info" />
+              <h3 className="font-bold text-info">
                 {t("artifactPlaybookTitle")}
               </h3>
             </div>
@@ -63,10 +63,10 @@ export default function AgentPreparationPage() {
             </p>
           </div>
 
-          <div className="border border-amber-500/30 bg-amber-500/5 p-6 rounded-2xl">
+          <div className="border border-warning-mark bg-warning-surface p-6 rounded-2xl">
             <div className="flex items-center gap-3 mb-3">
-              <Shield className="w-5 h-5 text-amber-500" />
-              <h3 className="font-bold text-amber-500">
+              <Shield className="w-5 h-5 text-warning" />
+              <h3 className="font-bold text-warning">
                 {t("artifactDrcTitle")}
               </h3>
             </div>
@@ -83,28 +83,28 @@ export default function AgentPreparationPage() {
         <p className="text-muted-foreground">{t("whyDesc")}</p>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="p-5 border border-red-500/30 bg-red-500/5 rounded-2xl">
+          <div className="p-5 border border-danger-mark bg-danger-surface rounded-2xl">
             <div className="flex items-center gap-2 mb-3">
-              <AlertTriangle className="w-5 h-5 text-red-500" />
-              <h3 className="font-bold text-red-500">{t("withoutTitle")}</h3>
+              <AlertTriangle className="w-5 h-5 text-danger" />
+              <h3 className="font-bold text-danger">{t("withoutTitle")}</h3>
             </div>
             <p className="text-sm text-muted-foreground">
               {t("withoutDesc")}
             </p>
           </div>
 
-          <div className="p-5 border border-emerald-500/30 bg-emerald-500/5 rounded-2xl">
+          <div className="p-5 border border-success-mark bg-success-surface rounded-2xl">
             <div className="flex items-center gap-2 mb-3">
-              <CheckCircle className="w-5 h-5 text-emerald-500" />
-              <h3 className="font-bold text-emerald-500">{t("withTitle")}</h3>
+              <CheckCircle className="w-5 h-5 text-success" />
+              <h3 className="font-bold text-success">{t("withTitle")}</h3>
             </div>
             <p className="text-sm text-muted-foreground">{t("withDesc")}</p>
           </div>
 
-          <div className="p-5 border border-amber-500/30 bg-amber-500/5 rounded-2xl">
+          <div className="p-5 border border-warning-mark bg-warning-surface rounded-2xl">
             <div className="flex items-center gap-2 mb-3">
-              <Zap className="w-5 h-5 text-amber-500" />
-              <h3 className="font-bold text-amber-500">{t("withDrcTitle")}</h3>
+              <Zap className="w-5 h-5 text-warning" />
+              <h3 className="font-bold text-warning">{t("withDrcTitle")}</h3>
             </div>
             <p className="text-sm text-muted-foreground">
               {t("withDrcDesc")}

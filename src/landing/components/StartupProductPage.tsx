@@ -212,7 +212,9 @@ const StartupProductPage = ({
             className="absolute inset-0 w-full h-full object-cover"
             src={heroVideo}
           />
-          <div className="absolute inset-0 bg-black/55" />
+          {/* The scrim is what the hero text is read against; it is dark
+              enough that white type stays legible over any photograph. */}
+          <div className="absolute inset-0 bg-black/70" />
           <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-black/30" />
           <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-black/20" />
         </div>
@@ -236,7 +238,7 @@ const StartupProductPage = ({
                     <span className="text-accent">{t("hero.title.accent")}</span>
                     {t("hero.title.suffix")}
                   </h1>
-                  <p className="text-lg text-white/70 leading-relaxed font-body mb-8 max-w-lg">
+                  <p className="text-lg text-white leading-relaxed font-body mb-8 max-w-lg">
                     {t("hero.subtitle")}
                   </p>
                 </motion.div>
@@ -269,7 +271,7 @@ const StartupProductPage = ({
                         {sending && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
                         {tAuth("sent.resend")}
                       </button>
-                      {error && <p className="text-sm text-red-400 mt-3">{error}</p>}
+                      {error && <p className="text-sm text-danger mt-3">{error}</p>}
                     </div>
                   ) : cardMode === "login" ? (
                     <div className="relative animate-fade-in">
@@ -293,7 +295,7 @@ const StartupProductPage = ({
                         </button>
                       </form>
                       {googleDivider}
-                      {error && <p className="text-sm text-red-400 mt-3">{error}</p>}
+                      {error && <p className="text-sm text-danger mt-3">{error}</p>}
                       <button
                         onClick={() => { setCardMode("signup"); setError(""); }}
                         className="block w-full text-center text-sm text-muted-foreground hover:text-accent transition-colors mt-4 font-body"
@@ -327,7 +329,7 @@ const StartupProductPage = ({
                         </button>
                       </form>
                       {googleDivider}
-                      {error && <p className="text-sm text-red-400 mt-3">{error}</p>}
+                      {error && <p className="text-sm text-danger mt-3">{error}</p>}
                       <button
                         onClick={() => { setCardMode("login"); setError(""); }}
                         className="block w-full text-center text-sm text-muted-foreground hover:text-accent transition-colors mt-4 font-body"

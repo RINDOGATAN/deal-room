@@ -75,9 +75,9 @@ function biasLabel(biasA: number, biasB: number): { text: string; color: string 
   if (Math.abs(biasA) < 0.05 && Math.abs(biasB) < 0.05)
     return { text: "Balanced", color: "text-muted-foreground bg-muted border-border" };
   if (biasA > 0.15)
-    return { text: "Favors Party A", color: "text-blue-500 bg-blue-500/10 border-blue-500/30" };
+    return { text: "Favors Party A", color: "text-info bg-info-surface border-info-mark" };
   if (biasB > 0.15)
-    return { text: "Favors Party B", color: "text-orange-500 bg-orange-500/10 border-orange-500/30" };
+    return { text: "Favors Party B", color: "text-warning bg-warning-surface border-warning-mark" };
   return { text: "Balanced", color: "text-muted-foreground bg-muted border-border" };
 }
 

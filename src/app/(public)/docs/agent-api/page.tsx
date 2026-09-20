@@ -190,7 +190,7 @@ export default function AgentApiPage() {
           </div>
           <div className="card-brutal p-5">
             <div className="flex items-center gap-3 mb-2">
-              <CheckCircle className="w-4 h-4 text-emerald-500" />
+              <CheckCircle className="w-4 h-4 text-success" />
               <h3 className="font-bold">{t("entitlementRespondentTitle")}</h3>
             </div>
             <p className="text-sm text-muted-foreground">
@@ -291,7 +291,7 @@ export default function AgentApiPage() {
               <tbody>
                 <tr className="border-b border-border">
                   <td className="p-3">
-                    <code className="text-xs px-1.5 py-0.5 bg-emerald-500/10 text-emerald-500 border border-emerald-500/30 rounded">
+                    <code className="text-xs px-1.5 py-0.5 bg-success-surface text-success border border-success-mark rounded">
                       GET
                     </code>
                   </td>
@@ -302,7 +302,7 @@ export default function AgentApiPage() {
                 </tr>
                 <tr>
                   <td className="p-3">
-                    <code className="text-xs px-1.5 py-0.5 bg-emerald-500/10 text-emerald-500 border border-emerald-500/30 rounded">
+                    <code className="text-xs px-1.5 py-0.5 bg-success-surface text-success border border-success-mark rounded">
                       GET
                     </code>
                   </td>
@@ -343,12 +343,12 @@ export default function AgentApiPage() {
                       <code
                         className={`text-xs px-1.5 py-0.5 rounded border ${
                           method === "GET"
-                            ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/30"
+                            ? "bg-success-surface text-success border-success-mark"
                             : method === "POST"
-                              ? "bg-blue-500/10 text-blue-500 border-blue-500/30"
+                              ? "bg-info-surface text-info border-info-mark"
                               : method === "PUT"
-                                ? "bg-amber-500/10 text-amber-500 border-amber-500/30"
-                                : "bg-red-500/10 text-red-500 border-red-500/30"
+                                ? "bg-warning-surface text-warning border-warning-mark"
+                                : "bg-danger-surface text-danger border-danger-mark"
                         }`}
                       >
                         {method}
@@ -381,7 +381,7 @@ export default function AgentApiPage() {
               <tbody>
                 <tr className="border-b border-border">
                   <td className="p-3">
-                    <code className="text-xs px-1.5 py-0.5 bg-blue-500/10 text-blue-500 border border-blue-500/30 rounded">
+                    <code className="text-xs px-1.5 py-0.5 bg-info-surface text-info border border-info-mark rounded">
                       POST
                     </code>
                   </td>
@@ -392,7 +392,7 @@ export default function AgentApiPage() {
                 </tr>
                 <tr>
                   <td className="p-3">
-                    <code className="text-xs px-1.5 py-0.5 bg-blue-500/10 text-blue-500 border border-blue-500/30 rounded">
+                    <code className="text-xs px-1.5 py-0.5 bg-info-surface text-info border border-info-mark rounded">
                       POST
                     </code>
                   </td>
@@ -428,7 +428,7 @@ export default function AgentApiPage() {
                     className="border-b border-border last:border-0"
                   >
                     <td className="p-3">
-                      <code className="text-xs px-1.5 py-0.5 bg-emerald-500/10 text-emerald-500 border border-emerald-500/30 rounded">
+                      <code className="text-xs px-1.5 py-0.5 bg-success-surface text-success border border-success-mark rounded">
                         {method}
                       </code>
                     </td>
@@ -466,8 +466,8 @@ export default function AgentApiPage() {
                       <code
                         className={`text-xs px-1.5 py-0.5 rounded border ${
                           method === "GET"
-                            ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/30"
-                            : "bg-blue-500/10 text-blue-500 border-blue-500/30"
+                            ? "bg-success-surface text-success border-success-mark"
+                            : "bg-info-surface text-info border-info-mark"
                         }`}
                       >
                         {method}
@@ -507,10 +507,10 @@ export default function AgentApiPage() {
                       <code
                         className={`text-xs px-1.5 py-0.5 rounded border ${
                           method === "GET"
-                            ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/30"
+                            ? "bg-success-surface text-success border-success-mark"
                             : method === "POST"
-                              ? "bg-blue-500/10 text-blue-500 border-blue-500/30"
-                              : "bg-red-500/10 text-red-500 border-red-500/30"
+                              ? "bg-info-surface text-info border-info-mark"
+                              : "bg-danger-surface text-danger border-danger-mark"
                         }`}
                       >
                         {method}
@@ -550,8 +550,8 @@ export default function AgentApiPage() {
                       <code
                         className={`text-xs px-1.5 py-0.5 rounded border ${
                           method === "GET"
-                            ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/30"
-                            : "bg-blue-500/10 text-blue-500 border-blue-500/30"
+                            ? "bg-success-surface text-success border-success-mark"
+                            : "bg-info-surface text-info border-info-mark"
                         }`}
                       >
                         {method}
@@ -589,7 +589,7 @@ export default function AgentApiPage() {
                     className="border-b border-border last:border-0"
                   >
                     <td className="p-3">
-                      <code className="text-xs px-1.5 py-0.5 bg-blue-500/10 text-blue-500 border border-blue-500/30 rounded">
+                      <code className="text-xs px-1.5 py-0.5 bg-info-surface text-info border border-info-mark rounded">
                         {method}
                       </code>
                     </td>
@@ -600,7 +600,7 @@ export default function AgentApiPage() {
               </tbody>
             </table>
           </div>
-          <div className="p-4 border border-amber-500/30 bg-amber-500/5 rounded-xl space-y-2">
+          <div className="p-4 border border-warning-mark bg-warning-surface rounded-xl space-y-2">
             <p className="text-sm font-medium">{t("disputesNotConfiguredTitle")}</p>
             <p className="text-sm text-muted-foreground">
               {t("disputesNotConfiguredDesc")}
@@ -707,10 +707,10 @@ Content-Type: application/json
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="p-4 border border-emerald-500/30 bg-emerald-500/5 rounded-xl">
+          <div className="p-4 border border-success-mark bg-success-surface rounded-xl">
             <div className="flex items-center gap-2 mb-2">
-              <CheckCircle className="w-4 h-4 text-emerald-500" />
-              <p className="font-medium text-emerald-500 text-sm">
+              <CheckCircle className="w-4 h-4 text-success" />
+              <p className="font-medium text-success text-sm">
                 {t("redLineOverlap")}
               </p>
             </div>
@@ -718,10 +718,10 @@ Content-Type: application/json
               {t("redLineOverlapDesc")}
             </p>
           </div>
-          <div className="p-4 border border-amber-500/30 bg-amber-500/5 rounded-xl">
+          <div className="p-4 border border-warning-mark bg-warning-surface rounded-xl">
             <div className="flex items-center gap-2 mb-2">
-              <ShieldAlert className="w-4 h-4 text-amber-500" />
-              <p className="font-medium text-amber-500 text-sm">
+              <ShieldAlert className="w-4 h-4 text-warning" />
+              <p className="font-medium text-warning text-sm">
                 {t("redLineOneSided")}
               </p>
             </div>
@@ -729,10 +729,10 @@ Content-Type: application/json
               {t("redLineOneSidedDesc")}
             </p>
           </div>
-          <div className="p-4 border border-red-500/30 bg-red-500/5 rounded-xl">
+          <div className="p-4 border border-danger-mark bg-danger-surface rounded-xl">
             <div className="flex items-center gap-2 mb-2">
-              <XCircle className="w-4 h-4 text-red-500" />
-              <p className="font-medium text-red-500 text-sm">
+              <XCircle className="w-4 h-4 text-danger" />
+              <p className="font-medium text-danger text-sm">
                 {t("redLineConflict")}
               </p>
             </div>
@@ -879,7 +879,7 @@ Content-Type: application/json
         {/* Success */}
         <div className="space-y-2">
           <h3 className="text-lg font-bold flex items-center gap-2">
-            <CheckCircle className="w-4 h-4 text-emerald-500" />
+            <CheckCircle className="w-4 h-4 text-success" />
             {t("agreedDeal")}
           </h3>
           <p className="text-sm text-muted-foreground">
@@ -912,7 +912,7 @@ Content-Type: application/json
         {/* Failure */}
         <div className="space-y-2">
           <h3 className="text-lg font-bold flex items-center gap-2">
-            <XCircle className="w-4 h-4 text-red-500" />
+            <XCircle className="w-4 h-4 text-danger" />
             {t("failedDeal")}
           </h3>
           <p className="text-sm text-muted-foreground">

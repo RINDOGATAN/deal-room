@@ -44,7 +44,7 @@ export function LawyerWarningModal({
       >
         <DialogHeader>
           <div className="flex items-center gap-3 mb-2">
-            <div className="w-10 h-10 bg-warning/20 flex items-center justify-center rounded-2xl flex-shrink-0">
+            <div className="w-10 h-10 bg-warning-surface flex items-center justify-center rounded-2xl flex-shrink-0">
               <AlertTriangle className="w-5 h-5 text-warning" />
             </div>
             <DialogTitle className="font-heading text-xl">
@@ -100,8 +100,8 @@ export function LawyerWarningModal({
 
             {/* Stage B */}
             <div className="flex items-start gap-3 pl-1">
-              <div className="w-6 h-6 rounded-full bg-purple-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
-                <span className="text-xs font-medium text-purple-500">B</span>
+              <div className="w-6 h-6 rounded-full bg-info-surface flex items-center justify-center flex-shrink-0 mt-0.5">
+                <span className="text-xs font-medium text-info">B</span>
               </div>
               <div>
                 <p className="text-sm font-medium">
