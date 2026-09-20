@@ -22,21 +22,22 @@ import {
   Download,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { StatusNote } from "@/components/ui/status-note";
 
 const statusConfig = {
   DRAFT: { label: "Draft", color: "bg-muted text-muted-foreground", icon: FileText },
-  AWAITING_RESPONSE: { label: "Awaiting Response", color: "bg-yellow-500/20 text-yellow-500", icon: Clock },
-  NEGOTIATING: { label: "Negotiating", color: "bg-blue-500/20 text-blue-500", icon: Users },
-  AGREED: { label: "Agreed", color: "bg-primary/20 text-primary", icon: CheckCircle },
-  SIGNING: { label: "Signing", color: "bg-primary/20 text-primary", icon: FileText },
-  COMPLETED: { label: "Completed", color: "bg-green-500/20 text-green-500", icon: CheckCircle },
-  CANCELLED: { label: "Cancelled", color: "bg-yellow-500/20 text-yellow-600", icon: AlertCircle },
+  AWAITING_RESPONSE: { label: "Awaiting Response", color: "bg-warning-surface text-warning", icon: Clock },
+  NEGOTIATING: { label: "Negotiating", color: "bg-info-surface text-info", icon: Users },
+  AGREED: { label: "Agreed", color: "bg-info-surface text-primary", icon: CheckCircle },
+  SIGNING: { label: "Signing", color: "bg-info-surface text-primary", icon: FileText },
+  COMPLETED: { label: "Completed", color: "bg-success-surface text-success", icon: CheckCircle },
+  CANCELLED: { label: "Cancelled", color: "bg-warning-surface text-warning", icon: AlertCircle },
 };
 
 const partyStatusConfig = {
   PENDING: { label: "Pending", color: "text-muted-foreground" },
-  SUBMITTED: { label: "Submitted", color: "text-blue-500" },
-  REVIEWING: { label: "Reviewing", color: "text-yellow-500" },
+  SUBMITTED: { label: "Submitted", color: "text-info" },
+  REVIEWING: { label: "Reviewing", color: "text-warning" },
   ACCEPTED: { label: "Accepted", color: "text-primary" },
 };
 
@@ -82,12 +83,7 @@ export default function SupervisorDealDetailPage() {
           </Link>
           <h1 className="text-2xl font-bold">Error</h1>
         </div>
-        <div className="card-brutal border-yellow-500">
-          <div className="flex items-center gap-3 text-yellow-600">
-            <AlertCircle className="w-5 h-5" />
-            <span>{error.message}</span>
-          </div>
-        </div>
+        <StatusNote tone="warning">{error.message}</StatusNote>
       </div>
     );
   }
@@ -235,10 +231,10 @@ export default function SupervisorDealDetailPage() {
 
       {/* Stage B — Joint Closing Counsel Banner */}
       {isJointCounsel && jointCounselPending && (
-        <div className="card-brutal border-blue-500/50 bg-blue-500/5">
+        <div className="card-brutal border-info-mark bg-info-surface">
           <div className="flex items-start gap-4">
-            <div className="w-12 h-12 bg-blue-500/20 flex items-center justify-center flex-shrink-0">
-              <Scale className="w-6 h-6 text-blue-500" />
+            <div className="w-12 h-12 bg-info-surface flex items-center justify-center flex-shrink-0">
+              <Scale className="w-6 h-6 text-info" />
             </div>
             <div>
               <h2 className="text-lg font-semibold mb-1">Joint Closing Counsel</h2>
@@ -290,7 +286,7 @@ export default function SupervisorDealDetailPage() {
             </div>
             {respondent && (
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-blue-500/20 flex items-center justify-center text-blue-500 font-semibold">
+                <div className="w-10 h-10 bg-info-surface flex items-center justify-center text-info font-semibold">
                   {(respondent.name || respondent.email || "B")[0].toUpperCase()}
                 </div>
                 <div>
@@ -408,7 +404,7 @@ export default function SupervisorDealDetailPage() {
                 <div>
                   {partyBSelection ? (
                     <div>
-                      <span className={sameSelection ? "text-primary" : "text-blue-500"}>
+                      <span className={sameSelection ? "text-primary" : "text-info"}>
                         {partyBSelection.option.label}
                       </span>
                       <p className="text-xs text-muted-foreground">
@@ -434,11 +430,11 @@ export default function SupervisorDealDetailPage() {
                 </div>
                 <div>
                   {clause.status === "AGREED" ? (
-                    <Badge className="bg-primary/20 text-primary text-xs">Agreed</Badge>
+                    <Badge className="bg-info-surface text-primary text-xs">Agreed</Badge>
                   ) : clause.status === "SUGGESTED" ? (
-                    <Badge className="bg-blue-500/20 text-blue-500 text-xs">Suggested</Badge>
+                    <Badge className="bg-info-surface text-info text-xs">Suggested</Badge>
                   ) : partyASelection && partyBSelection && !sameSelection ? (
-                    <Badge className="bg-yellow-500/20 text-yellow-500 text-xs">Divergent</Badge>
+                    <Badge className="bg-warning-surface text-warning text-xs">Divergent</Badge>
                   ) : (
                     <Badge variant="outline" className="text-xs">Pending</Badge>
                   )}

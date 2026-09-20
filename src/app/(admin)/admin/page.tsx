@@ -12,11 +12,11 @@ import {
   FileText,
   Package,
   UserCog,
-  AlertCircle,
   Loader2,
   ArrowRight,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { StatusNote } from "@/components/ui/status-note";
 
 export default function AdminDashboard() {
   const router = useRouter();
@@ -55,12 +55,7 @@ export default function AdminDashboard() {
       );
     }
     return (
-      <div className="card-brutal border-yellow-500">
-        <div className="flex items-center gap-3 text-yellow-600">
-          <AlertCircle className="w-5 h-5" />
-          <span>Failed to load dashboard: {error.message}</span>
-        </div>
-      </div>
+      <StatusNote tone="warning">Failed to load dashboard: {error.message}</StatusNote>
     );
   }
 
@@ -88,12 +83,12 @@ export default function AdminDashboard() {
           <p className="text-sm text-muted-foreground">Customers</p>
         </div>
         <div className="card-brutal text-center">
-          <FileText className="w-6 h-6 text-blue-500 mx-auto mb-2" />
+          <FileText className="w-6 h-6 text-info mx-auto mb-2" />
           <p className="text-3xl font-bold">{stats?.dealCount || 0}</p>
           <p className="text-sm text-muted-foreground">Total Deals</p>
         </div>
         <div className="card-brutal text-center">
-          <Package className="w-6 h-6 text-green-500 mx-auto mb-2" />
+          <Package className="w-6 h-6 text-success mx-auto mb-2" />
           <p className="text-3xl font-bold">{stats?.skillCount || 0}</p>
           <p className="text-sm text-muted-foreground">Skills</p>
         </div>
@@ -124,8 +119,8 @@ export default function AdminDashboard() {
         <Link href="/admin/deals" className="card-brutal group hover:border-primary transition-colors">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-blue-500/20 flex items-center justify-center">
-                <FileText className="w-6 h-6 text-blue-500" />
+              <div className="w-12 h-12 bg-info-surface flex items-center justify-center">
+                <FileText className="w-6 h-6 text-info" />
               </div>
               <div>
                 <h3 className="font-semibold">All Deals</h3>
@@ -154,8 +149,8 @@ export default function AdminDashboard() {
         <Link href="/admin/skills" className="card-brutal group hover:border-primary transition-colors">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-green-500/20 flex items-center justify-center">
-                <Package className="w-6 h-6 text-green-500" />
+              <div className="w-12 h-12 bg-success-surface flex items-center justify-center">
+                <Package className="w-6 h-6 text-success" />
               </div>
               <div>
                 <h3 className="font-semibold">Skills Marketplace</h3>

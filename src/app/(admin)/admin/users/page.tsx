@@ -8,12 +8,12 @@ import { format } from "date-fns";
 import {
   UserCheck,
   Search,
-  AlertCircle,
   Loader2,
   FileText,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { StatusNote } from "@/components/ui/status-note";
 
 export default function UsersPage() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -49,12 +49,7 @@ export default function UsersPage() {
 
   if (error) {
     return (
-      <div className="card-brutal border-yellow-500">
-        <div className="flex items-center gap-3 text-yellow-600">
-          <AlertCircle className="w-5 h-5" />
-          <span>Failed to load users: {error.message}</span>
-        </div>
-      </div>
+      <StatusNote tone="warning">Failed to load users: {error.message}</StatusNote>
     );
   }
 
@@ -115,9 +110,9 @@ export default function UsersPage() {
                 </div>
                 <div>
                   {authMethod === "google" ? (
-                    <Badge className="bg-green-500/20 text-green-500">Google SSO</Badge>
+                    <Badge className="bg-success-surface text-success">Google SSO</Badge>
                   ) : (
-                    <Badge className="bg-blue-500/20 text-blue-500">Magic Link</Badge>
+                    <Badge className="bg-info-surface text-info">Magic Link</Badge>
                   )}
                 </div>
                 <div className="flex items-center gap-2">

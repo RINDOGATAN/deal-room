@@ -15,7 +15,7 @@ export default function RootError({
   const message = formatUserError(error, "An unexpected error occurred.");
   return (
     <div className="max-w-lg mx-auto py-16 text-center space-y-6">
-      <AlertCircle className="w-12 h-12 text-red-500 mx-auto" />
+      <AlertCircle className="w-12 h-12 text-danger mx-auto" />
       <div>
         <h2 className="text-xl font-bold mb-2">Something went wrong</h2>
         <p className="text-sm text-muted-foreground">{message}</p>

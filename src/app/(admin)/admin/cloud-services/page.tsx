@@ -30,7 +30,7 @@ const SERVICE_LAYERS = [
     icon: ShieldCheck,
     persona: "Legal Ops",
     depth: "High",
-    depthColor: "text-red-500",
+    depthColor: "text-danger",
     description: "RFC 3161 timestamps, audit certificates, ceremony IDs",
   },
   {
@@ -38,7 +38,7 @@ const SERVICE_LAYERS = [
     icon: Brain,
     persona: "Negotiators",
     depth: "Medium",
-    depthColor: "text-amber-500",
+    depthColor: "text-warning",
     description: "Dynamic biases, quality scoring, conflict detection",
   },
   {
@@ -46,7 +46,7 @@ const SERVICE_LAYERS = [
     icon: BarChart3,
     persona: "Managers",
     depth: "Medium",
-    depthColor: "text-amber-500",
+    depthColor: "text-warning",
     description: "Benchmarks, clause popularity, deal activity",
   },
   {
@@ -54,7 +54,7 @@ const SERVICE_LAYERS = [
     icon: Puzzle,
     persona: "Authors",
     depth: "High",
-    depthColor: "text-red-500",
+    depthColor: "text-danger",
     description: "Phase 2 — clause authoring platform",
   },
   {
@@ -62,7 +62,7 @@ const SERVICE_LAYERS = [
     icon: Store,
     persona: "Enterprise",
     depth: "Low",
-    depthColor: "text-green-500",
+    depthColor: "text-success",
     description: "Phase 3 — CRM and DMS connectors",
   },
 ];
@@ -283,7 +283,7 @@ export default function CloudServicesPage() {
         <div>
           <div className="flex items-center gap-3">
             <h1 className="text-2xl font-bold">Cloud Services</h1>
-            <Badge className="bg-blue-500/20 text-blue-600">
+            <Badge className="bg-info-surface text-info">
               <Cloud className="w-3 h-3 mr-1" />
               Reference
             </Badge>
@@ -381,11 +381,11 @@ export default function CloudServicesPage() {
           <div className="grid grid-cols-4 gap-0 bg-muted/50 text-xs font-medium text-muted-foreground uppercase tracking-wider">
             <div className="p-3 border-r border-border">Feature</div>
             <div className="p-3 border-r border-border flex items-center gap-1">
-              <CheckCircle className="w-3 h-3 text-green-500" />
+              <CheckCircle className="w-3 h-3 text-success" />
               With Cloud API
             </div>
             <div className="p-3 border-r border-border flex items-center gap-1">
-              <AlertTriangle className="w-3 h-3 text-amber-500" />
+              <AlertTriangle className="w-3 h-3 text-warning" />
               Without (Degraded)
             </div>
             <div className="p-3">Insertion Point</div>
@@ -399,7 +399,7 @@ export default function CloudServicesPage() {
               }`}
             >
               <div className="p-3 border-r border-border font-medium">{row.feature}</div>
-              <div className="p-3 border-r border-border text-green-700 dark:text-green-400">
+              <div className="p-3 border-r border-border text-success dark:text-success">
                 {row.withCloud}
               </div>
               <div className="p-3 border-r border-border text-muted-foreground">
@@ -456,7 +456,7 @@ export default function CloudServicesPage() {
                   <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">
                     Degraded Behavior
                   </p>
-                  <div className="flex items-start gap-2 text-sm text-amber-600 dark:text-amber-400">
+                  <div className="flex items-start gap-2 text-sm text-warning dark:text-warning">
                     <AlertTriangle className="w-4 h-4 mt-0.5 shrink-0" />
                     <p>{point.fallback}</p>
                   </div>
@@ -527,7 +527,7 @@ export default function CloudServicesPage() {
               </p>
             </div>
           </div>
-          <div className="flex items-start gap-2 text-sm text-amber-600 dark:text-amber-400">
+          <div className="flex items-start gap-2 text-sm text-warning dark:text-warning">
             <AlertTriangle className="w-4 h-4 mt-0.5 shrink-0" />
             <p>
               Requires <span className="font-mono">prisma db push</span> or migration after schema update.

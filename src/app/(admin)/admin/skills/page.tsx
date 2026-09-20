@@ -8,7 +8,6 @@ import { format } from "date-fns";
 import {
   Package,
   Search,
-  AlertCircle,
   Loader2,
   Globe,
   Languages,
@@ -19,6 +18,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { AssignSkillModal } from "@/components/admin/AssignSkillModal";
+import { StatusNote } from "@/components/ui/status-note";
 
 export default function SkillsPage() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -48,12 +48,7 @@ export default function SkillsPage() {
 
   if (error) {
     return (
-      <div className="card-brutal border-yellow-500">
-        <div className="flex items-center gap-3 text-yellow-600">
-          <AlertCircle className="w-5 h-5" />
-          <span>Failed to load skills: {error.message}</span>
-        </div>
-      </div>
+      <StatusNote tone="warning">Failed to load skills: {error.message}</StatusNote>
     );
   }
 
@@ -102,7 +97,7 @@ export default function SkillsPage() {
                 <Badge
                   className={
                     skill.isActive
-                      ? "bg-green-500/20 text-green-500"
+                      ? "bg-success-surface text-success"
                       : "bg-muted text-muted-foreground"
                   }
                 >

@@ -5,7 +5,6 @@
 import { trpc } from "@/lib/trpc";
 import {
   BarChart,
-  AlertCircle,
   Loader2,
   TrendingUp,
   FileText,
@@ -13,6 +12,7 @@ import {
   Globe,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { StatusNote } from "@/components/ui/status-note";
 
 export default function AnalyticsPage() {
   const { data: analytics, isLoading, error } = trpc.platformAdmin.getAnalytics.useQuery();
@@ -32,12 +32,7 @@ export default function AnalyticsPage() {
 
   if (error) {
     return (
-      <div className="card-brutal border-yellow-500">
-        <div className="flex items-center gap-3 text-yellow-600">
-          <AlertCircle className="w-5 h-5" />
-          <span>Failed to load analytics: {error.message}</span>
-        </div>
-      </div>
+      <StatusNote tone="warning">Failed to load analytics: {error.message}</StatusNote>
     );
   }
 
@@ -56,12 +51,12 @@ export default function AnalyticsPage() {
       {/* Overview Stats */}
       <div className="grid grid-cols-4 gap-4">
         <div className="card-brutal text-center">
-          <FileText className="w-6 h-6 text-blue-500 mx-auto mb-2" />
+          <FileText className="w-6 h-6 text-info mx-auto mb-2" />
           <p className="text-3xl font-bold">{analytics?.totalDeals || 0}</p>
           <p className="text-sm text-muted-foreground">Total Deals</p>
         </div>
         <div className="card-brutal text-center">
-          <TrendingUp className="w-6 h-6 text-green-500 mx-auto mb-2" />
+          <TrendingUp className="w-6 h-6 text-success mx-auto mb-2" />
           <p className="text-3xl font-bold">{analytics?.completedDeals || 0}</p>
           <p className="text-sm text-muted-foreground">Completed</p>
         </div>

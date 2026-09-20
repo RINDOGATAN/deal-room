@@ -243,7 +243,7 @@ export function AssignSkillModal({
 
           {/* Error Display */}
           {createMutation.error && (
-            <div className="p-3 bg-yellow-500/10 border border-yellow-500 text-yellow-600 text-sm rounded">
+            <div className="p-3 bg-warning-surface border border-warning-mark text-foreground text-sm rounded">
               {createMutation.error.message}
             </div>
           )}

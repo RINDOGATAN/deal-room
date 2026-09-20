@@ -64,7 +64,7 @@ function AuthErrorContent() {
     <div className="min-h-screen flex items-center justify-center px-4">
       <div className="card-brutal max-w-md w-full">
         <div className="flex items-start gap-3 mb-4">
-          <AlertTriangle className="w-6 h-6 text-yellow-500 flex-shrink-0 mt-0.5" />
+          <AlertTriangle className="w-6 h-6 text-warning flex-shrink-0 mt-0.5" />
           <div>
             <h1 className="text-lg font-semibold mb-1">{t("errorTitle")}</h1>
             <p className="text-sm text-muted-foreground">{t(messageKey)}</p>

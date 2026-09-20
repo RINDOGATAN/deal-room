@@ -147,7 +147,7 @@ export default function AdminSignInPage() {
           </div>
 
           {error && (
-            <div className="p-4 bg-yellow-500/10 border border-yellow-500 text-yellow-600 text-sm">
+            <div className="p-4 bg-warning-surface border border-warning-mark text-foreground text-sm">
               {error}
             </div>
           )}

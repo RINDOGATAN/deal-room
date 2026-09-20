@@ -17,15 +17,16 @@ import {
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { StatusNote } from "@/components/ui/status-note";
 
 const statusConfig = {
   DRAFT: { label: "Draft", color: "bg-muted text-muted-foreground", icon: FileText },
-  AWAITING_RESPONSE: { label: "Awaiting", color: "bg-yellow-500/20 text-yellow-500", icon: Clock },
-  NEGOTIATING: { label: "Negotiating", color: "bg-blue-500/20 text-blue-500", icon: Users },
-  AGREED: { label: "Agreed", color: "bg-primary/20 text-primary", icon: CheckCircle },
-  SIGNING: { label: "Signing", color: "bg-primary/20 text-primary", icon: FileText },
-  COMPLETED: { label: "Completed", color: "bg-green-500/20 text-green-500", icon: CheckCircle },
-  CANCELLED: { label: "Cancelled", color: "bg-yellow-500/20 text-yellow-600", icon: AlertCircle },
+  AWAITING_RESPONSE: { label: "Awaiting", color: "bg-warning-surface text-warning", icon: Clock },
+  NEGOTIATING: { label: "Negotiating", color: "bg-info-surface text-info", icon: Users },
+  AGREED: { label: "Agreed", color: "bg-info-surface text-primary", icon: CheckCircle },
+  SIGNING: { label: "Signing", color: "bg-info-surface text-primary", icon: FileText },
+  COMPLETED: { label: "Completed", color: "bg-success-surface text-success", icon: CheckCircle },
+  CANCELLED: { label: "Cancelled", color: "bg-warning-surface text-warning", icon: AlertCircle },
 };
 
 export default function AllDealsPage() {
@@ -76,12 +77,7 @@ export default function AllDealsPage() {
 
   if (error) {
     return (
-      <div className="card-brutal border-yellow-500">
-        <div className="flex items-center gap-3 text-yellow-600">
-          <AlertCircle className="w-5 h-5" />
-          <span>Failed to load deals: {error.message}</span>
-        </div>
-      </div>
+      <StatusNote tone="warning">Failed to load deals: {error.message}</StatusNote>
     );
   }
 
@@ -147,7 +143,7 @@ export default function AllDealsPage() {
                 <div className="text-xs">
                   <p className="text-primary">{initiator?.name || initiator?.email}</p>
                   {respondent && (
-                    <p className="text-blue-500">vs {respondent.name || respondent.email}</p>
+                    <p className="text-info">vs {respondent.name || respondent.email}</p>
                   )}
                 </div>
                 <div>
@@ -164,12 +160,12 @@ export default function AllDealsPage() {
                     <div className="space-y-1">
                       {assignments.map((a) => (
                         <div key={a.id} className="flex items-center gap-2">
-                          <Badge className="bg-primary/20 text-primary text-xs">
+                          <Badge className="bg-info-surface text-primary text-xs">
                             {a.supervisor.name || a.supervisor.email}
                           </Badge>
                           <button
                             onClick={() => unassignMutation.mutate({ assignmentId: a.id })}
-                            className="text-muted-foreground hover:text-yellow-600 text-xs"
+                            className="text-muted-foreground hover:text-warning text-xs"
                           >
                             ×
                           </button>
@@ -208,7 +204,7 @@ export default function AllDealsPage() {
                           }
                         }}
                         disabled={!selectedSupervisor || assignMutation.isPending}
-                        className="text-green-500 hover:text-green-600 disabled:opacity-50"
+                        className="text-success hover:text-success disabled:opacity-50"
                       >
                         <CheckCircle className="w-4 h-4" />
                       </button>

@@ -23,8 +23,8 @@ function ErrorContent() {
   return (
     <>
       <div className="text-center mb-6">
-        <div className="w-16 h-16 bg-yellow-500/20 flex items-center justify-center mx-auto mb-6">
-          <AlertCircle className="w-8 h-8 text-yellow-600" />
+        <div className="w-16 h-16 bg-warning-surface flex items-center justify-center mx-auto mb-6">
+          <AlertCircle className="w-8 h-8 text-warning" />
         </div>
         <div className="flex items-center justify-center gap-2 mb-4">
           <Shield className="w-4 h-4 text-primary" />
