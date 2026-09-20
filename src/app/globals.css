@@ -29,7 +29,27 @@
   --color-input: var(--input);
   --color-border: var(--border);
   --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-destructive-hover: var(--destructive-hover);
+  --color-destructive-hover-foreground: var(--destructive-hover-foreground);
+  /* Status palette — see src/lib/status-colors.ts, which is pinned to these
+     values by src/lib/__tests__/status-colors.test.ts. */
+  --color-danger: var(--danger);
+  --color-danger-mark: var(--danger-mark);
+  --color-danger-surface: var(--danger-surface);
   --color-warning: var(--warning);
+  --color-warning-mark: var(--warning-mark);
+  --color-warning-surface: var(--warning-surface);
+  --color-warning-solid: var(--warning-solid);
+  --color-warning-solid-foreground: var(--warning-solid-foreground);
+  --color-success: var(--success);
+  --color-success-mark: var(--success-mark);
+  --color-success-surface: var(--success-surface);
+  --color-success-solid: var(--success-solid);
+  --color-success-solid-foreground: var(--success-solid-foreground);
+  --color-info: var(--info);
+  --color-info-mark: var(--info-mark);
+  --color-info-surface: var(--info-surface);
   --color-accent-foreground: var(--accent-foreground);
   --color-accent: var(--accent);
   --color-muted-foreground: var(--muted-foreground);
@@ -72,10 +92,37 @@
   /* Accent = Blue */
   --accent: #53aecc;
   --accent-foreground: #1a1a1a;
-  /* Destructive - Red */
-  --destructive: #ef4444;
-  /* Warning - Amber */
-  --warning: #f5b72a;
+
+  /* ---- Status palette ----------------------------------------------------
+     Four families, each with the same three roles. Values are proved in
+     src/lib/status-colors.ts and its test: `--x` (text) clears 4.5:1 on every
+     surface below, `--x-mark` (icons, borders, dots, bars) clears 3:1, and
+     `--x-surface` is the opaque tinted panel the text sits on. Solid fills
+     carry their own foreground. Never use a hue on its own to mean something:
+     pair it with the word and the icon shape from TONE_STYLES. */
+  --danger: #fca5a5;
+  --danger-mark: #ef4444;
+  --danger-surface: #382727;
+  --warning: #fbbf24;
+  --warning-mark: #f5b72a;
+  --warning-surface: #383221;
+  --warning-solid: #f5b72a;
+  --warning-solid-foreground: #1a1a1a;
+  --success: #6ee7a8;
+  --success-mark: #22c55e;
+  --success-surface: #24342a;
+  --success-solid: #22c55e;
+  --success-solid-foreground: #1a1a1a;
+  --info: #8fd4e8;
+  --info-mark: #53aecc;
+  --info-surface: #293235;
+  /* Destructive = the danger family's solid fill (filled buttons, chips).
+     Darker than the mark so white text on it clears 4.5:1. */
+  --destructive: #dc2626;
+  --destructive-foreground: #ffffff;
+  /* Hover brightens to the mark and flips to dark text; both states are proved. */
+  --destructive-hover: #ef4444;
+  --destructive-hover-foreground: #1a1a1a;
   /* Borders - visible but subtle */
   --border: #383838;
   --input: #2e2e2e;
