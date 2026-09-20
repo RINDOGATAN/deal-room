@@ -12,7 +12,10 @@ import {
   FileText,
   Clock,
   CheckCircle,
-  AlertCircle,
+  CircleCheck,
+  Handshake,
+  Ban,
+  TriangleAlert,
   ArrowRight,
   Users,
   Mail,
@@ -45,6 +48,7 @@ import {
 import { useContractMessages } from "@/lib/use-contract-messages";
 import { dealHasTia } from "@/lib/dpa-checks";
 import { buildObligationsLedger } from "@/lib/obligations";
+import { StatusNote } from "@/components/ui/status-note";
 
 function DownloadLinks({ dealId, className, showTia }: { dealId: string; className?: string; showTia?: boolean }) {
   return (
@@ -73,24 +77,26 @@ function DownloadLinks({ dealId, className, showTia }: { dealId: string; classNa
   );
 }
 
+// One shape per status, so the badge reads the same to someone who cannot tell
+// the hues apart. The colour is the second signal, never the only one.
 const statusIcons = {
   DRAFT: FileText,
   AWAITING_RESPONSE: Clock,
   NEGOTIATING: Users,
-  AGREED: CheckCircle,
-  SIGNING: FileText,
-  COMPLETED: CheckCircle,
-  CANCELLED: AlertCircle,
+  AGREED: Handshake,
+  SIGNING: PenTool,
+  COMPLETED: CircleCheck,
+  CANCELLED: Ban,
 };
 
 const statusColors = {
-  DRAFT: "bg-muted text-muted-foreground",
-  AWAITING_RESPONSE: "bg-yellow-500/20 text-yellow-500",
-  NEGOTIATING: "bg-blue-500/20 text-blue-500",
-  AGREED: "bg-primary/20 text-primary",
-  SIGNING: "bg-purple-500/20 text-purple-500",
-  COMPLETED: "bg-green-500/20 text-green-500",
-  CANCELLED: "bg-orange-500/20 text-orange-500",
+  DRAFT: "bg-muted text-foreground",
+  AWAITING_RESPONSE: "bg-warning-surface text-warning",
+  NEGOTIATING: "bg-info-surface text-info",
+  AGREED: "bg-success-surface text-success",
+  SIGNING: "bg-info-surface text-info",
+  COMPLETED: "bg-success-surface text-success",
+  CANCELLED: "bg-danger-surface text-danger",
 };
 
 /** Outer wrapper: determines contract language and provides correct locale */
@@ -256,12 +262,7 @@ function DealDetailContent({ dealId }: { dealId: string }) {
 
   if (error || !deal) {
     return (
-      <div className="card-brutal border-yellow-500">
-        <div className="flex items-center gap-3 text-yellow-600">
-          <AlertCircle className="w-5 h-5" />
-          <span>{tDeals("failedToLoad", { error: error?.message || "Not found" })}</span>
-        </div>
-      </div>
+      <StatusNote tone="warning">{tDeals("failedToLoad", { error: error?.message || "Not found" })}</StatusNote>
     );
   }
 
@@ -300,7 +301,7 @@ function DealDetailContent({ dealId }: { dealId: string }) {
             </Badge>
             {(deal.status === "SIGNING" || deal.status === "COMPLETED") && signingRequest && (
               signingRequest.ceremonyId ? (
-                <Badge className="bg-green-500/20 text-green-600">
+                <Badge className="bg-success-surface text-success">
                   <ShieldCheck className="w-3 h-3 mr-1" />
                   {t("certifiedDocument")}
                 </Badge>
@@ -332,9 +333,22 @@ function DealDetailContent({ dealId }: { dealId: string }) {
             const daysUntilExpiry = Math.floor((expires - now) / 86_400_000);
             const expired = daysUntilExpiry < 0;
             const urgent = !expired && daysUntilExpiry <= 3;
+            // Urgency is carried by the warning shape and by the word in front
+            // of the dates, not by tinting the line: the dates stay readable.
+            const pressing = urgent || expired;
             return (
-              <div className={`flex items-center gap-2 text-xs ${urgent || expired ? "text-destructive" : "text-muted-foreground"}`}>
-                <Clock className="w-3.5 h-3.5" />
+              <div className={`flex items-center gap-2 text-xs ${pressing ? "text-foreground" : "text-muted-foreground"}`}>
+                {pressing ? (
+                  <>
+                    <TriangleAlert className="w-3.5 h-3.5 text-danger-mark flex-shrink-0" />
+                    <span className="font-semibold text-danger uppercase tracking-wide">
+                      {expired ? t("signingExpiredLabel") : t("signingUrgentLabel")}
+                    </span>
+                    <span>·</span>
+                  </>
+                ) : (
+                  <Clock className="w-3.5 h-3.5" />
+                )}
                 <span>{t("signingInitiatedAgo", { days: daysSinceStart })}</span>
                 <span>·</span>
                 <span>
@@ -818,8 +832,8 @@ function DealDetailContent({ dealId }: { dealId: string }) {
                   <span className="metric text-muted-foreground w-6 text-right flex-shrink-0">{index + 1}</span>
                   <div className={`w-2 h-2 flex-shrink-0 ${
                     clauseStatus === "AGREED" ? "bg-primary" :
-                    clauseStatus === "SUGGESTED" ? "bg-blue-500" :
-                    clauseStatus === "DIVERGENT" ? "bg-yellow-500" :
+                    clauseStatus === "SUGGESTED" ? "bg-info-mark" :
+                    clauseStatus === "DIVERGENT" ? "bg-warning-mark" :
                     "bg-muted-foreground/30"
                   }`} />
                   <div className="min-w-0">
@@ -850,7 +864,7 @@ function DealDetailContent({ dealId }: { dealId: string }) {
         <div className="flex justify-end">
           <button
             onClick={() => cancelDeal.mutate({ id: deal.id })}
-            className="flex items-center gap-2 px-4 py-2 text-sm text-orange-500 hover:bg-orange-500/10 transition-colors"
+            className="flex items-center gap-2 px-4 py-2 text-sm text-warning hover:bg-warning-surface transition-colors"
           >
             <X className="w-4 h-4" />
             {t("cancelDeal")}

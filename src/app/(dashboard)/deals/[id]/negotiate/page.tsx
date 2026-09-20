@@ -12,7 +12,6 @@ import {
   ArrowLeft,
   ArrowRight,
   Check,
-  AlertCircle,
   Info,
   ChevronDown,
   ChevronUp,
@@ -33,6 +32,7 @@ import { interpolateParameters, type ParameterSchema } from "@/lib/parameters";
 import { LawyerWarningModal } from "@/components/LawyerWarningModal";
 import { VettingBadge } from "@/components/VettingBadge";
 import { useContractMessages } from "@/lib/use-contract-messages";
+import { StatusNote } from "@/components/ui/status-note";
 
 type GoverningLaw = "CALIFORNIA" | "NEW_YORK" | "ENGLAND_WALES" | "SPAIN";
 
@@ -256,12 +256,7 @@ function NegotiateContent({ dealId }: { dealId: string }) {
 
   if (error || !deal) {
     return (
-      <div className="card-brutal border-warning">
-        <div className="flex items-center gap-3 text-warning">
-          <AlertCircle className="w-5 h-5" />
-          <span>{t("failedToLoad", { error: error?.message || "Not found" })}</span>
-        </div>
-      </div>
+      <StatusNote tone="warning">{t("failedToLoad", { error: error?.message || "Not found" })}</StatusNote>
     );
   }
 
@@ -712,9 +707,9 @@ function NegotiateContent({ dealId }: { dealId: string }) {
 
             {/* Warning if current selection became unavailable */}
             {currentSelectionUnavailable && (
-              <div className="p-3 border border-warning/50 bg-warning/10 rounded-xl flex items-start gap-2">
+              <div className="p-3 border border-warning-mark bg-warning-surface rounded-xl flex items-start gap-2">
                 <AlertTriangle className="w-4 h-4 text-warning mt-0.5 flex-shrink-0" />
-                <p className="text-sm text-warning">
+                <p className="text-sm text-foreground">
                   {t("previousSelectionUnavailable", { law: tNewDeal(`jurisdictions.${governingLawTKey[governingLaw]}`) })}
                 </p>
               </div>
@@ -734,7 +729,7 @@ function NegotiateContent({ dealId }: { dealId: string }) {
                   className={`
                     card-brutal cursor-pointer transition-all
                     ${isSelected ? "border-primary/50 bg-primary/5" : "hover:border-muted-foreground"}
-                    ${hasWarning ? "border-l-4 border-l-warning" : ""}
+                    ${hasWarning ? "border-l-4 border-l-warning-mark" : ""}
                   `}
                   onClick={() => handleOptionSelect(option.id)}
                 >
@@ -756,10 +751,10 @@ function NegotiateContent({ dealId }: { dealId: string }) {
                             <span
                               className={`text-xs px-2 py-0.5 rounded-full font-medium ${
                                 quality.score >= 70
-                                  ? "bg-green-500/10 text-green-600"
+                                  ? "bg-success-surface text-success"
                                   : quality.score >= 40
-                                    ? "bg-amber-500/10 text-amber-600"
-                                    : "bg-red-500/10 text-red-600"
+                                    ? "bg-warning-surface text-warning"
+                                    : "bg-danger-surface text-danger"
                               }`}
                             >
                               {quality.score}
@@ -791,9 +786,9 @@ function NegotiateContent({ dealId }: { dealId: string }) {
                       {hasWarning ? (
                         <AlertTriangle className="w-3.5 h-3.5 text-warning flex-shrink-0 mt-px" />
                       ) : (
-                        <Info className="w-3.5 h-3.5 text-blue-400 flex-shrink-0 mt-px" />
+                        <Info className="w-3.5 h-3.5 text-info flex-shrink-0 mt-px" />
                       )}
-                      <span className={hasWarning ? "text-warning/80" : "text-blue-400/80"}>
+                      <span className="text-foreground">
                         {hasWarning ? jurisdictionRules.warning : jurisdictionRules.note}
                         {hasWarning && hasNote && <> — {jurisdictionRules.note}</>}
                       </span>
@@ -895,7 +890,7 @@ function NegotiateContent({ dealId }: { dealId: string }) {
             const yourScore = Math.round(deal.currentUserRole === "INITIATOR" ? prediction.predictedSatisfactionA : prediction.predictedSatisfactionB);
             const theirScore = Math.round(deal.currentUserRole === "INITIATOR" ? prediction.predictedSatisfactionB : prediction.predictedSatisfactionA);
             const getLabel = (s: number) => s >= 85 ? t("satisfactionCloseToPreference") : s >= 65 ? t("satisfactionFavorable") : s >= 45 ? t("satisfactionBalanced") : s >= 25 ? t("satisfactionAccommodated") : t("satisfactionSignificantConcession");
-            const getColor = (s: number) => s >= 85 ? "text-green-600" : s >= 65 ? "text-primary" : s >= 45 ? "text-foreground" : s >= 25 ? "text-amber-600" : "text-red-600";
+            const getColor = (s: number) => s >= 85 ? "text-success" : s >= 65 ? "text-primary" : s >= 45 ? "text-foreground" : s >= 25 ? "text-warning" : "text-danger";
             return (
               <div className="card-brutal border-primary/20 bg-primary/5">
                 <div className="flex items-center gap-2 mb-3">

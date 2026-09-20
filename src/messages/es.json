@@ -308,6 +308,8 @@
     "signingInitiatedAgo": "Firma iniciada {days, plural, =0 {hoy} =1 {hace 1 día} other {hace # días}}",
     "signingExpiresIn": "Caduca en {days, plural, =0 {menos de un día} =1 {1 día} other {# días}}",
     "signingExpired": "La firma caducó {days, plural, =0 {hoy} =1 {hace 1 día} other {hace # días}}",
+    "signingUrgentLabel": "Urgente",
+    "signingExpiredLabel": "Caducada",
     "respondentAcceptedTitle": "{name} se ha unido a este acuerdo",
     "respondentAcceptedDescription": "Tu contraparte ya puede hacer sus selecciones. Podrás revisar el compromiso cuando las envíe.",
     "waitingForInitiatorTitle": "Esperando a que {name} empiece",

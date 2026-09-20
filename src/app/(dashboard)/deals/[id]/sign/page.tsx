@@ -41,6 +41,7 @@ import {
 } from "@/lib/parameters";
 import { roleConfigFor, type ContractRole } from "@/lib/contractRoles";
 import { AiDraftPanel } from "@/components/ai/AiDraftPanel";
+import { StatusNote } from "@/components/ui/status-note";
 
 /**
  * Stall notice + manual reminder. Renders only once the counterparty has been
@@ -82,7 +83,7 @@ function SigningStallNotice({
     now - manualReminderSentAt.getTime() < 72 * 60 * 60 * 1000;
 
   return (
-    <div className="mt-4 max-w-md mx-auto p-4 border border-warning/40 bg-warning/5 rounded-xl text-center">
+    <div className="mt-4 max-w-md mx-auto p-4 border border-warning-mark bg-warning-surface rounded-xl text-center">
       <p className="text-sm text-muted-foreground mb-3">
         {t("stall.waitingSince", {
           days: daysWaiting,
@@ -390,12 +391,7 @@ function SigningContent({ dealId }: { dealId: string }) {
 
   if (!deal) {
     return (
-      <div className="card-brutal border-yellow-500">
-        <div className="flex items-center gap-3 text-yellow-600">
-          <AlertCircle className="w-5 h-5" />
-          <span>{t("failedToLoad")}</span>
-        </div>
-      </div>
+      <StatusNote tone="warning">{t("failedToLoad")}</StatusNote>
     );
   }
 
@@ -431,8 +427,8 @@ function SigningContent({ dealId }: { dealId: string }) {
           </div>
         </div>
 
-        <div className="card-brutal border-yellow-500 text-center py-8">
-          <AlertCircle className="w-12 h-12 text-yellow-500 mx-auto mb-4" />
+        <div className="card-brutal border-warning-mark text-center py-8">
+          <AlertCircle className="w-12 h-12 text-warning mx-auto mb-4" />
           <h2 className="text-lg font-semibold mb-2">{t("notReadyForSigning")}</h2>
           <p className="text-muted-foreground mb-6 max-w-md mx-auto">
             {t("allClausesMustBeAgreed")}
@@ -465,8 +461,8 @@ function SigningContent({ dealId }: { dealId: string }) {
           </div>
         </div>
 
-        <div className="card-brutal border-purple-500/50 text-center py-8">
-          <Shield className="w-12 h-12 text-purple-500 mx-auto mb-4" />
+        <div className="card-brutal border-info-mark text-center py-8">
+          <Shield className="w-12 h-12 text-info mx-auto mb-4" />
           <h2 className="text-lg font-semibold mb-2">{t("attorneyReviewInProgress")}</h2>
           <p className="text-muted-foreground mb-6 max-w-md mx-auto">
             {t("signingAfterReview")}
@@ -538,14 +534,14 @@ function SigningContent({ dealId }: { dealId: string }) {
       {signingRequest && (
         <div className={`card-brutal flex items-start gap-3 ${
           signingRequest.ceremonyId
-            ? "border-green-500/30 bg-green-500/5"
+            ? "border-success-mark bg-success-surface"
             : "border-muted bg-muted/20"
         }`}>
           {signingRequest.ceremonyId ? (
             <>
-              <ShieldCheck className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+              <ShieldCheck className="w-5 h-5 text-success flex-shrink-0 mt-0.5" />
               <div>
-                <p className="font-semibold text-green-600 text-sm">{t("certifiedDocument")}</p>
+                <p className="font-semibold text-success text-sm">{t("certifiedDocument")}</p>
                 <p className="text-xs text-muted-foreground">{t("certifiedSigningDescription")}</p>
               </div>
             </>
@@ -628,7 +624,7 @@ function SigningContent({ dealId }: { dealId: string }) {
 
       {/* Unfilled fill-in blanks warning */}
       {unfilledParams.length > 0 && (
-        <div className="card-brutal border-warning/50 bg-warning/10">
+        <div className="card-brutal border-warning-mark bg-warning-surface">
           <div className="flex items-start gap-3">
             <AlertCircle className="w-5 h-5 text-warning mt-0.5 flex-shrink-0" />
             <div>
@@ -646,7 +642,7 @@ function SigningContent({ dealId }: { dealId: string }) {
 
       {/* Execution Details Alert */}
       {!ownDetailsConfirmed && (
-        <div className="card-brutal border-warning/50 bg-warning/10">
+        <div className="card-brutal border-warning-mark bg-warning-surface">
           <div className="flex items-start gap-3">
             <AlertCircle className="w-5 h-5 text-warning mt-0.5 flex-shrink-0" />
             <div>
@@ -674,7 +670,7 @@ function SigningContent({ dealId }: { dealId: string }) {
                 {t("signingDetails.yourDetails")}
               </h3>
               {ownDetailsConfirmed && (
-                <Badge className="bg-primary/20 text-primary">
+                <Badge className="bg-info-surface text-primary">
                   <Check className="w-3 h-3 mr-1" />
                   {t("signingDetails.confirmed")}
                 </Badge>
@@ -874,7 +870,7 @@ function SigningContent({ dealId }: { dealId: string }) {
                   {t("signingDetails.otherPartyDetails")}
                 </h3>
                 {otherDetailsConfirmed ? (
-                  <Badge className="bg-primary/20 text-primary">
+                  <Badge className="bg-info-surface text-primary">
                     <Check className="w-3 h-3 mr-1" />
                     {t("signingDetails.confirmed")}
                   </Badge>
@@ -1077,7 +1073,7 @@ function SigningContent({ dealId }: { dealId: string }) {
             </h2>
             <MarkdownishDigest text={signingRequest.aiRiskDigest} />
             <div className="mt-4 pt-3 border-t border-border space-y-1">
-              <p className="text-xs font-medium text-yellow-500">
+              <p className="text-xs font-medium text-warning">
                 {tAi("riskDigest.disclaimer")}
               </p>
               <p className="text-xs text-muted-foreground italic">
@@ -1119,7 +1115,7 @@ function SigningContent({ dealId }: { dealId: string }) {
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm text-muted-foreground">{isSoloMode ? t("signature") : t("partyASignature")}</span>
                 {signingRequest.initiatorSignedAt ? (
-                  <Badge className="bg-primary/20 text-primary">
+                  <Badge className="bg-info-surface text-primary">
                     <Check className="w-3 h-3 mr-1" />
                     {t("signed")}
                   </Badge>
@@ -1149,7 +1145,7 @@ function SigningContent({ dealId }: { dealId: string }) {
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-sm text-muted-foreground">{t("partyBSignature")}</span>
                   {signingRequest.respondentSignedAt ? (
-                    <Badge className="bg-primary/20 text-primary">
+                    <Badge className="bg-info-surface text-primary">
                       <Check className="w-3 h-3 mr-1" />
                       {t("signed")}
                     </Badge>

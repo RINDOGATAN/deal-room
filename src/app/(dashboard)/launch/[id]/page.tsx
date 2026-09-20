@@ -78,8 +78,8 @@ export default function JourneyHubPage() {
   if (!journey) {
     return (
       <div className="max-w-3xl mx-auto">
-        <div className="card-brutal border-yellow-500 text-center py-10">
-          <p className="text-yellow-600">{t("journeyNotFound")}</p>
+        <div className="card-brutal border-warning-mark text-center py-10">
+          <p className="text-warning">{t("journeyNotFound")}</p>
           <Link href="/launch" className="text-primary underline mt-4 inline-block">
             {t("backToLaunch")}
           </Link>
@@ -140,11 +140,11 @@ export default function JourneyHubPage() {
 
           const badgeClass = ({
             NOT_STARTED: "bg-muted text-muted-foreground",
-            READY_FOR_REVIEW: "bg-blue-500/20 text-blue-500",
-            AWAITING_REVIEW: "bg-yellow-500/20 text-yellow-500",
-            REVIEWED: "bg-primary/20 text-primary",
-            FILED: "bg-green-500/20 text-green-600",
-            DONE_ELSEWHERE: "bg-slate-500/20 text-slate-400",
+            READY_FOR_REVIEW: "bg-info-surface text-info",
+            AWAITING_REVIEW: "bg-warning-surface text-warning",
+            REVIEWED: "bg-info-surface text-primary",
+            FILED: "bg-success-surface text-success",
+            DONE_ELSEWHERE: "bg-muted text-muted-foreground",
           } satisfies Record<StepStatus, string>)[status];
 
           const stepTitle = tSteps(`${key}.title`);
@@ -488,7 +488,7 @@ function RequestReviewDialog({
                       {a.barNumber ? ` · ${tReview("barNumber", { n: a.barNumber })}` : ""}
                     </p>
                     {a.unavailable && (
-                      <p className="text-xs text-orange-500 mt-1">
+                      <p className="text-xs text-warning mt-1">
                         {a.unavailable}
                       </p>
                     )}
