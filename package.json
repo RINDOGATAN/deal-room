@@ -16,6 +16,7 @@
     "check:api": "node scripts/check-api-error-handling.mjs",
     "check:skills": "node scripts/check-skills.mjs",
     "check:upgrade": "bash scripts/upgrade-check.sh",
+    "report:contrast": "tsx scripts/contrast-report.ts",
     "skills:manifest": "node scripts/skills-sync.mjs manifest",
     "skills:diff": "node scripts/skills-sync.mjs diff",
     "db:seed": "tsx prisma/seed.ts",
