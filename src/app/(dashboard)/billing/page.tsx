@@ -242,7 +242,7 @@ export default function BillingPage() {
                     )}
                   </button>
                 ) : (
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
+                  <CheckCircle2 className="h-5 w-5 text-success" />
                 )}
                 <div>
                   <span className="font-medium">{row.name}</span>
@@ -257,7 +257,7 @@ export default function BillingPage() {
                 {row.isActive ? (
                   <div className="flex items-center gap-3">
                     <div className="text-right">
-                      <span className="inline-block px-2 py-0.5 text-xs font-medium bg-green-500/10 text-green-600 rounded-full">
+                      <span className="inline-block px-2 py-0.5 text-xs font-medium bg-success-surface text-success rounded-full">
                         {t("active")}
                       </span>
                       {row.renewsAt && (
@@ -283,7 +283,7 @@ export default function BillingPage() {
                             name: row.name,
                           })
                         }
-                        className="text-xs text-muted-foreground hover:text-destructive flex items-center gap-1 transition-colors"
+                        className="text-xs text-muted-foreground hover:text-danger flex items-center gap-1 transition-colors"
                       >
                         <XCircle className="h-3.5 w-3.5" />
                         {t("cancel")}
@@ -369,7 +369,7 @@ export default function BillingPage() {
                 }
               }}
               disabled={cancelMutation.isPending}
-              className="text-xs px-4 py-2 rounded-full bg-destructive text-white hover:bg-destructive/90 disabled:opacity-50 transition-colors"
+              className="text-xs px-4 py-2 rounded-full bg-destructive text-destructive-foreground hover:bg-destructive-hover hover:text-destructive-hover-foreground disabled:opacity-50 transition-colors"
             >
               {cancelMutation.isPending
                 ? t("cancelling")

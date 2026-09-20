@@ -9,7 +9,6 @@ import { format } from "date-fns";
 import {
   Briefcase,
   Search,
-  AlertCircle,
   Loader2,
   Plus,
   ChevronLeft,
@@ -20,6 +19,7 @@ import {
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { StatusNote } from "@/components/ui/status-note";
 import {
   SPECIALIZATIONS,
   SPECIALIZATION_LABELS,
@@ -86,12 +86,7 @@ function ExpertsList({
 
   if (error) {
     return (
-      <div className="card-brutal border-yellow-500">
-        <div className="flex items-center gap-3 text-yellow-600">
-          <AlertCircle className="w-5 h-5" />
-          <span>Failed to load experts: {error.message}</span>
-        </div>
-      </div>
+      <StatusNote tone="warning">Failed to load experts: {error.message}</StatusNote>
     );
   }
 
@@ -160,8 +155,8 @@ function ExpertsList({
                     key={et}
                     className={
                       et === "TECHNICAL"
-                        ? "bg-orange-500/20 text-orange-500"
-                        : "bg-green-500/20 text-green-500"
+                        ? "bg-warning-surface text-warning"
+                        : "bg-success-surface text-success"
                     }
                   >
                     {expertTypeLabels[et as ExpertType] || et}
@@ -185,7 +180,7 @@ function ExpertsList({
               </div>
               <div>
                 {profile.isPublished ? (
-                  <Badge className="bg-green-500/20 text-green-500">Published</Badge>
+                  <Badge className="bg-success-surface text-success">Published</Badge>
                 ) : (
                   <Badge className="bg-muted text-muted-foreground">Draft</Badge>
                 )}
@@ -196,14 +191,14 @@ function ExpertsList({
               <div className="flex items-center gap-1">
                 {confirmDeleteId === profile.userId ? (
                   <>
-                    <span className="text-xs text-red-500 mr-1">Delete?</span>
+                    <span className="text-xs text-danger mr-1">Delete?</span>
                     <button
                       onClick={() => {
                         deleteMutation.mutate({ userId: profile.userId });
                         setConfirmDeleteId(null);
                       }}
                       disabled={deleteMutation.isPending}
-                      className="p-1 text-red-500 hover:bg-red-500/10 rounded"
+                      className="p-1 text-danger hover:bg-danger-surface rounded"
                       title="Confirm delete"
                     >
                       <Check className="w-4 h-4" />
@@ -228,7 +223,7 @@ function ExpertsList({
                     <button
                       onClick={() => setConfirmDeleteId(profile.userId)}
                       disabled={deleteMutation.isPending}
-                      className="p-1 text-red-500 hover:bg-red-500/10 rounded"
+                      className="p-1 text-danger hover:bg-danger-surface rounded"
                       title="Delete"
                     >
                       <Trash2 className="w-4 h-4" />
@@ -400,7 +395,7 @@ function ExpertEditor({
               </div>
               <div className="flex items-center gap-2">
                 {user.isLawyer && (
-                  <Badge className="bg-blue-500/20 text-blue-500">Lawyer</Badge>
+                  <Badge className="bg-info-surface text-info">Lawyer</Badge>
                 )}
                 {user.role && (
                   <Badge variant="outline" className="text-xs">
@@ -452,7 +447,7 @@ function ExpertEditor({
         {userId && !confirmDelete && (
           <button
             onClick={() => setConfirmDelete(true)}
-            className="text-red-500 hover:text-red-600 flex items-center gap-2 text-sm"
+            className="text-danger hover:text-danger flex items-center gap-2 text-sm"
           >
             <Trash2 className="w-4 h-4" />
             Delete Profile
@@ -460,11 +455,11 @@ function ExpertEditor({
         )}
         {userId && confirmDelete && (
           <div className="flex items-center gap-2">
-            <span className="text-xs text-red-500">Delete this profile?</span>
+            <span className="text-xs text-danger">Delete this profile?</span>
             <button
               onClick={() => deleteMutation.mutate({ userId: selectedUserId! })}
               disabled={deleteMutation.isPending}
-              className="px-3 py-1.5 text-xs font-medium bg-red-500 text-white rounded hover:bg-red-600 transition-colors"
+              className="px-3 py-1.5 text-xs font-medium bg-destructive text-destructive-foreground rounded hover:bg-destructive-hover hover:text-destructive-hover-foreground transition-colors"
             >
               {deleteMutation.isPending ? "Deleting..." : "Confirm"}
             </button>
@@ -677,9 +672,9 @@ function ExpertEditor({
             }`}
           >
             <span
-              className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white transition-transform ${
-                acceptingClients ? "translate-x-5" : ""
-              }`}
+              className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full transition-transform ${
+                  acceptingClients ? "translate-x-5 bg-background" : "bg-foreground"
+                }`}
             />
           </button>
           <span className="text-sm font-medium">Accepting New Clients</span>
@@ -692,12 +687,12 @@ function ExpertEditor({
               onClick={() => canPublish && setIsPublished(!isPublished)}
               disabled={!canPublish}
               className={`relative w-11 h-6 rounded-full transition-colors ${
-                isPublished && canPublish ? "bg-green-500" : "bg-muted"
+                isPublished && canPublish ? "bg-success-mark" : "bg-muted"
               } ${!canPublish ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
             >
               <span
-                className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white transition-transform ${
-                  isPublished && canPublish ? "translate-x-5" : ""
+                className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full transition-transform ${
+                  isPublished && canPublish ? "translate-x-5 bg-background" : "bg-foreground"
                 }`}
               />
             </button>

@@ -215,14 +215,14 @@ export default function NewJourneyPage() {
               <span className="text-xs text-muted-foreground">
                 {t("totalLabel")}{" "}
                 <span
-                  className={`font-mono ${equityError ? "text-destructive" : ""}`}
+                  className={`font-mono ${equityError ? "text-danger" : ""}`}
                 >
                   {totalEquity.toFixed(1)}%
                 </span>
               </span>
             </div>
             {equityError && (
-              <p className="text-xs text-destructive">{equityError}</p>
+              <p className="text-xs text-danger">{equityError}</p>
             )}
             <p className="text-sm text-muted-foreground">
               {t("foundersHint")}
@@ -233,7 +233,7 @@ export default function NewJourneyPage() {
                   key={i}
                   className={`p-4 border rounded-md space-y-3 bg-muted/10 ${
                     founderIssues[i].missingName || founderIssues[i].invalidEmail
-                      ? "border-destructive/40"
+                      ? "border-danger-mark"
                       : "border-border"
                   }`}
                 >
@@ -244,7 +244,7 @@ export default function NewJourneyPage() {
                     {founders.length > 1 && i > 0 && (
                       <button
                         onClick={() => removeFounder(i)}
-                        className="text-muted-foreground hover:text-destructive p-2.5 -mr-2 -my-1"
+                        className="text-muted-foreground hover:text-danger p-2.5 -mr-2 -my-1"
                         aria-label={t("removeFounderAria")}
                       >
                         <X className="w-4 h-4" />
@@ -261,7 +261,7 @@ export default function NewJourneyPage() {
                         placeholder={t("fullNamePlaceholder")}
                         autoComplete="name"
                         aria-invalid={founderIssues[i].missingName}
-                        className={`input-brutal ${founderIssues[i].missingName ? "border-destructive" : ""}`}
+                        className={`input-brutal ${founderIssues[i].missingName ? "border-danger-mark" : ""}`}
                       />
                     </div>
                     <div className="space-y-1">
@@ -274,10 +274,10 @@ export default function NewJourneyPage() {
                         placeholder={t("emailPlaceholder")}
                         autoComplete="email"
                         aria-invalid={founderIssues[i].invalidEmail && f.email.length > 0}
-                        className={`input-brutal ${founderIssues[i].invalidEmail && f.email.length > 0 ? "border-destructive" : ""}`}
+                        className={`input-brutal ${founderIssues[i].invalidEmail && f.email.length > 0 ? "border-danger-mark" : ""}`}
                       />
                       {founderIssues[i].invalidEmail && f.email.length > 0 && (
-                        <p className="text-xs text-destructive">{t("emailInvalidHint")}</p>
+                        <p className="text-xs text-danger">{t("emailInvalidHint")}</p>
                       )}
                     </div>
                     <div className="space-y-1">
@@ -324,7 +324,7 @@ export default function NewJourneyPage() {
               or the partial-equity rule, neither of which is obvious from
               the disabled button alone. */}
           {!foundersStepValid && blockReasons.length > 0 && (
-            <div className="card-brutal border-destructive/40 bg-destructive/5 py-3">
+            <div className="card-brutal border-danger-mark bg-danger-surface py-3">
               <p className="text-sm font-medium mb-1">{t("cannotProceedTitle")}</p>
               <ul className="text-sm text-muted-foreground list-disc list-inside space-y-0.5">
                 {blockReasons.map((reason, i) => (

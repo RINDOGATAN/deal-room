@@ -8,7 +8,6 @@ import { format } from "date-fns";
 import {
   Users,
   Search,
-  AlertCircle,
   Loader2,
   Package,
   Building,
@@ -26,6 +25,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import Link from "next/link";
+import { StatusNote } from "@/components/ui/status-note";
 
 export default function CustomersPage() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -69,12 +69,7 @@ export default function CustomersPage() {
 
   if (error) {
     return (
-      <div className="card-brutal border-yellow-500">
-        <div className="flex items-center gap-3 text-yellow-600">
-          <AlertCircle className="w-5 h-5" />
-          <span>Failed to load customers: {error.message}</span>
-        </div>
-      </div>
+      <StatusNote tone="warning">Failed to load customers: {error.message}</StatusNote>
     );
   }
 
@@ -162,7 +157,7 @@ export default function CustomersPage() {
               </button>
             </div>
             {createMutation.error && (
-              <div className="p-3 bg-yellow-500/10 border border-yellow-500 text-yellow-600 text-sm">
+              <div className="p-3 bg-warning-surface border border-warning-mark text-foreground text-sm">
                 {createMutation.error.message}
               </div>
             )}
@@ -213,8 +208,8 @@ export default function CustomersPage() {
                 <Badge
                   className={
                     customer.type === "SAAS"
-                      ? "bg-blue-500/20 text-blue-500"
-                      : "bg-primary/20 text-primary"
+                      ? "bg-info-surface text-info"
+                      : "bg-info-surface text-primary"
                   }
                 >
                   {customer.type === "SAAS" ? (

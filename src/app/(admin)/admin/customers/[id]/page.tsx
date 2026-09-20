@@ -8,7 +8,6 @@ import { useParams } from "next/navigation";
 import { format } from "date-fns";
 import {
   ArrowLeft,
-  AlertCircle,
   Loader2,
   Package,
   Building,
@@ -32,6 +31,7 @@ import { Badge } from "@/components/ui/badge";
 import { AssignSkillModal } from "@/components/admin/AssignSkillModal";
 import { features } from "@/config/features";
 import Link from "next/link";
+import { StatusNote } from "@/components/ui/status-note";
 
 export default function CustomerDetailPage() {
   const params = useParams();
@@ -157,11 +157,11 @@ export default function CustomerDetailPage() {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "ACTIVE":
-        return <Badge className="bg-green-500/20 text-green-500">Active</Badge>;
+        return <Badge className="bg-success-surface text-success">Active</Badge>;
       case "SUSPENDED":
-        return <Badge className="bg-orange-500/20 text-orange-500">Suspended</Badge>;
+        return <Badge className="bg-warning-surface text-warning">Suspended</Badge>;
       case "EXPIRED":
-        return <Badge className="bg-red-500/20 text-red-500">Expired</Badge>;
+        return <Badge className="bg-danger-surface text-danger">Expired</Badge>;
       default:
         return <Badge className="bg-muted text-muted-foreground">{status}</Badge>;
     }
@@ -170,11 +170,11 @@ export default function CustomerDetailPage() {
   const getLicenseTypeBadge = (type: string) => {
     switch (type) {
       case "TRIAL":
-        return <Badge className="bg-yellow-500/20 text-yellow-500">Trial</Badge>;
+        return <Badge className="bg-warning-surface text-warning">Trial</Badge>;
       case "SUBSCRIPTION":
-        return <Badge className="bg-blue-500/20 text-blue-500">Subscription</Badge>;
+        return <Badge className="bg-info-surface text-info">Subscription</Badge>;
       case "PERPETUAL":
-        return <Badge className="bg-primary/20 text-primary">Perpetual</Badge>;
+        return <Badge className="bg-info-surface text-primary">Perpetual</Badge>;
       default:
         return <Badge>{type}</Badge>;
     }
@@ -205,12 +205,7 @@ export default function CustomerDetailPage() {
           </Link>
           <h1 className="text-2xl font-bold">Customer Not Found</h1>
         </div>
-        <div className="card-brutal border-yellow-500">
-          <div className="flex items-center gap-3 text-yellow-600">
-            <AlertCircle className="w-5 h-5" />
-            <span>{error?.message || "Customer not found"}</span>
-          </div>
-        </div>
+        <StatusNote tone="warning">{error?.message || "Customer not found"}</StatusNote>
       </div>
     );
   }
@@ -245,8 +240,8 @@ export default function CustomerDetailPage() {
             <Badge
               className={
                 customer.type === "SAAS"
-                  ? "bg-blue-500/20 text-blue-500"
-                  : "bg-primary/20 text-primary"
+                  ? "bg-info-surface text-info"
+                  : "bg-info-surface text-primary"
               }
             >
               {customer.type === "SAAS" ? (
@@ -337,7 +332,7 @@ export default function CustomerDetailPage() {
                         <button
                           onClick={() => saveJurisdictions(entitlement.id)}
                           disabled={updateJurisdictionsMutation.isPending || editedJurisdictions.length === 0}
-                          className="p-1 text-green-500 hover:bg-green-500/10 rounded disabled:opacity-50"
+                          className="p-1 text-success hover:bg-success-surface rounded disabled:opacity-50"
                           title="Save"
                         >
                           {updateJurisdictionsMutation.isPending ? (
@@ -395,7 +390,7 @@ export default function CustomerDetailPage() {
                     <button
                       onClick={() => suspendMutation.mutate({ entitlementId: entitlement.id })}
                       disabled={suspendMutation.isPending}
-                      className="p-1 text-orange-500 hover:bg-orange-500/10 rounded"
+                      className="p-1 text-warning hover:bg-warning-surface rounded"
                       title="Suspend"
                     >
                       {suspendMutation.isPending ? (
@@ -408,7 +403,7 @@ export default function CustomerDetailPage() {
                     <button
                       onClick={() => reactivateMutation.mutate({ entitlementId: entitlement.id })}
                       disabled={reactivateMutation.isPending}
-                      className="p-1 text-green-500 hover:bg-green-500/10 rounded"
+                      className="p-1 text-success hover:bg-success-surface rounded"
                       title="Reactivate"
                     >
                       {reactivateMutation.isPending ? (
@@ -440,9 +435,9 @@ export default function CustomerDetailPage() {
 
         {/* Created key banner — shown once after creation */}
         {createdKeyRaw && (
-          <div className="card-brutal border-green-500 mb-4">
+          <div className="card-brutal border-success-mark mb-4">
             <div className="space-y-2">
-              <p className="text-sm font-medium text-green-600">
+              <p className="text-sm font-medium text-success">
                 API key created — copy it now, it won&apos;t be shown again:
               </p>
               <div className="flex items-center gap-2">
@@ -458,7 +453,7 @@ export default function CustomerDetailPage() {
                   className="p-2 text-muted-foreground hover:text-foreground hover:bg-muted rounded"
                 >
                   {copiedCode === createdKeyRaw ? (
-                    <Check className="w-4 h-4 text-green-500" />
+                    <Check className="w-4 h-4 text-success" />
                   ) : (
                     <Copy className="w-4 h-4" />
                   )}
@@ -567,9 +562,9 @@ export default function CustomerDetailPage() {
                 </div>
                 <div>
                   {ak.isActive ? (
-                    <Badge className="bg-green-500/20 text-green-500">Active</Badge>
+                    <Badge className="bg-success-surface text-success">Active</Badge>
                   ) : (
-                    <Badge className="bg-red-500/20 text-red-500">Revoked</Badge>
+                    <Badge className="bg-danger-surface text-danger">Revoked</Badge>
                   )}
                 </div>
                 <div className="text-muted-foreground text-xs">
@@ -580,7 +575,7 @@ export default function CustomerDetailPage() {
                     <button
                       onClick={() => revokeApiKeyMutation.mutate({ apiKeyId: ak.id })}
                       disabled={revokeApiKeyMutation.isPending}
-                      className="p-1 text-orange-500 hover:bg-orange-500/10 rounded"
+                      className="p-1 text-warning hover:bg-warning-surface rounded"
                       title="Revoke"
                     >
                       <Ban className="w-4 h-4" />
@@ -593,7 +588,7 @@ export default function CustomerDetailPage() {
                       }
                     }}
                     disabled={deleteApiKeyMutation.isPending}
-                    className="p-1 text-red-500 hover:bg-red-500/10 rounded"
+                    className="p-1 text-danger hover:bg-danger-surface rounded"
                     title="Delete"
                   >
                     <Trash2 className="w-4 h-4" />
@@ -656,7 +651,7 @@ export default function CustomerDetailPage() {
                       title="Copy code"
                     >
                       {copiedCode === ic.code ? (
-                        <Check className="w-3.5 h-3.5 text-green-500" />
+                        <Check className="w-3.5 h-3.5 text-success" />
                       ) : (
                         <Copy className="w-3.5 h-3.5" />
                       )}
@@ -666,7 +661,7 @@ export default function CustomerDetailPage() {
                     {ic.usedBy ? (
                       <Badge className="bg-muted text-muted-foreground">Used</Badge>
                     ) : (
-                      <Badge className="bg-green-500/20 text-green-500">Available</Badge>
+                      <Badge className="bg-success-surface text-success">Available</Badge>
                     )}
                   </div>
                   <div>

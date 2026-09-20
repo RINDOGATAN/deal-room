@@ -224,8 +224,8 @@ export default function PolicyPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Conservative */}
-          <div className="border border-red-500/30 rounded-2xl overflow-hidden">
-            <div className="px-4 py-3 bg-red-500/5 border-b border-red-500/30">
+          <div className="border border-danger-mark rounded-2xl overflow-hidden">
+            <div className="px-4 py-3 bg-danger-surface border-b border-danger-mark">
               <p className="font-bold text-sm">
                 {t("exampleConservativeTitle")}
               </p>
@@ -239,8 +239,8 @@ export default function PolicyPage() {
           </div>
 
           {/* Aggressive */}
-          <div className="border border-emerald-500/30 rounded-2xl overflow-hidden">
-            <div className="px-4 py-3 bg-emerald-500/5 border-b border-emerald-500/30">
+          <div className="border border-success-mark rounded-2xl overflow-hidden">
+            <div className="px-4 py-3 bg-success-surface border-b border-success-mark">
               <p className="font-bold text-sm">
                 {t("exampleAggressiveTitle")}
               </p>
@@ -262,11 +262,11 @@ export default function PolicyPage() {
           {mistakes.map((mistake) => (
             <div
               key={mistake.titleKey}
-              className="p-4 border border-amber-500/30 bg-amber-500/5 rounded-xl"
+              className="p-4 border border-warning-mark bg-warning-surface rounded-xl"
             >
               <div className="flex items-center gap-2 mb-1">
-                <AlertTriangle className="w-4 h-4 text-amber-500" />
-                <p className="font-medium text-sm text-amber-500">
+                <AlertTriangle className="w-4 h-4 text-warning" />
+                <p className="font-medium text-sm text-warning">
                   {t(mistake.titleKey)}
                 </p>
               </div>

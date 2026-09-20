@@ -11,8 +11,10 @@ import {
   FileText,
   Plus,
   Clock,
-  CheckCircle,
-  AlertCircle,
+  CircleCheck,
+  Handshake,
+  PenTool,
+  Ban,
   ArrowRight,
   Users,
   Mail,
@@ -21,25 +23,28 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { features } from "@/config/features";
 import { PilotCapNotice } from "@/components/pilot/PilotNotice";
+import { StatusNote } from "@/components/ui/status-note";
 
+// One shape per status, so the badge reads the same to someone who cannot tell
+// the hues apart. The colour is the second signal, never the only one.
 const statusIcons = {
   DRAFT: FileText,
   AWAITING_RESPONSE: Clock,
   NEGOTIATING: Users,
-  AGREED: CheckCircle,
-  SIGNING: FileText,
-  COMPLETED: CheckCircle,
-  CANCELLED: AlertCircle,
+  AGREED: Handshake,
+  SIGNING: PenTool,
+  COMPLETED: CircleCheck,
+  CANCELLED: Ban,
 };
 
 const statusColors = {
-  DRAFT: "bg-muted text-muted-foreground",
-  AWAITING_RESPONSE: "bg-yellow-500/20 text-yellow-500",
-  NEGOTIATING: "bg-blue-500/20 text-blue-500",
-  AGREED: "bg-primary/20 text-primary",
-  SIGNING: "bg-purple-500/20 text-purple-500",
-  COMPLETED: "bg-green-500/20 text-green-500",
-  CANCELLED: "bg-orange-500/20 text-orange-500",
+  DRAFT: "bg-muted text-foreground",
+  AWAITING_RESPONSE: "bg-warning-surface text-warning",
+  NEGOTIATING: "bg-info-surface text-info",
+  AGREED: "bg-success-surface text-success",
+  SIGNING: "bg-info-surface text-info",
+  COMPLETED: "bg-success-surface text-success",
+  CANCELLED: "bg-danger-surface text-danger",
 };
 
 export default function DealsPage() {
@@ -86,12 +91,7 @@ export default function DealsPage() {
 
   if (error) {
     return (
-      <div className="card-brutal border-yellow-500">
-        <div className="flex items-center gap-3 text-yellow-600">
-          <AlertCircle className="w-5 h-5" />
-          <span>{t("failedToLoad", { error: error.message })}</span>
-        </div>
-      </div>
+      <StatusNote tone="warning">{t("failedToLoad", { error: error.message })}</StatusNote>
     );
   }
 
@@ -220,9 +220,9 @@ export default function DealsPage() {
                         <span
                           className={`flex items-center gap-1.5 ${
                             invitationExpired
-                              ? "text-orange-500"
+                              ? "text-warning"
                               : daysWaiting >= 7
-                                ? "text-yellow-600"
+                                ? "text-warning"
                                 : "text-muted-foreground"
                           }`}
                         >

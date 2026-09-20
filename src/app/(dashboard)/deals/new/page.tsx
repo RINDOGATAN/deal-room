@@ -558,8 +558,8 @@ export default function NewDealPage() {
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-yellow-500/20 rounded-2xl flex items-center justify-center">
-                <Lock className="w-6 h-6 text-yellow-500" />
+              <div className="w-12 h-12 bg-warning-surface rounded-2xl flex items-center justify-center">
+                <Lock className="w-6 h-6 text-warning" />
               </div>
               <div>
                 <DialogTitle>{t("accessRequired")}</DialogTitle>
@@ -782,13 +782,13 @@ export default function NewDealPage() {
                     className={`
                       card-brutal text-left relative transition-colors
                       ${isUnavailable
-                        ? "border-warning/50 opacity-75"
+                        ? "border-warning-mark opacity-75"
                         : "hover:border-muted-foreground"
                       }
                     `}
                   >
                     {isUnavailable && (
-                      <span className="absolute top-4 right-4 bg-warning/20 text-warning text-xs font-semibold px-2.5 py-0.5 rounded-full">
+                      <span className="absolute top-4 right-4 bg-warning-surface text-warning text-xs font-semibold px-2.5 py-0.5 rounded-full">
                         {isMarketplace ? t("premiumBadge") : t("premiumSkill", { price: formatPrice(9) })}
                       </span>
                     )}
@@ -796,7 +796,7 @@ export default function NewDealPage() {
                       <div className={`
                         hidden sm:flex w-10 h-10 items-center justify-center rounded-xl
                         ${isUnavailable
-                          ? "bg-warning/20 text-warning"
+                          ? "bg-warning-surface text-warning"
                           : "bg-muted text-muted-foreground"
                         }
                       `}>
@@ -984,9 +984,9 @@ export default function NewDealPage() {
             <span className="text-xs text-muted-foreground">({t("cannotChangeLater")})</span>
           </div>
 
-          <div className="card-brutal border-yellow-500/50 bg-yellow-500/5">
+          <div className="card-brutal border-warning-mark bg-warning-surface">
             <div className="flex items-start gap-3">
-              <Scale className="w-5 h-5 text-yellow-500 mt-0.5" />
+              <Scale className="w-5 h-5 text-warning mt-0.5" />
               <div>
                 <p className="text-sm font-medium">{t("determinesLegalFramework")}</p>
                 <p className="text-sm text-muted-foreground mt-1">
@@ -1059,7 +1059,7 @@ export default function NewDealPage() {
                           (tmpl) => tmpl.nativeJurisdiction === jurisdiction.value
                         );
                         return hasNative ? (
-                          <p className="text-xs text-emerald-600 mt-2 flex items-center gap-1 font-medium">
+                          <p className="text-xs text-success mt-2 flex items-center gap-1 font-medium">
                             <Scale className="w-3 h-3" />
                             {t("nativeTemplateAvailable")}
                           </p>
@@ -1081,9 +1081,9 @@ export default function NewDealPage() {
 
       {/* Native template indicator */}
       {resolvedNativeTemplate && selectedJurisdiction && (
-        <div className="card-brutal border-emerald-500/50 bg-emerald-500/5 animate-in fade-in slide-in-from-bottom-4 duration-300">
+        <div className="card-brutal border-success-mark bg-success-surface animate-in fade-in slide-in-from-bottom-4 duration-300">
           <div className="flex items-start gap-3">
-            <Scale className="w-5 h-5 text-emerald-500 mt-0.5" />
+            <Scale className="w-5 h-5 text-success mt-0.5" />
             <div>
               <p className="text-sm font-medium">
                 {t("nativeTemplate", { jurisdiction: selectedJurisdictionMeta ? t(`jurisdictions.${selectedJurisdictionMeta.tKey}`) : "" })}
@@ -1108,9 +1108,9 @@ export default function NewDealPage() {
             </Label>
           </div>
 
-          <div className="card-brutal border-blue-500/50 bg-blue-500/5">
+          <div className="card-brutal border-info-mark bg-info-surface">
             <div className="flex items-start gap-3">
-              <Languages className="w-5 h-5 text-blue-500 mt-0.5" />
+              <Languages className="w-5 h-5 text-info mt-0.5" />
               <div>
                 <p className="text-sm font-medium">{t("contractLanguageExplainer")}</p>
               </div>
@@ -1255,7 +1255,7 @@ export default function NewDealPage() {
                   <span className="font-medium">
                     {templates?.find((tmpl) => tmpl.contractType === selectedType)?.displayName}
                     {resolvedNativeTemplate && (
-                      <span className="ml-2 text-xs text-emerald-600 font-normal">{t("nativeBadge")}</span>
+                      <span className="ml-2 text-xs text-success font-normal">{t("nativeBadge")}</span>
                     )}
                   </span>
                 </div>
@@ -1379,7 +1379,7 @@ export default function NewDealPage() {
                     </p>
                     {requiredParams.length > 0 && (
                       <p className="text-xs text-muted-foreground shrink-0">
-                        <span className="text-destructive">*</span> {t("requiredFieldsLegend")}
+                        <span className="text-danger">*</span> {t("requiredFieldsLegend")}
                       </p>
                     )}
                   </div>
@@ -1427,7 +1427,7 @@ export default function NewDealPage() {
               -measure selections contradict other answers; creation is gated
               behind the confirmation checkbox while any are present. */}
           {tiaWarnings.length > 0 && (
-            <div className="card-brutal border-warning/50 bg-warning/10 space-y-3">
+            <div className="card-brutal border-warning-mark bg-warning-surface space-y-3">
               <div className="flex items-start gap-3">
                 <AlertTriangle className="w-5 h-5 text-warning mt-0.5 flex-shrink-0" />
                 <div className="space-y-2">
@@ -1446,7 +1446,7 @@ export default function NewDealPage() {
                 className={`sm:ml-8 w-full sm:w-auto rounded-xl border px-3 py-2.5 min-h-[44px] text-left text-sm flex items-start gap-2.5 transition-colors ${
                   tiaConfirmed
                     ? "border-primary bg-primary/10"
-                    : "border-warning/50 bg-background/40 hover:border-muted-foreground"
+                    : "border-warning-mark bg-background/40 hover:border-muted-foreground"
                 }`}
               >
                 <span
@@ -1578,7 +1578,7 @@ function ParameterField({
     <div className="space-y-1.5">
       <Label htmlFor={`param-${param.id}`}>
         {label}
-        {param.required && <span className="text-destructive ml-1">*</span>}
+        {param.required && <span className="text-danger ml-1">*</span>}
       </Label>
       {param.type === "multiSelect" && param.options ? (
         <div
@@ -1620,7 +1620,7 @@ function ParameterField({
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
           rows={3}
-          className={`input-brutal w-full resize-y ${error ? "border-destructive" : ""}`}
+          className={`input-brutal w-full resize-y ${error ? "border-danger-mark" : ""}`}
         />
       ) : (
         <div className="relative">
@@ -1637,7 +1637,7 @@ function ParameterField({
             placeholder={placeholder}
             className={`input-brutal ${param.type === "currency" ? "pl-7" : ""} ${
               param.type === "percentage" ? "pr-8" : ""
-            } ${error ? "border-destructive" : ""}`}
+            } ${error ? "border-danger-mark" : ""}`}
           />
           {param.type === "percentage" && (
             <span className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm pointer-events-none">

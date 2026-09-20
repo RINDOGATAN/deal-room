@@ -366,8 +366,8 @@ export default function LawyerProfilePage() {
               }`}
             >
               <span
-                className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white transition-transform ${
-                  acceptingClients ? "translate-x-5" : ""
+                className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full transition-transform ${
+                  acceptingClients ? "translate-x-5 bg-background" : "bg-foreground"
                 }`}
               />
             </button>
@@ -388,8 +388,8 @@ export default function LawyerProfilePage() {
               } ${!canPublish ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
             >
               <span
-                className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white transition-transform ${
-                  isPublished && canPublish ? "translate-x-5" : ""
+                className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full transition-transform ${
+                  isPublished && canPublish ? "translate-x-5 bg-background" : "bg-foreground"
                 }`}
               />
             </button>

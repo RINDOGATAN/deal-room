@@ -55,8 +55,8 @@ export default function InvitationPage() {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center p-6">
         <div className="card-brutal max-w-md w-full text-center">
-          <div className="w-16 h-16 bg-yellow-500/20 flex items-center justify-center mx-auto mb-6">
-            <AlertCircle className="w-8 h-8 text-yellow-600" />
+          <div className="w-16 h-16 bg-warning-surface flex items-center justify-center mx-auto mb-6">
+            <AlertCircle className="w-8 h-8 text-warning" />
           </div>
           <h1 className="text-2xl font-bold mb-2">{t("invalid")}</h1>
           <p className="text-muted-foreground mb-6">{t("invalidDescription")}</p>
@@ -100,8 +100,8 @@ export default function InvitationPage() {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center p-6">
         <div className="card-brutal max-w-md w-full text-center">
-          <div className="w-16 h-16 bg-yellow-500/20 flex items-center justify-center mx-auto mb-6">
-            <AlertCircle className="w-8 h-8 text-yellow-500" />
+          <div className="w-16 h-16 bg-warning-surface flex items-center justify-center mx-auto mb-6">
+            <AlertCircle className="w-8 h-8 text-warning" />
           </div>
           <h1 className="text-2xl font-bold mb-2">{t("expired")}</h1>
           <p className="text-muted-foreground mb-6">{t("expiredDescription")}</p>
@@ -140,8 +140,8 @@ export default function InvitationPage() {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center p-6">
         <div className="card-brutal max-w-md w-full text-center">
-          <div className="w-16 h-16 bg-yellow-500/20 flex items-center justify-center mx-auto mb-6">
-            <AlertCircle className="w-8 h-8 text-yellow-600" />
+          <div className="w-16 h-16 bg-warning-surface flex items-center justify-center mx-auto mb-6">
+            <AlertCircle className="w-8 h-8 text-warning" />
           </div>
           <h1 className="text-2xl font-bold mb-2">{t("cancelled")}</h1>
           <p className="text-muted-foreground mb-6">{t("cancelledDescription")}</p>
@@ -260,11 +260,11 @@ export default function InvitationPage() {
 
         {/* Email Mismatch Warning */}
         {!emailMatches && (
-          <div className="card-brutal border-yellow-500">
+          <div className="card-brutal border-warning-mark">
             <div className="flex items-start gap-3">
-              <AlertCircle className="w-5 h-5 text-yellow-500 flex-shrink-0 mt-0.5" />
+              <AlertCircle className="w-5 h-5 text-warning flex-shrink-0 mt-0.5" />
               <div>
-                <p className="font-medium text-yellow-500">{t("emailMismatch")}</p>
+                <p className="font-medium text-warning">{t("emailMismatch")}</p>
                 <p className="text-sm text-muted-foreground mt-1">
                   {t.rich("emailMismatchDescription", {
                     invited: () => <span className="text-foreground">{invitation.email}</span>,

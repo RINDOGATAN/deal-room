@@ -12,6 +12,7 @@ import { brand } from "@/config/brand";
 import { features } from "@/config/features";
 import { TESTER_EMAILS } from "@/lib/tester";
 import { PilotSignupNotice } from "@/components/pilot/PilotNotice";
+import { StatusNote } from "@/components/ui/status-note";
 
 const TESTER_MODE_ON = process.env.NEXT_PUBLIC_TESTER_MODE === "true";
 
@@ -166,16 +167,16 @@ export default function SignInPage() {
     <div className="w-full max-w-md">
       <div className="card-brutal">
         <div className="text-center mb-8">
-          <h1 className="text-3xl mb-2 text-white uppercase tracking-wide" style={{ fontFamily: "var(--font-display), 'Jost', sans-serif", fontWeight: 600 }}>{t("dealroom")}</h1>
+          <h1 className="text-3xl mb-2 text-foreground uppercase tracking-wide" style={{ fontFamily: "var(--font-display), 'Jost', sans-serif", fontWeight: 600 }}>{t("dealroom")}</h1>
           <p className="text-muted-foreground mb-4">
             {t("poweredBy")}
           </p>
         </div>
 
         {error && (
-          <div className="mb-6 p-4 bg-yellow-500/10 border border-yellow-500 text-yellow-600 text-sm">
+          <StatusNote tone="danger" compact className="mb-6">
             {error}
-          </div>
+          </StatusNote>
         )}
 
         {/* Local credentials login (sovereign/self-hosted) */}

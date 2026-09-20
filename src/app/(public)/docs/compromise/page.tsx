@@ -22,24 +22,24 @@ export default function CompromisePage() {
         <h2 className="text-xl font-bold">{t("problemTitle")}</h2>
         <p className="text-muted-foreground">{t("problemDesc")}</p>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="p-4 border border-amber-500/30 bg-amber-500/5 rounded-xl">
-            <p className="font-medium text-amber-400">
+          <div className="p-4 border border-warning-mark bg-warning-surface rounded-xl">
+            <p className="font-medium text-warning">
               {t("problemPowerImbalance")}
             </p>
             <p className="text-sm text-muted-foreground mt-1">
               {t("problemPowerImbalanceDesc")}
             </p>
           </div>
-          <div className="p-4 border border-amber-500/30 bg-amber-500/5 rounded-xl">
-            <p className="font-medium text-amber-400">
+          <div className="p-4 border border-warning-mark bg-warning-surface rounded-xl">
+            <p className="font-medium text-warning">
               {t("problemEndlessCycles")}
             </p>
             <p className="text-sm text-muted-foreground mt-1">
               {t("problemEndlessCyclesDesc")}
             </p>
           </div>
-          <div className="p-4 border border-amber-500/30 bg-amber-500/5 rounded-xl">
-            <p className="font-medium text-amber-400">
+          <div className="p-4 border border-warning-mark bg-warning-surface rounded-xl">
+            <p className="font-medium text-warning">
               {t("problemArbitrarySplits")}
             </p>
             <p className="text-sm text-muted-foreground mt-1">

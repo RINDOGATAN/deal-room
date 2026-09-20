@@ -97,8 +97,8 @@ export default function AdminAiPage() {
                       <Badge
                         className={
                           g.status === "ok"
-                            ? "bg-green-500/20 text-green-400"
-                            : "bg-red-500/20 text-red-400"
+                            ? "bg-success-surface text-success"
+                            : "bg-danger-surface text-danger"
                         }
                       >
                         {g.status}

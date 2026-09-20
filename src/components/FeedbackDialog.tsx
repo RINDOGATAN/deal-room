@@ -48,7 +48,7 @@ export function FeedbackDialog({ open, onOpenChange }: FeedbackDialogProps) {
       <DialogContent className="sm:max-w-md">
         {sent ? (
           <div className="flex flex-col items-center gap-3 py-6 text-center">
-            <CheckCircle2 className="h-10 w-10 text-green-500" />
+            <CheckCircle2 className="h-10 w-10 text-success" />
             <p className="text-lg font-medium">Thanks for your feedback!</p>
             <p className="text-sm text-muted-foreground">We&apos;ll use it to improve this tool.</p>
           </div>
@@ -58,7 +58,7 @@ export function FeedbackDialog({ open, onOpenChange }: FeedbackDialogProps) {
               <DialogTitle>What&apos;s wrong?</DialogTitle>
             </DialogHeader>
             {submit.isError && (
-              <p className="text-sm text-destructive">Failed to send. Please try again.</p>
+              <p className="text-sm text-danger">Failed to send. Please try again.</p>
             )}
             <form
               onSubmit={(e) => {

@@ -253,14 +253,14 @@ export function PlaybookGuide({ skills }: { skills: Skill[] }) {
           <ul className="space-y-1.5">
             {["redLineWhen1", "redLineWhen2", "redLineWhen3"].map((key) => (
               <li key={key} className="flex items-start gap-2 text-sm text-muted-foreground">
-                <Shield className="w-4 h-4 text-red-500 flex-shrink-0 mt-0.5" />
+                <Shield className="w-4 h-4 text-danger flex-shrink-0 mt-0.5" />
                 {t(key)}
               </li>
             ))}
           </ul>
         </div>
 
-        <div className="p-4 border border-amber-500/30 bg-amber-500/5 rounded-xl">
+        <div className="p-4 border border-warning-mark bg-warning-surface rounded-xl">
           <h3 className="font-bold text-sm mb-1">{t("redLineAcceptableTitle")}</h3>
           <p className="text-xs text-muted-foreground">
             {t("redLineAcceptableDesc")}
@@ -353,7 +353,7 @@ export function PlaybookGuide({ skills }: { skills: Skill[] }) {
       </div>
 
       {/* Next: Disputes */}
-      <div className="p-6 border border-amber-500/30 bg-amber-500/5 rounded-2xl">
+      <div className="p-6 border border-warning-mark bg-warning-surface rounded-2xl">
         <h2 className="text-xl font-bold mb-2">
           {t("title").includes("Playbook") ? "Next: Dispute Readiness" : "Siguiente: Preparación ante Disputas"}
         </h2>
@@ -362,7 +362,7 @@ export function PlaybookGuide({ skills }: { skills: Skill[] }) {
         </p>
         <Link
           href="/docs/agent-preparation/disputes"
-          className="inline-flex items-center gap-2 text-amber-500 font-medium hover:underline"
+          className="inline-flex items-center gap-2 text-warning font-medium hover:underline"
         >
           <Shield className="w-4 h-4" />
           Dispute Readiness
@@ -401,7 +401,7 @@ function ClausePlaybookEntry({
             </span>
             <h4 className="font-semibold text-sm">{clauseTitle}</h4>
             {clause.isRequired && (
-              <span className="text-[10px] px-1.5 py-0.5 bg-red-500/10 text-red-500 border border-red-500/30 rounded-full">
+              <span className="text-[10px] px-1.5 py-0.5 bg-danger-surface text-danger border border-danger-mark rounded-full">
                 required
               </span>
             )}

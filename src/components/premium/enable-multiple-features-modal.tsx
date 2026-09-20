@@ -84,7 +84,7 @@ export function EnableMultipleFeaturesModal({
           <span>{totalLabel}</span>
         </div>
         {error && (
-          <p className="text-sm text-destructive bg-destructive/10 px-3 py-2 rounded-xl">{error}</p>
+          <p className="text-sm text-danger bg-danger-surface px-3 py-2 rounded-xl">{error}</p>
         )}
         <DialogFooter className="gap-2 sm:gap-0 mt-4">
           <button

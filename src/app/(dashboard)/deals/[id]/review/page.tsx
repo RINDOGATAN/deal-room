@@ -12,8 +12,8 @@ import {
   ArrowRight,
   Check,
   X,
-  AlertCircle,
   AlertTriangle,
+  OctagonAlert,
   Scale,
   ThumbsUp,
   ThumbsDown,
@@ -39,6 +39,7 @@ import { Badge } from "@/components/ui/badge";
 import { VettingBadge } from "@/components/VettingBadge";
 import { AiDraftPanel } from "@/components/ai/AiDraftPanel";
 import { useContractMessages } from "@/lib/use-contract-messages";
+import { StatusNote } from "@/components/ui/status-note";
 
 function DownloadLinks({ dealId, className, showTia }: { dealId: string; className?: string; showTia?: boolean }) {
   return (
@@ -349,12 +350,7 @@ function ReviewContent({ dealId }: { dealId: string }) {
 
   if (!deal) {
     return (
-      <div className="card-brutal border-yellow-500">
-        <div className="flex items-center gap-3 text-yellow-600">
-          <AlertCircle className="w-5 h-5" />
-          <span>{t("failedToLoad")}</span>
-        </div>
-      </div>
+      <StatusNote tone="warning">{t("failedToLoad")}</StatusNote>
     );
   }
 
@@ -391,12 +387,7 @@ function ReviewContent({ dealId }: { dealId: string }) {
 
   if (!suggestions) {
     return (
-      <div className="card-brutal border-yellow-500">
-        <div className="flex items-center gap-3 text-yellow-600">
-          <AlertCircle className="w-5 h-5" />
-          <span>{t("failedToLoad")}</span>
-        </div>
-      </div>
+      <StatusNote tone="warning">{t("failedToLoad")}</StatusNote>
     );
   }
 
@@ -541,11 +532,11 @@ function ReviewContent({ dealId }: { dealId: string }) {
 
       {/* Pending Counter-Proposals Alert */}
       {pendingCounterProposalsForMe.length > 0 && (
-        <div className="card-brutal border-yellow-500/50 bg-yellow-500/10">
+        <div className="card-brutal border-warning-mark bg-warning-surface">
           <div className="flex items-start gap-3">
-            <MessageSquare className="w-5 h-5 text-yellow-500 mt-0.5" />
+            <MessageSquare className="w-5 h-5 text-warning mt-0.5" />
             <div>
-              <p className="font-semibold text-yellow-200">
+              <p className="font-semibold text-warning">
                 {t("counterProposalsPending", { count: pendingCounterProposalsForMe.length, plural: pendingCounterProposalsForMe.length > 1 ? "s" : "" })}
               </p>
               <p className="text-sm text-muted-foreground mt-1">
@@ -560,9 +551,9 @@ function ReviewContent({ dealId }: { dealId: string }) {
       {satisfactionScores && !needsGeneration && (() => {
         const getLabel = (s: number) => s >= 85 ? t("satisfactionCloseToPreference") : s >= 65 ? t("satisfactionFavorable") : s >= 45 ? t("satisfactionBalanced") : s >= 25 ? t("satisfactionAccommodated") : t("satisfactionSignificantConcession");
         // Brand-aligned dark-theme palette — the previous cream/light
-        // tokens (`bg-green-50` etc.) inverted poorly against the rest
+        // tokens (light cream fills) inverted poorly against the rest
         // of the app and stood out as off-brand.
-        const getColor = (s: number) => s >= 85 ? "text-green-400 bg-green-500/10 border-green-500/30" : s >= 65 ? "text-primary bg-primary/10 border-primary/30" : s >= 45 ? "text-foreground bg-muted/50 border-border" : s >= 25 ? "text-yellow-400 bg-yellow-500/10 border-yellow-500/30" : "text-destructive bg-destructive/10 border-destructive/30";
+        const getColor = (s: number) => s >= 85 ? "text-success bg-success-surface border-success-mark" : s >= 65 ? "text-primary bg-primary/10 border-primary/30" : s >= 45 ? "text-foreground bg-muted/50 border-border" : s >= 25 ? "text-warning bg-warning-surface border-warning-mark" : "text-danger bg-danger-surface border-danger-mark";
 
         const myScores = isInitiator ? satisfactionScores.partyA : satisfactionScores.partyB;
         const theirScores = isInitiator ? satisfactionScores.partyB : satisfactionScores.partyA;
@@ -626,14 +617,14 @@ function ReviewContent({ dealId }: { dealId: string }) {
 
       {/* Cross-Clause Conflict Warnings (from Cloud Intelligence API) */}
       {validation?.conflicts && validation.conflicts.length > 0 && (
-        <div className="card-brutal border-l-4 border-l-warning bg-warning/5">
+        <div className="card-brutal border-l-4 border-l-warning-mark bg-warning-surface">
           <div className="flex items-start gap-3">
             <AlertTriangle className="w-5 h-5 text-warning flex-shrink-0 mt-0.5" />
             <div className="space-y-2">
               <p className="font-semibold text-warning">{t("conflictWarnings")}</p>
               {validation.conflicts.map((conflict, i) => (
                 <div key={i} className="text-sm text-muted-foreground">
-                  <span className={conflict.severity === "error" ? "text-destructive font-medium" : "text-warning"}>
+                  <span className={conflict.severity === "error" ? "text-danger font-medium" : "text-warning"}>
                     {conflict.severity === "error" ? "Error: " : "Warning: "}
                   </span>
                   {conflict.message}
@@ -692,8 +683,8 @@ function ReviewContent({ dealId }: { dealId: string }) {
 
                   {/* Incoming proposals for this param */}
                   {pendingForMe.map((pp) => (
-                    <div key={pp.id} className="p-3 border border-yellow-500/30 bg-yellow-500/10 space-y-2">
-                      <p className="text-sm font-medium text-yellow-200">
+                    <div key={pp.id} className="p-3 border border-warning-mark bg-warning-surface space-y-2">
+                      <p className="text-sm font-medium text-warning">
                         {t("incomingParameterProposal", { label })}
                       </p>
                       <div className="flex items-center gap-4 text-sm">
@@ -701,16 +692,16 @@ function ReviewContent({ dealId }: { dealId: string }) {
                         <span className="font-semibold text-primary">{t("parameterProposalTo", { value: pp.proposedValue })}</span>
                       </div>
                       {pp.rationale && (
-                        <div className="flex items-start gap-2 p-2 bg-blue-500/10 border border-blue-500/20">
-                          <MessageSquare className="w-3.5 h-3.5 text-blue-400 flex-shrink-0 mt-0.5" />
-                          <p className="text-xs text-blue-200">&quot;{pp.rationale}&quot;</p>
+                        <div className="flex items-start gap-2 p-2 bg-info-surface border border-info-mark">
+                          <MessageSquare className="w-3.5 h-3.5 text-info flex-shrink-0 mt-0.5" />
+                          <p className="text-xs text-foreground">&quot;{pp.rationale}&quot;</p>
                         </div>
                       )}
                       <div className="flex items-center gap-2 pt-1">
                         <button
                           onClick={() => respondToParameterProposal.mutate({ proposalId: pp.id, accept: false })}
                           disabled={respondToParameterProposal.isPending}
-                          className="flex items-center gap-2 px-3 py-2 border border-yellow-500 text-yellow-600 hover:bg-yellow-500 hover:text-white transition-colors rounded-full text-sm"
+                          className="flex items-center gap-2 px-3 py-2 border border-warning-mark text-warning hover:bg-warning-solid hover:text-warning-solid-foreground transition-colors rounded-full text-sm"
                         >
                           <ThumbsDown className="w-4 h-4" />
                           {t("reject")}
@@ -729,16 +720,16 @@ function ReviewContent({ dealId }: { dealId: string }) {
 
                   {/* My proposals for this param */}
                   {myProposals.map((pp) => (
-                    <div key={pp.id} className="p-3 border border-blue-500/30 bg-blue-500/5 space-y-2">
+                    <div key={pp.id} className="p-3 border border-info-mark bg-info-surface space-y-2">
                       <div className="flex items-center justify-between gap-2">
-                        <p className="text-sm font-medium text-blue-300">
+                        <p className="text-sm font-medium text-info">
                           {t("yourParameterProposal", { label })}
                         </p>
                         <Badge
                           className={
-                            pp.status === "ACCEPTED" ? "bg-green-500/20 text-green-400" :
-                            pp.status === "REJECTED" ? "bg-red-500/20 text-red-400" :
-                            "bg-yellow-500/20 text-yellow-400"
+                            pp.status === "ACCEPTED" ? "bg-success-surface text-success" :
+                            pp.status === "REJECTED" ? "bg-danger-surface text-danger" :
+                            "bg-warning-surface text-warning"
                           }
                         >
                           {pp.status === "ACCEPTED" ? t("accepted") :
@@ -751,9 +742,9 @@ function ReviewContent({ dealId }: { dealId: string }) {
                         <span className="font-semibold">{t("parameterProposalTo", { value: pp.proposedValue })}</span>
                       </div>
                       {pp.rationale && (
-                        <div className="flex items-start gap-2 p-2 bg-blue-500/10 border border-blue-500/20">
-                          <MessageSquare className="w-3.5 h-3.5 text-blue-400 flex-shrink-0 mt-0.5" />
-                          <p className="text-xs text-blue-200">&quot;{pp.rationale}&quot;</p>
+                        <div className="flex items-start gap-2 p-2 bg-info-surface border border-info-mark">
+                          <MessageSquare className="w-3.5 h-3.5 text-info flex-shrink-0 mt-0.5" />
+                          <p className="text-xs text-foreground">&quot;{pp.rationale}&quot;</p>
                         </div>
                       )}
                     </div>
@@ -827,7 +818,7 @@ function ReviewContent({ dealId }: { dealId: string }) {
                   <div className="space-y-2">
                     {paramEvents.map((event, idx) => (
                       <div key={idx} className="flex items-start gap-2 text-xs text-muted-foreground">
-                        <div className="w-2 h-2 rounded-full mt-1.5 flex-shrink-0 bg-purple-400" />
+                        <div className="w-2 h-2 rounded-full mt-1.5 flex-shrink-0 bg-info-mark" />
                         <div>
                           <span className="text-foreground">
                             {event.type === "parameter_proposed" && t("historyParameterProposed", { party: event.party === "you" ? t("historyYou") : t("historyThem"), param: event.clauseTitle, from: event.parameterFrom || "", to: event.parameterTo || "" })}
@@ -972,20 +963,20 @@ function ReviewContent({ dealId }: { dealId: string }) {
             return (
               <div
                 key={item.clauseId}
-                className={`card-brutal ${item.status === "AGREED" ? "border-primary" : ""} ${clauseCounterProposals.length > 0 ? "border-yellow-500/50" : ""}`}
+                className={`card-brutal ${item.status === "AGREED" ? "border-primary" : ""} ${clauseCounterProposals.length > 0 ? "border-warning-mark" : ""}`}
               >
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
                       <h3 className="font-semibold">{item.clauseTitle}</h3>
                       {item.status === "AGREED" && (
-                        <Badge className="bg-primary/20 text-primary">
+                        <Badge className="bg-info-surface text-primary">
                           <Check className="w-3 h-3 mr-1" />
                           {tCommon("agreed")}
                         </Badge>
                       )}
                       {clauseCounterProposals.length > 0 && (
-                        <Badge className="bg-yellow-500/20 text-yellow-500">
+                        <Badge className="bg-warning-surface text-warning">
                           <MessageSquare className="w-3 h-3 mr-1" />
                           {t("counterProposalBadge")}
                         </Badge>
@@ -1009,8 +1000,8 @@ function ReviewContent({ dealId }: { dealId: string }) {
 
                 {/* Counter-Proposal Alert */}
                 {clauseCounterProposals.length > 0 && (
-                  <div className="mb-4 p-4 border border-yellow-500/30 bg-yellow-500/10">
-                    <p className="text-sm font-medium text-yellow-200 mb-3">
+                  <div className="mb-4 p-4 border border-warning-mark bg-warning-surface">
+                    <p className="text-sm font-medium text-warning mb-3">
                       {t("otherPartyProposed")}
                     </p>
                     {clauseCounterProposals.map((cp) => (
@@ -1022,9 +1013,9 @@ function ReviewContent({ dealId }: { dealId: string }) {
                           </div>
                         </div>
                         {cp.rationale && (
-                          <div className="flex items-start gap-2 p-3 bg-blue-500/10 border border-blue-500/20">
-                            <MessageSquare className="w-4 h-4 text-blue-400 flex-shrink-0 mt-0.5" />
-                            <p className="text-sm text-blue-200">
+                          <div className="flex items-start gap-2 p-3 bg-info-surface border border-info-mark">
+                            <MessageSquare className="w-4 h-4 text-info flex-shrink-0 mt-0.5" />
+                            <p className="text-sm text-foreground">
                               &quot;{cp.rationale}&quot;
                             </p>
                           </div>
@@ -1036,7 +1027,7 @@ function ReviewContent({ dealId }: { dealId: string }) {
                               accept: false,
                             })}
                             disabled={respondToCounterProposal.isPending}
-                            className="flex items-center gap-2 px-3 py-2 border border-yellow-500 text-yellow-600 hover:bg-yellow-500 hover:text-white transition-colors rounded-full text-sm"
+                            className="flex items-center gap-2 px-3 py-2 border border-warning-mark text-warning hover:bg-warning-solid hover:text-warning-solid-foreground transition-colors rounded-full text-sm"
                           >
                             <ThumbsDown className="w-4 h-4" />
                             {t("reject")}
@@ -1060,8 +1051,8 @@ function ReviewContent({ dealId }: { dealId: string }) {
 
                 {/* My Sent Counter-Proposals */}
                 {myCounterProposals.length > 0 && (
-                  <div className="mb-4 p-4 border border-blue-500/30 bg-blue-500/5">
-                    <p className="text-sm font-medium text-blue-300 mb-3">
+                  <div className="mb-4 p-4 border border-info-mark bg-info-surface">
+                    <p className="text-sm font-medium text-info mb-3">
                       {t("yourCounterProposal")}
                     </p>
                     {myCounterProposals.map((cp) => (
@@ -1070,9 +1061,9 @@ function ReviewContent({ dealId }: { dealId: string }) {
                           <p className="font-semibold text-sm">{cp.proposedOption.label}</p>
                           <Badge
                             className={
-                              cp.status === "ACCEPTED" ? "bg-green-500/20 text-green-400" :
-                              cp.status === "REJECTED" ? "bg-red-500/20 text-red-400" :
-                              "bg-yellow-500/20 text-yellow-400"
+                              cp.status === "ACCEPTED" ? "bg-success-surface text-success" :
+                              cp.status === "REJECTED" ? "bg-danger-surface text-danger" :
+                              "bg-warning-surface text-warning"
                             }
                           >
                             {cp.status === "ACCEPTED" ? t("accepted") :
@@ -1081,9 +1072,9 @@ function ReviewContent({ dealId }: { dealId: string }) {
                           </Badge>
                         </div>
                         {cp.rationale && (
-                          <div className="flex items-start gap-2 p-2 bg-blue-500/10 border border-blue-500/20">
-                            <MessageSquare className="w-3.5 h-3.5 text-blue-400 flex-shrink-0 mt-0.5" />
-                            <p className="text-xs text-blue-200">
+                          <div className="flex items-start gap-2 p-2 bg-info-surface border border-info-mark">
+                            <MessageSquare className="w-3.5 h-3.5 text-info flex-shrink-0 mt-0.5" />
+                            <p className="text-xs text-foreground">
                               &quot;{cp.rationale}&quot;
                             </p>
                           </div>
@@ -1153,7 +1144,7 @@ function ReviewContent({ dealId }: { dealId: string }) {
                       const yourScore = isInitiator ? suggestion.satisfactionPartyA : suggestion.satisfactionPartyB;
                       const theirScore = isInitiator ? suggestion.satisfactionPartyB : suggestion.satisfactionPartyA;
                       const getLabel = (s: number) => s >= 85 ? t("satisfactionCloseToPreference") : s >= 65 ? t("satisfactionFavorable") : s >= 45 ? t("satisfactionBalanced") : s >= 25 ? t("satisfactionAccommodated") : t("satisfactionSignificantConcession");
-                      const getColor = (s: number) => s >= 85 ? "bg-green-500/10 text-green-400" : s >= 65 ? "bg-primary/10 text-primary" : s >= 45 ? "bg-muted text-foreground" : s >= 25 ? "bg-yellow-500/10 text-yellow-400" : "bg-destructive/10 text-destructive";
+                      const getColor = (s: number) => s >= 85 ? "bg-success-surface text-success" : s >= 65 ? "bg-primary/10 text-primary" : s >= 45 ? "bg-muted text-foreground" : s >= 25 ? "bg-warning-surface text-warning" : "bg-danger-surface text-danger";
                       return (
                         <div className="flex flex-wrap gap-2 mb-4">
                           <span className={`text-xs px-2.5 py-1 rounded-full font-medium ${getColor(yourScore)}`}>
@@ -1271,35 +1262,35 @@ function ReviewContent({ dealId }: { dealId: string }) {
                                         message = t("historyCompromiseGenerated", { option: event.optionLabel || "" });
                                         break;
                                       case "compromise_accepted":
-                                        dotColor = "bg-green-500";
+                                        dotColor = "bg-success-mark";
                                         message = t("historyAccepted", { party: partyLabel, option: event.optionLabel || "" });
                                         break;
                                       case "compromise_rejected":
-                                        dotColor = "bg-yellow-500";
+                                        dotColor = "bg-warning-mark";
                                         message = t("historyRejected", { party: partyLabel, option: event.optionLabel || "" });
                                         break;
                                       case "counter_proposal":
-                                        dotColor = "bg-blue-500";
+                                        dotColor = "bg-info-mark";
                                         message = t("historyCounterProposal", { party: partyLabel, option: event.optionLabel || "" });
                                         break;
                                       case "counter_accepted":
-                                        dotColor = "bg-green-500";
+                                        dotColor = "bg-success-mark";
                                         message = t("historyCounterAccepted", { party: partyLabel, option: event.optionLabel || "" });
                                         break;
                                       case "counter_rejected":
-                                        dotColor = "bg-red-500";
+                                        dotColor = "bg-danger-mark";
                                         message = t("historyCounterRejected", { party: partyLabel, option: event.optionLabel || "" });
                                         break;
                                       case "parameter_proposed":
-                                        dotColor = "bg-purple-500";
+                                        dotColor = "bg-info-mark";
                                         message = t("historyParameterProposed", { party: partyLabel, param: event.clauseTitle, from: event.parameterFrom || "", to: event.parameterTo || "" });
                                         break;
                                       case "parameter_accepted":
-                                        dotColor = "bg-green-500";
+                                        dotColor = "bg-success-mark";
                                         message = t("historyParameterAccepted", { party: partyLabel, param: event.clauseTitle });
                                         break;
                                       case "parameter_rejected":
-                                        dotColor = "bg-red-500";
+                                        dotColor = "bg-danger-mark";
                                         message = t("historyParameterRejected", { party: partyLabel, param: event.clauseTitle });
                                         break;
                                     }
@@ -1340,14 +1331,14 @@ function ReviewContent({ dealId }: { dealId: string }) {
                     <div className="flex items-center gap-4 text-sm">
                       <div className="flex items-center gap-2">
                         <span className="text-muted-foreground">{tCommon("you")}:</span>
-                        {myAccepted === true && <Badge className="bg-primary/20 text-primary">{t("accepted")}</Badge>}
-                        {myAccepted === false && <Badge className="bg-yellow-500/20 text-yellow-600">{t("rejected")}</Badge>}
+                        {myAccepted === true && <Badge className="bg-info-surface text-primary">{t("accepted")}</Badge>}
+                        {myAccepted === false && <Badge className="bg-warning-surface text-warning">{t("rejected")}</Badge>}
                         {myAccepted === null && <Badge variant="outline">{tCommon("pending")}</Badge>}
                       </div>
                       <div className="flex items-center gap-2">
                         <span className="text-muted-foreground">{t("they")}</span>
-                        {otherAccepted === true && <Badge className="bg-primary/20 text-primary">{t("accepted")}</Badge>}
-                        {otherAccepted === false && <Badge className="bg-yellow-500/20 text-yellow-600">{t("rejected")}</Badge>}
+                        {otherAccepted === true && <Badge className="bg-info-surface text-primary">{t("accepted")}</Badge>}
+                        {otherAccepted === false && <Badge className="bg-warning-surface text-warning">{t("rejected")}</Badge>}
                         {otherAccepted === null && <Badge variant="outline">{tCommon("pending")}</Badge>}
                       </div>
                     </div>
@@ -1366,7 +1357,7 @@ function ReviewContent({ dealId }: { dealId: string }) {
                             })),
                             suggestion.id
                           )}
-                          className="flex items-center gap-2 px-3 py-2 border border-muted-foreground text-muted-foreground hover:border-yellow-500 hover:text-yellow-600 transition-colors rounded-full text-sm"
+                          className="flex items-center gap-2 px-3 py-2 border border-muted-foreground text-muted-foreground hover:border-warning-mark hover:text-warning transition-colors rounded-full text-sm"
                         >
                           <MessageSquare className="w-4 h-4" />
                           <span className="hidden sm:inline">{t("counterPropose")}</span>
@@ -1377,7 +1368,7 @@ function ReviewContent({ dealId }: { dealId: string }) {
                             accept: false,
                           })}
                           disabled={respondToSuggestion.isPending}
-                          className="flex items-center gap-2 px-3 py-2 border border-yellow-500 text-yellow-600 hover:bg-yellow-500 hover:text-white transition-colors rounded-full text-sm"
+                          className="flex items-center gap-2 px-3 py-2 border border-warning-mark text-warning hover:bg-warning-solid hover:text-warning-solid-foreground transition-colors rounded-full text-sm"
                         >
                           <ThumbsDown className="w-4 h-4" />
                           {t("reject")}
@@ -1429,8 +1420,8 @@ function ReviewContent({ dealId }: { dealId: string }) {
                 </div>
               )}
               {attorneysError && (
-                <div className="flex items-center gap-2 text-sm text-destructive py-4 px-2">
-                  <AlertCircle className="w-4 h-4 flex-shrink-0" />
+                <div className="flex items-center gap-2 text-sm text-foreground py-4 px-2">
+                  <OctagonAlert className="w-4 h-4 flex-shrink-0 text-danger-mark" />
                   <span>{attorneysError.message}</span>
                 </div>
               )}
@@ -1523,10 +1514,10 @@ function ReviewContent({ dealId }: { dealId: string }) {
 
           {/* My review in progress */}
           {reviewStatus?.myReview && !reviewStatus.myReview.approvedAt && (
-            <div className="card-brutal border-purple-500/50">
+            <div className="card-brutal border-info-mark">
               <div className="flex items-start gap-4">
-                <div className="w-12 h-12 bg-purple-500/20 flex items-center justify-center flex-shrink-0">
-                  <Shield className="w-6 h-6 text-purple-500" />
+                <div className="w-12 h-12 bg-info-surface flex items-center justify-center flex-shrink-0">
+                  <Shield className="w-6 h-6 text-info" />
                 </div>
                 <div className="flex-1">
                   <h2 className="text-lg font-semibold mb-1">{t("attorneyReviewInProgress")}</h2>
@@ -1540,7 +1531,7 @@ function ReviewContent({ dealId }: { dealId: string }) {
                     <button
                       onClick={() => cancelReview.mutate({ dealRoomId: dealId })}
                       disabled={cancelReview.isPending}
-                      className="flex items-center gap-2 px-3 py-2 text-sm border border-yellow-500 text-yellow-600 hover:bg-yellow-500 hover:text-white transition-colors rounded-full"
+                      className="flex items-center gap-2 px-3 py-2 text-sm border border-warning-mark text-warning hover:bg-warning-solid hover:text-warning-solid-foreground transition-colors rounded-full"
                     >
                       <XCircle className="w-4 h-4" />
                       <span className="hidden sm:inline">{cancelReview.isPending ? t("cancelling") : t("cancelReview")}</span>
@@ -1570,10 +1561,10 @@ function ReviewContent({ dealId }: { dealId: string }) {
 
           {/* Other party has active review, I don't */}
           {reviewStatus?.otherPartyReviewActive && !reviewStatus.myReview && (
-            <div className="card-brutal border-blue-500/50">
+            <div className="card-brutal border-info-mark">
               <div className="flex items-start gap-4">
-                <div className="w-12 h-12 bg-blue-500/20 flex items-center justify-center flex-shrink-0">
-                  <Shield className="w-6 h-6 text-blue-500" />
+                <div className="w-12 h-12 bg-info-surface flex items-center justify-center flex-shrink-0">
+                  <Shield className="w-6 h-6 text-info" />
                 </div>
                 <div>
                   <h2 className="text-lg font-semibold mb-1">{t("otherPartyRequestedReview")}</h2>
@@ -1786,10 +1777,10 @@ function ReviewContent({ dealId }: { dealId: string }) {
 
           {/* No request yet — Initiator sees request button */}
           {!jointCounselStatus?.requested && isInitiator && (
-            <div className="card-brutal border-purple-500/30">
+            <div className="card-brutal border-info-mark">
               <div className="flex items-start gap-4">
-                <div className="w-12 h-12 bg-purple-500/20 flex items-center justify-center flex-shrink-0 rounded-2xl">
-                  <Briefcase className="w-6 h-6 text-purple-500" />
+                <div className="w-12 h-12 bg-info-surface flex items-center justify-center flex-shrink-0 rounded-2xl">
+                  <Briefcase className="w-6 h-6 text-info" />
                 </div>
                 <div className="flex-1">
                   <h2 className="text-lg font-semibold mb-1">{tJointCounsel("title")}</h2>
@@ -1810,10 +1801,10 @@ function ReviewContent({ dealId }: { dealId: string }) {
 
           {/* Requested, pending — Initiator sees status */}
           {jointCounselStatus?.requested && !jointCounselStatus.acknowledgedAt && !jointCounselStatus.declinedAt && jointCounselStatus.isInitiator && (
-            <div className="card-brutal border-purple-500/50">
+            <div className="card-brutal border-info-mark">
               <div className="flex items-start gap-4">
-                <div className="w-12 h-12 bg-purple-500/20 flex items-center justify-center flex-shrink-0 rounded-2xl">
-                  <Briefcase className="w-6 h-6 text-purple-500" />
+                <div className="w-12 h-12 bg-info-surface flex items-center justify-center flex-shrink-0 rounded-2xl">
+                  <Briefcase className="w-6 h-6 text-info" />
                 </div>
                 <div>
                   <h2 className="text-lg font-semibold mb-1">{tJointCounsel("pendingAcknowledgment")}</h2>
@@ -1827,10 +1818,10 @@ function ReviewContent({ dealId }: { dealId: string }) {
 
           {/* Requested, pending — Other party sees acknowledge/decline */}
           {jointCounselStatus?.requested && !jointCounselStatus.acknowledgedAt && !jointCounselStatus.declinedAt && !jointCounselStatus.isInitiator && (
-            <div className="card-brutal border-purple-500/50">
+            <div className="card-brutal border-info-mark">
               <div className="flex items-start gap-4">
-                <div className="w-12 h-12 bg-purple-500/20 flex items-center justify-center flex-shrink-0 rounded-2xl">
-                  <Briefcase className="w-6 h-6 text-purple-500" />
+                <div className="w-12 h-12 bg-info-surface flex items-center justify-center flex-shrink-0 rounded-2xl">
+                  <Briefcase className="w-6 h-6 text-info" />
                 </div>
                 <div className="flex-1">
                   <h2 className="text-lg font-semibold mb-1">{tJointCounsel("title")}</h2>
@@ -1846,7 +1837,7 @@ function ReviewContent({ dealId }: { dealId: string }) {
                     <button
                       onClick={() => declineJointCounsel.mutate({ dealRoomId: dealId })}
                       disabled={declineJointCounsel.isPending}
-                      className="flex items-center gap-2 px-3 py-2 text-sm border border-yellow-500 text-yellow-600 hover:bg-yellow-500 hover:text-white transition-colors rounded-full"
+                      className="flex items-center gap-2 px-3 py-2 text-sm border border-warning-mark text-warning hover:bg-warning-solid hover:text-warning-solid-foreground transition-colors rounded-full"
                     >
                       <X className="w-4 h-4" />
                       {declineJointCounsel.isPending ? tJointCounsel("declining") : tJointCounsel("declineRequest")}
@@ -1884,10 +1875,10 @@ function ReviewContent({ dealId }: { dealId: string }) {
 
           {/* Declined — Initiator */}
           {jointCounselStatus?.declinedAt && jointCounselStatus.isInitiator && (
-            <div className="card-brutal border-yellow-500/30">
+            <div className="card-brutal border-warning-mark">
               <div className="flex items-start gap-4">
-                <div className="w-12 h-12 bg-yellow-500/20 flex items-center justify-center flex-shrink-0 rounded-2xl">
-                  <Briefcase className="w-6 h-6 text-yellow-500" />
+                <div className="w-12 h-12 bg-warning-surface flex items-center justify-center flex-shrink-0 rounded-2xl">
+                  <Briefcase className="w-6 h-6 text-warning" />
                 </div>
                 <div>
                   <h2 className="text-lg font-semibold mb-1">{tJointCounsel("title")}</h2>
@@ -1899,10 +1890,10 @@ function ReviewContent({ dealId }: { dealId: string }) {
 
           {/* Declined — Other party */}
           {jointCounselStatus?.declinedAt && !jointCounselStatus.isInitiator && (
-            <div className="card-brutal border-yellow-500/30">
+            <div className="card-brutal border-warning-mark">
               <div className="flex items-start gap-4">
-                <div className="w-12 h-12 bg-yellow-500/20 flex items-center justify-center flex-shrink-0 rounded-2xl">
-                  <Briefcase className="w-6 h-6 text-yellow-500" />
+                <div className="w-12 h-12 bg-warning-surface flex items-center justify-center flex-shrink-0 rounded-2xl">
+                  <Briefcase className="w-6 h-6 text-warning" />
                 </div>
                 <div>
                   <h2 className="text-lg font-semibold mb-1">{tJointCounsel("title")}</h2>

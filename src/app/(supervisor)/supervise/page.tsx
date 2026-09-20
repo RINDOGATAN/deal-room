@@ -22,21 +22,22 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { useState, useEffect } from "react";
+import { StatusNote } from "@/components/ui/status-note";
 
 const statusConfig = {
   DRAFT: { label: "Draft", color: "bg-muted text-muted-foreground", icon: FileText },
-  AWAITING_RESPONSE: { label: "Awaiting Response", color: "bg-yellow-500/20 text-yellow-500", icon: Clock },
-  NEGOTIATING: { label: "Negotiating", color: "bg-blue-500/20 text-blue-500", icon: Users },
-  AGREED: { label: "Agreed", color: "bg-primary/20 text-primary", icon: CheckCircle },
-  SIGNING: { label: "Signing", color: "bg-primary/20 text-primary", icon: FileText },
-  COMPLETED: { label: "Completed", color: "bg-green-500/20 text-green-500", icon: CheckCircle },
-  CANCELLED: { label: "Cancelled", color: "bg-yellow-500/20 text-yellow-600", icon: AlertCircle },
+  AWAITING_RESPONSE: { label: "Awaiting Response", color: "bg-warning-surface text-warning", icon: Clock },
+  NEGOTIATING: { label: "Negotiating", color: "bg-info-surface text-info", icon: Users },
+  AGREED: { label: "Agreed", color: "bg-info-surface text-primary", icon: CheckCircle },
+  SIGNING: { label: "Signing", color: "bg-info-surface text-primary", icon: FileText },
+  COMPLETED: { label: "Completed", color: "bg-success-surface text-success", icon: CheckCircle },
+  CANCELLED: { label: "Cancelled", color: "bg-warning-surface text-warning", icon: AlertCircle },
 };
 
 const partyStatusConfig = {
   PENDING: { label: "Pending", color: "text-muted-foreground" },
-  SUBMITTED: { label: "Submitted", color: "text-blue-500" },
-  REVIEWING: { label: "Reviewing", color: "text-yellow-500" },
+  SUBMITTED: { label: "Submitted", color: "text-info" },
+  REVIEWING: { label: "Reviewing", color: "text-warning" },
   ACCEPTED: { label: "Accepted", color: "text-primary" },
 };
 
@@ -81,12 +82,7 @@ export default function SupervisorDashboard() {
       );
     }
     return (
-      <div className="card-brutal border-yellow-500">
-        <div className="flex items-center gap-3 text-yellow-600">
-          <AlertCircle className="w-5 h-5" />
-          <span>Failed to load deals: {error.message}</span>
-        </div>
-      </div>
+      <StatusNote tone="warning">Failed to load deals: {error.message}</StatusNote>
     );
   }
 
@@ -125,7 +121,7 @@ export default function SupervisorDashboard() {
           <p className="text-sm text-muted-foreground">Drafts</p>
         </div>
         <div className="card-brutal text-center">
-          <p className="text-3xl font-bold text-blue-500">{stats.negotiating}</p>
+          <p className="text-3xl font-bold text-info">{stats.negotiating}</p>
           <p className="text-sm text-muted-foreground">Negotiating</p>
         </div>
         <div className="card-brutal text-center">
@@ -202,7 +198,7 @@ export default function SupervisorDashboard() {
 
                       {respondent ? (
                         <div className="flex items-center gap-2">
-                          <div className="w-8 h-8 bg-blue-500/20 flex items-center justify-center text-blue-500 text-sm font-semibold">
+                          <div className="w-8 h-8 bg-info-surface flex items-center justify-center text-info text-sm font-semibold">
                             {(respondent.name || respondent.email || "?")[0].toUpperCase()}
                           </div>
                           <div>
@@ -291,13 +287,13 @@ export default function SupervisorDashboard() {
                           </p>
                           <p className="text-xs text-muted-foreground">Pending</p>
                         </div>
-                        <div className="p-3 bg-yellow-500/10 border border-yellow-500/30">
-                          <p className="text-lg font-bold text-yellow-500">{divergentClauses}</p>
-                          <p className="text-xs text-yellow-500">Divergent</p>
+                        <div className="p-3 bg-warning-surface border border-warning-mark">
+                          <p className="text-lg font-bold text-warning">{divergentClauses}</p>
+                          <p className="text-xs text-warning">Divergent</p>
                         </div>
-                        <div className="p-3 bg-blue-500/10 border border-blue-500/30">
-                          <p className="text-lg font-bold text-blue-500">{suggestedClauses}</p>
-                          <p className="text-xs text-blue-500">Suggested</p>
+                        <div className="p-3 bg-info-surface border border-info-mark">
+                          <p className="text-lg font-bold text-info">{suggestedClauses}</p>
+                          <p className="text-xs text-info">Suggested</p>
                         </div>
                         <div className="p-3 bg-primary/10 border border-primary/30">
                           <p className="text-lg font-bold text-primary">{agreedClauses}</p>
@@ -343,7 +339,7 @@ export default function SupervisorDashboard() {
                               </div>
                               <div>
                                 {partyBSelection ? (
-                                  <span className={sameSelection ? "text-primary" : "text-blue-500"}>
+                                  <span className={sameSelection ? "text-primary" : "text-info"}>
                                     {partyBSelection.option.label}
                                   </span>
                                 ) : (
@@ -352,11 +348,11 @@ export default function SupervisorDashboard() {
                               </div>
                               <div>
                                 {clause.status === "AGREED" ? (
-                                  <Badge className="bg-primary/20 text-primary text-xs">Agreed</Badge>
+                                  <Badge className="bg-info-surface text-primary text-xs">Agreed</Badge>
                                 ) : clause.status === "SUGGESTED" ? (
-                                  <Badge className="bg-blue-500/20 text-blue-500 text-xs">Suggested</Badge>
+                                  <Badge className="bg-info-surface text-info text-xs">Suggested</Badge>
                                 ) : partyASelection && partyBSelection && !sameSelection ? (
-                                  <Badge className="bg-yellow-500/20 text-yellow-500 text-xs">Divergent</Badge>
+                                  <Badge className="bg-warning-surface text-warning text-xs">Divergent</Badge>
                                 ) : (
                                   <Badge variant="outline" className="text-xs">Pending</Badge>
                                 )}

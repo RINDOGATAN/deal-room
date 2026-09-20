@@ -81,7 +81,7 @@ export default function AdminVerifyPage() {
       <div className="w-full max-w-md">
         <div className="card-brutal">
           <div className="text-center mb-6">
-            <Shield className="w-12 h-12 text-yellow-600 mx-auto mb-4" />
+            <Shield className="w-12 h-12 text-warning mx-auto mb-4" />
             <h1 className="text-xl font-bold mb-2">Session Error</h1>
             <p className="text-muted-foreground mb-4">
               {statusError.message}
@@ -175,7 +175,7 @@ export default function AdminVerifyPage() {
                 </div>
 
                 {error && (
-                  <div className="p-4 bg-yellow-500/10 border border-yellow-500 text-yellow-600 text-sm">
+                  <div className="p-4 bg-warning-surface border border-warning-mark text-foreground text-sm">
                     {error}
                   </div>
                 )}
@@ -243,7 +243,7 @@ export default function AdminVerifyPage() {
           </div>
 
           {error && (
-            <div className="p-4 bg-yellow-500/10 border border-yellow-500 text-yellow-600 text-sm">
+            <div className="p-4 bg-warning-surface border border-warning-mark text-foreground text-sm">
               {error}
             </div>
           )}

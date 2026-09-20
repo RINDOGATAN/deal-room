@@ -232,7 +232,7 @@ export default function MarketplacePage() {
                 {/* Status badge */}
                 <div className="shrink-0">
                   {skill.isEntitled ? (
-                    <span className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium bg-green-500/10 text-green-600 rounded-full">
+                    <span className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium bg-success-surface text-success rounded-full">
                       <CheckCircle2 className="h-3 w-3" />
                       {t("active")}
                     </span>

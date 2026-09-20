@@ -9,7 +9,6 @@ import {
   UserCog,
   Plus,
   Search,
-  AlertCircle,
   Loader2,
   X,
   FileText,
@@ -17,6 +16,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { StatusNote } from "@/components/ui/status-note";
 
 export default function SupervisorsPage() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -92,12 +92,7 @@ export default function SupervisorsPage() {
 
   if (error) {
     return (
-      <div className="card-brutal border-yellow-500">
-        <div className="flex items-center gap-3 text-yellow-600">
-          <AlertCircle className="w-5 h-5" />
-          <span>Failed to load supervisors: {error.message}</span>
-        </div>
-      </div>
+      <StatusNote tone="warning">Failed to load supervisors: {error.message}</StatusNote>
     );
   }
 
@@ -172,7 +167,7 @@ export default function SupervisorsPage() {
               </button>
             </div>
             {createMutation.error && (
-              <div className="p-3 bg-yellow-500/10 border border-yellow-500 text-yellow-600 text-sm">
+              <div className="p-3 bg-warning-surface border border-warning-mark text-foreground text-sm">
                 {createMutation.error.message}
               </div>
             )}
@@ -222,7 +217,7 @@ export default function SupervisorsPage() {
               </div>
               <div>
                 {supervisor.isActive ? (
-                  <Badge className="bg-green-500/20 text-green-500">Active</Badge>
+                  <Badge className="bg-success-surface text-success">Active</Badge>
                 ) : (
                   <Badge className="bg-muted text-muted-foreground">Inactive</Badge>
                 )}
@@ -268,8 +263,8 @@ export default function SupervisorsPage() {
                   disabled={toggleActiveMutation.isPending}
                   className={`px-3 py-1 text-xs border transition-colors ${
                     supervisor.isActive
-                      ? "border-yellow-500 text-yellow-600 hover:bg-yellow-500/10"
-                      : "border-green-500 text-green-500 hover:bg-green-500/10"
+                      ? "border-warning-mark text-warning hover:bg-warning-surface"
+                      : "border-success-mark text-success hover:bg-success-surface"
                   }`}
                 >
                   {supervisor.isActive ? "Deactivate" : "Activate"}
@@ -332,7 +327,7 @@ export default function SupervisorsPage() {
             </div>
           </div>
           {addBarAdmission.error && (
-            <div className="mt-3 p-3 bg-yellow-500/10 border border-yellow-500 text-yellow-600 text-sm">
+            <div className="mt-3 p-3 bg-warning-surface border border-warning-mark text-foreground text-sm">
               {addBarAdmission.error.message}
             </div>
           )}

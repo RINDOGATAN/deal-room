@@ -127,7 +127,7 @@ export default function SupervisorVerifyPage() {
                 </div>
 
                 {error && (
-                  <div className="p-4 bg-yellow-500/10 border border-yellow-500 text-yellow-600 text-sm">
+                  <div className="p-4 bg-warning-surface border border-warning-mark text-foreground text-sm">
                     {error}
                   </div>
                 )}
@@ -135,7 +135,7 @@ export default function SupervisorVerifyPage() {
                 <button
                   type="submit"
                   disabled={verifyMutation.isPending || code.length !== 6}
-                  className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-primary text-white font-semibold border-2 border-primary/80 shadow-[4px_4px_0px_0px_rgba(0,0,0,0.3)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,0.3)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all disabled:opacity-50"
+                  className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-semibold border-2 border-primary/80 shadow-[4px_4px_0px_0px_rgba(0,0,0,0.3)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,0.3)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all disabled:opacity-50"
                 >
                   {verifyMutation.isPending ? (
                     <>
@@ -203,7 +203,7 @@ export default function SupervisorVerifyPage() {
           </div>
 
           {error && (
-            <div className="p-4 bg-yellow-500/10 border border-yellow-500 text-yellow-600 text-sm">
+            <div className="p-4 bg-warning-surface border border-warning-mark text-foreground text-sm">
               {error}
             </div>
           )}
@@ -211,7 +211,7 @@ export default function SupervisorVerifyPage() {
           <button
             type="submit"
             disabled={verifyMutation.isPending || code.length !== 6}
-            className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-primary text-white font-semibold border-2 border-primary/80 shadow-[4px_4px_0px_0px_rgba(0,0,0,0.3)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,0.3)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all disabled:opacity-50"
+            className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-semibold border-2 border-primary/80 shadow-[4px_4px_0px_0px_rgba(0,0,0,0.3)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,0.3)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all disabled:opacity-50"
           >
             {verifyMutation.isPending ? (
               <>

@@ -23,10 +23,10 @@ const statusIcons: Record<string, typeof Clock> = {
 };
 
 const statusColors: Record<string, string> = {
-  PENDING: "bg-yellow-500/10 text-yellow-600",
+  PENDING: "bg-warning-surface text-warning",
   ACCEPTED: "bg-primary/10 text-primary",
-  DECLINED: "bg-destructive/10 text-destructive",
-  COMPLETED: "bg-green-500/10 text-green-600",
+  DECLINED: "bg-danger-surface text-danger",
+  COMPLETED: "bg-success-surface text-success",
   CANCELLED: "bg-muted text-muted-foreground",
 };
 
@@ -158,7 +158,7 @@ export default function RequestsPage() {
                         return (
                           <span
                             className={`inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full font-medium ${
-                              expired ? "bg-destructive/10 text-destructive" : "bg-yellow-500/10 text-yellow-600"
+                              expired ? "bg-danger-surface text-danger" : "bg-warning-surface text-warning"
                             }`}
                           >
                             {expired
@@ -168,7 +168,7 @@ export default function RequestsPage() {
                         );
                       })()}
                       {(request as { sourceApp?: string | null }).sourceApp && (
-                        <span className="inline-flex items-center text-xs px-2 py-0.5 rounded-full font-medium bg-blue-500/10 text-blue-600">
+                        <span className="inline-flex items-center text-xs px-2 py-0.5 rounded-full font-medium bg-info-surface text-info">
                           {sourceAppLabels[(request as { sourceApp: string }).sourceApp] || (request as { sourceApp: string }).sourceApp}
                         </span>
                       )}
