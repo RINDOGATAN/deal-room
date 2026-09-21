@@ -3,11 +3,11 @@
 
 /**
  * The hosted pilot banner: present on hosted (both languages, with the
- * link to todo.law/run), absent on the kit, and mounted in the root layout
- * so it reaches every page.
+ * link to todo.law/run), absent on the kit, and mounted only in the
+ * signed-in (dashboard) layout: public pages carry no banner.
  */
 import { describe, it, expect } from "vitest";
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
 import { createElement, type ComponentType } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
@@ -77,12 +77,48 @@ describe("PilotBanner", () => {
     expect(render(false, "es")).toBe("");
   });
 
-  it("is mounted in the root layout, so it is on every page", () => {
-    const layout = readFileSync(
-      path.resolve(__dirname, "../../../app/layout.tsx"),
-      "utf8",
-    );
+  // Owner, 2026-09-21: the banner shows only once a person is signed in.
+  const src = (rel: string) => readFileSync(path.resolve(__dirname, "../../..", rel), "utf8");
+
+  it("is mounted in the signed-in (dashboard) layout", () => {
+    const layout = src("app/(dashboard)/layout.tsx");
     expect(layout).toContain('import { PilotBanner } from "@/components/pilot/PilotBanner"');
     expect(layout).toMatch(/<PilotBanner\s*\/>/);
+  });
+
+  it("is absent from the landing page, a docs page and the sign-in screen", () => {
+    for (const rel of [
+      "app/layout.tsx",
+      "app/page.tsx",
+      "landing/components/StartupProductPage.tsx",
+      "app/(public)/layout.tsx",
+      "app/(public)/docs/layout.tsx",
+      "app/(public)/docs/page.tsx",
+      "app/(auth)/layout.tsx",
+      "app/(auth)/sign-in/page.tsx",
+    ]) {
+      expect(src(rel), rel).not.toContain("PilotBanner");
+    }
+    // The quiet pilot sentence on the sign-in screen is not the banner and stays.
+    expect(src("app/(auth)/sign-in/page.tsx")).toMatch(/<PilotSignupNotice\s*\/>/);
+  });
+
+  it("is mounted nowhere outside the signed-in layout", () => {
+    const root = path.resolve(__dirname, "../../..");
+    const offenders: string[] = [];
+    const walk = (dir: string) => {
+      for (const entry of readdirSync(dir, { withFileTypes: true })) {
+        const full = path.join(dir, entry.name);
+        if (entry.isDirectory()) {
+          if (entry.name !== "__tests__" && entry.name !== "node_modules") walk(full);
+        } else if (/\.tsx?$/.test(entry.name) && !/\.test\.tsx?$/.test(entry.name)) {
+          const rel = path.relative(root, full);
+          if (rel === "components/pilot/PilotBanner.tsx") continue;
+          if (/<PilotBanner[\s/>]/.test(readFileSync(full, "utf8"))) offenders.push(rel);
+        }
+      }
+    };
+    walk(root);
+    expect(offenders).toEqual([path.join("app", "(dashboard)", "layout.tsx")]);
   });
 });

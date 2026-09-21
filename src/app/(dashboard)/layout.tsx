@@ -33,6 +33,7 @@ import { trpc } from "@/lib/trpc";
 import { FeedbackDialog } from "@/components/FeedbackDialog";
 import { OnboardingModal } from "@/components/OnboardingModal";
 import { TesterBar } from "@/components/TesterBar";
+import { PilotBanner } from "@/components/pilot/PilotBanner";
 import { UserRoleProvider } from "@/contexts/UserRoleContext";
 
 export default function DashboardLayout({
@@ -100,6 +101,9 @@ export default function DashboardLayout({
   return (
     <UserRoleProvider>
     <div className="min-h-screen bg-background">
+      {/* Hosted pilot notice, signed-in pages only: public pages carry no
+          banner. Renders nothing on the kit. */}
+      <PilotBanner />
       {/* Floating Glassmorphism Header */}
       <header className="sticky top-0 z-20 px-4 pt-3">
         <div className="max-w-7xl mx-auto bg-card/80 backdrop-blur-sm border border-border rounded-xl md:rounded-full px-4 md:px-6 py-3">

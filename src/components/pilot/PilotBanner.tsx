@@ -11,7 +11,8 @@ import { PILOT_RUN_URL } from "@/lib/pilot";
 export const PILOT_BANNER_DISMISS_KEY = "dealroom.pilotBannerDismissed";
 
 /**
- * One-line notice on every page of the hosted pilot, dismissible for the
+ * One-line notice on every signed-in page of the hosted pilot (mounted in
+ * the dashboard layout; public pages carry no banner), dismissible for the
  * browser session. Renders nothing on the kit. `hosted` exists for tests.
  */
 export function PilotBanner({ hosted = features.hostedPilot }: { hosted?: boolean }) {

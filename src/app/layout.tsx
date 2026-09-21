@@ -7,7 +7,6 @@ import "./globals.css";
 import { Providers } from "@/components/providers";
 import { Toaster } from "@/components/ui/sonner";
 import { LegalNotice } from "@/components/legal-notice";
-import { PilotBanner } from "@/components/pilot/PilotBanner";
 import { brand } from "@/config/brand";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
@@ -94,8 +93,6 @@ export default async function RootLayout({
       </head>
       <body className={`${inter.variable} ${dancingScript.variable} ${jost.variable} ${archivoBlack.variable} ${spaceMono.variable} font-sans antialiased min-h-screen flex flex-col`}>
         <NextIntlClientProvider messages={messages}>
-          {/* Hosted pilot notice on every page; renders nothing on the kit. */}
-          <PilotBanner />
           <Providers>
           {children}
           <Toaster />
