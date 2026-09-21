@@ -15,40 +15,16 @@ import {
 import { features } from "@/config/features";
 import { SPECIALIZATIONS, CERTIFICATIONS, EXPERT_TYPES } from "../services/experts/taxonomy";
 import { GoverningLaw } from "@prisma/client";
-import type { ExtendedPrismaClient } from "@/lib/prisma";
+import { requireAdminSecondFactor } from "../services/second-factor";
 
-// Helper to check 2FA and get admin record
-const requireVerified2FA = async (
-  email: string,
-  getCookie: (name: string) => string | undefined,
-  prisma: ExtendedPrismaClient
-) => {
-  const twoFactorVerified = getCookie("platform_admin_2fa_verified");
-  if (twoFactorVerified !== "true") {
-    throw new TRPCError({
-      code: "FORBIDDEN",
-      message: "2FA verification required",
-    });
-  }
-
-  const admin = await prisma.platformAdmin.findUnique({
-    where: { email: email.toLowerCase() },
-  });
-
-  if (!admin || !admin.isActive) {
-    throw new TRPCError({
-      code: "FORBIDDEN",
-      message: "Platform admin access required",
-    });
-  }
-
-  return admin;
-};
+// Helper to check 2FA (signed gate cookie, bound to this admin and sign-in)
+// and get the admin record
+const requireVerified2FA = requireAdminSecondFactor;
 
 export const platformAdminRouter = createTRPCRouter({
   // Dashboard stats
   getDashboardStats: adminProcedure.query(async ({ ctx }) => {
-    await requireVerified2FA(ctx.adminSession.email, ctx.getCookie, ctx.prisma);
+    await requireVerified2FA(ctx.adminSession, ctx.getCookie, ctx.prisma);
 
     const [
       customerCount,
@@ -94,7 +70,7 @@ export const platformAdminRouter = createTRPCRouter({
 
   // Supervisor management
   listSupervisors: adminProcedure.query(async ({ ctx }) => {
-    await requireVerified2FA(ctx.adminSession.email, ctx.getCookie, ctx.prisma);
+    await requireVerified2FA(ctx.adminSession, ctx.getCookie, ctx.prisma);
 
     return ctx.prisma.supervisor.findMany({
       orderBy: { createdAt: "desc" },
@@ -113,7 +89,7 @@ export const platformAdminRouter = createTRPCRouter({
       name: z.string().optional(),
     }))
     .mutation(async ({ ctx, input }) => {
-      await requireVerified2FA(ctx.adminSession.email, ctx.getCookie, ctx.prisma);
+      await requireVerified2FA(ctx.adminSession, ctx.getCookie, ctx.prisma);
 
       // Check if supervisor already exists
       const existing = await ctx.prisma.supervisor.findUnique({
@@ -141,7 +117,7 @@ export const platformAdminRouter = createTRPCRouter({
       isActive: z.boolean(),
     }))
     .mutation(async ({ ctx, input }) => {
-      await requireVerified2FA(ctx.adminSession.email, ctx.getCookie, ctx.prisma);
+      await requireVerified2FA(ctx.adminSession, ctx.getCookie, ctx.prisma);
 
       return ctx.prisma.supervisor.update({
         where: { id: input.supervisorId },
@@ -156,7 +132,7 @@ export const platformAdminRouter = createTRPCRouter({
       barNumber: z.string().min(1, "Bar number is required"),
     }))
     .mutation(async ({ ctx, input }) => {
-      await requireVerified2FA(ctx.adminSession.email, ctx.getCookie, ctx.prisma);
+      await requireVerified2FA(ctx.adminSession, ctx.getCookie, ctx.prisma);
 
       const existing = await ctx.prisma.supervisorBarAdmission.findUnique({
         where: {
@@ -186,7 +162,7 @@ export const platformAdminRouter = createTRPCRouter({
   removeBarAdmission: adminProcedure
     .input(z.object({ barAdmissionId: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      await requireVerified2FA(ctx.adminSession.email, ctx.getCookie, ctx.prisma);
+      await requireVerified2FA(ctx.adminSession, ctx.getCookie, ctx.prisma);
 
       const admission = await ctx.prisma.supervisorBarAdmission.findUnique({
         where: { id: input.barAdmissionId },
@@ -208,7 +184,7 @@ export const platformAdminRouter = createTRPCRouter({
 
   // Deal management (all deals)
   listAllDeals: adminProcedure.query(async ({ ctx }) => {
-    await requireVerified2FA(ctx.adminSession.email, ctx.getCookie, ctx.prisma);
+    await requireVerified2FA(ctx.adminSession, ctx.getCookie, ctx.prisma);
 
     return ctx.prisma.dealRoom.findMany({
       orderBy: { updatedAt: "desc" },
@@ -238,7 +214,7 @@ export const platformAdminRouter = createTRPCRouter({
       dealRoomId: z.string(),
     }))
     .mutation(async ({ ctx, input }) => {
-      const admin = await requireVerified2FA(ctx.adminSession.email, ctx.getCookie, ctx.prisma);
+      const admin = await requireVerified2FA(ctx.adminSession, ctx.getCookie, ctx.prisma);
 
       // Check if already assigned
       const existing = await ctx.prisma.supervisorAssignment.findUnique({
@@ -269,7 +245,7 @@ export const platformAdminRouter = createTRPCRouter({
   removeSupervisorAssignment: adminProcedure
     .input(z.object({ assignmentId: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      await requireVerified2FA(ctx.adminSession.email, ctx.getCookie, ctx.prisma);
+      await requireVerified2FA(ctx.adminSession, ctx.getCookie, ctx.prisma);
 
       return ctx.prisma.supervisorAssignment.delete({
         where: { id: input.assignmentId },
@@ -282,7 +258,7 @@ export const platformAdminRouter = createTRPCRouter({
       search: z.string().optional(),
     }))
     .query(async ({ ctx, input }) => {
-      await requireVerified2FA(ctx.adminSession.email, ctx.getCookie, ctx.prisma);
+      await requireVerified2FA(ctx.adminSession, ctx.getCookie, ctx.prisma);
 
       const where = input.search
         ? {
@@ -312,7 +288,7 @@ export const platformAdminRouter = createTRPCRouter({
       type: z.enum(["SAAS", "SELF_HOSTED"]),
     }))
     .mutation(async ({ ctx, input }) => {
-      await requireVerified2FA(ctx.adminSession.email, ctx.getCookie, ctx.prisma);
+      await requireVerified2FA(ctx.adminSession, ctx.getCookie, ctx.prisma);
 
       // Check if customer already exists
       const existing = await ctx.prisma.customer.findUnique({
@@ -341,7 +317,7 @@ export const platformAdminRouter = createTRPCRouter({
       customerId: z.string(),
     }))
     .query(async ({ ctx, input }) => {
-      await requireVerified2FA(ctx.adminSession.email, ctx.getCookie, ctx.prisma);
+      await requireVerified2FA(ctx.adminSession, ctx.getCookie, ctx.prisma);
 
       const customer = await ctx.prisma.customer.findUnique({
         where: { id: input.customerId },
@@ -377,7 +353,7 @@ export const platformAdminRouter = createTRPCRouter({
       expiresAt: z.string().datetime().optional(),
     }))
     .mutation(async ({ ctx, input }) => {
-      await requireVerified2FA(ctx.adminSession.email, ctx.getCookie, ctx.prisma);
+      await requireVerified2FA(ctx.adminSession, ctx.getCookie, ctx.prisma);
 
       // Check customer exists
       const customer = await ctx.prisma.customer.findUnique({
@@ -443,7 +419,7 @@ export const platformAdminRouter = createTRPCRouter({
       entitlementId: z.string(),
     }))
     .mutation(async ({ ctx, input }) => {
-      await requireVerified2FA(ctx.adminSession.email, ctx.getCookie, ctx.prisma);
+      await requireVerified2FA(ctx.adminSession, ctx.getCookie, ctx.prisma);
 
       const entitlement = await ctx.prisma.skillEntitlement.findUnique({
         where: { id: input.entitlementId },
@@ -466,7 +442,7 @@ export const platformAdminRouter = createTRPCRouter({
       entitlementId: z.string(),
     }))
     .mutation(async ({ ctx, input }) => {
-      await requireVerified2FA(ctx.adminSession.email, ctx.getCookie, ctx.prisma);
+      await requireVerified2FA(ctx.adminSession, ctx.getCookie, ctx.prisma);
 
       try {
         await reactivateEntitlement(input.entitlementId);
@@ -486,7 +462,7 @@ export const platformAdminRouter = createTRPCRouter({
       jurisdictions: z.array(z.string()).min(1, "At least one jurisdiction is required"),
     }))
     .mutation(async ({ ctx, input }) => {
-      await requireVerified2FA(ctx.adminSession.email, ctx.getCookie, ctx.prisma);
+      await requireVerified2FA(ctx.adminSession, ctx.getCookie, ctx.prisma);
 
       try {
         await updateEntitlementJurisdictions(input.entitlementId, input.jurisdictions);
@@ -501,7 +477,7 @@ export const platformAdminRouter = createTRPCRouter({
 
   // User management (read-only)
   listUsers: adminProcedure.query(async ({ ctx }) => {
-    await requireVerified2FA(ctx.adminSession.email, ctx.getCookie, ctx.prisma);
+    await requireVerified2FA(ctx.adminSession, ctx.getCookie, ctx.prisma);
 
     return ctx.prisma.user.findMany({
       orderBy: [
@@ -519,7 +495,7 @@ export const platformAdminRouter = createTRPCRouter({
 
   // Skill management
   listSkillPackages: adminProcedure.query(async ({ ctx }) => {
-    await requireVerified2FA(ctx.adminSession.email, ctx.getCookie, ctx.prisma);
+    await requireVerified2FA(ctx.adminSession, ctx.getCookie, ctx.prisma);
 
     return ctx.prisma.skillPackage.findMany({
       orderBy: { installedAt: "desc" },
@@ -533,7 +509,7 @@ export const platformAdminRouter = createTRPCRouter({
 
   // Analytics
   getAnalytics: adminProcedure.query(async ({ ctx }) => {
-    await requireVerified2FA(ctx.adminSession.email, ctx.getCookie, ctx.prisma);
+    await requireVerified2FA(ctx.adminSession, ctx.getCookie, ctx.prisma);
 
     const [
       totalDeals,
@@ -602,7 +578,7 @@ export const platformAdminRouter = createTRPCRouter({
   listApiKeys: adminProcedure
     .input(z.object({ customerId: z.string() }))
     .query(async ({ ctx, input }) => {
-      await requireVerified2FA(ctx.adminSession.email, ctx.getCookie, ctx.prisma);
+      await requireVerified2FA(ctx.adminSession, ctx.getCookie, ctx.prisma);
 
       return ctx.prisma.apiKey.findMany({
         where: { customerId: input.customerId },
@@ -628,7 +604,7 @@ export const platformAdminRouter = createTRPCRouter({
       expiresAt: z.string().datetime().optional(),
     }))
     .mutation(async ({ ctx, input }) => {
-      await requireVerified2FA(ctx.adminSession.email, ctx.getCookie, ctx.prisma);
+      await requireVerified2FA(ctx.adminSession, ctx.getCookie, ctx.prisma);
 
       const customer = await ctx.prisma.customer.findUnique({
         where: { id: input.customerId },
@@ -672,7 +648,7 @@ export const platformAdminRouter = createTRPCRouter({
   revokeApiKey: adminProcedure
     .input(z.object({ apiKeyId: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      await requireVerified2FA(ctx.adminSession.email, ctx.getCookie, ctx.prisma);
+      await requireVerified2FA(ctx.adminSession, ctx.getCookie, ctx.prisma);
 
       const apiKey = await ctx.prisma.apiKey.findUnique({
         where: { id: input.apiKeyId },
@@ -696,7 +672,7 @@ export const platformAdminRouter = createTRPCRouter({
   deleteApiKey: adminProcedure
     .input(z.object({ apiKeyId: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      await requireVerified2FA(ctx.adminSession.email, ctx.getCookie, ctx.prisma);
+      await requireVerified2FA(ctx.adminSession, ctx.getCookie, ctx.prisma);
 
       const apiKey = await ctx.prisma.apiKey.findUnique({
         where: { id: input.apiKeyId },
@@ -723,7 +699,7 @@ export const platformAdminRouter = createTRPCRouter({
   listInviteCodes: adminProcedure
     .input(z.object({ customerId: z.string() }))
     .query(async ({ ctx, input }) => {
-      await requireVerified2FA(ctx.adminSession.email, ctx.getCookie, ctx.prisma);
+      await requireVerified2FA(ctx.adminSession, ctx.getCookie, ctx.prisma);
 
       if (!features.inviteCodeAuth) {
         throw new TRPCError({
@@ -748,7 +724,7 @@ export const platformAdminRouter = createTRPCRouter({
       customerId: z.string(),
     }))
     .mutation(async ({ ctx, input }) => {
-      await requireVerified2FA(ctx.adminSession.email, ctx.getCookie, ctx.prisma);
+      await requireVerified2FA(ctx.adminSession, ctx.getCookie, ctx.prisma);
 
       if (!features.inviteCodeAuth) {
         throw new TRPCError({
@@ -786,7 +762,7 @@ export const platformAdminRouter = createTRPCRouter({
   // ────────────────────────────────────────────────────────────
 
   listExpertProfiles: adminProcedure.query(async ({ ctx }) => {
-    await requireVerified2FA(ctx.adminSession.email, ctx.getCookie, ctx.prisma);
+    await requireVerified2FA(ctx.adminSession, ctx.getCookie, ctx.prisma);
 
     return ctx.prisma.lawyerProfile.findMany({
       orderBy: { createdAt: "desc" },
@@ -809,7 +785,7 @@ export const platformAdminRouter = createTRPCRouter({
   getExpertProfile: adminProcedure
     .input(z.object({ userId: z.string() }))
     .query(async ({ ctx, input }) => {
-      await requireVerified2FA(ctx.adminSession.email, ctx.getCookie, ctx.prisma);
+      await requireVerified2FA(ctx.adminSession, ctx.getCookie, ctx.prisma);
 
       const profile = await ctx.prisma.lawyerProfile.findUnique({
         where: { userId: input.userId },
@@ -854,7 +830,7 @@ export const platformAdminRouter = createTRPCRouter({
       acceptingClients: z.boolean().default(true),
     }))
     .mutation(async ({ ctx, input }) => {
-      await requireVerified2FA(ctx.adminSession.email, ctx.getCookie, ctx.prisma);
+      await requireVerified2FA(ctx.adminSession, ctx.getCookie, ctx.prisma);
 
       // Ensure the user exists
       const user = await ctx.prisma.user.findUnique({
@@ -904,7 +880,7 @@ export const platformAdminRouter = createTRPCRouter({
   deleteExpertProfile: adminProcedure
     .input(z.object({ userId: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      await requireVerified2FA(ctx.adminSession.email, ctx.getCookie, ctx.prisma);
+      await requireVerified2FA(ctx.adminSession, ctx.getCookie, ctx.prisma);
 
       const profile = await ctx.prisma.lawyerProfile.findUnique({
         where: { userId: input.userId },
@@ -941,7 +917,7 @@ export const platformAdminRouter = createTRPCRouter({
   getCustomerUsage: adminProcedure
     .input(z.object({ customerId: z.string() }))
     .query(async ({ ctx, input }) => {
-      await requireVerified2FA(ctx.adminSession.email, ctx.getCookie, ctx.prisma);
+      await requireVerified2FA(ctx.adminSession, ctx.getCookie, ctx.prisma);
 
       const usages = await ctx.prisma.negotiationUsage.findMany({
         where: { customerId: input.customerId },
@@ -976,7 +952,7 @@ export const platformAdminRouter = createTRPCRouter({
   // ────────────────────────────────────────────────────────────
 
   getRevenueReport: adminProcedure.query(async ({ ctx }) => {
-    await requireVerified2FA(ctx.adminSession.email, ctx.getCookie, ctx.prisma);
+    await requireVerified2FA(ctx.adminSession, ctx.getCookie, ctx.prisma);
 
     const [events, totalByType, totalBySkill] = await Promise.all([
       ctx.prisma.revenueEvent.findMany({

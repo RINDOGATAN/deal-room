@@ -32,6 +32,11 @@ vi.mock("next/headers", () => ({
   cookies: async () => ({ get: mockCookieGet }),
 }));
 
+// The attempt counter is DB-backed; these tests never reach a code check.
+vi.mock("@/server/middleware/apiKeyAuth", () => ({
+  claimSlot: async () => ({ allowed: true, remaining: 9 }),
+}));
+
 const mockPlatformAdminFindUnique = vi.fn();
 const mockSupervisorFindUnique = vi.fn();
 vi.mock("@/lib/prisma", () => ({
@@ -66,11 +71,17 @@ function hasGateCookie(res: Response, name: string): boolean {
 describe("platform-admin-2fa-verify negative branches", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mockGetServerSession.mockResolvedValue({ user: { email: "admin@example.test" } });
+    process.env.NEXTAUTH_SECRET = "test-secret";
+    mockCookieGet.mockReturnValue({ value: "admin-session-token" });
+    mockJwtDecode.mockResolvedValue({
+      adminId: "admin1",
+      email: "admin@example.test",
+      sid: "sign-in-1",
+    });
   });
 
   it("rejects when there is no first-factor admin session, before hitting the DB", async () => {
-    mockGetServerSession.mockResolvedValue(null);
+    mockCookieGet.mockReturnValue(undefined);
     const res = await adminVerifyPOST(
       post("/api/platform-admin-2fa-verify", { code: WELL_FORMED_CODE }),
     );
@@ -122,7 +133,11 @@ describe("supervisor-2fa-verify negative branches", () => {
     vi.clearAllMocks();
     mockCookieGet.mockReturnValue({ value: "supervisor-session-token" });
     process.env.NEXTAUTH_SECRET = "test-secret";
-    mockJwtDecode.mockResolvedValue({ supervisorId: "sup1", email: "sup@example.test" });
+    mockJwtDecode.mockResolvedValue({
+      supervisorId: "sup1",
+      email: "sup@example.test",
+      sid: "sign-in-1",
+    });
   });
 
   it("rejects when the supervisor_session cookie is missing, before hitting the DB", async () => {

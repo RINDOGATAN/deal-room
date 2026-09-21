@@ -11,6 +11,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { readSupervisorSession } from "@/lib/portal-session";
+import { SECOND_FACTOR_COOKIE, verifySecondFactor } from "@/lib/portal-2fa";
 import prisma from "@/lib/prisma";
 import { renderToBuffer } from "@react-pdf/renderer";
 import {
@@ -34,6 +35,17 @@ export async function GET(
 
     if (!supervisorSession) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    // The second factor gates the portal's pages; it gates its documents too.
+    const secondFactor = await verifySecondFactor(
+      "supervisor",
+      supervisorSession.supervisorId,
+      supervisorSession.sid,
+      cookieStore.get(SECOND_FACTOR_COOKIE.supervisor)?.value
+    );
+    if (!secondFactor) {
+      return NextResponse.json({ error: "2FA verification required" }, { status: 403 });
     }
 
     // Verify supervisor is active

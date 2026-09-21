@@ -7,7 +7,12 @@ import { ZodError } from "zod";
 import { getServerSession, type Session } from "next-auth";
 import { cookies } from "next/headers";
 import { authOptions } from "@/lib/auth";
-import { readAdminSession, readSupervisorSession } from "@/lib/portal-session";
+import {
+  readAdminSession,
+  readSupervisorSession,
+  type AdminPortalSession,
+  type SupervisorPortalSession,
+} from "@/lib/portal-session";
 import prisma from "@/lib/prisma";
 import { formatUserError } from "@/lib/format-error";
 import { features } from "@/config/features";
@@ -16,8 +21,8 @@ import { PilotCapError, assertPilotCanEdit } from "@/server/services/pilot";
 
 interface CreateContextOptions {
   session: Session | null;
-  adminSession: { email: string; adminId: string } | null;
-  supervisorSession: { email: string; supervisorId: string } | null;
+  adminSession: AdminPortalSession | null;
+  supervisorSession: SupervisorPortalSession | null;
   getCookie: (name: string) => string | undefined;
 }
 

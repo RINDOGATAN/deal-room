@@ -43,8 +43,23 @@ async function decodePortalToken(
   }
 }
 
-export type AdminPortalSession = { email: string; adminId: string };
-export type SupervisorPortalSession = { email: string; supervisorId: string };
+/**
+ * `sid` identifies one sign-in: a random id stamped into the token by the
+ * portal's jwt callback and carried unchanged through re-issues. The second
+ * factor is bound to it (portal-2fa.ts). Null on a token that has none, in
+ * which case no second factor can verify.
+ */
+export type AdminPortalSession = { email: string; adminId: string; sid: string | null };
+export type SupervisorPortalSession = { email: string; supervisorId: string; sid: string | null };
+
+/** A fresh session id, for the jwt callbacks at sign-in. */
+export function newPortalSessionId(): string {
+  return crypto.randomUUID();
+}
+
+function sidOf(decoded: JWT): string | null {
+  return typeof decoded.sid === "string" && decoded.sid ? decoded.sid : null;
+}
 
 export async function readAdminSession(
   token: string | undefined
@@ -53,7 +68,7 @@ export async function readAdminSession(
   if (typeof decoded?.email !== "string" || typeof decoded?.adminId !== "string") {
     return null;
   }
-  return { email: decoded.email, adminId: decoded.adminId };
+  return { email: decoded.email, adminId: decoded.adminId, sid: sidOf(decoded) };
 }
 
 export async function readSupervisorSession(
@@ -63,5 +78,5 @@ export async function readSupervisorSession(
   if (typeof decoded?.email !== "string" || typeof decoded?.supervisorId !== "string") {
     return null;
   }
-  return { email: decoded.email, supervisorId: decoded.supervisorId };
+  return { email: decoded.email, supervisorId: decoded.supervisorId, sid: sidOf(decoded) };
 }

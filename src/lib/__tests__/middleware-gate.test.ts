@@ -6,6 +6,7 @@ import { encode, type JWT } from "next-auth/jwt";
 import { NextRequest } from "next/server";
 import { middleware } from "../../../middleware";
 import { ADMIN_PORTAL_SALT, SUPERVISOR_PORTAL_SALT } from "@/lib/portal-session";
+import { issueSecondFactor } from "@/lib/portal-2fa";
 
 const SECRET = "test-secret-for-middleware-gate";
 
@@ -31,7 +32,12 @@ let supervisorSession = "";
 beforeAll(async () => {
   process.env.NEXTAUTH_SECRET = SECRET;
   adminSession = await encode({
-    token: { sub: "admin-1", adminId: "admin-1", email: "owner@example.test" } as unknown as JWT,
+    token: {
+      sub: "admin-1",
+      adminId: "admin-1",
+      email: "owner@example.test",
+      sid: "sign-in-1",
+    } as unknown as JWT,
     secret: SECRET,
     salt: ADMIN_PORTAL_SALT,
   });
@@ -119,12 +125,21 @@ describe("middleware gate, 2FA", () => {
   });
 
   it("lets a fully verified admin through without rewriting currency", async () => {
+    const secondFactor = await issueSecondFactor("admin", "admin-1", "sign-in-1");
     const res = await run(
       "/admin/users",
-      `currency=EUR; admin_session=${adminSession}; platform_admin_2fa_verified=true`,
+      `currency=EUR; admin_session=${adminSession}; platform_admin_2fa_verified=${secondFactor}`,
     );
     expect(res.headers.get("x-middleware-next")).toBe("1");
     expect(setsCurrency(res)).toBe(false);
+  });
+
+  it("does not accept the old hand-settable value", async () => {
+    const res = await run(
+      "/admin/users",
+      `admin_session=${adminSession}; platform_admin_2fa_verified=true`,
+    );
+    expect(redirectTarget(res)).toBe("/admin/verify");
   });
 });
 

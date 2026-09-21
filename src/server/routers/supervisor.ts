@@ -4,41 +4,17 @@
 import { z } from "zod";
 import { createTRPCRouter, supervisorProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
-import type { ExtendedPrismaClient } from "@/lib/prisma";
+import { requireSupervisorSecondFactor } from "../services/second-factor";
 
-// Helper to check 2FA and get supervisor record
-const requireVerified2FA = async (
-  email: string,
-  getCookie: (name: string) => string | undefined,
-  prisma: ExtendedPrismaClient
-) => {
-  const twoFactorVerified = getCookie("supervisor_2fa_verified");
-  if (twoFactorVerified !== "true") {
-    throw new TRPCError({
-      code: "FORBIDDEN",
-      message: "2FA verification required",
-    });
-  }
-
-  const supervisor = await prisma.supervisor.findUnique({
-    where: { email: email.toLowerCase() },
-  });
-
-  if (!supervisor || !supervisor.isActive) {
-    throw new TRPCError({
-      code: "FORBIDDEN",
-      message: "Supervisor access required",
-    });
-  }
-
-  return supervisor;
-};
+// Helper to check 2FA (signed gate cookie, bound to this supervisor and
+// sign-in) and get supervisor record
+const requireVerified2FA = requireSupervisorSecondFactor;
 
 export const supervisorRouter = createTRPCRouter({
   // Get deals assigned to the current supervisor
   getAssignedDeals: supervisorProcedure.query(async ({ ctx }) => {
     const supervisor = await requireVerified2FA(
-      ctx.supervisorSession.email,
+      ctx.supervisorSession,
       ctx.getCookie,
       ctx.prisma
     );
@@ -104,7 +80,7 @@ export const supervisorRouter = createTRPCRouter({
     .input(z.object({ dealId: z.string() }))
     .query(async ({ ctx, input }) => {
       const supervisor = await requireVerified2FA(
-        ctx.supervisorSession.email,
+        ctx.supervisorSession,
         ctx.getCookie,
         ctx.prisma
       );
@@ -229,7 +205,7 @@ export const supervisorRouter = createTRPCRouter({
     .input(z.object({ dealRoomId: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const supervisor = await requireVerified2FA(
-        ctx.supervisorSession.email,
+        ctx.supervisorSession,
         ctx.getCookie,
         ctx.prisma
       );
@@ -284,7 +260,7 @@ export const supervisorRouter = createTRPCRouter({
     .input(z.object({ dealId: z.string() }))
     .query(async ({ ctx, input }) => {
       const supervisor = await requireVerified2FA(
-        ctx.supervisorSession.email,
+        ctx.supervisorSession,
         ctx.getCookie,
         ctx.prisma
       );

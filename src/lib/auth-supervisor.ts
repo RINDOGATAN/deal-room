@@ -8,7 +8,11 @@ import { PrismaClient } from "@prisma/client";
 import { createSupervisorAdapter } from "./supervisor-adapter";
 import { brand } from "@/config/brand";
 import { createLogger } from "@/lib/logger";
-import { SUPERVISOR_PORTAL_SALT, portalJwtOptions } from "@/lib/portal-session";
+import {
+  SUPERVISOR_PORTAL_SALT,
+  newPortalSessionId,
+  portalJwtOptions,
+} from "@/lib/portal-session";
 
 const logger = createLogger("auth-supervisor");
 
@@ -106,6 +110,8 @@ export const supervisorAuthOptions: NextAuthOptions = {
           token.supervisorId = supervisor.id;
           token.email = supervisor.email;
           token.name = supervisor.name;
+          // One id per sign-in; the second-factor cookie is bound to it.
+          token.sid = newPortalSessionId();
         }
       }
       // On subsequent requests the token is returned as issued. `supervisorId`

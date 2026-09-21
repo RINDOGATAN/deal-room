@@ -4,6 +4,7 @@ import { localeCleanupSetCookies } from "@/lib/locale-cookie";
 import { currencyForCountry } from "@/lib/currency";
 import { isHostedPilotEnv } from "@/lib/pilot";
 import { readAdminSession, readSupervisorSession } from "@/lib/portal-session";
+import { SECOND_FACTOR_COOKIE, verifySecondFactor } from "@/lib/portal-2fa";
 
 export async function middleware(request: NextRequest) {
   const response = await route(request);
@@ -82,9 +83,15 @@ async function gate(request: NextRequest) {
       return NextResponse.redirect(new URL("/supervise/sign-in", request.url));
     }
 
-    // Check for 2FA verification cookie
-    const supervisor2FA = request.cookies.get("supervisor_2fa_verified");
-    if (supervisor2FA?.value !== "true") {
+    // The 2FA cookie must be the signed value issued for this supervisor and
+    // this sign-in, not yet expired.
+    const supervisor2FA = await verifySecondFactor(
+      "supervisor",
+      supervisorSession.supervisorId,
+      supervisorSession.sid,
+      request.cookies.get(SECOND_FACTOR_COOKIE.supervisor)?.value
+    );
+    if (!supervisor2FA) {
       return NextResponse.redirect(new URL("/supervise/verify", request.url));
     }
   }
@@ -108,9 +115,15 @@ async function gate(request: NextRequest) {
       return NextResponse.redirect(new URL("/admin/sign-in", request.url));
     }
 
-    // Check for 2FA verification cookie
-    const admin2FA = request.cookies.get("platform_admin_2fa_verified");
-    if (admin2FA?.value !== "true") {
+    // The 2FA cookie must be the signed value issued for this admin and this
+    // sign-in, not yet expired.
+    const admin2FA = await verifySecondFactor(
+      "admin",
+      adminSession.adminId,
+      adminSession.sid,
+      request.cookies.get(SECOND_FACTOR_COOKIE.admin)?.value
+    );
+    if (!admin2FA) {
       return NextResponse.redirect(new URL("/admin/verify", request.url));
     }
   }

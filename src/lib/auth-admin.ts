@@ -8,7 +8,7 @@ import { PrismaClient } from "@prisma/client";
 import { createAdminAdapter } from "./admin-adapter";
 import { brand } from "@/config/brand";
 import { createLogger } from "@/lib/logger";
-import { ADMIN_PORTAL_SALT, portalJwtOptions } from "@/lib/portal-session";
+import { ADMIN_PORTAL_SALT, newPortalSessionId, portalJwtOptions } from "@/lib/portal-session";
 
 const logger = createLogger("auth-admin");
 
@@ -126,6 +126,8 @@ export const adminAuthOptions: NextAuthOptions = {
           token.adminId = admin.id;
           token.email = admin.email;
           token.name = admin.name;
+          // One id per sign-in; the second-factor cookie is bound to it.
+          token.sid = newPortalSessionId();
         }
       }
       // On subsequent requests the token is returned as issued. `adminId` is

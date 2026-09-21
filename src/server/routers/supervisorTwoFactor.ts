@@ -9,6 +9,7 @@ import {
   generateSupervisorQRCode,
   verifySupervisorToken,
 } from "@/lib/totp-supervisor";
+import { claimSecondFactorAttempt } from "../services/second-factor";
 
 export const supervisorTwoFactorRouter = createTRPCRouter({
   // Get 2FA status for current supervisor
@@ -100,6 +101,16 @@ export const supervisorTwoFactorRouter = createTRPCRouter({
         throw new TRPCError({
           code: "NOT_FOUND",
           message: "2FA not setup. Call setup first.",
+        });
+      }
+
+      // This answer tells the caller whether a code is right, so it shares
+      // the attempt limit with the route that sets the gate cookie.
+      const attempt = await claimSecondFactorAttempt("supervisor", supervisor.id);
+      if (!attempt.allowed) {
+        throw new TRPCError({
+          code: "TOO_MANY_REQUESTS",
+          message: "Too many verification attempts. Please wait and try again.",
         });
       }
 
