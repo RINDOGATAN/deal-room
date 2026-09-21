@@ -7,7 +7,7 @@
   "hero.title.accent": "",
   "hero.title.suffix": "",
   "hero.subtitle": "Stop emailing Word files back and forth. Move on from risky templates. Negotiate contracts on a secure platform that finds the optimal compromise for both parties — powered by AI.",
-  "hero.cta": "Start the Free Pilot",
+  "hero.cta": "Get Started Free",
   "hero.cta.subtitle": "Stop emailing Word files back and forth. Move on from risky templates.",
   "hero.login": "Already have an account? Log in",
   "hero.platform_url": "https://dealroom.todo.law",
@@ -78,8 +78,7 @@
   "cta.heading.prefix": "Ready to close your next ",
   "cta.heading.accent": "deal",
   "cta.heading.suffix": "?",
-  "cta.text": "Try it on the free hosted pilot, with limits and no security certification. For real client data, run your own instance, where premium skills are $60 a year each in the kit.",
-  "cta.textEur": "Try it on the free hosted pilot, with limits and no security certification. For real client data, run your own instance, where premium skills are €60 a year each in the kit.",
+  "cta.text": "Start negotiating smarter today. Free for startups.",
   "cta.button": "Launch Dealroom",
 
   "footer.tagline": "Contract negotiation platform",
