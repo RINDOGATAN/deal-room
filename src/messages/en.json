@@ -91,7 +91,6 @@
   },
   "pilot": {
     "banner": "Hosted pilot: free, capped, and with no contractual safeguards. 90 days of editing from your first sign-in, then read-only with export. To deploy real customer details, <run>run your own instance</run>.",
-    "dismiss": "Dismiss",
     "settingsTitle": "Settings",
     "settingsNav": "Settings",
     "sectionTitle": "Hosted pilot",

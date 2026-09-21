@@ -91,7 +91,6 @@
   },
   "pilot": {
     "banner": "Piloto alojado: gratuito, limitado y sin garantías contractuales. 90 días de edición desde tu primer inicio de sesión; después, solo lectura con exportación. Para manejar datos reales de clientes, <run>usa tu propia instancia</run>.",
-    "dismiss": "Cerrar",
     "settingsTitle": "Ajustes",
     "settingsNav": "Ajustes",
     "sectionTitle": "Piloto alojado",
