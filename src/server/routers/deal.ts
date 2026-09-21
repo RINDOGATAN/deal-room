@@ -324,6 +324,21 @@ export const dealRouter = createTRPCRouter({
       // Get current user's party role
       const currentParty = dealRoom.parties.find((p) => p.userId === userId);
 
+      // Privacy: a party's option, priority, flexibility and notes are theirs
+      // alone until both parties have submitted (the same rule as
+      // selections.getForClause). Until then return only the caller's own.
+      const bothSubmitted = dealRoom.parties.every(
+        (p) =>
+          p.status === PartyStatus.SUBMITTED ||
+          p.status === PartyStatus.REVIEWING ||
+          p.status === PartyStatus.ACCEPTED
+      );
+      if (!bothSubmitted) {
+        for (const clause of dealRoom.clauses) {
+          clause.selections = clause.selections.filter((s) => s.partyId === currentParty?.id);
+        }
+      }
+
       return {
         ...dealRoom,
         currentUserRole: currentParty?.role,
@@ -761,6 +776,15 @@ export const dealRouter = createTRPCRouter({
         throw new TRPCError({
           code: "NOT_FOUND",
           message: "Deal room not found",
+        });
+      }
+
+      // Check if user has access
+      const isParty = dealRoom.parties.some((p) => p.userId === ctx.session.user.id);
+      if (!isParty) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "You do not have access to this deal room",
         });
       }
 
