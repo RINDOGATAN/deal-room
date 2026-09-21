@@ -308,16 +308,7 @@ export const skillsRouter = createTRPCRouter({
       return template.clauses.map((c) => c.category);
     }),
 
-  // Sync skills from filesystem (admin only - for development)
-  sync: protectedProcedure.mutation(async ({ ctx }) => {
-    // In production, this would be an admin-only operation
-    // For now, we'll call the skill loader
-    const { syncSkillsToDatabase } = await import(
-      "@/server/services/skills/loader"
-    );
-
-    const result = await syncSkillsToDatabase(ctx.prisma);
-
-    return result;
-  }),
+  // No catalogue sync over the API. The catalogue is refreshed by the seed
+  // (`prisma db seed`, and the sovereign migrator on every boot), which
+  // reconciles instead of deleting clause templates.
 });
