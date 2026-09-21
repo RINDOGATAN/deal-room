@@ -3,10 +3,17 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
-import { decode } from "next-auth/jwt";
+import { readSupervisorSession } from "@/lib/portal-session";
 import prisma from "@/lib/prisma";
 import { apiError } from "@/lib/api-response";
 import { verifySupervisorToken } from "@/lib/totp-supervisor";
+import {
+  SECOND_FACTOR_COOKIE,
+  SECOND_FACTOR_MAX_AGE_SECONDS,
+  issueSecondFactor,
+} from "@/lib/portal-2fa";
+import { claimSecondFactorAttempt } from "@/server/services/second-factor";
+import { tooManyRequests } from "@/server/middleware/public-rate-limit";
 
 export async function POST(request: NextRequest) {
   try {
@@ -24,30 +31,19 @@ export async function POST(request: NextRequest) {
     }
 
     const cookieStore = await cookies();
-    const supervisorToken = cookieStore.get("supervisor_session")?.value;
+    // Only a token issued by the supervisor sign-in reads as a session.
+    const supervisorSession = await readSupervisorSession(
+      cookieStore.get("supervisor_session")?.value
+    );
 
-    if (!supervisorToken) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    let supervisorId: string | null = null;
-    try {
-      const decoded = await decode({
-        token: supervisorToken,
-        secret: process.env.NEXTAUTH_SECRET!,
-      });
-      supervisorId = (decoded?.supervisorId as string) ?? (decoded?.sub as string) ?? null;
-    } catch {
-      return NextResponse.json({ error: "Invalid session" }, { status: 401 });
-    }
-
-    if (!supervisorId) {
+    // The gate is bound to the sign-in, so a session without an id cannot pass it.
+    if (!supervisorSession?.sid) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     // Get supervisor by ID
     const supervisor = await prisma.supervisor.findUnique({
-      where: { id: supervisorId },
+      where: { id: supervisorSession.supervisorId },
       include: { twoFactorSecret: true },
     });
 
@@ -60,6 +56,11 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "2FA not verified" }, { status: 400 });
     }
 
+    // A six-digit code can be guessed: limit the tries per supervisor. Fails
+    // closed (the throw lands in apiError) if the counter is unavailable.
+    const attempt = await claimSecondFactorAttempt("supervisor", supervisor.id);
+    if (!attempt.allowed) return tooManyRequests(attempt);
+
     // Verify the TOTP code against the stored secret before granting the gate
     if (!verifySupervisorToken(supervisor.twoFactorSecret.secret, code)) {
       return NextResponse.json({ error: "Invalid verification code" }, { status: 401 });
@@ -67,14 +68,19 @@ export async function POST(request: NextRequest) {
 
     const response = NextResponse.json({ success: true });
 
-    // Set secure httpOnly cookie that expires in 4 hours
-    response.cookies.set("supervisor_2fa_verified", "true", {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      maxAge: 4 * 60 * 60, // 4 hours in seconds
-      path: "/",
-    });
+    // Signed, bound to this supervisor and this sign-in, expiry inside the
+    // signature (4 hours). httpOnly as before.
+    response.cookies.set(
+      SECOND_FACTOR_COOKIE.supervisor,
+      await issueSecondFactor("supervisor", supervisor.id, supervisorSession.sid),
+      {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        maxAge: SECOND_FACTOR_MAX_AGE_SECONDS,
+        path: "/",
+      }
+    );
 
     return response;
   } catch (error) {
@@ -86,7 +92,7 @@ export async function DELETE() {
   const response = NextResponse.json({ success: true });
 
   // Clear the 2FA verification cookie
-  response.cookies.delete("supervisor_2fa_verified");
+  response.cookies.delete(SECOND_FACTOR_COOKIE.supervisor);
 
   return response;
 }

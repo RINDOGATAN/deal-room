@@ -32,6 +32,12 @@ vi.mock("next/headers", () => ({
   cookies: async () => ({ get: mockCookieGet }),
 }));
 
+// The attempt counter is DB-backed; these tests are about the code check.
+const mockClaimSlot = vi.fn();
+vi.mock("@/server/middleware/apiKeyAuth", () => ({
+  claimSlot: (...args: unknown[]) => mockClaimSlot(...args),
+}));
+
 const mockPlatformAdminFindUnique = vi.fn();
 const mockSupervisorFindUnique = vi.fn();
 vi.mock("@/lib/prisma", () => ({
@@ -81,7 +87,14 @@ function gateCookie(res: Response, name: string): string | undefined {
 describe("platform-admin-2fa-verify", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mockGetServerSession.mockResolvedValue({ user: { email: "admin@example.test" } });
+    process.env.NEXTAUTH_SECRET = "test-secret";
+    mockClaimSlot.mockResolvedValue({ allowed: true, remaining: 9 });
+    mockCookieGet.mockReturnValue({ value: "admin-session-token" });
+    mockJwtDecode.mockResolvedValue({
+      adminId: "admin1",
+      email: "admin@example.test",
+      sid: "sign-in-1",
+    });
     mockPlatformAdminFindUnique.mockResolvedValue({
       id: "admin1",
       isActive: true,
@@ -120,7 +133,13 @@ describe("supervisor-2fa-verify", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mockCookieGet.mockReturnValue({ value: "supervisor-session-token" });
-    mockJwtDecode.mockResolvedValue({ supervisorId: "sup1" });
+    process.env.NEXTAUTH_SECRET = "test-secret";
+    mockClaimSlot.mockResolvedValue({ allowed: true, remaining: 9 });
+    mockJwtDecode.mockResolvedValue({
+      supervisorId: "sup1",
+      email: "sup@example.test",
+      sid: "sign-in-1",
+    });
     mockSupervisorFindUnique.mockResolvedValue({
       id: "sup1",
       isActive: true,

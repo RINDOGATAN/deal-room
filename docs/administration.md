@@ -340,6 +340,8 @@ Routes are protected via Next.js middleware:
 - `/supervise/*` requires `supervisor_session` + `supervisor_2fa_verified`
 - Auth pages (`/sign-in`, `/verify`, `/verify-request`) are excluded
 
+The three sign-ins share `NEXTAUTH_SECRET`, but each privileged portal derives its own token key (`src/lib/portal-session.ts`), so a token issued by one sign-in does not decode in another portal's cookie. The 2FA cookies are not flags: each holds a signed value bound to the admin or supervisor id and to the sign-in it was issued for, with its four-hour expiry inside the signature (`src/lib/portal-2fa.ts`). The middleware, both tRPC routers and the supervisor document routes verify it with the same helper. TOTP checks are limited to ten per account per fifteen minutes.
+
 ---
 
 ## CLI Commands

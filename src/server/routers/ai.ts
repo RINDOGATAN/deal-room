@@ -25,6 +25,7 @@ import {
   adminProcedure,
 } from "../trpc";
 import { getAIProviderName, isAIConfigured, type AiLane } from "../services/ai/llm-door";
+import { requireAdminSecondFactor } from "../services/second-factor";
 import {
   AI_RATE_LIMIT_PER_HOUR,
   AI_SETTINGS_SINGLETON_ID,
@@ -92,6 +93,8 @@ export const aiRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
+      await requireAdminSecondFactor(ctx.adminSession, ctx.getCookie, ctx.prisma);
+
       const now = new Date();
       const settings = await ctx.prisma.aiSettings.upsert({
         where: { id: AI_SETTINGS_SINGLETON_ID },
@@ -133,6 +136,8 @@ export const aiRouter = createTRPCRouter({
       })
     )
     .query(async ({ ctx, input }) => {
+      await requireAdminSecondFactor(ctx.adminSession, ctx.getCookie, ctx.prisma);
+
       return ctx.prisma.aiGeneration.findMany({
         include: {
           user: { select: { id: true, name: true, email: true } },

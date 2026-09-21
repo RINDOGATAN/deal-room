@@ -3,9 +3,11 @@ import type { NextRequest } from "next/server";
 import { localeCleanupSetCookies } from "@/lib/locale-cookie";
 import { currencyForCountry } from "@/lib/currency";
 import { isHostedPilotEnv } from "@/lib/pilot";
+import { readAdminSession, readSupervisorSession } from "@/lib/portal-session";
+import { SECOND_FACTOR_COOKIE, verifySecondFactor } from "@/lib/portal-2fa";
 
-export function middleware(request: NextRequest) {
-  const response = route(request);
+export async function middleware(request: NextRequest) {
+  const response = await route(request);
 
   // Collapse duplicate / legacy language cookies into the single shared
   // `locale` cookie. Never writes a default when the visitor has not chosen.
@@ -19,10 +21,10 @@ export function middleware(request: NextRequest) {
   return response;
 }
 
-function route(request: NextRequest) {
+async function route(request: NextRequest) {
   // The access checks decide the response first, so no visitor (not even
   // one on a first request, with no cookies yet) can skip them.
-  const response = gate(request);
+  const response = await gate(request);
 
   // Set currency cookie based on geo-IP (a known non-US country → EUR,
   // otherwise USD), on whatever response the gate produced, redirects included.
@@ -53,7 +55,7 @@ function hostedPilot() {
   });
 }
 
-function gate(request: NextRequest) {
+async function gate(request: NextRequest) {
   const path = request.nextUrl.pathname;
 
   if ((path === "/billing" || path.startsWith("/billing/")) && hostedPilot()) {
@@ -72,15 +74,24 @@ function gate(request: NextRequest) {
       return NextResponse.next();
     }
 
-    // Check for supervisor session cookie
-    const supervisorSession = request.cookies.get("supervisor_session");
+    // A supervisor session is a token issued by the supervisor sign-in. A
+    // missing cookie, or a token from another portal, goes to sign-in.
+    const supervisorSession = await readSupervisorSession(
+      request.cookies.get("supervisor_session")?.value
+    );
     if (!supervisorSession) {
       return NextResponse.redirect(new URL("/supervise/sign-in", request.url));
     }
 
-    // Check for 2FA verification cookie
-    const supervisor2FA = request.cookies.get("supervisor_2fa_verified");
-    if (supervisor2FA?.value !== "true") {
+    // The 2FA cookie must be the signed value issued for this supervisor and
+    // this sign-in, not yet expired.
+    const supervisor2FA = await verifySecondFactor(
+      "supervisor",
+      supervisorSession.supervisorId,
+      supervisorSession.sid,
+      request.cookies.get(SECOND_FACTOR_COOKIE.supervisor)?.value
+    );
+    if (!supervisor2FA) {
       return NextResponse.redirect(new URL("/supervise/verify", request.url));
     }
   }
@@ -97,15 +108,22 @@ function gate(request: NextRequest) {
       return NextResponse.next();
     }
 
-    // Check for admin session cookie
-    const adminSession = request.cookies.get("admin_session");
+    // An admin session is a token issued by the admin sign-in. A missing
+    // cookie, or a token from another portal, goes to sign-in.
+    const adminSession = await readAdminSession(request.cookies.get("admin_session")?.value);
     if (!adminSession) {
       return NextResponse.redirect(new URL("/admin/sign-in", request.url));
     }
 
-    // Check for 2FA verification cookie
-    const admin2FA = request.cookies.get("platform_admin_2fa_verified");
-    if (admin2FA?.value !== "true") {
+    // The 2FA cookie must be the signed value issued for this admin and this
+    // sign-in, not yet expired.
+    const admin2FA = await verifySecondFactor(
+      "admin",
+      adminSession.adminId,
+      adminSession.sid,
+      request.cookies.get(SECOND_FACTOR_COOKIE.admin)?.value
+    );
+    if (!admin2FA) {
       return NextResponse.redirect(new URL("/admin/verify", request.url));
     }
   }

@@ -63,23 +63,23 @@ async function featuresUnder(env: Env) {
 describe("/billing on the hosted pilot", () => {
   it.each(["/billing", "/billing/", "/billing?success=true&session_id=cs_1"])(
     "redirects %s to Settings",
-    (path) => {
+    async (path) => {
       setEnv(PILOT);
-      const res = get(path);
+      const res = await get(path);
       expect(res.status).toBe(307);
       expect(redirectTarget(res)).toBe("/settings");
     },
   );
 
-  it("also redirects when only the server-side Vercel signal is present", () => {
+  it("also redirects when only the server-side Vercel signal is present", async () => {
     setEnv({ VERCEL_ENV: "production" });
-    expect(redirectTarget(get("/billing"))).toBe("/settings");
+    expect(redirectTarget(await get("/billing"))).toBe("/settings");
   });
 
-  it("leaves other pages alone", () => {
+  it("leaves other pages alone", async () => {
     setEnv(PILOT);
     for (const path of ["/settings", "/deals", "/billing-help"]) {
-      const res = get(path);
+      const res = await get(path);
       expect(redirectTarget(res)).toBeNull();
       expect(res.headers.get("x-middleware-next")).toBe("1");
     }
@@ -95,9 +95,9 @@ describe("/billing off the pilot is unchanged", () => {
   it.each([
     ["kit", KIT],
     ["non-pilot deployment with Stripe", STRIPE_NON_PILOT],
-  ])("the %s lets /billing through to the page", (_label, env) => {
+  ])("the %s lets /billing through to the page", async (_label, env) => {
     setEnv(env);
-    const res = get("/billing");
+    const res = await get("/billing");
     expect(redirectTarget(res)).toBeNull();
     expect(res.headers.get("x-middleware-next")).toBe("1");
   });
