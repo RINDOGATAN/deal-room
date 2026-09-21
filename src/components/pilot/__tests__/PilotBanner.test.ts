@@ -32,8 +32,10 @@ describe("PilotBanner", () => {
   it("shows the pilot sentence and the run link on hosted", () => {
     const html = render(true);
     expect(html).toContain('data-testid="pilot-banner"');
-    expect(html).toContain("Hosted pilot: free, capped, no security certification.");
-    expect(html).toContain("For real client data,");
+    expect(html).toContain("Hosted pilot: free, capped, and with no contractual safeguards.");
+    expect(html).toContain("To deploy real customer details,");
+    // The owner withdrew this phrase from the banner on 2026-09-20.
+    expect(html).not.toContain("security certification");
     expect(html).toContain('href="https://www.todo.law/run"');
     expect(html).toContain("run your own instance");
     // Dismissible.
@@ -42,8 +44,10 @@ describe("PilotBanner", () => {
 
   it("speaks Castilian Spanish with tú", () => {
     const html = render(true, "es");
-    expect(html).toContain("Piloto alojado: gratuito, con límites y sin certificación de seguridad.");
-    expect(html).toContain("ejecuta tu propia instancia");
+    expect(html).toContain("Piloto alojado: gratuito, limitado y sin garantías contractuales.");
+    expect(html).toContain("Para manejar datos reales de clientes,");
+    expect(html).toContain("usa tu propia instancia");
+    expect(html).not.toContain("certificación de seguridad");
     expect(html).toContain('href="https://www.todo.law/run"');
     expect(html).toContain('aria-label="Cerrar"');
   });

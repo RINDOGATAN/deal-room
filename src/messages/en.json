@@ -90,7 +90,7 @@
     "allSkillsFreeDescription": "We've unlocked the entire catalog so you can try any contract type. No subscription needed during this period."
   },
   "pilot": {
-    "banner": "Hosted pilot: free, capped, no security certification. 90 days of editing from your first sign-in, then read-only with export. For real client data, <run>run your own instance</run>.",
+    "banner": "Hosted pilot: free, capped, and with no contractual safeguards. 90 days of editing from your first sign-in, then read-only with export. To deploy real customer details, <run>run your own instance</run>.",
     "dismiss": "Dismiss",
     "settingsTitle": "Settings",
     "settingsNav": "Settings",

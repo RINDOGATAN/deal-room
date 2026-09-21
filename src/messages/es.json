@@ -90,7 +90,7 @@
     "allSkillsFreeDescription": "Hemos desbloqueado el catálogo completo para que puedas probar cualquier tipo de contrato. No hace falta suscripción durante este periodo."
   },
   "pilot": {
-    "banner": "Piloto alojado: gratuito, con límites y sin certificación de seguridad. 90 días de edición desde tu primer inicio de sesión; después, solo lectura con exportación. Para datos reales de clientes, <run>ejecuta tu propia instancia</run>.",
+    "banner": "Piloto alojado: gratuito, limitado y sin garantías contractuales. 90 días de edición desde tu primer inicio de sesión; después, solo lectura con exportación. Para manejar datos reales de clientes, <run>usa tu propia instancia</run>.",
     "dismiss": "Cerrar",
     "settingsTitle": "Ajustes",
     "settingsNav": "Ajustes",
