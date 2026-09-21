@@ -10,24 +10,26 @@ history was not tracked per-release and lives only in git.
 ## [Unreleased]
 
 ### Changed
-- **The hosted service is a free, capped pilot.** When the build runs as
+- **The hosted service is free, with limits per account.** When the build runs as
   dealroom.todo.law (`VERCEL_ENV=production`, or `AUTH_COOKIE_DOMAIN=.todo.law`)
   every skill is available to every account and nothing is sold; Stripe is off
   in the app whatever the variables say, and kit skill packages are not
   delivered. Per account: one organisation, 90 days of editing from the first
   sign-in (then read-only), 10 deals, 3 startup journeys. The window opens at
-  the account's first sign-in while the pilot runs, never before the
+  the account's first sign-in under these limits, never before the
   deployment date (1 October 2026), and never from the account's creation
-  date: the same clock rule as the other suite apps. A dismissible banner
-  on every page and the sign-up screens say so in English and Spanish ("90
-  days of editing from your first sign-in, then read-only with export");
+  date: the same clock rule as the other suite apps. Dealroom does not
+  present itself as a pilot: there is no site-wide banner. The sign-up
+  screens and the new-deal flow carry a caution in English and Spanish
+  ("Hosted Dealroom comes with no contractual safeguards. Do not enter
+  privileged or confidential information. For that, run your own instance.");
   `/settings` shows the days left and the ceilings; a reached cap names both
   ways out (your own instance, and the new `GET /api/account/export`). The
   kit price follows the storefront currency rule: dollars unless the visitor
   is known to be outside the US, euros only then (the `currency` cookie now
   defaults to USD when the country is unknown). New column
   `users.pilotStartedAt` (additive migration). The self-hosted kit is
-  unchanged: no caps, no banner.
+  unchanged: no caps, no caution.
 - **The agent dispute endpoint refuses honestly when Gavel is not configured.**
   `POST /api/v1/agent/deals/:id/dispute` used to answer `201 Created` and store
   a `placeholder_<timestamp>` case when `GAVEL_API_KEY` was unset, so a caller

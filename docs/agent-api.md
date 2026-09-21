@@ -944,7 +944,7 @@ Every negotiation (both `AGREED` and `FAILED`) is recorded in a `NegotiationUsag
 
 ## Subscriptions & Billing
 
-**Hosted pilot (dealroom.todo.law):** a free, capped pilot. Every skill,
+**Hosted (dealroom.todo.law):** free, with limits per account. Every skill,
 premium ones included, is available to every API key at no cost, and
 nothing is sold there: `POST /subscribe` answers **409**
 `{ "error": "Payments are disabled; all skills are free" }`.
@@ -1294,7 +1294,7 @@ All A2A skills are bilingual (EN/ES) and support three jurisdictions: California
 
 ### A2A Usage Limits
 
-On the hosted pilot, A2A skills are available at no cost, with weekly
+On hosted Dealroom, A2A skills are available at no cost, with weekly
 limits (nothing is sold there). On your own instance, premium A2A skills are
 60 a year each in the kit (in your currency).
 
