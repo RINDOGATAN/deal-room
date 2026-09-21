@@ -25,7 +25,7 @@ export async function GET(
   // delivers no kit packages: those come from the storefront, with a licence.
   if (features.hostedPilot) {
     return NextResponse.json(
-      { error: "Skill packages are not delivered by the hosted pilot" },
+      { error: "Skill packages are not delivered by hosted Dealroom" },
       { status: 404 }
     );
   }
