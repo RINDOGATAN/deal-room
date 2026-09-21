@@ -6,8 +6,8 @@ import superjson from "superjson";
 import { ZodError } from "zod";
 import { getServerSession, type Session } from "next-auth";
 import { cookies } from "next/headers";
-import { decode } from "next-auth/jwt";
 import { authOptions } from "@/lib/auth";
+import { readAdminSession, readSupervisorSession } from "@/lib/portal-session";
 import prisma from "@/lib/prisma";
 import { formatUserError } from "@/lib/format-error";
 import { features } from "@/config/features";
@@ -35,71 +35,12 @@ export const createTRPCContext = async (_opts: { req: Request }) => {
   const session = await getServerSession(authOptions);
   const cookieStore = await cookies();
 
-  // Try to decode admin session from JWT
-  let adminSession: { email: string; adminId: string } | null = null;
-  const adminToken = cookieStore.get("admin_session")?.value;
-  if (adminToken) {
-    try {
-      const decoded = await decode({
-        token: adminToken,
-        secret: process.env.NEXTAUTH_SECRET!,
-      });
-
-      // If we have adminId and email directly, use them
-      if (decoded?.email && decoded?.adminId) {
-        adminSession = {
-          email: decoded.email as string,
-          adminId: decoded.adminId as string,
-        };
-      }
-      // Fallback: if we only have sub (user ID), look up the admin
-      else if (decoded?.sub) {
-        const admin = await prisma.platformAdmin.findUnique({
-          where: { id: decoded.sub },
-        });
-        if (admin) {
-          adminSession = {
-            email: admin.email,
-            adminId: admin.id,
-          };
-        }
-      }
-    } catch {
-      // Invalid token, ignore
-    }
-  }
-
-  // Try to decode supervisor session from JWT
-  let supervisorSession: { email: string; supervisorId: string } | null = null;
-  const supervisorToken = cookieStore.get("supervisor_session")?.value;
-  if (supervisorToken) {
-    try {
-      const decoded = await decode({
-        token: supervisorToken,
-        secret: process.env.NEXTAUTH_SECRET!,
-      });
-      if (decoded?.email && decoded?.supervisorId) {
-        supervisorSession = {
-          email: decoded.email as string,
-          supervisorId: decoded.supervisorId as string,
-        };
-      }
-      // Fallback: JWT may only have sub (user ID) without email/supervisorId
-      else if (decoded?.sub && !supervisorSession) {
-        const supervisor = await prisma.supervisor.findUnique({
-          where: { id: decoded.sub as string },
-        });
-        if (supervisor?.isActive) {
-          supervisorSession = {
-            email: supervisor.email,
-            supervisorId: supervisor.id,
-          };
-        }
-      }
-    } catch {
-      // Invalid token, ignore
-    }
-  }
+  // Portal sessions: only a token issued by that portal's own sign-in reads
+  // as a session (own key, own identity claim). Anything else is null.
+  const adminSession = await readAdminSession(cookieStore.get("admin_session")?.value);
+  const supervisorSession = await readSupervisorSession(
+    cookieStore.get("supervisor_session")?.value
+  );
 
   return createInnerTRPCContext({
     session,

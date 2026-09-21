@@ -8,6 +8,7 @@ import { PrismaClient } from "@prisma/client";
 import { createAdminAdapter } from "./admin-adapter";
 import { brand } from "@/config/brand";
 import { createLogger } from "@/lib/logger";
+import { ADMIN_PORTAL_SALT, portalJwtOptions } from "@/lib/portal-session";
 
 const logger = createLogger("auth-admin");
 
@@ -82,6 +83,9 @@ export const adminAuthOptions: NextAuthOptions = {
   session: {
     strategy: "jwt",
   },
+  // Own encryption key: a token from the user or supervisor sign-in does not
+  // decode here (see portal-session.ts).
+  jwt: portalJwtOptions(ADMIN_PORTAL_SALT),
   callbacks: {
     async signIn({ user }) {
       // Only allow sign-in if the email belongs to an active platform admin
@@ -124,23 +128,9 @@ export const adminAuthOptions: NextAuthOptions = {
           token.name = admin.name;
         }
       }
-      // On subsequent requests, ensure adminId is set
-      else if (token.sub && !token.adminId) {
-        // Try to look up by ID (token.sub) or email
-        const admin = token.email
-          ? await prisma.platformAdmin.findUnique({
-              where: { email: (token.email as string).toLowerCase() },
-            })
-          : await prisma.platformAdmin.findUnique({
-              where: { id: token.sub },
-            });
-
-        if (admin) {
-          token.adminId = admin.id;
-          token.email = admin.email;
-          token.name = admin.name;
-        }
-      }
+      // On subsequent requests the token is returned as issued. `adminId` is
+      // only ever set at this portal's own sign-in: a token that lacks it is
+      // never promoted by matching its e-mail against the admin table.
 
       return token;
     },

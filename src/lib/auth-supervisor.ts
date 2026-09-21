@@ -8,6 +8,7 @@ import { PrismaClient } from "@prisma/client";
 import { createSupervisorAdapter } from "./supervisor-adapter";
 import { brand } from "@/config/brand";
 import { createLogger } from "@/lib/logger";
+import { SUPERVISOR_PORTAL_SALT, portalJwtOptions } from "@/lib/portal-session";
 
 const logger = createLogger("auth-supervisor");
 
@@ -69,6 +70,9 @@ export const supervisorAuthOptions: NextAuthOptions = {
   session: {
     strategy: "jwt",
   },
+  // Own encryption key: a token from the user or admin sign-in does not
+  // decode here (see portal-session.ts).
+  jwt: portalJwtOptions(SUPERVISOR_PORTAL_SALT),
   callbacks: {
     async signIn({ user }) {
       // Only allow sign-in if the email belongs to an active supervisor
@@ -104,16 +108,9 @@ export const supervisorAuthOptions: NextAuthOptions = {
           token.name = supervisor.name;
         }
       }
-      // On subsequent requests, ensure supervisorId is set if we have an email
-      else if (token.email && !token.supervisorId) {
-        const supervisor = await prisma.supervisor.findUnique({
-          where: { email: (token.email as string).toLowerCase() },
-        });
-        if (supervisor) {
-          token.supervisorId = supervisor.id;
-          token.name = supervisor.name;
-        }
-      }
+      // On subsequent requests the token is returned as issued. `supervisorId`
+      // is only ever set at this portal's own sign-in: a token that lacks it
+      // is never promoted by matching its e-mail against the supervisor table.
       return token;
     },
   },

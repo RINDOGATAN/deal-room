@@ -3,7 +3,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
-import { decode } from "next-auth/jwt";
+import { readSupervisorSession } from "@/lib/portal-session";
 import prisma from "@/lib/prisma";
 import { apiError } from "@/lib/api-response";
 import { verifySupervisorToken } from "@/lib/totp-supervisor";
@@ -24,30 +24,18 @@ export async function POST(request: NextRequest) {
     }
 
     const cookieStore = await cookies();
-    const supervisorToken = cookieStore.get("supervisor_session")?.value;
+    // Only a token issued by the supervisor sign-in reads as a session.
+    const supervisorSession = await readSupervisorSession(
+      cookieStore.get("supervisor_session")?.value
+    );
 
-    if (!supervisorToken) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    let supervisorId: string | null = null;
-    try {
-      const decoded = await decode({
-        token: supervisorToken,
-        secret: process.env.NEXTAUTH_SECRET!,
-      });
-      supervisorId = (decoded?.supervisorId as string) ?? (decoded?.sub as string) ?? null;
-    } catch {
-      return NextResponse.json({ error: "Invalid session" }, { status: 401 });
-    }
-
-    if (!supervisorId) {
+    if (!supervisorSession) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     // Get supervisor by ID
     const supervisor = await prisma.supervisor.findUnique({
-      where: { id: supervisorId },
+      where: { id: supervisorSession.supervisorId },
       include: { twoFactorSecret: true },
     });
 

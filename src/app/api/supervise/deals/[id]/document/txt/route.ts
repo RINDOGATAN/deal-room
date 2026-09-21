@@ -10,7 +10,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
-import { decode } from "next-auth/jwt";
+import { readSupervisorSession } from "@/lib/portal-session";
 import prisma from "@/lib/prisma";
 import {
   generateContractData,
@@ -26,32 +26,17 @@ export async function GET(
   try {
     // Decode supervisor session from JWT cookie
     const cookieStore = await cookies();
-    const supervisorToken = cookieStore.get("supervisor_session")?.value;
+    const supervisorSession = await readSupervisorSession(
+      cookieStore.get("supervisor_session")?.value
+    );
 
-    if (!supervisorToken) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    let supervisorEmail: string | null = null;
-    try {
-      const decoded = await decode({
-        token: supervisorToken,
-        secret: process.env.NEXTAUTH_SECRET!,
-      });
-      if (decoded?.email) {
-        supervisorEmail = decoded.email as string;
-      }
-    } catch {
-      return NextResponse.json({ error: "Invalid session" }, { status: 401 });
-    }
-
-    if (!supervisorEmail) {
+    if (!supervisorSession) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     // Verify supervisor is active
     const supervisor = await prisma.supervisor.findUnique({
-      where: { email: supervisorEmail.toLowerCase() },
+      where: { id: supervisorSession.supervisorId },
     });
 
     if (!supervisor || !supervisor.isActive) {

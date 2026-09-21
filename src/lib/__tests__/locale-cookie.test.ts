@@ -88,28 +88,28 @@ describe("localeCleanupSetCookies", () => {
 });
 
 describe("middleware", () => {
-  function run(cookie?: string) {
+  async function run(cookie?: string) {
     const headers = new Headers();
     if (cookie) headers.set("cookie", cookie);
-    const res = middleware(new NextRequest("https://dealroom.todo.law/docs", { headers }));
+    const res = await middleware(new NextRequest("https://dealroom.todo.law/docs", { headers }));
     return res.headers.getSetCookie().filter((c) => c.startsWith("locale="));
   }
 
-  it("emits both Set-Cookie headers when two locale values arrive", () => {
-    expect(run("currency=EUR; locale=es; locale=en")).toEqual([
+  it("emits both Set-Cookie headers when two locale values arrive", async () => {
+    expect(await run("currency=EUR; locale=es; locale=en")).toEqual([
       "locale=; Path=/; Max-Age=0; SameSite=Lax",
       "locale=en; Path=/; Max-Age=31536000; SameSite=Lax; Domain=.todo.law",
     ]);
   });
 
-  it("keeps both headers when the middleware also writes the currency cookie", () => {
-    expect(run("locale=es; locale=en")).toHaveLength(2);
+  it("keeps both headers when the middleware also writes the currency cookie", async () => {
+    expect(await run("locale=es; locale=en")).toHaveLength(2);
   });
 
-  it("emits nothing for one value and never writes a default", () => {
-    expect(run("currency=EUR; locale=es")).toEqual([]);
-    expect(run("currency=EUR")).toEqual([]);
-    expect(run()).toEqual([]);
+  it("emits nothing for one value and never writes a default", async () => {
+    expect(await run("currency=EUR; locale=es")).toEqual([]);
+    expect(await run("currency=EUR")).toEqual([]);
+    expect(await run()).toEqual([]);
   });
 });
 

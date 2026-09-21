@@ -120,7 +120,8 @@ describe("supervisor-2fa-verify", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mockCookieGet.mockReturnValue({ value: "supervisor-session-token" });
-    mockJwtDecode.mockResolvedValue({ supervisorId: "sup1" });
+    process.env.NEXTAUTH_SECRET = "test-secret";
+    mockJwtDecode.mockResolvedValue({ supervisorId: "sup1", email: "sup@example.test" });
     mockSupervisorFindUnique.mockResolvedValue({
       id: "sup1",
       isActive: true,

@@ -121,7 +121,8 @@ describe("supervisor-2fa-verify negative branches", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mockCookieGet.mockReturnValue({ value: "supervisor-session-token" });
-    mockJwtDecode.mockResolvedValue({ supervisorId: "sup1" });
+    process.env.NEXTAUTH_SECRET = "test-secret";
+    mockJwtDecode.mockResolvedValue({ supervisorId: "sup1", email: "sup@example.test" });
   });
 
   it("rejects when the supervisor_session cookie is missing, before hitting the DB", async () => {

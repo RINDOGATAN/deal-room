@@ -3,9 +3,10 @@ import type { NextRequest } from "next/server";
 import { localeCleanupSetCookies } from "@/lib/locale-cookie";
 import { currencyForCountry } from "@/lib/currency";
 import { isHostedPilotEnv } from "@/lib/pilot";
+import { readAdminSession, readSupervisorSession } from "@/lib/portal-session";
 
-export function middleware(request: NextRequest) {
-  const response = route(request);
+export async function middleware(request: NextRequest) {
+  const response = await route(request);
 
   // Collapse duplicate / legacy language cookies into the single shared
   // `locale` cookie. Never writes a default when the visitor has not chosen.
@@ -19,10 +20,10 @@ export function middleware(request: NextRequest) {
   return response;
 }
 
-function route(request: NextRequest) {
+async function route(request: NextRequest) {
   // The access checks decide the response first, so no visitor (not even
   // one on a first request, with no cookies yet) can skip them.
-  const response = gate(request);
+  const response = await gate(request);
 
   // Set currency cookie based on geo-IP (a known non-US country → EUR,
   // otherwise USD), on whatever response the gate produced, redirects included.
@@ -53,7 +54,7 @@ function hostedPilot() {
   });
 }
 
-function gate(request: NextRequest) {
+async function gate(request: NextRequest) {
   const path = request.nextUrl.pathname;
 
   if ((path === "/billing" || path.startsWith("/billing/")) && hostedPilot()) {
@@ -72,8 +73,11 @@ function gate(request: NextRequest) {
       return NextResponse.next();
     }
 
-    // Check for supervisor session cookie
-    const supervisorSession = request.cookies.get("supervisor_session");
+    // A supervisor session is a token issued by the supervisor sign-in. A
+    // missing cookie, or a token from another portal, goes to sign-in.
+    const supervisorSession = await readSupervisorSession(
+      request.cookies.get("supervisor_session")?.value
+    );
     if (!supervisorSession) {
       return NextResponse.redirect(new URL("/supervise/sign-in", request.url));
     }
@@ -97,8 +101,9 @@ function gate(request: NextRequest) {
       return NextResponse.next();
     }
 
-    // Check for admin session cookie
-    const adminSession = request.cookies.get("admin_session");
+    // An admin session is a token issued by the admin sign-in. A missing
+    // cookie, or a token from another portal, goes to sign-in.
+    const adminSession = await readAdminSession(request.cookies.get("admin_session")?.value);
     if (!adminSession) {
       return NextResponse.redirect(new URL("/admin/sign-in", request.url));
     }
