@@ -9,6 +9,6 @@
   "login.newHere": "New here? Sign up",
   "or": "or",
   "continueWithGoogle": "Continue with Google",
-  "pilot.notice": "Hosted pilot: free, capped, and with no contractual safeguards. 90 days of editing from your first sign-in, then read-only with export. To deploy real customer details,",
-  "pilot.run": "run your own instance"
+  "caution.text": "Hosted Dealroom comes with no contractual safeguards. Do not enter privileged or confidential information. For that,",
+  "caution.run": "run your own instance"
 }

@@ -6,6 +6,8 @@ import { AlertTriangle } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { features } from "@/config/features";
 import { trpc } from "@/lib/trpc";
+import { cn } from "@/lib/utils";
+import { StatusNote } from "@/components/ui/status-note";
 import { PILOT_CAPS, PILOT_EXPORT_PATH, PILOT_RUN_URL, type PilotCapReason } from "@/lib/pilot";
 
 const linkClass =
@@ -23,14 +25,40 @@ const exportLink = (chunks: React.ReactNode) => (
   </a>
 );
 
-/** The banner sentence, fixed (not dismissible), for the sign-up screen. */
-export function PilotSignupNotice() {
+/**
+ * The caution about confidential information, shown on hosted wherever a
+ * person is about to enter deal content. `variant="signup"` is the quiet
+ * line under the sign-in form; the default is a warning note for the
+ * new-deal flow. Renders nothing on the kit. `hosted` exists for tests.
+ */
+export function HostedCaution({
+  variant = "note",
+  hosted = features.hostedPilot,
+  className,
+}: {
+  variant?: "note" | "signup";
+  hosted?: boolean;
+  className?: string;
+}) {
   const t = useTranslations("pilot");
-  if (!features.hostedPilot) return null;
+  if (!hosted) return null;
+  const text = t.rich("caution", { run: runLink });
+  if (variant === "signup") {
+    return (
+      <p
+        data-testid="hosted-caution"
+        className={cn("text-xs text-muted-foreground text-center", className)}
+      >
+        {text}
+      </p>
+    );
+  }
   return (
-    <p data-testid="pilot-signup-notice" className="text-xs text-muted-foreground text-center">
-      {t.rich("banner", { run: runLink })}
-    </p>
+    <div data-testid="hosted-caution" className={className}>
+      <StatusNote tone="warning" compact title={t("cautionTitle")}>
+        {text}
+      </StatusNote>
+    </div>
   );
 }
 

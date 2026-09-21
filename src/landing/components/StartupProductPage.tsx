@@ -161,17 +161,17 @@ const StartupProductPage = ({
     signIn("google", { callbackUrl });
   };
 
-  // Hosted pilot: the same sentence as the site-wide banner, fixed here.
-  const pilotNotice = hostedPilot ? (
-    <p data-testid="pilot-signup-notice" className="text-xs text-muted-foreground font-body mt-4 text-center">
-      {tAuth("pilot.notice")}{" "}
+  // Hosted: the caution about confidential information, under the sign-up form.
+  const hostedCaution = hostedPilot ? (
+    <p data-testid="hosted-caution" className="text-xs text-muted-foreground font-body mt-4 text-center">
+      {tAuth("caution.text")}{" "}
       <a
         href={PILOT_RUN_URL}
         target="_blank"
         rel="noopener noreferrer"
         className="text-accent underline decoration-accent/40 hover:decoration-accent"
       >
-        {tAuth("pilot.run")}
+        {tAuth("caution.run")}
       </a>
       .
     </p>
@@ -300,7 +300,7 @@ const StartupProductPage = ({
                       >
                         {tAuth("login.newHere")}
                       </button>
-                      {pilotNotice}
+                      {hostedCaution}
                     </div>
                   ) : (
                     <div className="relative animate-fade-in">
@@ -334,7 +334,7 @@ const StartupProductPage = ({
                       >
                         {t("hero.login")}
                       </button>
-                      {pilotNotice}
+                      {hostedCaution}
                     </div>
                   )}
                 </div>

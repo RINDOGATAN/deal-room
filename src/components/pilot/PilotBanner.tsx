@@ -50,7 +50,7 @@ export function PilotBanner({ hosted = features.hostedPilot }: { hosted?: boolea
     >
       <div className="max-w-7xl mx-auto flex items-start sm:items-center gap-3 px-4 py-2 text-xs sm:text-sm">
         <p className="flex-1">
-          {t.rich("banner", {
+          {t.rich("caution", {
             run: (chunks) => (
               <a
                 href={PILOT_RUN_URL}
