@@ -133,7 +133,7 @@ export type PilotCapReason = "read_only" | PilotRecordKind;
 export function pilotCapMessage(reason: PilotCapReason): string {
   const what =
     reason === "read_only"
-      ? `The ${PILOT_CAPS.editDays}-day hosted pilot has ended, so this account is now read-only.`
-      : `This account has reached the hosted pilot limit of ${PILOT_CAPS[reason]} ${reason === "deals" ? "deals" : "startup journeys"}.`;
+      ? `The ${PILOT_CAPS.editDays} days of editing included in free hosted use have ended, so this account is now read-only.`
+      : `This account has reached the free hosted limit of ${PILOT_CAPS[reason]} ${reason === "deals" ? "deals" : "startup journeys"}.`;
   return `${what} To keep working, run your own instance (${PILOT_RUN_URL}) or export what you created (${PILOT_EXPORT_PATH}).`;
 }
