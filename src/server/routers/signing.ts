@@ -50,6 +50,27 @@ async function captureSignatureForensics(): Promise<{
   }
 }
 
+/**
+ * A Firmas hand-off token is a bearer credential: whoever holds it can open
+ * that party's signing link. A party only ever receives their own; the other
+ * side's is replaced by a fixed marker so the UI can still tell that a
+ * hand-off is in flight.
+ */
+export const FIRMAS_TOKEN_REDACTED = "redacted";
+
+function redactCounterpartyFirmasToken(
+  callerRole: string,
+  sr: { initiatorFirmasToken: string | null; respondentFirmasToken: string | null }
+) {
+  const mark = (token: string | null) => (token ? FIRMAS_TOKEN_REDACTED : null);
+  return {
+    initiatorFirmasToken:
+      callerRole === "INITIATOR" ? sr.initiatorFirmasToken : mark(sr.initiatorFirmasToken),
+    respondentFirmasToken:
+      callerRole === "RESPONDENT" ? sr.respondentFirmasToken : mark(sr.respondentFirmasToken),
+  };
+}
+
 const signingDetailsSchema = z.object({
   legalName: z.string().min(1),
   address: z.string().min(1),
@@ -191,12 +212,27 @@ export const signingRouter = createTRPCRouter({
   getRequest: protectedProcedure
     .input(z.object({ dealRoomId: z.string() }))
     .query(async ({ ctx, input }) => {
+      const party = await ctx.prisma.dealRoomParty.findFirst({
+        where: { dealRoomId: input.dealRoomId, userId: ctx.session.user.id },
+        select: { role: true },
+      });
+      if (!party) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "You do not have access to this deal",
+        });
+      }
+
       const signingRequest = await ctx.prisma.signingRequest.findFirst({
         where: { dealRoomId: input.dealRoomId },
         orderBy: { createdAt: "desc" },
       });
+      if (!signingRequest) return signingRequest;
 
-      return signingRequest;
+      return {
+        ...signingRequest,
+        ...redactCounterpartyFirmasToken(party.role, signingRequest),
+      };
     }),
 
   /**
@@ -673,97 +709,6 @@ export const signingRouter = createTRPCRouter({
       return updated;
     }),
 
-  // Webhook handler for e-signature provider callbacks
-  handleWebhook: protectedProcedure
-    .input(
-      z.object({
-        externalId: z.string(),
-        event: z.enum(["VIEWED", "SIGNED", "COMPLETED", "DECLINED", "VOIDED"]),
-        signerEmail: z.string().optional(),
-        signedAt: z.string().optional(),
-        documentUrl: z.string().optional(),
-      })
-    )
-    .mutation(async ({ ctx, input }) => {
-      const signingRequest = await ctx.prisma.signingRequest.findFirst({
-        where: { externalId: input.externalId },
-        include: {
-          dealRoom: {
-            include: {
-              parties: {
-                include: { user: true },
-              },
-            },
-          },
-        },
-      });
-
-      if (!signingRequest) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "Signing request not found",
-        });
-      }
-
-      // Handle different webhook events
-      switch (input.event) {
-        case "SIGNED":
-          // Determine which party signed based on email
-          const signerParty = signingRequest.dealRoom.parties.find(
-            (p) => p.user?.email === input.signerEmail
-          );
-
-          if (signerParty) {
-            const signedAt = input.signedAt ? new Date(input.signedAt) : new Date();
-
-            if (signerParty.role === "INITIATOR" && !signingRequest.initiatorSignedAt) {
-              await ctx.prisma.signingRequest.update({
-                where: { id: signingRequest.id },
-                data: {
-                  initiatorSignedAt: signedAt,
-                  status: signingRequest.respondentSignedAt ? "COMPLETED" : "PARTIALLY_SIGNED",
-                },
-              });
-            } else if (signerParty.role === "RESPONDENT" && !signingRequest.respondentSignedAt) {
-              await ctx.prisma.signingRequest.update({
-                where: { id: signingRequest.id },
-                data: {
-                  respondentSignedAt: signedAt,
-                  status: signingRequest.initiatorSignedAt ? "COMPLETED" : "PARTIALLY_SIGNED",
-                },
-              });
-            }
-          }
-          break;
-
-        case "COMPLETED":
-          await ctx.prisma.signingRequest.update({
-            where: { id: signingRequest.id },
-            data: {
-              status: "COMPLETED",
-              completedAt: new Date(),
-              documentUrl: input.documentUrl,
-            },
-          });
-
-          await ctx.prisma.dealRoom.update({
-            where: { id: signingRequest.dealRoomId },
-            data: { status: "COMPLETED" },
-          });
-          break;
-
-        case "DECLINED":
-        case "VOIDED":
-          await ctx.prisma.signingRequest.update({
-            where: { id: signingRequest.id },
-            data: { status: "DECLINED" },
-          });
-          break;
-      }
-
-      return { success: true };
-    }),
-
   /**
    * Self-mint (or other-party-mint) a Firmas hand-off. Each party can
    * choose to sign with the Firmas wallet for biometric mobile identity
@@ -1060,7 +1005,7 @@ export const signingRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       const party = await ctx.prisma.dealRoomParty.findFirst({
         where: { dealRoomId: input.dealRoomId, userId: ctx.session.user.id },
-        select: { id: true },
+        select: { id: true, role: true },
       });
       if (!party) {
         throw new TRPCError({
@@ -1103,17 +1048,19 @@ export const signingRouter = createTRPCRouter({
         };
       };
 
+      const tokens = redactCounterpartyFirmasToken(party.role, sr);
+
       return {
         status: sr.status,
         completedAt: sr.completedAt,
         initiator: {
-          firmasToken: sr.initiatorFirmasToken,
+          firmasToken: tokens.initiatorFirmasToken,
           firmasSentAt: sr.initiatorFirmasSentAt,
           signedAt: sr.initiatorSignedAt,
           ...projectBundle(sr.initiatorSignedBundle),
         },
         respondent: {
-          firmasToken: sr.respondentFirmasToken,
+          firmasToken: tokens.respondentFirmasToken,
           firmasSentAt: sr.respondentFirmasSentAt,
           signedAt: sr.respondentSignedAt,
           ...projectBundle(sr.respondentSignedBundle),
