@@ -51,7 +51,7 @@ import {
 } from "@/components/ui/dialog";
 import { getContactMailto } from "@/config/brand";
 import { PromoBanner } from "@/components/PromoBanner";
-import { PilotCapNotice } from "@/components/pilot/PilotNotice";
+import { HostedCaution, PilotCapNotice } from "@/components/pilot/PilotNotice";
 import { EnableFeatureModal } from "@/components/premium/enable-feature-modal";
 import { marketplaceSkillUrl } from "@/lib/marketplace";
 
@@ -552,6 +552,7 @@ export default function NewDealPage() {
 
       <PromoBanner />
       <PilotCapNotice kind="deals" />
+      <HostedCaution />
 
       {/* Entitlement Error Modal */}
       <Dialog open={!!entitlementError} onOpenChange={(open) => !open && setEntitlementError(null)}>

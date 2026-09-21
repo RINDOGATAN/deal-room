@@ -90,7 +90,8 @@
     "allSkillsFreeDescription": "We've unlocked the entire catalog so you can try any contract type. No subscription needed during this period."
   },
   "pilot": {
-    "banner": "Hosted pilot: free, capped, and with no contractual safeguards. 90 days of editing from your first sign-in, then read-only with export. To deploy real customer details, <run>run your own instance</run>.",
+    "cautionTitle": "Caution",
+    "caution": "Hosted Dealroom comes with no contractual safeguards. Do not enter privileged or confidential information. For that, <run>run your own instance</run>.",
     "settingsTitle": "Settings",
     "settingsNav": "Settings",
     "sectionTitle": "Hosted pilot",

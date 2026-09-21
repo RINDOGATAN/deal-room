@@ -90,7 +90,8 @@
     "allSkillsFreeDescription": "Hemos desbloqueado el catálogo completo para que puedas probar cualquier tipo de contrato. No hace falta suscripción durante este periodo."
   },
   "pilot": {
-    "banner": "Piloto alojado: gratuito, limitado y sin garantías contractuales. 90 días de edición desde tu primer inicio de sesión; después, solo lectura con exportación. Para manejar datos reales de clientes, <run>usa tu propia instancia</run>.",
+    "cautionTitle": "Precaución",
+    "caution": "Dealroom alojado no ofrece garantías contractuales. No introduzcas información privilegiada o confidencial. Para eso, <run>usa tu propia instancia</run>.",
     "settingsTitle": "Ajustes",
     "settingsNav": "Ajustes",
     "sectionTitle": "Piloto alojado",
