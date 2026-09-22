@@ -74,6 +74,8 @@ jobs:
           # applies, so published images build from an immutable base.
           build-args: |
             NEXT_PUBLIC_APP_URL=http://localhost:8486
+            APP_VERSION=${{ github.event.inputs.version || github.ref_name }}
+            APP_COMMIT=${{ github.sha }}
           cache-from: type=gha,scope=app-${{ steps.platform.outputs.pair }}
           cache-to: type=gha,mode=max,scope=app-${{ steps.platform.outputs.pair }}
           outputs: type=image,name=${{ env.IMAGE }},push-by-digest=true,name-canonical=true,push=true

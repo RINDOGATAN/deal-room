@@ -1,4 +1,6 @@
 import type { NextConfig } from "next";
+import { readdirSync, readFileSync } from "node:fs";
+import { join } from "node:path";
 import createNextIntlPlugin from "next-intl/plugin";
 
 const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
@@ -14,9 +16,27 @@ const hostedPilot =
     (process.env.AUTH_COOKIE_DOMAIN ?? "").trim().toLowerCase(),
   );
 
+// What /api/health reports and checks: the build's version and commit, and
+// the last migration the build ships (the runtime image carries no
+// prisma/migrations folder, so the name is recorded here).
+const lastMigration =
+  readdirSync(join(process.cwd(), "prisma", "migrations"), { withFileTypes: true })
+    .filter((d) => d.isDirectory())
+    .map((d) => d.name)
+    .sort()
+    .at(-1) ?? "";
+const buildVersion =
+  process.env.APP_VERSION ||
+  (JSON.parse(readFileSync(join(process.cwd(), "package.json"), "utf8")) as { version: string })
+    .version;
+const buildCommit = (process.env.APP_COMMIT || process.env.VERCEL_GIT_COMMIT_SHA || "").slice(0, 7);
+
 const nextConfig: NextConfig = {
   env: {
     NEXT_PUBLIC_HOSTED_PILOT: hostedPilot ? "true" : "false",
+    DEALROOM_BUILD_MIGRATION: lastMigration,
+    DEALROOM_BUILD_VERSION: buildVersion,
+    DEALROOM_BUILD_COMMIT: buildCommit,
   },
   // Sovereign/self-hosted bundles (deploy/sovereign) build a standalone
   // server so the runtime image ships without dev tooling. Cloud (Vercel)

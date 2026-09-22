@@ -69,6 +69,10 @@ ENV NEXT_PUBLIC_LOCAL_AUTH_ENABLED=$NEXT_PUBLIC_LOCAL_AUTH_ENABLED \
 ENV DATABASE_URL=postgresql://build:build@localhost:5432/build \
     DATABASE_URL_UNPOOLED=postgresql://build:build@localhost:5432/build
 RUN npx prisma generate
+# Reported by /api/health (next.config.ts); the publish workflow passes the
+# release tag and the commit. Declared here so they never bust earlier layers.
+ARG APP_VERSION=""
+ARG APP_COMMIT=""
 RUN npx next build
 
 # ---- migrator: minimal one-shot migrate/seed image --------------------------
