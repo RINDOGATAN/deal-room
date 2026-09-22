@@ -4,12 +4,12 @@
 
 import { ErrorScreen } from "@/components/ErrorScreen";
 
-export default function RootError({
+export default function AuthError({
   error,
   reset,
 }: {
   error: Error & { digest?: string };
   reset: () => void;
 }) {
-  return <ErrorScreen error={error} reset={reset} backHref="/" />;
+  return <ErrorScreen error={error} reset={reset} backHref="/sign-in" />;
 }

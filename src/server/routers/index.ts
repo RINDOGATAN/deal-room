@@ -22,6 +22,7 @@ import { analyticsRouter } from "./analytics";
 import { journeyRouter } from "./journey";
 import { aiRouter } from "./ai";
 import { pilotRouter } from "./pilot";
+import { diagnosticsRouter } from "./diagnostics";
 
 export const appRouter = createTRPCRouter({
   deal: dealRouter,
@@ -47,6 +48,8 @@ export const appRouter = createTRPCRouter({
   journey: journeyRouter,
   ai: aiRouter,
   pilot: pilotRouter,
+  // Test-only failing procedure; off unless FAILURE_PROBE_ENABLED=true.
+  diagnostics: diagnosticsRouter,
 });
 
 export type AppRouter = typeof appRouter;
