@@ -13,6 +13,7 @@ import { features } from "@/config/features";
 import { isTesterEmail } from "@/lib/tester";
 import { createLogger } from "@/lib/logger";
 import { resolveAuthProviderPolicy } from "@/lib/auth-provider-policy";
+import { resolveAuthCookiePolicy } from "@/lib/auth-cookie-policy";
 
 const logger = createLogger("auth");
 
@@ -25,20 +26,15 @@ if (providerPolicy.refused.length > 0) {
   });
 }
 
-const isProduction =
-  process.env.NODE_ENV === "production" &&
-  (process.env.NEXTAUTH_URL?.startsWith("https://") ?? true);
-
 // Cross-app SSO: the cloud deployment shares its session cookie across
 // *.todo.law (brand.cookieDomain). Sovereign/self-hosted deployments set
 // AUTH_COOKIE_DOMAIN="" in the environment to fall back to a host-only
-// cookie — the .todo.law domain is a cloud-deployment concern only.
-const cookieDomain =
-  process.env.AUTH_COOKIE_DOMAIN !== undefined
-    ? process.env.AUTH_COOKIE_DOMAIN || undefined
-    : isProduction
-      ? brand.cookieDomain
-      : undefined;
+// cookie — the .todo.law domain is a cloud-deployment concern only. The
+// sign-out route reads the same policy, so it clears what this sets.
+const { secure: isProduction, domain: cookieDomain } = resolveAuthCookiePolicy(
+  process.env,
+  brand.cookieDomain,
+);
 
 // Build providers list based on brand/features.
 // Google OAuth only when configured — sovereign bundles run without it.
