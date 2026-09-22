@@ -14,7 +14,7 @@ import {
   type SupervisorPortalSession,
 } from "@/lib/portal-session";
 import prisma from "@/lib/prisma";
-import { formatUserError } from "@/lib/format-error";
+import { presentInternalError } from "@/server/internal-error";
 import { features } from "@/config/features";
 import { pilotMutationExempt } from "@/lib/pilot";
 import { PilotCapError, assertPilotCanEdit } from "@/server/services/pilot";
@@ -57,19 +57,19 @@ export const createTRPCContext = async (_opts: { req: Request }) => {
 
 const t = initTRPC.context<typeof createTRPCContext>().create({
   transformer: superjson,
-  errorFormatter({ shape, error }) {
-    const sanitizedMessage =
-      error.code === "INTERNAL_SERVER_ERROR"
-        ? formatUserError(
-            error.cause ?? error,
-            "An unexpected error occurred. Please try again.",
-          )
-        : shape.message;
+  errorFormatter({ shape, error, path }) {
+    // A failure on our side: logged under a reference id, and the person
+    // reads what to do next instead of "Internal server error".
+    const internal =
+      error.code === "INTERNAL_SERVER_ERROR" ? presentInternalError(error, path) : null;
     return {
       ...shape,
-      message: sanitizedMessage,
+      message: internal ? internal.message : shape.message,
       data: {
         ...shape.data,
+        // Never send a server stack trace to the browser.
+        stack: undefined,
+        reference: internal?.reference ?? null,
         zodError:
           error.cause instanceof ZodError ? error.cause.flatten() : null,
         // Hosted pilot cap reached: the interface shows its own translation.

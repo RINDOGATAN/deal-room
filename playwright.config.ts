@@ -2,6 +2,8 @@ import { defineConfig } from "@playwright/test";
 
 export default defineConfig({
   testDir: "./e2e",
+  // The pilot smoke walk runs against a local build: playwright.smoke.config.ts.
+  testIgnore: ["smoke/**"],
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: 1,

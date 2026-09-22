@@ -4,6 +4,7 @@
 
 | Document | Description |
 |----------|-------------|
+| [status-and-support.md](./status-and-support.md) | For users: how to report a problem, what an error reference is for, exports always available (linked from every error page) |
 | [deployment.md](./deployment.md) | Multi-brand architecture, Vercel setup, environment variables, adding new brands |
 | [administration.md](./administration.md) | Two-level admin system, deal lifecycle, signing, lawyer involvement stages |
 | [lawyer-involvement.md](./lawyer-involvement.md) | Dedicated guide to the three stages of lawyer involvement (EN) |

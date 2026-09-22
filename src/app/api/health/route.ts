@@ -4,28 +4,32 @@
 /**
  * Health check.
  *
- * GET /api/health — returns a small JSON snapshot suitable for an
- * uptime monitor (UptimeRobot, BetterStack, etc.) or a quick
- * "is the site OK right now" smoke test.
+ * GET /api/health — read by the hosting provider's checks, uptime monitors,
+ * the suite's container healthcheck and the storefront's digest.
  *
  * Response shape:
  *   {
  *     ok: boolean,
+ *     reason: null | "database" | "migrations",
  *     time: ISO timestamp,
- *     commit: short git sha (from VERCEL_GIT_COMMIT_SHA),
- *     version: package.json version,
- *     services: { database: "ok" | "unreachable", databaseLatencyMs?: number }
+ *     commit: short git sha of the build, or null,
+ *     version: the build's version,
+ *     services: {
+ *       database: "ok" | "unreachable",
+ *       migrations: "ok" | "mismatch" | "unknown",
+ *       databaseLatencyMs?: number
+ *     }
  *   }
  *
  * HTTP status:
- *   200 — everything healthy.
- *   503 — at least one downstream is unreachable. Body still
- *         describes which service is broken so the monitor can
- *         alert with useful context, not just "site down".
+ *   200 — the database answered a trivial query within 2 seconds AND its
+ *         last applied migration is the build's last migration.
+ *   503 — otherwise, with one reason word and no detail. The cause goes to
+ *         the server log only.
  *
- * Public endpoint — no auth. Body contains only operational
- * metadata (no secrets, no PII, no tenant data). The git sha is
- * already public on GitHub for the same commit.
+ * Public endpoint — no auth. Reads only `_prisma_migrations` (and the
+ * rate-limit counter), never user data. The git sha is already public on
+ * GitHub for the same commit.
  */
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
@@ -35,21 +39,30 @@ import {
   clientIp,
   tooManyRequests,
 } from "@/server/middleware/public-rate-limit";
+import { checkHealth, type HealthProbe, type MigrationState } from "@/server/health";
 
 const logger = createLogger("health");
 
-const VERSION = "0.1.0"; // mirrors package.json; bumped manually on releases
+// Recorded at build time by next.config.ts.
+const EXPECTED_MIGRATION = process.env.DEALROOM_BUILD_MIGRATION ?? "";
+const VERSION = process.env.DEALROOM_BUILD_VERSION || "unknown";
+const COMMIT =
+  process.env.VERCEL_GIT_COMMIT_SHA?.slice(0, 7) || process.env.DEALROOM_BUILD_COMMIT || null;
 
-interface HealthSnapshot {
-  ok: boolean;
-  time: string;
-  commit: string | null;
-  version: string;
-  services: {
-    database: "ok" | "unreachable";
-    databaseLatencyMs?: number;
-  };
-}
+const probe: HealthProbe = {
+  // One round-trip, touches no table.
+  ping: () => prisma.$queryRaw`SELECT 1`,
+  async migrations(): Promise<MigrationState> {
+    const rows = await prisma.$queryRaw<{ last_applied: string | null; failed: bigint | number }[]>`
+      SELECT
+        (SELECT migration_name FROM _prisma_migrations
+          WHERE finished_at IS NOT NULL AND rolled_back_at IS NULL
+          ORDER BY migration_name DESC LIMIT 1) AS last_applied,
+        (SELECT COUNT(*) FROM _prisma_migrations
+          WHERE finished_at IS NULL AND rolled_back_at IS NULL) AS failed`;
+    return { lastApplied: rows[0]?.last_applied ?? null, failed: Number(rows[0]?.failed ?? 0) };
+  },
+};
 
 export async function GET(request: Request) {
   // Per-IP limit. Fails open, so an unreachable database still reaches the
@@ -57,33 +70,27 @@ export async function GET(request: Request) {
   const limit = await checkPublicRateLimit("health", clientIp(request.headers));
   if (!limit.allowed) return tooManyRequests(limit);
 
-  const start = Date.now();
-  const snapshot: HealthSnapshot = {
-    ok: true,
-    time: new Date().toISOString(),
-    commit: process.env.VERCEL_GIT_COMMIT_SHA?.slice(0, 7) ?? null,
-    version: VERSION,
-    services: { database: "ok" },
-  };
-
-  // Cheapest possible round-trip to confirm Postgres is reachable.
-  // SELECT 1 is one packet round-trip and does not touch any table.
-  try {
-    await prisma.$queryRaw`SELECT 1`;
-    snapshot.services.databaseLatencyMs = Date.now() - start;
-  } catch (e) {
-    // Detail goes to the Vercel log so we can see the cause; the
-    // public response stays minimal — a status flip plus the
-    // `database: "unreachable"` service marker is enough for an
-    // uptime monitor to alert on without leaking internals.
-    logger.error("database probe failed", { err: String(e) });
-    snapshot.ok = false;
-    snapshot.services.database = "unreachable";
-  }
-
-  return NextResponse.json(snapshot, {
-    status: snapshot.ok ? 200 : 503,
-    // Defeat any CDN caching — uptime monitors need a fresh read every time.
-    headers: { "Cache-Control": "no-store, max-age=0" },
+  const verdict = await checkHealth(probe, EXPECTED_MIGRATION, undefined, (reason, err) => {
+    logger.error("health check failed", { reason, err: String(err) });
   });
+
+  return NextResponse.json(
+    {
+      ok: verdict.ok,
+      reason: verdict.reason,
+      time: new Date().toISOString(),
+      commit: COMMIT,
+      version: VERSION,
+      services: {
+        database: verdict.reason === "database" ? "unreachable" : "ok",
+        migrations: verdict.ok ? "ok" : verdict.reason === "migrations" ? "mismatch" : "unknown",
+        ...(verdict.databaseLatencyMs !== null && { databaseLatencyMs: verdict.databaseLatencyMs }),
+      },
+    },
+    {
+      status: verdict.ok ? 200 : 503,
+      // Defeat any CDN caching — uptime monitors need a fresh read every time.
+      headers: { "Cache-Control": "no-store, max-age=0" },
+    },
+  );
 }

@@ -4,7 +4,7 @@
 
 import { ErrorScreen } from "@/components/ErrorScreen";
 
-export default function RootError({
+export default function PublicError({
   error,
   reset,
 }: {

@@ -71,3 +71,75 @@ jobs:
 
       - name: Build
         run: npm run build
+
+  # A fresh self-hosted install from zero, then a pilot user's walk through
+  # it: every migration in order on an EMPTY database, the seed, a
+  # production build, and the Playwright smoke walk at 1280 and 390 px
+  # (e2e/smoke/pilot-walk.spec.ts). Local throwaway database only.
+  fresh-install-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: dealroom
+          POSTGRES_PASSWORD: dealroom
+          POSTGRES_DB: dealroom_smoke
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U dealroom"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      DATABASE_URL: postgresql://dealroom:dealroom@localhost:5432/dealroom_smoke
+      DATABASE_URL_UNPOOLED: postgresql://dealroom:dealroom@localhost:5432/dealroom_smoke
+      # Self-host posture: local email sign-in, no Stripe, no mailer.
+      NEXT_PUBLIC_LOCAL_AUTH_ENABLED: "true"
+      NEXTAUTH_URL: http://127.0.0.1:3014
+      NEXTAUTH_SECRET: ci-smoke-only-not-a-secret
+      SMOKE_PORT: "3014"
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Every migration, in order, on an empty database
+        run: |
+          npx prisma migrate deploy
+          # Fails when any migration in the tree is not applied.
+          npx prisma migrate status
+
+      - name: Seed
+        run: npx prisma db seed
+
+      - name: Production build
+        run: npx next build
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Smoke walk (1280 px and 390 px)
+        run: npx playwright test -c playwright.smoke.config.ts
+
+      - name: Keep the report on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: smoke-report
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7

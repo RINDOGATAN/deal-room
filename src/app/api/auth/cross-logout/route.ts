@@ -2,8 +2,8 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 import { NextResponse } from "next/server";
-
-const isProduction = process.env.NODE_ENV === "production";
+import { brand } from "@/config/brand";
+import { resolveAuthCookiePolicy } from "@/lib/auth-cookie-policy";
 
 // All session cookie names used across todo.law apps
 const CROSS_APP_COOKIES = [
@@ -37,14 +37,9 @@ const CROSS_APP_COOKIES = [
 
 export async function POST() {
   const response = NextResponse.json({ ok: true });
-  // Sovereign/self-hosted deployments set AUTH_COOKIE_DOMAIN="" for a
-  // host-only cookie; the .todo.law cross-app SSO domain is cloud-only.
-  const domain =
-    process.env.AUTH_COOKIE_DOMAIN !== undefined
-      ? process.env.AUTH_COOKIE_DOMAIN || undefined
-      : isProduction
-        ? ".todo.law"
-        : undefined;
+  // Same secure flag and domain as the sign-in set (auth-cookie-policy.ts):
+  // a removal with any other domain leaves the session cookie in place.
+  const { secure, domain } = resolveAuthCookiePolicy(process.env, brand.cookieDomain);
 
   for (const name of CROSS_APP_COOKIES) {
     response.cookies.set(name, "", {
@@ -52,7 +47,7 @@ export async function POST() {
       path: "/",
       ...(domain && { domain }),
       httpOnly: true,
-      secure: isProduction,
+      secure,
       sameSite: "lax",
     });
   }
