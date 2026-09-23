@@ -4,6 +4,7 @@
 import { Resend } from "resend";
 import { brand } from "@/config/brand";
 import { createLogger } from "@/lib/logger";
+import { mailFrom } from "@/lib/mail-from";
 
 const logger = createLogger("email");
 
@@ -58,24 +59,6 @@ function emailMuted(text: string): string {
   return `<p style="color: ${brand.colors.muted}; font-size: 13px; line-height: 1.5; margin: 24px 0 0;">${text}</p>`;
 }
 
-function emailFrom(): string {
-  // Display name "DEALROOM by TODO.LAW" — explicit so recipients can
-  // tell this apart from sibling todo.law properties (DPO Central,
-  // AISentinel) that share the same noreply@ mailbox. Gmail caches a
-  // contact's display name aggressively, so recipients who have
-  // previously seen DPO Central mail from this address may still see
-  // the stale name in their inbox; the wire-side From header is now
-  // unambiguous and will surface correctly for new recipients.
-  const raw = process.env.EMAIL_FROM || "noreply@todo.law";
-  // Tolerate EMAIL_FROM being set either bare ("noreply@todo.law")
-  // or already formatted ("Whatever <noreply@todo.law>"); we always
-  // overwrite the display-name half. Non-greedy `(.+?)` so nested or
-  // malformed `<...>` sequences don't accidentally capture an inner
-  // angle bracket and produce a Resend-rejecting From header.
-  const emailAddr = raw.includes("<") ? raw.match(/<(.+?)>/)?.[1] ?? raw : raw;
-  return `DEALROOM by TODO.LAW <${emailAddr}>`;
-}
-
 // ────────────────────────────────────────────────────────────
 
 interface SendInvitationEmailParams {
@@ -95,7 +78,7 @@ export async function sendInvitationEmail({
 
   try {
     await getResend().emails.send({
-      from: emailFrom(),
+      from: mailFrom(),
       to,
       subject: `You're invited to negotiate: ${dealName}`,
       html: emailWrapper("Contract Negotiation", `
@@ -129,7 +112,7 @@ export async function sendAttorneyReviewRequestEmail({
 
   try {
     await getResend().emails.send({
-      from: emailFrom(),
+      from: mailFrom(),
       to,
       subject: `Attorney review requested: ${dealName}`,
       html: emailWrapper("Attorney Review", `
@@ -190,7 +173,7 @@ export async function sendRecommendationRequestEmail({
 
   try {
     await getResend().emails.send({
-      from: emailFrom(),
+      from: mailFrom(),
       to,
       ...(bcc && bcc.length > 0 ? { bcc } : {}),
       replyTo: requesterEmail,
@@ -227,7 +210,7 @@ export async function sendJointCounselNotificationEmail({
 
   try {
     await getResend().emails.send({
-      from: emailFrom(),
+      from: mailFrom(),
       to,
       subject: `Joint closing counsel requested: ${dealName}`,
       html: emailWrapper("Joint Counsel", `
@@ -261,7 +244,7 @@ export async function sendJointCounselAssignmentEmail({
 
   try {
     await getResend().emails.send({
-      from: emailFrom(),
+      from: mailFrom(),
       to,
       subject: `Joint closing counsel assignment: ${dealName}`,
       html: emailWrapper("Joint Counsel Assignment", `
@@ -294,7 +277,7 @@ export async function sendSigningInitiatedEmail({
 
   try {
     await getResend().emails.send({
-      from: emailFrom(),
+      from: mailFrom(),
       to,
       subject: `Ready to sign: ${dealName}`,
       html: emailWrapper("Contract Signing", `
@@ -332,7 +315,7 @@ export async function sendSigningNudgeEmail({
 
   try {
     await getResend().emails.send({
-      from: emailFrom(),
+      from: mailFrom(),
       to,
       subject: `Reminder from ${senderName}: ${dealName} is waiting for you`,
       html: emailWrapper("Contract Signing", `
@@ -367,7 +350,7 @@ export async function sendSigningExpiringSoonEmail({
 
   try {
     await getResend().emails.send({
-      from: emailFrom(),
+      from: mailFrom(),
       to,
       subject: `Reminder: signing expires in ${daysRemaining} ${dayWord} — ${dealName}`,
       html: emailWrapper("Contract Signing", `
@@ -399,7 +382,7 @@ export async function sendSigningExpiredEmail({
 
   try {
     await getResend().emails.send({
-      from: emailFrom(),
+      from: mailFrom(),
       to,
       subject: `Signing expired: ${dealName}`,
       html: emailWrapper("Contract Signing", `
@@ -432,7 +415,7 @@ export async function sendCounterpartySignedEmail({
 
   try {
     await getResend().emails.send({
-      from: emailFrom(),
+      from: mailFrom(),
       to,
       subject: `${signerName} has signed: ${dealName}`,
       html: emailWrapper("Contract Signing", `
@@ -467,7 +450,7 @@ export async function sendFirmasSigningEmail({
 }: SendFirmasSigningEmailParams) {
   try {
     await getResend().emails.send({
-      from: emailFrom(),
+      from: mailFrom(),
       to,
       subject: `${initiatorName} asked you to sign a ${contractType}`,
       html: emailWrapper("Sign on your phone", `

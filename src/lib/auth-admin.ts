@@ -7,6 +7,7 @@ import { Resend } from "resend";
 import { PrismaClient } from "@prisma/client";
 import { createAdminAdapter } from "./admin-adapter";
 import { brand } from "@/config/brand";
+import { mailFrom, mailProductName, signInSubject } from "@/lib/mail-from";
 import { createLogger } from "@/lib/logger";
 import { ADMIN_PORTAL_SALT, newPortalSessionId, portalJwtOptions } from "@/lib/portal-session";
 
@@ -23,7 +24,7 @@ export const adminAuthOptions: NextAuthOptions = {
   adapter: createAdminAdapter(prisma),
   providers: [
     EmailProvider({
-      from: process.env.EMAIL_FROM,
+      from: mailFrom(),
       sendVerificationRequest: async ({ identifier: email, url }) => {
         // Check if the email belongs to an active platform admin
         const admin = await prisma.platformAdmin.findUnique({
@@ -53,13 +54,13 @@ export const adminAuthOptions: NextAuthOptions = {
 
         try {
           await resend.emails.send({
-            from: `DEALROOM <${process.env.EMAIL_FROM || "noreply@todo.law"}>`,
+            from: mailFrom(),
             to: email,
-            subject: `Sign in to DEALROOM - Platform Admin`,
+            subject: signInSubject("administrator"),
             html: `
               <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 500px; margin: 0 auto; background: ${brand.colors.background}; border-radius: 12px; overflow: hidden;">
                 <div style="padding: 24px 24px 16px; border-bottom: 1px solid ${brand.colors.border};">
-                  <span style="font-size: 20px; font-weight: 700; color: ${brand.colors.foreground}; letter-spacing: 0.05em;">DEALROOM</span>
+                  <span style="font-size: 20px; font-weight: 700; color: ${brand.colors.foreground}; letter-spacing: 0.05em;">${mailProductName}</span>
                   <span style="font-size: 13px; color: ${brand.colors.muted}; margin-left: 10px;">Platform Admin</span>
                 </div>
                 <div style="padding: 32px 24px;">
@@ -68,7 +69,7 @@ export const adminAuthOptions: NextAuthOptions = {
                   <p style="color: ${brand.colors.muted}; font-size: 13px; line-height: 1.5; margin: 24px 0 0;">If you didn't request this email, you can safely ignore it.</p>
                 </div>
                 <div style="padding: 16px 24px; border-top: 1px solid ${brand.colors.border};">
-                  <p style="color: #666666; font-size: 11px; margin: 0;">${brand.company}&#8482; &middot; DEALROOM &middot; <a href="https://${brand.appDomain}" style="color: ${brand.colors.primary}; text-decoration: none;">${brand.appDomain}</a></p>
+                  <p style="color: #666666; font-size: 11px; margin: 0;">${brand.company}&#8482; &middot; ${mailProductName} &middot; <a href="https://${brand.appDomain}" style="color: ${brand.colors.primary}; text-decoration: none;">${brand.appDomain}</a></p>
                 </div>
               </div>
             `,

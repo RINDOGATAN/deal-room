@@ -10,6 +10,7 @@ import { verifyWebhookSignature, getSubscription } from "@/lib/stripe";
 import { features } from "@/config/features";
 import { brand } from "@/config/brand";
 import { getResend } from "@/lib/email";
+import { mailFrom } from "@/lib/mail-from";
 import { generateDownloadToken } from "@/lib/crypto";
 import { createLogger } from "@/lib/logger";
 
@@ -236,7 +237,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
 
       try {
         await getResend().emails.send({
-          from: process.env.EMAIL_FROM || `noreply@${brand.domain}`,
+          from: mailFrom(),
           to: customer.email,
           subject: "DEALROOM — Your Skill Packages Are Ready",
           html: `
@@ -499,7 +500,7 @@ async function handlePaymentFailed(invoice: Stripe.Invoice) {
   if (customer.email) {
     try {
       await getResend().emails.send({
-        from: process.env.EMAIL_FROM || `noreply@${brand.domain}`,
+        from: mailFrom(),
         to: customer.email,
         subject: "DEALROOM — Payment Failed",
         html: `
