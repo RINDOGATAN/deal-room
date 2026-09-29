@@ -5,8 +5,9 @@
  * Agent API — contract credit balance
  *
  * GET /api/v1/agent/credits/balance
- * The key's remaining credits, whether the customer's monthly plan is
- * active, and the latest ledger entries (purchases, contracts, reversals).
+ * The remaining credits of the key's customer (shared by all of its keys)
+ * and the latest ledger entries (purchases, contracts, reversals), each
+ * with the key that bought or spent it.
  */
 
 import { NextRequest, NextResponse } from "next/server";
@@ -18,7 +19,6 @@ import {
   ApiScopeError,
 } from "@/server/middleware/apiKeyAuth";
 import { apiError } from "@/lib/api-response";
-import { activePlanFor } from "@/server/services/billing/deal-entitlement";
 
 export async function GET(req: NextRequest) {
   try {
@@ -40,27 +40,24 @@ export async function GET(req: NextRequest) {
     }
 
     if (!features.stripeEnabled) {
-      return NextResponse.json({ billing: "off", balance: null, planActive: false, entries: [] });
+      return NextResponse.json({ billing: "off", balance: null, entries: [] });
     }
 
-    const [credit, plan] = await Promise.all([
-      prisma.agentCredit.findUnique({
-        where: { apiKeyId: auth.apiKey.id },
-        include: { entries: { orderBy: { createdAt: "desc" }, take: 20 } },
-      }),
-      activePlanFor(auth.customer.id),
-    ]);
+    const credit = await prisma.customerCredit.findUnique({
+      where: { customerId: auth.customer.id },
+      include: { entries: { orderBy: { createdAt: "desc" }, take: 20 } },
+    });
 
     return NextResponse.json({
       billing: "per_contract",
-      apiKeyId: auth.apiKey.id,
+      heldBy: "customer",
+      customerId: auth.customer.id,
       balance: credit?.balance ?? 0,
-      planActive: !!plan,
-      planPeriodEnd: plan?.currentPeriodEnd ?? null,
       entries: (credit?.entries ?? []).map((e) => ({
         delta: e.delta,
         reason: e.reason,
         dealRoomId: e.dealRoomId,
+        apiKeyId: e.apiKeyId,
         createdAt: e.createdAt,
       })),
     });

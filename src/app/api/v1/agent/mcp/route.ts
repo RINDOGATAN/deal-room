@@ -178,7 +178,7 @@ export async function GET() {
       {
         name: "download_contract",
         description: features.stripeEnabled
-          ? "Download the agreed contract (PDF, DOCX or TXT). Negotiation is free; the contract is paid when its document is first fetched: one prepaid credit of this key is spent (or the customer's monthly plan covers it). Later fetches of the same deal are free. With no credit and no plan the answer is HTTP 402 with code PAYMENT_REQUIRED and the link to buy credits."
+          ? "Download the agreed contract (PDF, DOCX or TXT). Negotiation is free; the contract is paid when its document is first fetched: one prepaid credit of the customer is spent (any of its keys draws on the one balance). Later fetches of the same deal are free. With no credit left the answer is HTTP 402 with code PAYMENT_REQUIRED and the link to buy credits."
           : "Download the agreed contract (PDF, DOCX or TXT). Payments are off on this deployment; every contract is free.",
         inputSchema: {
           type: "object",
@@ -205,7 +205,7 @@ export async function GET() {
       {
         name: "buy_credits",
         description:
-          "Open a hosted checkout for a pack of ten contract credits for this API key. Returns checkoutUrl for a person to open in a browser; the credits arrive when the payment succeeds. Answers 409 where payments are off.",
+          "Open a hosted checkout for a pack of ten contract credits for this API key's customer (any of its keys can spend them). Returns checkoutUrl for a person to open in a browser; the credits arrive when the payment succeeds. Answers 409 where payments are off.",
         inputSchema: {
           type: "object",
           properties: {
@@ -220,7 +220,7 @@ export async function GET() {
       {
         name: "get_credit_balance",
         description:
-          "Remaining contract credits for this API key, whether the monthly plan is active, and the latest ledger entries.",
+          "Remaining contract credits of this API key's customer (one balance shared by all of its keys) and the latest ledger entries.",
         inputSchema: { type: "object", properties: {}, required: [] },
         endpoint: { method: "GET", url: `${baseUrl}/credits/balance` },
         requiredScopes: ["billing:read"],
@@ -235,24 +235,6 @@ export async function GET() {
           required: [],
         },
         endpoint: { method: "GET", url: `${baseUrl}/subscriptions` },
-        requiredScopes: ["billing:read"],
-      },
-      {
-        name: "subscribe",
-        description:
-          "Open a hosted checkout for the monthly plan (unlimited contracts) for this API key's customer. While it is active, fetching an agreed contract spends no credit. Answers 409 where payments are off. Every template is included; skills are not sold one by one (a request naming skillIds answers 410).",
-        inputSchema: {
-          type: "object",
-          properties: {
-            currency: { type: "string", enum: ["usd", "eur"], default: "usd" },
-            returnUrl: {
-              type: "string",
-              description: "URL to redirect to after checkout",
-            },
-          },
-          required: [],
-        },
-        endpoint: { method: "POST", url: `${baseUrl}/subscribe` },
         requiredScopes: ["billing:read"],
       },
     ];

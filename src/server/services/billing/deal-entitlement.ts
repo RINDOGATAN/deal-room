@@ -5,11 +5,11 @@
  * Per-deal entitlement for pay per contract.
  *
  * A deal is paid when it holds a PAID `deal_payments` row: a one-off
- * payment for that deal, an agent credit spent on it, or the monthly plan
- * that covered it. The check runs only in the document routes (PDF, DOCX,
- * TXT) and at the start of the signature; negotiation, counter-offers and
- * the on-screen preview never call it. With Stripe off (the kit) every deal
- * counts as paid and nothing is read.
+ * payment for that deal, or an agent credit spent on it. The check runs
+ * only in the document routes (PDF, DOCX, TXT) and at the start of the
+ * signature; negotiation, counter-offers and the on-screen preview never
+ * call it. With Stripe off (the kit) every deal counts as paid and nothing
+ * is read. (The monthly plan was discarded in round 2; there is none.)
  */
 
 import { NextResponse } from "next/server";
@@ -20,10 +20,9 @@ import {
   AGENT_PAYMENT_REQUIRED_MESSAGE,
   PAYMENT_REQUIRED_MESSAGE,
   dealPredatesBilling,
-  planCoversContracts,
 } from "@/lib/contract-billing";
 
-export type DealAccessVia = "billing_off" | "payment" | "predates_billing" | "plan" | "credit";
+export type DealAccessVia = "billing_off" | "payment" | "predates_billing" | "credit";
 export type DealAccess = { paid: true; via: DealAccessVia } | { paid: false };
 
 function isUniqueViolation(err: unknown) {
@@ -51,47 +50,6 @@ async function predatesBilling(dealRoomId: string) {
   });
 }
 
-/** The customer's active monthly plan, if any. */
-export async function activePlanFor(customerId: string) {
-  const plans = await prisma.contractPlan.findMany({
-    where: { customerId },
-    orderBy: { updatedAt: "desc" },
-  });
-  return plans.find((p) => planCoversContracts(p.status, p.currentPeriodEnd)) ?? null;
-}
-
-/** Record that the plan covered this deal, so it stays paid after the plan ends. */
-async function recordPlanCoverage(opts: {
-  dealRoomId: string;
-  customerId: string;
-  stripeSubscriptionId: string;
-  payerUserId?: string;
-  payerApiKeyId?: string;
-}) {
-  const dedupeKey = `plan:${opts.dealRoomId}`;
-  await prisma.dealPayment.upsert({
-    where: { dedupeKey },
-    update: {
-      status: "PAID",
-      revokedAt: null,
-      revokedReason: null,
-      paidAt: new Date(),
-      stripeSubscriptionId: opts.stripeSubscriptionId,
-      customerId: opts.customerId,
-    },
-    create: {
-      dealRoomId: opts.dealRoomId,
-      kind: "PLAN",
-      dedupeKey,
-      customerId: opts.customerId,
-      payerUserId: opts.payerUserId,
-      payerApiKeyId: opts.payerApiKeyId,
-      stripeSubscriptionId: opts.stripeSubscriptionId,
-      amount: 0,
-    },
-  });
-}
-
 /** Whether the deal is paid, without spending anything. Used by the UI. */
 export async function isDealPaid(dealRoomId: string): Promise<DealAccess> {
   if (!features.stripeEnabled) return { paid: true, via: "billing_off" };
@@ -101,39 +59,23 @@ export async function isDealPaid(dealRoomId: string): Promise<DealAccess> {
 }
 
 /**
- * Access for a signed-in person who is a party to the deal. A plan holder
- * gets the deal recorded as covered by the plan.
+ * Access for a signed-in person who is a party to the deal: the deal is
+ * paid, predates billing, or billing is off. People pay per contract on
+ * the deal page; they hold no credits.
  */
 export async function dealAccessForUser(
   dealRoomId: string,
-  user: { id: string; email?: string | null },
+  _user: { id: string; email?: string | null },
 ): Promise<DealAccess> {
-  const base = await isDealPaid(dealRoomId);
-  if (base.paid || !user.email) return base;
-
-  const customer = await prisma.customer.findFirst({
-    where: { email: { equals: user.email, mode: "insensitive" } },
-    select: { id: true },
-  });
-  if (!customer) return { paid: false };
-
-  const plan = await activePlanFor(customer.id);
-  if (!plan) return { paid: false };
-
-  await recordPlanCoverage({
-    dealRoomId,
-    customerId: customer.id,
-    stripeSubscriptionId: plan.stripeSubscriptionId,
-    payerUserId: user.id,
-  });
-  return { paid: true, via: "plan" };
+  return isDealPaid(dealRoomId);
 }
 
 /**
- * Spend one credit of the key on the deal. Atomic: the balance only drops
- * when the CREDIT row is written, and the row's dedupe key stops a second
- * concurrent fetch from spending again. Returns false when the key has no
- * credit left.
+ * Spend one of the customer's credits on the deal. Atomic: the balance
+ * only drops when the CREDIT row is written, and the row's dedupe key stops
+ * a second concurrent fetch (from any key of the customer) from spending
+ * again. Returns false when the customer has no credit left. The key that
+ * fetched is recorded, but the credit is the customer's.
  */
 export async function consumeCredit(opts: {
   dealRoomId: string;
@@ -142,8 +84,8 @@ export async function consumeCredit(opts: {
 }): Promise<boolean> {
   try {
     return await prisma.$transaction(async (tx) => {
-      const debited = await tx.agentCredit.updateMany({
-        where: { apiKeyId: opts.apiKeyId, balance: { gte: 1 } },
+      const debited = await tx.customerCredit.updateMany({
+        where: { customerId: opts.customerId, balance: { gte: 1 } },
         data: { balance: { decrement: 1 } },
       });
       if (debited.count === 0) return false;
@@ -156,8 +98,9 @@ export async function consumeCredit(opts: {
           customerId: opts.customerId,
         },
       });
-      await tx.agentCreditEntry.create({
+      await tx.customerCreditEntry.create({
         data: {
+          customerId: opts.customerId,
           apiKeyId: opts.apiKeyId,
           delta: -1,
           reason: "CONSUME",
@@ -175,8 +118,8 @@ export async function consumeCredit(opts: {
 }
 
 /**
- * Access for an agent API key: an existing payment, then the customer's
- * monthly plan, then one of the key's prepaid credits.
+ * Access for an agent API key: an existing payment, else one of the
+ * prepaid credits of the key's customer.
  */
 export async function dealAccessForAgent(
   dealRoomId: string,
@@ -184,18 +127,6 @@ export async function dealAccessForAgent(
 ): Promise<DealAccess> {
   const base = await isDealPaid(dealRoomId);
   if (base.paid) return base;
-
-  const plan = await activePlanFor(auth.customerId);
-  if (plan) {
-    await recordPlanCoverage({
-      dealRoomId,
-      customerId: auth.customerId,
-      stripeSubscriptionId: plan.stripeSubscriptionId,
-      payerApiKeyId: auth.apiKeyId,
-    });
-    return { paid: true, via: "plan" };
-  }
-
   if (await consumeCredit({ dealRoomId, ...auth })) return { paid: true, via: "credit" };
   return { paid: false };
 }

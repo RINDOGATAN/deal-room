@@ -28,14 +28,13 @@ export function getStripe(): Stripe {
 }
 
 /**
- * Hosted checkout for pay per contract. `mode: "payment"` for a contract or
- * a credit pack (one-off), `mode: "subscription"` for the monthly plan.
- * The metadata (`kind` plus the deal id or the API key id) is copied onto
- * the payment intent or the subscription, so refunds and renewals can be
- * traced back without a lookup.
+ * Hosted checkout for pay per contract: a contract or a credit pack, both
+ * one-off payments. The metadata (`kind` plus the deal id or the customer
+ * id) is copied onto the payment intent, so refunds can be traced back
+ * without a lookup.
  */
 export async function createBillingCheckout(params: {
-  mode: "payment" | "subscription";
+  mode: "payment";
   priceId: string;
   stripeCustomerId: string;
   metadata: Record<string, string>;
@@ -53,9 +52,7 @@ export async function createBillingCheckout(params: {
     cancel_url: params.cancelUrl,
     metadata: params.metadata,
     ...(params.locale ? { locale: params.locale } : {}),
-    ...(params.mode === "payment"
-      ? { payment_intent_data: { metadata: params.metadata } }
-      : { subscription_data: { metadata: params.metadata } }),
+    payment_intent_data: { metadata: params.metadata },
   };
   return stripe.checkout.sessions.create(sessionParams);
 }

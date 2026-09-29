@@ -9,18 +9,19 @@
  * deal is paid, it renders them unchanged; otherwise it renders the "Get
  * this contract" action in their place. `<ContractPaymentPanel>` is the
  * same action with its explanation, for the signing page. Amounts come
- * from the Stripe prices (never from code); if they cannot be read the
- * button shows no number rather than a wrong one. `<CheckoutReturn>`
+ * from `PRICE_DISPLAY_CONTRACT` or the Stripe price (never from code); if
+ * neither is known the button shows no number rather than a wrong one.
+ * `<CheckoutReturn>`
  * confirms the payment when Stripe sends the person back to the deal.
  */
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import { useLocale, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { CreditCard, Loader2 } from "lucide-react";
 import { features } from "@/config/features";
 import { trpc } from "@/lib/trpc";
-import { formatAmount, type BillingCurrency } from "@/lib/contract-billing";
+import type { BillingCurrency } from "@/lib/contract-billing";
 import { cn } from "@/lib/utils";
 
 function useDealPayment(dealId: string) {
@@ -32,30 +33,20 @@ function useDealPayment(dealId: string) {
 
 function GetContract({ dealId, variant }: { dealId: string; variant: "inline" | "panel" }) {
   const t = useTranslations("contractBilling");
-  const locale = useLocale();
   const { data: pricing } = trpc.billing.getContractPricing.useQuery();
   const [chosen, setChosen] = useState<BillingCurrency | null>(null);
-  const [busy, setBusy] = useState<"contract" | "plan" | null>(null);
+  const [busy, setBusy] = useState(false);
 
   const currency = chosen ?? pricing?.defaultCurrency ?? "usd";
-  const amountOf = (product: "contract" | "monthly") => {
-    const minor = pricing?.prices?.[product]?.[currency];
-    return typeof minor === "number" ? formatAmount(minor, currency, locale) : null;
-  };
-  const contractPrice = amountOf("contract");
-  const planPrice = amountOf("monthly");
+  const contractPrice = pricing?.display?.contract[currency] ?? null;
 
-  const open = async (what: "contract" | "plan") => {
-    setBusy(what);
+  const open = async () => {
+    setBusy(true);
     try {
-      const res = await fetch(what === "contract" ? `/api/deals/${dealId}/checkout` : "/api/checkout", {
+      const res = await fetch(`/api/deals/${dealId}/checkout`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(
-          what === "contract"
-            ? { currency }
-            : { plan: "unlimited", currency, returnUrl: `/deals/${dealId}` },
-        ),
+        body: JSON.stringify({ currency }),
       });
       const body = (await res.json().catch(() => ({}))) as { url?: string; error?: string };
       if (res.ok && body.url) {
@@ -67,7 +58,7 @@ function GetContract({ dealId, variant }: { dealId: string; variant: "inline" | 
     } catch {
       toast.error(t("failed"));
     }
-    setBusy(null);
+    setBusy(false);
   };
 
   const currencySwitch = (
@@ -93,24 +84,13 @@ function GetContract({ dealId, variant }: { dealId: string; variant: "inline" | 
   const button = (
     <button
       type="button"
-      onClick={() => open("contract")}
-      disabled={busy !== null}
+      onClick={open}
+      disabled={busy}
       data-testid="get-contract"
       className="inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 disabled:opacity-60"
     >
-      {busy === "contract" ? <Loader2 className="w-4 h-4 animate-spin" /> : <CreditCard className="w-4 h-4" />}
+      {busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <CreditCard className="w-4 h-4" />}
       {contractPrice ? t("getContractPrice", { price: contractPrice }) : t("getContract")}
-    </button>
-  );
-
-  const planLink = (
-    <button
-      type="button"
-      onClick={() => open("plan")}
-      disabled={busy !== null}
-      className="text-xs text-muted-foreground underline underline-offset-2 hover:text-foreground disabled:opacity-60"
-    >
-      {planPrice ? t("planOffer", { price: planPrice }) : t("planOfferNoPrice")}
     </button>
   );
 
@@ -119,7 +99,6 @@ function GetContract({ dealId, variant }: { dealId: string; variant: "inline" | 
       <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
         {button}
         {currencySwitch}
-        {planLink}
       </div>
     );
   }
@@ -131,7 +110,6 @@ function GetContract({ dealId, variant }: { dealId: string; variant: "inline" | 
         {button}
         {currencySwitch}
       </div>
-      <div>{planLink}</div>
     </div>
   );
 }
@@ -157,9 +135,9 @@ export function ContractPaymentPanel({ dealId, className }: { dealId: string; cl
 }
 
 /**
- * On return from Stripe (`?paid=1&session_id=…` or `?plan=active`), record
- * the payment at once and refresh the deal's state. The webhook records the
- * same payment independently; both paths are idempotent.
+ * On return from Stripe (`?paid=1&session_id=…`), record the payment at
+ * once and refresh the deal's state. The webhook records the same payment
+ * independently; both paths are idempotent.
  */
 export function CheckoutReturn({ dealId }: { dealId: string }) {
   const t = useTranslations("contractBilling");
@@ -170,22 +148,14 @@ export function CheckoutReturn({ dealId }: { dealId: string }) {
     if (!features.stripeEnabled || done.current) return;
     const params = new URLSearchParams(window.location.search);
     const sessionId = params.get("session_id");
-    const planReturn = params.get("plan") === "active";
-    if (!sessionId && !planReturn) return;
+    if (!sessionId) return;
     done.current = true;
 
     const clean = () => {
       const url = new URL(window.location.href);
-      ["paid", "session_id", "plan", "checkout"].forEach((k) => url.searchParams.delete(k));
+      ["paid", "session_id", "checkout"].forEach((k) => url.searchParams.delete(k));
       window.history.replaceState(null, "", url.toString());
     };
-
-    if (planReturn && !sessionId) {
-      toast.success(t("planActive"));
-      clean();
-      void utils.billing.invalidate();
-      return;
-    }
 
     toast.info(t("confirming"));
     fetch("/api/checkout/activate", {
@@ -193,9 +163,8 @@ export function CheckoutReturn({ dealId }: { dealId: string }) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ sessionId }),
     })
-      .then(async (res) => {
-        const body = (await res.json().catch(() => ({}))) as { kind?: string };
-        if (res.ok) toast.success(body.kind === "plan" ? t("planActive") : t("paid"));
+      .then((res) => {
+        if (res.ok) toast.success(t("paid"));
         else toast.info(t("notConfirmed"));
       })
       .catch(() => toast.info(t("notConfirmed")))

@@ -75,7 +75,7 @@ export async function GET(
     }
 
     // Pay per contract: the first fetch of an agreed contract spends one
-    // credit (or is covered by a payment or the monthly plan).
+    // credit of the customer (or is already covered by a payment).
     const access = await dealAccessForAgent(agentDeal.dealRoomId, {
       apiKeyId: auth.apiKey.id,
       customerId: auth.customer.id,

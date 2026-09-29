@@ -3,7 +3,7 @@
 
 /**
  * POST /api/v1/agent/credits/checkout: a pack of ten, priced from the
- * environment, with the API key id in the checkout metadata.
+ * environment, credited to the key's customer (the key is noted only).
  */
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { NextRequest } from "next/server";
@@ -51,7 +51,10 @@ afterEach(() => {
 });
 
 describe("agent credit checkout", () => {
-  it("opens a one-off checkout for one pack, key id in metadata", async () => {
+  it("opens a one-off checkout for one pack, owned by the key's customer", async () => {
+    // Even if the e-mail lookup found another customer row, the credits go
+    // to the customer that owns the key.
+    stripe.getOrCreateStripeCustomer.mockResolvedValueOnce({ customerId: "cust_other", stripeCustomerId: "cus_1" });
     const res = await POST(req({ currency: "eur" }));
     expect(res.status).toBe(200);
     expect(await res.json()).toEqual({
@@ -63,7 +66,7 @@ describe("agent credit checkout", () => {
       expect.objectContaining({
         mode: "payment",
         priceId: "price_pack_eur",
-        metadata: { kind: "credits", apiKeyId: "key_1", customerId: "cust_1", credits: "10" },
+        metadata: { kind: "credits", customerId: "cust_1", apiKeyId: "key_1", credits: "10" },
       }),
     );
   });

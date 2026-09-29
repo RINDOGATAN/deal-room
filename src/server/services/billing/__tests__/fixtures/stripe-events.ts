@@ -31,13 +31,14 @@ export const creditsSessionPaid = {
   object: "checkout.session",
   mode: "payment",
   payment_status: "paid",
-  amount_total: 26100,
+  amount_total: 21750,
   currency: "usd",
   payment_intent: "pi_test_credits_1",
   subscription: null,
   metadata: { kind: "credits", apiKeyId: "key_1", customerId: "cust_2", credits: "10" },
 } as unknown as Stripe.Checkout.Session;
 
+/** A session carrying the discarded "plan" kind: not pay per contract any more. */
 export const planSessionComplete = {
   id: "cs_test_plan_1",
   object: "checkout.session",
@@ -46,16 +47,6 @@ export const planSessionComplete = {
   subscription: "sub_test_plan_1",
   metadata: { kind: "plan", customerId: "cust_3", userId: "user_3" },
 } as unknown as Stripe.Checkout.Session;
-
-export const planSubscriptionActive = {
-  id: "sub_test_plan_1",
-  object: "subscription",
-  status: "active",
-  metadata: { kind: "plan", customerId: "cust_3" },
-  items: {
-    data: [{ current_period_start: 1790000000, current_period_end: 1792592000 }],
-  },
-} as unknown as Stripe.Subscription;
 
 export const legacySkillSession = {
   id: "cs_test_legacy",

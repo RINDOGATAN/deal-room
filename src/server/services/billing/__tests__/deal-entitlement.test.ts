@@ -5,7 +5,7 @@
  * Pay per contract: who may download or sign a deal. Hermetic: Prisma and
  * the feature flags are mocked.
  */
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { Prisma } from "@prisma/client";
 
 const flags = vi.hoisted(() => ({ stripeEnabled: true }));
@@ -16,6 +16,9 @@ const db = vi.hoisted(() => {
     dealPayment: { findFirst: vi.fn(), upsert: vi.fn(), create: vi.fn() },
     dealRoom: { findUnique: vi.fn() },
     customer: { findFirst: vi.fn() },
+    customerCredit: { updateMany: vi.fn() },
+    customerCreditEntry: { create: vi.fn() },
+    // Round-1 tables: must never be touched any more.
     contractPlan: { findMany: vi.fn() },
     agentCredit: { updateMany: vi.fn() },
     agentCreditEntry: { create: vi.fn() },
@@ -35,8 +38,9 @@ import {
   agentPaymentRequiredResponse,
 } from "../deal-entitlement";
 
+const START = "2026-10-01";
 const AGREED = { status: "AGREED", createdAt: new Date("2026-10-05T00:00:00Z"), signingRequest: null };
-const FUTURE = new Date(Date.now() + 10 * 86400_000);
+const ORIGINAL_START = process.env.CONTRACT_BILLING_START;
 
 beforeEach(() => {
   vi.clearAllMocks();
@@ -44,10 +48,13 @@ beforeEach(() => {
   db.$transaction.mockImplementation(async (fn: (tx: typeof db) => unknown) => fn(db));
   db.dealPayment.findFirst.mockResolvedValue(null);
   db.dealRoom.findUnique.mockResolvedValue(AGREED);
-  db.customer.findFirst.mockResolvedValue(null);
-  db.contractPlan.findMany.mockResolvedValue([]);
-  db.agentCredit.updateMany.mockResolvedValue({ count: 0 });
-  delete process.env.CONTRACT_BILLING_START;
+  db.customerCredit.updateMany.mockResolvedValue({ count: 0 });
+  process.env.CONTRACT_BILLING_START = START;
+});
+
+afterAll(() => {
+  if (ORIGINAL_START === undefined) delete process.env.CONTRACT_BILLING_START;
+  else process.env.CONTRACT_BILLING_START = ORIGINAL_START;
 });
 
 describe("isDealPaid", () => {
@@ -70,52 +77,65 @@ describe("isDealPaid", () => {
     expect(await isDealPaid("d1")).toEqual({ paid: true, via: "predates_billing" });
   });
 
-  it("is unpaid for an agreed deal with no payment", async () => {
+  it("does not charge a deal from before the billing start", async () => {
+    db.dealRoom.findUnique.mockResolvedValue({ ...AGREED, createdAt: new Date("2026-09-20T00:00:00Z") });
+    expect(await isDealPaid("d1")).toEqual({ paid: true, via: "predates_billing" });
+  });
+
+  it("is unpaid for a deal from after the billing start with no payment", async () => {
     expect(await isDealPaid("d1")).toEqual({ paid: false });
   });
 });
 
 describe("dealAccessForUser", () => {
-  it("records the plan's coverage when the person holds an active monthly plan", async () => {
-    db.customer.findFirst.mockResolvedValue({ id: "c1" });
-    db.contractPlan.findMany.mockResolvedValue([
-      { stripeSubscriptionId: "sub_1", status: "active", currentPeriodEnd: FUTURE },
-    ]);
-    const access = await dealAccessForUser("d1", { id: "u1", email: "a@example.com" });
-    expect(access).toEqual({ paid: true, via: "plan" });
-    expect(db.dealPayment.upsert).toHaveBeenCalledWith(
-      expect.objectContaining({
-        where: { dedupeKey: "plan:d1" },
-        create: expect.objectContaining({ kind: "PLAN", payerUserId: "u1", stripeSubscriptionId: "sub_1" }),
-      }),
-    );
+  it("has no plan to fall back on: an unpaid deal stays unpaid", async () => {
+    expect(await dealAccessForUser("d1", { id: "u1", email: "a@example.com" })).toEqual({ paid: false });
+    expect(db.contractPlan.findMany).not.toHaveBeenCalled();
+    expect(db.dealPayment.upsert).not.toHaveBeenCalled();
   });
 
-  it("refuses when the plan is past due", async () => {
-    db.customer.findFirst.mockResolvedValue({ id: "c1" });
-    db.contractPlan.findMany.mockResolvedValue([
-      { stripeSubscriptionId: "sub_1", status: "past_due", currentPeriodEnd: FUTURE },
-    ]);
-    expect(await dealAccessForUser("d1", { id: "u1", email: "a@example.com" })).toEqual({ paid: false });
-    expect(db.dealPayment.upsert).not.toHaveBeenCalled();
+  it("lets a paid deal through", async () => {
+    db.dealPayment.findFirst.mockResolvedValue({ id: "p1" });
+    expect(await dealAccessForUser("d1", { id: "u1", email: "a@example.com" })).toEqual({
+      paid: true,
+      via: "payment",
+    });
   });
 });
 
-describe("agent credits", () => {
-  it("spends one credit on the first fetch and writes the deal payment and the ledger entry", async () => {
-    db.agentCredit.updateMany.mockResolvedValue({ count: 1 });
+describe("agent credits, held per customer", () => {
+  it("spends one of the customer's credits on the first fetch, noting the key", async () => {
+    db.customerCredit.updateMany.mockResolvedValue({ count: 1 });
     const access = await dealAccessForAgent("d1", { apiKeyId: "k1", customerId: "c1" });
     expect(access).toEqual({ paid: true, via: "credit" });
-    expect(db.agentCredit.updateMany).toHaveBeenCalledWith({
-      where: { apiKeyId: "k1", balance: { gte: 1 } },
+    expect(db.customerCredit.updateMany).toHaveBeenCalledWith({
+      where: { customerId: "c1", balance: { gte: 1 } },
       data: { balance: { decrement: 1 } },
     });
     expect(db.dealPayment.create).toHaveBeenCalledWith({
-      data: expect.objectContaining({ kind: "CREDIT", dedupeKey: "credit:d1", payerApiKeyId: "k1" }),
+      data: expect.objectContaining({
+        kind: "CREDIT",
+        dedupeKey: "credit:d1",
+        payerApiKeyId: "k1",
+        customerId: "c1",
+      }),
     });
-    expect(db.agentCreditEntry.create).toHaveBeenCalledWith({
-      data: { apiKeyId: "k1", delta: -1, reason: "CONSUME", dealRoomId: "d1" },
+    expect(db.customerCreditEntry.create).toHaveBeenCalledWith({
+      data: { customerId: "c1", apiKeyId: "k1", delta: -1, reason: "CONSUME", dealRoomId: "d1" },
     });
+    expect(db.agentCredit.updateMany).not.toHaveBeenCalled();
+    expect(db.agentCreditEntry.create).not.toHaveBeenCalled();
+  });
+
+  it("draws on the same balance from another key of the customer (a rotated key changes nothing)", async () => {
+    db.customerCredit.updateMany.mockResolvedValue({ count: 1 });
+    await dealAccessForAgent("d1", { apiKeyId: "k1", customerId: "c1" });
+    await dealAccessForAgent("d2", { apiKeyId: "k2-rotated", customerId: "c1" });
+    const wheres = db.customerCredit.updateMany.mock.calls.map((c) => c[0].where);
+    expect(wheres).toEqual([
+      { customerId: "c1", balance: { gte: 1 } },
+      { customerId: "c1", balance: { gte: 1 } },
+    ]);
   });
 
   it("does not spend again once the deal is paid", async () => {
@@ -124,10 +144,19 @@ describe("agent credits", () => {
       paid: true,
       via: "payment",
     });
-    expect(db.agentCredit.updateMany).not.toHaveBeenCalled();
+    expect(db.customerCredit.updateMany).not.toHaveBeenCalled();
   });
 
-  it("is unpaid with no credit left", async () => {
+  it("does not spend on a deal from before the billing start", async () => {
+    db.dealRoom.findUnique.mockResolvedValue({ ...AGREED, createdAt: new Date("2026-09-20T00:00:00Z") });
+    expect(await dealAccessForAgent("d1", { apiKeyId: "k1", customerId: "c1" })).toEqual({
+      paid: true,
+      via: "predates_billing",
+    });
+    expect(db.customerCredit.updateMany).not.toHaveBeenCalled();
+  });
+
+  it("is unpaid when the customer has no credit left", async () => {
     expect(await dealAccessForAgent("d1", { apiKeyId: "k1", customerId: "c1" })).toEqual({ paid: false });
     expect(db.dealPayment.create).not.toHaveBeenCalled();
   });
@@ -141,12 +170,13 @@ describe("agent credits", () => {
 });
 
 describe("402 responses", () => {
-  it("gives a person a plain message and the checkout link", async () => {
+  it("gives a person a plain message and the checkout link, without a plan", async () => {
     const res = paymentRequiredResponse("d1");
     expect(res.status).toBe(402);
     const body = await res.json();
     expect(body.code).toBe("PAYMENT_REQUIRED");
     expect(body.error).toMatch(/not paid yet/);
+    expect(body.error).not.toMatch(/plan/);
     expect(body.checkout).toEqual({ method: "POST", url: "/api/deals/d1/checkout" });
   });
 
@@ -154,6 +184,7 @@ describe("402 responses", () => {
     const res = agentPaymentRequiredResponse();
     expect(res.status).toBe(402);
     const body = await res.json();
+    expect(body.error).toMatch(/your account has no credits/);
     expect(body.checkout.url).toBe("/api/v1/agent/credits/checkout");
     expect(body.balance.url).toBe("/api/v1/agent/credits/balance");
   });

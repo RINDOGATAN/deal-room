@@ -55,12 +55,12 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
     }
 
-    // Pay per contract (contract or monthly plan): record it now, so the
+    // Pay per contract (a contract or a credit pack): record it now, so the
     // download is unlocked when the person lands back on the deal, even if
     // the webhook has not arrived yet. Idempotent with the webhook.
     const kind = billingKindOf(checkoutSession.metadata);
     if (kind) {
-      await fulfilCheckoutSession(checkoutSession, getSubscription);
+      await fulfilCheckoutSession(checkoutSession);
       return NextResponse.json({
         activated: true,
         kind,

@@ -2,119 +2,34 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * Agent API — the monthly plan (unlimited contracts)
+ * Agent API — subscriptions, retired (HTTP 410)
  *
  * POST /api/v1/agent/subscribe
- * Opens a hosted Stripe checkout for the monthly plan for the key's
- * customer and returns the URL for a person to open in a browser. While
- * the plan is active, every agreed contract the customer's agents fetch is
- * covered, and no credit is spent.
+ * This route sold per-skill subscriptions, and in round 1 of pay per
+ * contract it was going to sell a monthly plan. Both are gone (owner
+ * decision 2026-09-29): every template is included and each contract is
+ * paid with one prepaid credit of the customer when its document is first
+ * fetched. Credits: POST /api/v1/agent/credits/checkout.
  *
- * Pay per contract (2026-09-29) replaced per-skill subscriptions: every
- * template is included. A request naming `skillIds` gets 410.
- *
- * Body (optional): { currency?: "usd" | "eur", returnUrl?: string }
+ * The answer is the same in every posture (where the agent API itself is
+ * on), because the thing it sold no longer exists anywhere. Existing
+ * per-skill subscribers are untouched; the webhook keeps serving them.
  */
 
-import { NextRequest, NextResponse } from "next/server";
-import prisma from "@/lib/prisma";
-import { createBillingCheckout, getOrCreateStripeCustomer } from "@/lib/stripe";
+import { NextResponse } from "next/server";
 import { features } from "@/config/features";
-import {
-  authenticateApiKey,
-  requireScope,
-  ApiScopeError,
-} from "@/server/middleware/apiKeyAuth";
-import { apiError } from "@/lib/api-response";
-import { chooseCurrency, priceIdFor } from "@/lib/contract-billing";
-import { activePlanFor } from "@/server/services/billing/deal-entitlement";
-import { appBaseUrl } from "@/server/services/billing/checkout";
+import { AGENT_SUBSCRIBE_GONE_MESSAGE } from "@/lib/contract-billing";
 
-/** Only http(s) return targets are passed to Stripe. */
-function safeReturnUrl(value: unknown): string | null {
-  if (typeof value !== "string") return null;
-  try {
-    const url = new URL(value);
-    return url.protocol === "https:" || url.protocol === "http:" ? url.toString() : null;
-  } catch {
-    return null;
+export async function POST() {
+  if (!features.agentApi) {
+    return NextResponse.json({ error: "Not available" }, { status: 404 });
   }
-}
-
-export async function POST(req: NextRequest) {
-  try {
-    if (!features.agentApi) {
-      return NextResponse.json({ error: "Not available" }, { status: 404 });
-    }
-    if (!features.stripeEnabled) {
-      return NextResponse.json(
-        { error: "Payments are disabled; every contract is free" },
-        { status: 409 }
-      );
-    }
-
-    const auth = await authenticateApiKey(req);
-    if (!auth) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    try {
-      requireScope(auth, "billing:read");
-    } catch (e) {
-      if (e instanceof ApiScopeError) {
-        return NextResponse.json({ error: e.message }, { status: 403 });
-      }
-      throw e;
-    }
-
-    const body = (await req.json().catch(() => ({}))) as {
-      skillIds?: string[];
-      currency?: unknown;
-      returnUrl?: unknown;
-    };
-
-    if (body.skillIds?.length) {
-      return NextResponse.json(
-        {
-          error:
-            "Skills are no longer sold one by one: every template is included and each contract is paid when its document is first fetched. Subscribe without skillIds for the monthly plan, or buy credits (POST /api/v1/agent/credits/checkout).",
-        },
-        { status: 410 }
-      );
-    }
-
-    if (await activePlanFor(auth.customer.id)) {
-      return NextResponse.json({ error: "This customer already has the monthly plan" }, { status: 409 });
-    }
-
-    const { customerId, stripeCustomerId } = await getOrCreateStripeCustomer(
-      prisma,
-      auth.customer.email,
-      auth.customer.name
-    );
-    const currency = chooseCurrency({ requested: body.currency });
-    const priceId = priceIdFor("monthly", currency);
-    if (!priceId) {
-      return NextResponse.json({ error: "The monthly plan price is not configured" }, { status: 503 });
-    }
-
-    const returnUrl = safeReturnUrl(body.returnUrl);
-    const base = appBaseUrl();
-    const checkoutSession = await createBillingCheckout({
-      mode: "subscription",
-      priceId,
-      stripeCustomerId,
-      metadata: { kind: "plan", customerId, apiKeyId: auth.apiKey.id },
-      successUrl: returnUrl ?? `${base}/billing?plan=active`,
-      cancelUrl: returnUrl ?? `${base}/billing`,
-    });
-
-    return NextResponse.json({
-      checkoutUrl: checkoutSession.url,
-      plan: "unlimited",
-      currency,
-    });
-  } catch (error) {
-    return apiError(error, "Internal server error");
-  }
+  return NextResponse.json(
+    {
+      error: AGENT_SUBSCRIBE_GONE_MESSAGE,
+      code: "GONE",
+      buyCredits: { method: "POST", url: "/api/v1/agent/credits/checkout" },
+    },
+    { status: 410 },
+  );
 }

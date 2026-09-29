@@ -2,8 +2,11 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * Stripe events for pay per contract: a contract bought for a deal, an
- * agent credit pack, and the monthly plan. Called by the idempotent webhook
+ * Stripe events for pay per contract: a contract bought for a deal and an
+ * agent credit pack (credited to the customer, whichever of its keys
+ * bought it). No revenue share is recorded on these payments: the
+ * `revenue_events` rows belong to the legacy per-skill subscriptions only.
+ * Called by the idempotent webhook
  * (`/api/webhooks/stripe`, which claims each event id once) and by the
  * return from checkout (so the download unlocks even if the webhook is
  * still on its way). Every write is idempotent on its own as well: the
@@ -19,7 +22,7 @@ import { createLogger } from "@/lib/logger";
 
 const logger = createLogger("billing-events");
 
-export const BILLING_KINDS = ["contract", "credits", "plan"] as const;
+export const BILLING_KINDS = ["contract", "credits"] as const;
 export type BillingKind = (typeof BILLING_KINDS)[number];
 
 export function billingKindOf(metadata: Stripe.Metadata | null | undefined): BillingKind | null {
@@ -63,90 +66,57 @@ async function fulfilContract(session: Stripe.Checkout.Session) {
   logger.info("contract paid", { dealRoomId: meta.dealRoomId, sessionId: session.id });
 }
 
-/** A pack of credits for one agent API key. */
+/**
+ * A pack of credits, added to the customer's balance. The key that opened
+ * the checkout (`apiKeyId` in the metadata) is recorded for reference only.
+ */
 async function fulfilCredits(session: Stripe.Checkout.Session) {
   const meta = session.metadata ?? {};
-  if (!meta.apiKeyId || !meta.customerId) {
-    logger.error("credit checkout without a key id", { sessionId: session.id });
+  const customerId = meta.customerId;
+  if (!customerId) {
+    logger.error("credit checkout without a customer id", { sessionId: session.id });
     return;
   }
   const credits = Number.parseInt(meta.credits ?? "", 10) || CREDITS_PER_PACK;
   try {
     await prisma.$transaction(async (tx) => {
-      await tx.agentCredit.upsert({
-        where: { apiKeyId: meta.apiKeyId },
+      await tx.customerCredit.upsert({
+        where: { customerId },
         update: {},
-        create: { apiKeyId: meta.apiKeyId, customerId: meta.customerId, balance: 0 },
+        create: { customerId, balance: 0 },
       });
       // Unique per (session, PURCHASE): a second delivery fails here and
       // the whole transaction, balance included, rolls back.
-      await tx.agentCreditEntry.create({
+      await tx.customerCreditEntry.create({
         data: {
-          apiKeyId: meta.apiKeyId,
+          customerId,
+          apiKeyId: meta.apiKeyId || null,
           delta: credits,
           reason: "PURCHASE",
           stripeCheckoutSessionId: session.id,
           stripePaymentIntentId: idOf(session.payment_intent as string | Stripe.PaymentIntent | null),
         },
       });
-      await tx.agentCredit.update({
-        where: { apiKeyId: meta.apiKeyId },
+      await tx.customerCredit.update({
+        where: { customerId },
         data: { balance: { increment: credits } },
       });
     });
-    logger.info("credits added", { apiKeyId: meta.apiKeyId, credits, sessionId: session.id });
+    logger.info("credits added", { customerId, credits, sessionId: session.id });
   } catch (err) {
     if (isUniqueViolation(err)) return; // already credited
     throw err;
   }
 }
 
-/** Store or refresh the monthly plan from its Stripe subscription. */
-export async function syncPlanSubscription(subscription: Stripe.Subscription, customerIdHint?: string) {
-  const customerId = subscription.metadata?.customerId || customerIdHint;
-  if (!customerId) {
-    logger.error("plan subscription without a customer id", { subscriptionId: subscription.id });
-    return;
-  }
-  // The period moved from the subscription to its items in recent API
-  // versions; read whichever is present.
-  const legacy = subscription as unknown as { current_period_start?: number; current_period_end?: number };
-  const item = subscription.items?.data?.[0] as
-    | { current_period_start?: number; current_period_end?: number }
-    | undefined;
-  const start = legacy.current_period_start ?? item?.current_period_start;
-  const end = legacy.current_period_end ?? item?.current_period_end;
-  const period = {
-    currentPeriodStart: start ? new Date(start * 1000) : null,
-    currentPeriodEnd: end ? new Date(end * 1000) : null,
-  };
-  await prisma.contractPlan.upsert({
-    where: { stripeSubscriptionId: subscription.id },
-    update: { status: subscription.status, ...period },
-    create: { customerId, stripeSubscriptionId: subscription.id, status: subscription.status, ...period },
-  });
-}
-
 /**
- * checkout.session.completed / async_payment_succeeded. `retrieveSubscription`
- * is injected so tests need no Stripe client.
+ * checkout.session.completed / async_payment_succeeded. Returns false for
+ * a session that is not pay per contract (a legacy per-skill checkout),
+ * which the caller then handles as before.
  */
-export async function fulfilCheckoutSession(
-  session: Stripe.Checkout.Session,
-  retrieveSubscription: (id: string) => Promise<Stripe.Subscription>,
-) {
+export async function fulfilCheckoutSession(session: Stripe.Checkout.Session) {
   const kind = billingKindOf(session.metadata);
   if (!kind) return false;
-
-  if (kind === "plan") {
-    const subscriptionId = idOf(session.subscription as string | Stripe.Subscription | null);
-    if (!subscriptionId) {
-      logger.error("plan checkout without a subscription", { sessionId: session.id });
-      return true;
-    }
-    await syncPlanSubscription(await retrieveSubscription(subscriptionId), session.metadata?.customerId);
-    return true;
-  }
 
   // Card payments arrive "paid"; delayed methods (bank debits) arrive
   // "unpaid" and are fulfilled on checkout.session.async_payment_succeeded.
@@ -170,15 +140,17 @@ async function revokeContractPayments(where: Prisma.DealPaymentWhereInput, reaso
 
 /** Take back an unspent pack. The balance may go below zero; it then blocks new spending. */
 async function reverseCreditPurchase(purchase: {
-  apiKeyId: string;
+  customerId: string;
+  apiKeyId: string | null;
   delta: number;
   stripeCheckoutSessionId: string | null;
   stripePaymentIntentId: string | null;
 }) {
   try {
     await prisma.$transaction(async (tx) => {
-      await tx.agentCreditEntry.create({
+      await tx.customerCreditEntry.create({
         data: {
+          customerId: purchase.customerId,
           apiKeyId: purchase.apiKeyId,
           delta: -purchase.delta,
           reason: "REVERSAL",
@@ -186,8 +158,8 @@ async function reverseCreditPurchase(purchase: {
           stripePaymentIntentId: purchase.stripePaymentIntentId,
         },
       });
-      await tx.agentCredit.update({
-        where: { apiKeyId: purchase.apiKeyId },
+      await tx.customerCredit.update({
+        where: { customerId: purchase.customerId },
         data: { balance: { decrement: purchase.delta } },
       });
     });
@@ -203,7 +175,7 @@ export async function handleCheckoutPaymentFailed(session: Stripe.Checkout.Sessi
   if (kind === "contract") {
     await revokeContractPayments({ stripeCheckoutSessionId: session.id }, "payment_failed");
   } else if (kind === "credits") {
-    const purchase = await prisma.agentCreditEntry.findFirst({
+    const purchase = await prisma.customerCreditEntry.findFirst({
       where: { stripeCheckoutSessionId: session.id, reason: "PURCHASE" },
     });
     if (purchase) await reverseCreditPurchase(purchase);
@@ -225,7 +197,7 @@ export async function handleChargeRefunded(charge: Stripe.Charge) {
   if (!paymentIntentId) return;
 
   const revoked = await revokeContractPayments({ stripePaymentIntentId: paymentIntentId }, "refunded");
-  const purchase = await prisma.agentCreditEntry.findFirst({
+  const purchase = await prisma.customerCreditEntry.findFirst({
     where: { stripePaymentIntentId: paymentIntentId, reason: "PURCHASE" },
   });
   if (purchase) await reverseCreditPurchase(purchase);

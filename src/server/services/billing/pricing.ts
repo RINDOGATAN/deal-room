@@ -2,11 +2,13 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * Display prices for pay per contract, read from the Stripe prices the six
- * environment variables point to. Nothing here hard-codes an amount: change
- * the price in Stripe (or point a variable at a new price) and the product,
- * the agent card and the MCP discovery follow. Cached for ten minutes per
- * server instance so a page view never waits on Stripe twice.
+ * Prices for pay per contract, read from the Stripe prices the four
+ * environment variables point to (the display text may be overridden with
+ * `PRICE_DISPLAY_CONTRACT` / `PRICE_DISPLAY_CREDITS_10`, see
+ * `displayPrice`). Nothing here hard-codes an amount: change the price in
+ * Stripe (or point a variable at a new price) and the product, the agent
+ * card and the MCP discovery follow. Cached for ten minutes per server
+ * instance so a page view never waits on Stripe twice.
  */
 
 import { features } from "@/config/features";
@@ -14,6 +16,7 @@ import {
   BILLING_CURRENCIES,
   CONTRACT_PRICE_ENV,
   CREDITS_PER_PACK,
+  displayPrice,
   priceIdFor,
   type BillingCurrency,
   type BillingProduct,
@@ -28,8 +31,6 @@ export interface PricePoint {
   /** Minor units, as Stripe stores it (2900 = 29.00). */
   amount: number | null;
   currency: BillingCurrency;
-  /** "month" for the plan; null for one-off prices. */
-  interval: string | null;
 }
 
 export type PriceTable = Record<BillingProduct, Record<BillingCurrency, PricePoint | null>>;
@@ -47,17 +48,12 @@ async function loadPoint(product: BillingProduct, currency: BillingCurrency): Pr
   if (!priceId) return null;
   try {
     const price = await getStripe().prices.retrieve(priceId);
-    return {
-      priceId,
-      amount: price.unit_amount ?? null,
-      currency,
-      interval: price.recurring?.interval ?? null,
-    };
+    return { priceId, amount: price.unit_amount ?? null, currency };
   } catch (err) {
     // The id stays usable for checkout even when the lookup fails; only the
     // display amount is missing, and the interface then shows no number.
     logger.error("could not read Stripe price", { product, currency, err: String(err) });
-    return { priceId, amount: null, currency, interval: null };
+    return { priceId, amount: null, currency };
   }
 }
 
@@ -90,15 +86,25 @@ export async function agentPricingBlock() {
     Object.fromEntries(
       BILLING_CURRENCIES.map((c) => [c, table[product][c]?.amount ?? null]),
     );
+  const display = (product: BillingProduct) =>
+    Object.fromEntries(
+      BILLING_CURRENCIES.map((c) => [c, displayPrice(product, c, { stripeMinor: table[product][c]?.amount })]),
+    );
   return {
     model: "per_contract",
     unit: "contract",
     amountsMinorUnits: {
       contract: amounts("contract"),
       creditPack: amounts("credits10"),
-      monthlyPlan: amounts("monthly"),
+    },
+    display: {
+      contract: display("contract"),
+      creditPack: display("credits10"),
     },
     creditPackSize: CREDITS_PER_PACK,
+    creditsHeldBy: "customer",
+    creditsNote:
+      "Credits belong to the customer that owns the API keys. Any of its keys spends from the one balance; rotating or revoking a key changes nothing.",
     chargedWhen:
       "An agent fetches the document of an agreed deal for the first time (PDF, DOCX or TXT). Negotiation is free.",
     buyCredits: "POST /api/v1/agent/credits/checkout",

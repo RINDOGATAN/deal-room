@@ -6,10 +6,11 @@
  *
  * POST /api/v1/agent/credits/checkout
  * Opens a hosted Stripe checkout for one pack (price from
- * STRIPE_PRICE_CREDITS_10_USD / _EUR), with the API key id in the metadata,
- * and returns the URL for a person to open. When the payment succeeds the
- * webhook adds the credits to this key. One credit is spent the first time
- * the key fetches the document of an agreed deal.
+ * STRIPE_PRICE_CREDITS_10_USD / _EUR), with the key's customer id in the
+ * metadata, and returns the URL for a person to open. When the payment
+ * succeeds the webhook adds the credits to the customer's balance. Any key
+ * of the customer spends from it: one credit the first time an agreed
+ * deal's document is fetched. Rotating or revoking a key changes nothing.
  *
  * Body (optional): { currency?: "usd" | "eur", returnUrl?: string }
  */
@@ -69,7 +70,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "The credit pack price is not configured" }, { status: 503 });
     }
 
-    const { customerId, stripeCustomerId } = await getOrCreateStripeCustomer(
+    const { stripeCustomerId } = await getOrCreateStripeCustomer(
       prisma,
       auth.customer.email,
       auth.customer.name
@@ -81,10 +82,12 @@ export async function POST(req: NextRequest) {
       mode: "payment",
       priceId,
       stripeCustomerId,
+      // The credits belong to the key's customer; the key is noted for the
+      // record only (any key of the customer spends from the balance).
       metadata: {
         kind: "credits",
+        customerId: auth.customer.id,
         apiKeyId: auth.apiKey.id,
-        customerId,
         credits: String(CREDITS_PER_PACK),
       },
       successUrl: returnUrl ?? `${base}/docs/agent-api?credits=added`,

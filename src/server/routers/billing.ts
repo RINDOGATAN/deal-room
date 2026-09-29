@@ -7,9 +7,9 @@ import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { headers } from "next/headers";
 import { features } from "@/config/features";
 import { cancelSubscription } from "@/lib/stripe";
-import { chooseCurrency } from "@/lib/contract-billing";
+import { chooseCurrency, displayPrice, type BillingCurrency } from "@/lib/contract-billing";
 import { getPriceTable } from "../services/billing/pricing";
-import { activePlanFor, isDealPaid } from "../services/billing/deal-entitlement";
+import { isDealPaid } from "../services/billing/deal-entitlement";
 import { localeFromRequest } from "../services/billing/checkout";
 
 /** Stored currency preference from Customer.metadata, if any. */
@@ -28,13 +28,13 @@ export const billingRouter = createTRPCRouter({
   }),
 
   /**
-   * Pay per contract: display amounts (minor units, read from the Stripe
-   * prices the env ids point to), the currency to show first, and the
-   * person's monthly plan.
+   * Pay per contract: the price to show per currency (from
+   * `PRICE_DISPLAY_CONTRACT` when set, else the Stripe price the env id
+   * points to), and the currency to show first.
    */
   getContractPricing: protectedProcedure.query(async ({ ctx }) => {
     if (!features.stripeEnabled) {
-      return { enabled: false as const, defaultCurrency: "usd" as const, prices: null, plan: null };
+      return { enabled: false as const, defaultCurrency: "usd" as const, display: null };
     }
     const email = ctx.session.user.email;
     const customer = email
@@ -46,18 +46,12 @@ export const billingRouter = createTRPCRouter({
     const locale = localeFromRequest((await headers()).get("cookie"));
     const defaultCurrency = chooseCurrency({ stored: storedCurrency(customer?.metadata), locale });
     const table = await getPriceTable();
-    const amounts = (product: "contract" | "monthly" | "credits10") => ({
-      usd: table?.[product].usd?.amount ?? null,
-      eur: table?.[product].eur?.amount ?? null,
-    });
-    const plan = customer ? await activePlanFor(customer.id) : null;
+    const shown = (currency: BillingCurrency) =>
+      displayPrice("contract", currency, { stripeMinor: table?.contract[currency]?.amount, locale });
     return {
       enabled: true as const,
       defaultCurrency,
-      prices: { contract: amounts("contract"), monthly: amounts("monthly") },
-      plan: plan
-        ? { active: true, currentPeriodEnd: plan.currentPeriodEnd?.toISOString() ?? null }
-        : null,
+      display: { contract: { usd: shown("usd"), eur: shown("eur") } },
       hasBillingAccount: !!customer?.stripeCustomerId,
     };
   }),
@@ -75,17 +69,6 @@ export const billingRouter = createTRPCRouter({
 
       const access = await isDealPaid(input.dealRoomId);
       if (access.paid) return { billing: true, paid: true, via: access.via };
-      // A plan holder is covered; the coverage is recorded at download.
-      const email = ctx.session.user.email;
-      const customer = email
-        ? await ctx.prisma.customer.findFirst({
-            where: { email: { equals: email, mode: "insensitive" } },
-            select: { id: true },
-          })
-        : null;
-      if (customer && (await activePlanFor(customer.id))) {
-        return { billing: true, paid: true, via: "plan" as const };
-      }
       return { billing: true, paid: false, via: null };
     }),
 
