@@ -65,8 +65,9 @@ rows marked "2026-08-05" are covered by that rotation. "Unknown" means no record
 | `EMAIL_FROM` | Hosted; kit .env | Sender address |
 | `STRIPE_PRICE_CONTRACT_USD`, `STRIPE_PRICE_CONTRACT_EUR` | Hosted (build and runtime) | Price ids: one contract |
 | `STRIPE_PRICE_CREDITS_10_USD`, `STRIPE_PRICE_CREDITS_10_EUR` | Hosted (build and runtime) | Price ids: agent pack of ten credits |
-| `STRIPE_PRICE_MONTHLY_USD`, `STRIPE_PRICE_MONTHLY_EUR` | Hosted (build and runtime) | Price ids: monthly plan, unlimited contracts. On hosted, the six together switch billing on (`docs/billing.md`) |
-| `CONTRACT_BILLING_START` | Hosted (optional) | ISO date; deals created before it are not charged |
+| `CONTRACT_BILLING_START` | Hosted (build and runtime, required) | ISO date, the deploy date; deals created before it are never charged. With the four price ids, the five together switch billing on (`docs/billing.md`) |
+| `PRICE_DISPLAY_CONTRACT`, `PRICE_DISPLAY_CREDITS_10` | Hosted (runtime, optional) | Display amounts (e.g. `29`, `217.50`); otherwise read from the Stripe price |
+| `STRIPE_PRICE_MONTHLY_USD`, `STRIPE_PRICE_MONTHLY_EUR` | Nowhere (no longer read) | The discarded monthly plan; remove if set |
 | `STRIPE_PRICE_ID`, `STRIPE_PRICE_ID_USD` | Seed only | Former per-skill price (replaced by pay per contract, 2026-09-29); no checkout uses it |
 | `NEXT_PUBLIC_STRIPE_ENABLED` | Hosted (build) | Client-side billing UI |
 | `FREE_TRIAL_ALL_SKILLS`, `NEXT_PUBLIC_FREE_TRIAL_ALL_SKILLS` | Hosted; kit (off) | Promo window with all skills free |

@@ -57,14 +57,17 @@ AUTH_COOKIE_DOMAIN           # cross-app session cookie domain
 STRIPE_SECRET_KEY
 NEXT_PUBLIC_STRIPE_ENABLED=true
 STRIPE_WEBHOOK_SECRET
-STRIPE_PRICE_CONTRACT_USD      # the six price ids; on hosted, all six
-STRIPE_PRICE_CONTRACT_EUR      # together are what switches billing on
-STRIPE_PRICE_CREDITS_10_USD
+STRIPE_PRICE_CONTRACT_USD      # the four price ids plus the start date: on
+STRIPE_PRICE_CONTRACT_EUR      # hosted, these five together are what
+STRIPE_PRICE_CREDITS_10_USD    # switches billing on (build and runtime)
 STRIPE_PRICE_CREDITS_10_EUR
-STRIPE_PRICE_MONTHLY_USD
-STRIPE_PRICE_MONTHLY_EUR
-CONTRACT_BILLING_START         # optional ISO date: deals created before it stay free
+CONTRACT_BILLING_START         # required ISO date (the deploy date): deals created before it are never charged
+PRICE_DISPLAY_CONTRACT         # optional display amount, e.g. 29
+PRICE_DISPLAY_CREDITS_10       # optional display amount, e.g. 217.50
 ```
+
+`STRIPE_PRICE_MONTHLY_USD` / `STRIPE_PRICE_MONTHLY_EUR` (the discarded
+monthly plan) are no longer read.
 
 `STRIPE_PRICE_ID` / `STRIPE_PRICE_ID_USD` (the former per-skill price) are
 no longer used by any checkout; the seed still copies `STRIPE_PRICE_ID` onto

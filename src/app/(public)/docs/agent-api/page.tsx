@@ -103,6 +103,8 @@ export default function AgentApiPage() {
   ];
 
   const subscriptionEndpoints: [string, string, string][] = [
+    ["POST", "/credits/checkout", t("purposeBuyCredits")],
+    ["GET", "/credits/balance", t("purposeCreditBalance")],
     ["GET", "/subscriptions", t("purposeGetSubscriptions")],
     ["POST", "/subscribe", t("purposeSubscribe")],
   ];
