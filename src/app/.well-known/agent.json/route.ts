@@ -10,6 +10,7 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { features } from "@/config/features";
 import { brand } from "@/config/brand";
+import { agentPricingBlock } from "@/server/services/billing/pricing";
 
 export async function GET() {
   if (!features.agentApi) {
@@ -78,7 +79,7 @@ export async function GET() {
             { name: "playbook:write", description: "Create, update, delete playbooks" },
             { name: "negotiate", description: "Initiate and join negotiations" },
             { name: "deals:read", description: "View deals and download documents" },
-            { name: "billing:read", description: "View credit balance" },
+            { name: "billing:read", description: "View the credit balance, buy credit packs, start the monthly plan" },
             { name: "webhooks:manage", description: "Manage webhook endpoints" },
             { name: "disputes:create", description: "Escalate failed/agreed deals to Gavel ADR" },
           ],
@@ -142,9 +143,14 @@ export async function GET() {
       deals: `${baseUrl}/api/v1/agent/deals`,
       subscriptions: `${baseUrl}/api/v1/agent/subscriptions`,
       subscribe: `${baseUrl}/api/v1/agent/subscribe`,
+      creditsCheckout: `${baseUrl}/api/v1/agent/credits/checkout`,
+      creditsBalance: `${baseUrl}/api/v1/agent/credits/balance`,
       webhooks: `${baseUrl}/api/v1/agent/webhooks`,
       mcp: `${baseUrl}/api/v1/agent/mcp`,
     },
+    // Machine-readable price. Amounts are minor units (2900 = 29.00), read
+    // from the Stripe prices this deployment is configured with.
+    pricing: await agentPricingBlock(),
     documentation: `${baseUrl}/docs/agent-api`,
   };
 
