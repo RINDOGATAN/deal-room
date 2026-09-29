@@ -33,7 +33,7 @@ const exportLink = (chunks: React.ReactNode) => (
  */
 export function HostedCaution({
   variant = "note",
-  hosted = features.hostedPilot,
+  hosted = features.hosted,
   className,
 }: {
   variant?: "note" | "signup";

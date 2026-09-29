@@ -19,7 +19,23 @@ const ENV_KEYS = [
   "VERCEL_ENV",
   "AUTH_COOKIE_DOMAIN",
   "NEXT_PUBLIC_HOSTED_PILOT",
+  "NEXT_PUBLIC_CONTRACT_BILLING",
+  "STRIPE_PRICE_CONTRACT_USD",
+  "STRIPE_PRICE_CONTRACT_EUR",
+  "STRIPE_PRICE_CREDITS_10_USD",
+  "STRIPE_PRICE_CREDITS_10_EUR",
+  "STRIPE_PRICE_MONTHLY_USD",
+  "STRIPE_PRICE_MONTHLY_EUR",
 ] as const;
+
+const SIX_PRICES = {
+  STRIPE_PRICE_CONTRACT_USD: "price_contract_usd",
+  STRIPE_PRICE_CONTRACT_EUR: "price_contract_eur",
+  STRIPE_PRICE_CREDITS_10_USD: "price_credits_usd",
+  STRIPE_PRICE_CREDITS_10_EUR: "price_credits_eur",
+  STRIPE_PRICE_MONTHLY_USD: "price_monthly_usd",
+  STRIPE_PRICE_MONTHLY_EUR: "price_monthly_eur",
+};
 
 const ORIGINAL: Record<string, string | undefined> = Object.fromEntries(
   ENV_KEYS.map((k) => [k, process.env[k]]),
@@ -83,5 +99,61 @@ describe("hosted pilot posture", () => {
     });
     expect(features.hostedPilot).toBe(false);
     expect(features.stripeEnabled).toBe(true);
+  });
+});
+
+describe("hosted pay per contract (2026-09-29)", () => {
+  it("switches billing on and the pilot mechanics off once the six prices are set", async () => {
+    const features = await featuresUnder({
+      VERCEL_ENV: "production",
+      STRIPE_SECRET_KEY: "sk_test_dummy",
+      NEXT_PUBLIC_STRIPE_ENABLED: "true",
+      ...SIX_PRICES,
+    });
+    expect(features.stripeEnabled).toBe(true);
+    expect(features.billing).toBe(true);
+    expect(features.hostedPilot).toBe(false);
+    // The confidentiality caution stays.
+    expect(features.hosted).toBe(true);
+    // Every template serves; the contract is what is paid.
+    expect(features.allSkillsFree).toBe(true);
+    expect(features.skillInstaller).toBe(false);
+  });
+
+  it("stays the free pilot while any one of the six prices is missing", async () => {
+    const { STRIPE_PRICE_MONTHLY_EUR: _missing, ...five } = SIX_PRICES;
+    void _missing;
+    const features = await featuresUnder({
+      VERCEL_ENV: "production",
+      STRIPE_SECRET_KEY: "sk_test_dummy",
+      NEXT_PUBLIC_STRIPE_ENABLED: "true",
+      ...five,
+    });
+    expect(features.stripeEnabled).toBe(false);
+    expect(features.hostedPilot).toBe(true);
+    expect(features.hosted).toBe(true);
+  });
+
+  it("reaches the browser bundle through the inlined contract-billing flag", async () => {
+    const features = await featuresUnder({
+      NEXT_PUBLIC_HOSTED_PILOT: "true",
+      NEXT_PUBLIC_STRIPE_ENABLED: "true",
+      NEXT_PUBLIC_CONTRACT_BILLING: "true",
+    });
+    expect(features.stripeEnabled).toBe(true);
+    expect(features.hostedPilot).toBe(false);
+    expect(features.hosted).toBe(true);
+  });
+
+  it("leaves the kit all free even with the price variables present", async () => {
+    const features = await featuresUnder({
+      NEXT_PUBLIC_LOCAL_AUTH_ENABLED: "true",
+      NEXT_PUBLIC_HOSTED_PILOT: "false",
+      ...SIX_PRICES,
+    });
+    expect(features.stripeEnabled).toBe(false);
+    expect(features.hosted).toBe(false);
+    expect(features.allSkillsFree).toBe(true);
+    expect(features.skillInstaller).toBe(true);
   });
 });

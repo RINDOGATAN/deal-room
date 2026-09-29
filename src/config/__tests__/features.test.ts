@@ -62,12 +62,14 @@ describe("features.allSkillsFree", () => {
     expect(features.allSkillsFree).toBe(true);
   });
 
-  it("keeps skills gated when Stripe is configured and no promo is set", async () => {
+  // Pay per contract (2026-09-29): with Stripe on, every template serves
+  // without a skill entitlement; the price per contract covers it.
+  it("serves every skill without an entitlement when Stripe is configured", async () => {
     setEnv({ STRIPE_SECRET_KEY: "sk_test_dummy" });
     vi.resetModules();
     const { features } = await import("@/config/features");
     expect(features.stripeEnabled).toBe(true);
-    expect(features.allSkillsFree).toBe(false);
+    expect(features.allSkillsFree).toBe(true);
   });
 
   it("still honors the promo env while Stripe stays configured", async () => {
@@ -79,16 +81,16 @@ describe("features.allSkillsFree", () => {
   });
 
   // The client-posture path: in the browser bundle STRIPE_SECRET_KEY is never
-  // inlined, so hosted clients only see NEXT_PUBLIC_STRIPE_ENABLED. That
-  // signal alone must lock premium skills — otherwise every hosted browser
-  // renders the "all free" UI while the server enforces the paywall.
-  it("locks skills from the client-inlined signal alone (browser-bundle view)", async () => {
+  // inlined, so clients only see NEXT_PUBLIC_STRIPE_ENABLED. That signal
+  // alone must turn billing on in the browser, so the per-contract checkout
+  // shows where the server enforces it.
+  it("turns billing on from the client-inlined signal alone (browser-bundle view)", async () => {
     setEnv({ NEXT_PUBLIC_STRIPE_ENABLED: "true" });
     vi.resetModules();
     const { features } = await import("@/config/features");
     expect(features.stripeEnabled).toBe(true);
     expect(features.billing).toBe(true);
-    expect(features.allSkillsFree).toBe(false);
+    expect(features.allSkillsFree).toBe(true);
   });
 
   it("keeps the promo override working under the client posture", async () => {

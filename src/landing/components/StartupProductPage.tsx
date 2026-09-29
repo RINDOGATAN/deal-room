@@ -9,7 +9,8 @@ import type { LucideIcon } from "lucide-react";
 import { features as appFeatures } from "@/config/features";
 import { PILOT_RUN_URL } from "@/lib/pilot";
 
-const hostedPilot = appFeatures.hostedPilot;
+// The confidentiality caution shows on hosted whatever its billing state.
+const hosted = appFeatures.hosted;
 
 export interface Feature {
   id: string;
@@ -162,7 +163,7 @@ const StartupProductPage = ({
   };
 
   // Hosted: the caution about confidential information, under the sign-up form.
-  const hostedCaution = hostedPilot ? (
+  const hostedCaution = hosted ? (
     <p data-testid="hosted-caution" className="text-xs text-muted-foreground font-body mt-4 text-center">
       {tAuth("caution.text")}{" "}
       <a

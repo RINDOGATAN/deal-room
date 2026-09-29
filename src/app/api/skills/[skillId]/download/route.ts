@@ -21,9 +21,9 @@ export async function GET(
 ) {
   const { skillId } = await params;
 
-  // The hosted pilot makes every skill usable in the browser but sells and
+  // Hosted Dealroom makes every skill usable in the browser but sells and
   // delivers no kit packages: those come from the storefront, with a licence.
-  if (features.hostedPilot) {
+  if (features.hosted) {
     return NextResponse.json(
       { error: "Skill packages are not delivered by hosted Dealroom" },
       { status: 404 }

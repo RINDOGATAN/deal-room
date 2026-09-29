@@ -3,19 +3,35 @@
 
 import { brand } from "./brand";
 import { isHostedPilotEnv } from "@/lib/pilot";
+import { contractPricesConfigured } from "@/lib/contract-billing";
 
 /**
- * Hosted pilot posture (2026-09-16): the hosted build is a free, capped
- * pilot where nothing is sold, so it switches Stripe off in the app even if
- * the Stripe variables are still set on the deployment. Server code reads
+ * The hosted deployment (dealroom.todo.law). Server code reads
  * `VERCEL_ENV`; the browser bundle reads `NEXT_PUBLIC_HOSTED_PILOT`, which
  * `next.config.ts` inlines at build time. The kit never matches.
  */
-const hostedPilot = isHostedPilotEnv({
+const hosted = isHostedPilotEnv({
   NEXT_PUBLIC_HOSTED_PILOT: process.env.NEXT_PUBLIC_HOSTED_PILOT,
   VERCEL_ENV: process.env.VERCEL_ENV,
   AUTH_COOKIE_DOMAIN: process.env.AUTH_COOKIE_DOMAIN,
 });
+
+/**
+ * Pay per contract (2026-09-29) is ready when the six Stripe price
+ * variables are set (`src/lib/contract-billing.ts`). The browser bundle
+ * cannot see them, so `next.config.ts` inlines the answer as
+ * `NEXT_PUBLIC_CONTRACT_BILLING`.
+ */
+const contractBillingReady =
+  process.env.NEXT_PUBLIC_CONTRACT_BILLING === "true" ||
+  contractPricesConfigured({
+    STRIPE_PRICE_CONTRACT_USD: process.env.STRIPE_PRICE_CONTRACT_USD,
+    STRIPE_PRICE_CONTRACT_EUR: process.env.STRIPE_PRICE_CONTRACT_EUR,
+    STRIPE_PRICE_CREDITS_10_USD: process.env.STRIPE_PRICE_CREDITS_10_USD,
+    STRIPE_PRICE_CREDITS_10_EUR: process.env.STRIPE_PRICE_CREDITS_10_EUR,
+    STRIPE_PRICE_MONTHLY_USD: process.env.STRIPE_PRICE_MONTHLY_USD,
+    STRIPE_PRICE_MONTHLY_EUR: process.env.STRIPE_PRICE_MONTHLY_EUR,
+  });
 
 /**
  * Stripe posture, readable on BOTH sides of the bundle split.
@@ -30,11 +46,23 @@ const hostedPilot = isHostedPilotEnv({
  * Self-hosted installs set neither, so both lanes agree Stripe is off and all
  * skills stay free. `src/lib/stripe.ts` still checks the secret key itself, so
  * a client-flag-only misconfiguration fails with a clear error, not a crash.
+ *
+ * On the hosted deployment the Stripe variables alone are not enough: the
+ * hosted build stays the free pilot (Stripe off in the app) until the six
+ * per-contract price variables are set as well. That keeps a deploy of
+ * this code from switching billing on before the prices exist.
  */
 const stripeConfigured =
-  !hostedPilot &&
+  (!hosted || contractBillingReady) &&
   (!!process.env.STRIPE_SECRET_KEY ||
     process.env.NEXT_PUBLIC_STRIPE_ENABLED === "true");
+
+/**
+ * Hosted pilot mechanics (90-day edit window, record ceilings, read-only
+ * state, the Settings counters) apply only while hosted billing is off.
+ * Once billing is on they go; the confidentiality caution stays (`hosted`).
+ */
+const hostedPilot = hosted && !stripeConfigured;
 
 // All features that used to be gated to brand.id === "todo" are now
 // always on — the second brand was retired on 2026-05-02. The flag
@@ -42,11 +70,22 @@ const stripeConfigured =
 // like `features.marketplace` stay self-documenting.
 export const features = {
   /**
+   * The hosted deployment, whatever its billing state. Drives the
+   * confidentiality caution (no contractual safeguards; do not enter
+   * privileged or confidential information). False on the kit.
+   */
+  hosted,
+  /**
    * Hosted pilot: every skill free for every account, with caps (one
    * organisation per account, 90 days of editing, record ceilings — see
-   * `src/lib/pilot.ts`) and a banner that says so. False on the kit.
+   * `src/lib/pilot.ts`). False on the kit, and false on hosted once pay
+   * per contract is on.
    */
   hostedPilot,
+  /**
+   * Stripe on. With it, pay per contract applies: downloads and the start
+   * of the signature need the deal to be paid (`deal_payments`).
+   */
   stripeEnabled: stripeConfigured,
   selfServiceUpgrade: stripeConfigured,
   inviteCodeAuth: brand.auth.mode === "invite-code",
@@ -72,30 +111,21 @@ export const features = {
   /** Startup Quick Start — guided US Delaware C-Corp launch journey */
   startupJourney: true,
   /**
-   * All premium skills available without an entitlement.
+   * All premium skills available without a skill entitlement, in every
+   * posture.
    *
-   * True whenever EITHER holds:
-   *   1. Stripe is not configured (neither STRIPE_SECRET_KEY nor
-   *      NEXT_PUBLIC_STRIPE_ENABLED — see `stripeConfigured` above). With
-   *      payments off there is no way to charge, so every skill is free for
-   *      everyone. This is the self-hosted state; premium value there is the
-   *      downloadable .skill install, not a server-side unlock.
-   *   2. A promo env var is set: `FREE_TRIAL_ALL_SKILLS` (server-only) or
-   *      `NEXT_PUBLIC_FREE_TRIAL_ALL_SKILLS` (server + client). Kept so a
-   *      free window can still be opened while Stripe remains configured.
+   *   - Stripe off (self-host kit): there is no way to charge, so every
+   *     skill is free; premium value there is the downloadable .skill
+   *     install, not a server-side unlock. Unchanged.
+   *   - Stripe on (hosted, pay per contract since 2026-09-29): every
+   *     template serves without a skill entitlement because the price per
+   *     contract covers it. The per-skill purchase and its yearly price are
+   *     gone; what is paid is the contract (`deal_payments`).
    *
-   * The client-inlined `NEXT_PUBLIC_STRIPE_ENABLED` leg is what keeps hosted
-   * browser bundles honest: the secret key is invisible to the client, so
-   * without it every client evaluated this as "free". The public-prefixed
-   * promo variant is required for the `<PromoBanner>` to render, for the same
-   * inlining reason. Stripe checkout still functions whenever Stripe is
-   * configured, so customers who subscribe during a promo keep their
-   * entitlements.
+   * Kept as a flag (rather than deleting the entitlement branches) so the
+   * dormant licensing code stays readable and reversible.
    */
-  allSkillsFree:
-    !stripeConfigured ||
-    process.env.NEXT_PUBLIC_FREE_TRIAL_ALL_SKILLS === "true" ||
-    process.env.FREE_TRIAL_ALL_SKILLS === "true",
+  allSkillsFree: true,
   /**
    * The "every premium skill is free right now" promo banner.
    *
@@ -113,7 +143,7 @@ export const features = {
    * locally). The page and its nav link hide whenever Stripe is on, and on
    * the hosted pilot, where every skill is already available.
    */
-  skillInstaller: !stripeConfigured && !hostedPilot,
+  skillInstaller: !stripeConfigured && !hosted,
   /**
    * Local-credentials auth — the self-host posture signal.
    *
