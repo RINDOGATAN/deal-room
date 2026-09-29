@@ -18,6 +18,10 @@ import {
 import { generateContractData } from "@/server/services/document/generator";
 import { generateContractTxt } from "@/server/services/document/contractTxt";
 import { features } from "@/config/features";
+import {
+  agentPaymentRequiredResponse,
+  dealAccessForAgent,
+} from "@/server/services/billing/deal-entitlement";
 import { createLogger } from "@/lib/logger";
 
 const logger = createLogger("agent-api");
@@ -69,6 +73,14 @@ export async function GET(
         { status: 400 }
       );
     }
+
+    // Pay per contract: the first fetch of an agreed contract spends one
+    // credit (or is covered by a payment or the monthly plan).
+    const access = await dealAccessForAgent(agentDeal.dealRoomId, {
+      apiKeyId: auth.apiKey.id,
+      customerId: auth.customer.id,
+    });
+    if (!access.paid) return agentPaymentRequiredResponse();
 
     const contractData = await generateContractData(agentDeal.dealRoomId);
     if (!contractData) {

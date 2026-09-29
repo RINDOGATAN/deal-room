@@ -22,8 +22,21 @@ import {
   buildRiskDigestUserPrompt,
 } from "../services/ai/prompts/risk-digest";
 import { createLogger } from "@/lib/logger";
+import { dealAccessForUser } from "../services/billing/deal-entitlement";
+import { PAYMENT_REQUIRED_MESSAGE } from "@/lib/contract-billing";
 
 const logger = createLogger("signing");
+
+/**
+ * Pay per contract: the start of the signature is a moment of value, like
+ * the download. Unpaid deals are refused with PAYMENT_REQUIRED (HTTP 402).
+ */
+async function assertDealPaidForSigning(dealRoomId: string, user: { id: string; email?: string | null }) {
+  const access = await dealAccessForUser(dealRoomId, user);
+  if (!access.paid) {
+    throw new TRPCError({ code: "PAYMENT_REQUIRED", message: PAYMENT_REQUIRED_MESSAGE });
+  }
+}
 
 /**
  * Best-effort capture of who and where a signature came from.
@@ -431,6 +444,8 @@ export const signingRouter = createTRPCRouter({
           message: "A signing request is already in progress",
         });
       }
+
+      await assertDealPaidForSigning(input.dealRoomId, ctx.session.user);
 
       // Begin certification ceremony (degrades gracefully without API key)
       let ceremonyId: string | null = null;
@@ -841,6 +856,8 @@ export const signingRouter = createTRPCRouter({
             message: "Cannot initiate signing while joint counsel request is pending",
           });
         }
+
+        await assertDealPaidForSigning(input.dealRoomId, ctx.session.user);
 
         let ceremonyId: string | null = null;
         let documentHash: string | null = null;

@@ -20,6 +20,10 @@ import {
 } from "@/server/services/document/generator";
 import { generateContractDocx } from "@/server/services/document/contractDocx";
 import { apiError } from "@/lib/api-response";
+import {
+  dealAccessForUser,
+  paymentRequiredResponse,
+} from "@/server/services/billing/deal-entitlement";
 
 export async function GET(
   request: NextRequest,
@@ -48,6 +52,10 @@ export async function GET(
         { status: 400 }
       );
     }
+
+    // Pay per contract: the download is the moment of value.
+    const access = await dealAccessForUser(dealRoomId, session.user);
+    if (!access.paid) return paymentRequiredResponse(dealRoomId);
 
     let contractData = await generateContractData(dealRoomId);
     if (!contractData) {
