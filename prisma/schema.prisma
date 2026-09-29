@@ -501,6 +501,7 @@ model DealRoom {
   agentDealRoom          AgentDealRoom?
   parameterProposals     ParameterProposal[]
   aiGenerations          AiGeneration[]
+  payments               DealPayment[]
 
   @@index([journeyId])
   @@map("deal_rooms")
@@ -1376,4 +1377,107 @@ model AiGeneration {
   @@index([createdAt])
   @@index([dealRoomId])
   @@map("ai_generations")
+}
+
+// ============================================================
+// PAY PER CONTRACT (2026-09-29)
+// ============================================================
+// Drafting and negotiating are free; a contract is paid at the moment of
+// value (download or signature). A deal is paid when it holds a PAID row
+// here: a one-off payment for that deal (CONTRACT), an agent credit spent
+// on it (CREDIT), or a monthly plan that covered it (PLAN). A refund or a
+// failed payment marks the row REVOKED, which reverts the entitlement.
+// Only consulted when Stripe is on; the self-host kit never reads it.
+
+enum DealPaymentKind {
+  CONTRACT
+  CREDIT
+  PLAN
+}
+
+enum DealPaymentStatus {
+  PAID
+  REVOKED
+}
+
+model DealPayment {
+  id                      String            @id @default(cuid())
+  dealRoomId              String
+  payerUserId             String?
+  payerApiKeyId           String?
+  customerId              String?
+  kind                    DealPaymentKind
+  status                  DealPaymentStatus @default(PAID)
+  // At most one CREDIT row and one PLAN row per deal ("credit:<dealId>",
+  // "plan:<dealId>"), so concurrent downloads never spend twice.
+  dedupeKey               String?           @unique
+  stripeCheckoutSessionId String?           @unique
+  stripePaymentIntentId   String?
+  stripeSubscriptionId    String?
+  amount                  Int? // minor units (2900 = 29.00)
+  currency                String?
+  paidAt                  DateTime          @default(now())
+  revokedAt               DateTime?
+  revokedReason           String?
+  createdAt               DateTime          @default(now())
+
+  dealRoom DealRoom @relation(fields: [dealRoomId], references: [id], onDelete: Cascade)
+
+  @@index([dealRoomId, status])
+  @@index([stripePaymentIntentId])
+  @@map("deal_payments")
+}
+
+enum AgentCreditReason {
+  PURCHASE
+  CONSUME
+  REVERSAL
+}
+
+// Prepaid contract credits, held per agent API key.
+model AgentCredit {
+  apiKeyId   String   @id
+  customerId String
+  balance    Int      @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  entries AgentCreditEntry[]
+
+  @@index([customerId])
+  @@map("agent_credits")
+}
+
+model AgentCreditEntry {
+  id                      String            @id @default(cuid())
+  apiKeyId                String
+  delta                   Int
+  reason                  AgentCreditReason
+  dealRoomId              String?
+  stripeCheckoutSessionId String?
+  stripePaymentIntentId   String?
+  createdAt               DateTime          @default(now())
+
+  credit AgentCredit @relation(fields: [apiKeyId], references: [apiKeyId], onDelete: Cascade)
+
+  // A purchase (and its reversal) is written once per checkout session.
+  @@unique([stripeCheckoutSessionId, reason])
+  @@index([apiKeyId, createdAt])
+  @@index([stripePaymentIntentId])
+  @@map("agent_credit_entries")
+}
+
+// The monthly plan (unlimited contracts), one row per Stripe subscription.
+model ContractPlan {
+  id                   String    @id @default(cuid())
+  customerId           String
+  stripeSubscriptionId String    @unique
+  status               String // Stripe subscription status: active, trialing, past_due, canceled, ...
+  currentPeriodStart   DateTime?
+  currentPeriodEnd     DateTime?
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+
+  @@index([customerId])
+  @@map("contract_plans")
 }
