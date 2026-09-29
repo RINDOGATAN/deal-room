@@ -11,16 +11,13 @@ import {
   Globe,
   Languages,
   Download,
-  ShoppingCart,
   Search,
   X,
   ExternalLink,
 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { Input } from "@/components/ui/input";
-import { EnableFeatureModal } from "@/components/premium/enable-feature-modal";
 import { PromoBanner } from "@/components/PromoBanner";
-import { formatPrice } from "@/lib/currency";
 import { useKitPrice } from "@/hooks/useCurrency";
 import { features } from "@/config/features";
 import {
@@ -50,12 +47,6 @@ export default function MarketplacePage() {
   const [jurisdictionFilter, setJurisdictionFilter] = useState<string | null>(null);
   const [languageFilter, setLanguageFilter] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
-  const [enableSkill, setEnableSkill] = useState<{
-    id: string;
-    name: string;
-    priceAmount?: number;
-    priceCurrency?: string;
-  } | null>(null);
 
   const { data: skills, isLoading } =
     trpc.skillManager.listMarketplace.useQuery();
@@ -106,7 +97,11 @@ export default function MarketplacePage() {
       <div>
         <h1 className="text-2xl font-bold">{t("title")}</h1>
         <p className="text-muted-foreground">
-          {features.hostedPilot ? t("subtitlePilot", { price: kitPrice }) : t("subtitle")}
+          {features.hostedPilot
+            ? t("subtitlePilot", { price: kitPrice })
+            : features.stripeEnabled
+              ? t("subtitlePerContract")
+              : t("subtitle")}
         </p>
       </div>
 
@@ -238,11 +233,7 @@ export default function MarketplacePage() {
                     </span>
                   ) : (
                     <span className="inline-block px-2.5 py-1 text-sm sm:text-xs font-bold text-primary bg-primary/5 border border-primary/20 rounded-full">
-                      {STOREFRONT_BUY
-                        ? t("premiumBadge")
-                        : skill.priceAmount
-                          ? `${formatPrice(skill.priceAmount / 100)}/${t("month")}`
-                          : t("contactUs")}
+                      {t("premiumBadge")}
                     </span>
                   )}
                 </div>
@@ -301,38 +292,15 @@ export default function MarketplacePage() {
                     {t("getItStorefront")}
                   </a>
                 ) : (
-                  <button
-                    onClick={() =>
-                      setEnableSkill({
-                        id: skill.id,
-                        name: skill.displayName,
-                        priceAmount: skill.priceAmount ?? undefined,
-                        priceCurrency: skill.priceCurrency ?? undefined,
-                      })
-                    }
-                    className="btn-brutal text-xs px-4 py-2 flex-1 flex items-center justify-center gap-2"
-                  >
-                    <ShoppingCart className="h-3.5 w-3.5" />
-                    {t("enable")}
-                  </button>
+                  // Pay per contract: nothing is sold per skill in the app.
+                  // A catalogue entry without installed content is listed
+                  // for information only.
+                  <span className="text-xs text-muted-foreground flex-1">{t("catalogueOnly")}</span>
                 )}
               </div>
             </div>
           ))}
         </div>
-      )}
-
-      {/* Enable feature modal */}
-      {enableSkill && (
-        <EnableFeatureModal
-          open={!!enableSkill}
-          onClose={() => setEnableSkill(null)}
-          skillPackageId={enableSkill.id}
-          skillName={enableSkill.name}
-          priceAmount={enableSkill.priceAmount}
-          priceCurrency={enableSkill.priceCurrency}
-          returnUrl="/marketplace"
-        />
       )}
     </div>
   );

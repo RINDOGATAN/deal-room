@@ -91,7 +91,7 @@ export async function POST(request: NextRequest) {
       stripeCustomerId,
       locale,
       metadata: { kind: "plan", customerId, userId: session.user.id ?? "" },
-      successUrl: `${base}${returnPath ?? "/billing"}${returnPath?.includes("?") ? "&" : "?"}plan=active`,
+      successUrl: `${base}${returnPath ?? "/billing"}${returnPath?.includes("?") ? "&" : "?"}plan=active&session_id={CHECKOUT_SESSION_ID}`,
       cancelUrl: `${base}${returnPath ?? "/billing"}`,
     });
 
