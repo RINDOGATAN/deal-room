@@ -19,9 +19,16 @@ export async function dismissDialogs(page: Page): Promise<void> {
     const lawyerBtn = page.locator("button", { hasText: /I Understand|Entendido/i });
     const hasLawyer = await lawyerBtn.first().waitFor({ state: "visible", timeout: 3_000 }).then(() => true).catch(() => false);
     if (hasLawyer) {
+      // Wait for the dialog itself to close, not for the button text: the
+      // button reads "Saving..." while the dismissal is in flight, which
+      // used to satisfy a "hidden" wait early and send a second click into
+      // the closing dialog (a click with no timeout, so the walk hung).
+      const lawyerDialog = page
+        .locator("[role=dialog]")
+        .filter({ hasText: /Proceeding Without a Lawyer|Procediendo sin Abogado/i });
       // force: true bypasses overlay interception when multiple dialogs stack
-      await lawyerBtn.first().click({ force: true });
-      await lawyerBtn.first().waitFor({ state: "hidden", timeout: 5_000 }).catch(() => {});
+      await lawyerBtn.first().click({ force: true, timeout: 10_000 });
+      await expect(lawyerDialog).toBeHidden({ timeout: 15_000 });
       continue; // Check for more dialogs
     }
 

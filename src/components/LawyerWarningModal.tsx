@@ -36,6 +36,12 @@ export function LawyerWarningModal({
     dismissMutation.mutate({ dealRoomId });
   };
 
+  // Stay in the saving state after success: the dialog only closes once the
+  // parent's deal refetch lands, and a button that turned back into
+  // "I Understand" in that gap invited a second click that the closing
+  // dialog then swallowed.
+  const dismissing = dismissMutation.isPending || dismissMutation.isSuccess;
+
   return (
     <Dialog open={open} onOpenChange={() => {}}>
       <DialogContent
@@ -117,11 +123,11 @@ export function LawyerWarningModal({
 
         <button
           onClick={handleDismiss}
-          disabled={dismissMutation.isPending}
+          disabled={dismissing}
           className="btn-brutal w-full flex items-center justify-center gap-2"
         >
           <Shield className="w-4 h-4" />
-          {dismissMutation.isPending ? t("dismissing") : t("dismiss")}
+          {dismissing ? t("dismissing") : t("dismiss")}
         </button>
       </DialogContent>
     </Dialog>
