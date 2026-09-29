@@ -3,7 +3,7 @@
 
 import { brand } from "./brand";
 import { isHostedPilotEnv } from "@/lib/pilot";
-import { contractPricesConfigured } from "@/lib/contract-billing";
+import { contractBillingConfigured } from "@/lib/contract-billing";
 
 /**
  * The hosted deployment (dealroom.todo.law). Server code reads
@@ -17,20 +17,19 @@ const hosted = isHostedPilotEnv({
 });
 
 /**
- * Pay per contract (2026-09-29) is ready when the six Stripe price
- * variables are set (`src/lib/contract-billing.ts`). The browser bundle
- * cannot see them, so `next.config.ts` inlines the answer as
- * `NEXT_PUBLIC_CONTRACT_BILLING`.
+ * Pay per contract (2026-09-29) is ready when the five variables are set:
+ * the four Stripe price ids and `CONTRACT_BILLING_START`
+ * (`src/lib/contract-billing.ts`). The browser bundle cannot see them, so
+ * `next.config.ts` inlines the answer as `NEXT_PUBLIC_CONTRACT_BILLING`.
  */
 const contractBillingReady =
   process.env.NEXT_PUBLIC_CONTRACT_BILLING === "true" ||
-  contractPricesConfigured({
+  contractBillingConfigured({
     STRIPE_PRICE_CONTRACT_USD: process.env.STRIPE_PRICE_CONTRACT_USD,
     STRIPE_PRICE_CONTRACT_EUR: process.env.STRIPE_PRICE_CONTRACT_EUR,
     STRIPE_PRICE_CREDITS_10_USD: process.env.STRIPE_PRICE_CREDITS_10_USD,
     STRIPE_PRICE_CREDITS_10_EUR: process.env.STRIPE_PRICE_CREDITS_10_EUR,
-    STRIPE_PRICE_MONTHLY_USD: process.env.STRIPE_PRICE_MONTHLY_USD,
-    STRIPE_PRICE_MONTHLY_EUR: process.env.STRIPE_PRICE_MONTHLY_EUR,
+    CONTRACT_BILLING_START: process.env.CONTRACT_BILLING_START,
   });
 
 /**
@@ -48,9 +47,10 @@ const contractBillingReady =
  * a client-flag-only misconfiguration fails with a clear error, not a crash.
  *
  * On the hosted deployment the Stripe variables alone are not enough: the
- * hosted build stays the free pilot (Stripe off in the app) until the six
- * per-contract price variables are set as well. That keeps a deploy of
- * this code from switching billing on before the prices exist.
+ * hosted build stays the free pilot (Stripe off in the app) until the four
+ * per-contract price variables and `CONTRACT_BILLING_START` are set as
+ * well. That keeps a deploy of this code from switching billing on before
+ * the prices and the start date exist.
  */
 const stripeConfigured =
   (!hosted || contractBillingReady) &&

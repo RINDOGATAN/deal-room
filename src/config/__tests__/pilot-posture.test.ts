@@ -24,17 +24,18 @@ const ENV_KEYS = [
   "STRIPE_PRICE_CONTRACT_EUR",
   "STRIPE_PRICE_CREDITS_10_USD",
   "STRIPE_PRICE_CREDITS_10_EUR",
+  "CONTRACT_BILLING_START",
+  // Discarded in round 2; listed so the tests can prove they are not read.
   "STRIPE_PRICE_MONTHLY_USD",
   "STRIPE_PRICE_MONTHLY_EUR",
 ] as const;
 
-const SIX_PRICES = {
+const FIVE_VARS = {
   STRIPE_PRICE_CONTRACT_USD: "price_contract_usd",
   STRIPE_PRICE_CONTRACT_EUR: "price_contract_eur",
   STRIPE_PRICE_CREDITS_10_USD: "price_credits_usd",
   STRIPE_PRICE_CREDITS_10_EUR: "price_credits_eur",
-  STRIPE_PRICE_MONTHLY_USD: "price_monthly_usd",
-  STRIPE_PRICE_MONTHLY_EUR: "price_monthly_eur",
+  CONTRACT_BILLING_START: "2026-10-01",
 };
 
 const ORIGINAL: Record<string, string | undefined> = Object.fromEntries(
@@ -102,13 +103,13 @@ describe("hosted pilot posture", () => {
   });
 });
 
-describe("hosted pay per contract (2026-09-29)", () => {
-  it("switches billing on and the pilot mechanics off once the six prices are set", async () => {
+describe("hosted pay per contract (2026-09-29, round 2: five variables)", () => {
+  it("switches billing on and the pilot mechanics off once the five variables are set", async () => {
     const features = await featuresUnder({
       VERCEL_ENV: "production",
       STRIPE_SECRET_KEY: "sk_test_dummy",
       NEXT_PUBLIC_STRIPE_ENABLED: "true",
-      ...SIX_PRICES,
+      ...FIVE_VARS,
     });
     expect(features.stripeEnabled).toBe(true);
     expect(features.billing).toBe(true);
@@ -120,18 +121,49 @@ describe("hosted pay per contract (2026-09-29)", () => {
     expect(features.skillInstaller).toBe(false);
   });
 
-  it("stays the free pilot while any one of the six prices is missing", async () => {
-    const { STRIPE_PRICE_MONTHLY_EUR: _missing, ...five } = SIX_PRICES;
-    void _missing;
+  it.each(Object.keys(FIVE_VARS))("stays free while %s is missing", async (missing) => {
+    const four = Object.fromEntries(Object.entries(FIVE_VARS).filter(([k]) => k !== missing));
     const features = await featuresUnder({
       VERCEL_ENV: "production",
       STRIPE_SECRET_KEY: "sk_test_dummy",
       NEXT_PUBLIC_STRIPE_ENABLED: "true",
-      ...five,
+      ...four,
     });
     expect(features.stripeEnabled).toBe(false);
     expect(features.hostedPilot).toBe(true);
     expect(features.hosted).toBe(true);
+  });
+
+  it("stays free when the start date is not a date", async () => {
+    const features = await featuresUnder({
+      VERCEL_ENV: "production",
+      STRIPE_SECRET_KEY: "sk_test_dummy",
+      NEXT_PUBLIC_STRIPE_ENABLED: "true",
+      ...FIVE_VARS,
+      CONTRACT_BILLING_START: "next week",
+    });
+    expect(features.stripeEnabled).toBe(false);
+  });
+
+  it("does not need, or read, the discarded monthly variables", async () => {
+    const features = await featuresUnder({
+      VERCEL_ENV: "production",
+      STRIPE_SECRET_KEY: "sk_test_dummy",
+      NEXT_PUBLIC_STRIPE_ENABLED: "true",
+      ...FIVE_VARS,
+      STRIPE_PRICE_MONTHLY_USD: "",
+      STRIPE_PRICE_MONTHLY_EUR: "",
+    });
+    expect(features.stripeEnabled).toBe(true);
+
+    const monthlyOnly = await featuresUnder({
+      VERCEL_ENV: "production",
+      STRIPE_SECRET_KEY: "sk_test_dummy",
+      NEXT_PUBLIC_STRIPE_ENABLED: "true",
+      STRIPE_PRICE_MONTHLY_USD: "price_monthly_usd",
+      STRIPE_PRICE_MONTHLY_EUR: "price_monthly_eur",
+    });
+    expect(monthlyOnly.stripeEnabled).toBe(false);
   });
 
   it("reaches the browser bundle through the inlined contract-billing flag", async () => {
@@ -149,7 +181,7 @@ describe("hosted pay per contract (2026-09-29)", () => {
     const features = await featuresUnder({
       NEXT_PUBLIC_LOCAL_AUTH_ENABLED: "true",
       NEXT_PUBLIC_HOSTED_PILOT: "false",
-      ...SIX_PRICES,
+      ...FIVE_VARS,
     });
     expect(features.stripeEnabled).toBe(false);
     expect(features.hosted).toBe(false);
