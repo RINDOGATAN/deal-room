@@ -2,9 +2,13 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * The hosted pilot banner: present on hosted (both languages, with the
+ * The hosted caution banner: present on hosted (both languages, with the
  * link to todo.law/run), absent on the kit, and mounted only in the
  * signed-in (dashboard) layout: public pages carry no banner.
+ *
+ * Owner, 2026-09-21: Dealroom no longer calls itself a pilot. The banner
+ * stays on every signed-in page and carries the confidentiality caution
+ * (directive 2026-09-29: keep the confidentiality warnings where they are).
  */
 import { describe, it, expect } from "vitest";
 import { readFileSync, readdirSync } from "node:fs";
@@ -29,11 +33,12 @@ function render(hosted: boolean, locale: "en" | "es" = "en") {
 }
 
 describe("PilotBanner", () => {
-  it("shows the pilot sentence and the run link on hosted", () => {
+  it("shows the confidentiality caution and the run link on hosted", () => {
     const html = render(true);
-    expect(html).toContain('data-testid="pilot-banner"');
-    expect(html).toContain("Hosted pilot: free, capped, and with no contractual safeguards.");
-    expect(html).toContain("To deploy real customer details,");
+    expect(html).toContain('data-testid="hosted-caution-banner"');
+    expect(html).toContain("Hosted Dealroom comes with no contractual safeguards.");
+    expect(html).toContain("Do not enter privileged or confidential information.");
+    expect(html).not.toMatch(/pilot/i);
     // The owner withdrew this phrase from the banner on 2026-09-20.
     expect(html).not.toContain("security certification");
     expect(html).toContain('href="https://www.todo.law/run"');
@@ -44,32 +49,18 @@ describe("PilotBanner", () => {
 
   it("speaks Castilian Spanish with tú", () => {
     const html = render(true, "es");
-    expect(html).toContain("Piloto alojado: gratuito, limitado y sin garantías contractuales.");
-    expect(html).toContain("Para manejar datos reales de clientes,");
-    expect(html).toContain("usa tu propia instancia");
+    expect(html).toContain("Dealroom alojado no ofrece garantías contractuales.");
+    expect(html).toContain("No introduzcas información privilegiada o confidencial.");
+    expect(html).not.toMatch(/piloto/i);
     expect(html).not.toContain("certificación de seguridad");
+    expect(html).toContain("usa tu propia instancia");
     expect(html).toContain('href="https://www.todo.law/run"');
     expect(html).toContain('aria-label="Cerrar"');
   });
 
-  it("states the suite-wide clock rule in both languages", () => {
-    expect(render(true)).toContain(
-      "90 days of editing from your first sign-in, then read-only with export.",
-    );
-    expect(render(true, "es")).toContain(
-      "90 días de edición desde tu primer inicio de sesión; después, solo lectura con exportación.",
-    );
-  });
-
-  it("uses the same rule sentence on the landing sign-up card and in Settings", () => {
-    const landing = (locale: string) =>
-      JSON.parse(
-        readFileSync(path.resolve(__dirname, `../../../landing/i18n/${locale}/startups-auth.json`), "utf8"),
-      ) as Record<string, string>;
-    expect(landing("en")["pilot.notice"]).toContain(en.pilot.rule.replace(/\.$/, ""));
-    expect(landing("es")["pilot.notice"]).toContain(es.pilot.rule.replace(/\.$/, ""));
-    expect(en.pilot.banner).toContain(en.pilot.rule);
-    expect(es.pilot.banner).toContain(es.pilot.rule);
+  it("uses the same caution sentence as the sign-in screen", () => {
+    expect(en.pilot.caution).toContain("confidential information");
+    expect(es.pilot.caution).toContain("información privilegiada o confidencial");
   });
 
   it("renders nothing on the kit", () => {
@@ -99,8 +90,8 @@ describe("PilotBanner", () => {
     ]) {
       expect(src(rel), rel).not.toContain("PilotBanner");
     }
-    // The quiet pilot sentence on the sign-in screen is not the banner and stays.
-    expect(src("app/(auth)/sign-in/page.tsx")).toMatch(/<PilotSignupNotice\s*\/>/);
+    // The quiet caution line on the sign-in screen is not the banner and stays.
+    expect(src("app/(auth)/sign-in/page.tsx")).toMatch(/<HostedCaution variant="signup"\s*\/>/);
   });
 
   it("is mounted nowhere outside the signed-in layout", () => {
