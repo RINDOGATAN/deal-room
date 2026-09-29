@@ -2,16 +2,14 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * Agent API — the monthly plan (unlimited contracts)
+ * Agent API — buy a pack of ten contract credits
  *
- * POST /api/v1/agent/subscribe
- * Opens a hosted Stripe checkout for the monthly plan for the key's
- * customer and returns the URL for a person to open in a browser. While
- * the plan is active, every agreed contract the customer's agents fetch is
- * covered, and no credit is spent.
- *
- * Pay per contract (2026-09-29) replaced per-skill subscriptions: every
- * template is included. A request naming `skillIds` gets 410.
+ * POST /api/v1/agent/credits/checkout
+ * Opens a hosted Stripe checkout for one pack (price from
+ * STRIPE_PRICE_CREDITS_10_USD / _EUR), with the API key id in the metadata,
+ * and returns the URL for a person to open. When the payment succeeds the
+ * webhook adds the credits to this key. One credit is spent the first time
+ * the key fetches the document of an agreed deal.
  *
  * Body (optional): { currency?: "usd" | "eur", returnUrl?: string }
  */
@@ -26,11 +24,9 @@ import {
   ApiScopeError,
 } from "@/server/middleware/apiKeyAuth";
 import { apiError } from "@/lib/api-response";
-import { chooseCurrency, priceIdFor } from "@/lib/contract-billing";
-import { activePlanFor } from "@/server/services/billing/deal-entitlement";
+import { CREDITS_PER_PACK, chooseCurrency, priceIdFor } from "@/lib/contract-billing";
 import { appBaseUrl } from "@/server/services/billing/checkout";
 
-/** Only http(s) return targets are passed to Stripe. */
 function safeReturnUrl(value: unknown): string | null {
   if (typeof value !== "string") return null;
   try {
@@ -57,7 +53,6 @@ export async function POST(req: NextRequest) {
     if (!auth) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-
     try {
       requireScope(auth, "billing:read");
     } catch (e) {
@@ -67,24 +62,11 @@ export async function POST(req: NextRequest) {
       throw e;
     }
 
-    const body = (await req.json().catch(() => ({}))) as {
-      skillIds?: string[];
-      currency?: unknown;
-      returnUrl?: unknown;
-    };
-
-    if (body.skillIds?.length) {
-      return NextResponse.json(
-        {
-          error:
-            "Skills are no longer sold one by one: every template is included and each contract is paid when its document is first fetched. Subscribe without skillIds for the monthly plan, or buy credits (POST /api/v1/agent/credits/checkout).",
-        },
-        { status: 410 }
-      );
-    }
-
-    if (await activePlanFor(auth.customer.id)) {
-      return NextResponse.json({ error: "This customer already has the monthly plan" }, { status: 409 });
+    const body = (await req.json().catch(() => ({}))) as { currency?: unknown; returnUrl?: unknown };
+    const currency = chooseCurrency({ requested: body.currency });
+    const priceId = priceIdFor("credits10", currency);
+    if (!priceId) {
+      return NextResponse.json({ error: "The credit pack price is not configured" }, { status: 503 });
     }
 
     const { customerId, stripeCustomerId } = await getOrCreateStripeCustomer(
@@ -92,29 +74,29 @@ export async function POST(req: NextRequest) {
       auth.customer.email,
       auth.customer.name
     );
-    const currency = chooseCurrency({ requested: body.currency });
-    const priceId = priceIdFor("monthly", currency);
-    if (!priceId) {
-      return NextResponse.json({ error: "The monthly plan price is not configured" }, { status: 503 });
-    }
 
     const returnUrl = safeReturnUrl(body.returnUrl);
     const base = appBaseUrl();
     const checkoutSession = await createBillingCheckout({
-      mode: "subscription",
+      mode: "payment",
       priceId,
       stripeCustomerId,
-      metadata: { kind: "plan", customerId, apiKeyId: auth.apiKey.id },
-      successUrl: returnUrl ?? `${base}/billing?plan=active`,
-      cancelUrl: returnUrl ?? `${base}/billing`,
+      metadata: {
+        kind: "credits",
+        apiKeyId: auth.apiKey.id,
+        customerId,
+        credits: String(CREDITS_PER_PACK),
+      },
+      successUrl: returnUrl ?? `${base}/docs/agent-api?credits=added`,
+      cancelUrl: returnUrl ?? `${base}/docs/agent-api`,
     });
 
     return NextResponse.json({
       checkoutUrl: checkoutSession.url,
-      plan: "unlimited",
+      credits: CREDITS_PER_PACK,
       currency,
     });
   } catch (error) {
-    return apiError(error, "Internal server error");
+    return apiError(error, "Failed to open the checkout");
   }
 }

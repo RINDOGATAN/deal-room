@@ -27,49 +27,6 @@ export function getStripe(): Stripe {
   return stripeClient;
 }
 
-export interface CreateCheckoutParams {
-  stripeCustomerId?: string;
-  customerEmail: string;
-  customerId: string;
-  skillPackageIds: string[];
-  lineItems: { price: string; quantity: number }[];
-  successUrl: string;
-  cancelUrl: string;
-}
-
-export async function createCheckoutSession(
-  params: CreateCheckoutParams
-): Promise<Stripe.Checkout.Session> {
-  const stripe = getStripe();
-
-  const sessionParams: Stripe.Checkout.SessionCreateParams = {
-    mode: "subscription",
-    payment_method_types: ["card"],
-    allow_promotion_codes: true,
-    line_items: params.lineItems,
-    success_url: params.successUrl,
-    cancel_url: params.cancelUrl,
-    metadata: {
-      customerId: params.customerId,
-      skillPackageIds: params.skillPackageIds.join(","),
-    },
-    subscription_data: {
-      metadata: {
-        customerId: params.customerId,
-        skillPackageIds: params.skillPackageIds.join(","),
-      },
-    },
-  };
-
-  if (params.stripeCustomerId) {
-    sessionParams.customer = params.stripeCustomerId;
-  } else {
-    sessionParams.customer_email = params.customerEmail;
-  }
-
-  return stripe.checkout.sessions.create(sessionParams);
-}
-
 /**
  * Hosted checkout for pay per contract. `mode: "payment"` for a contract or
  * a credit pack (one-off), `mode: "subscription"` for the monthly plan.
