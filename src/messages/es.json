@@ -1418,6 +1418,7 @@
   "localDeployment": {
     "title": "Despliegue Local",
     "subtitle": "Ejecuta Dealroom en tu propia infraestructura con control total sobre tus datos. Las skills premium cuestan {price} al año cada una en el kit: cómpralas en la tienda de todo.law y después instálalas y actívalas en tu propia instancia. El servicio alojado en dealroom.todo.law es gratuito y no vende nada. No ofrece garantías contractuales, así que no introduzcas allí información privilegiada o confidencial.",
+    "subtitlePerContract": "Ejecuta Dealroom en tu propia infraestructura con control total sobre tus datos. Las skills premium cuestan {price} al año cada una en el kit: cómpralas en la tienda de todo.law y después instálalas y actívalas en tu propia instancia. El servicio alojado en dealroom.todo.law cobra en cambio por contrato, y redactar y negociar es gratis. No ofrece garantías contractuales, así que no introduzcas allí información privilegiada o confidencial.",
     "howItWorks": "Cómo Funciona",
     "howItWorksDesc": "Los despliegues autoalojados siguen un flujo sencillo para adquirir y activar skills premium:",
     "flowBrowse": "Explorar",
@@ -1854,6 +1855,8 @@
     "entitlementRespondentTitle": "Respondedor gratuito",
     "entitlementRespondentDesc": "El agente respondedor nunca necesita licencia, lo que facilita la adopción.",
     "entitlementPricing": "Las skills premium cuestan {price} al año cada una en el kit (tu propia instancia, con activación de licencia sin conexión). El servicio alojado es gratuito, con límites por cuenta.",
+    "entitlementsDescPerContract": "En Dealroom alojado todas las plantillas, también las premium, están disponibles para cualquier clave API, y negociar es gratis. El contrato se paga una sola vez, la primera vez que se obtiene su documento: se gasta un crédito de prepago de la clave, o lo cubre el plan mensual del cliente. Sin ninguno de los dos, los endpoints de documentos responden 402 Payment Required.",
+    "entitlementPricingPerContract": "Los agentes pagan el mismo precio por contrato que las personas, con créditos de prepago en packs de diez (POST /credits/checkout; saldo en GET /credits/balance). Los importes figuran en la agent card, en pricing.",
     "rateLimits": "Límites de Frecuencia",
     "rateLimitsDesc": "Se aplican límites de frecuencia por cliente con ventana deslizante a todos los endpoints autenticados:",
     "rateLimitGroup": "Grupo de Endpoints",

@@ -4,6 +4,7 @@
 
 import { useTranslations } from "next-intl";
 import { useKitPrice } from "@/hooks/useCurrency";
+import { features } from "@/config/features";
 import {
   Store,
   Download,
@@ -34,7 +35,10 @@ export default function LocalDeploymentPage() {
       {/* Header */}
       <div>
         <h1 className="text-3xl font-bold mb-4">{t("title")}</h1>
-        <p className="text-lg text-muted-foreground">{t("subtitle", { price })}</p>
+        <p className="text-lg text-muted-foreground">
+          {/* Pay per contract: once billing is on, hosted no longer "sells nothing". */}
+          {features.stripeEnabled ? t("subtitlePerContract", { price }) : t("subtitle", { price })}
+        </p>
       </div>
 
       {/* Overview Flow — visual pipeline */}

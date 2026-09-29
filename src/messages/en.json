@@ -1417,6 +1417,7 @@
   "localDeployment": {
     "title": "Local Deployment",
     "subtitle": "Run Dealroom on your own infrastructure with full control over your data. Premium skills are {price} a year each in the kit: buy them on the todo.law storefront, then install and activate them on your own instance. The hosted service at dealroom.todo.law is free and sells nothing. It comes with no contractual safeguards, so do not enter privileged or confidential information there.",
+    "subtitlePerContract": "Run Dealroom on your own infrastructure with full control over your data. Premium skills are {price} a year each in the kit: buy them on the todo.law storefront, then install and activate them on your own instance. The hosted service at dealroom.todo.law charges per contract instead, with drafting and negotiating free. It comes with no contractual safeguards, so do not enter privileged or confidential information there.",
     "howItWorks": "How It Works",
     "howItWorksDesc": "Self-hosted deployments follow a simple flow to acquire and activate premium skills:",
     "flowBrowse": "Browse",
@@ -1853,6 +1854,8 @@
     "entitlementRespondentTitle": "Respondent free",
     "entitlementRespondentDesc": "The responding agent never needs a licence, which keeps adoption simple.",
     "entitlementPricing": "Premium skills are {price} a year each in the kit (your own instance, offline licence activation). The hosted service is free, with limits per account.",
+    "entitlementsDescPerContract": "On hosted Dealroom every template, premium ones included, is available to every API key, and negotiating is free. The contract is paid once, the first time its document is fetched: one prepaid credit of the key is spent, or the customer's monthly plan covers it. Without either, the document endpoints answer 402 Payment Required.",
+    "entitlementPricingPerContract": "Agents pay the same price per contract as people, through prepaid credits sold in packs of ten (POST /credits/checkout; balance at GET /credits/balance). The amounts are in the agent card under pricing.",
     "rateLimits": "Rate Limits",
     "rateLimitsDesc": "Per-customer sliding window rate limits apply to all authenticated endpoints:",
     "rateLimitGroup": "Endpoint Group",
