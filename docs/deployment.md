@@ -51,15 +51,24 @@ CRON_SECRET
 AUTH_COOKIE_DOMAIN           # cross-app session cookie domain
 ```
 
-### Payments (paywall on)
+### Payments (pay per contract, see `docs/billing.md`)
 
 ```
 STRIPE_SECRET_KEY
 NEXT_PUBLIC_STRIPE_ENABLED=true
 STRIPE_WEBHOOK_SECRET
-STRIPE_PRICE_ID
-STRIPE_PRICE_ID_USD
+STRIPE_PRICE_CONTRACT_USD      # the six price ids; on hosted, all six
+STRIPE_PRICE_CONTRACT_EUR      # together are what switches billing on
+STRIPE_PRICE_CREDITS_10_USD
+STRIPE_PRICE_CREDITS_10_EUR
+STRIPE_PRICE_MONTHLY_USD
+STRIPE_PRICE_MONTHLY_EUR
+CONTRACT_BILLING_START         # optional ISO date: deals created before it stay free
 ```
+
+`STRIPE_PRICE_ID` / `STRIPE_PRICE_ID_USD` (the former per-skill price) are
+no longer used by any checkout; the seed still copies `STRIPE_PRICE_ID` onto
+skill package rows, where nothing reads it.
 
 ### Optional services
 
