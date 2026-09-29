@@ -1434,7 +1434,9 @@ enum AgentCreditReason {
   REVERSAL
 }
 
-// Prepaid contract credits, held per agent API key.
+// UNUSED since round 2 (2026-09-29): credits were first held per API key.
+// They now belong to the customer (`CustomerCredit` below). The tables stay
+// (migrations are append-only); nothing reads or writes them.
 model AgentCredit {
   apiKeyId   String   @id
   customerId String
@@ -1467,7 +1469,43 @@ model AgentCreditEntry {
   @@map("agent_credit_entries")
 }
 
-// The monthly plan (unlimited contracts), one row per Stripe subscription.
+// Prepaid contract credits, held per customer (the organisation or person
+// that owns the API keys). Any key of the customer spends from the one
+// balance; rotating or revoking a key changes nothing.
+model CustomerCredit {
+  customerId String   @id
+  balance    Int      @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  entries CustomerCreditEntry[]
+
+  @@map("customer_credits")
+}
+
+model CustomerCreditEntry {
+  id                      String            @id @default(cuid())
+  customerId              String
+  // The key that bought or spent, for the record only; it never owns credit.
+  apiKeyId                String?
+  delta                   Int
+  reason                  AgentCreditReason
+  dealRoomId              String?
+  stripeCheckoutSessionId String?
+  stripePaymentIntentId   String?
+  createdAt               DateTime          @default(now())
+
+  credit CustomerCredit @relation(fields: [customerId], references: [customerId], onDelete: Cascade)
+
+  // A purchase (and its reversal) is written once per checkout session.
+  @@unique([stripeCheckoutSessionId, reason])
+  @@index([customerId, createdAt])
+  @@index([stripePaymentIntentId])
+  @@map("customer_credit_entries")
+}
+
+// UNUSED since round 2 (2026-09-29): the monthly plan was discarded before
+// launch. The table stays empty (migrations are append-only).
 model ContractPlan {
   id                   String    @id @default(cuid())
   customerId           String
