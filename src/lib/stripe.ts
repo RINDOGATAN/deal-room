@@ -70,6 +70,43 @@ export async function createCheckoutSession(
   return stripe.checkout.sessions.create(sessionParams);
 }
 
+/**
+ * Hosted checkout for pay per contract. `mode: "payment"` for a contract or
+ * a credit pack (one-off), `mode: "subscription"` for the monthly plan.
+ * The metadata (`kind` plus the deal id or the API key id) is copied onto
+ * the payment intent or the subscription, so refunds and renewals can be
+ * traced back without a lookup.
+ */
+export async function createBillingCheckout(params: {
+  mode: "payment" | "subscription";
+  priceId: string;
+  stripeCustomerId: string;
+  metadata: Record<string, string>;
+  successUrl: string;
+  cancelUrl: string;
+  locale?: "en" | "es";
+}): Promise<Stripe.Checkout.Session> {
+  const stripe = getStripe();
+  const sessionParams: Stripe.Checkout.SessionCreateParams = {
+    mode: params.mode,
+    customer: params.stripeCustomerId,
+    line_items: [{ price: params.priceId, quantity: 1 }],
+    allow_promotion_codes: true,
+    success_url: params.successUrl,
+    cancel_url: params.cancelUrl,
+    metadata: params.metadata,
+    ...(params.locale ? { locale: params.locale } : {}),
+    ...(params.mode === "payment"
+      ? { payment_intent_data: { metadata: params.metadata } }
+      : { subscription_data: { metadata: params.metadata } }),
+  };
+  return stripe.checkout.sessions.create(sessionParams);
+}
+
+export async function retrieveCheckoutSession(sessionId: string): Promise<Stripe.Checkout.Session> {
+  return getStripe().checkout.sessions.retrieve(sessionId);
+}
+
 export async function createCustomer(params: {
   email: string;
   name?: string;

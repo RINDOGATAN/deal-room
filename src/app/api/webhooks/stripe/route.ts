@@ -13,6 +13,13 @@ import { getResend } from "@/lib/email";
 import { mailFrom } from "@/lib/mail-from";
 import { generateDownloadToken } from "@/lib/crypto";
 import { createLogger } from "@/lib/logger";
+import {
+  billingKindOf,
+  fulfilCheckoutSession,
+  handleChargeRefunded,
+  handleCheckoutPaymentFailed,
+  syncPlanSubscription,
+} from "@/server/services/billing/stripe-events";
 
 const logger = createLogger("stripe-webhook");
 
@@ -78,18 +85,41 @@ export async function POST(request: NextRequest) {
 
     try {
       switch (event.type) {
-        case "checkout.session.completed":
-          await handleCheckoutCompleted(event.data.object as Stripe.Checkout.Session);
+        case "checkout.session.completed": {
+          // Pay per contract (contract, credit pack, monthly plan) first;
+          // anything else is a legacy per-skill subscription.
+          const session = event.data.object as Stripe.Checkout.Session;
+          if (!(await fulfilCheckoutSession(session, getSubscription))) {
+            await handleCheckoutCompleted(session);
+          }
+          break;
+        }
+
+        case "checkout.session.async_payment_succeeded":
+          await fulfilCheckoutSession(event.data.object as Stripe.Checkout.Session, getSubscription);
+          break;
+
+        case "checkout.session.async_payment_failed":
+          await handleCheckoutPaymentFailed(event.data.object as Stripe.Checkout.Session);
+          break;
+
+        case "charge.refunded":
+          await handleChargeRefunded(event.data.object as Stripe.Charge);
           break;
 
         case "customer.subscription.created":
         case "customer.subscription.updated":
-          await handleSubscriptionChange(event.data.object as Stripe.Subscription);
+        case "customer.subscription.deleted": {
+          const subscription = event.data.object as Stripe.Subscription;
+          if (billingKindOf(subscription.metadata) === "plan") {
+            await syncPlanSubscription(subscription);
+          } else if (event.type === "customer.subscription.deleted") {
+            await handleSubscriptionDeleted(subscription);
+          } else {
+            await handleSubscriptionChange(subscription);
+          }
           break;
-
-        case "customer.subscription.deleted":
-          await handleSubscriptionDeleted(event.data.object as Stripe.Subscription);
-          break;
+        }
 
         case "invoice.payment_succeeded":
           await handleInvoicePaymentSucceeded(event.data.object as Stripe.Invoice);
@@ -472,6 +502,11 @@ async function handleInvoicePaymentSucceeded(invoice: Stripe.Invoice) {
 }
 
 async function handlePaymentFailed(invoice: Stripe.Invoice) {
+  // The monthly plan's own state follows customer.subscription.updated
+  // (past_due stops it covering new contracts); the per-skill suspension
+  // and its e-mail below are for legacy skill subscriptions only.
+  if (billingKindOf(invoice.parent?.subscription_details?.metadata) === "plan") return;
+
   const stripeCustomerId =
     typeof invoice.customer === "string"
       ? invoice.customer
