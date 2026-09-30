@@ -107,7 +107,7 @@ See [agent-api.md](./agent-api.md) for full endpoint documentation.
 
 ## Usage Limits
 
-Since 2026-09-16 nothing is sold on the hosted pilot (dealroom.todo.law):
+Since 2026-09-16 nothing is sold on hosted Dealroom (dealroom.todo.law):
 A2A skills are available there at no cost, within the weekly limits below.
 For your own instance, premium skills are 60 a year each in the kit (in your currency).
 
@@ -282,7 +282,7 @@ A2A skills live in the private `RINDOGATAN/legalskills` repository and are seede
 DATABASE_URL="<unpooled URL>" SKILLS_DIR=/path/to/legalskills npx prisma db seed
 ```
 
-All 12 A2A skill IDs are registered in `prisma/seed.ts` and marked as premium. The seeded catalog price is used only where in-app billing is on; the hosted pilot ignores it and sells nothing.
+All 12 A2A skill IDs are registered in `prisma/seed.ts` and marked as premium. The seeded catalog price is used only where in-app billing is on; hosted Dealroom ignores it and sells nothing.
 
 ### Rate Limiting
 

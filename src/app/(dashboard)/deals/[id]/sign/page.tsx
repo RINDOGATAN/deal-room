@@ -42,6 +42,7 @@ import {
 import { roleConfigFor, type ContractRole } from "@/lib/contractRoles";
 import { AiDraftPanel } from "@/components/ai/AiDraftPanel";
 import { StatusNote } from "@/components/ui/status-note";
+import { ContractPaymentPanel, PaidDownloads } from "@/components/billing/ContractPayment";
 
 /**
  * Stall notice + manual reminder. Renders only once the counterparty has been
@@ -146,7 +147,10 @@ function MarkdownishDigest({ text }: { text: string }) {
 }
 
 function DownloadLinks({ dealId, className }: { dealId: string; className?: string }) {
+  // Pay per contract: the purchase action replaces the links until the
+  // contract is paid (unchanged when Stripe is off).
   return (
+    <PaidDownloads dealId={dealId}>
     <div className={`flex items-center justify-center gap-1.5 text-xs text-muted-foreground ${className ?? ""}`}>
       <Download className="w-3.5 h-3.5 flex-shrink-0" />
       <a href={`/api/deals/${dealId}/document`} className="hover:text-foreground underline underline-offset-2">PDF</a>
@@ -155,6 +159,7 @@ function DownloadLinks({ dealId, className }: { dealId: string; className?: stri
       <span aria-hidden>·</span>
       <a href={`/api/deals/${dealId}/document/txt`} className="hover:text-foreground underline underline-offset-2">TXT</a>
     </div>
+    </PaidDownloads>
   );
 }
 
@@ -1489,6 +1494,8 @@ function SigningContent({ dealId }: { dealId: string }) {
             <p className="text-sm text-muted-foreground mb-4 max-w-md mx-auto">
               {t("readyForSignaturesDescription")}
             </p>
+            {/* Pay per contract: signing starts once the contract is paid. */}
+            <ContractPaymentPanel dealId={dealId} className="max-w-md mx-auto mb-4 text-left" />
             <div className="flex items-center justify-center gap-3 mb-4 flex-wrap">
               <button
                 onClick={() => initiateSigning.mutate({ dealRoomId: dealId })}

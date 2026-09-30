@@ -9,6 +9,6 @@
   "login.newHere": "¿Primera vez? Regístrate",
   "or": "o",
   "continueWithGoogle": "Continuar con Google",
-  "pilot.notice": "Piloto alojado: gratuito, limitado y sin garantías contractuales. 90 días de edición desde tu primer inicio de sesión; después, solo lectura con exportación. Para manejar datos reales de clientes,",
-  "pilot.run": "usa tu propia instancia"
+  "caution.text": "Dealroom alojado no ofrece garantías contractuales. No introduzcas información privilegiada o confidencial. Para eso,",
+  "caution.run": "usa tu propia instancia"
 }

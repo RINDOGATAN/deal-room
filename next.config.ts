@@ -16,6 +16,23 @@ const hostedPilot =
     (process.env.AUTH_COOKIE_DOMAIN ?? "").trim().toLowerCase(),
   );
 
+// Pay per contract is ready when the five variables are set: the four
+// Stripe price ids and a valid CONTRACT_BILLING_START date (same rule as
+// src/lib/contract-billing.ts:contractBillingConfigured). The browser bundle
+// cannot read them, so the answer is inlined here; on hosted this is what
+// switches billing on and the pilot mechanics off.
+const billingStart = process.env.CONTRACT_BILLING_START?.trim();
+const contractBilling =
+  process.env.NEXT_PUBLIC_CONTRACT_BILLING === "true" ||
+  ([
+    "STRIPE_PRICE_CONTRACT_USD",
+    "STRIPE_PRICE_CONTRACT_EUR",
+    "STRIPE_PRICE_CREDITS_10_USD",
+    "STRIPE_PRICE_CREDITS_10_EUR",
+  ].every((key) => !!process.env[key]?.trim()) &&
+    !!billingStart &&
+    !Number.isNaN(new Date(billingStart).getTime()));
+
 // What /api/health reports and checks: the build's version and commit, and
 // the last migration the build ships (the runtime image carries no
 // prisma/migrations folder, so the name is recorded here).
@@ -34,6 +51,7 @@ const buildCommit = (process.env.APP_COMMIT || process.env.VERCEL_GIT_COMMIT_SHA
 const nextConfig: NextConfig = {
   env: {
     NEXT_PUBLIC_HOSTED_PILOT: hostedPilot ? "true" : "false",
+    NEXT_PUBLIC_CONTRACT_BILLING: contractBilling ? "true" : "false",
     DEALROOM_BUILD_MIGRATION: lastMigration,
     DEALROOM_BUILD_VERSION: buildVersion,
     DEALROOM_BUILD_COMMIT: buildCommit,

@@ -8,6 +8,7 @@ import prisma from "@/lib/prisma";
 import { getStripe, getSubscription } from "@/lib/stripe";
 import { features } from "@/config/features";
 import { apiError } from "@/lib/api-response";
+import { billingKindOf, fulfilCheckoutSession } from "@/server/services/billing/stripe-events";
 
 /**
  * Activates entitlements for a completed Stripe checkout session.
@@ -44,9 +45,7 @@ export async function POST(request: NextRequest) {
     }
 
     const customerId = checkoutSession.metadata?.customerId;
-    const skillPackageIds = checkoutSession.metadata?.skillPackageIds?.split(",").filter(Boolean) ?? [];
-
-    if (!customerId || !skillPackageIds.length) {
+    if (!customerId) {
       return NextResponse.json({ error: "Missing metadata" }, { status: 400 });
     }
 
@@ -54,6 +53,24 @@ export async function POST(request: NextRequest) {
     const customer = await prisma.customer.findUnique({ where: { id: customerId } });
     if (!customer || customer.email?.toLowerCase() !== session.user.email?.toLowerCase()) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+    }
+
+    // Pay per contract (a contract or a credit pack): record it now, so the
+    // download is unlocked when the person lands back on the deal, even if
+    // the webhook has not arrived yet. Idempotent with the webhook.
+    const kind = billingKindOf(checkoutSession.metadata);
+    if (kind) {
+      await fulfilCheckoutSession(checkoutSession);
+      return NextResponse.json({
+        activated: true,
+        kind,
+        dealRoomId: checkoutSession.metadata?.dealRoomId ?? null,
+      });
+    }
+
+    const skillPackageIds = checkoutSession.metadata?.skillPackageIds?.split(",").filter(Boolean) ?? [];
+    if (!skillPackageIds.length) {
+      return NextResponse.json({ error: "Missing metadata" }, { status: 400 });
     }
 
     const subscriptionId =

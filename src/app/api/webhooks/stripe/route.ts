@@ -13,6 +13,11 @@ import { getResend } from "@/lib/email";
 import { mailFrom } from "@/lib/mail-from";
 import { generateDownloadToken } from "@/lib/crypto";
 import { createLogger } from "@/lib/logger";
+import {
+  fulfilCheckoutSession,
+  handleChargeRefunded,
+  handleCheckoutPaymentFailed,
+} from "@/server/services/billing/stripe-events";
 
 const logger = createLogger("stripe-webhook");
 
@@ -78,10 +83,29 @@ export async function POST(request: NextRequest) {
 
     try {
       switch (event.type) {
-        case "checkout.session.completed":
-          await handleCheckoutCompleted(event.data.object as Stripe.Checkout.Session);
+        case "checkout.session.completed": {
+          // Pay per contract (a contract or a credit pack) first; anything
+          // else is a legacy per-skill subscription, handled as before.
+          const session = event.data.object as Stripe.Checkout.Session;
+          if (!(await fulfilCheckoutSession(session))) {
+            await handleCheckoutCompleted(session);
+          }
+          break;
+        }
+
+        case "checkout.session.async_payment_succeeded":
+          await fulfilCheckoutSession(event.data.object as Stripe.Checkout.Session);
           break;
 
+        case "checkout.session.async_payment_failed":
+          await handleCheckoutPaymentFailed(event.data.object as Stripe.Checkout.Session);
+          break;
+
+        case "charge.refunded":
+          await handleChargeRefunded(event.data.object as Stripe.Charge);
+          break;
+
+        // Legacy per-skill subscriptions (the historic subscribers), as on main.
         case "customer.subscription.created":
         case "customer.subscription.updated":
           await handleSubscriptionChange(event.data.object as Stripe.Subscription);

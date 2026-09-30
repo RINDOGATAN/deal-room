@@ -13,18 +13,19 @@ Dealroom uses a "free coffee machine, paid capsules" model:
 
 ### Where premium skills are sold (since 2026-09-16)
 
-- **Hosted pilot (dealroom.todo.law):** free and capped. Every skill,
-  premium ones included, is available to every account; nothing is sold
-  there. Limits per account: one organisation, 90 days of editing from the
+- **Hosted (dealroom.todo.law):** free. Every skill, premium ones included,
+  is available to every account; nothing is sold there. Free hosted use
+  includes, per account: one organisation, 90 days of editing from the
   first sign-in (then read-only, export always available), 10 deals, 3
-  startup journeys. No security certification: for real client data, run
-  your own instance (https://www.todo.law/run).
+  startup journeys. Hosted Dealroom comes with no contractual safeguards.
+  Do not enter privileged or confidential information. For that, run your
+  own instance (https://www.todo.law/run).
 - **The kit (your own instance):** no caps. Premium skills are **60 a year
   each in the kit (in your currency)**, bought on the todo.law storefront and activated offline
   with a licence file (see "Offline Activation" below).
 
 The Stripe, subscription and online-activation paths described below remain
-in the code for other deployments but are switched off on the hosted pilot.
+in the code for other deployments but are switched off on hosted Dealroom.
 
 ---
 
@@ -118,7 +119,7 @@ The signature ensures packages haven't been tampered with. Only packages signed 
 
 | Type | Validation | Use Case |
 |------|------------|----------|
-| **SaaS** | API call to license server | Not used on the hosted pilot (nothing is sold there) |
+| **SaaS** | API call to license server | Not used on hosted Dealroom (nothing is sold there) |
 | **Self-Hosted** | Cryptographic license file | Air-gapped/on-premise deployments |
 
 ### Jurisdiction Tiers

@@ -27,47 +27,38 @@ export function getStripe(): Stripe {
   return stripeClient;
 }
 
-export interface CreateCheckoutParams {
-  stripeCustomerId?: string;
-  customerEmail: string;
-  customerId: string;
-  skillPackageIds: string[];
-  lineItems: { price: string; quantity: number }[];
+/**
+ * Hosted checkout for pay per contract: a contract or a credit pack, both
+ * one-off payments. The metadata (`kind` plus the deal id or the customer
+ * id) is copied onto the payment intent, so refunds can be traced back
+ * without a lookup.
+ */
+export async function createBillingCheckout(params: {
+  mode: "payment";
+  priceId: string;
+  stripeCustomerId: string;
+  metadata: Record<string, string>;
   successUrl: string;
   cancelUrl: string;
-}
-
-export async function createCheckoutSession(
-  params: CreateCheckoutParams
-): Promise<Stripe.Checkout.Session> {
+  locale?: "en" | "es";
+}): Promise<Stripe.Checkout.Session> {
   const stripe = getStripe();
-
   const sessionParams: Stripe.Checkout.SessionCreateParams = {
-    mode: "subscription",
-    payment_method_types: ["card"],
+    mode: params.mode,
+    customer: params.stripeCustomerId,
+    line_items: [{ price: params.priceId, quantity: 1 }],
     allow_promotion_codes: true,
-    line_items: params.lineItems,
     success_url: params.successUrl,
     cancel_url: params.cancelUrl,
-    metadata: {
-      customerId: params.customerId,
-      skillPackageIds: params.skillPackageIds.join(","),
-    },
-    subscription_data: {
-      metadata: {
-        customerId: params.customerId,
-        skillPackageIds: params.skillPackageIds.join(","),
-      },
-    },
+    metadata: params.metadata,
+    ...(params.locale ? { locale: params.locale } : {}),
+    payment_intent_data: { metadata: params.metadata },
   };
-
-  if (params.stripeCustomerId) {
-    sessionParams.customer = params.stripeCustomerId;
-  } else {
-    sessionParams.customer_email = params.customerEmail;
-  }
-
   return stripe.checkout.sessions.create(sessionParams);
+}
+
+export async function retrieveCheckoutSession(sessionId: string): Promise<Stripe.Checkout.Session> {
+  return getStripe().checkout.sessions.retrieve(sessionId);
 }
 
 export async function createCustomer(params: {

@@ -2,9 +2,9 @@
 
 > Dealroom is a two-party asynchronous contract negotiation platform built by TODO.LAW. It replaces emailing Word files back and forth with a secure, AI-powered workspace that finds the optimal compromise for both parties.
 
-## Hosted pilot and the kit
+## Hosted and the kit
 
-- **dealroom.todo.law is a free, capped pilot.** Every contract skill is available to every account at no cost, and nothing is sold there. Limits per account: one organisation, 90 days of editing from the first sign-in (then read-only, with export always available), 10 deals and 3 startup journeys. It carries no security certification: for real client data, run your own instance (https://www.todo.law/run).
+- **dealroom.todo.law is free.** Every contract skill is available to every account at no cost, and nothing is sold there. Free hosted use includes, per account: one organisation, 90 days of editing from the first sign-in (then read-only, with export always available), 10 deals and 3 startup journeys. Hosted Dealroom comes with no contractual safeguards. Do not enter privileged or confidential information. For that, run your own instance (https://www.todo.law/run).
 - **The kit (self-hosted Dealroom) has no caps.** Premium skills are sold only for the kit: 60 a year each in the kit (in your currency), bought on the todo.law storefront and activated offline with a licence file.
 
 ## Public Pages
@@ -19,7 +19,7 @@
 - [Agent API](https://dealroom.todo.law/docs/agent-api): A2A agent integration documentation
 - [Agent Preparation](https://dealroom.todo.law/docs/agent-preparation): Guide for preparing agents for contract negotiation and dispute resolution
 - [Local Deployment](https://dealroom.todo.law/docs/local-deployment): Self-hosted deployment guide
-- [Marketplace](https://dealroom.todo.law/marketplace): Browse the contract skills (all available at no cost on the hosted pilot)
+- [Marketplace](https://dealroom.todo.law/marketplace): Browse the contract skills (all available at no cost on hosted Dealroom)
 - [Premium skills for the kit](https://todo.law/marketplace): 60 a year each in the kit (in your currency), for your own instance
 
 ## What Dealroom Does

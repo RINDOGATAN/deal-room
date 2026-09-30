@@ -79,7 +79,6 @@ Content-Type: application/json
 | POST | `/api/v1/agent/negotiate` |
 | POST | `/api/v1/agent/negotiate/join` |
 | POST | `/api/v1/agent/playbooks` |
-| POST | `/api/v1/agent/subscribe` |
 | POST | `/api/v1/agent/webhooks` |
 | POST | `/api/v1/agent/deals/:id/accept` |
 | POST | `/api/v1/agent/deals/:id/reject` |
@@ -895,24 +894,18 @@ curl https://dealroom.todo.law/api/v1/agent/deals/DEAL_ID/document \
   -o contract.pdf
 ```
 
+Where payments are on, this first fetch spends one credit of the key's
+customer; with no credit left it answers **402** with the link to buy
+credits. See [Paying per contract](#paying-per-contract).
+
 ---
 
 ## Entitlements
 
-Premium templates (skills from the `legalskills` repo) require an active subscription entitlement. The **initiator** must hold the entitlement for the template's contract type and jurisdiction. The respondent does not need an entitlement — they are participating in a deal the initiator started.
-
-If the initiator attempts to negotiate with a premium template without entitlement:
-
-```json
-{
-  "error": "Not entitled to use this template",
-  "reason": "No entitlement found for this skill"
-}
-```
-
-**Status:** `403 Forbidden`
-
-Free templates (NDA, MSA, SaaS, DPA, Privacy Notice) are available to all customers without entitlement.
+Every template, premium ones included, is available to every API key
+without a skill entitlement. Negotiating is always free. Where payments are
+on, what is paid is the **contract**, when its document is first fetched
+(see [Paying per contract](#paying-per-contract)).
 
 ---
 
@@ -942,22 +935,119 @@ Every negotiation (both `AGREED` and `FAILED`) is recorded in a `NegotiationUsag
 
 ---
 
-## Subscriptions & Billing
+## Paying per contract
 
-**Hosted pilot (dealroom.todo.law):** a free, capped pilot. Every skill,
-premium ones included, is available to every API key at no cost, and
-nothing is sold there: `POST /subscribe` answers **409**
-`{ "error": "Payments are disabled; all skills are free" }`.
+**Your own instance (the kit):** payments are off. Every contract is free;
+the credit endpoints below answer **409** `{ "error": "Payments are disabled; every contract is free" }`
+(the retired `POST /subscribe` answers 410 everywhere).
+Premium skills for your own instance are bought on the todo.law storefront
+and activated offline with a licence file.
 
-**Your own instance (the kit):** premium skills are **60 a year each in the
-kit (in your currency)**, bought on the todo.law storefront and activated offline with a licence
-file. The endpoints below apply only to a deployment that runs its own
-in-app billing.
+**Where payments are on (hosted Dealroom, once billing is switched on):**
 
-Where in-app billing is on, the **initiator's customer** must hold an active
-entitlement. The respondent does not need one.
+- Drafting and negotiating are free, whatever the template.
+- A contract is paid **once**, the first time an agent fetches the document
+  of an agreed deal (`GET /deals/:id/document`, `/document/docx` or
+  `/document/txt`). One **prepaid credit** is spent. Later fetches of the
+  same deal, by any key, are free.
+- **Credits belong to the customer**, not to a key. Every API key of the
+  customer spends from the one balance; rotating or revoking a key changes
+  nothing. The ledger notes which key bought or spent each credit.
+- Credits are sold in **packs of ten, at 25 percent off** the single price.
+  The single price is the same for agents and people.
+- There is no subscription or monthly plan. `POST /subscribe` answers
+  **410 Gone** with a plain message and the link to buy credits.
+- Deals created before the deployment's billing start date are never
+  charged.
+- If the deal is not paid and the customer has no credit, the document
+  endpoints answer **402 Payment Required**:
 
-### Check Subscription Status
+```json
+{
+  "error": "This contract is not paid yet and your account has no credits left. Buy a pack of ten credits (POST /api/v1/agent/credits/checkout); any API key of the account spends them, one credit when an agreed contract is first fetched.",
+  "code": "PAYMENT_REQUIRED",
+  "checkout": { "method": "POST", "url": "/api/v1/agent/credits/checkout" },
+  "balance": { "method": "GET", "url": "/api/v1/agent/credits/balance" }
+}
+```
+
+The amounts are machine-readable in `/.well-known/agent.json` and in the MCP
+discovery document, under `pricing`: `amountsMinorUnits` (e.g. `2900` =
+29.00, per currency, read from the deployment's Stripe prices, so always
+what Stripe charges) and `display` (the text shown to people). The block
+also states `creditsHeldBy: "customer"`.
+
+### Buy a pack of ten credits
+
+```
+POST /credits/checkout
+Scope: billing:read
+Content-Type: application/json
+```
+
+```json
+{ "currency": "eur", "returnUrl": "https://your-app.example/after-payment" }
+```
+
+Both fields are optional (`currency` defaults to `usd`).
+
+**Response:**
+
+```json
+{
+  "checkoutUrl": "https://checkout.stripe.com/c/pay/cs_...",
+  "credits": 10,
+  "currency": "eur"
+}
+```
+
+A person opens `checkoutUrl` in a browser to pay. The credits are added to
+the balance of **the key's customer** when the payment succeeds (Stripe
+webhook); any key of the customer can then spend them. A fully refunded pack
+is taken back (a partial refund keeps it); if some credits were already
+spent, the balance can go below zero and blocks new spending until topped
+up.
+
+### Check the balance
+
+```
+GET /credits/balance
+Scope: billing:read
+```
+
+```json
+{
+  "billing": "per_contract",
+  "heldBy": "customer",
+  "customerId": "clcust...",
+  "balance": 9,
+  "entries": [
+    { "delta": -1, "reason": "CONSUME", "dealRoomId": "cldeal...", "apiKeyId": "clkey2...", "createdAt": "2026-10-02T10:00:00.000Z" },
+    { "delta": 10, "reason": "PURCHASE", "dealRoomId": null, "apiKeyId": "clkey1...", "createdAt": "2026-10-01T09:00:00.000Z" }
+  ]
+}
+```
+
+The balance is the customer's: every key of the customer sees the same
+number.
+
+### Subscriptions (retired)
+
+```
+POST /subscribe
+```
+
+Answers **410 Gone** in every posture:
+
+```json
+{
+  "error": "Subscriptions are no longer offered. Every template is included, and each contract is paid with one prepaid credit when its document is first fetched. Buy credits in packs of ten at POST /api/v1/agent/credits/checkout.",
+  "code": "GONE",
+  "buyCredits": { "method": "POST", "url": "/api/v1/agent/credits/checkout" }
+}
+```
+
+### Earlier per-skill subscriptions
 
 ```
 GET /subscriptions
@@ -986,45 +1076,8 @@ Scope: billing:read
 }
 ```
 
-### Subscribe to Premium Skills
-
-```
-POST /subscribe
-Scope: billing:read
-Content-Type: application/json
-```
-
-```json
-{
-  "skillIds": ["com.nel.skills.consulting", "com.nel.skills.founders"],
-  "returnUrl": "https://your-app.com/callback"
-}
-```
-
-**Response:**
-
-```json
-{
-  "checkoutUrl": "https://checkout.stripe.com/c/pay/cs_...",
-  "message": "Open this URL in a browser to complete the subscription. Entitlements activate automatically after payment.",
-  "skills": [
-    {
-      "skillId": "com.nel.skills.consulting",
-      "displayName": "Consulting Agreement",
-      "priceAmount": 900,
-      "priceCurrency": "eur"
-    }
-  ]
-}
-```
-
-The admin opens `checkoutUrl` in a browser to complete payment. Entitlements are activated automatically via Stripe webhook — the agent can start negotiating immediately after.
-
-If `skillIds` is omitted, the response lists all available premium skills.
-
-### Revenue Share
-
-70% of subscription revenue goes to the skill publisher. 30% is retained by the platform. Revenue share is processed automatically via Stripe Connect when the publisher has a connected account.
+`GET /subscriptions` still lists subscriptions bought before pay per
+contract; they are no longer needed to use any template.
 
 ---
 
@@ -1248,7 +1301,7 @@ Returns a standard A2A Agent Card describing Dealroom's negotiation capabilities
 GET /api/v1/agent/mcp
 ```
 
-Returns MCP-compatible tool definitions for Dealroom operations (discovery-only — execution goes through REST endpoints). Includes tools: `list_templates`, `get_template`, `create_playbook`, `initiate_negotiation`, `join_negotiation`, `get_deal`, `download_contract`, `get_credits`.
+Returns MCP-compatible tool definitions for Dealroom operations (discovery-only — execution goes through REST endpoints). Includes tools: `list_templates`, `get_template`, `create_playbook`, `initiate_negotiation`, `join_negotiation`, `get_deal`, `download_contract` (documents the 402 behaviour), `get_subscriptions`, `buy_credits`, `get_credit_balance` (the customer's shared balance), plus a `pricing` block with the per-contract amounts. There is no `subscribe` tool: subscriptions are retired.
 
 ---
 
@@ -1261,7 +1314,7 @@ Returns MCP-compatible tool definitions for Dealroom operations (discovery-only 
 | `playbook:write` | Create, update, and delete playbooks |
 | `negotiate` | Initiate and join negotiations, counter-propose, accept/reject |
 | `deals:read` | List deals, view details, poll status, download documents |
-| `billing:read` | View subscriptions, initiate subscription checkout |
+| `billing:read` | View the customer's credit balance and earlier subscriptions, buy credit packs |
 | `webhooks:manage` | Register, list, and delete webhook endpoints |
 | `disputes:create` | Escalate deals to Gavel ADR |
 | `experts:read` | Search and view expert profiles |
@@ -1294,7 +1347,7 @@ All A2A skills are bilingual (EN/ES) and support three jurisdictions: California
 
 ### A2A Usage Limits
 
-On the hosted pilot, A2A skills are available at no cost, with weekly
+On hosted Dealroom, A2A skills are available at no cost, with weekly
 limits (nothing is sold there). On your own instance, premium A2A skills are
 60 a year each in the kit (in your currency).
 

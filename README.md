@@ -13,22 +13,22 @@ Two-party async contract negotiation platform with weighted compromise algorithm
 - **Two-Level Admin** — Platform admins manage marketplace; supervisors monitor deals
 - **Self-Hostable** — AGPL-licensed sovereign kit for running on your own hardware (see below)
 
-## Hosted pilot and the kit
+## Hosted and the kit
 
-- **Hosted ([dealroom.todo.law](https://dealroom.todo.law)) is a free, capped
-  pilot.** Every skill is available to every account and nothing is sold
-  there. Limits per account: one organisation (an account is its own
+- **Hosted ([dealroom.todo.law](https://dealroom.todo.law)) is free.** Every
+  skill is available to every account and nothing is sold there. Free hosted
+  use includes, per account: one organisation (an account is its own
   organisation), 90 days of editing from the first sign-in (then read-only;
   the export at `/api/account/export` always works), 10 deals and 3 startup
-  journeys. A banner on every page says so. It has no security
-  certification: for real client data, run your own instance
-  (<https://www.todo.law/run>).
+  journeys. Hosted Dealroom comes with no contractual safeguards. Do not
+  enter privileged or confidential information. For that, run your own
+  instance (<https://www.todo.law/run>).
 - **The kit (self-hosted) has no caps.** Premium skills are sold only for
   the kit: 60 a year each in the kit (in your currency) on the todo.law
   storefront, installed and
   activated offline with a licence file.
 
-The pilot switches on when the build runs on Vercel production
+The hosted limits switch on when the build runs on Vercel production
 (`VERCEL_ENV=production`) or with `AUTH_COOKIE_DOMAIN=.todo.law`; the rules
 live in `src/lib/pilot.ts`.
 
@@ -100,7 +100,7 @@ EMAIL_FROM=noreply@yourdomain.com
 GOOGLE_CLIENT_ID=...
 GOOGLE_CLIENT_SECRET=...
 SKILLS_DIR=/path/to/skills          # Optional: premium skills directory
-STRIPE_SECRET_KEY=...               # Optional: in-app billing (ignored on the hosted pilot)
+STRIPE_SECRET_KEY=...               # Optional: in-app billing (ignored on hosted dealroom.todo.law)
 ```
 
 ## Administration

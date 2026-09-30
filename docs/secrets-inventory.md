@@ -63,8 +63,13 @@ rows marked "2026-08-05" are covered by that rotation. "Unknown" means no record
 | `AUTH_COOKIE_DOMAIN` | Hosted; kit .env (empty) | Session cookie domain (cross-app SSO on hosted) |
 | `GOOGLE_CLIENT_ID`, `NEXT_PUBLIC_GOOGLE_CLIENT_ID` | Hosted; kit .env | Google OAuth client ID |
 | `EMAIL_FROM` | Hosted; kit .env | Sender address |
-| `STRIPE_PRICE_ID`, `STRIPE_PRICE_ID_USD` | Hosted; seed | Price IDs for checkout |
-| `NEXT_PUBLIC_STRIPE_ENABLED` | Hosted (build) | Client-side paywall UI |
+| `STRIPE_PRICE_CONTRACT_USD`, `STRIPE_PRICE_CONTRACT_EUR` | Hosted (build and runtime) | Price ids: one contract |
+| `STRIPE_PRICE_CREDITS_10_USD`, `STRIPE_PRICE_CREDITS_10_EUR` | Hosted (build and runtime) | Price ids: agent pack of ten credits |
+| `CONTRACT_BILLING_START` | Hosted (build and runtime, required) | ISO date, the deploy date; deals created before it are never charged. With the four price ids, the five together switch billing on (`docs/billing.md`) |
+| `PRICE_DISPLAY_CONTRACT`, `PRICE_DISPLAY_CREDITS_10` | Hosted (runtime, optional) | Display amounts (e.g. `29`, `217.50`); otherwise read from the Stripe price |
+| `STRIPE_PRICE_MONTHLY_USD`, `STRIPE_PRICE_MONTHLY_EUR` | Nowhere (no longer read) | The discarded monthly plan; remove if set |
+| `STRIPE_PRICE_ID`, `STRIPE_PRICE_ID_USD` | Seed only | Former per-skill price (replaced by pay per contract, 2026-09-29); no checkout uses it |
+| `NEXT_PUBLIC_STRIPE_ENABLED` | Hosted (build) | Client-side billing UI |
 | `FREE_TRIAL_ALL_SKILLS`, `NEXT_PUBLIC_FREE_TRIAL_ALL_SKILLS` | Hosted; kit (off) | Promo window with all skills free |
 | `NEXT_PUBLIC_LOCAL_AUTH_ENABLED` | Build arg (`true` in published images) | Self-host posture and local sign-in |
 | `TESTER_MODE_ENABLED`, `NEXT_PUBLIC_TESTER_MODE` | Kit (false); unset on hosted | Tester sign-in and data reset |

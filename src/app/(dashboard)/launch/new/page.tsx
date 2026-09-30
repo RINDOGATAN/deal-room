@@ -23,7 +23,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { validateEquity } from "@/lib/journey/equity";
-import { PilotCapNotice } from "@/components/pilot/PilotNotice";
+import { HostedCaution, PilotCapNotice } from "@/components/pilot/PilotNotice";
 
 type FounderDraft = {
   name: string;
@@ -142,6 +142,7 @@ export default function NewJourneyPage() {
       </div>
 
       <PilotCapNotice kind="journeys" />
+      <HostedCaution />
 
       <div className="h-1 bg-muted rounded-full overflow-hidden" aria-hidden>
         <div

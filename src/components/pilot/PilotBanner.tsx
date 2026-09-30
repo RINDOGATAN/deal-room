@@ -15,7 +15,7 @@ export const PILOT_BANNER_DISMISS_KEY = "dealroom.pilotBannerDismissed";
  * the dashboard layout; public pages carry no banner), dismissible for the
  * browser session. Renders nothing on the kit. `hosted` exists for tests.
  */
-export function PilotBanner({ hosted = features.hostedPilot }: { hosted?: boolean }) {
+export function PilotBanner({ hosted = features.hosted }: { hosted?: boolean }) {
   const t = useTranslations("pilot");
   const [dismissed, setDismissed] = useState(false);
 
@@ -45,12 +45,12 @@ export function PilotBanner({ hosted = features.hostedPilot }: { hosted?: boolea
   return (
     <div
       role="note"
-      data-testid="pilot-banner"
+      data-testid="hosted-caution-banner"
       className="w-full bg-primary/10 border-b border-primary/30 text-foreground"
     >
       <div className="max-w-7xl mx-auto flex items-start sm:items-center gap-3 px-4 py-2 text-xs sm:text-sm">
         <p className="flex-1">
-          {t.rich("banner", {
+          {t.rich("caution", {
             run: (chunks) => (
               <a
                 href={PILOT_RUN_URL}

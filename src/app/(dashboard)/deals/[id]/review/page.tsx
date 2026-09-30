@@ -40,9 +40,13 @@ import { VettingBadge } from "@/components/VettingBadge";
 import { AiDraftPanel } from "@/components/ai/AiDraftPanel";
 import { useContractMessages } from "@/lib/use-contract-messages";
 import { StatusNote } from "@/components/ui/status-note";
+import { PaidDownloads } from "@/components/billing/ContractPayment";
 
 function DownloadLinks({ dealId, className, showTia }: { dealId: string; className?: string; showTia?: boolean }) {
+  // Pay per contract: the purchase action replaces the links until the
+  // contract is paid (unchanged when Stripe is off).
   return (
+    <PaidDownloads dealId={dealId}>
     <div className={`flex items-center gap-1.5 text-xs text-muted-foreground ${className ?? ""}`}>
       <Download className="w-3.5 h-3.5 flex-shrink-0" />
       <a href={`/api/deals/${dealId}/document`} className="hover:text-foreground underline underline-offset-2">PDF</a>
@@ -65,6 +69,7 @@ function DownloadLinks({ dealId, className, showTia }: { dealId: string; classNa
         White-label
       </a>
     </div>
+    </PaidDownloads>
   );
 }
 

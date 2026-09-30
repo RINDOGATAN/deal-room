@@ -23,8 +23,8 @@ For every variable, what it unlocks and who rotates it, see
 | Source | Builds from `main` on every push | Semver tag `vX.Y.Z` publishes `:vX.Y.Z` and `:latest` images |
 | Database | Neon PostgreSQL (pooled URL for the app, direct URL for migrations and seeds) | Postgres container in the suite compose file |
 | Sign-in | Magic link (Resend) and Google OAuth | Local email-only credentials (`NEXT_PUBLIC_LOCAL_AUTH_ENABLED=true`, baked into the image) |
-| Posture | **Free, capped pilot** (since 2026-09-16): on when `VERCEL_ENV=production` (or `AUTH_COOKIE_DOMAIN=.todo.law`); banner on every page; per account 1 organisation, 90 days of editing then read-only, 10 deals, 3 journeys; export at `/api/account/export` | No caps, no banner |
-| Payments | None. The pilot switches Stripe off in the app even if Stripe variables are still set | Stripe off: neither set, every skill is free (`features.allSkillsFree`) |
+| Posture | **Free, with limits per account** (since 2026-09-16): on when `VERCEL_ENV=production` (or `AUTH_COOKIE_DOMAIN=.todo.law`); a caution against entering privileged or confidential information on the sign-up screen and in the new-deal flow; per account 1 organisation, 90 days of editing then read-only, 10 deals, 3 journeys; export at `/api/account/export` | No caps, no caution |
+| Payments | None. The hosted posture switches Stripe off in the app even if Stripe variables are still set | Stripe off: neither set, every skill is free (`features.allSkillsFree`) |
 | Premium skills | All available to every account at no cost; nothing is sold | 60 a year each in the kit (in your currency): `.skill` file bought on the storefront, installed on `/skills` |
 | Default deal mode | Two-party | Solo |
 | Migrations | `prisma migrate deploy` in the Vercel build | Migrator container (`deploy/sovereign/migrate.sh`), which also refreshes the built-in skill catalog on every boot |
@@ -51,15 +51,27 @@ CRON_SECRET
 AUTH_COOKIE_DOMAIN           # cross-app session cookie domain
 ```
 
-### Payments (paywall on)
+### Payments (pay per contract, see `docs/billing.md`)
 
 ```
 STRIPE_SECRET_KEY
 NEXT_PUBLIC_STRIPE_ENABLED=true
 STRIPE_WEBHOOK_SECRET
-STRIPE_PRICE_ID
-STRIPE_PRICE_ID_USD
+STRIPE_PRICE_CONTRACT_USD      # the four price ids plus the start date: on
+STRIPE_PRICE_CONTRACT_EUR      # hosted, these five together are what
+STRIPE_PRICE_CREDITS_10_USD    # switches billing on (build and runtime)
+STRIPE_PRICE_CREDITS_10_EUR
+CONTRACT_BILLING_START         # required ISO date (the deploy date): deals created before it are never charged
+PRICE_DISPLAY_CONTRACT         # optional display amount, e.g. 29
+PRICE_DISPLAY_CREDITS_10       # optional display amount, e.g. 217.50
 ```
+
+`STRIPE_PRICE_MONTHLY_USD` / `STRIPE_PRICE_MONTHLY_EUR` (the discarded
+monthly plan) are no longer read.
+
+`STRIPE_PRICE_ID` / `STRIPE_PRICE_ID_USD` (the former per-skill price) are
+no longer used by any checkout; the seed still copies `STRIPE_PRICE_ID` onto
+skill package rows, where nothing reads it.
 
 ### Optional services
 
