@@ -53,6 +53,7 @@ export const CONTRACT_PAGES: readonly ContractPageDef[] = [
   { slug: "founders-agreement", contractType: "FOUNDERS", group: "startups" },
   { slug: "term-sheet", contractType: "TERM_SHEET", group: "startups" },
   { slug: "convertible-note", contractType: "CONVERTIBLE_NOTE", group: "startups" },
+  { slug: "safe-agreement", contractType: "SAFE", group: "startups" },
   { slug: "seed-investment-agreement", contractType: "SEED_INVESTMENT", group: "startups" },
   { slug: "shareholders-agreement", contractType: "SHAREHOLDERS", group: "startups" },
   { slug: "shareholders-agreement-spain", contractType: "PACTO_SOCIOS", group: "startups" },

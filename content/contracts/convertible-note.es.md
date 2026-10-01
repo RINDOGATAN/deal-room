@@ -4,7 +4,7 @@ title: "Préstamo convertible para startups: modelo de nota convertible"
 description: "Modelo de préstamo convertible (nota convertible) para startups: interés, vencimiento, techo de valoración, descuento, conversión y prelación, también para S.L."
 heading: "Préstamo convertible (nota convertible)"
 summary: "El préstamo convertible es un préstamo de un inversor a una sociedad en fase inicial pensado para convertirse en participaciones en la siguiente ronda de financiación cualificada, en lugar de devolverse. En Dealroom, la sociedad y el inversor eligen y negocian cada condición económica y jurídica del préstamo."
-related: ["term-sheet", "seed-investment-agreement", "shareholders-agreement-spain", "founders-agreement"]
+related: ["safe-agreement", "term-sheet", "seed-investment-agreement", "shareholders-agreement-spain", "founders-agreement"]
 faq:
   - q: "¿Cómo se convierte un préstamo convertible en participaciones?"
     a: "Al cerrarse una ronda de financiación cualificada, el principal más los intereses devengados (el importe de conversión) se divide entre el precio de conversión. Ese precio es el menor entre el que resulta del techo de valoración y el precio de la ronda con descuento, de modo que el inversor recibe la opción que le da más participaciones."
@@ -13,7 +13,7 @@ faq:
   - q: "¿Qué ocurre si llega el vencimiento sin ronda de financiación?"
     a: "Depende de la opción pactada: conversión automática al techo de valoración, elección del inversor entre reembolso en efectivo o conversión, o reembolso obligatorio en efectivo. Una exigencia de reembolso puede llevar a una startup a la insolvencia, por lo que muchos préstamos prevén la conversión al vencimiento."
   - q: "¿Qué diferencia hay entre un préstamo convertible y un SAFE?"
-    a: "El préstamo convertible es deuda: devenga intereses, tiene fecha de vencimiento y debe respetar la normativa de usura. La skill señala además que, a diferencia de los SAFE, los préstamos convertibles suelen usar techos de valoración pre-money. El catálogo de Dealroom ofrece actualmente el préstamo convertible, no el SAFE."
+    a: "El préstamo convertible es deuda: devenga intereses, tiene fecha de vencimiento y debe respetar la normativa de usura. La skill señala además que, a diferencia de los SAFE, los préstamos convertibles suelen usar techos de valoración pre-money. Dealroom ofrece ambos; la guía del SAFE los compara con más detalle."
   - q: "¿Qué tipo de interés puede pactarse en España?"
     a: "El contrato ofrece un 5 % simple, un 8 % simple o ningún interés. En España el tipo debe respetar la Ley Azcárate de 1908 contra la usura, y un préstamo a tipo cero entre partes vinculadas puede dar lugar a imputación de intereses conforme a la LIRPF."
 ---

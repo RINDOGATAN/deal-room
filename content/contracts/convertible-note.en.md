@@ -4,7 +4,7 @@ title: "Convertible note template: startup convertible loan terms"
 description: "Convertible note agreement for startups: interest, maturity, valuation cap, discount, qualified financing, conversion, prepayment and priority, in three jurisdictions."
 heading: "Convertible note"
 summary: "A convertible note is a loan from an investor to an early-stage company that is designed to turn into shares at the company's next qualifying funding round instead of being repaid. Dealroom lets the Company and the Investor choose and negotiate each economic and legal term of the note."
-related: ["term-sheet", "seed-investment-agreement", "shareholders-agreement", "founders-agreement"]
+related: ["safe-agreement", "term-sheet", "seed-investment-agreement", "shareholders-agreement", "founders-agreement"]
 faq:
   - q: "How does a convertible note convert into shares?"
     a: "When the company closes a qualified financing, the principal plus accrued interest (the conversion amount) is divided by the conversion price to give the number of shares. The conversion price is the lower of the price produced by the valuation cap and the discounted round price, so the investor receives whichever gives more shares."
@@ -13,7 +13,7 @@ faq:
   - q: "What happens if a convertible note reaches maturity without a funding round?"
     a: "It depends on the option chosen: the note can convert automatically at the valuation cap, the investor can choose between cash repayment and conversion, or the full amount must be repaid in cash. Repayment demands can push a start-up into insolvency, which is why many notes convert at maturity instead."
   - q: "What is the difference between a convertible note and a SAFE?"
-    a: "A convertible note is a debt instrument: it carries interest, has a maturity date and must comply with usury rules. The skill also notes that, unlike SAFEs, convertible notes typically use pre-money valuation caps. Dealroom's catalogue currently offers the convertible note, not a SAFE."
+    a: "A convertible note is a debt instrument: it carries interest, has a maturity date and must comply with usury rules. The skill also notes that, unlike SAFEs, convertible notes typically use pre-money valuation caps. Dealroom offers both; the SAFE guide compares them in more detail."
   - q: "Can a Spanish S.L. issue a convertible note?"
     a: "Yes. Under Spanish law the note is structured as a préstamo convertible. Conversion into participaciones sociales takes place through a capital increase by set-off of credits under article 301 of the Ley de Sociedades de Capital, approved by the general meeting with a report from the directors. Because the credit must be fully due, the note falls due at the moment of conversion. Under the registry doctrine the skill relies on, the statutory pre-emption right does not arise in this kind of increase."
 ---

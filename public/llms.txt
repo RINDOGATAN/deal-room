@@ -50,6 +50,7 @@ One page per contract type, in English and Castilian Spanish: what the contract 
 - [Founders agreement](https://dealroom.todo.law/contracts/founders-agreement) · [ES: Acuerdo de fundadores](https://dealroom.todo.law/es/contracts/founders-agreement)
 - [Venture capital term sheet](https://dealroom.todo.law/contracts/term-sheet) · [ES: Term sheet (carta de intenciones de inversión)](https://dealroom.todo.law/es/contracts/term-sheet)
 - [Convertible note](https://dealroom.todo.law/contracts/convertible-note) · [ES: Préstamo convertible (nota convertible)](https://dealroom.todo.law/es/contracts/convertible-note)
+- [SAFE (simple agreement for future equity)](https://dealroom.todo.law/contracts/safe-agreement) · [ES: Acuerdo SAFE (acuerdo simple de capital futuro)](https://dealroom.todo.law/es/contracts/safe-agreement)
 - [Seed investment agreement](https://dealroom.todo.law/contracts/seed-investment-agreement) · [ES: Pacto de inversión](https://dealroom.todo.law/es/contracts/seed-investment-agreement)
 - [Shareholders agreement](https://dealroom.todo.law/contracts/shareholders-agreement) · [ES: Pacto de accionistas](https://dealroom.todo.law/es/contracts/shareholders-agreement)
 - [Spanish shareholders' agreement (pacto de socios)](https://dealroom.todo.law/contracts/shareholders-agreement-spain) · [ES: Pacto de socios para sociedad limitada](https://dealroom.todo.law/es/contracts/shareholders-agreement-spain)
