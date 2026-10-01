@@ -854,6 +854,44 @@
     ]
   },
   {
+    "skillId": "com.nel.skills.safe-agreement",
+    "slug": "safe-agreement",
+    "displayName": {
+      "en": "SAFE Agreement",
+      "es": "Acuerdo SAFE"
+    },
+    "description": {
+      "en": "Simple Agreement for Future Equity (SAFE) for early-stage startup fundraising. Converts to equity upon qualifying financing, acquisition, or IPO.",
+      "es": "Acuerdo simple de capital futuro (SAFE, por sus siglas en inglés) para la financiación de startups en fase inicial. Se convierte en capital ante una ronda de financiación cualificada, una adquisición o una salida a bolsa."
+    },
+    "category": {
+      "en": "Investment",
+      "es": "Inversión"
+    },
+    "application": "Dealroom",
+    "contractType": "SAFE",
+    "jurisdictions": [
+      "CALIFORNIA",
+      "ENGLAND_WALES",
+      "SPAIN"
+    ],
+    "languages": [
+      "en",
+      "es"
+    ],
+    "clauseCount": 10,
+    "version": "1.0.1",
+    "lawReviewedAsOf": "2026-07-11",
+    "author": "Sergio Maldonado",
+    "templateFamily": "SAFE",
+    "nativeJurisdiction": "CALIFORNIA",
+    "format": "dealroom-clauses",
+    "compat": [
+      "TODO.LAW Suite",
+      "LQ.AI"
+    ]
+  },
+  {
     "skillId": "com.nel.skills.seed-investment",
     "slug": "seed-investment",
     "displayName": {
