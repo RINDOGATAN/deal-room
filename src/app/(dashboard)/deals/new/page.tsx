@@ -172,9 +172,12 @@ const contractLanguageMeta = [
   { value: "es" as ContractLanguage, tKey: "spanish" as const },
 ];
 
+// New York is not a general governing-law option (owner, 2026-10-01): it is
+// listed only for a contract whose own skill is tagged NEW_YORK, and never
+// shown greyed out. Existing New York deals are untouched.
 const jurisdictionMeta = [
   { value: "CALIFORNIA" as GoverningLaw, flag: "🇺🇸", tKey: "california" as const },
-  { value: "NEW_YORK" as GoverningLaw, flag: "🇺🇸", tKey: "newYork" as const },
+  { value: "NEW_YORK" as GoverningLaw, flag: "🇺🇸", tKey: "newYork" as const, onlyWhenOffered: true },
   { value: "ENGLAND_WALES" as GoverningLaw, flag: "🇬🇧", tKey: "englandWales" as const },
   { value: "SPAIN" as GoverningLaw, flag: "🇪🇸", tKey: "spain" as const },
 ];
@@ -998,7 +1001,9 @@ export default function NewDealPage() {
           </div>
 
           <div className="grid grid-cols-1 gap-3">
-            {jurisdictionMeta.map((jurisdiction) => {
+            {jurisdictionMeta
+              .filter((jurisdiction) => !jurisdiction.onlyWhenOffered || availableJurisdictions.has(jurisdiction.value))
+              .map((jurisdiction) => {
               const isSelected = selectedJurisdiction === jurisdiction.value;
               const isDisabled = availableJurisdictions.size > 0 && !availableJurisdictions.has(jurisdiction.value);
 
