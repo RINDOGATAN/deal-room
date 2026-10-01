@@ -30,12 +30,12 @@ describe("currencyForCountry", () => {
   });
 
   it("gives dollars to everyone else and to an unknown visitor", () => {
-    for (const code of ["US", "CA", "MX", "BR", "AR", "JP", "IN", "AU", "TR", "RU", "UA", "AD", "", null]) {
+    for (const code of ["US", "CA", "MX", "BR", "AR", "JP", "IN", "AU", "TR", "RU", "UA", "MA", "", null]) {
       expect(currencyForCountry(code)).toBe("USD");
     }
   });
 
-  it("lists the 27 EU members, 3 EEA states, the UK and Switzerland (plus two aliases)", () => {
+  it("lists the 27 EU members, 3 EEA states, the UK and Switzerland, two aliases, and eight microstates and territories", () => {
     expect(EUROPE_COUNTRIES.size).toBe(27 + 3 + 2 + 2 + 8);
     for (const c of ["AD", "MC", "SM", "VA", "GI", "JE", "GG", "IM"]) expect(EUROPE_COUNTRIES.has(c)).toBe(true);
   });
