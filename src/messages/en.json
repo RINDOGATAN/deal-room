@@ -1102,7 +1102,6 @@
     "getContract": "Get this contract",
     "getContractPrice": "Get this contract: {price}",
     "explain": "Drafting and negotiating are free. You pay once, when you download or sign the contract, whatever the template.",
-    "payIn": "Pay in",
     "opening": "Opening the payment page...",
     "confirming": "Confirming your payment...",
     "paid": "Payment received. The contract is ready to download and sign.",
@@ -1223,7 +1222,11 @@
     "step3Title": "3. Let your agent negotiate",
     "step3Desc": "Your agent uses the playbook via the API. Agreed contracts are generated as binding PDFs.",
     "catalogTitle": "Available Contract Types",
-    "catalogDesc": "Click any contract type to see its negotiable clauses and options. Each option shows which party it favors, so you can make informed choices when configuring your playbook."
+    "catalogDesc": "Click any contract type to see its negotiable clauses and options. Each option shows which party it favors, so you can make informed choices when configuring your playbook.",
+    "limitsTitle": "Weekly limits",
+    "limitsBody": "The standard limit is 5 negotiations per contract type per week. Accounts holding credits have 300 a week in total.",
+    "limitsBuy": "Buy credits to lift it, with the buy_credits tool or POST /api/v1/agent/credits/checkout.",
+    "limitsPricingLink": "See the prices"
   },
   "agentPrep": {
     "title": "Agent Preparation Guide",
@@ -1491,13 +1494,15 @@
     "troubleActivationTitle": "\"Activation limit reached\"",
     "troubleActivationDesc": "Each license allows a limited number of machine activations. Deactivate unused machines with the CLI (npm run skill:deactivate), or contact support to increase your activation limit."
   },
+  "currency": {
+    "pricesIn": "Prices in {currency}"
+  },
   "pricing": {
     "metaTitle": "Dealroom pricing: pay per contract",
     "metaDescription": "Drafting and negotiating on Dealroom are free; each contract is paid once, when it is first downloaded or its signature starts.",
     "title": "Pricing",
     "lead": "Drafting and negotiating are free. Each contract is paid once, when it is first downloaded or its signature starts.",
     "leadOff": "Payments are off on this deployment. Every contract is free.",
-    "amountBoth": "{usd} or {eur}",
     "peopleTitle": "For people",
     "peoplePrice": "{price} per contract",
     "peoplePriceUnknown": "One payment per contract. The amount is shown before you pay.",
@@ -1908,6 +1913,9 @@
     "rateLimitDefault": "All other endpoints",
     "rateLimitDefaultLimit": "1,000 requests / hour",
     "rateLimitRetryAfter": "When exceeded, the API returns 429 with a Retry-After header indicating seconds until the next allowed request.",
+    "rateLimitA2a": "A2A contract types (prefix A2A_) also have a weekly limit on new negotiations. The standard limit is 5 per contract type per week; accounts holding credits have 300 a week in total.",
+    "rateLimitA2aBuy": "Buy credits to lift it: the buy_credits tool, or POST /credits/checkout.",
+    "rateLimitA2aPricingLink": "See the prices",
     "sectionSubscriptions": "Subscriptions (not used on hosted Dealroom)",
     "purposeGetSubscriptions": "View the premium entitlements held by the API key's customer",
     "purposeSubscribe": "Retired: answers 410. There is no subscription; contracts are paid with credits",

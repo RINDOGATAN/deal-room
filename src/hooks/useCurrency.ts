@@ -4,20 +4,26 @@
 
 import { useSyncExternalStore } from "react";
 import { useTranslations } from "next-intl";
-import { getCurrency, type Currency } from "@/lib/currency";
+import { choiceFromCookieHeader, getCurrency, subscribeCurrency, type Currency } from "@/lib/currency";
 
 /**
- * The visitor's currency. The first render (and the prerendered HTML) uses
- * dollars, as the storefront rule does for an unknown visitor; the cookie
- * set by the middleware switches a known non-US visitor to euros on load.
+ * The visitor's currency: their own choice, else the region guess the
+ * middleware wrote. The first render (and the prerendered HTML) uses
+ * dollars; the cookie switches a European visitor to euros on load.
  */
 export function useCurrency(): Currency {
-  // The cookie does not change while the page is open, so nothing to subscribe to.
-  return useSyncExternalStore(noSubscription, getCurrency, serverCurrency);
+  return useSyncExternalStore(subscribeCurrency, getCurrency, serverCurrency);
 }
 
-const noSubscription = () => () => {};
+/** The visitor's own choice from the switch, or null (then the server's default applies). */
+export function useCurrencyChoice(): Currency | null {
+  return useSyncExternalStore(subscribeCurrency, readChoice, noChoice);
+}
+
 const serverCurrency = (): Currency => "USD";
+const readChoice = (): Currency | null =>
+  typeof document === "undefined" ? null : choiceFromCookieHeader(document.cookie);
+const noChoice = (): Currency | null => null;
 
 /** Kit premium price, one of the pair `pilot.kitPriceUSD` / `pilot.kitPriceEUR`. */
 export function useKitPrice(): string {

@@ -7,6 +7,7 @@ import {
   CONTRACT_PRICE_ENV_KEYS,
   billingStartDate,
   chooseCurrency,
+  preferredCurrency,
   contractBillingConfigured,
   dealPredatesBilling,
   displayPrice,
@@ -95,12 +96,19 @@ describe("the billing start date", () => {
 });
 
 describe("currency and display", () => {
-  it("chooses the currency: request, then stored preference, then language", () => {
-    expect(chooseCurrency({ requested: "usd", stored: "eur", locale: "es" })).toBe("usd");
-    expect(chooseCurrency({ requested: "gbp", stored: "eur", locale: "en" })).toBe("eur");
-    expect(chooseCurrency({ locale: "es" })).toBe("eur");
-    expect(chooseCurrency({ locale: "en" })).toBe("usd");
+  it("chooses the currency: request, then stored preference, then the region fallback", () => {
+    expect(chooseCurrency({ requested: "usd", stored: "eur", fallback: "eur" })).toBe("usd");
+    expect(chooseCurrency({ requested: "gbp", stored: "eur", fallback: "usd" })).toBe("eur");
+    expect(chooseCurrency({ fallback: "eur" })).toBe("eur");
+    expect(chooseCurrency({ fallback: "usd" })).toBe("usd");
     expect(chooseCurrency({})).toBe("usd");
+  });
+
+  it("reads the stored billing currency from the customer metadata", () => {
+    expect(preferredCurrency({ preferredCurrency: "eur" })).toBe("eur");
+    expect(preferredCurrency({})).toBeUndefined();
+    expect(preferredCurrency(null)).toBeUndefined();
+    expect(preferredCurrency(["eur"])).toBeUndefined();
   });
 
   it("formats display amounts without hard-coded prices", () => {

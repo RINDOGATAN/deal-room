@@ -114,14 +114,17 @@ For your own instance, premium skills are 60 a year each in the kit (in your cur
 
 | Tier | Invocations | Detection |
 |------|-------------|-----------|
-| **Standard** | 5 per skill per week | Default for every customer |
-| **Extended** | 300 total per week | `premiumA2A` flag in customer metadata (set by an administrator) |
+| **Standard** | 5 per contract type per week | Default for every customer |
+| **Extended** | 300 a week in total | Automatic for an account holding credits: a credit balance above zero, a credit pack bought since `CONTRACT_BILLING_START` (not refunded), or a contract paid since that date. The `premiumA2A` flag in customer metadata (set by an administrator) still grants it. |
+
+To lift the standard limit, buy credits: the `buy_credits` MCP tool or
+`POST /api/v1/agent/credits/checkout` (prices at https://dealroom.todo.law/pricing).
 
 **Rate limit enforcement:**
 - Applied at the negotiate endpoint for contract types with the `A2A_` prefix
-- Standard tier tracks per `customerId + contractType` (5/week each)
-- Premium tier tracks per `customerId` aggregate (300/week total)
-- Exceeding limits returns `429 Too Many Requests` with `Retry-After` header
+- Standard limit tracks per `customerId + contractType` (5 a week each)
+- Extended limit tracks per `customerId` aggregate (300 a week in total)
+- Exceeding a limit returns `429 Too Many Requests` with a `Retry-After` header and a message stating the standard limit, the extended limit and how to lift it
 
 **Rate limit response:**
 ```json
@@ -289,14 +292,15 @@ All 12 A2A skill IDs are registered in `prisma/seed.ts` and marked as premium. T
 
 A2A rate limits are implemented in `src/server/middleware/apiKeyAuth.ts`:
 
-- `checkA2aRateLimit(customerId, contractType, isPremiumA2a)` — sliding window over 1 week
-- Standard tier: per-skill tracking (`customerId:a2a:A2A_API_ACCESS`)
-- Premium tier: aggregate tracking (`customerId:a2a:premium`)
+- `checkA2aRateLimit(customerId, contractType, extended)` — fixed one-week window
+- `extended` comes from `hasExtendedA2aLimit(customer)` in `src/server/services/billing/a2a-limit.ts` (credits held, a pack or a paid contract since `CONTRACT_BILLING_START`, or the `premiumA2A` flag)
+- Standard limit: per-contract-type tracking (`customerId:a2a:A2A_API_ACCESS`)
+- Extended limit: aggregate tracking (`customerId:a2a:premium`; the key name is kept so running counters carry over)
 - Enforced in `src/app/api/v1/agent/negotiate/route.ts` for any `contractType.startsWith("A2A_")`
 
 ### Database
 
-The `Customer.metadata` JSON field stores tier configuration:
+The `Customer.metadata` JSON field can still grant the extended limit by hand:
 
 ```json
 {

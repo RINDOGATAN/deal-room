@@ -22,7 +22,9 @@ import { CreditCard, Loader2 } from "lucide-react";
 import { features } from "@/config/features";
 import { trpc } from "@/lib/trpc";
 import type { BillingCurrency } from "@/lib/contract-billing";
-import { cn } from "@/lib/utils";
+import { toBillingCurrency } from "@/lib/currency";
+import { useCurrencyChoice } from "@/hooks/useCurrency";
+import { CurrencySwitch } from "@/components/pricing/CurrencySwitch";
 
 function useDealPayment(dealId: string) {
   return trpc.billing.getDealPayment.useQuery(
@@ -34,10 +36,12 @@ function useDealPayment(dealId: string) {
 function GetContract({ dealId, variant }: { dealId: string; variant: "inline" | "panel" }) {
   const t = useTranslations("contractBilling");
   const { data: pricing } = trpc.billing.getContractPricing.useQuery();
-  const [chosen, setChosen] = useState<BillingCurrency | null>(null);
+  const choice = useCurrencyChoice();
   const [busy, setBusy] = useState(false);
 
-  const currency = chosen ?? pricing?.defaultCurrency ?? "usd";
+  // One currency: the visitor's switch choice, else the server's default
+  // (the account's billing currency, else the region guess).
+  const currency: BillingCurrency = choice ? toBillingCurrency(choice) : pricing?.defaultCurrency ?? "usd";
   const contractPrice = pricing?.display?.contract[currency] ?? null;
 
   const open = async () => {
@@ -61,25 +65,7 @@ function GetContract({ dealId, variant }: { dealId: string; variant: "inline" | 
     setBusy(false);
   };
 
-  const currencySwitch = (
-    <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
-      <span>{t("payIn")}</span>
-      {(["usd", "eur"] as const).map((c) => (
-        <button
-          key={c}
-          type="button"
-          onClick={() => setChosen(c)}
-          aria-pressed={currency === c}
-          className={cn(
-            "px-1.5 py-0.5 rounded border",
-            currency === c ? "border-primary text-foreground" : "border-border hover:text-foreground",
-          )}
-        >
-          {c.toUpperCase()}
-        </button>
-      ))}
-    </span>
-  );
+  const currencySwitch = <CurrencySwitch current={currency === "eur" ? "EUR" : "USD"} />;
 
   const button = (
     <button

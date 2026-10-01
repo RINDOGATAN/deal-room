@@ -70,6 +70,18 @@ new Stripe price, point the variable at it, and update the display variable.
 | `PRICE_DISPLAY_CONTRACT` | Optional. The amount to show for one contract, for example `29`. A plain number is shown in the reader's currency ("$29", "29 €"); other text is shown as written. |
 | `PRICE_DISPLAY_CREDITS_10` | Optional. The amount to show for a pack of ten, for example `217.50`. |
 
+### Which currency a person sees (2026-10-01)
+
+One currency per visitor, never both. Euros for a visitor in the EU, the
+EEA, the United Kingdom or Switzerland; dollars for everyone else. The
+region comes from the `x-vercel-ip-country` header, else the region of the
+`Accept-Language` header, else dollars (`src/lib/currency.ts`). A signed-in
+customer's stored billing currency (`Customer.metadata.preferredCurrency`,
+written at checkout) wins over the region guess, and the quiet "Prices in
+USD" / "Precios en EUR" link wins over both for the browser session
+(cookie `currency_choice`). The pricing page's structured data, the agent
+card and `llms.txt` keep both amounts.
+
 `STRIPE_PRICE_MONTHLY_USD` and `STRIPE_PRICE_MONTHLY_EUR` are no longer read.
 If they are set on the deployment they can be removed.
 

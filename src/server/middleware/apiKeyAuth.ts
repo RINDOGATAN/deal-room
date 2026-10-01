@@ -12,6 +12,7 @@ import { NextRequest } from "next/server";
 import prisma from "@/lib/prisma";
 import { sha256 } from "@/lib/crypto";
 import type { Customer } from "@prisma/client";
+import { A2A_EXTENDED_LIMIT, A2A_STANDARD_LIMIT } from "@/server/services/billing/a2a-limit";
 
 export interface ApiKeyAuth {
   customer: Customer;
@@ -130,19 +131,21 @@ export async function claimSlot(
 
 /**
  * Check A2A-specific rate limits.
- * Standard tier: 5 invocations per skill per week per customer.
- * Premium tier (premiumA2A flag): 300 total invocations per week per customer.
+ * Standard: 5 invocations per contract type per week per customer.
+ * Extended: 300 total invocations per week per customer, for a customer
+ * holding credits or paying (see `hasExtendedA2aLimit`) or carrying the
+ * `premiumA2A` flag. The aggregate key keeps its old name.
  */
 export async function checkA2aRateLimit(
   customerId: string,
   contractType: string,
-  isPremiumA2a: boolean,
+  extended: boolean,
 ): Promise<RateLimitResult> {
   const weekMs = 7 * 24 * 3600_000;
-  if (isPremiumA2a) {
-    return claimSlot(`${customerId}:a2a:premium`, 300, weekMs);
+  if (extended) {
+    return claimSlot(`${customerId}:a2a:premium`, A2A_EXTENDED_LIMIT, weekMs);
   }
-  return claimSlot(`${customerId}:a2a:${contractType}`, 5, weekMs);
+  return claimSlot(`${customerId}:a2a:${contractType}`, A2A_STANDARD_LIMIT, weekMs);
 }
 
 /**

@@ -1103,7 +1103,6 @@
     "getContract": "Obtener este contrato",
     "getContractPrice": "Obtener este contrato: {price}",
     "explain": "Redactar y negociar es gratis. Pagas una sola vez, al descargar o firmar el contrato, sea cual sea la plantilla.",
-    "payIn": "Pagar en",
     "opening": "Abriendo la página de pago...",
     "confirming": "Confirmando tu pago...",
     "paid": "Pago recibido. El contrato está listo para descargar y firmar.",
@@ -1224,7 +1223,11 @@
     "step3Title": "3. Deja negociar a tu agente",
     "step3Desc": "Tu agente utiliza el playbook a través de la API. Los contratos acordados se generan como PDF vinculantes.",
     "catalogTitle": "Tipos de Contrato Disponibles",
-    "catalogDesc": "Haz clic en cualquier tipo de contrato para ver sus cláusulas negociables y opciones. Cada opción muestra a qué parte favorece, para que puedas tomar decisiones informadas al configurar tu playbook."
+    "catalogDesc": "Haz clic en cualquier tipo de contrato para ver sus cláusulas negociables y opciones. Cada opción muestra a qué parte favorece, para que puedas tomar decisiones informadas al configurar tu playbook.",
+    "limitsTitle": "Límites semanales",
+    "limitsBody": "El límite estándar es de 5 negociaciones por tipo de contrato y semana. Las cuentas con créditos tienen 300 a la semana en total.",
+    "limitsBuy": "Compra créditos para ampliarlo, con la herramienta buy_credits o POST /api/v1/agent/credits/checkout.",
+    "limitsPricingLink": "Ver los precios"
   },
   "agentPrep": {
     "title": "Guía de Preparación del Agente",
@@ -1492,13 +1495,15 @@
     "troubleActivationTitle": "\"Límite de activaciones alcanzado\"",
     "troubleActivationDesc": "Cada licencia permite un número limitado de activaciones por equipo. Desactiva los equipos que no utilices con la CLI (npm run skill:deactivate), o contacta con soporte para aumentar tu límite de activaciones."
   },
+  "currency": {
+    "pricesIn": "Precios en {currency}"
+  },
   "pricing": {
     "metaTitle": "Precios de Dealroom: pago por contrato",
     "metaDescription": "Redactar y negociar en Dealroom es gratis; cada contrato se paga una sola vez, cuando se descarga por primera vez o se inicia su firma.",
     "title": "Precios",
     "lead": "Redactar y negociar es gratis. Cada contrato se paga una sola vez, cuando se descarga por primera vez o se inicia su firma.",
     "leadOff": "Los pagos están desactivados en esta instalación. Todos los contratos son gratuitos.",
-    "amountBoth": "{usd} o {eur}",
     "peopleTitle": "Para personas",
     "peoplePrice": "{price} por contrato",
     "peoplePriceUnknown": "Un pago por contrato. El importe se muestra antes de pagar.",
@@ -1909,6 +1914,9 @@
     "rateLimitDefault": "Todos los demás endpoints",
     "rateLimitDefaultLimit": "1.000 peticiones / hora",
     "rateLimitRetryAfter": "Al exceder el límite, la API devuelve 429 con una cabecera Retry-After indicando los segundos hasta la siguiente petición permitida.",
+    "rateLimitA2a": "Los tipos de contrato A2A (prefijo A2A_) tienen además un límite semanal de negociaciones nuevas. El límite estándar es de 5 por tipo de contrato y semana; las cuentas con créditos tienen 300 a la semana en total.",
+    "rateLimitA2aBuy": "Compra créditos para ampliarlo: la herramienta buy_credits, o POST /credits/checkout.",
+    "rateLimitA2aPricingLink": "Ver los precios",
     "sectionSubscriptions": "Suscripciones (no se usan en Dealroom alojado)",
     "purposeGetSubscriptions": "Ver los derechos de uso premium del cliente de la clave API",
     "purposeSubscribe": "Retirado: responde 410. No hay suscripción; los contratos se pagan con créditos",

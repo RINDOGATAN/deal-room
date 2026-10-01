@@ -3,7 +3,7 @@
 
 /**
  * Shared steps of the pay-per-contract checkouts: the currency (stored
- * preference, else the interface language) and the base URL Stripe returns
+ * preference, else the visitor's region) and the base URL Stripe returns
  * to. The base URL comes from configuration, never from the request's
  * Origin header, so a forged header cannot redirect a paying customer.
  */
@@ -23,12 +23,13 @@ export function localeFromRequest(cookieHeader: string | null): "en" | "es" {
 
 /**
  * The customer's currency. An explicit request wins and is remembered in
- * `Customer.metadata.preferredCurrency` for next time.
+ * `Customer.metadata.preferredCurrency` for next time; then the stored
+ * preference; then `fallback` (the visitor's region guess).
  */
 export async function currencyForCustomer(
   customerId: string,
   requested: unknown,
-  locale: string,
+  fallback: BillingCurrency,
 ): Promise<BillingCurrency> {
   const customer = await prisma.customer.findUnique({
     where: { id: customerId },
@@ -38,7 +39,7 @@ export async function currencyForCustomer(
     customer?.metadata && typeof customer.metadata === "object" && !Array.isArray(customer.metadata)
       ? (customer.metadata as Record<string, unknown>)
       : {};
-  const currency = chooseCurrency({ requested, stored: metadata.preferredCurrency, locale });
+  const currency = chooseCurrency({ requested, stored: metadata.preferredCurrency, fallback });
   if (isBillingCurrency(requested) && metadata.preferredCurrency !== requested) {
     await prisma.customer.update({
       where: { id: customerId },

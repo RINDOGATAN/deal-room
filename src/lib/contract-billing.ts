@@ -84,19 +84,27 @@ export function isBillingCurrency(value: unknown): value is BillingCurrency {
   return value === "usd" || value === "eur";
 }
 
+/** The billing currency stored on a customer (`Customer.metadata.preferredCurrency`), if any. */
+export function preferredCurrency(metadata: unknown): unknown {
+  return metadata && typeof metadata === "object" && !Array.isArray(metadata)
+    ? (metadata as Record<string, unknown>).preferredCurrency
+    : undefined;
+}
+
 /**
- * Currency for a person: a stored preference wins; otherwise the interface
- * language decides (Spanish → euros, English → dollars). The person can
- * switch at checkout, and the choice is then stored.
+ * Currency for a person: an explicit request wins, then a stored
+ * preference; otherwise `fallback` (the visitor's region guess, see
+ * `src/lib/currency.ts`), else dollars. The person can switch before
+ * checkout, and the choice is then stored.
  */
 export function chooseCurrency(opts: {
   requested?: unknown;
   stored?: unknown;
-  locale?: string | null;
+  fallback?: BillingCurrency;
 }): BillingCurrency {
   if (isBillingCurrency(opts.requested)) return opts.requested;
   if (isBillingCurrency(opts.stored)) return opts.stored;
-  return opts.locale?.toLowerCase().startsWith("es") ? "eur" : "usd";
+  return opts.fallback ?? "usd";
 }
 
 /**

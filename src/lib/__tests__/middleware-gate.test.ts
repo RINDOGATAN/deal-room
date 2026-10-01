@@ -74,19 +74,29 @@ describe("middleware gate, first visit (no cookies)", () => {
     expect(res.headers.get("x-middleware-next")).toBe("1");
     expect(redirectTarget(res)).toBeNull();
     const currency = res.headers.getSetCookie().find((c) => c.startsWith("currency="));
-    // No country header: the visitor is not known to be outside the US.
+    // No country header and no Accept-Language region: dollars.
     expect(currency).toMatch(/^currency=USD; /);
     expect(currency).toMatch(/Path=\//);
-    expect(currency).toMatch(/Max-Age=2592000/);
+    // A session cookie: no Max-Age, no Expires.
+    expect(currency).not.toMatch(/Max-Age|Expires/i);
   });
 
-  it("sets EUR only for a visitor known to be outside the US", async () => {
-    const res = await middleware(
-      new NextRequest("https://dealroom.todo.law/deals", {
-        headers: { "x-vercel-ip-country": "ES" },
-      }),
-    );
-    expect(res.headers.getSetCookie().some((c) => c.startsWith("currency=EUR"))).toBe(true);
+  it("sets EUR for a visitor in Europe and USD for one elsewhere", async () => {
+    const at = (headers: Record<string, string>, cookie?: string) =>
+      middleware(
+        new NextRequest("https://dealroom.todo.law/deals", {
+          headers: cookie ? { ...headers, cookie } : headers,
+        }),
+      );
+    const value = (res: Response) =>
+      res.headers.getSetCookie().find((c) => c.startsWith("currency="))?.split(";")[0];
+    expect(value(await at({ "x-vercel-ip-country": "ES" }))).toBe("currency=EUR");
+    expect(value(await at({ "x-vercel-ip-country": "GB" }))).toBe("currency=EUR");
+    expect(value(await at({ "x-vercel-ip-country": "BR" }))).toBe("currency=USD");
+    // No country header: the Accept-Language region decides.
+    expect(value(await at({ "accept-language": "de-CH,de;q=0.9" }))).toBe("currency=EUR");
+    // A cookie left by the earlier rule (any non-US country → EUR) is corrected.
+    expect(value(await at({ "x-vercel-ip-country": "BR" }, "currency=EUR"))).toBe("currency=USD");
   });
 
   it("sets USD for a US visitor on a redirect too", async () => {
@@ -124,11 +134,11 @@ describe("middleware gate, 2FA", () => {
     expect(redirectTarget(res)).toBe("/supervise/verify");
   });
 
-  it("lets a fully verified admin through without rewriting currency", async () => {
+  it("lets a fully verified admin through without rewriting a currency cookie that matches", async () => {
     const secondFactor = await issueSecondFactor("admin", "admin-1", "sign-in-1");
     const res = await run(
       "/admin/users",
-      `currency=EUR; admin_session=${adminSession}; platform_admin_2fa_verified=${secondFactor}`,
+      `currency=USD; admin_session=${adminSession}; platform_admin_2fa_verified=${secondFactor}`,
     );
     expect(res.headers.get("x-middleware-next")).toBe("1");
     expect(setsCurrency(res)).toBe(false);
