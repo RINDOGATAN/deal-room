@@ -4,9 +4,10 @@
 /**
  * Agent API — List Templates
  *
- * GET /api/v1/agent/templates
+ * GET /api/v1/agent/templates[?q=nda]
  * Returns available contract templates with clauses and options,
- * filtered by the customer's entitlements.
+ * filtered by the customer's entitlements. With `q`, only the templates
+ * the shared contract search matches, best match first.
  */
 
 import { NextRequest, NextResponse } from "next/server";
@@ -20,6 +21,7 @@ import { checkEntitlement } from "@/server/services/licensing/entitlement";
 import { features } from "@/config/features";
 import { createLogger } from "@/lib/logger";
 import { LIVE_ROWS } from "@/lib/clause-retirement";
+import { localizedValues, searchContracts } from "@/lib/contract-search";
 
 const logger = createLogger("agent-api");
 
@@ -82,8 +84,18 @@ export async function GET(req: NextRequest) {
       }
     }
 
+    // Optional `?q=`: the shared contract search ("nda", "dpa",
+    // "confidencialidad"), best match first.
+    const matched = searchContracts(req.nextUrl.searchParams.get("q"), filteredTemplates, (t) => ({
+      codes: [t.contractType],
+      families: [t.templateFamily],
+      names: [t.displayName, ...localizedValues(t.displayNameLocalized)],
+      descriptions: [t.description, ...localizedValues(t.descriptionLocalized)],
+      categories: [t.category, ...localizedValues(t.categoryLocalized)],
+    }));
+
     return NextResponse.json({
-      templates: filteredTemplates.map((t) => ({
+      templates: matched.map((t) => ({
         contractType: t.contractType,
         displayName: t.displayName,
         description: t.description,

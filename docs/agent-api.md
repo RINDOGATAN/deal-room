@@ -158,10 +158,13 @@ HTTP 200 when everything works, HTTP 503 with the same shape (with `ok: false` a
 
 ```
 GET /templates
+GET /templates?q=nda
 Scope: templates:read
 ```
 
 Returns available contract templates filtered by the customer's entitlements. Free templates (e.g., DPA) are always included; premium templates require an active entitlement.
+
+The optional `q` searches by contract code, abbreviation, synonym or name in English or Spanish (`nda`, `dpa`, `hipaa`, `statement of work`, `confidencialidad`), ignoring case and accents, and returns only the matching templates, best match first (code or abbreviation, then name, then description). The MCP tool `list_templates` takes the same search as `query`.
 
 **Response:**
 

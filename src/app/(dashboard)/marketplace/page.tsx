@@ -26,6 +26,7 @@ import {
   marketplaceSkillUrl,
 } from "@/lib/marketplace";
 import { useTranslations } from "next-intl";
+import { localizedValues, searchContracts } from "@/lib/contract-search";
 
 const JURISDICTION_LABELS: Record<string, string> = {
   CALIFORNIA: "California",
@@ -68,20 +69,18 @@ export default function MarketplacePage() {
 
   const filtered = useMemo(() => {
     if (!skills) return [];
-    return skills.filter((s) => {
+    const shown = skills.filter((s) => {
       if (jurisdictionFilter && !s.jurisdictions.includes(jurisdictionFilter))
         return false;
       if (languageFilter && !s.languages.includes(languageFilter)) return false;
-      if (searchQuery.trim()) {
-        const q = searchQuery.toLowerCase();
-        if (
-          !s.displayName.toLowerCase().includes(q) &&
-          !s.description?.toLowerCase().includes(q)
-        )
-          return false;
-      }
       return true;
     });
+    return searchContracts(searchQuery, shown, (s) => ({
+      codes: [s.contractType, s.name],
+      names: [s.displayName, ...localizedValues(s.displayNameLocalized)],
+      descriptions: [s.description, ...localizedValues(s.descriptionLocalized)],
+      categories: [s.category, ...localizedValues(s.categoryLocalized)],
+    }));
   }, [skills, jurisdictionFilter, languageFilter, searchQuery]);
 
   if (isLoading) {
