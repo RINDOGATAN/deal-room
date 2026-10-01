@@ -91,11 +91,22 @@ const NestedClauseOptionSchema = z.object({
     partyA: LocalizedStringArraySchema,
     partyB: LocalizedStringArraySchema,
   }),
-  bias: z.object({
-    partyA: z.number().min(-1).max(1),
-    partyB: z.number().min(-1).max(1),
-  }),
-});
+  // biasPartyA/biasPartyB is the single source of truth for bias (it is what
+  // the seed stores). A nested `bias` object is still accepted for packages
+  // authored wholly in the nested layout; check:skills fails when an option
+  // carries both and they disagree.
+  bias: z
+    .object({
+      partyA: z.number().min(-1).max(1),
+      partyB: z.number().min(-1).max(1),
+    })
+    .optional(),
+  biasPartyA: z.number().min(-1).max(1).optional(),
+  biasPartyB: z.number().min(-1).max(1).optional(),
+}).refine(
+  (o) => o.bias !== undefined || (o.biasPartyA !== undefined && o.biasPartyB !== undefined),
+  { message: "option needs biasPartyA and biasPartyB" },
+);
 
 const ClauseOptionSchema = z.union([
   FlatClauseOptionSchema,
@@ -274,16 +285,27 @@ function isI18nOption(option: unknown): boolean {
     typeof option === "object" &&
     option !== null &&
     "pros" in option &&
-    "cons" in option &&
-    "bias" in option
+    "cons" in option
   );
+}
+
+/**
+ * Bias of an option for one party. biasPartyA/biasPartyB is the single source
+ * of truth; the nested `bias` object is only a fallback for packages that
+ * carry no flat field.
+ */
+function optionBias(opt: Record<string, unknown>, party: "A" | "B"): number | undefined {
+  const flat = party === "A" ? opt.biasPartyA : opt.biasPartyB;
+  if (typeof flat === "number") return flat;
+  const bias = opt.bias as Record<string, number> | undefined;
+  return party === "A" ? bias?.partyA : bias?.partyB;
 }
 
 /**
  * Normalize a clause option to the flat format for database storage.
  * Resolves i18n content to the specified language.
  */
-function normalizeOption(
+export function normalizeOption(
   option: unknown,
   language: string = DEFAULT_LANGUAGE
 ): NormalizedClauseOption {
@@ -296,7 +318,6 @@ function normalizeOption(
   const nested = isI18nOption(option);
   const pros = (opt.pros ?? {}) as Record<string, unknown>;
   const cons = (opt.cons ?? {}) as Record<string, unknown>;
-  const bias = (opt.bias ?? {}) as Record<string, number>;
 
   return {
     id: opt.id as string,
@@ -309,8 +330,8 @@ function normalizeOption(
     prosPartyB: resolveLocalizedArray(nested ? pros.partyB : opt.prosPartyB, language),
     consPartyB: resolveLocalizedArray(nested ? cons.partyB : opt.consPartyB, language),
     legalText: resolveLocalizedString(opt.legalText, language),
-    biasPartyA: (nested ? bias.partyA : opt.biasPartyA) as number,
-    biasPartyB: (nested ? bias.partyB : opt.biasPartyB) as number,
+    biasPartyA: optionBias(opt, "A") as number,
+    biasPartyB: optionBias(opt, "B") as number,
     jurisdictionConfig: opt.jurisdictionConfig as Record<string, unknown> | undefined,
   };
 }
@@ -464,15 +485,7 @@ interface ValidationResult {
  * Get bias value from an option (handles both legacy and i18n formats)
  */
 function getOptionBias(option: Record<string, unknown>, party: "A" | "B"): number {
-  // New format: bias.partyA / bias.partyB
-  if (option.bias && typeof option.bias === "object") {
-    const bias = option.bias as Record<string, number>;
-    return party === "A" ? (bias.partyA ?? 0) : (bias.partyB ?? 0);
-  }
-  // Legacy format: biasPartyA / biasPartyB
-  return party === "A"
-    ? (option.biasPartyA as number) ?? 0
-    : (option.biasPartyB as number) ?? 0;
+  return optionBias(option, party) ?? 0;
 }
 
 /**

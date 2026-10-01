@@ -1,66 +1,113 @@
 ---
 contractType: "TERM_SHEET"
 title: "Term sheet para startups: carta de intenciones de inversión"
-description: "Modelo de term sheet o carta de intenciones de inversión: tamaño de ronda, valoración pre-money, preferencia de liquidación, antidilución, consejo y exclusividad."
+description: "Term sheet para una ronda con precio: valoración, preferencia de liquidación, antidilución, consejo, vetos, pool de opciones, vesting de fundadores, arrastre y exclusividad."
 heading: "Term sheet (carta de intenciones de inversión)"
-summary: "El term sheet recoge las condiciones principales de una ronda de inversión entre una sociedad y su inversor principal antes de redactar los documentos definitivos. En su mayor parte no es vinculante; en Dealroom ambas partes negocian cada condición y deciden qué cláusulas obligan."
+summary: "El term sheet recoge las condiciones principales de una ronda de inversión con precio entre una sociedad y su inversor/a principal antes de redactar los documentos definitivos. En su mayor parte no es vinculante. En Dealroom ambas partes negocian cada una de sus 15 condiciones, incluida qué cláusulas obligan, conforme al Derecho de California, de Inglaterra y Gales o español."
 related: ["convertible-note", "shareholders-agreement-spain", "seed-investment-agreement", "equity-incentive-plan"]
 faq:
   - q: "¿Es vinculante un term sheet?"
-    a: "En general no. Lo habitual es que solo obliguen la exclusividad, la confidencialidad y los gastos, y que el resto sea una declaración de intenciones. El modelo permite también hacer vinculantes las condiciones económicas clave o firmar una carta de intenciones totalmente no vinculante. En Derecho español, negociar de mala fe puede generar responsabilidad precontractual (art. 1902 del Código Civil) incluso sin cláusulas vinculantes."
+    a: "En general no. Lo habitual es que solo obliguen la exclusividad, la confidencialidad y los gastos, y que el resto sea una declaración de intenciones. La skill permite también hacer vinculantes las condiciones económicas clave, como la valoración y el importe, o firmar una carta de intenciones totalmente no vinculante. En Derecho español, negociar de mala fe puede generar responsabilidad incluso sin cláusulas vinculantes."
   - q: "¿Cómo se adapta un term sheet a una S.L. española?"
-    a: "La versión española prevé una ampliación de capital aprobada por la Junta General (art. 301 LSC), con derecho de suscripción preferente de los socios (art. 304 LSC) que puede excluirse, documentos otorgados ante notario cuando proceda y tribunales de Madrid. Las preferencias del inversor se articulan sobre todo mediante el pacto de socios."
+    a: "Una ronda en efectivo es una ampliación de capital con aportaciones dinerarias aprobada por la junta general, en la que nace el derecho de preferencia de los socios salvo que la junta lo excluya; se formaliza ante notario y se inscribe en el Registro Mercantil. No sigue la vía de compensación de créditos, propia de los préstamos convertibles. Los litigios se someten a los tribunales de Madrid."
+  - q: "¿Puede una S.L. emitir participaciones preferentes?"
+    a: "Sí. La Ley de Sociedades de Capital permite expresamente participaciones con derechos diferentes, incluido un dividendo preferente, creadas en los estatutos con los requisitos de una modificación estatutaria y completadas con el pacto de socios. La skill recuerda los límites legales, por ejemplo que las participaciones no pueden devengar intereses."
   - q: "¿Qué es una preferencia de liquidación 1x no participativa?"
-    a: "En una venta o liquidación, el inversor recupera primero una vez su inversión, o bien convierte a participaciones ordinarias y cobra a prorrata, pero no ambas cosas. Es la opción más próxima al punto medio; la participativa y la 2x favorecen al inversor y, según la skill, la 2x es poco habitual en la práctica española."
+    a: "En una venta o liquidación, el/la inversor/a recupera primero una vez su inversión, o bien convierte a participaciones ordinarias y cobra a prorrata, pero no ambas cosas. Es la opción por defecto de la skill y la más próxima al punto medio, ligeramente inclinada hacia la sociedad. Según la skill, la 2x es poco habitual en la práctica española."
   - q: "¿Qué significa crear el pool de opciones antes de la inversión?"
-    a: "Que la reserva de opciones para empleados se crea en la valoración pre-money, de modo que la dilución recae en los socios existentes, sobre todo los fundadores, y la valoración efectiva es menor que la cifra anunciada. El modelo ofrece un 10, un 15 o un 20 %, con el 15 % como opción equilibrada."
+    a: "Que la reserva de opciones para empleados/as se crea en la valoración pre-money, de modo que la dilución recae en los socios existentes, sobre todo los/as fundadores/as, y la valoración efectiva es menor que la cifra anunciada. La skill ofrece un 10, un 15 o un 20 %, con el 15 % como opción equilibrada."
 ---
 
 ## Qué es y cuándo se utiliza
 
-El term sheet, u hoja de condiciones, resume los términos principales de una ronda de financiación mediante participaciones o acciones preferentes (por ejemplo, una Serie A) antes de que se redacten los documentos definitivos. Cubre la economía de la ronda, la gobernanza, los derechos del inversor y las cláusulas de protección. El catálogo lo describe como basado en los modelos estadounidenses de la NVCA (actualización de octubre de 2025) y en los británicos de UK Private Capital (antes BVCA, edición de febrero de 2025), con una capa nativa para la S.L. española.
+El term sheet resume las condiciones principales de una ronda de financiación con participaciones o acciones preferentes (por ejemplo, una Serie A) antes de que se redacten los documentos definitivos. Abarca la economía de la ronda, el gobierno de la sociedad, los derechos del/de la inversor/a y la salida. La skill se basa en los modelos estadounidenses de la NVCA (revisión de octubre de 2025) y en los británicos de UK Private Capital (antes BVCA, edición de febrero de 2025), con una capa propia para la sociedad limitada española.
 
-## Quién lo firma y en qué papel
+Está pensado para una ronda con precio, con una valoración fijada o implícita y una nueva clase de participaciones preferentes. El préstamo convertible es otro instrumento y tiene su propia skill de [préstamo convertible](/es/contracts/convertible-note). Una vez pactadas, las condiciones se trasladan a los documentos definitivos, como el [pacto de socios](/es/contracts/shareholders-agreement-spain).
 
-- **La Sociedad**, que capta la inversión.
-- **El Inversor Principal**, que lidera la ronda y negocia sus condiciones.
+## Quién lo firma y en qué calidad
+
+- **La Sociedad**, que capta la financiación.
+- **El/La Inversor/a principal**, que lidera la ronda y negocia sus condiciones.
+
+Las partes indican el importe de la ronda y la valoración pre-money (ambos obligatorios) y, de forma opcional, la fecha de cierre, la designación de la serie (A por defecto), el mínimo y el máximo de una ronda abierta, los hitos y el número de tramos (2 por defecto), el precio de emisión original, el porcentaje del pool de opciones, el múltiplo de liquidación (1 por defecto), el nivel de deuda a partir del cual se necesita el consentimiento del/de la inversor/a, el tipo de dividendo (8 % por defecto) y el límite de los honorarios legales reembolsables (25.000 dólares por defecto).
 
 ## Cláusulas principales
 
-### Tamaño de la ronda y valoración pre-money
+La skill negocia 15 cláusulas. Todas son obligatorias salvo los derechos de registro.
 
-La ronda puede cerrarse de una vez por un importe fijo, de forma escalonada entre un mínimo y un máximo, o por tramos ligados a hitos. Se indican el importe y, en su caso, el mínimo, el máximo, los hitos y el número de tramos. La valoración puede ser una cifra pre-money fija, una cifra que incluye la ampliación del pool de opciones, o un porcentaje objetivo para el inversor.
+### Importe de la ronda y valoración pre-money
 
-### Preferencia de liquidación, antidilución y dividendos
+La ronda puede cerrarse de una vez por un importe fijo, quedar abierta entre un mínimo y un máximo, o desembolsarse por tramos liberados al cumplirse hitos. La valoración puede ser una cifra pre-money fija, una cifra que incluye la ampliación del pool de opciones, o un porcentaje objetivo de participación del/de la inversor/a con la valoración implícita.
 
-La preferencia puede ser 1x no participativa, 1x participativa con tope o 2x no participativa. La antidilución, media ponderada amplia, media ponderada estrecha o *full ratchet*. Los dividendos, no acumulativos cuando se declaren, acumulativos a un tipo fijo o sin preferencia.
+### Preferencia de liquidación
 
-### Consejo y cláusulas de protección
+1x no participativa, 1x participativa con un tope de retorno total, o 2x no participativa.
 
-El consejo puede estar controlado por los fundadores, ser equilibrado con un consejero independiente o estar controlado por los inversores. Las materias que requieren consentimiento del inversor pueden seguir la lista estándar, una lista ampliada a cuestiones operativas (contrataciones, contratos, inversiones) o una lista mínima.
+### Protección antidilución
 
-### Pool de opciones para empleados
+Media ponderada de base amplia (la opción por defecto de la NVCA); media ponderada de base estrecha, que la skill calcula sobre la base más reducida (solo las preferentes en circulación) y presenta como posición minoritaria favorable al/a la inversor/a; o full ratchet, que lleva el precio al de la nueva emisión más baja y es poco frecuente.
 
-Un 10, un 15 o un 20 %, creado antes de la inversión.
+### Composición del consejo
+
+Consejo controlado por los/as fundadores/as con un puesto para el/la inversor/a, consejo equilibrado con un/a consejero/a independiente que deshace los empates, o consejo controlado por los/as inversores/as.
+
+### Materias reservadas
+
+La lista estándar NVCA o BVCA de decisiones fundamentales que exigen el consentimiento del/de la inversor/a, una lista ampliada a contrataciones, contratos e inversiones, o una lista mínima limitada a modificaciones estatutarias, valores de rango superior y supuestos de liquidación.
+
+### Pool de opciones para empleados/as
+
+10, 15 o 20 %, creado antes de la inversión.
+
+### Dividendos
+
+Dividendos no acumulativos con prioridad cuando el consejo los acuerde, dividendos acumulativos a un tipo fijo, o sin preferencia, con reparto igual como si se hubiera convertido.
+
+### Consolidación de los/as fundadores/as
+
+Consolidación de cuatro años con un año de cliff sobre las participaciones existentes, consolidación que reconoce el tiempo ya trabajado con aceleración double trigger, o sin nueva consolidación, que la skill considera inusual en una ronda con precio.
+
+### Arrastre y acompañamiento
+
+Arrastre que exige el consejo, la mayoría de las ordinarias y la mayoría de las preferentes, con protecciones estándar y acompañamiento para todos; arrastre protector de los/as fundadores/as con supermayoría, precio mínimo de valor razonable fijado por un experto independiente y contraprestación solo en efectivo; o arrastre activado por la mayoría de las preferentes por sí sola.
+
+### Adquisición preferente y venta conjunta
+
+Ante una transmisión de un/a fundador/a, compra primero la sociedad y después los/as inversores/as, que además pueden vender junto a él/ella; solo adquisición preferente, sin venta conjunta; o un período de bloqueo seguido de ambos derechos.
+
+### Rescate
+
+Sin rescate, que la skill considera lo habitual en fase inicial, o una opción de venta del/de la inversor/a a partir del quinto aniversario, sujeta siempre a los límites legales de devolución de capital.
+
+### Derechos de registro (financiaciones en EE. UU.)
+
+Paquete completo (registro a petición, formulario abreviado y adhesión) o solo adhesión. Solo disponible para California.
 
 ### Exclusividad y cláusulas vinculantes
 
-La exclusividad puede ser de 30 días, de 60 días o no existir. Otra cláusula fija qué condiciones son vinculantes y la ley aplicable.
+Exclusividad de 30 días, de 60 días o ninguna; y una cláusula que fija qué condiciones obligan (las estándar, ampliadas a la economía clave, o ninguna) y el Derecho aplicable.
 
-Las condiciones estándar añaden la conversión en ordinarias, el voto sobre base convertida, derechos de información y de suscripción proporcional para inversores significativos, derechos de registro, adquisición preferente y acompañamiento, arrastre, vesting de fundadores a cuatro años con un año de *cliff*, acuerdos de cesión de invenciones con empleados, seguro de administradores y gastos legales con límite.
+Las cláusulas estándar añaden la conversión en ordinarias, el voto como si se hubiera convertido, los derechos de información y de participación pro rata de los inversores relevantes, los acuerdos de cesión de invenciones del personal, el seguro de consejeros/as y directivos/as y el pago por la sociedad de los honorarios legales del/de la inversor/a principal hasta el límite.
 
 ## Qué suelen negociar las partes
 
-Dealroom propone como punto medio las posiciones equilibradas de la skill: cierre único, valoración pre-money fija (o porcentaje objetivo), antidilución por media ponderada amplia, consejo equilibrado, protecciones estándar, pool del 15 %, exclusividad de 30 días y cláusulas vinculantes estándar. En la preferencia de liquidación, la 1x no participativa es la más próxima al centro. Los desacuerdos más marcados son el *full ratchet* y el consejo controlado por inversores, que favorecen claramente al Inversor Principal, al igual que los dividendos acumulativos o la preferencia 2x.
+Cuando las partes no se ponen de acuerdo, Dealroom propone las posiciones equilibradas de la skill: cierre único, valoración pre-money fija o participación objetivo, media ponderada de base amplia, consejo equilibrado, materias reservadas estándar, pool del 15 %, consolidación estándar de cuatro años, arrastre y acompañamiento estándar, adquisición preferente y venta conjunta estándar, exclusividad de 30 días y cláusulas vinculantes estándar.
 
-## Jurisdicciones e idiomas disponibles en Dealroom
+Algunas cláusulas no tienen opción neutral. En la preferencia de liquidación y en el rescate, las opciones más cercanas al punto medio (1x no participativa, sin rescate) se inclinan ligeramente hacia la sociedad. En los dividendos, el no acumulativo y la ausencia de preferencia están igual de cerca del punto medio, ambos ligeramente a favor de la sociedad. En los derechos de registro, el paquete completo es el más cercano y se inclina ligeramente hacia el/la inversor/a. Los desacuerdos más fuertes son el full ratchet, el consejo controlado por inversores/as y el arrastre por mayoría de preferentes, que favorecen claramente al/a la inversor/a principal.
 
-Dealroom ofrece el term sheet para **California**, **Inglaterra y Gales** y **España**, en **español** o en **inglés**. La versión española parte de una S.L. inscrita en el Registro Mercantil, con estatutos, pacto de socios y acuerdo de inversión, aprobación de la ampliación por la Junta General y tribunales de Madrid. La versión inglesa aplica la Companies Act 2006 y la de California remite a la ley de Delaware o California.
+## Jurisdicciones e idiomas que admite Dealroom
+
+Dealroom ofrece el term sheet para **California**, **Inglaterra y Gales** y **España**, en **español** o en **inglés**.
+
+- **California:** remite al Derecho de Delaware o de California, a los tribunales del condado del centro principal de actividad y a los cinco documentos definitivos de la NVCA. La consolidación recuerda la elección de la sección 83(b) en 30 días.
+- **Inglaterra y Gales:** aplica la Companies Act 2006, con exclusión del derecho legal de suscripción preferente para la ronda, y los documentos definitivos de UK Private Capital. Los derechos de registro están bloqueados.
+- **España:** parte de una sociedad limitada. La ronda en efectivo es una ampliación de capital aprobada por la junta general, en la que nace el derecho de preferencia de los socios salvo exclusión; se formaliza ante notario y se inscribe. Cada cierre adicional o tramo exige un nuevo acuerdo de la junta. Las preferencias se crean como participaciones privilegiadas en los estatutos más el pacto de socios. La consolidación se articula con opciones de compra cruzadas entre socios, no con recompras de la sociedad. Los litigios se someten a los tribunales de Madrid. Los derechos de registro están bloqueados.
 
 ## Errores frecuentes
 
-- **No delimitar qué es vinculante.** La skill advierte de que distinguirlo con claridad evita disputas sobre su exigibilidad.
-- **Fijarse solo en la valoración anunciada.** El pool de opciones pre-money reduce la valoración efectiva y recae entero en los fundadores.
-- **Subestimar la preferencia de liquidación.** La skill la considera la principal protección del inversor frente a pérdidas.
-- **Creer que en España lo no vinculante no tiene riesgo.** Los términos económicos vinculantes pueden tratarse como un precontrato, y la mala fe genera responsabilidad.
-- **Trasladar estructuras estadounidenses a una S.L. sin adaptarlas.** Las preferencias deben respetar las normas imperativas de la LSC y suelen articularse en el pacto de socios.
+- **No dejar claro qué obliga.** La skill advierte que señalar con claridad lo vinculante evita discusiones sobre su exigibilidad.
+- **Fijarse solo en la valoración anunciada.** Un pool creado antes de la inversión reduce la valoración efectiva y recae por entero en los/as fundadores/as.
+- **Creer que lo no vinculante no tiene riesgo en España.** La negociación de mala fe puede generar responsabilidad precontractual.
+- **Usar la vía del préstamo convertible para una ronda en efectivo.** La ronda con precio es una ampliación con aportaciones dinerarias, con derecho de preferencia, no una conversión de deuda.
+- **Dejar el arrastre y las transmisiones solo en el pacto de socios.** El pacto solo obliga a quienes lo firman; estas cláusulas deben llevarse también a los estatutos cuando sean inscribibles.
+- **Importar derechos de registro estadounidenses a una operación inglesa o española.** No tienen equivalente allí.

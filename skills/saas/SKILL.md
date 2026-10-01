@@ -1,16 +1,16 @@
 ---
 name: saas
 description: |
-  **SaaS Agreement Generator & Legal Review Tool**: Creates Software-as-a-Service Subscription Agreements with SLA provisions, multi-jurisdictional support, and various pricing models.
+  **SaaS Agreement Generator & Legal Review Tool**: Creates Software-as-a-Service Agreements with an uptime commitment, support levels and data terms, under California, England & Wales or Spanish law.
   - MANDATORY TRIGGERS: saas agreement, saas contract, software as a service, subscription agreement, cloud services agreement, software subscription
-  - Supports multiple pricing models: per-user, usage-based, flat-rate, tiered
-  - Multi-jurisdictional (California, Delaware, New York, England & Wales)
+  - Negotiated terms: uptime, support, data ownership, termination, price changes, renewal, data export, liability cap, security standards, dispute resolution
+  - Governing law: California, England & Wales, Spain (or a custom law and courts named by the parties)
   - Two modes: (1) Generate new SaaS Agreement, (2) Review/audit SaaS Agreement for risks
 ---
 
 # SaaS Agreement Skill
 
-Generate and review Software-as-a-Service (SaaS) Agreements with clear structure, plain language, and multi-jurisdictional support. Designed from the Provider (Vendor) perspective with comprehensive subscription models and SLA provisions.
+Generate and review Software-as-a-Service (SaaS) Agreements with clear structure, plain language, and multi-jurisdictional support. The generated agreement contains exactly the clauses in `clauses.json` and `boilerplate.json`; the service tier, number of users, Fees, billing and initial term belong in the Order Form.
 
 ## Modes
 
@@ -28,41 +28,39 @@ Generate and review Software-as-a-Service (SaaS) Agreements with clear structure
 Use `AskUserQuestion` to collect all options:
 
 ```
-Question 1 - Subscription Model:
-Header: "Pricing"
-Question: "Which subscription/pricing model will this agreement use?"
-Options:
-- Per-user/seat-based (Recommended) | Fixed price per user per billing period
-- Usage-based | Pay-as-you-go based on consumption metrics (API calls, storage, transactions)
-- Flat-rate | Single fixed price for unlimited access
-- Tiered | Multiple pricing tiers with different feature sets
-
-Question 2 - Initial Term:
-Header: "Term"
-Question: "What is the initial subscription term?"
-Options:
-- Annual (Recommended) | 12-month commitment with annual or monthly billing
-- Monthly | Month-to-month subscription with monthly billing
-- Multi-year | 2-3 year commitment, typically with volume discounts
-- Custom | Flexible term to be specified in Order Form
-
-Question 3 - SLA Uptime Commitment:
+Question 1 - Uptime Commitment:
 Header: "Uptime"
-Question: "What uptime commitment should the SLA include?"
+Question: "What uptime commitment should the agreement include?"
 Options:
-- 99.9% (Three Nines) (Recommended) | Up to 8.76 hours downtime per year, standard for business SaaS
-- 99.5% | Up to 43.8 hours downtime per year, suitable for non-critical applications
-- 99.0% | Up to 87.6 hours downtime per year, basic tier
-- Commercially reasonable | No specific uptime guarantee, best efforts only
+- 99.9% (Three Nines) | Availability of at least 99.9% each calendar month
+- 99.5% | Availability of at least 99.5% each calendar month
+- 99.99% (Four Nines) | Availability of at least 99.99% each calendar month
+- Commercially reasonable | Reasonable efforts, no uptime percentage
 
-Question 4 - Governing Law:
+Question 2 - Support:
+Header: "Support"
+Question: "Which support level applies?"
+Options:
+- Premium | 24/7/365, 1-hour response for critical issues
+- Standard | Business hours, 4-hour response for critical issues
+- Basic | Email during business hours, 24 business hours
+
+Question 3 - Governing Law:
 Header: "Jurisdiction"
 Question: "Which jurisdiction's law should govern this agreement?"
 Options:
-- Delaware (Recommended) | Delaware law, courts in Wilmington (corporate-friendly)
-- California | California law, courts in San Francisco or Los Angeles
-- New York | New York law, courts in New York County (finance/enterprise)
-- England & Wales | English law, courts in London (international)
+- California | California law
+- England & Wales | English law
+- Spain | Spanish law
+
+Question 4 - Disputes:
+Header: "Disputes"
+Question: "Where are disputes resolved?"
+Options:
+- Default courts | Courts of the governing-law jurisdiction
+- Delaware courts | Court of Chancery of Delaware as the forum (governing law unchanged)
+- Arbitration | JAMS, AAA or ICC (seated in the governing-law jurisdiction) or LCIA (London)
+- Custom | A governing law and courts named by the parties
 
 Question 5 - Output Format:
 Header: "Format"
@@ -80,11 +78,10 @@ Using the template in `references/saas-template.md`:
 
 1. **Read the template** from the references folder
 2. **Customize** based on user selections:
-   - Insert appropriate subscription/pricing terms
-   - Set the initial term and renewal provisions
-   - Include SLA schedule with selected uptime commitment and service credits
-   - Apply jurisdiction-specific governing law and dispute resolution
-   - Add jurisdiction-specific compliance provisions
+   - Insert the selected uptime commitment and support level (the agreement provides no service credits)
+   - Insert the remaining negotiated terms: data ownership, termination rights, price change notice, renewal, data export period, liability cap and security standards
+   - Apply the governing law and the selected dispute resolution option
+   - Add the jurisdiction-specific provisions for California, England & Wales or Spain
 3. **Generate the document** in the requested format
 4. Use placeholders in `[BRACKETS]` for variable information
 
@@ -136,7 +133,7 @@ This SaaS Subscription Agreement ("Agreement") is between:
 ## 3. Grant of Rights
 ...
 
-## Schedule A: Service Level Agreement
+## Service Availability and Maintenance
 ...
 ```
 
@@ -347,29 +344,16 @@ Present the review report to the user and offer to:
 
 | Uptime Level | Annual Downtime | Monthly Downtime | Best For |
 |--------------|-----------------|------------------|----------|
+| 99.99% | 52.6 minutes | 4.4 minutes | Critical infrastructure |
 | 99.9% | 8.76 hours | 43.8 minutes | Business-critical SaaS |
 | 99.5% | 43.8 hours | 3.65 hours | Standard business apps |
-| 99.0% | 87.6 hours | 7.3 hours | Non-critical tools |
 
-### Standard Service Credit Structure
-
-| Uptime Achieved | Service Credit |
-|-----------------|----------------|
-| < 99.9% but ≥ 99.0% | 10% of monthly fees |
-| < 99.0% but ≥ 95.0% | 25% of monthly fees |
-| < 95.0% | 50% of monthly fees |
-
-### Pricing Model Comparison
-
-| Model | Provider Risk | Customer Risk | Best For |
-|-------|---------------|---------------|----------|
-| **Per-user** | Low | Low | Predictable team sizes |
-| **Usage-based** | Medium | Medium | Variable workloads |
-| **Flat-rate** | High | Low | SMB, simplicity |
-| **Tiered** | Low | Low | Growth-stage companies |
+The generated agreement does not attach service credits to a missed uptime
+commitment. When reviewing a third party's agreement, check its credit regime
+with `references/review-checklist.md`.
 
 ---
 
 ## References
-- `references/saas-template.md` - Complete SaaS Agreement template with all sections
+- `references/saas-template.md` - Structure of the generated SaaS Agreement: standard terms, negotiated options and jurisdiction provisions
 - `references/review-checklist.md` - Comprehensive legal review checklist for SaaS agreements

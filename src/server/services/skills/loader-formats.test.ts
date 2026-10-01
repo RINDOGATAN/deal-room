@@ -2,7 +2,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 import { describe, it, expect } from "vitest";
-import { validateClausesFile } from "./loader";
+import { normalizeOption, validateClausesFile } from "./loader";
 import { ClausesFileSchema as PackagingSchema } from "./validator";
 
 /**
@@ -64,7 +64,32 @@ const PLAIN_NESTED = option({
   bias: { partyA: 0.1, partyB: -0.1 },
 });
 
+// Nested pros/cons with the flat biasPartyA/biasPartyB: the built-in skills'
+// shape since their duplicate nested `bias` objects were removed.
+const NESTED_PROS_FLAT_BIAS = option({
+  id: "o5", code: "o5", order: 5,
+  label: { en: "A" }, plainDescription: { en: "d" }, legalText: { en: "t" },
+  pros: { partyA: { en: ["p"] }, partyB: { en: ["p"] } },
+  cons: { partyA: { en: ["c"] }, partyB: { en: ["c"] } },
+  biasPartyA: 0.3, biasPartyB: -0.2,
+});
+
 describe("loader: option format combinations", () => {
+  it("accepts nested pros/cons with flat biasPartyA/biasPartyB, and keeps pros and bias", () => {
+    const r = validateClausesFile(file([NESTED_PROS_FLAT_BIAS]));
+    expect(r.errors).toEqual([]);
+    expect(r.valid).toBe(true);
+    const o = normalizeOption(NESTED_PROS_FLAT_BIAS, "en");
+    expect(o.prosPartyA).toEqual(["p"]);
+    expect([o.biasPartyA, o.biasPartyB]).toEqual([0.3, -0.2]);
+  });
+
+  it("prefers biasPartyA/biasPartyB over a nested bias object", () => {
+    const both = { ...NESTED_PROS_FLAT_BIAS, bias: { partyA: -0.9, partyB: 0.9 } };
+    const o = normalizeOption(both, "en");
+    expect([o.biasPartyA, o.biasPartyB]).toEqual([0.3, -0.2]);
+  });
+
   it("accepts plain + flat (the historical 'legacy' shape)", () => {
     const r = validateClausesFile(file([PLAIN_FLAT, { ...PLAIN_FLAT, id: "x", code: "x", order: 2 }]));
     expect(r.errors).toEqual([]);

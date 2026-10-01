@@ -15,7 +15,7 @@ faq:
   - q: "What is the difference between a convertible note and a SAFE?"
     a: "A convertible note is a debt instrument: it carries interest, has a maturity date and must comply with usury rules. The skill also notes that, unlike SAFEs, convertible notes typically use pre-money valuation caps. Dealroom's catalogue currently offers the convertible note, not a SAFE."
   - q: "Can a Spanish S.L. issue a convertible note?"
-    a: "Yes. Under Spanish law the note is structured as a préstamo convertible. Conversion into participaciones sociales takes place through a capital increase by set-off of credits under article 301 of the Ley de Sociedades de Capital, approved by the general meeting, with existing members' preferential subscription rights excluded as needed."
+    a: "Yes. Under Spanish law the note is structured as a préstamo convertible. Conversion into participaciones sociales takes place through a capital increase by set-off of credits under article 301 of the Ley de Sociedades de Capital, approved by the general meeting with a report from the directors. Because the credit must be fully due, the note falls due at the moment of conversion. Under the registry doctrine the skill relies on, the statutory pre-emption right does not arise in this kind of increase."
 ---
 
 ## What it is and when it is used
@@ -32,6 +32,8 @@ It is used when a company needs money before it is ready to agree a valuation. T
 Notes are often issued in a series to several investors. Holders of more than 50 percent of the principal of the series (the Majority Holders) can agree amendments and waivers with the Company that bind every holder.
 
 ## Key clauses
+
+The skill negotiates 11 clauses, all of them required.
 
 ### Principal amount and interest rate
 
@@ -51,7 +53,7 @@ The discount reduces the price the noteholder pays compared with new investors: 
 
 ### Qualified financing trigger
 
-This is the minimum size of equity round that triggers automatic conversion, excluding money from the notes themselves: 1 million, 500,000 or 2 million.
+This is the minimum size of equity round that triggers automatic conversion, excluding money from the notes themselves. You enter the threshold in the currency of the note; the options recommend 1,000,000 (the market standard in the skill), 500,000 or 2,000,000.
 
 ### Conversion mechanics
 
@@ -60,6 +62,10 @@ The note can convert into the same series of preferred shares sold to new invest
 ### Treatment at maturity
 
 If no qualified financing occurs, the note can convert automatically at the valuation cap, the Investor can elect between cash repayment and conversion (converting automatically if no election is made in time), or the full amount must be repaid in cash, with failure to pay being an event of default.
+
+### Liquidity event before conversion
+
+If the company is sold or goes public before the note converts or is repaid, the Investor can choose between a cash payment of 1x the conversion amount and conversion at the cap price just before the event (the market standard in the skill); can take 2x the conversion amount in cash, which the skill flags as non-standard; or the note simply converts into common shares at the cap price, with no cash multiple.
 
 ### Prepayment rights
 
@@ -73,7 +79,7 @@ While the note is outstanding, the Company provides quarterly unaudited financia
 
 The note can rank behind senior bank debt but equally with other convertible notes, ahead of all debt incurred after it, or behind all other debt, ahead only of shareholders.
 
-Standard terms also cover a sale of the company or IPO before conversion (the Investor chooses between a cash multiple of the conversion amount and conversion into common shares at the cap), events of default, securities law restrictions on transfer, and a waiver of formal demand for payment.
+Standard terms also cover events of default, securities law restrictions on transfer, the absence of shareholder rights before conversion, a waiver of formal demand for payment, and amendments agreed by the Majority Holders.
 
 ## What the two sides usually negotiate
 
@@ -84,19 +90,20 @@ The Company wants low dilution, time and flexibility; the Investor wants a good 
 - **Discount:** 20 percent.
 - **Qualified financing:** a 1 million minimum raise.
 - **Conversion:** into the same series as new investors.
+- **Sale before conversion:** the Investor's choice between a 1x cash payment and conversion at the cap.
 - **Prepayment:** only with the Investor's consent, plus a premium.
 - **Information:** quarterly financial reports.
 - **Priority:** behind senior debt, equal with other notes.
 
-The most contested points sit at the extremes. No valuation cap leans strongly towards the Company; cash repayment at maturity and a ban on prepayment favour the Investor. On interest, 5 percent simple is the market standard described in the skill; zero interest favours the Company and 8 percent favours the Investor. At maturity, giving the Investor the choice between cash and conversion sits closest to the centre.
+The most contested points sit at the extremes. No valuation cap leans strongly towards the Company; a 2x cash-out on a sale strongly favours the Investor, and cash repayment at maturity and a ban on prepayment also favour the Investor. On interest no option is neutral: 5 percent simple, the market standard described in the skill, is closest to the middle and leans slightly to the Company; zero interest favours the Company more and 8 percent favours the Investor. At maturity, giving the Investor the choice between cash and conversion sits closest to the centre.
 
 ## Jurisdictions and languages Dealroom supports for it
 
 Dealroom offers the convertible note for **California**, **England and Wales** and **Spain**, drafted in **English** or **Spanish**.
 
-- **California:** California law and courts, a jury trial waiver, and a statement that the note is exempt from California usury laws under Corporations Code section 25118 to the extent applicable. The skill notes the 10 percent usury limit for non-exempt lenders.
-- **England and Wales:** structured as a convertible loan note; conversion is by allotment of new shares under the Companies Act 2006, subject to section 561 pre-emption rights, and the Company confirms its authority to allot. Interest is subject to UK tax.
-- **Spain:** structured as a préstamo convertible; conversion into participaciones sociales is a capital increase by set-off of credits (article 301 LSC), approved by the general meeting, with preferential subscription rights under article 304 LSC excluded as needed. Interest must respect the 1908 usury law, and the Company withholds tax on interest under the personal income tax law.
+- **California:** California law and the courts of San Francisco County. The note aims to use the usury exemption in Corporations Code section 25118 where its conditions are met; otherwise the constitutional ceiling applies, which the skill gives as the higher of 10 percent or five points over the San Francisco Federal Reserve discount rate. Because pre-dispute jury waivers are unenforceable in California, the note contains none; instead either party may refer a dispute to a judicial referee.
+- **England and Wales:** structured as a convertible loan note; conversion is by allotment of new shares under the Companies Act 2006, subject to section 561 pre-emption rights, and the Company confirms its authority to allot. Interest is subject to UK tax, and liability for fraud is preserved.
+- **Spain:** structured as a préstamo convertible; conversion into participaciones sociales is a capital increase by set-off of credits (article 301 LSC), approved by the general meeting with a report from the directors. Because the law requires the credit to be fully due, every conversion option brings the note's maturity forward to the moment of conversion. Under the registry doctrine cited in the skill, the statutory pre-emption right of article 304 LSC does not arise in an increase by set-off, so no waiver is needed, although the articles may grant a wider right and abusive dilution can still be challenged. Interest must respect the 1908 usury law, the Company withholds tax on interest, and disputes go to the courts of the company's registered office.
 
 ## Common mistakes
 
@@ -105,4 +112,4 @@ Dealroom offers the convertible note for **California**, **England and Wales** a
 - **Setting the qualified financing threshold badly.** Too high delays conversion; too low allows conversion on a small round that does not really validate the price.
 - **Ignoring usury and tax rules.** Interest must stay within usury limits; zero-interest notes can lead to imputed interest for tax purposes.
 - **No information rights.** Noteholders are creditors with limited statutory information rights, so contractual reporting is their main source of information, and in Spain the member's right to information only applies after conversion.
-- **Forgetting the corporate approvals.** In Spain and England, conversion needs shareholder approvals and the waiver or disapplication of pre-emption rights.
+- **Forgetting the corporate steps.** In England, conversion needs authority to allot and attention to pre-emption rights. In Spain, it needs a general meeting resolution and the directors' report, and the note must fall due at conversion; creating a separate "shadow" class also requires amending the articles.

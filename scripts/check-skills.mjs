@@ -387,6 +387,22 @@ function checkClauseBiases(skill, clauses) {
     for (const [oi, option] of clause.options.entries()) {
       const hasA = typeof option.biasPartyA === "number";
       const hasB = typeof option.biasPartyB === "number";
+      // One source of truth: biasPartyA/biasPartyB. A nested `bias` object is
+      // accepted only for packages written entirely in the nested layout; when
+      // both are present they must agree, or the seed and the installer
+      // (src/server/services/skills/loader.ts) would weigh the option differently.
+      const nested = option.bias && typeof option.bias === "object" ? option.bias : null;
+      if (nested && (hasA || hasB)) {
+        if ((hasA && nested.partyA !== option.biasPartyA) || (hasB && nested.partyB !== option.biasPartyB)) {
+          logError(
+            skill,
+            "clauses.json",
+            `clauses[${ci}].options[${oi}] (id=${option.id ?? "?"}): bias {partyA: ${nested.partyA}, partyB: ${nested.partyB}} disagrees with biasPartyA=${option.biasPartyA} / biasPartyB=${option.biasPartyB}; keep biasPartyA/biasPartyB and drop the nested bias`,
+          );
+        }
+        continue;
+      }
+      if (nested) continue;
       if (!hasA || !hasB) {
         logWarn(
           skill,

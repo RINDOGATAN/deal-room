@@ -44,7 +44,7 @@ Acceso completo, módulos limitados o solo por API. Personalizaciones del Provee
 El Distribuidor/a controla los datos de los clientes finales como responsable, los controla pero el Proveedor puede obtener analítica anonimizada, o ambos tienen acceso con usos definidos.
 
 ### Resolución y no competencia
-Preaviso de doce meses con asistencia en la transición, de seis meses con exportación básica o de 90 días con exportación a cargo del Distribuidor/a. No competencia amplia durante el contrato y doce meses después, limitada a la vigencia, o ninguna.
+Preaviso de doce meses con asistencia en la transición, de seis meses con exportación básica o de 90 días con exportación a cargo del Distribuidor/a. No competencia amplia durante el contrato y doce meses después (sin que ninguna parte pueda captar clientes de la otra), limitada a la vigencia, o ninguna.
 
 ## Qué suelen negociar las partes
 

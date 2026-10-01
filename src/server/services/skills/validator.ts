@@ -107,11 +107,21 @@ const NestedClauseOptionSchema = z.object({
     partyA: LocalizedStringArraySchema,
     partyB: LocalizedStringArraySchema,
   }),
-  bias: z.object({
-    partyA: z.number().min(-1).max(1),
-    partyB: z.number().min(-1).max(1),
-  }),
-});
+  // biasPartyA/biasPartyB is the single source of truth for bias (it is what
+  // the seed stores). A nested `bias` object is still accepted for packages
+  // authored wholly in the nested layout.
+  bias: z
+    .object({
+      partyA: z.number().min(-1).max(1),
+      partyB: z.number().min(-1).max(1),
+    })
+    .optional(),
+  biasPartyA: z.number().min(-1).max(1).optional(),
+  biasPartyB: z.number().min(-1).max(1).optional(),
+}).refine(
+  (o) => o.bias !== undefined || (o.biasPartyA !== undefined && o.biasPartyB !== undefined),
+  { message: "option needs biasPartyA and biasPartyB" },
+);
 
 export const ClauseOptionSchema = z.union([
   FlatClauseOptionSchema,

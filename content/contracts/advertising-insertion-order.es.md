@@ -13,7 +13,7 @@ faq:
   - q: "¿Qué estándar de visibilidad se aplica?"
     a: "El estándar MRC considera visible una impresión cuando al menos el 50 % de los píxeles está a la vista durante un segundo continuo (dos segundos en vídeo). El modelo ofrece también un estándar estricto que exige el 100 % de los píxeles."
   - q: "¿Qué datos se usan para facturar?"
-    a: "Las partes eligen entre el servidor de anuncios del anunciante, con informes diarios e investigación de diferencias superiores al 10 %, o el del soporte, con informes semanales. Las condiciones generales añaden que, mientras se concilia una diferencia superior al 10 %, prevalece el recuento más bajo."
+    a: "Las partes eligen entre el servidor de anuncios del anunciante, con informes diarios, investigación conjunta de diferencias superiores al 10 % y facturación por la media de ambos recuentos si no se concilian; o el del soporte, con informes semanales, acceso a los datos a nivel de registro y un auditor externo para las disputas. Las condiciones generales añaden que, mientras se concilia una diferencia superior al 10 %, prevalece el recuento más bajo."
   - q: "¿Puede cancelarse la campaña?"
     a: "Sí, con la penalización pactada. Una opción es pago a 30 días sin penalización con 14 o más días de preaviso y del 25 % del presupuesto restante con menos; la otra es pago a 60 días con una penalización del 50 % de la parte no entregada."
 ---
@@ -24,7 +24,7 @@ La orden de inserción se usa en la publicidad digital de venta directa: un anun
 
 ## Quién lo firma y en qué calidad
 
-El **Anunciante** (comprador, que puede ser una agencia) y el **Soporte** o editor (vendedor del inventario, que puede ser una red publicitaria). Se indican el nombre de la campaña, las fechas de inicio y fin y el presupuesto total; las impresiones objetivo y el CPM base son opcionales.
+El **Anunciante** (comprador, que puede ser una agencia) y el **Soporte** (vendedor del inventario, que puede ser una red publicitaria y al que el contrato denomina "Editor/Medio"). Se indican el nombre de la campaña, las fechas de inicio y fin y el presupuesto total; las impresiones objetivo, el objetivo de visibilidad y el CPM base son opcionales.
 
 ## Cláusulas principales
 
@@ -32,7 +32,7 @@ El **Anunciante** (comprador, que puede ser una agencia) y el **Soporte** o edit
 CPM fijo, precio por resultados (CPA o CPC) o tarifa de patrocinio fija. Entrega garantizada con compensaciones o de mejor esfuerzo.
 
 ### Ubicación y visibilidad
-Posiciones premium fijas y exclusivas para el Anunciante, o rotación en todo el sitio a criterio del Soporte. Visibilidad según el estándar MRC (con un objetivo del 70 %) o un estándar estricto del 100 %.
+Posiciones premium fijas y exclusivas para el Anunciante, o rotación en todo el sitio a criterio del Soporte. Visibilidad según el estándar MRC, medida frente al objetivo de visibilidad que fijen las partes, o un estándar estricto del 100 % en el que ese objetivo pasa a ser un mínimo garantizado y las impresiones que no lo cumplen no se facturan.
 
 ### Seguridad de marca y segmentación
 Seguridad de marca integral (bloqueo de categorías, exclusión de palabras clave y verificación previa a la puja) o exclusiones estándar. Segmentación avanzada (comportamental, contextual y datos propios en entornos clean room) o solo contextual y geográfica.
@@ -48,11 +48,11 @@ Exclusividad de categoría, separación competitiva en la misma página o sin ex
 
 ## Qué suelen negociar las partes
 
-Casi todas las cláusulas enfrentan una opción favorable al Anunciante con otra favorable al Soporte. El precio por resultados, la entrega garantizada, las posiciones premium, la visibilidad estricta, la seguridad de marca integral, la verificación de fraude por terceros, la titularidad de los datos y la exclusividad de categoría favorecen al Anunciante. El patrocinio fijo, el mejor esfuerzo, la rotación en el sitio, el estándar MRC, la aprobación de creatividades por el Soporte y el pago a 60 días favorecen al Soporte. La separación competitiva en la misma página es la opción plenamente equilibrada, y el CPM fijo y los datos compartidos quedan cerca del punto medio. Cuando las partes eligen distinto, Dealroom propone un compromiso ponderado según la firmeza de cada parte en cada punto.
+Casi todas las cláusulas enfrentan una opción favorable al Anunciante con otra favorable al Soporte. El precio por resultados, la entrega garantizada, las posiciones premium, la visibilidad estricta, la seguridad de marca integral, la verificación de fraude por terceros, la titularidad de los datos y la exclusividad de categoría favorecen al Anunciante. El patrocinio fijo, el mejor esfuerzo, la rotación en el sitio, el estándar MRC, la aprobación de creatividades por el Soporte y el pago a 60 días favorecen al Soporte. La separación competitiva en la misma página es la opción plenamente equilibrada, y el CPM fijo, el estándar de visibilidad MRC y los datos compartidos quedan cerca del punto medio. Cuando las partes eligen distinto, Dealroom propone un compromiso ponderado según la firmeza de cada parte en cada punto.
 
 ## Jurisdicciones e idiomas disponibles en Dealroom
 
-Dealroom redacta esta orden bajo derecho de **España**, **Inglaterra y Gales** o **California**, en **español** o **inglés**. Para España, el modelo remite a la Ley General de Publicidad, a la LSSI-CE (identificación de comunicaciones comerciales y cookies), a los estándares de IAB Spain, a la LOPDGDD y al RGPD, y a las guías de la AEPD; somete las disputas a los tribunales de Madrid. Para Inglaterra y Gales, al CAP Code, el UK GDPR y PECR; para California, a las normas de la FTC, la CCPA y la CPRA, y CAN-SPAM.
+Dealroom redacta esta orden bajo derecho de **España**, **Inglaterra y Gales** o **California**, en **español** o **inglés**. Para España, el modelo remite a la Ley General de Publicidad, a la LSSI-CE (identificación de comunicaciones comerciales y cookies), a los estándares de IAB Spain, a la LOPDGDD y al RGPD, a las guías de la AEPD y a las normas del Reglamento de Servicios Digitales sobre transparencia de los anuncios y perfiles de menores y datos sensibles; somete las disputas a los tribunales de Madrid. Para Inglaterra y Gales, al CAP Code, el UK GDPR, PECR y la Unfair Contract Terms Act 1977; para California, a las normas de la FTC, la CCPA y la CPRA (incluidas las señales Global Privacy Control), las leyes de privacidad de otros estados cuando la campaña llegue a sus residentes y CAN-SPAM, con los tribunales del condado de Los Ángeles.
 
 ## Errores frecuentes
 

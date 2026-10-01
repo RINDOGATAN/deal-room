@@ -230,8 +230,9 @@ export function resolveClauseOption(
     prosPartyB: resolveLocalizedArray(pros?.partyB, language),
     consPartyB: resolveLocalizedArray(cons?.partyB, language),
     legalText: resolveLocalizedString(option.legalText, language),
-    biasPartyA: bias?.partyA ?? 0,
-    biasPartyB: bias?.partyB ?? 0,
+    // biasPartyA/biasPartyB is the single source of truth; nested `bias` is a fallback.
+    biasPartyA: typeof option.biasPartyA === "number" ? option.biasPartyA : bias?.partyA ?? 0,
+    biasPartyB: typeof option.biasPartyB === "number" ? option.biasPartyB : bias?.partyB ?? 0,
     jurisdictionConfig: option.jurisdictionConfig as Record<string, unknown> | undefined,
   };
 }

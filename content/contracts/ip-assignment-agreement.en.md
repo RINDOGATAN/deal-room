@@ -11,7 +11,7 @@ faq:
   - q: "Does an invention assignment cover everything an employee creates?"
     a: "Not in California. The skill notes that California Labor Code section 2870 excludes inventions developed entirely on the employee's own time without the employer's equipment, supplies, facilities or trade secrets, unless they relate to the employer's business. The California version of the agreement includes this limit and the written notice required by section 2872."
   - q: "Can moral rights be assigned with the IP?"
-    a: "No. In England and Wales moral rights can be waived in writing but not assigned, and in the United States they are limited mainly to works of visual art. The agreement therefore offers a full waiver, a waiver that keeps the right to be credited, or no waiver at all."
+    a: "No. In England and Wales moral rights can be waived in writing but not assigned, and in the United States they are limited mainly to works of visual art. The agreement therefore offers a full waiver, a waiver that keeps the right to be credited, or no waiver at all. In Spain moral rights cannot be waived either, so the full waiver is not offered there and the credit-keeping option is drafted as a commitment not to exercise them."
   - q: "How is the Assignor paid for an IP assignment?"
     a: "The agreement offers three forms of payment: a one-time lump sum payable shortly after signing, royalties calculated on net revenue from the assigned IP for a set number of years, or shares in the Assignee's company. Some form of consideration is needed for the contract to be enforceable, and English law requires it unless the document is executed as a deed."
   - q: "Do I need to register an IP assignment?"
@@ -45,7 +45,7 @@ This clause deals with IP the Assignor already owned before the agreement. It ca
 
 ### Moral rights waiver
 
-Moral rights are the author's right to be named and to object to derogatory treatment of the work. The options are a full waiver (with a promise not to assert rights that cannot be waived), a waiver of the integrity right only, with the Assignor still credited where commercially practicable, or no waiver.
+Moral rights are the author's right to be named and to object to derogatory treatment of the work. The options are a full waiver (with a promise not to assert rights that cannot be waived), a waiver of the integrity right only, with the Assignor still credited where commercially practicable, or no waiver. Under Spanish law the full waiver is not available, because moral rights are inalienable and cannot be waived; the middle option is recast as a practical commitment not to exercise them, with credit respected and the integrity right kept for serious harm to honour or reputation.
 
 ### Consideration
 
@@ -79,18 +79,18 @@ The Assignee wants the widest transfer, firm promises and no way back. The Assig
 - **Cooperation:** reasonable cooperation at the Assignee's expense, without a power of attorney.
 - **Open source:** disclosed components under permissive licences only.
 
-On scope, listing specific items sits closest to the centre, while an assignment of all related IP leans strongly towards the Assignee. On payment, the three methods lean only slightly one way or the other, so the choice usually follows the deal: a lump sum gives a clean break, royalties share the upside, and equity preserves cash. Reversion is a real point of tension: reversion if the IP is not used favours the Assignor, and an absolute assignment favours the Assignee.
+On scope, listing specific items sits closest to the centre, while an assignment of all related IP leans strongly towards the Assignee. On payment, the three methods lean only slightly one way or the other, so the choice usually follows the deal: a lump sum gives a clean break, royalties share the upside, and equity preserves cash. Reversion is a real point of tension: reversion if the IP is not used favours the Assignor most, reversion on insolvency less so, and an absolute assignment favours the Assignee.
 
 ## Jurisdictions and languages Dealroom supports for it
 
-Dealroom offers this agreement for **California**, **England and Wales** and **Spain**, drafted in **English** or **Spanish**. The California version applies California law and courts and includes the Labor Code section 2870 limit and section 2872 notice. The England and Wales version applies English law and courts and refers to the writing and signature requirement for copyright assignments under the Copyright, Designs and Patents Act 1988 and to registration of patent assignments under the Patents Act 1977. For an assignment drafted natively under the Spanish Intellectual Property Act, see the [Spanish IP assignment agreement](/contracts/ip-assignment-spain).
+Dealroom offers this agreement for **California**, **England and Wales** and **Spain**, drafted in **English** or **Spanish**. The California version applies California law and courts and includes the Labor Code section 2870 limit and section 2872 notice. The England and Wales version applies English law and courts and refers to the writing and signature requirement for copyright assignments under the Copyright, Designs and Patents Act 1988 and to registration of patent assignments under the Patents Act 1977. The Spain version applies the Spanish Intellectual Property Act, the Patents Act and the courts of the Assignee's registered office, reads the assignment restrictively and requires recordal of patent assignments with the Spanish Patent and Trademark Office. The skill leaves payment in shares and open source under Spanish law to a lawyer's judgement. For an assignment drafted natively under the Spanish Intellectual Property Act, see the [Spanish IP assignment agreement](/contracts/ip-assignment-spain).
 
 ## Common mistakes
 
 - **A vague scope.** The skill warns that the scope must be clearly defined to be enforceable, and that an overly broad scope may be challenged.
 - **Forgetting prior inventions.** Without a schedule, the Assignor may transfer valuable pre-existing IP by accident, or later claim that key IP was never transferred.
 - **Ignoring employee limits in California.** A period-based assignment from an employee cannot reach personal-time inventions protected by section 2870.
-- **Treating moral rights as transferable.** They can be waived, within limits, but not assigned; US visual art rights under VARA cannot be waived.
+- **Treating moral rights as transferable.** In England and Wales they can be waived but not assigned; US visual art rights under VARA cannot be waived; in Spain they can be neither waived nor assigned.
 - **Overlooking open source.** The Assignor cannot assign what it does not own, and copyleft licences can force the release of proprietary code.
 - **Not planning for registration.** Without a cooperation clause, or with a narrow one, the Assignee may need to go to court to compel the Assignor to sign filings.
 - **No real consideration.** A transfer with no payment and no deed may not be enforceable.

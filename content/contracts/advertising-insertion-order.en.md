@@ -13,7 +13,7 @@ faq:
   - q: "What is the MRC viewability standard?"
     a: "An impression counts as viewable when at least 50% of the ad's pixels are in view for at least one continuous second for display ads, or two seconds for video. The template also offers a stricter standard that requires 100% of the pixels in view."
   - q: "Whose numbers are used for billing?"
-    a: "The parties choose. Either the advertiser's third-party ad server is the billing basis, with daily reporting and investigation of discrepancies over 10%, or the publisher's own ad server is used, with weekly reports. The general terms add that the lower count prevails while a discrepancy over 10% is reconciled."
+    a: "The parties choose. Either the advertiser's third-party ad server is the billing basis, with daily reports, joint investigation of discrepancies over 10% and billing on the average of the two counts if they cannot be reconciled; or the publisher's own ad server is used, with weekly reports, access to log-level data and a third-party auditor for disputes. The general terms add that the lower count prevails while a discrepancy over 10% is being reconciled."
   - q: "Can the advertiser cancel the campaign?"
     a: "Yes, subject to the agreed fee. One option is NET 30 with no fee on 14 or more days' notice and 25% of the remaining budget on shorter notice; the other is NET 60 with a 50% cancellation fee on the undelivered portion."
 ---
@@ -24,7 +24,7 @@ An insertion order (IO) is used for direct-sold digital advertising: an advertis
 
 ## Who signs it and in which role
 
-The **Advertiser** (the buyer, which may be an agency) and the **Publisher** (the seller of inventory, which may be an ad network). The Advertiser fills in the campaign name, start and end dates and total budget; the impression target and base CPM are optional.
+The **Advertiser** (the buyer, which may be an agency) and the **Publisher** (the seller of inventory, which may be an ad network). The Advertiser fills in the campaign name, start and end dates and total budget; the impression target, the viewability target and the base CPM are optional.
 
 ## Key clauses
 
@@ -32,7 +32,7 @@ The **Advertiser** (the buyer, which may be an agency) and the **Publisher** (th
 Fixed CPM, performance-based pricing (CPA or CPC) or a flat sponsorship fee. Delivery can be guaranteed with make-goods or on a best-effort basis.
 
 ### Placement and viewability
-Premium fixed positions exclusive to the Advertiser, or run-of-site at the Publisher's discretion. Viewability under the MRC standard (with a 70% viewability target) or a stricter 100% standard.
+Premium fixed positions exclusive to the Advertiser, or run-of-site at the Publisher's discretion. Viewability under the MRC standard, measured against the viewability target the parties set, or a stricter 100% standard under which the target becomes a guaranteed minimum and impressions that fall short are not billed.
 
 ### Brand safety and targeting
 Comprehensive brand safety (category blocking, keyword exclusions and pre-bid verification) or standard category exclusions. Targeting can be advanced (behavioural, contextual and first-party data through clean rooms) or limited to contextual and geographic signals.
@@ -48,11 +48,11 @@ Category exclusivity, competitive separation on the same page, or no exclusivity
 
 ## What the two sides usually negotiate
 
-Most clauses pair an Advertiser-friendly option with a Publisher-friendly one. Performance pricing, guaranteed delivery, premium placements, strict viewability, comprehensive brand safety, third-party fraud verification, Advertiser data ownership and category exclusivity favour the Advertiser. A flat sponsorship fee, best-effort delivery, run-of-site, the MRC standard, publisher creative approval, publisher-managed fraud filtering and NET 60 favour the Publisher. Competitive separation on the same page is the one fully balanced option, and fixed CPM and shared data rights sit close to the middle. When the parties choose differently, Dealroom proposes a compromise weighted by how firmly each side holds its position on each point.
+Most clauses pair an Advertiser-friendly option with a Publisher-friendly one. Performance pricing, guaranteed delivery, premium placements, strict viewability, comprehensive brand safety, third-party fraud verification, Advertiser data ownership and category exclusivity favour the Advertiser. A flat sponsorship fee, best-effort delivery, run-of-site, the MRC standard, publisher creative approval, publisher-managed fraud filtering and NET 60 favour the Publisher. Competitive separation on the same page is the one fully balanced option, and fixed CPM, the MRC viewability standard and shared data rights sit close to the middle. When the parties choose differently, Dealroom proposes a compromise weighted by how firmly each side holds its position on each point.
 
 ## Jurisdictions and languages Dealroom supports for it
 
-Dealroom drafts this IO under the law of **California**, **England and Wales** or **Spain**, in **English** or **Spanish**. Each jurisdiction adds its advertising and privacy rules: for California, FTC truth-in-advertising rules, CCPA and CPRA opt-outs and CAN-SPAM for email; for England and Wales, the CAP Code, UK GDPR and PECR cookie consent; for Spain, the Ley General de Publicidad, the LSSI-CE, IAB Spain standards, the LOPDGDD and GDPR, and AEPD guidance on cookies.
+Dealroom drafts this IO under the law of **California**, **England and Wales** or **Spain**, in **English** or **Spanish**. Each jurisdiction adds its advertising and privacy rules: for California, FTC truth-in-advertising rules, CCPA and CPRA opt-outs (including Global Privacy Control signals), other US state privacy laws where the campaign reaches their residents, CAN-SPAM for email and the courts of Los Angeles County; for England and Wales, the CAP Code, UK GDPR and PECR cookie consent, and the Unfair Contract Terms Act 1977; for Spain, the Ley General de Publicidad, the LSSI-CE, IAB Spain standards, the LOPDGDD and GDPR, AEPD guidance on cookies, the Digital Services Act rules on ad transparency and on profiling of minors and sensitive data, and the courts of Madrid.
 
 ## Common mistakes
 

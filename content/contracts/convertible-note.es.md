@@ -9,7 +9,7 @@ faq:
   - q: "¿Cómo se convierte un préstamo convertible en participaciones?"
     a: "Al cerrarse una ronda de financiación cualificada, el principal más los intereses devengados (el importe de conversión) se divide entre el precio de conversión. Ese precio es el menor entre el que resulta del techo de valoración y el precio de la ronda con descuento, de modo que el inversor recibe la opción que le da más participaciones."
   - q: "¿Cómo se instrumenta la conversión en una S.L. española?"
-    a: "Mediante una ampliación de capital por compensación de créditos conforme al artículo 301 de la Ley de Sociedades de Capital, aprobada por la Junta General. El derecho de suscripción preferente de los socios existentes (artículo 304 LSC) debe excluirse en la medida necesaria para la conversión."
+    a: "Mediante una ampliación de capital por compensación de créditos conforme al artículo 301 de la Ley de Sociedades de Capital, aprobada por la Junta General con informe de los administradores. Como el crédito debe ser totalmente líquido y exigible, el préstamo vence anticipadamente en el momento de la conversión. Según la doctrina registral que recoge la skill, en este tipo de aumento no nace el derecho de preferencia del artículo 304 LSC, por lo que no es necesario excluirlo."
   - q: "¿Qué ocurre si llega el vencimiento sin ronda de financiación?"
     a: "Depende de la opción pactada: conversión automática al techo de valoración, elección del inversor entre reembolso en efectivo o conversión, o reembolso obligatorio en efectivo. Una exigencia de reembolso puede llevar a una startup a la insolvencia, por lo que muchos préstamos prevén la conversión al vencimiento."
   - q: "¿Qué diferencia hay entre un préstamo convertible y un SAFE?"
@@ -33,6 +33,8 @@ Es habitual emitir préstamos en serie a varios inversores. Los tenedores de má
 
 ## Cláusulas principales
 
+La skill negocia 11 cláusulas, todas obligatorias.
+
 ### Importe principal y tipo de interés
 
 Se indica el importe principal. Los intereses se devengan pero no se pagan en efectivo: se suman al principal y se convierten con él. Las opciones son un 5 % simple, un 8 % simple o ningún interés, en cuyo caso la rentabilidad del inversor procede solo del techo y del descuento.
@@ -51,7 +53,7 @@ Reduce el precio que paga el tenedor frente a los nuevos inversores: 20 %, 15 % 
 
 ### Ronda de financiación cualificada
 
-Es el tamaño mínimo de la ronda de capital que activa la conversión automática, sin contar los propios préstamos: 1 millón, 500.000 o 2 millones de euros.
+Es el tamaño mínimo de la ronda de capital que activa la conversión automática, sin contar los propios préstamos. Se indica el umbral en la moneda del préstamo; las opciones recomiendan 1.000.000 (el estándar de mercado según la skill), 500.000 o 2.000.000.
 
 ### Mecánica de conversión
 
@@ -60,6 +62,10 @@ El préstamo puede convertirse en la misma clase de participaciones preferentes 
 ### Tratamiento al vencimiento
 
 Si no hay ronda cualificada, el préstamo puede convertirse automáticamente al techo de valoración, el inversor puede elegir entre reembolso en efectivo o conversión (con conversión automática si no elige a tiempo), o debe reembolsarse íntegramente en efectivo, y el impago constituye un supuesto de incumplimiento.
+
+### Evento de liquidez antes de la conversión
+
+Si la sociedad se vende o sale a bolsa antes de que el préstamo se convierta o se devuelva, el inversor puede elegir entre cobrar en efectivo 1x el importe de conversión o convertir al precio del techo justo antes del evento (el estándar de mercado según la skill); puede cobrar 2x en efectivo, condición que la skill califica de no estándar; o el préstamo se convierte en participaciones ordinarias al precio del techo, sin múltiplo.
 
 ### Amortización anticipada
 
@@ -73,7 +79,7 @@ Mientras el préstamo esté vigente, la sociedad entrega estados financieros tri
 
 El préstamo puede quedar por detrás de la deuda bancaria senior y en igualdad con los demás préstamos convertibles, por delante de toda deuda posterior, o por detrás de toda la deuda, con prioridad solo frente a los socios.
 
-Las cláusulas estándar regulan además la venta o salida a bolsa de la sociedad antes de la conversión (el inversor elige entre un múltiplo en efectivo o la conversión al techo) y los supuestos de incumplimiento.
+Las cláusulas estándar regulan además los supuestos de incumplimiento, las restricciones a la transmisión, la ausencia de derechos de socio antes de la conversión y las modificaciones acordadas por los Tenedores Mayoritarios.
 
 ## Qué suelen negociar las partes
 
@@ -84,19 +90,20 @@ La sociedad busca poca dilución, tiempo y flexibilidad; el inversor busca un bu
 - **Descuento:** 20 %.
 - **Ronda cualificada:** captación mínima de 1 millón.
 - **Conversión:** a la misma clase que los nuevos inversores.
+- **Venta antes de la conversión:** elección del inversor entre 1x en efectivo y conversión al techo.
 - **Amortización anticipada:** solo con consentimiento del inversor y prima.
 - **Información:** informes financieros trimestrales.
 - **Prelación:** subordinado a la deuda senior y en igualdad con los demás préstamos.
 
-La ausencia de techo favorece claramente a la sociedad; el reembolso en efectivo al vencimiento y la prohibición de amortizar anticipadamente favorecen al inversor. En intereses, la skill presenta el 5 % simple como estándar de mercado. Al vencimiento, dar al inversor la elección entre efectivo y conversión es la opción más próxima al centro.
+La ausencia de techo favorece claramente a la sociedad; el cobro de 2x en una venta, el reembolso en efectivo al vencimiento y la prohibición de amortizar anticipadamente favorecen al inversor. En intereses no hay opción neutral: el 5 % simple, que la skill presenta como estándar de mercado, es el más cercano al punto medio y se inclina ligeramente hacia la sociedad. Al vencimiento, dar al inversor la elección entre efectivo y conversión es la opción más próxima al centro.
 
 ## Jurisdicciones e idiomas disponibles en Dealroom
 
 Dealroom ofrece el préstamo convertible para **California**, **Inglaterra y Gales** y **España**, redactado en **inglés** o en **español**.
 
-- **España:** se estructura como préstamo convertible; la conversión en participaciones sociales es una ampliación de capital por compensación de créditos (art. 301 LSC) aprobada por la Junta General, con exclusión del derecho de suscripción preferente (art. 304 LSC) en lo necesario. El tipo de interés debe respetar la Ley Azcárate de 1908, la sociedad practica la retención sobre los intereses conforme a la LIRPF y los litigios se someten a los tribunales del domicilio social.
-- **Inglaterra y Gales:** se estructura como convertible loan note; la conversión se hace mediante emisión de nuevas acciones conforme a la Companies Act 2006, con sujeción a los derechos de suscripción preferente de su sección 561. Los intereses tributan en el Reino Unido.
-- **California:** ley y tribunales de California, renuncia al juicio con jurado y declaración de exención de las leyes de usura conforme a la sección 25118 del Corporations Code, en la medida aplicable. La skill recoge el límite de usura del 10 % para prestamistas no exentos.
+- **España:** se estructura como préstamo convertible; la conversión en participaciones sociales es una ampliación de capital por compensación de créditos (art. 301 LSC) aprobada por la Junta General con informe de los administradores. Como la ley exige que el crédito sea totalmente líquido y exigible, todas las opciones de conversión anticipan el vencimiento al momento de la conversión. Según la doctrina registral que cita la skill, en este aumento no nace el derecho de preferencia del art. 304 LSC, aunque la dilución abusiva sigue siendo impugnable. El tipo de interés debe respetar la Ley Azcárate de 1908, la sociedad practica la retención sobre los intereses conforme a la LIRPF y los litigios se someten a los tribunales del domicilio social.
+- **Inglaterra y Gales:** se estructura como convertible loan note; la conversión se hace mediante emisión de nuevas acciones conforme a la Companies Act 2006, con sujeción a los derechos de suscripción preferente de su sección 561, y la sociedad confirma que tiene autorización para emitirlas. Los intereses tributan en el Reino Unido y se mantiene la responsabilidad por fraude.
+- **California:** Derecho de California y tribunales del condado de San Francisco. El préstamo pretende acogerse a la exención de usura de la sección 25118 del Corporations Code cuando se cumplan sus requisitos; si no, rige el límite constitucional (el mayor entre el 10 % y cinco puntos sobre el tipo de descuento de la Reserva Federal de San Francisco). No incluye renuncia al jurado, que en California no es exigible; cualquiera de las partes puede pedir que resuelva un/a referee designado/a judicialmente.
 
 ## Errores frecuentes
 
@@ -105,4 +112,4 @@ Dealroom ofrece el préstamo convertible para **California**, **Inglaterra y Gal
 - **Fijar mal el umbral de la ronda cualificada.** Demasiado alto retrasa la conversión; demasiado bajo permite convertir en una ronda pequeña que no valida el precio.
 - **Ignorar la usura y la fiscalidad.** El tipo debe respetar los límites de usura, y el tipo cero puede generar imputación de intereses.
 - **Prescindir de los derechos de información.** El tenedor es acreedor y, en España, el derecho de información del socio (art. 196 LSC) solo se aplica tras la conversión.
-- **Olvidar los acuerdos societarios.** La conversión exige el acuerdo de la Junta General y la exclusión del derecho de suscripción preferente; crear una clase paralela de participaciones exige además modificar los estatutos.
+- **Olvidar los trámites societarios.** La conversión exige el acuerdo de la Junta General, el informe de los administradores y el vencimiento anticipado del préstamo; crear una clase paralela de participaciones exige además modificar los estatutos.

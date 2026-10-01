@@ -11,7 +11,7 @@ faq:
   - q: "¿A quién pertenece el trabajo que crea un/a consultor/a autónomo/a?"
     a: "Salvo cesión por escrito, la propiedad intelectual creada por un/a profesional independiente pertenece a quien la crea, tanto en Estados Unidos como en el Reino Unido. Por eso el contrato necesita una cláusula expresa: cesión total al cliente, licencia exclusiva al cliente o licencia no exclusiva manteniendo el/la consultor/a la titularidad."
   - q: "¿Puede un contrato de consultoría incluir un pacto de no competencia?"
-    a: "En California, la no competencia impuesta a un/a profesional independiente es nula conforme a la sección 16600 del Business and Professions Code, por lo que Dealroom no ofrece esa opción allí. En Inglaterra y Gales solo es exigible si es razonable y necesaria para proteger un interés empresarial legítimo. Lo habitual es optar por una cláusula de no captación."
+    a: "En California, la no competencia impuesta a un/a profesional independiente es nula conforme a la sección 16600 del Business and Professions Code, por lo que Dealroom no ofrece esa opción allí. La skill trata igual en California los pactos de no captación, de modo que allí solo quedan la confidencialidad y la protección de los secretos empresariales. En Inglaterra y Gales solo es exigible si es razonable y necesaria para proteger un interés empresarial legítimo; lo habitual es optar por una cláusula de no captación."
   - q: "¿Sirve este contrato para un autónomo en España?"
     a: "No. Este contrato se rige por el Derecho de California o de Inglaterra y Gales. Para un encargo sujeto a Derecho español, con alta en el RETA, retención de IRPF y régimen TRADE, Dealroom ofrece el contrato de prestación de servicios."
   - q: "¿En qué idiomas puede redactarse?"
@@ -31,7 +31,7 @@ Firman dos partes:
 - **El Cliente**, una sociedad que encarga y paga los servicios.
 - **El/La Consultor/a**, que puede ser una persona física o una sociedad, y que presta los servicios.
 
-Las partes completan los datos del encargo: descripción de los servicios, horas mensuales en caso de retención, tarifa por hora, número máximo de horas, porcentaje de anticipo, duración inicial en meses (12 por defecto), fecha de inicio, ámbito geográfico de una posible no competencia, porcentaje de penalización por terminación anticipada y múltiplo de responsabilidad (2 por defecto).
+Las partes completan los datos del encargo: descripción de los servicios, horas mensuales en caso de retención, tarifa por hora y su divisa (USD por defecto), número máximo de horas, porcentaje de anticipo, duración inicial en meses (12 por defecto), fecha de inicio, ámbito geográfico de una posible no competencia, porcentaje de penalización por terminación anticipada y múltiplo de responsabilidad (2 por defecto).
 
 ## Cláusulas principales
 
@@ -57,7 +57,7 @@ Confidencialidad mutua con las excepciones habituales y 3 años de vigencia tras
 
 ### No competencia y no captación
 
-El/La consultor/a puede comprometerse a no captar empleados/as ni clientes del cliente durante 12 meses, quedando libre para trabajar con competidores; aceptar no competencia y no captación durante 6 meses tras el encargo; o no asumir ninguna restricción posterior aparte de la confidencialidad.
+El/La consultor/a puede comprometerse a no captar empleados/as ni clientes del cliente durante 12 meses, quedando libre para trabajar con competidores; aceptar no competencia y no captación durante 6 meses tras el encargo; o no asumir ninguna restricción posterior aparte de la confidencialidad. En California solo se ofrece esta última opción.
 
 ### Terminación
 
@@ -69,7 +69,7 @@ Responsabilidad limitada a los honorarios pagados en los 12 meses anteriores a l
 
 ### Estatus de profesional independiente
 
-Una declaración estándar de independencia; una cláusula reforzada que aborda control, sustitución, integración en el negocio e independencia económica, con indemnidad mutua si la relación se declara laboral; o una cláusula centrada en el derecho del/de la consultor/a a enviar un sustituto cualificado, que la skill describe como indicio clave según IR35.
+Una declaración estándar de independencia; una cláusula reforzada que aborda control, sustitución, integración en el negocio e independencia económica, con indemnidad mutua si la relación se declara laboral; o una cláusula centrada en el derecho del/de la consultor/a a enviar un sustituto cualificado, que la skill describe como indicio clave según IR35. Solo para Inglaterra y Gales, una cuarta opción reparte el riesgo fiscal de IR35: el cliente emite la Status Determination Statement antes del primer pago y responde a cualquier discrepancia en 45 días, y las partes pactan quién asume las cotizaciones patronales (employer National Insurance) y el apprenticeship levy si el encargo queda dentro de esas normas.
 
 Las cláusulas estándar regulan además el nivel de calidad exigible, el seguro de responsabilidad profesional, los gastos (a cargo del/de la consultor/a salvo pacto) y la subcontratación con aviso previo al cliente.
 
@@ -87,22 +87,22 @@ Cuando las partes no se ponen de acuerdo, Dealroom propone las posiciones equili
 - **Confidencialidad:** mutua, estándar o reforzada.
 - **Terminación:** cualquiera de las partes con 30 días de preaviso y pago del trabajo realizado.
 - **Responsabilidad:** límite en los honorarios pagados o en un múltiplo de ellos.
-- **Estatus:** la declaración estándar de independencia.
+- **Estatus:** la declaración estándar de independencia o, en Inglaterra y Gales, el reparto del riesgo de IR35.
 
-En las restricciones posteriores no hay una opción totalmente neutral; la no captación por sí sola es la más cercana al punto medio.
+En las restricciones posteriores no hay una opción totalmente neutral; en Inglaterra y Gales, la no captación por sí sola es la más cercana al punto medio.
 
 ## Jurisdicciones e idiomas que admite Dealroom
 
 Dealroom redacta este contrato conforme al Derecho de **California** y de **Inglaterra y Gales**, en **inglés** o en **español**.
 
-- **California:** el contrato recoge que la condición de profesional independiente debe superar el test ABC del artículo 2775 del Labor Code (AB5), y los litigios se someten a los tribunales de un condado de California. La opción de no competencia no está disponible.
+- **California:** el contrato recoge que la condición de profesional independiente debe superar el test ABC del artículo 2775 del Labor Code (AB5), y los litigios se someten a los tribunales de un condado de California. No están disponibles ni la no competencia ni la no captación, y la opción de IR35 no se aplica.
 - **Inglaterra y Gales:** el contrato se remite a las normas IR35 y a la Status Determination Statement del cliente, mantiene la responsabilidad por muerte o lesiones causadas por negligencia y por fraude conforme a la Unfair Contract Terms Act 1977, y aplica los intereses legales de demora cuando proceda.
 
 ## Errores frecuentes
 
 - **Confiar solo en la denominación.** Llamar a alguien profesional independiente no es decisivo. Si en la práctica el cliente controla cómo y cuándo se trabaja, la relación puede recalificarse como laboral.
 - **No ceder la propiedad intelectual.** El trabajo de un/a profesional independiente no suele ser "work made for hire" en Estados Unidos, y en el Reino Unido la propiedad intelectual corresponde a quien la crea. Sin cláusula escrita, el cliente puede no ser titular de lo que ha pagado.
-- **Pactar no competencia en California.** Es nula para profesionales independientes. Debe recurrirse a la no captación y a la confidencialidad.
+- **Pactar no competencia o no captación en California.** La skill trata ambas como nulas para profesionales independientes. Debe recurrirse a la confidencialidad y a la protección de los secretos empresariales.
 - **Elegir fórmulas abiertas sin valorarlas.** Un encargo indefinido o con renovación automática, una tarifa por hora sin límite y una retención amplia pueden debilitar la independencia.
 - **Pactar un derecho de sustitución solo sobre el papel.** La skill advierte que el/la consultor/a debe poder ejercerlo realmente para que resulte creíble.
 - **Responsabilidad ilimitada para una consultora pequeña.** Supone una exposición sin límite y exige un seguro de responsabilidad profesional acorde.

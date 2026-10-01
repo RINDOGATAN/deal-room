@@ -69,11 +69,11 @@ Cuánto duran las obligaciones de confidencialidad tras la extinción del contra
 
 ### Requisitos de seguro
 
-Qué cobertura debe mantener el Prestador: básica (sin mínimos), estándar (responsabilidad civil general de 1 millón de dólares por siniestro y 2 millones en total, más 1 millón de responsabilidad profesional) o reforzada (2 y 5 millones, más 2 de responsabilidad profesional).
+Qué cobertura debe mantener el Prestador: básica (sin mínimos), estándar (responsabilidad civil general de 1 millón por siniestro y 2 millones en total, más 1 millón de responsabilidad profesional) o reforzada (2 y 5 millones, más 2 de responsabilidad profesional). Los importes se expresan en la moneda de la ley aplicable: dólares estadounidenses con Derecho de California, euros con Derecho español y libras esterlinas con Derecho de Inglaterra y Gales.
 
 ### Procedimiento de órdenes de cambio
 
-Cómo se aprueban los cambios de alcance: orden de cambio formal firmada por ambas partes; aprobación por correo electrónico, documentada en cinco días hábiles; o un sistema por umbral (los cambios inferiores a 5.000 dólares o al 5% del valor de la Orden de Trabajo pueden aprobarse por correo electrónico).
+Cómo se aprueban los cambios de alcance: orden de cambio formal firmada por ambas partes; aprobación por correo electrónico, documentada en cinco días hábiles; o un sistema por umbral (los cambios inferiores a 5.000 en la misma moneda o al 5% del valor de la Orden de Trabajo pueden aprobarse por correo electrónico).
 
 ### No competencia y no elusión
 
