@@ -82,6 +82,7 @@ export async function POST(req: NextRequest) {
       mode: "payment",
       priceId,
       stripeCustomerId,
+      currency,
       // The credits belong to the key's customer; the key is noted for the
       // record only (any key of the customer spends from the balance).
       metadata: {
@@ -90,6 +91,7 @@ export async function POST(req: NextRequest) {
         apiKeyId: auth.apiKey.id,
         credits: String(CREDITS_PER_PACK),
       },
+      invoiceDescription: `Dealroom credit pack, ${CREDITS_PER_PACK} contracts`,
       successUrl: returnUrl ?? `${base}/docs/agent-api?credits=added`,
       cancelUrl: returnUrl ?? `${base}/docs/agent-api`,
     });

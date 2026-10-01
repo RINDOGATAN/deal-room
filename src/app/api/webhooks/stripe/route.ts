@@ -496,6 +496,10 @@ async function handleInvoicePaymentSucceeded(invoice: Stripe.Invoice) {
 }
 
 async function handlePaymentFailed(invoice: Stripe.Invoice) {
+  // Only subscription invoices: the invoices issued for pay-per-contract
+  // checkouts are created already paid and must never suspend anything.
+  if (!invoice.parent?.subscription_details?.subscription) return;
+
   const stripeCustomerId =
     typeof invoice.customer === "string"
       ? invoice.customer

@@ -67,6 +67,7 @@ describe("agent credit checkout", () => {
         mode: "payment",
         priceId: "price_pack_eur",
         metadata: { kind: "credits", customerId: "cust_1", apiKeyId: "key_1", credits: "10" },
+        invoiceDescription: "Dealroom credit pack, 10 contracts",
       }),
     );
   });

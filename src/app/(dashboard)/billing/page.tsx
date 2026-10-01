@@ -7,7 +7,8 @@
  *
  * Pay per contract (2026-09-29): each contract is paid on its deal page,
  * when it is downloaded or signed. This page explains the price, opens the
- * Stripe billing portal for receipts, and lists any earlier per-skill
+ * Stripe billing portal for receipts, lists the paid contracts and credit
+ * packs with their invoice links, and lists any earlier per-skill
  * subscriptions so their holders can cancel them. There is no plan (the
  * monthly plan was discarded before launch). Amounts come from
  * `PRICE_DISPLAY_CONTRACT` or the Stripe price, never from code.
@@ -16,9 +17,10 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Loader2 } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
+import { formatAmount } from "@/lib/contract-billing";
 import { toBillingCurrency } from "@/lib/currency";
 import { useCurrencyChoice } from "@/hooks/useCurrency";
 import { CurrencySwitch } from "@/components/pricing/CurrencySwitch";
@@ -41,6 +43,8 @@ export default function BillingPage() {
   const { data: pricing, isLoading } = trpc.billing.getContractPricing.useQuery();
   const choice = useCurrencyChoice();
   const { data: status } = trpc.billing.getSubscriptionStatus.useQuery();
+  const { data: payments } = trpc.billing.listPayments.useQuery();
+  const locale = useLocale();
 
   const cancelMutation = trpc.billing.cancelSubscription.useMutation({
     onSuccess: () => {
@@ -111,6 +115,77 @@ export default function BillingPage() {
           </button>
         )}
       </section>
+
+      {payments && (
+        <section className="card-brutal space-y-3">
+          <h2 className="text-lg font-semibold">{t("paymentsTitle")}</h2>
+          {payments.contracts.length === 0 && payments.packs.length === 0 ? (
+            <p className="text-sm text-muted-foreground">{t("paymentsEmpty")}</p>
+          ) : (
+            <ul className="divide-y divide-border">
+              {[
+                ...payments.contracts.map((c) => ({
+                  id: c.id,
+                  paidAt: c.paidAt,
+                  label: t("paymentContract", { name: c.dealName }),
+                  amount: c.amount != null && c.currency ? formatAmount(c.amount, c.currency, locale) : null,
+                  refunded: c.refunded,
+                  invoice: c.invoice,
+                })),
+                ...payments.packs.map((p) => ({
+                  id: p.id,
+                  paidAt: p.paidAt,
+                  label: t("paymentPack", { credits: p.credits }),
+                  amount: null,
+                  refunded: false,
+                  invoice: p.invoice,
+                })),
+              ]
+                .sort((a, b) => b.paidAt.localeCompare(a.paidAt))
+                .map((row) => (
+                  <li key={row.id} className="flex flex-wrap items-center justify-between gap-2 py-2 text-sm">
+                    <span>
+                      {row.label}
+                      <span className="text-muted-foreground">
+                        {" · "}
+                        {new Date(row.paidAt).toLocaleDateString(locale === "es" ? "es-ES" : "en-US")}
+                        {row.amount && ` · ${row.amount}`}
+                        {row.refunded && ` · ${t("paymentRefunded")}`}
+                      </span>
+                    </span>
+                    {row.invoice?.hostedInvoiceUrl || row.invoice?.invoicePdf ? (
+                      <span className="flex gap-3">
+                        {row.invoice.hostedInvoiceUrl && (
+                          <a
+                            href={row.invoice.hostedInvoiceUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-primary underline underline-offset-2"
+                          >
+                            {t("invoiceView")}
+                            {row.invoice.number && ` ${row.invoice.number}`}
+                          </a>
+                        )}
+                        {row.invoice.invoicePdf && (
+                          <a
+                            href={row.invoice.invoicePdf}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-primary underline underline-offset-2"
+                          >
+                            {t("invoicePdf")}
+                          </a>
+                        )}
+                      </span>
+                    ) : (
+                      <span className="text-muted-foreground">{t("invoiceNone")}</span>
+                    )}
+                  </li>
+                ))}
+            </ul>
+          )}
+        </section>
+      )}
 
       {legacy.length > 0 && (
         <section className="card-brutal space-y-3">

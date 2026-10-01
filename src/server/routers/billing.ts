@@ -6,7 +6,7 @@ import { TRPCError } from "@trpc/server";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { headers } from "next/headers";
 import { features } from "@/config/features";
-import { cancelSubscription } from "@/lib/stripe";
+import { cancelSubscription, getInvoiceLinksForSessions, type InvoiceLinks } from "@/lib/stripe";
 import { displayPrice, preferredCurrency, type BillingCurrency } from "@/lib/contract-billing";
 import { resolveVisitorCurrencyFromHeaders, toBillingCurrency } from "@/lib/currency";
 import { getPriceTable } from "../services/billing/pricing";
@@ -70,6 +70,77 @@ export const billingRouter = createTRPCRouter({
       if (access.paid) return { billing: true, paid: true, via: access.via };
       return { billing: true, paid: false, via: null };
     }),
+
+  /**
+   * The person's paid contracts and the account's credit packs, newest
+   * first, each with its invoice links. The links are read from Stripe on
+   * demand through the checkout session id; payments made before invoices
+   * were switched on have none.
+   */
+  listPayments: protectedProcedure.query(async ({ ctx }) => {
+    if (!features.stripeEnabled) return { contracts: [], packs: [] };
+    const email = ctx.session.user.email;
+    const customer = email
+      ? await ctx.prisma.customer.findFirst({
+          where: { email: { equals: email, mode: "insensitive" } },
+          select: { id: true },
+        })
+      : null;
+
+    const contracts = await ctx.prisma.dealPayment.findMany({
+      where: {
+        kind: "CONTRACT",
+        stripeCheckoutSessionId: { not: null },
+        OR: [{ payerUserId: ctx.session.user.id }, ...(customer ? [{ customerId: customer.id }] : [])],
+      },
+      orderBy: { paidAt: "desc" },
+      take: 20,
+      select: {
+        id: true,
+        dealRoomId: true,
+        status: true,
+        amount: true,
+        currency: true,
+        paidAt: true,
+        stripeCheckoutSessionId: true,
+        dealRoom: { select: { name: true } },
+      },
+    });
+    const packs = customer
+      ? await ctx.prisma.customerCreditEntry.findMany({
+          where: { customerId: customer.id, reason: "PURCHASE", stripeCheckoutSessionId: { not: null } },
+          orderBy: { createdAt: "desc" },
+          take: 20,
+          select: { id: true, delta: true, createdAt: true, stripeCheckoutSessionId: true },
+        })
+      : [];
+
+    const [contractInvoices, packInvoices] = await Promise.all([
+      getInvoiceLinksForSessions(contracts.map((c) => c.stripeCheckoutSessionId)),
+      getInvoiceLinksForSessions(packs.map((p) => p.stripeCheckoutSessionId)),
+    ]);
+    const links = (i: InvoiceLinks | null) =>
+      i ? { number: i.number, hostedInvoiceUrl: i.hostedInvoiceUrl, invoicePdf: i.invoicePdf } : null;
+
+    return {
+      contracts: contracts.map((c, i) => ({
+        id: c.id,
+        dealRoomId: c.dealRoomId,
+        dealName: c.dealRoom.name,
+        refunded: c.status === "REVOKED",
+        amount: c.amount,
+        currency: c.currency,
+        paidAt: c.paidAt.toISOString(),
+        invoice: links(contractInvoices[i]),
+      })),
+      packs: packs.map((p, i) => ({
+        id: p.id,
+        credits: p.delta,
+        paidAt: p.createdAt.toISOString(),
+        invoice: links(packInvoices[i]),
+      })),
+    };
+  }),
 
   getSubscriptionStatus: protectedProcedure.query(async ({ ctx }) => {
     const email = ctx.session.user.email;
