@@ -854,7 +854,7 @@
     ]
   },
   {
-    "skillId": "com.nel.skills.safe-agreement",
+    "skillId": "com.nel.skills.safe",
     "slug": "safe-agreement",
     "displayName": {
       "en": "SAFE Agreement",
