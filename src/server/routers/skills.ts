@@ -7,6 +7,7 @@ import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
 import { features } from "@/config/features";
 import { LIVE_ROWS } from "@/lib/clause-retirement";
+import { localizedValues } from "@/lib/contract-search";
 
 export const skillsRouter = createTRPCRouter({
   // List all available contract templates with licensing info
@@ -195,6 +196,13 @@ export const skillsRouter = createTRPCRouter({
         hasAccess: features.allSkillsFree ? true : !requiresLicense || !!entitlement,
         entitledJurisdictions: entitlement?.jurisdictions || [],
         expiresAt: entitlement?.expiresAt || null,
+        // Every language's name, description and category, so the wizard
+        // search finds "NDA" or "confidencialidad" whatever the UI language.
+        search: {
+          names: [t.displayName, ...localizedValues(t.displayNameLocalized)],
+          descriptions: [t.description, ...localizedValues(t.descriptionLocalized)],
+          categories: [t.category, ...localizedValues(t.categoryLocalized)],
+        },
       };
     });
   }),

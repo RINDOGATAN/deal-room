@@ -12,6 +12,7 @@
 
 - [Homepage](https://dealroom.todo.law): Platform overview, feature descriptions, how it works
 - [Pricing](https://dealroom.todo.law/pricing): Pay per contract for people and agents, what is free, and the kit
+- [Contract guides](https://dealroom.todo.law/contracts): Plain-language guide to every contract type Dealroom drafts and negotiates (Spanish: https://dealroom.todo.law/es/contracts)
 - [Documentation Hub](https://dealroom.todo.law/docs): Full platform documentation
 - [How It Works](https://dealroom.todo.law/docs/how-it-works): Step-by-step negotiation workflow
 - [Compromise Algorithm](https://dealroom.todo.law/docs/compromise): Weighted compromise methodology
@@ -23,6 +24,47 @@
 - [Local Deployment](https://dealroom.todo.law/docs/local-deployment): Self-hosted deployment guide
 - [Marketplace](https://dealroom.todo.law/marketplace): Browse the contract skills (all included in the per-contract price on hosted Dealroom)
 - [Premium skills for the kit](https://todo.law/marketplace): 60 a year each in the kit (in your currency), for your own instance
+
+## Contract Guides
+
+One page per contract type, in English and Castilian Spanish: what the contract is, who signs it, the key clauses, what the two sides usually negotiate and the middle ground Dealroom proposes, supported jurisdictions, common mistakes, and how to create it in Dealroom or through the agent API (`GET /api/v1/agent/templates?q=nda`, MCP `list_templates` with `query`).
+
+- [Non-disclosure agreement (NDA)](https://dealroom.todo.law/contracts/nda) · [ES: Acuerdo de confidencialidad (NDA)](https://dealroom.todo.law/es/contracts/nda)
+- [Master services agreement (MSA)](https://dealroom.todo.law/contracts/master-services-agreement) · [ES: Contrato marco de prestación de servicios (MSA)](https://dealroom.todo.law/es/contracts/master-services-agreement)
+- [SaaS subscription agreement](https://dealroom.todo.law/contracts/saas-agreement) · [ES: Contrato de suscripción SaaS](https://dealroom.todo.law/es/contracts/saas-agreement)
+- [Software development agreement](https://dealroom.todo.law/contracts/software-development-agreement) · [ES: Contrato de desarrollo de software](https://dealroom.todo.law/es/contracts/software-development-agreement)
+- [Technology license agreement](https://dealroom.todo.law/contracts/technology-license-agreement) · [ES: Contrato de licencia de tecnología](https://dealroom.todo.law/es/contracts/technology-license-agreement)
+- [Joint venture agreement](https://dealroom.todo.law/contracts/joint-venture-agreement) · [ES: Contrato de joint venture](https://dealroom.todo.law/es/contracts/joint-venture-agreement)
+- [Data processing agreement (DPA)](https://dealroom.todo.law/contracts/data-processing-agreement) · [ES: Contrato de encargo del tratamiento de datos](https://dealroom.todo.law/es/contracts/data-processing-agreement)
+- [Privacy notice (privacy policy)](https://dealroom.todo.law/contracts/privacy-notice) · [ES: Aviso de privacidad (política de privacidad)](https://dealroom.todo.law/es/contracts/privacy-notice)
+- [HIPAA business associate agreement (BAA)](https://dealroom.todo.law/contracts/business-associate-agreement) · [ES: Acuerdo de socio comercial de la HIPAA (BAA)](https://dealroom.todo.law/es/contracts/business-associate-agreement)
+- [Data licensing agreement](https://dealroom.todo.law/contracts/data-licensing-agreement) · [ES: Contrato de licencia de datos](https://dealroom.todo.law/es/contracts/data-licensing-agreement)
+- [Consulting agreement (independent contractor)](https://dealroom.todo.law/contracts/consulting-agreement) · [ES: Contrato de consultoría (profesional independiente)](https://dealroom.todo.law/es/contracts/consulting-agreement)
+- [Service agreement under Spanish law (contrato de prestación de servicios)](https://dealroom.todo.law/contracts/services-agreement-spain) · [ES: Contrato de prestación de servicios profesionales](https://dealroom.todo.law/es/contracts/services-agreement-spain)
+- [Employment agreement](https://dealroom.todo.law/contracts/employment-agreement) · [ES: Contrato de trabajo (California e Inglaterra y Gales)](https://dealroom.todo.law/es/contracts/employment-agreement)
+- [Employment contract under Spanish law (contrato laboral)](https://dealroom.todo.law/contracts/employment-contract-spain) · [ES: Contrato laboral (contrato de trabajo en España)](https://dealroom.todo.law/es/contracts/employment-contract-spain)
+- [Intellectual property assignment agreement](https://dealroom.todo.law/contracts/ip-assignment-agreement) · [ES: Contrato de cesión de propiedad intelectual](https://dealroom.todo.law/es/contracts/ip-assignment-agreement)
+- [IP assignment agreement under Spanish law (cesión de propiedad intelectual)](https://dealroom.todo.law/contracts/ip-assignment-spain) · [ES: Contrato de cesión de derechos de propiedad intelectual](https://dealroom.todo.law/es/contracts/ip-assignment-spain)
+- [Advisory agreement](https://dealroom.todo.law/contracts/advisory-agreement) · [ES: Contrato de asesoramiento](https://dealroom.todo.law/es/contracts/advisory-agreement)
+- [Certificate of incorporation (Delaware C corporation)](https://dealroom.todo.law/contracts/delaware-certificate-of-incorporation) · [ES: Certificado de constitución (C Corporation de Delaware)](https://dealroom.todo.law/es/contracts/delaware-certificate-of-incorporation)
+- [Founders agreement](https://dealroom.todo.law/contracts/founders-agreement) · [ES: Acuerdo de fundadores](https://dealroom.todo.law/es/contracts/founders-agreement)
+- [Venture capital term sheet](https://dealroom.todo.law/contracts/term-sheet) · [ES: Term sheet (carta de intenciones de inversión)](https://dealroom.todo.law/es/contracts/term-sheet)
+- [Convertible note](https://dealroom.todo.law/contracts/convertible-note) · [ES: Préstamo convertible (nota convertible)](https://dealroom.todo.law/es/contracts/convertible-note)
+- [Seed investment agreement](https://dealroom.todo.law/contracts/seed-investment-agreement) · [ES: Pacto de inversión](https://dealroom.todo.law/es/contracts/seed-investment-agreement)
+- [Shareholders agreement](https://dealroom.todo.law/contracts/shareholders-agreement) · [ES: Pacto de accionistas](https://dealroom.todo.law/es/contracts/shareholders-agreement)
+- [Spanish shareholders' agreement (pacto de socios)](https://dealroom.todo.law/contracts/shareholders-agreement-spain) · [ES: Pacto de socios para sociedad limitada](https://dealroom.todo.law/es/contracts/shareholders-agreement-spain)
+- [Equity incentive plan](https://dealroom.todo.law/contracts/equity-incentive-plan) · [ES: Plan de incentivos en capital](https://dealroom.todo.law/es/contracts/equity-incentive-plan)
+- [Advertising insertion order (IO)](https://dealroom.todo.law/contracts/advertising-insertion-order) · [ES: Orden de inserción publicitaria](https://dealroom.todo.law/es/contracts/advertising-insertion-order)
+- [Affiliate and referral program agreement](https://dealroom.todo.law/contracts/affiliate-agreement) · [ES: Contrato de programa de afiliados y referidos](https://dealroom.todo.law/es/contracts/affiliate-agreement)
+- [Influencer marketing agreement](https://dealroom.todo.law/contracts/influencer-marketing-agreement) · [ES: Contrato de marketing con influencers](https://dealroom.todo.law/es/contracts/influencer-marketing-agreement)
+- [White-label and reseller agreement](https://dealroom.todo.law/contracts/reseller-agreement) · [ES: Contrato de marca blanca y distribución](https://dealroom.todo.law/es/contracts/reseller-agreement)
+- [Board of directors minutes (Spain)](https://dealroom.todo.law/contracts/board-minutes-spain) · [ES: Acta de consejo de administración](https://dealroom.todo.law/es/contracts/board-minutes-spain)
+- [General meeting minutes (Spain)](https://dealroom.todo.law/contracts/general-meeting-minutes-spain) · [ES: Acta de junta general](https://dealroom.todo.law/es/contracts/general-meeting-minutes-spain)
+- [Phantom shares plan (Spain)](https://dealroom.todo.law/contracts/phantom-shares-plan) · [ES: Marco de phantom shares](https://dealroom.todo.law/es/contracts/phantom-shares-plan)
+- [Individual phantom shares grant (Spain)](https://dealroom.todo.law/contracts/phantom-shares-grant) · [ES: Asignación individual de phantom shares](https://dealroom.todo.law/es/contracts/phantom-shares-grant)
+- [Residential lease (Spain)](https://dealroom.todo.law/contracts/residential-lease-spain) · [ES: Contrato de arrendamiento de vivienda](https://dealroom.todo.law/es/contracts/residential-lease-spain)
+- [Assured periodic tenancy agreement](https://dealroom.todo.law/contracts/assured-periodic-tenancy) · [ES: Assured periodic tenancy (Inglaterra y Gales)](https://dealroom.todo.law/es/contracts/assured-periodic-tenancy)
+- [California residential lease agreement](https://dealroom.todo.law/contracts/california-residential-lease) · [ES: Contrato de alquiler de vivienda en California](https://dealroom.todo.law/es/contracts/california-residential-lease)
 
 ## What Dealroom Does
 

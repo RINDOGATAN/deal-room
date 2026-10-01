@@ -37,13 +37,18 @@ export async function GET() {
       {
         name: "list_templates",
         description:
-          "List available contract templates with clauses, options, and bias values. Use this to understand which contract types are available and what options exist for each clause.",
+          "List available contract templates with clauses, options, and bias values. Use this to understand which contract types are available and what options exist for each clause. Pass `query` to search by code, abbreviation or name in English or Spanish (\"nda\", \"dpa\", \"hipaa\", \"confidencialidad\"), best match first.",
         inputSchema: {
           type: "object",
-          properties: {},
+          properties: {
+            query: {
+              type: "string",
+              description: "Optional search: contract code, abbreviation or name (English or Spanish)",
+            },
+          },
           required: [],
         },
-        endpoint: { method: "GET", url: `${baseUrl}/templates` },
+        endpoint: { method: "GET", url: `${baseUrl}/templates?q={query}` },
         requiredScopes: ["templates:read"],
       },
       {

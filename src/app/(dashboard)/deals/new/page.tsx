@@ -54,6 +54,7 @@ import { PromoBanner } from "@/components/PromoBanner";
 import { PilotCapNotice } from "@/components/pilot/PilotNotice";
 import { EnableFeatureModal } from "@/components/premium/enable-feature-modal";
 import { marketplaceSkillUrl } from "@/lib/marketplace";
+import { searchContracts, type SearchableContract } from "@/lib/contract-search";
 
 const contractIcons: Record<string, typeof FileText> = {
   NDA: Shield,
@@ -96,6 +97,18 @@ interface TemplateInfo {
   entitledJurisdictions: string[];
   expiresAt: Date | null;
   presets: { id: string; name: string; description: string }[];
+  search?: { names: (string | null)[]; descriptions: (string | null)[]; categories: (string | null)[] };
+}
+
+/** What the shared contract search reads from a family (all its templates, every language). */
+function familySearchable(family: TemplateFamily): SearchableContract {
+  return {
+    codes: family.templates.map((t) => t.contractType),
+    families: [family.family, ...family.templates.map((t) => t.templateFamily)],
+    names: [family.displayName, ...family.templates.flatMap((t) => [t.displayName, ...(t.search?.names ?? [])])],
+    descriptions: family.templates.flatMap((t) => [t.description, ...(t.search?.descriptions ?? [])]),
+    categories: family.templates.flatMap((t) => [t.category, ...(t.search?.categories ?? [])]),
+  };
 }
 
 type DealMode = "NEGOTIATION" | "SOLO";
@@ -345,14 +358,7 @@ export default function NewDealPage() {
     if (selectedCategory) {
       result = result.filter(f => f.category === selectedCategory);
     }
-    if (searchQuery.trim()) {
-      const q = searchQuery.toLowerCase();
-      result = result.filter(f =>
-        f.displayName.toLowerCase().includes(q) ||
-        f.description?.toLowerCase().includes(q)
-      );
-    }
-    return result;
+    return searchContracts(searchQuery, result, familySearchable);
   }, [templateFamilies, selectedCategory, searchQuery]);
 
   // Reset selection when filter hides the currently selected family

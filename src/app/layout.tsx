@@ -92,7 +92,9 @@ export default async function RootLayout({
   const messages = await getMessages();
 
   return (
-    <html lang={locale} data-brand={brand.id}>
+    // suppressHydrationWarning: the prerendered Spanish contract pages set
+    // `lang` from their URL before hydration (ContractsShell).
+    <html lang={locale} data-brand={brand.id} suppressHydrationWarning>
       <head>
         <link rel="dns-prefetch" href="https://t.sealmetrics.com" />
         <script async src="https://t.sealmetrics.com/t.js?id=todolaw" />

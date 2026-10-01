@@ -35,6 +35,7 @@
     "contractInSpanish": "Contrato en español"
   },
   "nav": {
+    "contracts": "Contratos",
     "myDeals": "Mis Acuerdos",
     "newDeal": "Nuevo Acuerdo",
     "launch": "Lanzar",
@@ -1522,6 +1523,7 @@
     "agentsHeld": "Los créditos pertenecen a la cuenta de cliente. Todas las claves API de la cuenta consumen del mismo saldo, y rotar o revocar una clave no hace perder ningún crédito.",
     "agentsApi": "El saldo y las compras están disponibles en la API de agentes y por MCP:",
     "agentsDocsLink": "Consultar la documentación de la API de agentes",
+    "contractsLink": "Ver cada tipo de contrato, explicado",
     "freeTitle": "Qué es gratis",
     "freeDrafting": "Redactar un contrato.",
     "freeNegotiating": "Negociarlo con la otra parte.",
@@ -1560,6 +1562,8 @@
     "sectionAgentPrepDesc": "Prepara tu organización para contratos negociados por agentes: redacta políticas, configura playbooks y define la resolución de disputas.",
     "sectionPricingTitle": "Precios",
     "sectionPricingDesc": "Redactar y negociar es gratis; cada contrato se paga una sola vez, tanto por personas como por agentes.",
+    "sectionContractsTitle": "Guías de contratos",
+    "sectionContractsDesc": "Cada tipo de contrato que ofrece Dealroom, explicado: qué es, quién lo firma, sus cláusulas principales y lo que las partes suelen negociar.",
     "quickStartHeading": "Inicio Rápido",
     "quickStartIntro": "¿Primera vez en Dealroom? Así funciona una negociación típica:",
     "step1Label": "Crear una operación",

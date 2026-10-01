@@ -9,6 +9,19 @@ history was not tracked per-release and lives only in git.
 
 ## [Unreleased]
 
+### Added
+- **Contract search and public contract guides (2026-10-01).** One contract
+  matcher (`src/lib/contract-search.ts`) for the new-deal wizard, the
+  marketplace and the agent template listing (`GET /api/v1/agent/templates?q=`,
+  MCP `list_templates` `query`): codes, an English and Castilian alias table,
+  acronyms of display names, names in every language, ranked. Public guides
+  at `/contracts/<slug>` and `/es/contracts/<slug>` (one per catalogue
+  contract type, prerendered, wording in `content/contracts/*.md`), with
+  hreflang alternates, Article/FAQPage/BreadcrumbList and ItemList JSON-LD,
+  a generated `/sitemap.xml` (replaces `public/sitemap.xml`), llms.txt
+  entries and "Contracts" links from the landing, the public header, the
+  docs index and /pricing. Sign-in honours a same-site `?next=` path.
+
 ### Changed
 - **No friction (2026-10-01).** Checkout asks for a card and nothing else (no
   billing address, tax id or invoice; the payment provider's receipt is the
