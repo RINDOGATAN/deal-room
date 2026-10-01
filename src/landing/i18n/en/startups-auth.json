@@ -8,7 +8,5 @@
   "login.magicLink": "Send magic link",
   "login.newHere": "New here? Sign up",
   "or": "or",
-  "continueWithGoogle": "Continue with Google",
-  "caution.text": "Hosted Dealroom comes with no contractual safeguards. Do not enter privileged or confidential information. For that,",
-  "caution.run": "run your own instance"
+  "continueWithGoogle": "Continue with Google"
 }

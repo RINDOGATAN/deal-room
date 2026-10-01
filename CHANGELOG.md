@@ -10,6 +10,16 @@ history was not tracked per-release and lives only in git.
 ## [Unreleased]
 
 ### Changed
+- **No friction (2026-10-01).** Checkout asks for a card and nothing else (no
+  billing address, tax id or invoice; the payment provider's receipt is the
+  record, no tax calculated); the invoice links on `/billing` and
+  `GET /api/v1/agent/credits/invoices` are removed, as are the
+  "sold to businesses / prices exclude VAT" sentences. New York is no longer
+  a general governing-law option in the wizard (listed only for a skill
+  tagged NEW_YORK). Footers keep Privacy Policy, Terms of Service and How it
+  works, with only the copyright notice below. The hosted caution about
+  confidential information is removed everywhere (banner, sign-up, new-deal
+  and launch flows, pricing question, llms.txt, README).
 - **The hosted service is free, with limits per account.** When the build runs as
   dealroom.todo.law (`VERCEL_ENV=production`, or `AUTH_COOKIE_DOMAIN=.todo.law`)
   every skill is available to every account and nothing is sold; Stripe is off

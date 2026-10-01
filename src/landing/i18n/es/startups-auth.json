@@ -8,7 +8,5 @@
   "login.magicLink": "Enviar enlace mágico",
   "login.newHere": "¿Primera vez? Regístrate",
   "or": "o",
-  "continueWithGoogle": "Continuar con Google",
-  "caution.text": "Dealroom alojado no ofrece garantías contractuales. No introduzcas información privilegiada o confidencial. Para eso,",
-  "caution.run": "usa tu propia instancia"
+  "continueWithGoogle": "Continuar con Google"
 }

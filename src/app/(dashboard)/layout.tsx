@@ -33,7 +33,6 @@ import { trpc } from "@/lib/trpc";
 import { FeedbackDialog } from "@/components/FeedbackDialog";
 import { OnboardingModal } from "@/components/OnboardingModal";
 import { TesterBar } from "@/components/TesterBar";
-import { PilotBanner } from "@/components/pilot/PilotBanner";
 import { UserRoleProvider } from "@/contexts/UserRoleContext";
 
 export default function DashboardLayout({
@@ -101,9 +100,6 @@ export default function DashboardLayout({
   return (
     <UserRoleProvider>
     <div className="min-h-screen bg-background">
-      {/* Hosted pilot notice, signed-in pages only: public pages carry no
-          banner. Renders nothing on the kit. */}
-      <PilotBanner />
       {/* Floating Glassmorphism Header */}
       <header className="sticky top-0 z-20 px-4 pt-3">
         <div className="max-w-7xl mx-auto bg-card/80 backdrop-blur-sm border border-border rounded-xl md:rounded-full px-4 md:px-6 py-3">
@@ -342,15 +338,6 @@ export default function DashboardLayout({
             >
               {tFooter("privacyNotice")}
             </a>
-            {/* AGPL §13: offer of Corresponding Source to network users */}
-            <a
-              href={brand.links.sourceCode}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="col-span-2 flex items-center justify-center gap-1.5 hover:text-foreground transition-colors"
-            >
-              {tFooter("sourceCode")}
-            </a>
             <div className="col-span-2 flex justify-center pt-1">
               <LanguageSwitcher />
             </div>
@@ -410,16 +397,6 @@ export default function DashboardLayout({
               className="hover:text-foreground transition-colors"
             >
               {tFooter("privacyNotice")}
-            </a>
-            <span className="text-border">&middot;</span>
-            {/* AGPL §13: offer of Corresponding Source to network users */}
-            <a
-              href={brand.links.sourceCode}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-foreground transition-colors"
-            >
-              {tFooter("sourceCode")}
             </a>
             <span className="text-border">&middot;</span>
             <LanguageSwitcher />

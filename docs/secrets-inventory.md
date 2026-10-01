@@ -67,7 +67,6 @@ rows marked "2026-08-05" are covered by that rotation. "Unknown" means no record
 | `STRIPE_PRICE_CREDITS_10_USD`, `STRIPE_PRICE_CREDITS_10_EUR` | Hosted (build and runtime) | Price ids: agent pack of ten credits |
 | `CONTRACT_BILLING_START` | Hosted (build and runtime, required) | ISO date, the deploy date; deals created before it are never charged. With the four price ids, the five together switch billing on (`docs/billing.md`) |
 | `PRICE_DISPLAY_CONTRACT`, `PRICE_DISPLAY_CREDITS_10` | Hosted (runtime, optional) | Display amounts (e.g. `29`, `217.50`); otherwise read from the Stripe price |
-| `INVOICE_SELLER_NAME`, `INVOICE_SELLER_ADDRESS` | Hosted (runtime, optional) | Seller's legal name and address for the invoice footer; footer omitted when unset (`docs/billing.md`) |
 | `STRIPE_PRICE_MONTHLY_USD`, `STRIPE_PRICE_MONTHLY_EUR` | Nowhere (no longer read) | The discarded monthly plan; remove if set |
 | `STRIPE_PRICE_ID`, `STRIPE_PRICE_ID_USD` | Seed only | Former per-skill price (replaced by pay per contract, 2026-09-29); no checkout uses it |
 | `NEXT_PUBLIC_STRIPE_ENABLED` | Hosted (build) | Client-side billing UI |

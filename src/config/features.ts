@@ -60,7 +60,7 @@ const stripeConfigured =
 /**
  * Hosted pilot mechanics (90-day edit window, record ceilings, read-only
  * state, the Settings counters) apply only while hosted billing is off.
- * Once billing is on they go; the confidentiality caution stays (`hosted`).
+ * Once billing is on they go.
  */
 const hostedPilot = hosted && !stripeConfigured;
 
@@ -70,9 +70,7 @@ const hostedPilot = hosted && !stripeConfigured;
 // like `features.marketplace` stay self-documenting.
 export const features = {
   /**
-   * The hosted deployment, whatever its billing state. Drives the
-   * confidentiality caution (no contractual safeguards; do not enter
-   * privileged or confidential information). False on the kit.
+   * The hosted deployment, whatever its billing state. False on the kit.
    */
   hosted,
   /**

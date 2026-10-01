@@ -18,9 +18,6 @@ Dealroom uses a "free coffee machine, paid capsules" model:
   covered by the contract price. Drafting and negotiating are free; each
   contract is paid once, at the first download or the start of signature.
   Agents pay with prepaid credits sold in packs of ten (`docs/billing.md`).
-  Hosted Dealroom comes with no contractual safeguards.
-  Do not enter privileged or confidential information. For that, run your
-  own instance (https://www.todo.law/run).
 - **The kit (your own instance):** no caps. Premium skills are **60 a year
   each in the kit (in your currency)**, bought on the todo.law storefront and activated offline
   with a licence file (see "Offline Activation" below).

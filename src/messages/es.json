@@ -90,9 +90,6 @@
     "allSkillsFreeDescription": "Hemos desbloqueado el catálogo completo para que puedas probar cualquier tipo de contrato. No hace falta suscripción durante este periodo."
   },
   "pilot": {
-    "dismiss": "Cerrar",
-    "cautionTitle": "Precaución",
-    "caution": "Dealroom alojado no ofrece garantías contractuales. No introduzcas información privilegiada o confidencial. Para eso, <run>usa tu propia instancia</run>.",
     "settingsTitle": "Ajustes",
     "settingsNav": "Ajustes",
     "sectionTitle": "Uso alojado gratuito",
@@ -1103,7 +1100,6 @@
     "getContract": "Obtener este contrato",
     "getContractPrice": "Obtener este contrato: {price}",
     "explain": "Redactar y negociar es gratis. Pagas una sola vez, al descargar o firmar el contrato, sea cual sea la plantilla.",
-    "businessOnly": "Dealroom se vende a empresas y profesionales; los precios no incluyen IVA ni impuestos sobre las ventas, y los compradores europeos indican su número de IVA al pagar.",
     "opening": "Abriendo la página de pago...",
     "confirming": "Confirmando tu pago...",
     "paid": "Pago recibido. El contrato está listo para descargar y firmar.",
@@ -1117,15 +1113,7 @@
     "receipts": "Recibos y datos de pago",
     "legacyTitle": "Suscripciones anteriores por skill",
     "legacyBody": "Las skills ya no se venden por separado. Puedes cancelar estas suscripciones; todas las plantillas siguen disponibles.",
-    "pricingLink": "Ver la página de precios",
-    "paymentsTitle": "Pagos y facturas",
-    "paymentsEmpty": "Todavía no hay pagos.",
-    "paymentContract": "Contrato: {name}",
-    "paymentPack": "Paquete de créditos, {credits} contratos",
-    "paymentRefunded": "Reembolsado",
-    "invoiceView": "Ver factura",
-    "invoicePdf": "PDF",
-    "invoiceNone": "Sin factura (pagado antes de que se emitieran facturas)"
+    "pricingLink": "Ver la página de precios"
   },
   "lawyerWarning": {
     "title": "Procediendo sin Abogado/a",
@@ -1422,8 +1410,8 @@
   },
   "localDeployment": {
     "title": "Despliegue Local",
-    "subtitle": "Ejecuta Dealroom en tu propia infraestructura con control total sobre tus datos. Las skills premium cuestan {price} al año cada una en el kit: cómpralas en la tienda de todo.law y después instálalas y actívalas en tu propia instancia. El servicio alojado en dealroom.todo.law cobra por contrato, y redactar y negociar es gratis. No ofrece garantías contractuales, así que no introduzcas allí información privilegiada o confidencial.",
-    "subtitlePerContract": "Ejecuta Dealroom en tu propia infraestructura con control total sobre tus datos. Las skills premium cuestan {price} al año cada una en el kit: cómpralas en la tienda de todo.law y después instálalas y actívalas en tu propia instancia. El servicio alojado en dealroom.todo.law cobra en cambio por contrato, y redactar y negociar es gratis. No ofrece garantías contractuales, así que no introduzcas allí información privilegiada o confidencial.",
+    "subtitle": "Ejecuta Dealroom en tu propia infraestructura con control total sobre tus datos. Las skills premium cuestan {price} al año cada una en el kit: cómpralas en la tienda de todo.law y después instálalas y actívalas en tu propia instancia. El servicio alojado en dealroom.todo.law cobra por contrato, y redactar y negociar es gratis.",
+    "subtitlePerContract": "Ejecuta Dealroom en tu propia infraestructura con control total sobre tus datos. Las skills premium cuestan {price} al año cada una en el kit: cómpralas en la tienda de todo.law y después instálalas y actívalas en tu propia instancia. El servicio alojado en dealroom.todo.law cobra en cambio por contrato, y redactar y negociar es gratis.",
     "howItWorks": "Cómo Funciona",
     "howItWorksDesc": "Los despliegues autoalojados siguen un flujo sencillo para adquirir y activar skills premium:",
     "flowBrowse": "Explorar",
@@ -1511,7 +1499,7 @@
     "metaTitle": "Precios de Dealroom: pago por contrato",
     "metaDescription": "Redactar y negociar en Dealroom es gratis; cada contrato se paga una sola vez, cuando se descarga por primera vez o se inicia su firma.",
     "title": "Precios",
-    "lead": "Redactar y negociar es gratis. Cada contrato se paga una sola vez, cuando se descarga por primera vez o se inicia su firma. Dealroom se vende a empresas y profesionales. Los precios no incluyen IVA ni impuestos sobre las ventas; los compradores europeos indican su número de IVA al pagar.",
+    "lead": "Redactar y negociar es gratis. Cada contrato se paga una sola vez, cuando se descarga por primera vez o se inicia su firma.",
     "leadOff": "Los pagos están desactivados en esta instalación. Todos los contratos son gratuitos.",
     "peopleTitle": "Para personas",
     "peoplePrice": "{price} por contrato",
@@ -1523,15 +1511,14 @@
     "coversNothingRecurring": "Nada recurrente: pagas una sola vez por ese contrato.",
     "whenTitle": "Cuándo se cobra",
     "whenBody": "Cuando el contrato se descarga por primera vez o cuando se inicia su firma, lo que ocurra antes.",
-    "whenInvoice": "Cada pago incluye una factura.",
     "startBody": "No se cobran los contratos de operaciones creadas antes del {date}. Esto incluye todos los contratos acordados antes de esa fecha.",
     "agentsTitle": "Para agentes",
     "agentsPrice": "El mismo precio, {price} por contrato",
     "agentsPriceUnknown": "El mismo precio por contrato",
     "agentsWhen": "Cada contrato se paga con un crédito de prepago, que se consume cuando el agente obtiene por primera vez el documento del contrato acordado.",
-    "agentsPack": "Los créditos se venden en packs de {size}, con un {percent} por ciento de descuento: {price} el pack, sin IVA ni impuestos sobre las ventas.",
-    "agentsPackNoDiscount": "Los créditos se venden en packs de {size}: {price} el pack, sin IVA ni impuestos sobre las ventas.",
-    "agentsPackUnknown": "Los créditos se venden en packs de {size}. El precio no incluye IVA ni impuestos sobre las ventas.",
+    "agentsPack": "Los créditos se venden en packs de {size}, con un {percent} por ciento de descuento: {price} el pack.",
+    "agentsPackNoDiscount": "Los créditos se venden en packs de {size}: {price} el pack.",
+    "agentsPackUnknown": "Los créditos se venden en packs de {size}.",
     "agentsHeld": "Los créditos pertenecen a la cuenta de cliente. Todas las claves API de la cuenta consumen del mismo saldo, y rotar o revocar una clave no hace perder ningún crédito.",
     "agentsApi": "El saldo y las compras están disponibles en la API de agentes y por MCP:",
     "agentsDocsLink": "Consultar la documentación de la API de agentes",
@@ -1549,10 +1536,7 @@
     "qSubscriptionA": "No. No hay suscripción ni cuota mensual.",
     "qKitQ": "¿Y el kit autoalojado?",
     "qKitA": "El kit ejecuta Dealroom en tu propia infraestructura, sin cobro por contrato. Las skills premium para el kit cuestan 60 al año cada una (en tu moneda) y se compran en la tienda de todo.law.",
-    "qKitLink": "Ir a la tienda",
-    "qConfidentialQ": "¿Puedo introducir información confidencial?",
-    "qConfidentialA": "Dealroom alojado no ofrece garantías contractuales. No introduzcas información privilegiada o confidencial. Para eso, usa tu propia instancia.",
-    "qConfidentialLink": "Usar tu propia instancia"
+    "qKitLink": "Ir a la tienda"
   },
   "docsHome": {
     "heroTitle": "Guía de Usuario de <highlight>Dealroom</highlight>",
@@ -1913,7 +1897,7 @@
     "entitlementRespondentDesc": "El agente respondedor nunca necesita licencia, lo que facilita la adopción.",
     "entitlementPricing": "Las skills premium cuestan {price} al año cada una en el kit (tu propia instancia, con activación de licencia sin conexión). El servicio alojado cobra por contrato: los agentes pagan con créditos de prepago en packs de diez.",
     "entitlementsDescPerContract": "En Dealroom alojado todas las plantillas, también las premium, están disponibles para cualquier clave API, y negociar es gratis. El contrato se paga una sola vez, la primera vez que se obtiene su documento: se gasta un crédito de prepago. Los créditos pertenecen al cliente, no a una clave: cualquiera de sus claves API gasta del mismo saldo, y rotar o revocar una clave no cambia nada. Sin crédito, los endpoints de documentos responden 402 Payment Required.",
-    "entitlementPricingPerContract": "Los agentes pagan el mismo precio por contrato que las personas, con créditos de prepago en packs de diez (POST /credits/checkout; saldo en GET /credits/balance). Los importes figuran en la agent card, en pricing. Dealroom se vende a empresas y profesionales; los precios no incluyen IVA ni impuestos sobre las ventas, y los compradores europeos indican su número de IVA al pagar.",
+    "entitlementPricingPerContract": "Los agentes pagan el mismo precio por contrato que las personas, con créditos de prepago en packs de diez (POST /credits/checkout; saldo en GET /credits/balance). Los importes figuran en la agent card, en pricing.",
     "rateLimits": "Límites de Frecuencia",
     "rateLimitsDesc": "Se aplican límites de frecuencia por cliente con ventana deslizante a todos los endpoints autenticados:",
     "rateLimitGroup": "Grupo de Endpoints",
@@ -1932,7 +1916,6 @@
     "purposeSubscribe": "Retirado: responde 410. No hay suscripción; los contratos se pagan con créditos",
     "purposeBuyCredits": "Comprar un pack de diez créditos de contrato para tu cuenta (Dealroom alojado; 409 donde los pagos están desactivados)",
     "purposeCreditBalance": "El saldo de créditos de tu cuenta, compartido por todas sus claves API",
-    "purposeCreditInvoices": "Las facturas de los paquetes de créditos de tu cuenta",
     "sectionWebhooks": "Webhooks",
     "webhooksDesc": "Registra endpoints de webhooks para recibir notificaciones de eventos en tiempo real. Los payloads se firman con HMAC-SHA256 usando tu secreto de webhook.",
     "purposeRegisterWebhook": "Registrar un nuevo endpoint de webhook",
@@ -1987,14 +1970,12 @@
     "marketplace": "Marketplace",
     "billing": "Facturación",
     "termsOfUse": "Términos de Uso",
-    "privacyNotice": "Política de Privacidad",
-    "sourceCode": "Código fuente (AGPL-3.0)"
+    "privacyNotice": "Política de Privacidad"
   },
   "authFooter": {
     "privacy": "Política de Privacidad",
     "terms": "Términos de Uso",
     "howItWorks": "Cómo Funciona",
-    "sourceCode": "Código fuente (AGPL-3.0)",
     "platformAdmin": "Administración de la plataforma"
   },
   "adminAuth": {

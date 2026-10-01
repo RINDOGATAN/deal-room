@@ -5,6 +5,7 @@
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { brand } from "@/config/brand";
+import { features } from "@/config/features";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 
 export default function AuthLayout({
@@ -58,23 +59,16 @@ export default function AuthLayout({
           >
             {t("howItWorks")}
           </Link>
-          <span className="hidden sm:inline">&middot;</span>
-          {/* AGPL §13: offer of Corresponding Source to network users */}
-          <a
-            href={brand.links.sourceCode}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-foreground transition-colors"
-          >
-            {t("sourceCode")}
-          </a>
         </div>
-        {/* Quiet operator hint: self-hosted installs need a way to find /admin */}
-        <div className="container mx-auto px-6 text-center text-xs text-muted-foreground/70">
-          <Link href="/admin" className="hover:text-foreground transition-colors">
-            {t("platformAdmin")} → /admin
-          </Link>
-        </div>
+        {/* Quiet operator hint: self-hosted installs need a way to find /admin.
+            Hosted shows only the three links above. */}
+        {features.localAuth && (
+          <div className="container mx-auto px-6 text-center text-xs text-muted-foreground/70">
+            <Link href="/admin" className="hover:text-foreground transition-colors">
+              {t("platformAdmin")} → /admin
+            </Link>
+          </div>
+        )}
       </footer>
     </div>
   );

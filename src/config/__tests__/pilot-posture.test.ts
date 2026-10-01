@@ -114,7 +114,6 @@ describe("hosted pay per contract (2026-09-29, round 2: five variables)", () => 
     expect(features.stripeEnabled).toBe(true);
     expect(features.billing).toBe(true);
     expect(features.hostedPilot).toBe(false);
-    // The confidentiality caution stays.
     expect(features.hosted).toBe(true);
     // Every template serves; the contract is what is paid.
     expect(features.allSkillsFree).toBe(true);

@@ -6,11 +6,6 @@ import { signIn } from "next-auth/react";
 import { motion } from "framer-motion";
 import { ArrowRight, Check, Loader2 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-import { features as appFeatures } from "@/config/features";
-import { PILOT_RUN_URL } from "@/lib/pilot";
-
-// The confidentiality caution shows on hosted whatever its billing state.
-const hosted = appFeatures.hosted;
 
 export interface Feature {
   id: string;
@@ -162,22 +157,6 @@ const StartupProductPage = ({
     signIn("google", { callbackUrl });
   };
 
-  // Hosted: the caution about confidential information, under the sign-up form.
-  const hostedCaution = hosted ? (
-    <p data-testid="hosted-caution" className="text-xs text-muted-foreground font-body mt-4 text-center">
-      {tAuth("caution.text")}{" "}
-      <a
-        href={PILOT_RUN_URL}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="text-accent underline decoration-accent/40 hover:decoration-accent"
-      >
-        {tAuth("caution.run")}
-      </a>
-      .
-    </p>
-  ) : null;
-
   const googleDivider = (
     <>
       <div className="flex items-center gap-4 my-5">
@@ -301,7 +280,6 @@ const StartupProductPage = ({
                       >
                         {tAuth("login.newHere")}
                       </button>
-                      {hostedCaution}
                     </div>
                   ) : (
                     <div className="relative animate-fade-in">
@@ -335,7 +313,6 @@ const StartupProductPage = ({
                       >
                         {t("hero.login")}
                       </button>
-                      {hostedCaution}
                     </div>
                   )}
                 </div>

@@ -90,9 +90,6 @@
     "allSkillsFreeDescription": "We've unlocked the entire catalog so you can try any contract type. No subscription needed during this period."
   },
   "pilot": {
-    "dismiss": "Dismiss",
-    "cautionTitle": "Caution",
-    "caution": "Hosted Dealroom comes with no contractual safeguards. Do not enter privileged or confidential information. For that, <run>run your own instance</run>.",
     "settingsTitle": "Settings",
     "settingsNav": "Settings",
     "sectionTitle": "Free hosted use",
@@ -1102,7 +1099,6 @@
     "getContract": "Get this contract",
     "getContractPrice": "Get this contract: {price}",
     "explain": "Drafting and negotiating are free. You pay once, when you download or sign the contract, whatever the template.",
-    "businessOnly": "Dealroom is sold to businesses and professionals; prices exclude any VAT or sales tax, and European buyers give their VAT number at checkout.",
     "opening": "Opening the payment page...",
     "confirming": "Confirming your payment...",
     "paid": "Payment received. The contract is ready to download and sign.",
@@ -1116,15 +1112,7 @@
     "receipts": "Receipts and payment details",
     "legacyTitle": "Earlier add-on subscriptions",
     "legacyBody": "Skills are no longer sold one by one. You can cancel these; every template stays available.",
-    "pricingLink": "See the pricing page",
-    "paymentsTitle": "Payments and invoices",
-    "paymentsEmpty": "No payments yet.",
-    "paymentContract": "Contract: {name}",
-    "paymentPack": "Credit pack, {credits} contracts",
-    "paymentRefunded": "Refunded",
-    "invoiceView": "View invoice",
-    "invoicePdf": "PDF",
-    "invoiceNone": "No invoice (paid before invoices were issued)"
+    "pricingLink": "See the pricing page"
   },
   "lawyerWarning": {
     "title": "Proceeding Without a Lawyer",
@@ -1421,8 +1409,8 @@
   },
   "localDeployment": {
     "title": "Local Deployment",
-    "subtitle": "Run Dealroom on your own infrastructure with full control over your data. Premium skills are {price} a year each in the kit: buy them on the todo.law storefront, then install and activate them on your own instance. The hosted service at dealroom.todo.law charges per contract, with drafting and negotiating free. It comes with no contractual safeguards, so do not enter privileged or confidential information there.",
-    "subtitlePerContract": "Run Dealroom on your own infrastructure with full control over your data. Premium skills are {price} a year each in the kit: buy them on the todo.law storefront, then install and activate them on your own instance. The hosted service at dealroom.todo.law charges per contract instead, with drafting and negotiating free. It comes with no contractual safeguards, so do not enter privileged or confidential information there.",
+    "subtitle": "Run Dealroom on your own infrastructure with full control over your data. Premium skills are {price} a year each in the kit: buy them on the todo.law storefront, then install and activate them on your own instance. The hosted service at dealroom.todo.law charges per contract, with drafting and negotiating free.",
+    "subtitlePerContract": "Run Dealroom on your own infrastructure with full control over your data. Premium skills are {price} a year each in the kit: buy them on the todo.law storefront, then install and activate them on your own instance. The hosted service at dealroom.todo.law charges per contract instead, with drafting and negotiating free.",
     "howItWorks": "How It Works",
     "howItWorksDesc": "Self-hosted deployments follow a simple flow to acquire and activate premium skills:",
     "flowBrowse": "Browse",
@@ -1510,7 +1498,7 @@
     "metaTitle": "Dealroom pricing: pay per contract",
     "metaDescription": "Drafting and negotiating on Dealroom are free; each contract is paid once, when it is first downloaded or its signature starts.",
     "title": "Pricing",
-    "lead": "Drafting and negotiating are free. Each contract is paid once, when it is first downloaded or its signature starts. Dealroom is sold to businesses and professionals. Prices exclude any VAT or sales tax; European buyers give their VAT number at checkout.",
+    "lead": "Drafting and negotiating are free. Each contract is paid once, when it is first downloaded or its signature starts.",
     "leadOff": "Payments are off on this deployment. Every contract is free.",
     "peopleTitle": "For people",
     "peoplePrice": "{price} per contract",
@@ -1522,15 +1510,14 @@
     "coversNothingRecurring": "Nothing recurring: you pay once for that contract.",
     "whenTitle": "When it is charged",
     "whenBody": "When the contract is first downloaded, or when its signature starts, whichever comes first.",
-    "whenInvoice": "Each payment comes with an invoice.",
     "startBody": "Contracts in deals created before {date} are not charged. This includes every contract agreed before that date.",
     "agentsTitle": "For agents",
     "agentsPrice": "The same {price} per contract",
     "agentsPriceUnknown": "The same price per contract",
     "agentsWhen": "Each contract is paid with one prepaid credit, spent when the agent first fetches the document of the agreed contract.",
-    "agentsPack": "Credits are sold in packs of {size}, at {percent} percent off: {price} a pack, excluding any VAT or sales tax.",
-    "agentsPackNoDiscount": "Credits are sold in packs of {size}: {price} a pack, excluding any VAT or sales tax.",
-    "agentsPackUnknown": "Credits are sold in packs of {size}. The price excludes any VAT or sales tax.",
+    "agentsPack": "Credits are sold in packs of {size}, at {percent} percent off: {price} a pack.",
+    "agentsPackNoDiscount": "Credits are sold in packs of {size}: {price} a pack.",
+    "agentsPackUnknown": "Credits are sold in packs of {size}.",
     "agentsHeld": "Credits belong to the customer account. Every API key of the account spends from the same balance, and rotating or revoking a key loses no credits.",
     "agentsApi": "The balance and purchases are available through the agent API and through MCP:",
     "agentsDocsLink": "Read the agent API documentation",
@@ -1548,10 +1535,7 @@
     "qSubscriptionA": "No. There is no subscription and no monthly fee.",
     "qKitQ": "What about the self-hosted kit?",
     "qKitA": "The kit runs Dealroom on your own infrastructure, with no per-contract charge. Premium skills for the kit cost 60 a year each (in your currency) and are bought on the todo.law storefront.",
-    "qKitLink": "Go to the storefront",
-    "qConfidentialQ": "Can I enter confidential information?",
-    "qConfidentialA": "Hosted Dealroom comes with no contractual safeguards. Do not enter privileged or confidential information. For that, run your own instance.",
-    "qConfidentialLink": "Run your own instance"
+    "qKitLink": "Go to the storefront"
   },
   "docsHome": {
     "heroTitle": "Dealroom <highlight>User Guide</highlight>",
@@ -1912,7 +1896,7 @@
     "entitlementRespondentDesc": "The responding agent never needs a licence, which keeps adoption simple.",
     "entitlementPricing": "Premium skills are {price} a year each in the kit (your own instance, offline licence activation). The hosted service charges per contract: agents pay with prepaid credits sold in packs of ten.",
     "entitlementsDescPerContract": "On hosted Dealroom every template, premium ones included, is available to every API key, and negotiating is free. The contract is paid once, the first time its document is fetched: one prepaid credit is spent. Credits belong to the customer, not to a key: any of its API keys spends from the one balance, and rotating or revoking a key changes nothing. Without a credit, the document endpoints answer 402 Payment Required.",
-    "entitlementPricingPerContract": "Agents pay the same price per contract as people, through prepaid credits sold in packs of ten (POST /credits/checkout; balance at GET /credits/balance). The amounts are in the agent card under pricing. Dealroom is sold to businesses and professionals; prices exclude any VAT or sales tax, and European buyers give their VAT number at checkout.",
+    "entitlementPricingPerContract": "Agents pay the same price per contract as people, through prepaid credits sold in packs of ten (POST /credits/checkout; balance at GET /credits/balance). The amounts are in the agent card under pricing.",
     "rateLimits": "Rate Limits",
     "rateLimitsDesc": "Per-customer sliding window rate limits apply to all authenticated endpoints:",
     "rateLimitGroup": "Endpoint Group",
@@ -1931,7 +1915,6 @@
     "purposeSubscribe": "Retired: answers 410. There is no subscription; contracts are paid with credits",
     "purposeBuyCredits": "Buy a pack of ten contract credits for your account (hosted Dealroom; 409 where payments are off)",
     "purposeCreditBalance": "Your account's credit balance, shared by all of its API keys",
-    "purposeCreditInvoices": "The invoices of your account's credit packs",
     "sectionWebhooks": "Webhooks",
     "webhooksDesc": "Register webhook endpoints to receive real-time event notifications. Payloads are signed with HMAC-SHA256 using your webhook secret.",
     "purposeRegisterWebhook": "Register a new webhook endpoint",
@@ -1986,14 +1969,12 @@
     "marketplace": "Marketplace",
     "billing": "Billing",
     "termsOfUse": "Terms of Use",
-    "privacyNotice": "Privacy Notice",
-    "sourceCode": "Source code (AGPL-3.0)"
+    "privacyNotice": "Privacy Notice"
   },
   "authFooter": {
     "privacy": "Privacy Policy",
     "terms": "Terms of Service",
     "howItWorks": "How It Works",
-    "sourceCode": "Source code (AGPL-3.0)",
     "platformAdmin": "Platform administration"
   },
   "adminAuth": {

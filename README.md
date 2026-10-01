@@ -20,9 +20,7 @@ Two-party async contract negotiation platform with weighted compromise algorithm
   when it is first downloaded or when its signature starts; every skill,
   premium ones included, is covered by that price. Agents pay per contract
   with prepaid credits sold in packs of ten (see `docs/agent-api.md`,
-  "Paying per contract"). There is no monthly plan. Hosted Dealroom comes
-  with no contractual safeguards. Do not enter privileged or confidential
-  information. For that, run your own instance (<https://www.todo.law/run>).
+  "Paying per contract"). There is no monthly plan.
 - **The kit (self-hosted) has no caps.** Premium skills are sold only for
   the kit: 60 a year each in the kit (in your currency) on the todo.law
   storefront, installed and
@@ -195,7 +193,8 @@ Copyright (c) 2025-2026 Rindogatan LLC
 This project is licensed under the [GNU Affero General Public License v3.0](LICENSE).
 
 Under AGPL §13, if you run a modified Dealroom as a network service you must
-offer its Corresponding Source to your users. The app footer renders a
-"Source code (AGPL-3.0)" link for this; point it at your fork with
-`NEXT_PUBLIC_SOURCE_URL` at build time. Third-party attribution lives in
+offer its Corresponding Source to your users. The `/licenses` page carries
+that offer (the footers no longer link to it since 2026-10-01); point it at
+your fork with `NEXT_PUBLIC_SOURCE_URL` at build time, and add a visible
+link if your deployment needs one. Third-party attribution lives in
 [NOTICES.md](NOTICES.md).

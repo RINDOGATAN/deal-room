@@ -8,7 +8,6 @@ import type { Currency } from "@/lib/currency";
 import { CurrencySwitch } from "@/components/pricing/CurrencySwitch";
 
 const STOREFRONT_URL = "https://www.todo.law/marketplace";
-const RUN_URL = "https://www.todo.law/run";
 
 /**
  * The public pricing page body. Every amount and the billing start date
@@ -59,7 +58,6 @@ export function PricingView({
             <div className="space-y-2">
               <h3 className="font-semibold">{t("whenTitle")}</h3>
               <p className="text-sm text-muted-foreground">{t("whenBody")}</p>
-              <p className="text-sm text-muted-foreground">{t("whenInvoice")}</p>
               {facts.billingStart && (
                 <p className="text-sm text-muted-foreground">{t("startBody", { date: facts.billingStart })}</p>
               )}
@@ -121,15 +119,6 @@ export function PricingView({
               {t("qKitA")}{" "}
               <a href={STOREFRONT_URL} className="text-primary underline underline-offset-2">
                 {t("qKitLink")}
-              </a>
-            </dd>
-          </div>
-          <div>
-            <dt className="font-semibold">{t("qConfidentialQ")}</dt>
-            <dd className="text-muted-foreground mt-1">
-              {t("qConfidentialA")}{" "}
-              <a href={RUN_URL} className="text-primary underline underline-offset-2">
-                {t("qConfidentialLink")}
               </a>
             </dd>
           </div>

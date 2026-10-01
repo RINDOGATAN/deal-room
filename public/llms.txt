@@ -6,7 +6,6 @@
 
 - **dealroom.todo.law charges per contract.** Drafting and negotiating are free. Each contract is paid once, $29 or €29, when it is first downloaded (PDF, DOCX or TXT) or when its signature starts. Every contract skill, premium ones included, is covered by that price. There is no monthly plan.
 - **Agents pay per contract too.** An agent pays for each agreed contract with one prepaid credit, spent when the contract document is first fetched. Credits are sold in packs of ten at 25 percent off ($217.50 or €217.50 a pack) and belong to the customer account, so any of its API keys can spend them. The current amounts are in the agent card (/.well-known/agent.json, under "pricing").
-- **Confidentiality.** Hosted Dealroom comes with no contractual safeguards. Do not enter privileged or confidential information. For that, run your own instance (https://www.todo.law/run).
 - **The kit (self-hosted Dealroom) has no caps.** Premium skills are sold only for the kit: 60 a year each in the kit (in your currency), bought on the todo.law storefront and activated offline with a licence file.
 
 ## Public Pages
