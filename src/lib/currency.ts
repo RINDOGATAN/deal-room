@@ -34,6 +34,8 @@ export const EUROPE_COUNTRIES: ReadonlySet<string> = new Set([
   "GB", "CH",
   // Aliases seen in the wild: EL (the EU's own code for Greece), UK
   "EL", "UK",
+  // Euro microstates and the British Crown dependencies and Gibraltar (owner, 1 October 2026)
+  "AD", "MC", "SM", "VA", "GI", "JE", "GG", "IM",
 ]);
 
 function normalise(code: string | null | undefined): string {
