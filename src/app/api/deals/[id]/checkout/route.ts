@@ -81,6 +81,7 @@ export async function POST(
       priceId,
       stripeCustomerId,
       locale,
+      currency,
       metadata: { kind: "contract", dealRoomId, customerId, userId: session.user.id },
       invoiceDescription: `Dealroom contract: ${deal?.name || dealRoomId}`,
       successUrl: `${base}/deals/${dealRoomId}?paid=1&session_id={CHECKOUT_SESSION_ID}`,

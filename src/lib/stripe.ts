@@ -44,6 +44,63 @@ export function invoiceSellerFooter(env: Env = process.env): string | undefined 
   return lines.length ? lines.join("\n").slice(0, INVOICE_TEXT_LIMIT) : undefined;
 }
 
+/**
+ * EU and EEA country codes, as Stripe writes a billing address (ISO 3166-1,
+ * so Greece is GR). The reverse-charge note is printed only for these.
+ */
+export const EU_EEA_COUNTRIES: ReadonlySet<string> = new Set([
+  "AT", "BE", "BG", "HR", "CY", "CZ", "DK", "EE", "FI", "FR", "DE", "GR", "HU", "IE",
+  "IT", "LV", "LT", "LU", "MT", "NL", "PL", "PT", "RO", "SK", "SI", "ES", "SE",
+  "IS", "LI", "NO",
+]);
+
+export const REVERSE_CHARGE_NOTE =
+  "Reverse charge: VAT to be accounted for by the recipient (Article 196, Council Directive 2006/112/EC).";
+
+/**
+ * Shown on the Stripe checkout page, above the pay button. Dealroom is sold
+ * to businesses and professionals only (owner, 1 October 2026); European
+ * buyers are also told they give their VAT number.
+ */
+const CHECKOUT_BUSINESS_TEXT = {
+  en: {
+    all: "Dealroom is sold to businesses and professionals. Prices exclude any VAT or sales tax.",
+    europe:
+      "Dealroom is sold to businesses and professionals. Prices exclude any VAT or sales tax; European buyers give their VAT number at checkout.",
+  },
+  es: {
+    all: "Dealroom se vende a empresas y profesionales. Los precios no incluyen IVA ni impuestos sobre las ventas.",
+    europe:
+      "Dealroom se vende a empresas y profesionales. Los precios no incluyen IVA ni impuestos sobre las ventas; los compradores europeos indican su número de IVA al pagar.",
+  },
+} as const;
+
+/** The buyer details Stripe records on a completed checkout. */
+export interface BuyerDetails {
+  address?: { country?: string | null } | null;
+  tax_ids?: { value?: string | null }[] | null;
+}
+
+/**
+ * Reverse charge applies when the buyer's billing address is in the EU or
+ * EEA and a VAT number was given. Anywhere else, no tax line at all.
+ */
+export function reverseChargeApplies(buyer: BuyerDetails | null | undefined): boolean {
+  const country = (buyer?.address?.country ?? "").trim().toUpperCase();
+  if (!EU_EEA_COUNTRIES.has(country)) return false;
+  return (buyer?.tax_ids ?? []).some((id) => !!id.value?.trim());
+}
+
+/**
+ * The full invoice footer for a buyer: the seller lines, then the
+ * reverse-charge note when it applies. Undefined when there is neither.
+ */
+export function invoiceFooterFor(buyer: BuyerDetails | null | undefined, env: Env = process.env): string | undefined {
+  const seller = invoiceSellerFooter(env);
+  if (!reverseChargeApplies(buyer)) return seller;
+  return seller ? `${seller}\n${REVERSE_CHARGE_NOTE}` : REVERSE_CHARGE_NOTE;
+}
+
 export interface BillingCheckoutParams {
   mode: "payment";
   priceId: string;
@@ -54,20 +111,32 @@ export interface BillingCheckoutParams {
   locale?: "en" | "es";
   /** What the invoice is for: the deal's name, or the credit pack. */
   invoiceDescription: string;
+  /**
+   * The checkout currency. Euros mean a European buyer: the tax id becomes
+   * required where Stripe supports one for the billing country.
+   */
+  currency: "usd" | "eur";
 }
 
 /**
  * The Checkout session parameters. Every payment produces an invoice the
- * buyer can book: billing address required, tax id offered, and both saved
- * on the Stripe customer (`customer_update`, which Stripe requires for an
- * existing customer with tax id collection). No tax is calculated here:
- * `automatic_tax` stays off until the tax decision is made.
+ * buyer can book: billing address required, tax id collected, and both
+ * saved on the Stripe customer (`customer_update`, which Stripe requires for
+ * an existing customer with tax id collection). Dealroom is sold to
+ * businesses only, so a buyer paying in euros must give a tax id when their
+ * billing country has one (EU VAT numbers included); a buyer paying in
+ * dollars may give one and is never blocked. No tax is calculated:
+ * `automatic_tax` stays off. The reverse-charge note is added to the
+ * invoice after payment, once the address and VAT number are known
+ * (`addReverseChargeNote`).
  */
 export function buildBillingCheckoutParams(
   params: BillingCheckoutParams,
   env: Env = process.env,
 ): Stripe.Checkout.SessionCreateParams {
   const footer = invoiceSellerFooter(env);
+  const europe = params.currency === "eur";
+  const text = CHECKOUT_BUSINESS_TEXT[params.locale ?? "en"];
   return {
     mode: params.mode,
     customer: params.stripeCustomerId,
@@ -87,9 +156,28 @@ export function buildBillingCheckoutParams(
       },
     },
     billing_address_collection: "required",
-    tax_id_collection: { enabled: true },
+    tax_id_collection: europe ? { enabled: true, required: "if_supported" } : { enabled: true },
     customer_update: { name: "auto", address: "auto" },
+    custom_text: { submit: { message: europe ? text.europe : text.all } },
   };
+}
+
+/**
+ * After payment: when the buyer's billing address is in the EU or EEA and
+ * a VAT number was given, add the reverse-charge note to the session's
+ * invoice footer. Stripe keeps the footer editable on a paid invoice.
+ * Returns true when the invoice was updated. Writing the same footer twice
+ * is harmless, so the webhook and the return from checkout may both call it.
+ */
+export async function addReverseChargeNote(session: Stripe.Checkout.Session): Promise<boolean> {
+  if (!reverseChargeApplies(session.customer_details)) return false;
+  const invoice = session.invoice;
+  const invoiceId = typeof invoice === "string" ? invoice : invoice?.id;
+  if (!invoiceId) return false;
+  const footer = invoiceFooterFor(session.customer_details);
+  if (!footer) return false;
+  await getStripe().invoices.update(invoiceId, { footer });
+  return true;
 }
 
 /**

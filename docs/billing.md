@@ -154,14 +154,34 @@ once (`stripe_webhook_events`), so redeliveries are harmless.
 ### Invoices (2026-10-01)
 
 Every checkout (a contract or a credit pack) issues a Stripe invoice the
-buyer can book. At checkout the buyer must give a billing address and may
-give a tax id (for example an EU VAT number); both are saved on their Stripe
-customer for next time. The invoice carries a description (the deal's name,
-or "Dealroom credit pack, 10 contracts"), the checkout metadata, and a
-footer with `INVOICE_SELLER_NAME` and `INVOICE_SELLER_ADDRESS` when set.
+buyer can book. At checkout the buyer must give a billing address and a
+tax id; both are saved on their Stripe customer for next time. The invoice
+carries a description (the deal's name, or "Dealroom credit pack, 10
+contracts"), the checkout metadata, and a footer with `INVOICE_SELLER_NAME`
+and `INVOICE_SELLER_ADDRESS` when set.
 
-No tax is calculated: `automatic_tax` is off, and the amounts are the
-Stripe prices as before. The seller's own tax id, invoice numbering prefix
+**Sold to businesses only (owner, 2026-10-01).** Dealroom contracts and
+credit packs are sold to businesses and professionals. No tax is
+calculated (`automatic_tax` is off; the amounts are the Stripe prices) and
+the seller is not registered for the EU one-stop scheme. So:
+
+- A checkout in euros (a European buyer) sets `tax_id_collection.required:
+  "if_supported"`: a buyer whose billing country has a tax id Stripe can
+  collect must give one (EU VAT numbers included). A checkout in dollars
+  offers the field without requiring it, so a buyer in the United States
+  is never blocked. The checkout page says so above the pay button.
+- After payment (`fulfilCheckoutSession` → `addReverseChargeNote`), when
+  the billing address is in the EU or EEA and a VAT number was given, the
+  invoice footer gains: "Reverse charge: VAT to be accounted for by the
+  recipient (Article 196, Council Directive 2006/112/EC)." Anywhere else,
+  no tax line. This is best effort: a Stripe failure is logged
+  ("reverse-charge note not added") and does not affect the payment. The
+  invoice email Stripe sends at payment may go out before the note is
+  added; the hosted invoice and its PDF carry it.
+
+The seller's own tax id, invoice numbering prefix
+and any other legal mentions are set in the Stripe dashboard (Settings →
+Business → Public details, and Settings → Billing → Invoices). The seller's own tax id, invoice numbering prefix
 and any other legal mentions are set in the Stripe dashboard (Settings →
 Business → Public details, and Settings → Billing → Invoices).
 

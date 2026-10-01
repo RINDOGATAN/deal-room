@@ -19,6 +19,7 @@ import { Prisma } from "@prisma/client";
 import prisma from "@/lib/prisma";
 import { CREDITS_PER_PACK } from "@/lib/contract-billing";
 import { createLogger } from "@/lib/logger";
+import { addReverseChargeNote } from "@/lib/stripe";
 
 const logger = createLogger("billing-events");
 
@@ -135,7 +136,27 @@ export async function fulfilCheckoutSession(session: Stripe.Checkout.Session) {
   }
   if (kind === "contract") await fulfilContract(session);
   else await fulfilCredits(session);
+  await noteReverseCharge(session);
   return true;
+}
+
+/**
+ * EU/EEA buyer with a VAT number: the reverse-charge note goes on the
+ * invoice. Best effort: a Stripe failure is logged and never undoes or
+ * blocks the fulfilment above.
+ */
+async function noteReverseCharge(session: Stripe.Checkout.Session) {
+  try {
+    if (await addReverseChargeNote(session)) {
+      logger.info("reverse-charge note added", { sessionId: session.id, invoiceId: invoiceIdOf(session) });
+    }
+  } catch (err) {
+    logger.error("reverse-charge note not added", {
+      sessionId: session.id,
+      invoiceId: invoiceIdOf(session),
+      error: err instanceof Error ? err.message : String(err),
+    });
+  }
 }
 
 /** Revert a contract payment: the deal is unpaid again. */

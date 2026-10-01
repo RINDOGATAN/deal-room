@@ -1008,6 +1008,9 @@ is taken back (a partial refund keeps it); if some credits were already
 spent, the balance can go below zero and blocks new spending until topped
 up.
 
+Dealroom is sold to businesses and professionals; prices exclude any VAT or
+sales tax, and European buyers give their VAT number at checkout.
+
 ### Check the balance
 
 ```
@@ -1038,8 +1041,9 @@ GET /credits/invoices
 Scope: billing:read
 ```
 
-Every pack purchase comes with an invoice (billing address and, optionally,
-a tax id are collected at checkout). This lists the customer's latest 20
+Every pack purchase comes with an invoice (the billing address and a tax id
+are collected at checkout; the tax id is required when paying in euros and
+the billing country has one). This lists the customer's latest 20
 purchases, whichever key bought them, with the invoice's number, hosted page
 and PDF, read from Stripe on demand. A pack bought before invoices were
 switched on has `"invoice": null`. Contracts paid with a credit have no

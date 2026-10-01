@@ -82,6 +82,7 @@ export async function POST(req: NextRequest) {
       mode: "payment",
       priceId,
       stripeCustomerId,
+      currency,
       // The credits belong to the key's customer; the key is noted for the
       // record only (any key of the customer spends from the balance).
       metadata: {

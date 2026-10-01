@@ -25,6 +25,9 @@ const db = vi.hoisted(() => {
 });
 vi.mock("@/lib/prisma", () => ({ prisma: db, default: db }));
 
+const addReverseChargeNote = vi.hoisted(() => vi.fn(async () => false));
+vi.mock("@/lib/stripe", () => ({ addReverseChargeNote }));
+
 import {
   billingKindOf,
   fulfilCheckoutSession,
@@ -72,6 +75,14 @@ describe("checkout.session.completed", () => {
   it("does not unlock a checkout whose payment is still pending", async () => {
     await fulfilCheckoutSession(fx.contractSessionUnpaid);
     expect(db.dealPayment.upsert).not.toHaveBeenCalled();
+    expect(addReverseChargeNote).not.toHaveBeenCalled();
+  });
+
+  it("asks for the reverse-charge note once paid, and a Stripe failure there does not undo the payment", async () => {
+    addReverseChargeNote.mockRejectedValueOnce(new Error("Stripe unavailable"));
+    expect(await fulfilCheckoutSession(fx.contractSessionPaid)).toBe(true);
+    expect(db.dealPayment.upsert).toHaveBeenCalled();
+    expect(addReverseChargeNote).toHaveBeenCalledWith(fx.contractSessionPaid);
   });
 
   it("adds ten credits to the customer, noting the key that bought them", async () => {
