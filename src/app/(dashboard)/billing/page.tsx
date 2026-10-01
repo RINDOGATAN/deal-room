@@ -14,6 +14,7 @@
  */
 
 import { useState } from "react";
+import Link from "next/link";
 import { Loader2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
@@ -89,6 +90,9 @@ export default function BillingPage() {
         <p className="text-sm text-foreground">
           {contractPrice ? t("perContractBody", { price: contractPrice }) : t("perContractBodyNoPrice")}
         </p>
+        <Link href="/pricing" className="text-sm text-primary underline underline-offset-2 block">
+          {t("pricingLink")}
+        </Link>
         {pricing.hasBillingAccount && (
           <button
             type="button"

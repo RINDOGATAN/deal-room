@@ -4,6 +4,7 @@
 import { Globe, Menu, X } from "lucide-react";
 import { useState } from "react";
 import { brand } from "@/config/brand";
+import { features } from "@/config/features";
 
 interface StartupsHeaderProps {
   t: (key: string) => string;
@@ -28,6 +29,11 @@ const StartupsHeader = ({ t, locale, onLocaleToggle, onSignup }: StartupsHeaderP
           </a>
 
           <div className="hidden md:flex items-center gap-3">
+            {features.stripeEnabled && (
+              <a href="/pricing" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                {t("header.pricing")}
+              </a>
+            )}
             <button
               onClick={onLocaleToggle}
               className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
@@ -48,6 +54,11 @@ const StartupsHeader = ({ t, locale, onLocaleToggle, onSignup }: StartupsHeaderP
         {isMenuOpen && (
           <div className="md:hidden py-4 px-2 border-t border-border">
             <div className="flex flex-col gap-3">
+              {features.stripeEnabled && (
+                <a href="/pricing" onClick={closeMenu} className="text-sm text-muted-foreground px-2 py-1">
+                  {t("header.pricing")}
+                </a>
+              )}
               <button
                 onClick={() => { onLocaleToggle(); closeMenu(); }}
                 className="flex items-center gap-2 text-sm text-muted-foreground px-2 py-1"
