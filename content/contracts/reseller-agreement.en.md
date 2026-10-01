@@ -44,7 +44,7 @@ Full platform access, limited modules, or API-only access. Customisations owned 
 The Reseller controls end-customer data as controller, the Reseller controls it but the Provider may derive anonymised analytics, or both have defined access.
 
 ### Termination and non-compete
-Twelve months' notice with transition assistance, six months with basic data export, or ninety days with export at the Reseller's cost. A broad non-compete during the term and twelve months after, a limited one during the term only, or none.
+Twelve months' notice with transition assistance, six months with basic data export, or ninety days with export at the Reseller's cost. A broad non-compete during the term and twelve months after (with neither party soliciting the other's customers), a limited one during the term only, or none.
 
 ## What the two sides usually negotiate
 

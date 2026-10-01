@@ -11,7 +11,7 @@ faq:
   - q: "¿Puede cederse todo lo que crea un empleado?"
     a: "No en California. La skill recoge que el artículo 2870 del Labor Code de California excluye las invenciones desarrolladas íntegramente en el tiempo personal del empleado sin medios de la empresa, salvo que guarden relación con su actividad. La versión de California incluye este límite y el aviso por escrito que exige el artículo 2872."
   - q: "¿Se pueden ceder los derechos morales?"
-    a: "No. En Inglaterra y Gales pueden renunciarse por escrito, pero no cederse, y en Estados Unidos se limitan sobre todo a las obras de arte visual. Por eso el contrato ofrece una renuncia total, una renuncia que conserva el derecho a ser reconocido como autor, o ninguna renuncia."
+    a: "No. En Inglaterra y Gales pueden renunciarse por escrito, pero no cederse, y en Estados Unidos se limitan sobre todo a las obras de arte visual. Por eso el contrato ofrece una renuncia total, una renuncia que conserva el derecho a ser reconocido como autor, o ninguna renuncia. En España tampoco pueden renunciarse: allí no se ofrece la renuncia total y la opción que conserva la autoría se redacta como compromiso de no ejercicio."
   - q: "¿Cómo se paga al cedente?"
     a: "El contrato prevé tres formas: un precio único pagadero poco después de la firma, regalías calculadas sobre los ingresos netos obtenidos con la propiedad intelectual cedida durante un número de años, o participaciones en la sociedad del cesionario. Sin contraprestación, la cesión puede no ser exigible."
   - q: "¿Hay que inscribir la cesión?"
@@ -45,7 +45,7 @@ Regula la propiedad intelectual que el cedente ya tenía antes del contrato. Pue
 
 ### Renuncia a derechos morales
 
-Los derechos morales son el derecho del autor a ser identificado y a oponerse a un trato perjudicial de la obra. Las opciones son una renuncia total (con el compromiso de no ejercer los derechos que no puedan renunciarse), una renuncia solo al derecho de integridad, de modo que se siga reconociendo al cedente como autor cuando sea comercialmente viable, o ninguna renuncia.
+Los derechos morales son el derecho del autor a ser identificado y a oponerse a un trato perjudicial de la obra. Las opciones son una renuncia total (con el compromiso de no ejercer los derechos que no puedan renunciarse), una renuncia solo al derecho de integridad, de modo que se siga reconociendo al cedente como autor cuando sea comercialmente viable, o ninguna renuncia. Conforme al Derecho español no se ofrece la renuncia total, porque los derechos morales son irrenunciables e inalienables; la opción intermedia se redacta como un compromiso práctico de no ejercerlos, respetando la autoría y manteniendo el derecho de integridad frente a un perjuicio grave al honor o la reputación.
 
 ### Contraprestación
 
@@ -79,18 +79,18 @@ El cesionario busca la cesión más amplia, garantías firmes y que no haya reve
 - **Colaboración:** colaboración razonable a costa del cesionario, sin poder irrevocable.
 - **Código abierto:** componentes declarados y solo con licencias permisivas.
 
-En el alcance, enumerar elementos concretos es la opción más próxima al centro, mientras que ceder toda la propiedad intelectual relacionada favorece claramente al cesionario. En el precio, las tres fórmulas se inclinan solo ligeramente hacia una u otra parte, de modo que la elección suele depender de la operación. La reversión es un punto de tensión real: la reversión por falta de uso favorece al cedente y la cesión absoluta, al cesionario.
+En el alcance, enumerar elementos concretos es la opción más próxima al centro, mientras que ceder toda la propiedad intelectual relacionada favorece claramente al cesionario. En el precio, las tres fórmulas se inclinan solo ligeramente hacia una u otra parte, de modo que la elección suele depender de la operación. La reversión es un punto de tensión real: la reversión por falta de uso es la que más favorece al cedente, la reversión por insolvencia algo menos, y la cesión absoluta favorece al cesionario.
 
 ## Jurisdicciones e idiomas disponibles en Dealroom
 
-Dealroom ofrece este contrato para **California**, **Inglaterra y Gales** y **España**, redactado en **inglés** o en **español**. La versión de California aplica la ley y los tribunales de California e incluye el límite del artículo 2870 del Labor Code y el aviso del artículo 2872. La versión de Inglaterra y Gales aplica la ley y los tribunales ingleses y recoge el requisito de forma escrita y firma para ceder derechos de autor de la Copyright, Designs and Patents Act 1988 y la inscripción de las cesiones de patentes conforme a la Patents Act 1977. Para una cesión redactada de forma nativa conforme a la Ley de Propiedad Intelectual española, véase el [contrato de cesión de propiedad intelectual en España](/es/contracts/ip-assignment-spain).
+Dealroom ofrece este contrato para **California**, **Inglaterra y Gales** y **España**, redactado en **inglés** o en **español**. La versión de California aplica la ley y los tribunales de California e incluye el límite del artículo 2870 del Labor Code y el aviso del artículo 2872. La versión de Inglaterra y Gales aplica la ley y los tribunales ingleses y recoge el requisito de forma escrita y firma para ceder derechos de autor de la Copyright, Designs and Patents Act 1988 y la inscripción de las cesiones de patentes conforme a la Patents Act 1977. La versión de España aplica la Ley de Propiedad Intelectual, la Ley de Patentes y los tribunales del domicilio social del cesionario, interpreta la cesión de forma restrictiva y exige inscribir la cesión de patentes en la OEPM. La skill deja al criterio del/de la abogado/a el pago en participaciones y el código abierto en España. Para una cesión redactada de forma nativa conforme a la Ley de Propiedad Intelectual española, véase el [contrato de cesión de propiedad intelectual en España](/es/contracts/ip-assignment-spain).
 
 ## Errores frecuentes
 
 - **Un alcance impreciso.** La skill advierte de que el alcance debe estar claramente definido para ser exigible y de que uno excesivamente amplio puede impugnarse.
 - **Olvidar las invenciones previas.** Sin un anexo, el cedente puede transmitir sin querer propiedad intelectual valiosa, o alegar más tarde que nunca transmitió un elemento clave.
 - **Ignorar los límites para empleados en California.** Una cesión por periodo de un empleado no alcanza las invenciones de tiempo personal protegidas por el artículo 2870.
-- **Tratar los derechos morales como transmisibles.** Pueden renunciarse, con límites, pero no cederse; los derechos sobre arte visual reconocidos en Estados Unidos por la VARA no son renunciables.
+- **Tratar los derechos morales como transmisibles.** En Inglaterra y Gales pueden renunciarse, pero no cederse; los derechos sobre arte visual reconocidos en Estados Unidos por la VARA no son renunciables; en España no pueden ni renunciarse ni cederse.
 - **Pasar por alto el código abierto.** Nadie puede ceder lo que no es suyo, y las licencias copyleft pueden obligar a publicar código propio.
 - **No prever la inscripción.** Sin cláusula de colaboración, o con una muy limitada, el cesionario puede tener que acudir a los tribunales para que el cedente firme.
 - **Sin contraprestación real.** Una transmisión sin precio y sin escritura formal (deed) puede no ser exigible.

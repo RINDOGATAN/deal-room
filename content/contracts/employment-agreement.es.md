@@ -7,13 +7,13 @@ summary: "El contrato de trabajo fija las condiciones en que una empresa contrat
 related: ["employment-contract-spain", "consulting-agreement", "equity-incentive-plan", "ip-assignment-agreement"]
 faq:
   - q: "¿Qué debe incluir un contrato de trabajo?"
-    a: "El contrato de trabajo de Dealroom regula el tipo de relación laboral, la retribución, la participación en el capital, el periodo de prueba, la jornada y el lugar de trabajo, el preaviso, la posible no competencia, la cesión de propiedad intelectual, la confidencialidad y la resolución de conflictos. Las cláusulas estándar añaden puesto y funciones, prestaciones, gastos, devolución de material y despido por causa justificada."
+    a: "El contrato de trabajo de Dealroom regula el tipo de relación laboral, la retribución, la participación en el capital, el periodo de prueba, la jornada y el lugar de trabajo, el preaviso, la posible no competencia o no captación, la cesión de propiedad intelectual, la confidencialidad y la resolución de conflictos. Las cláusulas estándar añaden puesto y funciones, prestaciones, gastos, devolución de material y despido por causa justificada."
   - q: "¿Sirve este contrato para contratar a un/a trabajador/a en España?"
     a: "No. Este contrato se rige por el Derecho de California o de Inglaterra y Gales. Para una relación laboral sujeta al Estatuto de los Trabajadores, Dealroom ofrece el contrato laboral español, con sus propias reglas de periodo de prueba, indemnización y preaviso."
   - q: "¿Puede incluir un pacto de no competencia?"
     a: "En California no: la no competencia posterior al empleo es nula conforme a la sección 16600 del Business and Professions Code, y Dealroom no ofrece esa opción allí. En Inglaterra y Gales solo es exigible si es razonable en alcance, duración y territorio y protege un interés empresarial legítimo. La skill ofrece 12 meses, 6 meses o ninguna."
   - q: "¿Existe el despido libre (at-will) en Inglaterra y Gales?"
-    a: "No. El empleo at-will es la regla general en California, pero el Derecho inglés no lo reconoce: el/la empleado/a adquiere protección frente al despido improcedente tras dos años de antigüedad. Para Inglaterra y Gales, Dealroom ofrece contrato indefinido o de duración determinada."
+    a: "No. El empleo at-will es la regla general en California, pero el Derecho inglés no lo reconoce: el/la empleado/a adquiere protección frente al despido improcedente tras dos años de antigüedad (seis meses a partir del 1 de enero de 2027 según la Employment Rights Act 2025, fecha que la skill pide comprobar). Para Inglaterra y Gales, Dealroom ofrece contrato indefinido o de duración determinada."
   - q: "¿En qué idiomas puede redactarse?"
     a: "Dealroom redacta este contrato de trabajo en inglés o en español, para California o para Inglaterra y Gales."
 ---
@@ -31,7 +31,7 @@ Firman dos partes:
 - **La Empresa** (el Empleador), que contrata y retribuye.
 - **El/La Empleado/a**, persona física.
 
-Las partes completan los datos: fecha de inicio, fecha de fin en un contrato de duración determinada, salario base, porcentaje de bonus, número de acciones en opciones o RSU, días presenciales por semana y dirección de la oficina, zona horaria del horario principal, ámbito geográfico de la no competencia, ciudad para la resolución de conflictos y organismo de arbitraje.
+Las partes completan los datos: fecha de inicio, fecha de fin en un contrato de duración determinada, salario base y divisa de toda la retribución (USD por defecto), porcentaje de bonus, número de acciones en opciones o RSU, días presenciales por semana y dirección de la oficina, zona horaria del horario principal, ámbito geográfico de la no competencia, ciudad para la resolución de conflictos, organismo de arbitraje (JAMS por defecto) y jurisdicción cuyos tribunales conocerán de los litigios.
 
 ## Cláusulas principales
 
@@ -61,7 +61,11 @@ Dos semanas, un mes o tres meses, con la posibilidad de que la empresa pague en 
 
 ### No competencia
 
-Restricción de 12 o 6 meses para trabajar en una empresa competidora o crearla dentro de un territorio, o ninguna. Las dos opciones restrictivas no están disponibles en California.
+Restricción de 12 o 6 meses para trabajar en una empresa competidora o crearla dentro de un territorio, o ninguna. Las dos opciones restrictivas no están disponibles en California. En Inglaterra y Gales la skill reserva los doce meses para los cargos más altos.
+
+### No captación
+
+Prohibición durante 12 meses de captar al personal clave con quien el/la empleado/a tuvo trato relevante, prohibición durante 12 meses de captar a los clientes con quienes trató en su último año, o ninguna restricción, apoyándose en la confidencialidad y los secretos empresariales. Las dos opciones restrictivas no están disponibles en California, donde la skill trata estos pactos como nulos.
 
 ### Cesión de propiedad intelectual
 
@@ -79,7 +83,7 @@ Las cláusulas estándar regulan además puesto y funciones, prestaciones, reemb
 
 ## Qué suelen negociar las partes
 
-La empresa suele preferir el empleo at-will o de duración determinada, retribución con bonus o comisiones, ninguna participación en el capital, un periodo de prueba más largo, no competencia, cesión amplia de propiedad intelectual y arbitraje obligatorio. El/La empleado/a suele preferir el contrato indefinido, RSU, ningún periodo de prueba, teletrabajo, un preaviso más largo, ninguna no competencia, una cesión limitada y acceso a los tribunales.
+La empresa suele preferir el empleo at-will o de duración determinada, retribución con bonus o comisiones, ninguna participación en el capital, un periodo de prueba más largo, no competencia y no captación, cesión amplia de propiedad intelectual y arbitraje obligatorio. El/La empleado/a suele preferir el contrato indefinido, RSU, ningún periodo de prueba, teletrabajo, un preaviso más largo, ninguna restricción posterior, una cesión limitada y acceso a los tribunales.
 
 Cuando las partes no se ponen de acuerdo, Dealroom propone las posiciones equilibradas de la skill:
 
@@ -90,19 +94,19 @@ Cuando las partes no se ponen de acuerdo, Dealroom propone las posiciones equili
 - **Confidencialidad:** mutua.
 - **Conflictos:** tribunales.
 
-En tipo de relación, periodo de prueba, propiedad intelectual y no competencia no hay una opción totalmente neutral; las más cercanas al punto medio son el contrato indefinido, la prueba de tres meses, la cesión limitada o la cesión con licencia de vuelta y, en Inglaterra y Gales, la no competencia de seis meses.
+En tipo de relación, periodo de prueba, propiedad intelectual y no competencia no hay una opción totalmente neutral; las más cercanas al punto medio son el contrato indefinido, la prueba de tres meses, la cesión limitada o la cesión con licencia de vuelta y, en Inglaterra y Gales, la no competencia de seis meses. En no captación, las dos opciones restrictivas y la opción sin restricción se inclinan por igual en sentidos opuestos.
 
 ## Jurisdicciones e idiomas que admite Dealroom
 
 Dealroom redacta este contrato conforme al Derecho de **California** y de **Inglaterra y Gales**, en **inglés** o en **español**.
 
-- **California:** Derecho de California; incluye el aviso de la sección 2870 del Labor Code sobre invenciones del/de la empleado/a, separa cualquier restricción inválida según la sección 16600 y exige pagar el salario final y las vacaciones devengadas conforme a las secciones 201 a 203 del Labor Code.
+- **California:** Derecho de California; incluye el aviso de la sección 2870 del Labor Code sobre invenciones del/de la empleado/a, separa cualquier restricción inválida según la sección 16600, no ofrece las opciones de no competencia ni de no captación y exige pagar el salario final y las vacaciones devengadas conforme a las secciones 201 a 203 del Labor Code.
 - **Inglaterra y Gales:** Derecho inglés; preserva los derechos legales de la Employment Rights Act 1996, fija la antigüedad desde la fecha de inicio, aplica el mayor de los preavisos legal o contractual y recoge las obligaciones de la empresa conforme a la Data Protection Act 2018 y el UK GDPR.
 
 ## Errores frecuentes
 
 - **Usar la fórmula at-will en Inglaterra y Gales.** No se reconoce allí; el/la empleado/a tiene protecciones legales.
-- **Incluir no competencia para un/a empleado/a de California.** Es nula; la skill recomienda apoyarse en la confidencialidad.
+- **Incluir no competencia o no captación para un/a empleado/a de California.** La skill trata ambas como nulas y recomienda apoyarse en la confidencialidad y en la protección de los secretos empresariales.
 - **Una no competencia desproporcionada en Inglaterra y Gales.** Si no es razonable en alcance, duración y territorio, puede anularse; según la skill, seis meses tiene más probabilidades de mantenerse que doce.
 - **Omitir el aviso de la sección 2870.** En California, la cesión de propiedad intelectual debe respetar los derechos del/de la empleado/a sobre sus invenciones personales, y la empresa debe informarle por escrito.
 - **Bonus discrecionales con criterios poco claros.** La skill advierte que pueden generar conflictos sobre lo que se esperaba.

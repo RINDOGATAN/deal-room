@@ -11,16 +11,16 @@ faq:
   - q: "What is a cookie window in affiliate marketing?"
     a: "It is the period after a customer clicks the affiliate's link during which a purchase is credited to the affiliate. The template sets it in days (30 by default). Under last-click attribution, no commission is payable if the cookie expires before the purchase."
   - q: "What is a commission clawback?"
-    a: "It is the merchant's right to recover commission on a sale that is later refunded, charged back, cancelled or found to be fraudulent. The template offers a full clawback within 90 days, or a limited one: 100% within 30 days, 50% between day 31 and day 60, and nothing after that."
+    a: "It is the merchant's right to recover commission on a sale that is later refunded, charged back, cancelled or reversed. The template offers a full clawback within 90 days, or a limited one: 100% within 30 days, 50% between day 31 and day 60, and nothing after that."
   - q: "Do affiliates have to disclose that they earn a commission?"
     a: "Yes. Disclosure is legally required in all three jurisdictions the template covers, and failure to disclose can lead to regulatory action against both the merchant and the affiliate. The parties choose standard disclosure or prescribed wording set by the merchant."
   - q: "Do affiliates keep earning after the agreement ends?"
-    a: "Only under the annual term option, which gives trailing commissions on repeat purchases by customers the affiliate referred, for a trailing period. Under the month-to-month option no trailing commissions are paid."
+    a: "Only under the annual term option, which gives trailing commissions on repeat purchases by customers the affiliate referred during the term, for six months after the agreement ends. Under the month-to-month option no trailing commissions are paid."
 ---
 
 ## What it is and when it is used
 
-An affiliate or referral program agreement is used when a merchant pays third parties (bloggers, publishers, comparison sites, partners) a commission for sales they refer through a tracking link. The template names the program, sets a base commission rate and the cookie window, and adds standard terms on enrolment, affiliate representations (authentic channels, truthful content, no click fraud or cookie stuffing), merchant obligations, confidentiality, mutual indemnities, a liability cap equal to twelve months of commissions, and the affiliate's status as an independent contractor. The merchant may update the program schedule on thirty days' notice.
+An affiliate or referral program agreement is used when a merchant pays third parties (bloggers, publishers, comparison sites, partners) a commission for sales they refer through a tracking link. The template names the program, sets a base commission rate and the cookie window, and adds standard terms on enrolment, affiliate representations (authentic channels, truthful content, no click fraud or cookie stuffing), merchant obligations, confidentiality, mutual indemnities, a cap on the Merchant's liability equal to the commissions paid in the twelve months before a claim, and the affiliate's status as an independent contractor. The merchant may update the program schedule on thirty days' notice.
 
 ## Who signs it and in which role
 
@@ -41,15 +41,15 @@ Content and organic methods only, or broad digital marketing excluding bids on t
 No sub-affiliates, or sub-affiliates with the Merchant's approval (the Affiliate stays accountable). Standard regulatory disclosure, or enhanced disclosure using prescribed wording.
 
 ### Term, reporting and exclusivity
-Month-to-month with thirty days' notice, or an annual term with trailing commissions. Basic monthly reports or a real-time dashboard. Non-exclusive, or exclusive within a defined product category.
+Month-to-month with thirty days' notice, or a twelve-month term that renews automatically unless either party gives sixty days' notice, with six months of trailing commissions after it ends. Basic monthly reports or a real-time dashboard. Non-exclusive, or exclusive within a defined product category.
 
 ## What the two sides usually negotiate
 
-The Merchant prefers net-60 with a validation hold, full clawback, content-only marketing, strict brand approval, no sub-affiliates, month-to-month terms and category exclusivity. The Affiliate prefers tiered commissions, multi-touch attribution, limited clawback, a flexible brand kit, an annual term with trailing commissions, a real-time dashboard and non-exclusivity. The balanced positions are net-30 monthly payment, standard disclosure, broad digital marketing excluding brand search terms and the hybrid commission. When the parties disagree, Dealroom proposes these middle-ground options, weighted by how firmly each side holds its position.
+The Merchant prefers net-60 with a validation hold, full clawback, content-only marketing, strict brand approval, no sub-affiliates, month-to-month terms and category exclusivity. The Affiliate prefers tiered commissions, multi-touch attribution, limited clawback, a flexible brand kit, an annual term with trailing commissions, a real-time dashboard and non-exclusivity. The balanced positions are net-30 monthly payment, standard disclosure and broad digital marketing excluding brand search terms; on commission, the flat rate and the hybrid structure sit equally close to the middle. The other clauses have no fully neutral option; the positions nearest the middle are last-click attribution, limited clawback, the flexible brand kit, sub-affiliates with approval, the real-time dashboard and the month-to-month term, while the two exclusivity options are equally far apart. When the parties disagree, Dealroom proposes a compromise weighted by how firmly each side holds its position.
 
 ## Jurisdictions and languages Dealroom supports for it
 
-Dealroom drafts this agreement under the law of **California**, **England and Wales** or **Spain**, in **English** or **Spanish**. For California, the template refers to the FTC Endorsement Guides, the limits on non-competes under section 16600 (which affect exclusivity) and the CCPA and CPRA. For England and Wales, to the CAP Code, CMA guidance on endorsements, the Consumer Protection from Unfair Trading Regulations 2008, UK GDPR and PECR. For Spain, to the LSSI-CE and the Ley General de Publicidad, the LOPDGDD and GDPR, and the possible application of the Commercial Code rules on commission agency if the Affiliate acts in the Merchant's name.
+Dealroom drafts this agreement under the law of **California**, **England and Wales** or **Spain**, in **English** or **Spanish**. For California, the template refers to the FTC Endorsement Guides, the limits on non-competes under section 16600 (which affect exclusivity) and the CCPA and CPRA, with disputes in the courts of San Francisco County. For England and Wales, to the CAP Code, CMA guidance on endorsements, the Consumer Protection from Unfair Trading Regulations 2008, UK GDPR, PECR and the Unfair Contract Terms Act 1977. For Spain, to the LSSI-CE and the Ley General de Publicidad, the LOPDGDD and GDPR (cookie consent under article 22.2 of the LSSI-CE and AEPD guidance), and the possible application of the Commercial Code rules on commission agency if the Affiliate acts in the Merchant's name, with disputes in the courts of Madrid.
 
 ## Common mistakes
 

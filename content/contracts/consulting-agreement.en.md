@@ -11,7 +11,7 @@ faq:
   - q: "Who owns the work a freelancer or consultant creates?"
     a: "Unless the contract assigns it in writing, intellectual property created by an independent contractor stays with the contractor, both in the United States and in the United Kingdom. The agreement therefore needs an express clause: full assignment to the client, an exclusive licence to the client, or a non-exclusive licence while the consultant keeps ownership."
   - q: "Can a consulting agreement include a non-compete?"
-    a: "In California, a non-compete on an independent contractor is void under Business and Professions Code section 16600, so Dealroom does not offer that option there. In England and Wales a post-engagement restriction can be enforced only if it is reasonable and necessary to protect a legitimate business interest. A non-solicitation clause is the more common choice."
+    a: "In California, a non-compete on an independent contractor is void under Business and Professions Code section 16600, so Dealroom does not offer that option there. The skill treats non-solicitation clauses the same way in California, so only confidentiality and trade-secret protection remain there. In England and Wales a post-engagement restriction can be enforced only if it is reasonable and necessary to protect a legitimate business interest; a non-solicitation clause is the more common choice."
   - q: "What does IR35 mean for a consulting agreement in England and Wales?"
     a: "IR35 (the off-payroll working rules) examines control, the right to send a substitute and mutuality of obligation to decide whether a consultant is in substance an employee. The agreement's England and Wales provisions record that a medium or large client must make a Status Determination Statement and give it to the consultant."
   - q: "Is an independent contractor agreement the same as a consulting agreement?"
@@ -31,7 +31,7 @@ Two parties sign:
 - **The Client**, a company that engages the consultant and pays for the services.
 - **The Consultant**, who may be an individual or a company, and who performs the services.
 
-The parties fill in the facts of the deal: a description of the services, monthly hours for a retainer, the hourly rate, a maximum number of hours, the deposit percentage, the initial term in months (12 by default), the start date, the geographic area for any non-compete, the kill fee percentage and the liability multiple (2 by default).
+The parties fill in the facts of the deal: a description of the services, monthly hours for a retainer, the hourly rate and its currency (USD by default), a maximum number of hours, the deposit percentage, the initial term in months (12 by default), the start date, the geographic area for any non-compete, the kill fee percentage and the liability multiple (2 by default).
 
 ## Key clauses
 
@@ -57,7 +57,7 @@ Mutual confidentiality with standard exceptions and a 3-year survival period, a 
 
 ### Non-compete and non-solicitation
 
-The consultant may agree not to solicit the client's employees and customers for 12 months while staying free to work for competitors, may accept both a non-compete and a non-solicitation for 6 months after the engagement, or may have no post-engagement restriction beyond confidentiality.
+The consultant may agree not to solicit the client's employees and customers for 12 months while staying free to work for competitors, may accept both a non-compete and a non-solicitation for 6 months after the engagement, or may have no post-engagement restriction beyond confidentiality. In California only the last option is offered.
 
 ### Termination rights
 
@@ -69,7 +69,7 @@ Liability capped at the fees paid in the 12 months before the claim, a cap set a
 
 ### Independent contractor status
 
-A standard declaration of contractor status; an enhanced clause that addresses control, substitution, business integration and economic independence, with mutual indemnities if the relationship is held to be employment; or a clause built around the consultant's right to send a qualified substitute, which the skill describes as a key indicator under IR35.
+A standard declaration of contractor status; an enhanced clause that addresses control, substitution, business integration and economic independence, with mutual indemnities if the relationship is held to be employment; or a clause built around the consultant's right to send a qualified substitute, which the skill describes as a key indicator under IR35. For England and Wales only, a fourth option allocates the IR35 tax risk: the client issues the Status Determination Statement before the first payment and answers any challenge within 45 days, and the parties agree who bears employer National Insurance and the apprenticeship levy if the engagement falls inside the rules.
 
 The standard terms also cover performance standards, professional indemnity insurance, expenses (borne by the consultant unless agreed) and subcontracting with notice to the client.
 
@@ -87,15 +87,15 @@ When the two sides disagree, Dealroom proposes the balanced positions in the ski
 - **Confidentiality:** mutual, either standard or enhanced.
 - **Termination:** either party on 30 days' notice, with payment for work done.
 - **Liability:** a cap at the fees paid, or at a multiple of them.
-- **Status:** the standard contractor declaration.
+- **Status:** the standard contractor declaration or, in England and Wales, the IR35 risk allocation.
 
-On restrictive covenants there is no fully neutral option; non-solicitation only is the position closest to the middle.
+On restrictive covenants there is no fully neutral option; in England and Wales, non-solicitation only is the position closest to the middle.
 
 ## Jurisdictions and languages Dealroom supports for it
 
 Dealroom drafts this agreement under the law of **California** and of **England and Wales**, in **English** or **Spanish**.
 
-- **California:** the agreement records that contractor status must satisfy the ABC test in Labor Code section 2775 (AB5), and disputes go to the courts of a California county. The non-compete option is not available.
+- **California:** the agreement records that contractor status must satisfy the ABC test in Labor Code section 2775 (AB5), and disputes go to the courts of a California county. Neither the non-compete nor the non-solicitation option is available, and the IR35 option does not apply.
 - **England and Wales:** the agreement refers to the IR35 rules and the client's Status Determination Statement, preserves liability for death or personal injury caused by negligence and for fraud under the Unfair Contract Terms Act 1977, and applies statutory late payment interest where relevant.
 
 For a services engagement governed by Spanish law, use the [Spanish services agreement](/contracts/services-agreement-spain).
@@ -104,7 +104,7 @@ For a services engagement governed by Spanish law, use the [Spanish services agr
 
 - **Relying on the label alone.** Calling someone a contractor is not decisive. If the client in practice controls how and when the work is done, the relationship may be reclassified as employment.
 - **Leaving IP unassigned.** Work by a contractor is generally not a "work made for hire" in the United States, and in the United Kingdom IP vests in the creator. Without a written clause the client may not own what it paid for.
-- **Adding a non-compete in California.** It is void for independent contractors. Use non-solicitation and confidentiality instead.
+- **Adding a non-compete or non-solicitation in California.** The skill treats both as void for independent contractors. Rely on confidentiality and trade-secret law instead.
 - **Choosing open-ended terms without thought.** An ongoing or automatically renewing engagement, an hourly rate with no cap and a broad retainer can each weaken contractor status.
 - **Accepting a substitution right on paper only.** The skill notes that the consultant must actually be able to exercise the right for it to be credible.
 - **Uncapped liability for a small consultancy.** It creates unlimited exposure and requires matching professional indemnity insurance.

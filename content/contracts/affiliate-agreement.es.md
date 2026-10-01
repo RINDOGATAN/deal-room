@@ -11,20 +11,20 @@ faq:
   - q: "¿Qué es la ventana de cookie?"
     a: "Es el plazo tras el clic en el enlace del afiliado/a durante el cual una compra se le atribuye. El modelo la fija en días (30 por defecto). Con atribución de último clic, si la cookie caduca antes de la compra no se paga comisión."
   - q: "¿Se puede recuperar una comisión ya pagada?"
-    a: "Sí, si la venta se reembolsa, se retrocede o se cancela. El modelo ofrece una recuperación total dentro de 90 días, o una limitada: el 100 % en los primeros 30 días, el 50 % entre los días 31 y 60, y nada después."
+    a: "Sí, si la venta se reembolsa, se retrocede, se cancela o se anula. El modelo ofrece una recuperación total dentro de 90 días, o una limitada: el 100 % en los primeros 30 días, el 50 % entre los días 31 y 60, y nada después."
   - q: "¿Es obligatorio indicar que un enlace es de afiliación?"
     a: "Sí. La divulgación es obligatoria en las tres jurisdicciones del modelo, y no hacerla puede dar lugar a actuaciones contra el comerciante y el afiliado/a. En España, el modelo remite al artículo 20 de la LSSI-CE y a la Ley General de Publicidad."
   - q: "¿Se cobran comisiones tras terminar el contrato?"
-    a: "Solo con la opción de plazo anual, que da comisiones residuales por compras repetidas de clientes referidos durante un período posterior. Con la opción mes a mes no hay comisiones residuales."
+    a: "Solo con la opción de plazo anual, que da comisiones residuales por las compras repetidas de clientes referidos durante la vigencia, durante los seis meses siguientes a la terminación. Con la opción mes a mes no hay comisiones residuales."
 ---
 
 ## Qué es y cuándo se usa
 
-El contrato de programa de afiliados o referidos se usa cuando un comerciante paga a terceros (blogs, editores, comparadores, socios comerciales) una comisión por las ventas que llegan a través de un enlace de seguimiento. El modelo identifica el programa, fija la comisión base y la ventana de cookie, e incluye condiciones estándar de alta en el programa, declaraciones del afiliado/a (canales auténticos, contenido veraz, sin fraude de clics ni cookie stuffing), obligaciones del comerciante, confidencialidad, indemnidades recíprocas, un límite de responsabilidad igual a doce meses de comisiones y la condición de contratista independiente del afiliado/a. El comerciante puede actualizar las condiciones del programa con treinta días de preaviso.
+El contrato de programa de afiliados o referidos se usa cuando un comerciante paga a terceros (blogs, editores, comparadores, socios comerciales) una comisión por las ventas que llegan a través de un enlace de seguimiento. El modelo identifica el programa, fija la comisión base y la ventana de cookie, e incluye condiciones estándar de alta en el programa, declaraciones del afiliado/a (canales auténticos, contenido veraz, sin fraude de clics ni cookie stuffing), obligaciones del comerciante, confidencialidad, indemnidades recíprocas, un límite de la responsabilidad del comerciante igual a las comisiones pagadas en los doce meses anteriores a la reclamación y la condición de contratista independiente del afiliado/a. El comerciante puede actualizar las condiciones del programa con treinta días de preaviso.
 
 ## Quién lo firma y en qué calidad
 
-El **Comerciante** (la empresa que gestiona el programa) y el **Afiliado/a** (persona física o jurídica que lo promociona).
+El **Comerciante** (la empresa que gestiona el programa, a la que el contrato denomina "la Empresa") y el **Afiliado/a** (persona física o jurídica que lo promociona).
 
 ## Cláusulas principales
 
@@ -41,15 +41,15 @@ Solo contenido y canales orgánicos, o marketing digital amplio sin pujar por la
 Sin subafiliados/as, o con ellos previa aprobación (el Afiliado/a sigue siendo responsable). Divulgación normativa estándar o reforzada con un texto prescrito.
 
 ### Vigencia, informes y exclusividad
-Mes a mes con 30 días de preaviso, o anual con comisiones residuales. Informes mensuales básicos o panel en tiempo real. Sin exclusividad, o exclusividad en una categoría de producto.
+Mes a mes con 30 días de preaviso, o un plazo de doce meses que se renueva automáticamente salvo preaviso de 60 días, con seis meses de comisiones residuales tras la terminación. Informes mensuales básicos o panel en tiempo real. Sin exclusividad, o exclusividad en una categoría de producto.
 
 ## Qué suelen negociar las partes
 
-El Comerciante prefiere el pago a 60 días con retención, la recuperación total, el marketing solo orgánico, la preaprobación de la marca, sin subafiliados, el contrato mes a mes y la exclusividad por categoría. El Afiliado/a prefiere la comisión escalonada, la atribución multitáctil, la recuperación limitada, el kit de marca, el plazo anual con comisiones residuales, el panel en tiempo real y la no exclusividad. Las posiciones equilibradas son el pago a 30 días, la divulgación estándar, el marketing digital amplio sin pujas de marca y la comisión híbrida. Si las partes discrepan, Dealroom propone estas opciones intermedias, ponderadas según la firmeza de cada parte.
+El Comerciante prefiere el pago a 60 días con retención, la recuperación total, el marketing solo orgánico, la preaprobación de la marca, sin subafiliados, el contrato mes a mes y la exclusividad por categoría. El Afiliado/a prefiere la comisión escalonada, la atribución multitáctil, la recuperación limitada, el kit de marca, el plazo anual con comisiones residuales, el panel en tiempo real y la no exclusividad. Las posiciones equilibradas son el pago a 30 días, la divulgación estándar y el marketing digital amplio sin pujas de marca; en la comisión, la fija y la híbrida quedan igual de cerca del punto medio. En las demás cláusulas no hay una opción totalmente neutral; las más próximas al centro son la atribución al último clic, la recuperación limitada, el kit de marca, la subafiliación con aprobación, el panel en tiempo real y el contrato mes a mes, mientras que las dos opciones de exclusividad quedan igual de alejadas. Si las partes discrepan, Dealroom propone un compromiso ponderado según la firmeza de cada parte.
 
 ## Jurisdicciones e idiomas disponibles en Dealroom
 
-Dealroom redacta este contrato bajo derecho de **España**, **Inglaterra y Gales** o **California**, en **español** o **inglés**. Para España, el modelo remite a la LSSI-CE y a la Ley General de Publicidad, a la LOPDGDD y al RGPD (consentimiento de cookies conforme al artículo 22.2 de la LSSI-CE y las guías de la AEPD) y a la posible aplicación de las normas del Código de Comercio sobre la comisión mercantil si el Afiliado/a actúa en nombre del Comerciante; las disputas van a los tribunales de Madrid. Para Inglaterra y Gales, al CAP Code, la CMA y PECR; para California, a las guías de la FTC, la CCPA y los límites del artículo 16600 a la exclusividad.
+Dealroom redacta este contrato bajo derecho de **España**, **Inglaterra y Gales** o **California**, en **español** o **inglés**. Para España, el modelo remite a la LSSI-CE y a la Ley General de Publicidad, a la LOPDGDD y al RGPD (consentimiento de cookies conforme al artículo 22.2 de la LSSI-CE y las guías de la AEPD) y a la posible aplicación de las normas del Código de Comercio sobre la comisión mercantil si el Afiliado/a actúa en nombre del Comerciante; las disputas van a los tribunales de Madrid. Para Inglaterra y Gales, al CAP Code, las directrices de la CMA, las Consumer Protection from Unfair Trading Regulations 2008, el UK GDPR, PECR y la Unfair Contract Terms Act 1977; para California, a las guías de la FTC, la CCPA y la CPRA y los límites del artículo 16600 a la exclusividad, con los tribunales del condado de San Francisco.
 
 ## Errores frecuentes
 
