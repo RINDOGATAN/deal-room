@@ -12,6 +12,7 @@
 ## Public Pages
 
 - [Homepage](https://dealroom.todo.law): Platform overview, feature descriptions, how it works
+- [Pricing](https://dealroom.todo.law/pricing): Pay per contract for people and agents, what is free, and the kit
 - [Documentation Hub](https://dealroom.todo.law/docs): Full platform documentation
 - [How It Works](https://dealroom.todo.law/docs/how-it-works): Step-by-step negotiation workflow
 - [Compromise Algorithm](https://dealroom.todo.law/docs/compromise): Weighted compromise methodology

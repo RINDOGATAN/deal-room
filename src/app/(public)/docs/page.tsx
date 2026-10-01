@@ -10,7 +10,9 @@ import {
   Scale,
   ArrowRight,
   Shield,
+  Tag,
 } from "lucide-react";
+import { features } from "@/config/features";
 
 const sectionDefs = [
   {
@@ -37,6 +39,10 @@ const sectionDefs = [
     titleKey: "sectionAgentPrepTitle",
     descKey: "sectionAgentPrepDesc",
   },
+  // Pricing only where pay per contract is on (hosted); the kit has none.
+  ...(features.stripeEnabled
+    ? [{ href: "/pricing", icon: Tag, titleKey: "sectionPricingTitle", descKey: "sectionPricingDesc" }]
+    : []),
 ];
 
 export default function DocsPage() {
