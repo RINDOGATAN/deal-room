@@ -13,19 +13,20 @@ Dealroom uses a "free coffee machine, paid capsules" model:
 
 ### Where premium skills are sold (since 2026-09-16)
 
-- **Hosted (dealroom.todo.law):** free. Every skill, premium ones included,
-  is available to every account; nothing is sold there. Free hosted use
-  includes, per account: one organisation, 90 days of editing from the
-  first sign-in (then read-only, export always available), 10 deals, 3
-  startup journeys. Hosted Dealroom comes with no contractual safeguards.
+- **Hosted (dealroom.todo.law):** pay per contract (since 2026-09-30).
+  Every skill, premium ones included, is available to every account and is
+  covered by the contract price. Drafting and negotiating are free; each
+  contract is paid once, at the first download or the start of signature.
+  Agents pay with prepaid credits sold in packs of ten (`docs/billing.md`).
+  Hosted Dealroom comes with no contractual safeguards.
   Do not enter privileged or confidential information. For that, run your
   own instance (https://www.todo.law/run).
 - **The kit (your own instance):** no caps. Premium skills are **60 a year
   each in the kit (in your currency)**, bought on the todo.law storefront and activated offline
   with a licence file (see "Offline Activation" below).
 
-The Stripe, subscription and online-activation paths described below remain
-in the code for other deployments but are switched off on hosted Dealroom.
+The per-skill subscription and online-activation paths described below
+remain in the code for other deployments but are not used on hosted Dealroom.
 
 ---
 

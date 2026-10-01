@@ -8,6 +8,7 @@ import { Providers } from "@/components/providers";
 import { Toaster } from "@/components/ui/sonner";
 import { LegalNotice } from "@/components/legal-notice";
 import { brand } from "@/config/brand";
+import { features } from "@/config/features";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
 
@@ -42,9 +43,14 @@ const spaceMono = Space_Mono({
 
 const siteUrl = `https://dealroom.${brand.domain}`;
 
+// Hosted with pay per contract says so; the kit (payments off) keeps the
+// neutral wording.
+const tagline = features.stripeEnabled ? brand.taglinePerContract : brand.tagline;
+const description = features.stripeEnabled ? brand.descriptionPerContract : brand.description;
+
 export const metadata: Metadata = {
-  title: `DEALROOM - ${brand.tagline}`,
-  description: brand.description,
+  title: `Dealroom: ${tagline}`,
+  description,
   metadataBase: new URL(siteUrl),
   alternates: { canonical: "/" },
   icons: {
@@ -58,8 +64,8 @@ export const metadata: Metadata = {
   },
   manifest: "/site.webmanifest",
   openGraph: {
-    title: `Dealroom — ${brand.tagline}`,
-    description: brand.description,
+    title: `Dealroom: ${tagline}`,
+    description,
     url: siteUrl,
     siteName: "Dealroom",
     locale: "en_US",
@@ -67,8 +73,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary",
-    title: `Dealroom — ${brand.tagline}`,
-    description: brand.description,
+    title: `Dealroom: ${tagline}`,
+    description,
   },
   robots: {
     index: true,

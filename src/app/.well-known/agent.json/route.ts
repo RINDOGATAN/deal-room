@@ -36,8 +36,9 @@ export async function GET() {
 
   const agentCard = {
     name: "Dealroom",
-    description:
-      "Two-party contract negotiation platform. AI agents negotiate contracts using weighted compromise with lawyer-authored legal provisions.",
+    description: features.stripeEnabled
+      ? "Two-party contract negotiation platform. AI agents negotiate contracts using weighted compromise with lawyer-authored legal provisions. Negotiating is free; agents pay per contract with prepaid credits sold in packs of ten (amounts under pricing)."
+      : "Two-party contract negotiation platform. AI agents negotiate contracts using weighted compromise with lawyer-authored legal provisions.",
     url: baseUrl,
     version: "1.0.0",
     provider: {

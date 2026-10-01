@@ -682,7 +682,7 @@ Contract skills are maintained in a separate private repository (`legalskills`) 
 | `com.nel.skills.advertising-io` | Advertising Insertion Order | 6 | Pricing, delivery, viewability, brand safety, fraud protection |
 | `com.nel.skills.affiliate-program` | Affiliate / Referral Program Agreement | 5 | Commissions, attribution, clawback, disclosure, exclusivity |
 
-Premium skills are 60 a year each in the kit (in your currency; your own instance, offline licence). On hosted Dealroom (dealroom.todo.law) every premium skill is available to every account at no cost and nothing is sold. Where in-app billing is on (neither of those), licensed skills require an entitlement before use.
+Premium skills are 60 a year each in the kit (in your currency; your own instance, offline licence). On hosted Dealroom (dealroom.todo.law) every premium skill is available to every account and is covered by the per-contract price (drafting and negotiating free; each contract paid once at download or signature; see `docs/billing.md`). Where per-skill billing is on (neither of those), licensed skills require an entitlement before use.
 
 ### Skill Categories
 

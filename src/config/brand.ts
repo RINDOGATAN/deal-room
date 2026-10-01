@@ -23,6 +23,9 @@ export interface BrandConfig {
   shortName: string;
   tagline: string;
   description: string;
+  /** Site title and description used while hosted billing is on. */
+  taglinePerContract: string;
+  descriptionPerContract: string;
 
   // Company information
   company: string;
