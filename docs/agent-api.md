@@ -1347,8 +1347,9 @@ All A2A skills are bilingual (EN/ES) and support three jurisdictions: California
 
 ### A2A Usage Limits
 
-On hosted Dealroom, A2A skills are available at no cost, with weekly
-limits (nothing is sold there). On your own instance, premium A2A skills are
+On hosted Dealroom, every A2A skill is included, with weekly limits; the
+contract itself is paid per contract with a prepaid credit (see
+[Paying per contract](#paying-per-contract)). On your own instance, premium A2A skills are
 60 a year each in the kit (in your currency).
 
 | Tier | Limits |

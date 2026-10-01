@@ -17,6 +17,11 @@ export const todo: BrandConfig = {
   shortName: BRAND_NAME,
   tagline: "Contract Negotiation Platform",
   description: "Two-party asynchronous contract negotiation platform with intelligent compromise suggestions",
+  // Hosted with pay per contract (features.stripeEnabled): the site title
+  // and description must not read as a free service.
+  taglinePerContract: "Contract negotiation, pay per contract",
+  descriptionPerContract:
+    "Two-party contract negotiation, by people or by their AI agents, with weighted compromise suggestions. Drafting and negotiating are free; each contract is paid once, when it is downloaded or signed. Agents pay per contract with prepaid credits.",
 
   // Company information
   company: "TODO.LAW",

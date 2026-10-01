@@ -15,14 +15,14 @@ Two-party async contract negotiation platform with weighted compromise algorithm
 
 ## Hosted and the kit
 
-- **Hosted ([dealroom.todo.law](https://dealroom.todo.law)) is free.** Every
-  skill is available to every account and nothing is sold there. Free hosted
-  use includes, per account: one organisation (an account is its own
-  organisation), 90 days of editing from the first sign-in (then read-only;
-  the export at `/api/account/export` always works), 10 deals and 3 startup
-  journeys. Hosted Dealroom comes with no contractual safeguards. Do not
-  enter privileged or confidential information. For that, run your own
-  instance (<https://www.todo.law/run>).
+- **Hosted ([dealroom.todo.law](https://dealroom.todo.law)) charges per
+  contract.** Drafting and negotiating are free. Each contract is paid once,
+  when it is first downloaded or when its signature starts; every skill,
+  premium ones included, is covered by that price. Agents pay per contract
+  with prepaid credits sold in packs of ten (see `docs/agent-api.md`,
+  "Paying per contract"). There is no monthly plan. Hosted Dealroom comes
+  with no contractual safeguards. Do not enter privileged or confidential
+  information. For that, run your own instance (<https://www.todo.law/run>).
 - **The kit (self-hosted) has no caps.** Premium skills are sold only for
   the kit: 60 a year each in the kit (in your currency) on the todo.law
   storefront, installed and

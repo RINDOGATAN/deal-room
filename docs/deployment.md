@@ -23,9 +23,9 @@ For every variable, what it unlocks and who rotates it, see
 | Source | Builds from `main` on every push | Semver tag `vX.Y.Z` publishes `:vX.Y.Z` and `:latest` images |
 | Database | Neon PostgreSQL (pooled URL for the app, direct URL for migrations and seeds) | Postgres container in the suite compose file |
 | Sign-in | Magic link (Resend) and Google OAuth | Local email-only credentials (`NEXT_PUBLIC_LOCAL_AUTH_ENABLED=true`, baked into the image) |
-| Posture | **Free, with limits per account** (since 2026-09-16): on when `VERCEL_ENV=production` (or `AUTH_COOKIE_DOMAIN=.todo.law`); a caution against entering privileged or confidential information on the sign-up screen and in the new-deal flow; per account 1 organisation, 90 days of editing then read-only, 10 deals, 3 journeys; export at `/api/account/export` | No caps, no caution |
-| Payments | None. The hosted posture switches Stripe off in the app even if Stripe variables are still set | Stripe off: neither set, every skill is free (`features.allSkillsFree`) |
-| Premium skills | All available to every account at no cost; nothing is sold | 60 a year each in the kit (in your currency): `.skill` file bought on the storefront, installed on `/skills` |
+| Posture | **Pay per contract** (since 2026-09-30): hosted when `VERCEL_ENV=production` (or `AUTH_COOKIE_DOMAIN=.todo.law`); a caution against entering privileged or confidential information on the sign-up screen and in the new-deal flow. The earlier free-pilot caps (per account 1 organisation, 90 days of editing then read-only, 10 deals, 3 journeys) apply only while hosted billing is off (`features.hostedPilot`); export at `/api/account/export` | No caps, no caution |
+| Payments | Per contract, once the four price variables and `CONTRACT_BILLING_START` are set (see `docs/billing.md`); without them the hosted build stays the free pilot | Stripe off: neither set, every skill is free (`features.allSkillsFree`) |
+| Premium skills | All available to every account, covered by the per-contract price | 60 a year each in the kit (in your currency): `.skill` file bought on the storefront, installed on `/skills` |
 | Default deal mode | Two-party | Solo |
 | Migrations | `prisma migrate deploy` in the Vercel build | Migrator container (`deploy/sovereign/migrate.sh`), which also refreshes the built-in skill catalog on every boot |
 | Daily cron | `vercel.json`, 09:00 UTC, `CRON_SECRET` bearer | Host cron calling `/api/cron/daily` (see `deploy/sovereign/README.md`) |

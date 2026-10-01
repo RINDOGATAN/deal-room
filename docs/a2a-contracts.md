@@ -107,8 +107,9 @@ See [agent-api.md](./agent-api.md) for full endpoint documentation.
 
 ## Usage Limits
 
-Since 2026-09-16 nothing is sold on hosted Dealroom (dealroom.todo.law):
-A2A skills are available there at no cost, within the weekly limits below.
+On hosted Dealroom (dealroom.todo.law) every A2A skill is included, within
+the weekly limits below; negotiating is free and each agreed contract is
+paid once with a prepaid credit (see `docs/agent-api.md`, "Paying per contract").
 For your own instance, premium skills are 60 a year each in the kit (in your currency).
 
 | Tier | Invocations | Detection |
