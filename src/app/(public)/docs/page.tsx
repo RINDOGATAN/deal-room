@@ -3,7 +3,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 import Link from "next/link";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import {
   Workflow,
   Package,
@@ -11,8 +11,10 @@ import {
   ArrowRight,
   Shield,
   Tag,
+  Library,
 } from "lucide-react";
 import { features } from "@/config/features";
+import { contractPath } from "@/lib/contract-pages-paths";
 
 const sectionDefs = [
   {
@@ -39,6 +41,12 @@ const sectionDefs = [
     titleKey: "sectionAgentPrepTitle",
     descKey: "sectionAgentPrepDesc",
   },
+  {
+    href: "/contracts",
+    icon: Library,
+    titleKey: "sectionContractsTitle",
+    descKey: "sectionContractsDesc",
+  },
   // Pricing only where pay per contract is on (hosted); the kit has none.
   ...(features.stripeEnabled
     ? [{ href: "/pricing", icon: Tag, titleKey: "sectionPricingTitle", descKey: "sectionPricingDesc" }]
@@ -47,6 +55,9 @@ const sectionDefs = [
 
 export default function DocsPage() {
   const t = useTranslations("docsHome");
+  const locale = useLocale();
+  // The contract guides have their own URL per language.
+  const hrefFor = (href: string) => (href === "/contracts" ? contractPath(locale === "es" ? "es" : "en") : href);
 
   return (
     <div className="space-y-12">
@@ -95,7 +106,7 @@ export default function DocsPage() {
             return (
               <Link
                 key={section.href}
-                href={section.href}
+                href={hrefFor(section.href)}
                 className="group card-brutal block p-6 hover:border-primary transition-colors"
               >
                 <div className="flex items-start gap-4">

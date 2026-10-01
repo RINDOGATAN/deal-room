@@ -2,7 +2,8 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 import Link from "next/link";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import { contractPath } from "@/lib/contract-pages-paths";
 import type { PricingFacts } from "@/lib/pricing-page";
 import type { Currency } from "@/lib/currency";
 import { CurrencySwitch } from "@/components/pricing/CurrencySwitch";
@@ -25,7 +26,8 @@ export function PricingView({
   currency: Currency;
 }) {
   const t = useTranslations("pricing");
-  const key = currency === "EUR" ? "eur" : "usd";
+  const locale = useLocale();
+  const key =currency === "EUR" ? "eur" : "usd";
   const contractPrice = facts.contract[key];
   const packPrice = facts.pack[key];
 
@@ -98,6 +100,9 @@ export function PricingView({
             <li key={key}>{t(key)}</li>
           ))}
         </ul>
+        <Link href={contractPath(locale === "es" ? "es" : "en")} className="text-sm text-primary underline underline-offset-2">
+          {t("contractsLink")}
+        </Link>
       </section>
 
       <section className="space-y-4" aria-labelledby="pricing-questions">

@@ -5,6 +5,7 @@ import { Globe, Menu, X } from "lucide-react";
 import { useState } from "react";
 import { brand } from "@/config/brand";
 import { features } from "@/config/features";
+import { contractPath } from "@/lib/contract-pages-paths";
 
 interface StartupsHeaderProps {
   t: (key: string) => string;
@@ -16,6 +17,7 @@ interface StartupsHeaderProps {
 const StartupsHeader = ({ t, locale, onLocaleToggle, onSignup }: StartupsHeaderProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const closeMenu = () => setIsMenuOpen(false);
+  const contractsHref = contractPath(locale);
 
   return (
     <header className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-2rem)] max-w-5xl">
@@ -29,6 +31,9 @@ const StartupsHeader = ({ t, locale, onLocaleToggle, onSignup }: StartupsHeaderP
           </a>
 
           <div className="hidden md:flex items-center gap-3">
+            <a href={contractsHref} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+              {t("header.contracts")}
+            </a>
             {features.stripeEnabled && (
               <a href="/pricing" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                 {t("header.pricing")}
@@ -54,6 +59,9 @@ const StartupsHeader = ({ t, locale, onLocaleToggle, onSignup }: StartupsHeaderP
         {isMenuOpen && (
           <div className="md:hidden py-4 px-2 border-t border-border">
             <div className="flex flex-col gap-3">
+              <a href={contractsHref} onClick={closeMenu} className="text-sm text-muted-foreground px-2 py-1">
+                {t("header.contracts")}
+              </a>
               {features.stripeEnabled && (
                 <a href="/pricing" onClick={closeMenu} className="text-sm text-muted-foreground px-2 py-1">
                   {t("header.pricing")}

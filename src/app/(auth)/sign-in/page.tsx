@@ -12,6 +12,7 @@ import { brand } from "@/config/brand";
 import { features } from "@/config/features";
 import { TESTER_EMAILS } from "@/lib/tester";
 import { StatusNote } from "@/components/ui/status-note";
+import { nextPathFromLocation } from "@/lib/sign-in-next";
 
 const TESTER_MODE_ON = process.env.NEXT_PUBLIC_TESTER_MODE === "true";
 
@@ -50,7 +51,7 @@ export default function SignInPage() {
       const result = await signIn("email", {
         email: email.trim(),
         redirect: false,
-        callbackUrl: "/deals",
+        callbackUrl: nextPathFromLocation(),
       });
 
       if (result?.error) {
@@ -77,14 +78,14 @@ export default function SignInPage() {
         email: email.trim(),
         code: code.trim(),
         redirect: false,
-        callbackUrl: "/deals",
+        callbackUrl: nextPathFromLocation(),
       });
 
       if (result?.error) {
         setError(t("invalidInviteCode"));
         setIsEmailLoading(false);
       } else if (result?.ok) {
-        window.location.href = "/deals";
+        window.location.href = nextPathFromLocation();
       }
     } catch {
       setError(t("unexpectedError"));
@@ -103,14 +104,14 @@ export default function SignInPage() {
       const result = await signIn("local", {
         email: email.trim(),
         redirect: false,
-        callbackUrl: "/deals",
+        callbackUrl: nextPathFromLocation(),
       });
 
       if (result?.error) {
         setError(t("unexpectedError"));
         setIsEmailLoading(false);
       } else if (result?.ok) {
-        window.location.href = "/deals";
+        window.location.href = nextPathFromLocation();
       }
     } catch {
       setError(t("unexpectedError"));
@@ -124,7 +125,7 @@ export default function SignInPage() {
 
     try {
       await signIn("google", {
-        callbackUrl: "/deals",
+        callbackUrl: nextPathFromLocation(),
       });
     } catch {
       setError(t("googleSignInFailed"));
@@ -371,13 +372,13 @@ export default function SignInPage() {
                         const result = await signIn("tester", {
                           email: persona.email,
                           redirect: false,
-                          callbackUrl: "/deals",
+                          callbackUrl: nextPathFromLocation(),
                         });
                         if (result?.error) {
                           setError(t("testerSignInFailed"));
                           setIsEmailLoading(false);
                         } else {
-                          window.location.href = "/deals";
+                          window.location.href = nextPathFromLocation();
                         }
                       } catch {
                         setError(t("unexpectedError"));

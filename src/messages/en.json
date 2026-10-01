@@ -35,6 +35,7 @@
     "contractInSpanish": "Contract in Spanish"
   },
   "nav": {
+    "contracts": "Contracts",
     "myDeals": "My Deals",
     "newDeal": "New Deal",
     "launch": "Launch",
@@ -1521,6 +1522,7 @@
     "agentsHeld": "Credits belong to the customer account. Every API key of the account spends from the same balance, and rotating or revoking a key loses no credits.",
     "agentsApi": "The balance and purchases are available through the agent API and through MCP:",
     "agentsDocsLink": "Read the agent API documentation",
+    "contractsLink": "See every contract type, explained",
     "freeTitle": "What is free",
     "freeDrafting": "Drafting a contract.",
     "freeNegotiating": "Negotiating it with the other party.",
@@ -1559,6 +1561,8 @@
     "sectionAgentPrepDesc": "Prepare your organization for agent-negotiated contracts: write policies, build playbooks, and configure dispute resolution.",
     "sectionPricingTitle": "Pricing",
     "sectionPricingDesc": "Drafting and negotiating are free; each contract is paid once, by people and by agents alike.",
+    "sectionContractsTitle": "Contract guides",
+    "sectionContractsDesc": "Every contract type Dealroom offers, explained: what it is, who signs it, its key clauses and what the two sides usually negotiate.",
     "quickStartHeading": "Quick Start",
     "quickStartIntro": "New to Dealroom? Here's how a typical negotiation works:",
     "step1Label": "Create a deal",

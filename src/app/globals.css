@@ -429,6 +429,70 @@
   display: none;
 }
 
+/* Public contract guides (/contracts): Markdown rendered from content/contracts */
+.contract-article {
+  line-height: 1.75;
+}
+.contract-article h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.3;
+  margin: 2.5rem 0 1rem;
+  scroll-margin-top: 6rem;
+}
+.contract-article h3 {
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin: 1.75rem 0 0.5rem;
+  scroll-margin-top: 6rem;
+}
+.contract-article h4 {
+  font-weight: 600;
+  margin: 1.25rem 0 0.5rem;
+}
+.contract-article p {
+  margin: 0 0 1rem;
+}
+.contract-article ul,
+.contract-article ol {
+  margin: 0 0 1rem;
+  padding-left: 1.5rem;
+}
+.contract-article ul {
+  list-style: disc;
+}
+.contract-article ol {
+  list-style: decimal;
+}
+.contract-article li {
+  margin: 0.35rem 0;
+}
+.contract-article a {
+  color: var(--primary);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.contract-article code {
+  font-size: 0.875em;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 0.25rem;
+  padding: 0.05rem 0.3rem;
+}
+.contract-article pre {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  overflow-x: auto;
+  margin: 0 0 1rem;
+}
+.contract-article pre code {
+  border: 0;
+  padding: 0;
+  background: transparent;
+}
+
 /* Respect user's motion preferences */
 @media (prefers-reduced-motion: reduce) {
   *,

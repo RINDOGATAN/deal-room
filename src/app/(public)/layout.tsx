@@ -5,8 +5,9 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { useTranslations } from "next-intl";
-import { BookOpen, FileText } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
+import { BookOpen, FileText, Library } from "lucide-react";
+import { contractPath } from "@/lib/contract-pages-paths";
 import { brand } from "@/config/brand";
 import { features } from "@/config/features";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
@@ -21,6 +22,7 @@ export default function PublicLayout({
   const tFooter = useTranslations("footer");
   const tAuth = useTranslations("auth");
   const tNav = useTranslations("nav");
+  const locale = useLocale();
   const isDocsActive = pathname.startsWith("/docs");
   const isAuthenticated = status === "authenticated";
 
@@ -36,6 +38,13 @@ export default function PublicLayout({
             </Link>
 
             <nav className="flex items-center gap-1">
+              <Link
+                href={contractPath(locale === "es" ? "es" : "en")}
+                className="flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-full transition-colors text-muted-foreground hover:text-foreground hover:bg-secondary"
+              >
+                <Library className="w-4 h-4" />
+                <span className="hidden sm:inline">{tNav("contracts")}</span>
+              </Link>
               {features.publicDocs && (
                 <Link
                   href="/docs"

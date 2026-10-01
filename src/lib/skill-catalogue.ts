@@ -24,8 +24,6 @@ export interface CatalogueEntry {
   templateFamily: string | null;
 }
 
-const ROOT = process.cwd();
-
 function readJson(path: string): unknown {
   return JSON.parse(readFileSync(path, "utf8"));
 }
@@ -83,15 +81,20 @@ export function catalogueEntries(): CatalogueEntry[] {
     byType.set(entry.contractType, seen ? merge(seen, entry) : entry);
   };
 
-  for (const dir of ["skills", join("prisma", "hosted-skills")]) {
-    const base = join(ROOT, dir);
+  // Read while prerendering only (the pages that use this are static), so
+  // the build must not copy the project into the server bundle for it.
+  const skillFolders = [
+    join(/*turbopackIgnore: true*/ process.cwd(), "skills"),
+    join(/*turbopackIgnore: true*/ process.cwd(), "prisma", "hosted-skills"),
+  ];
+  for (const base of skillFolders) {
     if (!existsSync(base)) continue;
     for (const name of readdirSync(base, { withFileTypes: true })) {
       const meta = join(base, name.name, "metadata.json");
       if (name.isDirectory() && existsSync(meta)) add(readJson(meta));
     }
   }
-  const premium = join(ROOT, "prisma", "premium-catalog.json");
+  const premium = join(process.cwd(), "prisma", "premium-catalog.json");
   if (existsSync(premium)) for (const raw of readJson(premium) as unknown[]) add(raw);
 
   cache = [...byType.values()];
