@@ -195,7 +195,8 @@ Copyright (c) 2025-2026 Rindogatan LLC
 This project is licensed under the [GNU Affero General Public License v3.0](LICENSE).
 
 Under AGPL §13, if you run a modified Dealroom as a network service you must
-offer its Corresponding Source to your users. The app footer renders a
-"Source code (AGPL-3.0)" link for this; point it at your fork with
-`NEXT_PUBLIC_SOURCE_URL` at build time. Third-party attribution lives in
+offer its Corresponding Source to your users. The `/licenses` page carries
+that offer (the footers no longer link to it since 2026-10-01); point it at
+your fork with `NEXT_PUBLIC_SOURCE_URL` at build time, and add a visible
+link if your deployment needs one. Third-party attribution lives in
 [NOTICES.md](NOTICES.md).

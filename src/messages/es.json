@@ -1976,14 +1976,12 @@
     "marketplace": "Marketplace",
     "billing": "Facturación",
     "termsOfUse": "Términos de Uso",
-    "privacyNotice": "Política de Privacidad",
-    "sourceCode": "Código fuente (AGPL-3.0)"
+    "privacyNotice": "Política de Privacidad"
   },
   "authFooter": {
     "privacy": "Política de Privacidad",
     "terms": "Términos de Uso",
     "howItWorks": "Cómo Funciona",
-    "sourceCode": "Código fuente (AGPL-3.0)",
     "platformAdmin": "Administración de la plataforma"
   },
   "adminAuth": {

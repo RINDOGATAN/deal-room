@@ -102,6 +102,7 @@ rehearsed.
 ## License note (AGPL §13)
 
 Dealroom is AGPL-3.0-or-later. If you run a modified version as a network
-service, you must offer its Corresponding Source to your users. The app
-footer renders a "Source code (AGPL-3.0)" link for this purpose — point it
-at your fork via `NEXT_PUBLIC_SOURCE_URL` at build time.
+service, you must offer its Corresponding Source to your users. The
+`/licenses` page carries that offer (the footers no longer link to it since
+2026-10-01); point it at your fork via `NEXT_PUBLIC_SOURCE_URL` at build
+time, and add a visible link if your deployment needs one.

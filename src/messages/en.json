@@ -1975,14 +1975,12 @@
     "marketplace": "Marketplace",
     "billing": "Billing",
     "termsOfUse": "Terms of Use",
-    "privacyNotice": "Privacy Notice",
-    "sourceCode": "Source code (AGPL-3.0)"
+    "privacyNotice": "Privacy Notice"
   },
   "authFooter": {
     "privacy": "Privacy Policy",
     "terms": "Terms of Service",
     "howItWorks": "How It Works",
-    "sourceCode": "Source code (AGPL-3.0)",
     "platformAdmin": "Platform administration"
   },
   "adminAuth": {
