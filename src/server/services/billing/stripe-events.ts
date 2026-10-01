@@ -19,7 +19,6 @@ import { Prisma } from "@prisma/client";
 import prisma from "@/lib/prisma";
 import { CREDITS_PER_PACK } from "@/lib/contract-billing";
 import { createLogger } from "@/lib/logger";
-import { addReverseChargeNote } from "@/lib/stripe";
 
 const logger = createLogger("billing-events");
 
@@ -34,15 +33,6 @@ export function billingKindOf(metadata: Stripe.Metadata | null | undefined): Bil
 function idOf(ref: string | { id: string } | null | undefined): string | null {
   if (!ref) return null;
   return typeof ref === "string" ? ref : ref.id;
-}
-
-/**
- * The invoice Stripe issued for the session, for the log only: no column
- * holds it, and the billing page and agent API read it on demand from the
- * checkout session id. Null for sessions opened before invoices were on.
- */
-export function invoiceIdOf(session: Stripe.Checkout.Session): string | null {
-  return idOf(session.invoice as string | Stripe.Invoice | null | undefined);
 }
 
 function isUniqueViolation(err: unknown) {
@@ -73,7 +63,7 @@ async function fulfilContract(session: Stripe.Checkout.Session) {
     update: { stripePaymentIntentId: data.stripePaymentIntentId },
     create: data,
   });
-  logger.info("contract paid", { dealRoomId: meta.dealRoomId, sessionId: session.id, invoiceId: invoiceIdOf(session) });
+  logger.info("contract paid", { dealRoomId: meta.dealRoomId, sessionId: session.id });
 }
 
 /**
@@ -112,7 +102,7 @@ async function fulfilCredits(session: Stripe.Checkout.Session) {
         data: { balance: { increment: credits } },
       });
     });
-    logger.info("credits added", { customerId, credits, sessionId: session.id, invoiceId: invoiceIdOf(session) });
+    logger.info("credits added", { customerId, credits, sessionId: session.id });
   } catch (err) {
     if (isUniqueViolation(err)) return; // already credited
     throw err;
@@ -136,27 +126,7 @@ export async function fulfilCheckoutSession(session: Stripe.Checkout.Session) {
   }
   if (kind === "contract") await fulfilContract(session);
   else await fulfilCredits(session);
-  await noteReverseCharge(session);
   return true;
-}
-
-/**
- * EU/EEA buyer with a VAT number: the reverse-charge note goes on the
- * invoice. Best effort: a Stripe failure is logged and never undoes or
- * blocks the fulfilment above.
- */
-async function noteReverseCharge(session: Stripe.Checkout.Session) {
-  try {
-    if (await addReverseChargeNote(session)) {
-      logger.info("reverse-charge note added", { sessionId: session.id, invoiceId: invoiceIdOf(session) });
-    }
-  } catch (err) {
-    logger.error("reverse-charge note not added", {
-      sessionId: session.id,
-      invoiceId: invoiceIdOf(session),
-      error: err instanceof Error ? err.message : String(err),
-    });
-  }
 }
 
 /** Revert a contract payment: the deal is unpaid again. */

@@ -82,12 +82,9 @@ function GetContract({ dealId, variant }: { dealId: string; variant: "inline" | 
 
   if (variant === "inline") {
     return (
-      <div className="space-y-1">
-        <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-          {button}
-          {currencySwitch}
-        </div>
-        <p className="text-xs text-muted-foreground">{t("businessOnly")}</p>
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+        {button}
+        {currencySwitch}
       </div>
     );
   }
@@ -99,7 +96,6 @@ function GetContract({ dealId, variant }: { dealId: string; variant: "inline" | 
         {button}
         {currencySwitch}
       </div>
-      <p className="text-xs text-muted-foreground">{t("businessOnly")}</p>
     </div>
   );
 }

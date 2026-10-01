@@ -43,12 +43,7 @@ describe("pricing page", () => {
     const html = render(pricingFacts({ locale: "en", env: ENV }));
     expect(html).toContain("$31 per contract");
     expect(html).toContain("The same $31 per contract");
-    expect(html).toContain(
-      "Credits are sold in packs of 10, at 25 percent off: $232.50 a pack, excluding any VAT or sales tax.",
-    );
-    expect(html).toContain(
-      "Dealroom is sold to businesses and professionals. Prices exclude any VAT or sales tax; European buyers give their VAT number at checkout.",
-    );
+    expect(html).toContain("Credits are sold in packs of 10, at 25 percent off: $232.50 a pack.");
     expect(html).not.toContain("€");
     expect(html).toContain("Prices in EUR");
     expect(html).toContain("Contracts in deals created before 1 October 2026 are not charged.");

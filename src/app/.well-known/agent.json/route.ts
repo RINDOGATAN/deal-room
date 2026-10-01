@@ -144,7 +144,6 @@ export async function GET() {
       subscriptions: `${baseUrl}/api/v1/agent/subscriptions`,
       creditsCheckout: `${baseUrl}/api/v1/agent/credits/checkout`,
       creditsBalance: `${baseUrl}/api/v1/agent/credits/balance`,
-      creditsInvoices: `${baseUrl}/api/v1/agent/credits/invoices`,
       webhooks: `${baseUrl}/api/v1/agent/webhooks`,
       mcp: `${baseUrl}/api/v1/agent/mcp`,
     },

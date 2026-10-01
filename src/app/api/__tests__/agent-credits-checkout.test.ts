@@ -66,8 +66,8 @@ describe("agent credit checkout", () => {
       expect.objectContaining({
         mode: "payment",
         priceId: "price_pack_eur",
+        currency: "eur",
         metadata: { kind: "credits", customerId: "cust_1", apiKeyId: "key_1", credits: "10" },
-        invoiceDescription: "Dealroom credit pack, 10 contracts",
       }),
     );
   });
@@ -75,7 +75,7 @@ describe("agent credit checkout", () => {
   it("defaults to dollars", async () => {
     await POST(req());
     expect(stripe.createBillingCheckout).toHaveBeenCalledWith(
-      expect.objectContaining({ priceId: "price_pack_usd" }),
+      expect.objectContaining({ priceId: "price_pack_usd", currency: "usd" }),
     );
   });
 

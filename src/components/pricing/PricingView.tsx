@@ -59,7 +59,6 @@ export function PricingView({
             <div className="space-y-2">
               <h3 className="font-semibold">{t("whenTitle")}</h3>
               <p className="text-sm text-muted-foreground">{t("whenBody")}</p>
-              <p className="text-sm text-muted-foreground">{t("whenInvoice")}</p>
               {facts.billingStart && (
                 <p className="text-sm text-muted-foreground">{t("startBody", { date: facts.billingStart })}</p>
               )}
