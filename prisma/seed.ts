@@ -7,6 +7,7 @@ import * as path from "path";
 import * as crypto from "crypto";
 import { seedMarketplaceStubs } from "./marketplace-stubs";
 import { describeReconcile, reconcileSkillClauses } from "./skill-reconcile";
+import { optionProsCons } from "./option-pros-cons";
 
 const prisma = new PrismaClient();
 
@@ -94,10 +95,13 @@ interface ClauseOption {
   label: LocalizedString;
   order: number;
   plainDescription: LocalizedString;
-  prosPartyA: LocalizedArray;
-  consPartyA: LocalizedArray;
-  prosPartyB: LocalizedArray;
-  consPartyB: LocalizedArray;
+  // Either layout; read through optionProsCons(), never directly.
+  pros?: { partyA?: LocalizedArray; partyB?: LocalizedArray };
+  cons?: { partyA?: LocalizedArray; partyB?: LocalizedArray };
+  prosPartyA?: LocalizedArray;
+  consPartyA?: LocalizedArray;
+  prosPartyB?: LocalizedArray;
+  consPartyB?: LocalizedArray;
   legalText: LocalizedString;
   biasPartyA: number;
   biasPartyB: number;
@@ -165,10 +169,11 @@ function buildOptionLocalizedContent(option: ClauseOption): Record<string, unkno
 
   if (isLocalized(option.label)) { content.label = option.label; hasLocalized = true; }
   if (isLocalized(option.plainDescription)) { content.plainDescription = option.plainDescription; hasLocalized = true; }
-  if (isLocalized(option.prosPartyA)) { content.prosPartyA = option.prosPartyA; hasLocalized = true; }
-  if (isLocalized(option.consPartyA)) { content.consPartyA = option.consPartyA; hasLocalized = true; }
-  if (isLocalized(option.prosPartyB)) { content.prosPartyB = option.prosPartyB; hasLocalized = true; }
-  if (isLocalized(option.consPartyB)) { content.consPartyB = option.consPartyB; hasLocalized = true; }
+  const pc = optionProsCons(option);
+  if (isLocalized(pc.prosPartyA)) { content.prosPartyA = pc.prosPartyA; hasLocalized = true; }
+  if (isLocalized(pc.consPartyA)) { content.consPartyA = pc.consPartyA; hasLocalized = true; }
+  if (isLocalized(pc.prosPartyB)) { content.prosPartyB = pc.prosPartyB; hasLocalized = true; }
+  if (isLocalized(pc.consPartyB)) { content.consPartyB = pc.consPartyB; hasLocalized = true; }
   if (isLocalized(option.legalText)) { content.legalText = option.legalText; hasLocalized = true; }
 
   return hasLocalized ? content : undefined;
@@ -487,6 +492,7 @@ async function main() {
       // Create or update options
       for (const option of clause.options) {
         const optionLocalized = buildOptionLocalizedContent(option);
+        const pc = optionProsCons(option);
 
         await prisma.clauseOption.upsert({
           where: {
@@ -502,10 +508,10 @@ async function main() {
             label: resolveString(option.label),
             order: option.order,
             plainDescription: resolveString(option.plainDescription),
-            prosPartyA: resolveArray(option.prosPartyA),
-            consPartyA: resolveArray(option.consPartyA),
-            prosPartyB: resolveArray(option.prosPartyB),
-            consPartyB: resolveArray(option.consPartyB),
+            prosPartyA: resolveArray(pc.prosPartyA),
+            consPartyA: resolveArray(pc.consPartyA),
+            prosPartyB: resolveArray(pc.prosPartyB),
+            consPartyB: resolveArray(pc.consPartyB),
             legalText: resolveString(option.legalText),
             biasPartyA: option.biasPartyA ?? 0,
             biasPartyB: option.biasPartyB ?? 0,
@@ -517,10 +523,10 @@ async function main() {
             label: resolveString(option.label),
             order: option.order,
             plainDescription: resolveString(option.plainDescription),
-            prosPartyA: resolveArray(option.prosPartyA),
-            consPartyA: resolveArray(option.consPartyA),
-            prosPartyB: resolveArray(option.prosPartyB),
-            consPartyB: resolveArray(option.consPartyB),
+            prosPartyA: resolveArray(pc.prosPartyA),
+            consPartyA: resolveArray(pc.consPartyA),
+            prosPartyB: resolveArray(pc.prosPartyB),
+            consPartyB: resolveArray(pc.consPartyB),
             legalText: resolveString(option.legalText),
             biasPartyA: option.biasPartyA ?? 0,
             biasPartyB: option.biasPartyB ?? 0,
