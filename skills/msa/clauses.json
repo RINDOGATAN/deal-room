@@ -98,10 +98,6 @@
           "legalText": {
             "en": "Client shall pay all undisputed invoices within fifteen (15) days of the invoice date.",
             "es": "El Cliente abonará todas las facturas no impugnadas en un plazo de quince (15) días desde la fecha de emisión de la factura."
-          },
-          "bias": {
-            "partyA": 0.4,
-            "partyB": -0.4
           }
         },
         {
@@ -165,10 +161,6 @@
           "legalText": {
             "en": "Client shall pay all undisputed invoices within thirty (30) days of the invoice date.",
             "es": "El Cliente abonará todas las facturas no impugnadas en un plazo de treinta (30) días desde la fecha de emisión de la factura."
-          },
-          "bias": {
-            "partyA": 0,
-            "partyB": 0
           }
         },
         {
@@ -230,10 +222,6 @@
           "legalText": {
             "en": "Client shall pay all undisputed invoices within forty-five (45) days of the invoice date.",
             "es": "El Cliente abonará todas las facturas no impugnadas en un plazo de cuarenta y cinco (45) días desde la fecha de emisión de la factura."
-          },
-          "bias": {
-            "partyA": -0.3,
-            "partyB": 0.3
           }
         },
         {
@@ -299,10 +287,6 @@
           "legalText": {
             "en": "Client shall pay all undisputed invoices within sixty (60) days of the invoice date.",
             "es": "El Cliente abonará todas las facturas no impugnadas en un plazo de sesenta (60) días desde la fecha de emisión de la factura."
-          },
-          "bias": {
-            "partyA": -0.5,
-            "partyB": 0.5
           }
         }
       ]
@@ -391,10 +375,6 @@
           "legalText": {
             "en": "All Work Product created by Provider specifically for Client shall be owned by Client. Provider hereby assigns to Client all right, title, and interest in such Work Product, including all intellectual property rights.",
             "es": "Todo el Trabajo Realizado creado por el Prestador específicamente para el Cliente será de titularidad del Cliente. El Prestador cede al Cliente todos los derechos, títulos e intereses sobre dicho Trabajo Realizado, incluidos todos los derechos de propiedad intelectual e industrial."
-          },
-          "bias": {
-            "partyA": -0.5,
-            "partyB": 0.5
           }
         },
         {
@@ -464,10 +444,6 @@
           "legalText": {
             "en": "Provider retains all right, title, and interest in the Work Product. Provider grants Client a non-exclusive, perpetual, worldwide, royalty-free license to use, copy, and modify the Work Product for Client's internal business purposes.",
             "es": "El Prestador conserva todos los derechos, títulos e intereses sobre el Trabajo Realizado. El Prestador concede al Cliente una licencia no exclusiva, perpetua, de ámbito mundial y libre de cánones para usar, copiar y modificar el Trabajo Realizado para los fines empresariales internos del Cliente."
-          },
-          "bias": {
-            "partyA": 0.3,
-            "partyB": -0.3
           }
         },
         {
@@ -531,10 +507,6 @@
           "legalText": {
             "en": "The Parties shall jointly own the Work Product. Each Party may use, license, and exploit the Work Product without accounting to the other, subject to the confidentiality obligations herein.",
             "es": "Las Partes serán cotitulares del Trabajo Realizado. Cada Parte podrá usar, licenciar y explotar el Trabajo Realizado sin necesidad de rendir cuentas a la otra, con sujeción a las obligaciones de confidencialidad establecidas en el presente Contrato."
-          },
-          "bias": {
-            "partyA": 0,
-            "partyB": 0
           }
         }
       ]
@@ -617,10 +589,6 @@
           "legalText": {
             "en": "Each Party's total aggregate liability under this Agreement shall not exceed the fees paid or payable by Client in the twelve (12) months preceding the claim.",
             "es": "La responsabilidad total acumulada de cada Parte en virtud del presente Contrato no excederá de los honorarios abonados o debidos por el Cliente durante los doce (12) meses anteriores a la reclamación."
-          },
-          "bias": {
-            "partyA": 0,
-            "partyB": 0
           }
         },
         {
@@ -680,10 +648,6 @@
           "legalText": {
             "en": "Each Party's total aggregate liability for claims arising from a particular Statement of Work shall not exceed the fees paid or payable under that Statement of Work.",
             "es": "La responsabilidad total acumulada de cada Parte por reclamaciones derivadas de una Orden de Trabajo concreta no excederá de los honorarios abonados o debidos en virtud de dicha Orden de Trabajo."
-          },
-          "bias": {
-            "partyA": 0.2,
-            "partyB": -0.2
           }
         },
         {
@@ -741,10 +705,6 @@
           "legalText": {
             "en": "Each Party's total aggregate liability under this Agreement shall not exceed two times (2x) the fees paid or payable by Client in the twelve (12) months preceding the claim.",
             "es": "La responsabilidad total acumulada de cada Parte en virtud del presente Contrato no excederá del doble (2x) de los honorarios abonados o debidos por el Cliente durante los doce (12) meses anteriores a la reclamación."
-          },
-          "bias": {
-            "partyA": -0.2,
-            "partyB": 0.2
           }
         }
       ]
@@ -831,10 +791,6 @@
           "legalText": {
             "en": "Neither Party may terminate this Agreement for convenience. This Agreement may only be terminated for cause as otherwise provided in this Agreement.",
             "es": "Ninguna de las Partes podrá resolver el presente Contrato por conveniencia. El presente Contrato solo podrá resolverse por causa justificada conforme a lo establecido en el mismo."
-          },
-          "bias": {
-            "partyA": 0.2,
-            "partyB": -0.2
           }
         },
         {
@@ -896,10 +852,6 @@
           "legalText": {
             "en": "Either Party may terminate this Agreement for convenience upon thirty (30) days' prior written notice to the other Party.",
             "es": "Cualquiera de las Partes podrá resolver el presente Contrato por conveniencia mediante notificación escrita a la otra Parte con una antelación mínima de treinta (30) días."
-          },
-          "bias": {
-            "partyA": 0,
-            "partyB": 0
           }
         },
         {
@@ -959,10 +911,6 @@
           "legalText": {
             "en": "Either Party may terminate this Agreement for convenience upon sixty (60) days' prior written notice to the other Party.",
             "es": "Cualquiera de las Partes podrá resolver el presente Contrato por conveniencia mediante notificación escrita a la otra Parte con una antelación mínima de sesenta (60) días."
-          },
-          "bias": {
-            "partyA": 0.1,
-            "partyB": -0.1
           }
         }
       ]
@@ -1045,10 +993,6 @@
           "legalText": {
             "en": "Provider warrants that Deliverables will substantially conform to specifications for thirty (30) days following delivery or acceptance, whichever is later.",
             "es": "El Prestador garantiza que los Entregables se ajustarán sustancialmente a las especificaciones durante los treinta (30) días siguientes a su entrega o aceptación, lo que ocurra más tarde."
-          },
-          "bias": {
-            "partyA": 0.3,
-            "partyB": -0.3
           }
         },
         {
@@ -1108,10 +1052,6 @@
           "legalText": {
             "en": "Provider warrants that Deliverables will substantially conform to specifications for sixty (60) days following delivery or acceptance, whichever is later.",
             "es": "El Prestador garantiza que los Entregables se ajustarán sustancialmente a las especificaciones durante los sesenta (60) días siguientes a su entrega o aceptación, lo que ocurra más tarde."
-          },
-          "bias": {
-            "partyA": 0,
-            "partyB": 0
           }
         },
         {
@@ -1173,10 +1113,6 @@
           "legalText": {
             "en": "Provider warrants that Deliverables will substantially conform to specifications for ninety (90) days following delivery or acceptance, whichever is later.",
             "es": "El Prestador garantiza que los Entregables se ajustarán sustancialmente a las especificaciones durante los noventa (90) días siguientes a su entrega o aceptación, lo que ocurra más tarde."
-          },
-          "bias": {
-            "partyA": -0.2,
-            "partyB": 0.2
           }
         }
       ]
@@ -1259,10 +1195,6 @@
           "legalText": {
             "en": "Provider shall indemnify Client against third-party claims that the Deliverables infringe any patent, copyright, trademark, or trade secret.",
             "es": "El Prestador indemnizará al Cliente frente a reclamaciones de terceros por infracción de patentes, derechos de autor, marcas o secretos empresariales derivada de los Entregables."
-          },
-          "bias": {
-            "partyA": 0.2,
-            "partyB": -0.2
           }
         },
         {
@@ -1322,10 +1254,6 @@
           "legalText": {
             "en": "Each Party shall indemnify the other against third-party claims arising from: (a) infringement of intellectual property rights; (b) gross negligence or willful misconduct; and (c) breach of confidentiality obligations.",
             "es": "Cada Parte indemnizará a la otra frente a reclamaciones de terceros derivadas de: (a) infracción de derechos de propiedad intelectual e industrial; (b) negligencia grave o conducta dolosa; y (c) incumplimiento de las obligaciones de confidencialidad."
-          },
-          "bias": {
-            "partyA": 0,
-            "partyB": 0
           }
         },
         {
@@ -1387,10 +1315,6 @@
           "legalText": {
             "en": "Provider shall indemnify Client against third-party claims arising from: (a) IP infringement; (b) Provider's negligence; (c) confidentiality breaches; (d) Provider's violation of applicable laws; and (e) Provider's acts or omissions in performing the Services.",
             "es": "El Prestador indemnizará al Cliente frente a reclamaciones de terceros derivadas de: (a) infracción de propiedad intelectual e industrial; (b) negligencia del Prestador; (c) incumplimiento de las obligaciones de confidencialidad; (d) incumplimiento por el Prestador de la legislación aplicable; y (e) acciones u omisiones del Prestador en la prestación de los Servicios."
-          },
-          "bias": {
-            "partyA": -0.4,
-            "partyB": 0.4
           }
         }
       ]
@@ -1473,10 +1397,6 @@
           "legalText": {
             "en": "Confidentiality obligations shall survive termination of this Agreement for three (3) years, except for trade secrets which shall be protected indefinitely.",
             "es": "Las obligaciones de confidencialidad sobrevivirán a la resolución del presente Contrato durante un período de tres (3) años, salvo en lo relativo a los secretos empresariales, que gozarán de protección indefinida."
-          },
-          "bias": {
-            "partyA": 0,
-            "partyB": 0
           }
         },
         {
@@ -1532,10 +1452,6 @@
           "legalText": {
             "en": "Confidentiality obligations shall survive termination of this Agreement for five (5) years, except for trade secrets which shall be protected indefinitely.",
             "es": "Las obligaciones de confidencialidad sobrevivirán a la resolución del presente Contrato durante un período de cinco (5) años, salvo en lo relativo a los secretos empresariales, que gozarán de protección indefinida."
-          },
-          "bias": {
-            "partyA": 0.1,
-            "partyB": 0.1
           }
         },
         {
@@ -1593,10 +1509,6 @@
           "legalText": {
             "en": "Confidentiality obligations shall survive termination of this Agreement indefinitely.",
             "es": "Las obligaciones de confidencialidad sobrevivirán a la resolución del presente Contrato con carácter indefinido."
-          },
-          "bias": {
-            "partyA": 0.2,
-            "partyB": 0.2
           }
         }
       ]
@@ -1626,15 +1538,15 @@
           "id": "insurance-standard",
           "code": "standard",
           "label": {
-            "en": "Standard ($1m/$2m)",
-            "es": "Estándar (1 M$/2 M$)"
+            "en": "Standard (1m/2m)",
+            "es": "Estándar (1 M/2 M)"
           },
           "order": 1,
           "biasPartyA": 0,
           "biasPartyB": 0,
           "plainDescription": {
-            "en": "Provider maintains $1M per occurrence / $2M aggregate general liability and $1M professional liability.",
-            "es": "El Prestador mantiene un seguro de responsabilidad civil general de 1 M$ por siniestro / 2 M$ agregado y un seguro de responsabilidad profesional de 1 M$."
+            "en": "Provider maintains 1M per occurrence / 2M aggregate general liability and 1M professional liability, in the Contract Currency (US dollars under California law, euros under Spanish law, pounds sterling under the law of England and Wales).",
+            "es": "El Prestador mantiene un seguro de responsabilidad civil general de 1 M por siniestro / 2 M agregado y un seguro de responsabilidad profesional de 1 M, en la Moneda del Contrato (dólares estadounidenses con Derecho de California, euros con Derecho español, libras esterlinas con Derecho de Inglaterra y Gales)."
           },
           "pros": {
             "partyA": {
@@ -1677,27 +1589,23 @@
             }
           },
           "legalText": {
-            "en": "Provider shall maintain: (a) Commercial General Liability: $1,000,000 per occurrence, $2,000,000 aggregate; (b) Professional Liability: $1,000,000 per claim.",
-            "es": "El Prestador mantendrá vigentes los siguientes seguros: (a) Seguro de Responsabilidad Civil General: 1.000.000 $ por siniestro, 2.000.000 $ en total acumulado; (b) Seguro de Responsabilidad Civil Profesional: 1.000.000 $ por reclamación."
-          },
-          "bias": {
-            "partyA": 0,
-            "partyB": 0
+            "en": "Provider shall maintain, with limits expressed in the Contract Currency: (a) Commercial General Liability: 1,000,000 per occurrence, 2,000,000 aggregate; (b) Professional Liability: 1,000,000 per claim.",
+            "es": "El Prestador mantendrá vigentes los siguientes seguros, con límites expresados en la Moneda del Contrato: (a) Seguro de Responsabilidad Civil General: 1.000.000 por siniestro, 2.000.000 en total acumulado; (b) Seguro de Responsabilidad Civil Profesional: 1.000.000 por reclamación."
           }
         },
         {
           "id": "insurance-enhanced",
           "code": "enhanced",
           "label": {
-            "en": "Enhanced ($2m/$5m)",
-            "es": "Ampliado (2 M$/5 M$)"
+            "en": "Enhanced (2m/5m)",
+            "es": "Ampliado (2 M/5 M)"
           },
           "order": 2,
           "biasPartyA": -0.3,
           "biasPartyB": 0.3,
           "plainDescription": {
-            "en": "Provider maintains $2M per occurrence / $5M aggregate general liability and $2M professional liability.",
-            "es": "El Prestador mantiene un seguro de responsabilidad civil general de 2 M$ por siniestro / 5 M$ agregado y un seguro de responsabilidad profesional de 2 M$."
+            "en": "Provider maintains 2M per occurrence / 5M aggregate general liability and 2M professional liability, in the Contract Currency (US dollars under California law, euros under Spanish law, pounds sterling under the law of England and Wales).",
+            "es": "El Prestador mantiene un seguro de responsabilidad civil general de 2 M por siniestro / 5 M agregado y un seguro de responsabilidad profesional de 2 M, en la Moneda del Contrato (dólares estadounidenses con Derecho de California, euros con Derecho español, libras esterlinas con Derecho de Inglaterra y Gales)."
           },
           "pros": {
             "partyA": {
@@ -1740,12 +1648,8 @@
             }
           },
           "legalText": {
-            "en": "Provider shall maintain: (a) Commercial General Liability: $2,000,000 per occurrence, $5,000,000 aggregate; (b) Professional Liability: $2,000,000 per claim.",
-            "es": "El Prestador mantendrá vigentes los siguientes seguros: (a) Seguro de Responsabilidad Civil General: 2.000.000 $ por siniestro, 5.000.000 $ en total acumulado; (b) Seguro de Responsabilidad Civil Profesional: 2.000.000 $ por reclamación."
-          },
-          "bias": {
-            "partyA": -0.2,
-            "partyB": 0.2
+            "en": "Provider shall maintain, with limits expressed in the Contract Currency: (a) Commercial General Liability: 2,000,000 per occurrence, 5,000,000 aggregate; (b) Professional Liability: 2,000,000 per claim.",
+            "es": "El Prestador mantendrá vigentes los siguientes seguros, con límites expresados en la Moneda del Contrato: (a) Seguro de Responsabilidad Civil General: 2.000.000 por siniestro, 5.000.000 en total acumulado; (b) Seguro de Responsabilidad Civil Profesional: 2.000.000 por reclamación."
           }
         },
         {
@@ -1803,10 +1707,6 @@
           "legalText": {
             "en": "Provider shall maintain commercially reasonable insurance coverage appropriate for the Services, including general liability and professional liability insurance.",
             "es": "El Prestador mantendrá una cobertura de seguro comercialmente razonable y adecuada para los Servicios, que incluya un seguro de responsabilidad civil general y un seguro de responsabilidad civil profesional."
-          },
-          "bias": {
-            "partyA": 0.2,
-            "partyB": -0.2
           }
         }
       ]
@@ -1897,10 +1797,6 @@
           "legalText": {
             "en": "No change to scope is binding unless documented in a written change order signed by authorized representatives of both Parties, specifying the scope change, fee adjustment, and timeline impact.",
             "es": "Ningún cambio de alcance será vinculante salvo que se documente en una orden de cambio por escrito firmada por los representantes autorizados de ambas Partes, en la que se especifiquen el cambio de alcance, el ajuste de honorarios y el impacto en el calendario."
-          },
-          "bias": {
-            "partyA": 0.1,
-            "partyB": 0.1
           }
         },
         {
@@ -1962,10 +1858,6 @@
           "legalText": {
             "en": "Scope changes may be approved via email from authorized representatives, followed by documentation in a written change order within five (5) business days.",
             "es": "Los cambios de alcance podrán aprobarse por correo electrónico de los representantes autorizados, seguidos de su documentación en una orden de cambio por escrito en un plazo de cinco (5) días hábiles."
-          },
-          "bias": {
-            "partyA": 0,
-            "partyB": 0
           }
         },
         {
@@ -2025,12 +1917,8 @@
             }
           },
           "legalText": {
-            "en": "Changes with impact under $5,000 or 5% of SOW value may be approved via email. Changes exceeding this threshold require a formal written change order signed by both Parties.",
-            "es": "Los cambios con un impacto inferior a 5.000 $ o al 5 % del valor de la Orden de Trabajo podrán aprobarse por correo electrónico. Los cambios que superen dicho umbral requerirán una orden de cambio formal por escrito firmada por ambas Partes."
-          },
-          "bias": {
-            "partyA": 0,
-            "partyB": 0
+            "en": "Changes with impact under 5,000 in the Contract Currency or 5% of SOW value may be approved via email. Changes exceeding this threshold require a formal written change order signed by both Parties.",
+            "es": "Los cambios con un impacto inferior a 5.000 en la Moneda del Contrato o al 5 % del valor de la Orden de Trabajo podrán aprobarse por correo electrónico. Los cambios que superen dicho umbral requerirán una orden de cambio formal por escrito firmada por ambas Partes."
           }
         }
       ]
@@ -2114,10 +2002,6 @@
             "en": "[No non-compete or non-circumvention provisions]",
             "es": "[Sin cláusulas de no competencia ni de no elusión]"
           },
-          "bias": {
-            "partyA": 0.3,
-            "partyB": -0.3
-          },
           "jurisdictionConfig": {
             "CALIFORNIA": {
               "available": true,
@@ -2186,10 +2070,6 @@
           "legalText": {
             "en": "During the term and for one (1) year thereafter, Provider shall not directly solicit or contract with any customer or prospect of Client that Provider became aware of solely through this engagement, without Client's prior written consent.",
             "es": "Durante la vigencia del Contrato y durante un (1) año adicional, el Prestador no podrá captar ni contratar directamente con ningún cliente o cliente potencial del Cliente del que el Prestador haya tenido conocimiento exclusivamente a través de este encargo, sin el consentimiento previo y por escrito del Cliente."
-          },
-          "bias": {
-            "partyA": -0.1,
-            "partyB": 0.1
           },
           "jurisdictionConfig": {
             "CALIFORNIA": {
@@ -2265,10 +2145,6 @@
           "legalText": {
             "en": "During the term of this Agreement, Provider shall not provide substantially similar services to the following competitors: [named competitors]. This restriction does not survive termination.",
             "es": "Durante la vigencia del presente Contrato, el Prestador no prestará servicios sustancialmente similares a los siguientes competidores: [competidores designados]. Esta restricción no sobrevive a la resolución del Contrato."
-          },
-          "bias": {
-            "partyA": -0.4,
-            "partyB": 0.4
           },
           "jurisdictionConfig": {
             "CALIFORNIA": {
@@ -2374,10 +2250,6 @@
           "legalText": {
             "en": "Any dispute arising from this Agreement will be resolved exclusively in the state and federal courts located in the jurisdiction of the governing law. Each Party irrevocably submits to the exclusive jurisdiction of such courts.",
             "es": "Toda controversia derivada del presente Contrato se resolverá exclusivamente ante los juzgados y tribunales de la jurisdicción de la ley aplicable. Cada Parte se somete irrevocablemente a la jurisdicción exclusiva de dichos tribunales."
-          },
-          "bias": {
-            "partyA": 0,
-            "partyB": 0
           }
         },
         {
@@ -2445,10 +2317,6 @@
           "legalText": {
             "en": "Any dispute arising from this Agreement will be resolved exclusively in the Court of Chancery of the State of Delaware (or, if such court lacks jurisdiction, the state and federal courts located in Delaware).",
             "es": "Toda controversia derivada del presente Contrato se resolverá exclusivamente ante el Court of Chancery del Estado de Delaware (o, en caso de que dicho tribunal carezca de jurisdicción, ante los juzgados y tribunales estatales y federales con sede en Delaware)."
-          },
-          "bias": {
-            "partyA": 0,
-            "partyB": 0
           }
         },
         {
@@ -2520,10 +2388,6 @@
           "legalText": {
             "en": "Any dispute arising from this Agreement will be finally resolved by binding arbitration administered by JAMS under its Comprehensive Arbitration Rules. The arbitration will be conducted by one arbitrator in the seat of the governing law jurisdiction.",
             "es": "Toda controversia derivada del presente Contrato se resolverá definitivamente mediante arbitraje vinculante administrado por JAMS conforme a su Reglamento de Arbitraje General (Comprehensive Arbitration Rules). El arbitraje será conducido por un árbitro único en la sede de la jurisdicción de la ley aplicable."
-          },
-          "bias": {
-            "partyA": 0.1,
-            "partyB": -0.1
           }
         },
         {
@@ -2591,10 +2455,6 @@
           "legalText": {
             "en": "Any dispute arising from this Agreement will be finally resolved by arbitration under the Rules of Arbitration of the International Chamber of Commerce. The arbitration will be conducted by one arbitrator, with the seat in the capital of the governing law jurisdiction.",
             "es": "Toda controversia derivada del presente Contrato se resolverá definitivamente mediante arbitraje conforme al Reglamento de Arbitraje de la Cámara de Comercio Internacional. El arbitraje será conducido por un árbitro único, con sede en la capital de la jurisdicción de la ley aplicable."
-          },
-          "bias": {
-            "partyA": 0,
-            "partyB": 0
           }
         },
         {
@@ -2664,10 +2524,6 @@
           "legalText": {
             "en": "Any dispute arising from this Agreement will be finally resolved by arbitration administered by the American Arbitration Association under its Commercial Arbitration Rules. The arbitration will be conducted by one arbitrator in the seat of the governing law jurisdiction.",
             "es": "Toda controversia derivada del presente Contrato se resolverá definitivamente mediante arbitraje administrado por la American Arbitration Association conforme a su Reglamento de Arbitraje Comercial (Commercial Arbitration Rules). El arbitraje será conducido por un árbitro único en la sede de la jurisdicción de la ley aplicable."
-          },
-          "bias": {
-            "partyA": 0,
-            "partyB": 0
           }
         },
         {
@@ -2735,10 +2591,6 @@
           "legalText": {
             "en": "Any dispute arising from this Agreement will be finally resolved by arbitration under the LCIA Rules. The arbitration will be conducted by a sole arbitrator appointed by the LCIA Court. The seat of arbitration will be London, United Kingdom.",
             "es": "Toda controversia derivada del presente Contrato se resolverá definitivamente mediante arbitraje conforme al Reglamento de la LCIA. El arbitraje será conducido por un árbitro único designado por la Corte de la LCIA. La sede del arbitraje será Londres, Reino Unido."
-          },
-          "bias": {
-            "partyA": 0,
-            "partyB": 0
           }
         },
         {
@@ -2800,10 +2652,6 @@
           "legalText": {
             "en": "This Agreement is governed by the laws of [governing law], without prejudice to any mandatory application of data protection, consumer or other laws to its subject matter. Any dispute arising out of or relating to this Agreement shall be subject to the exclusive jurisdiction of [competent courts], and each Party irrevocably submits to that jurisdiction.",
             "es": "El presente Contrato se rige por [ley aplicable], sin perjuicio de la aplicación imperativa de las normas de protección de datos, de consumo u otras que correspondan a su objeto. Toda controversia derivada del presente Contrato o relacionada con él quedará sometida a la jurisdicción exclusiva de [tribunales competentes], a la que cada Parte se somete irrevocablemente."
-          },
-          "bias": {
-            "partyA": 0,
-            "partyB": 0
           }
         }
       ]

@@ -22,6 +22,21 @@ history was not tracked per-release and lives only in git.
   entries and "Contracts" links from the landing, the public header, the
   docs index and /pricing. Sign-in honours a same-site `?next=` path.
 
+### Fixed
+- **Built-in skill defects (2026-10-01).** MSA: the standard confidentiality
+  section no longer fixes a 3-year survival period; it follows the negotiated
+  Confidentiality duration (3 years, 5 years or indefinite). MSA insurance
+  limits and the change-order threshold are no longer in US dollars for every
+  jurisdiction: they are stated in the Contract Currency, which each
+  jurisdiction's provisions define (US dollars for California, euros for
+  Spain, pounds sterling for England and Wales; same round figures). SaaS:
+  `SKILL.md` and `references/saas-template.md` no longer describe service
+  credits, pricing models or New York and Delaware governing law that the
+  clauses do not contain. NDA, MSA, SaaS and Delaware options lose their
+  duplicate nested `bias` object (56 disagreed with `biasPartyA/B`); the seed
+  always used `biasPartyA/B`, and the skill loader and installer now prefer it
+  too. `check:skills` fails when an option carries disagreeing bias fields.
+
 ### Changed
 - **No friction (2026-10-01).** Checkout asks for a card and nothing else (no
   billing address, tax id or invoice; the payment provider's receipt is the

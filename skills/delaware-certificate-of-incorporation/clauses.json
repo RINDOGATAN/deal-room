@@ -66,10 +66,6 @@
           },
           "legalText": {
             "en": "FIRST: The name of this corporation is [company-name]."
-          },
-          "bias": {
-            "partyA": 0,
-            "partyB": 0
           }
         }
       ]
@@ -129,10 +125,6 @@
           },
           "legalText": {
             "en": "SECOND: The address of the corporation's registered office in the State of Delaware is [registered-agent]. The corporation's registered agent at that address is so designated in accordance with 8 Del. C. § 102(a)(2)."
-          },
-          "bias": {
-            "partyA": 0,
-            "partyB": 0
           }
         }
       ]
@@ -196,10 +188,6 @@
           },
           "legalText": {
             "en": "THIRD: The purpose of the corporation is to engage in any lawful act or activity for which corporations may be organized under the General Corporation Law of the State of Delaware."
-          },
-          "bias": {
-            "partyA": 0,
-            "partyB": 0
           }
         }
       ]
@@ -263,10 +251,6 @@
           },
           "legalText": {
             "en": "FOURTH: The total number of shares of stock the corporation shall have authority to issue is 10,000,000 shares of Common Stock, each having a par value of $[par-value] per share."
-          },
-          "bias": {
-            "partyA": 0,
-            "partyB": 0
           }
         },
         {
@@ -313,10 +297,6 @@
           },
           "legalText": {
             "en": "FOURTH: The total number of shares of stock the corporation shall have authority to issue is 5,000,000 shares of Common Stock, each having a par value of $[par-value] per share."
-          },
-          "bias": {
-            "partyA": 0,
-            "partyB": 0
           }
         },
         {
@@ -361,10 +341,6 @@
           },
           "legalText": {
             "en": "FOURTH: The total number of shares of stock the corporation shall have authority to issue is 20,000,000 shares of Common Stock, each having a par value of $[par-value] per share."
-          },
-          "bias": {
-            "partyA": 0,
-            "partyB": 0
           }
         }
       ]
@@ -426,10 +402,6 @@
           },
           "legalText": {
             "en": "FIFTH: To the fullest extent permitted by the General Corporation Law of the State of Delaware as it now exists or as it may be amended, no director of this corporation shall be personally liable to the corporation or its stockholders for monetary damages arising from a breach of fiduciary duty as a director. Any repeal or modification of this provision shall be prospective only and shall not adversely affect any right or protection of a director existing at the time of such repeal or modification."
-          },
-          "bias": {
-            "partyA": 0,
-            "partyB": 0
           }
         }
       ]
@@ -489,10 +461,6 @@
           },
           "legalText": {
             "en": "SIXTH: The name and mailing address of the incorporator is [incorporator], c/o the registered office set forth in Article SECOND."
-          },
-          "bias": {
-            "partyA": 0,
-            "partyB": 0
           }
         }
       ]

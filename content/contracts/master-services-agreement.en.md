@@ -69,11 +69,11 @@ How long confidentiality obligations last after the agreement ends: 3 years, 5 y
 
 ### Insurance requirements
 
-What cover the Provider must hold: basic (commercially reasonable cover, no minimums), standard ($1M per occurrence and $2M aggregate general liability plus $1M professional liability), or enhanced ($2M / $5M general liability plus $2M professional liability).
+What cover the Provider must hold: basic (commercially reasonable cover, no minimums), standard (1 million per occurrence and 2 million aggregate general liability plus 1 million professional liability), or enhanced (2 million / 5 million general liability plus 2 million professional liability). The amounts are in the currency of the governing law: US dollars under California law, euros under Spanish law and pounds sterling under the law of England and Wales.
 
 ### Change order process
 
-How changes to the scope of an SOW are approved: a formal written change order signed by both parties; approval by email followed by a written change order within five business days; or a threshold approach, where changes under $5,000 or 5% of the SOW value may be approved by email and larger ones need a formal change order.
+How changes to the scope of an SOW are approved: a formal written change order signed by both parties; approval by email followed by a written change order within five business days; or a threshold approach, where changes under 5,000 (in the same currency) or 5% of the SOW value may be approved by email and larger ones need a formal change order.
 
 ### Non-compete and non-circumvention
 
@@ -98,7 +98,7 @@ The Provider generally wants faster payment, ownership of its work, lower exposu
 - **Warranty**: the middle ground is **60 days**.
 - **Indemnification**: the middle ground is the **standard mutual indemnity** (IP, gross negligence, confidentiality).
 - **Confidentiality**: the middle ground is **5 years**, with 3 years close to it.
-- **Insurance**: the middle ground is **standard cover** ($1M / $2M plus $1M professional liability).
+- **Insurance**: the middle ground is **standard cover** (1 million / 2 million plus 1 million professional liability).
 - **Change orders**: the middle ground is the **threshold-based** approach.
 - **Non-compete**: the middle ground is **non-circumvention only**.
 

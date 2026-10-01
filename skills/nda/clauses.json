@@ -102,10 +102,6 @@
           "legalText": {
             "en": "The confidentiality obligations in this Agreement will survive termination or expiration for a period of two (2) years.",
             "es": "Las obligaciones de confidencialidad establecidas en el presente Acuerdo subsistirán tras su resolución o expiración durante un período de dos (2) años."
-          },
-          "bias": {
-            "partyA": -0.3,
-            "partyB": 0.3
           }
         },
         {
@@ -173,10 +169,6 @@
           "legalText": {
             "en": "The confidentiality obligations in this Agreement will survive termination or expiration for a period of three (3) years.",
             "es": "Las obligaciones de confidencialidad establecidas en el presente Acuerdo subsistirán tras su resolución o expiración durante un período de tres (3) años."
-          },
-          "bias": {
-            "partyA": 0,
-            "partyB": 0
           }
         },
         {
@@ -244,10 +236,6 @@
           "legalText": {
             "en": "The confidentiality obligations in this Agreement will survive termination or expiration for a period of five (5) years.",
             "es": "Las obligaciones de confidencialidad establecidas en el presente Acuerdo subsistirán tras su resolución o expiración durante un período de cinco (5) años."
-          },
-          "bias": {
-            "partyA": 0.3,
-            "partyB": -0.3
           }
         },
         {
@@ -317,10 +305,6 @@
           "legalText": {
             "en": "The confidentiality obligations in this Agreement with respect to information qualifying as a trade secret under applicable law will survive indefinitely.",
             "es": "Las obligaciones de confidencialidad establecidas en el presente Acuerdo respecto a la información que constituya secreto empresarial conforme a la legislación aplicable subsistirán de forma indefinida."
-          },
-          "bias": {
-            "partyA": 0.5,
-            "partyB": -0.5
           }
         }
       ]
@@ -411,10 +395,6 @@
           "legalText": {
             "en": "The Receiving Party may only disclose Confidential Information if required by law, court order, or governmental authority, provided that the Receiving Party gives the Disclosing Party prompt written notice to allow the Disclosing Party to seek protective measures.",
             "es": "La Parte Receptora únicamente podrá divulgar la Información Confidencial cuando así lo exija la ley, una resolución judicial o un requerimiento de autoridad gubernamental, siempre que la Parte Receptora notifique por escrito y sin dilación a la Parte Divulgante, a fin de que esta pueda solicitar las medidas de protección oportunas."
-          },
-          "bias": {
-            "partyA": 0.5,
-            "partyB": -0.5
           }
         },
         {
@@ -482,10 +462,6 @@
           "legalText": {
             "en": "The Receiving Party may disclose Confidential Information: (a) if required by law, court order, or governmental authority, provided prompt notice is given; (b) to professional legal or financial advisors bound by duties of confidentiality.",
             "es": "La Parte Receptora podrá divulgar la Información Confidencial: (a) cuando así lo exija la ley, una resolución judicial o un requerimiento de autoridad gubernamental, previa notificación sin demora; (b) a asesores jurídicos o financieros profesionales sujetos a deber de confidencialidad."
-          },
-          "bias": {
-            "partyA": 0,
-            "partyB": 0
           }
         },
         {
@@ -551,10 +527,6 @@
           "legalText": {
             "en": "The Receiving Party may disclose Confidential Information to: (a) legal requirements with notice; (b) professional advisors; (c) employees and contractors with a need to know, provided they are bound by written confidentiality obligations at least as protective as this Agreement.",
             "es": "La Parte Receptora podrá divulgar la Información Confidencial a: (a) los supuestos legalmente exigidos, previa notificación; (b) asesores profesionales; (c) empleados y contratistas que necesiten conocerla, siempre que estén vinculados por obligaciones escritas de confidencialidad al menos tan protectoras como las del presente Acuerdo."
-          },
-          "bias": {
-            "partyA": -0.2,
-            "partyB": 0.2
           }
         },
         {
@@ -622,10 +594,6 @@
           "legalText": {
             "en": "The Receiving Party may disclose Confidential Information to: (a) legal requirements with notice; (b) professional advisors; (c) employees and contractors with need to know; (d) affiliates and potential business partners who agree in writing to confidentiality terms at least as protective as this Agreement.",
             "es": "La Parte Receptora podrá divulgar la Información Confidencial a: (a) los supuestos legalmente exigidos, previa notificación; (b) asesores profesionales; (c) empleados y contratistas que necesiten conocerla; (d) sociedades vinculadas y potenciales socios comerciales que se comprometan por escrito a respetar condiciones de confidencialidad al menos tan protectoras como las del presente Acuerdo."
-          },
-          "bias": {
-            "partyA": -0.5,
-            "partyB": 0.5
           }
         }
       ]
@@ -716,10 +684,6 @@
           "legalText": {
             "en": "\"Confidential Information\" means any information disclosed by the Disclosing Party that is marked as \"confidential\" or \"proprietary\" at the time of disclosure.",
             "es": "Se entenderá por «Información Confidencial» toda información divulgada por la Parte Divulgante que esté marcada como «confidencial» o «reservada» en el momento de su divulgación."
-          },
-          "bias": {
-            "partyA": -0.4,
-            "partyB": 0.4
           }
         },
         {
@@ -787,10 +751,6 @@
           "legalText": {
             "en": "\"Confidential Information\" means any information disclosed by the Disclosing Party that: (a) is marked as \"confidential\" or \"proprietary\"; or (b) would reasonably be understood to be confidential given its nature or the circumstances of disclosure.",
             "es": "Se entenderá por «Información Confidencial» toda información divulgada por la Parte Divulgante que: (a) esté marcada como «confidencial» o «reservada»; o (b) pueda razonablemente considerarse confidencial dada su naturaleza o las circunstancias de su divulgación."
-          },
-          "bias": {
-            "partyA": 0,
-            "partyB": 0
           }
         },
         {
@@ -858,10 +818,6 @@
           "legalText": {
             "en": "\"Confidential Information\" means any non-public information disclosed by the Disclosing Party to the Receiving Party, whether orally, in writing, or in any other form, regardless of whether marked as confidential.",
             "es": "Se entenderá por «Información Confidencial» toda información no pública divulgada por la Parte Divulgante a la Parte Receptora, ya sea verbalmente, por escrito o en cualquier otro formato, con independencia de que esté marcada como confidencial."
-          },
-          "bias": {
-            "partyA": 0.4,
-            "partyB": -0.4
           }
         }
       ]
@@ -952,10 +908,6 @@
           "legalText": {
             "en": "Upon termination or expiration, the Receiving Party must return or destroy all Confidential Information within ten (10) business days and certify destruction in writing.",
             "es": "Tras la resolución o expiración del Acuerdo, la Parte Receptora deberá devolver o destruir toda la Información Confidencial en el plazo de diez (10) días hábiles y certificar por escrito dicha destrucción."
-          },
-          "bias": {
-            "partyA": 0.4,
-            "partyB": -0.4
           }
         },
         {
@@ -1023,10 +975,6 @@
           "legalText": {
             "en": "Upon termination, the Receiving Party must return or destroy all Confidential Information within thirty (30) days, except that one archival copy may be retained solely for legal compliance purposes, which remains subject to this Agreement.",
             "es": "Tras la resolución, la Parte Receptora deberá devolver o destruir toda la Información Confidencial en el plazo de treinta (30) días, salvo que podrá conservarse una copia de archivo exclusivamente a efectos de cumplimiento normativo, la cual seguirá sujeta a las disposiciones del presente Acuerdo."
-          },
-          "bias": {
-            "partyA": 0,
-            "partyB": 0
           }
         },
         {
@@ -1094,10 +1042,6 @@
           "legalText": {
             "en": "Upon termination, the Receiving Party must return or destroy all readily accessible Confidential Information within thirty (30) days. Copies in routine backup systems may be retained provided they are not accessed except for backup recovery purposes and remain subject to confidentiality obligations.",
             "es": "Tras la resolución, la Parte Receptora deberá devolver o destruir toda la Información Confidencial de fácil acceso en el plazo de treinta (30) días. Las copias existentes en sistemas rutinarios de copias de seguridad podrán conservarse siempre que no se acceda a ellas salvo para fines de recuperación y permanezcan sujetas a las obligaciones de confidencialidad."
-          },
-          "bias": {
-            "partyA": -0.3,
-            "partyB": 0.3
           }
         }
       ]
@@ -1189,10 +1133,6 @@
           "legalText": {
             "en": "Any dispute arising from this Agreement will be resolved exclusively in the state and federal courts located in the jurisdiction of the governing law. Each Party irrevocably submits to the exclusive jurisdiction of such courts.",
             "es": "Toda controversia derivada del presente Acuerdo se resolverá exclusivamente ante los juzgados y tribunales de la jurisdicción de la ley aplicable. Cada Parte se somete irrevocablemente a la jurisdicción exclusiva de dichos tribunales."
-          },
-          "bias": {
-            "partyA": 0,
-            "partyB": 0
           }
         },
         {
@@ -1260,10 +1200,6 @@
           "legalText": {
             "en": "Any dispute arising from this Agreement will be resolved exclusively in the Court of Chancery of the State of Delaware (or, if such court lacks jurisdiction, the state and federal courts located in Delaware). Each Party irrevocably submits to the exclusive jurisdiction of such courts.",
             "es": "Toda controversia derivada del presente Acuerdo se resolverá exclusivamente ante el Tribunal de Equidad del Estado de Delaware (o, si dicho tribunal careciere de competencia, ante los tribunales estatales y federales radicados en Delaware). Cada Parte se somete irrevocablemente a la jurisdicción exclusiva de dichos tribunales."
-          },
-          "bias": {
-            "partyA": 0,
-            "partyB": 0
           },
           "jurisdictionConfig": {
             "ENGLAND_WALES": {
@@ -1344,10 +1280,6 @@
             "en": "Any dispute arising from this Agreement will be finally resolved by binding arbitration administered by JAMS under its Comprehensive Arbitration Rules. The arbitration will be conducted by one arbitrator in the seat of the governing law jurisdiction. The arbitrator's award is final and binding.",
             "es": "Toda controversia derivada del presente Acuerdo se resolverá definitivamente mediante arbitraje vinculante administrado por JAMS conforme a su Reglamento de Arbitraje Integral. El arbitraje será conducido por un único árbitro en la sede de la jurisdicción de la ley aplicable. El laudo arbitral será firme y vinculante."
           },
-          "bias": {
-            "partyA": 0.1,
-            "partyB": -0.1
-          },
           "jurisdictionConfig": {
             "ENGLAND_WALES": {
               "available": false
@@ -1422,10 +1354,6 @@
           "legalText": {
             "en": "Any dispute arising from this Agreement will be finally resolved by arbitration under the Rules of Arbitration of the International Chamber of Commerce. The arbitration will be conducted by one arbitrator, with the seat in the capital of the governing law jurisdiction. The award is final and binding.",
             "es": "Toda controversia derivada del presente Acuerdo se resolverá definitivamente mediante arbitraje conforme al Reglamento de Arbitraje de la Cámara de Comercio Internacional. El arbitraje será conducido por un único árbitro, con sede en la capital de la jurisdicción de la ley aplicable. El laudo será firme y vinculante."
-          },
-          "bias": {
-            "partyA": 0,
-            "partyB": 0
           }
         },
         {
@@ -1495,10 +1423,6 @@
           "legalText": {
             "en": "Any dispute arising from this Agreement will be finally resolved by arbitration administered by the American Arbitration Association under its Commercial Arbitration Rules. The arbitration will be conducted by one arbitrator in the seat of the governing law jurisdiction.",
             "es": "Toda controversia derivada del presente Acuerdo se resolverá definitivamente mediante arbitraje administrado por la Asociación Americana de Arbitraje conforme a su Reglamento de Arbitraje Comercial. El arbitraje será conducido por un único árbitro en la sede de la jurisdicción de la ley aplicable."
-          },
-          "bias": {
-            "partyA": 0,
-            "partyB": 0
           },
           "jurisdictionConfig": {
             "ENGLAND_WALES": {
@@ -1574,10 +1498,6 @@
           "legalText": {
             "en": "Any dispute arising from this Agreement will be finally resolved by arbitration under the LCIA Rules. The arbitration will be conducted by a sole arbitrator appointed by the LCIA Court. The seat of arbitration will be London, United Kingdom.",
             "es": "Toda controversia derivada del presente Acuerdo se resolverá definitivamente mediante arbitraje conforme al Reglamento de la LCIA. El arbitraje será conducido por un árbitro único designado por la Corte de la LCIA. La sede del arbitraje será Londres, Reino Unido."
-          },
-          "bias": {
-            "partyA": 0,
-            "partyB": 0
           },
           "jurisdictionConfig": {
             "CALIFORNIA": {
@@ -1661,10 +1581,6 @@
           "legalText": {
             "en": "Any dispute arising out of or relating to this Agreement shall be submitted to the exclusive jurisdiction of the courts of [dispute forum city], the parties expressly waiving any other forum that might otherwise apply.",
             "es": "Cualquier controversia derivada del presente Acuerdo o relacionada con él se someterá a la jurisdicción exclusiva de los Juzgados y Tribunales de [dispute forum city], renunciando expresamente las partes a cualquier otro fuero que pudiera corresponderles."
-          },
-          "bias": {
-            "partyA": 0.0,
-            "partyB": 0.1
           }
         },
         {
@@ -1740,10 +1656,6 @@
           "legalText": {
             "en": "Before filing any judicial proceeding, the parties shall first attempt to resolve any dispute arising out of or relating to this Agreement through mediation conducted under Spanish Law 5/2012 of 6 July on mediation in civil and commercial matters. If no settlement is reached within sixty (60) days of the mediator's first session, either party may then submit the dispute to the exclusive jurisdiction of the courts of [dispute forum city].",
             "es": "Antes de acudir a los tribunales, las partes intentarán resolver cualquier controversia derivada del presente Acuerdo o relacionada con él mediante mediación conforme a la Ley 5/2012, de 6 de julio, de mediación en asuntos civiles y mercantiles. Si no se alcanza un acuerdo en el plazo de sesenta (60) días desde la primera sesión del mediador, cualquiera de las partes podrá someter la controversia a la jurisdicción exclusiva de los Juzgados y Tribunales de [dispute forum city]."
-          },
-          "bias": {
-            "partyA": -0.1,
-            "partyB": 0.2
           }
         },
         {
@@ -1819,10 +1731,6 @@
           "legalText": {
             "en": "Any dispute arising out of or relating to this Agreement, including its existence, validity, termination, or breach, shall be finally settled by arbitration administered by the Madrid Arbitration Court of the Madrid Chamber of Commerce, in accordance with its Arbitration Rules in force on the date of the request for arbitration. The arbitral tribunal shall be composed of one (1) arbitrator. The seat of arbitration shall be Madrid (Spain) and the language of the proceedings shall be Spanish. The arbitration shall be a derecho (decided in law, not in equity).",
             "es": "Cualquier controversia derivada del presente Acuerdo o relacionada con él, incluida su existencia, validez, terminación o incumplimiento, se resolverá definitivamente mediante arbitraje administrado por la Corte de Arbitraje de Madrid de la Cámara de Comercio de Madrid, conforme a su Reglamento vigente en la fecha de presentación de la solicitud de arbitraje. El tribunal arbitral estará formado por un (1) árbitro. La sede del arbitraje será Madrid (España) y el idioma de las actuaciones, el castellano. El arbitraje será de Derecho."
-          },
-          "bias": {
-            "partyA": 0.3,
-            "partyB": -0.2
           }
         },
         {
@@ -1884,10 +1792,6 @@
           "legalText": {
             "en": "This Agreement is governed by the laws of [governing law], without prejudice to any mandatory application of data protection, consumer or other laws to its subject matter. Any dispute arising out of or relating to this Agreement shall be subject to the exclusive jurisdiction of [competent courts], and each Party irrevocably submits to that jurisdiction.",
             "es": "El presente Acuerdo se rige por [ley aplicable], sin perjuicio de la aplicación imperativa de las normas de protección de datos, de consumo u otras que correspondan a su objeto. Toda controversia derivada del presente Acuerdo o relacionada con él quedará sometida a la jurisdicción exclusiva de [tribunales competentes], a la que cada Parte se somete irrevocablemente."
-          },
-          "bias": {
-            "partyA": 0,
-            "partyB": 0
           }
         }
       ]
@@ -1978,10 +1882,6 @@
           "legalText": {
             "en": "Each Party acknowledges that Confidential Information is valuable and unique, and that unauthorized disclosure may cause irreparable harm. The Disclosing Party is entitled to seek injunctive relief without proving actual damages, in addition to other legal remedies.",
             "es": "Cada Parte reconoce que la Información Confidencial es valiosa y de carácter único, y que su divulgación no autorizada puede causar un daño irreparable. La Parte Divulgante tendrá derecho a solicitar medidas cautelares sin necesidad de acreditar daños efectivos, además de cualesquiera otros recursos legales."
-          },
-          "bias": {
-            "partyA": 0.2,
-            "partyB": -0.2
           }
         },
         {
@@ -2047,10 +1947,6 @@
           "legalText": {
             "en": "The Disclosing Party is entitled to seek injunctive relief without proving actual damages and without the requirement to post a bond, to the extent permitted by applicable law, in addition to other legal remedies.",
             "es": "La Parte Divulgante tendrá derecho a solicitar medidas cautelares sin necesidad de acreditar daños efectivos y sin la obligación de prestar caución, en la medida en que lo permita la legislación aplicable, además de cualesquiera otros recursos legales."
-          },
-          "bias": {
-            "partyA": 0.4,
-            "partyB": -0.4
           }
         },
         {
@@ -2114,10 +2010,6 @@
           "legalText": {
             "en": "Each Party reserves all rights and remedies available at law or in equity for any breach of this Agreement, including the right to seek monetary damages and injunctive relief where appropriate.",
             "es": "Cada Parte se reserva todos los derechos y recursos disponibles en derecho y en equidad por cualquier incumplimiento del presente Acuerdo, incluido el derecho a reclamar una indemnización por daños y perjuicios y a solicitar medidas cautelares cuando proceda."
-          },
-          "bias": {
-            "partyA": -0.1,
-            "partyB": 0.1
           }
         }
       ]
@@ -2210,10 +2102,6 @@
           "legalText": {
             "en": "This Agreement begins on the Effective Date and continues for one (1) year, unless terminated earlier by either Party giving thirty (30) days' written notice.",
             "es": "El presente Acuerdo entrará en vigor en la Fecha de Efectividad y tendrá una duración de un (1) año, salvo resolución anticipada por cualquiera de las Partes mediante notificación escrita con treinta (30) días de antelación."
-          },
-          "bias": {
-            "partyA": -0.2,
-            "partyB": 0.2
           }
         },
         {
@@ -2281,10 +2169,6 @@
           "legalText": {
             "en": "This Agreement begins on the Effective Date and continues for two (2) years, unless terminated earlier by either Party giving thirty (30) days' written notice.",
             "es": "El presente Acuerdo entrará en vigor en la Fecha de Efectividad y tendrá una duración de dos (2) años, salvo resolución anticipada por cualquiera de las Partes mediante notificación escrita con treinta (30) días de antelación."
-          },
-          "bias": {
-            "partyA": 0,
-            "partyB": 0
           }
         },
         {
@@ -2350,10 +2234,6 @@
           "legalText": {
             "en": "This Agreement begins on the Effective Date and continues for three (3) years, unless terminated earlier by either Party giving sixty (60) days' written notice.",
             "es": "El presente Acuerdo entrará en vigor en la Fecha de Efectividad y tendrá una duración de tres (3) años, salvo resolución anticipada por cualquiera de las Partes mediante notificación escrita con sesenta (60) días de antelación."
-          },
-          "bias": {
-            "partyA": 0.2,
-            "partyB": -0.2
           }
         }
       ]
@@ -2445,10 +2325,6 @@
             "en": "[No non-solicitation provision included]",
             "es": "[No se incluye cláusula de no captación]"
           },
-          "bias": {
-            "partyA": 0,
-            "partyB": 0
-          },
           "jurisdictionConfig": {
             "CALIFORNIA": {
               "available": true,
@@ -2527,10 +2403,6 @@
           "legalText": {
             "en": "During the term of this Agreement, neither Party will directly solicit for employment any employee of the other Party with whom it has had contact in connection with the Purpose.",
             "es": "Durante la vigencia del presente Acuerdo, ninguna de las Partes captará directamente para su contratación a ningún empleado de la otra Parte con quien haya tenido contacto en relación con el Objeto del acuerdo."
-          },
-          "bias": {
-            "partyA": 0.1,
-            "partyB": -0.1
           },
           "jurisdictionConfig": {
             "CALIFORNIA": {
@@ -2612,10 +2484,6 @@
           "legalText": {
             "en": "During the term of this Agreement and for one (1) year thereafter, neither Party will directly solicit for employment any employee of the other Party with whom it has had contact in connection with the Purpose.",
             "es": "Durante la vigencia del presente Acuerdo y durante un (1) año a partir de su resolución, ninguna de las Partes captará directamente para su contratación a ningún empleado de la otra Parte con quien haya tenido contacto en relación con el Objeto del acuerdo."
-          },
-          "bias": {
-            "partyA": 0.3,
-            "partyB": -0.3
           },
           "jurisdictionConfig": {
             "CALIFORNIA": {
@@ -2716,10 +2584,6 @@
           "legalText": {
             "en": "Neither Party may assign or transfer this Agreement without the prior written consent of the other Party. Any attempted assignment without consent is void.",
             "es": "Ninguna de las Partes podrá ceder ni transferir el presente Acuerdo sin el consentimiento previo y por escrito de la otra Parte. Toda cesión intentada sin dicho consentimiento será nula de pleno derecho."
-          },
-          "bias": {
-            "partyA": 0,
-            "partyB": 0
           }
         },
         {
@@ -2783,10 +2647,6 @@
           "legalText": {
             "en": "Neither Party may assign this Agreement without consent, except to an affiliate under common control upon written notice. The assigning Party remains responsible for the affiliate's compliance.",
             "es": "Ninguna de las Partes podrá ceder el presente Acuerdo sin consentimiento, salvo a una sociedad vinculada bajo control común, previa notificación escrita. La Parte cedente seguirá siendo responsable del cumplimiento por parte de la sociedad vinculada."
-          },
-          "bias": {
-            "partyA": 0,
-            "partyB": 0
           }
         },
         {
@@ -2850,10 +2710,6 @@
           "legalText": {
             "en": "Neither Party may assign this Agreement without consent, except: (a) to an affiliate; or (b) in connection with a merger, acquisition, or sale of substantially all assets, upon written notice to the other Party.",
             "es": "Ninguna de las Partes podrá ceder el presente Acuerdo sin consentimiento, salvo: (a) a una sociedad vinculada; o (b) en el marco de una fusión, adquisición o venta de la totalidad o parte sustancial de los activos, previa notificación escrita a la otra Parte."
-          },
-          "bias": {
-            "partyA": -0.1,
-            "partyB": 0.1
           }
         }
       ]
