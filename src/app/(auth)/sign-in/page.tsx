@@ -11,7 +11,6 @@ import { Label } from "@/components/ui/label";
 import { brand } from "@/config/brand";
 import { features } from "@/config/features";
 import { TESTER_EMAILS } from "@/lib/tester";
-import { HostedCaution } from "@/components/pilot/PilotNotice";
 import { StatusNote } from "@/components/ui/status-note";
 
 const TESTER_MODE_ON = process.env.NEXT_PUBLIC_TESTER_MODE === "true";
@@ -399,7 +398,6 @@ export default function SignInPage() {
         )}
 
         <div className="mt-6 pt-6 border-t border-border text-center space-y-3">
-          <HostedCaution variant="signup" />
           <p className="text-xs text-muted-foreground">
             {t.rich("bySigningIn", {
               termsLink: (chunks) => (

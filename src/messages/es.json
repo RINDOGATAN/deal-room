@@ -90,9 +90,6 @@
     "allSkillsFreeDescription": "Hemos desbloqueado el catálogo completo para que puedas probar cualquier tipo de contrato. No hace falta suscripción durante este periodo."
   },
   "pilot": {
-    "dismiss": "Cerrar",
-    "cautionTitle": "Precaución",
-    "caution": "Dealroom alojado no ofrece garantías contractuales. No introduzcas información privilegiada o confidencial. Para eso, <run>usa tu propia instancia</run>.",
     "settingsTitle": "Ajustes",
     "settingsNav": "Ajustes",
     "sectionTitle": "Uso alojado gratuito",
@@ -1413,8 +1410,8 @@
   },
   "localDeployment": {
     "title": "Despliegue Local",
-    "subtitle": "Ejecuta Dealroom en tu propia infraestructura con control total sobre tus datos. Las skills premium cuestan {price} al año cada una en el kit: cómpralas en la tienda de todo.law y después instálalas y actívalas en tu propia instancia. El servicio alojado en dealroom.todo.law cobra por contrato, y redactar y negociar es gratis. No ofrece garantías contractuales, así que no introduzcas allí información privilegiada o confidencial.",
-    "subtitlePerContract": "Ejecuta Dealroom en tu propia infraestructura con control total sobre tus datos. Las skills premium cuestan {price} al año cada una en el kit: cómpralas en la tienda de todo.law y después instálalas y actívalas en tu propia instancia. El servicio alojado en dealroom.todo.law cobra en cambio por contrato, y redactar y negociar es gratis. No ofrece garantías contractuales, así que no introduzcas allí información privilegiada o confidencial.",
+    "subtitle": "Ejecuta Dealroom en tu propia infraestructura con control total sobre tus datos. Las skills premium cuestan {price} al año cada una en el kit: cómpralas en la tienda de todo.law y después instálalas y actívalas en tu propia instancia. El servicio alojado en dealroom.todo.law cobra por contrato, y redactar y negociar es gratis.",
+    "subtitlePerContract": "Ejecuta Dealroom en tu propia infraestructura con control total sobre tus datos. Las skills premium cuestan {price} al año cada una en el kit: cómpralas en la tienda de todo.law y después instálalas y actívalas en tu propia instancia. El servicio alojado en dealroom.todo.law cobra en cambio por contrato, y redactar y negociar es gratis.",
     "howItWorks": "Cómo Funciona",
     "howItWorksDesc": "Los despliegues autoalojados siguen un flujo sencillo para adquirir y activar skills premium:",
     "flowBrowse": "Explorar",
@@ -1539,10 +1536,7 @@
     "qSubscriptionA": "No. No hay suscripción ni cuota mensual.",
     "qKitQ": "¿Y el kit autoalojado?",
     "qKitA": "El kit ejecuta Dealroom en tu propia infraestructura, sin cobro por contrato. Las skills premium para el kit cuestan 60 al año cada una (en tu moneda) y se compran en la tienda de todo.law.",
-    "qKitLink": "Ir a la tienda",
-    "qConfidentialQ": "¿Puedo introducir información confidencial?",
-    "qConfidentialA": "Dealroom alojado no ofrece garantías contractuales. No introduzcas información privilegiada o confidencial. Para eso, usa tu propia instancia.",
-    "qConfidentialLink": "Usar tu propia instancia"
+    "qKitLink": "Ir a la tienda"
   },
   "docsHome": {
     "heroTitle": "Guía de Usuario de <highlight>Dealroom</highlight>",

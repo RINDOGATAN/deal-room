@@ -20,9 +20,7 @@ Two-party async contract negotiation platform with weighted compromise algorithm
   when it is first downloaded or when its signature starts; every skill,
   premium ones included, is covered by that price. Agents pay per contract
   with prepaid credits sold in packs of ten (see `docs/agent-api.md`,
-  "Paying per contract"). There is no monthly plan. Hosted Dealroom comes
-  with no contractual safeguards. Do not enter privileged or confidential
-  information. For that, run your own instance (<https://www.todo.law/run>).
+  "Paying per contract"). There is no monthly plan.
 - **The kit (self-hosted) has no caps.** Premium skills are sold only for
   the kit: 60 a year each in the kit (in your currency) on the todo.law
   storefront, installed and

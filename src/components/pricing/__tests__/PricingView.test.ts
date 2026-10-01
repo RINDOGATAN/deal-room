@@ -47,7 +47,8 @@ describe("pricing page", () => {
     expect(html).not.toContain("€");
     expect(html).toContain("Prices in EUR");
     expect(html).toContain("Contracts in deals created before 1 October 2026 are not charged.");
-    expect(html).toContain("https://www.todo.law/run");
+    // The confidentiality question went with the hosted caution (2026-10-01).
+    expect(html).not.toContain("Can I enter confidential information?");
     expect(html).toContain("https://www.todo.law/marketplace");
     expect(html).toContain('href="/docs/agent-api"');
   });

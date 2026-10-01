@@ -90,9 +90,6 @@
     "allSkillsFreeDescription": "We've unlocked the entire catalog so you can try any contract type. No subscription needed during this period."
   },
   "pilot": {
-    "dismiss": "Dismiss",
-    "cautionTitle": "Caution",
-    "caution": "Hosted Dealroom comes with no contractual safeguards. Do not enter privileged or confidential information. For that, <run>run your own instance</run>.",
     "settingsTitle": "Settings",
     "settingsNav": "Settings",
     "sectionTitle": "Free hosted use",
@@ -1412,8 +1409,8 @@
   },
   "localDeployment": {
     "title": "Local Deployment",
-    "subtitle": "Run Dealroom on your own infrastructure with full control over your data. Premium skills are {price} a year each in the kit: buy them on the todo.law storefront, then install and activate them on your own instance. The hosted service at dealroom.todo.law charges per contract, with drafting and negotiating free. It comes with no contractual safeguards, so do not enter privileged or confidential information there.",
-    "subtitlePerContract": "Run Dealroom on your own infrastructure with full control over your data. Premium skills are {price} a year each in the kit: buy them on the todo.law storefront, then install and activate them on your own instance. The hosted service at dealroom.todo.law charges per contract instead, with drafting and negotiating free. It comes with no contractual safeguards, so do not enter privileged or confidential information there.",
+    "subtitle": "Run Dealroom on your own infrastructure with full control over your data. Premium skills are {price} a year each in the kit: buy them on the todo.law storefront, then install and activate them on your own instance. The hosted service at dealroom.todo.law charges per contract, with drafting and negotiating free.",
+    "subtitlePerContract": "Run Dealroom on your own infrastructure with full control over your data. Premium skills are {price} a year each in the kit: buy them on the todo.law storefront, then install and activate them on your own instance. The hosted service at dealroom.todo.law charges per contract instead, with drafting and negotiating free.",
     "howItWorks": "How It Works",
     "howItWorksDesc": "Self-hosted deployments follow a simple flow to acquire and activate premium skills:",
     "flowBrowse": "Browse",
@@ -1538,10 +1535,7 @@
     "qSubscriptionA": "No. There is no subscription and no monthly fee.",
     "qKitQ": "What about the self-hosted kit?",
     "qKitA": "The kit runs Dealroom on your own infrastructure, with no per-contract charge. Premium skills for the kit cost 60 a year each (in your currency) and are bought on the todo.law storefront.",
-    "qKitLink": "Go to the storefront",
-    "qConfidentialQ": "Can I enter confidential information?",
-    "qConfidentialA": "Hosted Dealroom comes with no contractual safeguards. Do not enter privileged or confidential information. For that, run your own instance.",
-    "qConfidentialLink": "Run your own instance"
+    "qKitLink": "Go to the storefront"
   },
   "docsHome": {
     "heroTitle": "Dealroom <highlight>User Guide</highlight>",

@@ -101,9 +101,6 @@ When billing is on:
 
 - the pilot mechanics go: the 90-day edit window, the record ceilings, the
   read-only state and the Settings counters are skipped;
-- the confidentiality cautions stay everywhere they were (hosted Dealroom
-  offers no contractual safeguards; do not enter privileged or
-  confidential information);
 - `/billing` is available (price, receipts, and cancellation of any earlier
   per-skill subscription), and the marketplace lists every skill as part of
   the catalogue with no per-skill purchase.
