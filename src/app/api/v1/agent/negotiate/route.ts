@@ -22,6 +22,8 @@ import {
 import { withIdempotency } from "@/server/middleware/idempotency";
 import { checkDealCreationEntitlement } from "@/server/services/licensing/entitlement";
 import { features } from "@/config/features";
+import { brand } from "@/config/brand";
+import { a2aLimitMessage, hasExtendedA2aLimit } from "@/server/services/billing/a2a-limit";
 import { fireWebhook } from "@/server/services/agent/webhooks";
 import { createLogger } from "@/lib/logger";
 
@@ -146,18 +148,19 @@ export async function POST(req: NextRequest) {
 
     // A2A rate limit check for contract types with A2A_ prefix
     if (playbook.contractType.startsWith("A2A_")) {
-      const isPremiumA2a = !!((auth.customer as Record<string, unknown>).metadata as Record<string, unknown> | null)?.premiumA2A;
+      const extended = await hasExtendedA2aLimit(auth.customer);
       const a2aLimit = await checkA2aRateLimit(
         auth.customer.id,
         playbook.contractType,
-        isPremiumA2a,
+        extended,
       );
       if (!a2aLimit.allowed) {
         return NextResponse.json(
           {
-            error: isPremiumA2a
-              ? "A2A premium weekly limit reached (300 invocations/week)."
-              : "A2A contract invocation limit reached (5 per skill/week). Upgrade to premium tier for 300 calls/week.",
+            error: a2aLimitMessage(
+              extended,
+              features.stripeEnabled ? `https://dealroom.${brand.domain}/pricing` : null,
+            ),
             remaining: a2aLimit.remaining,
           },
           {

@@ -7,17 +7,11 @@ import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { headers } from "next/headers";
 import { features } from "@/config/features";
 import { cancelSubscription } from "@/lib/stripe";
-import { chooseCurrency, displayPrice, type BillingCurrency } from "@/lib/contract-billing";
+import { displayPrice, preferredCurrency, type BillingCurrency } from "@/lib/contract-billing";
+import { resolveVisitorCurrencyFromHeaders, toBillingCurrency } from "@/lib/currency";
 import { getPriceTable } from "../services/billing/pricing";
 import { isDealPaid } from "../services/billing/deal-entitlement";
 import { localeFromRequest } from "../services/billing/checkout";
-
-/** Stored currency preference from Customer.metadata, if any. */
-function storedCurrency(metadata: unknown): unknown {
-  return metadata && typeof metadata === "object" && !Array.isArray(metadata)
-    ? (metadata as Record<string, unknown>).preferredCurrency
-    : undefined;
-}
 
 export const billingRouter = createTRPCRouter({
   getConfig: protectedProcedure.query(() => {
@@ -30,7 +24,7 @@ export const billingRouter = createTRPCRouter({
   /**
    * Pay per contract: the price to show per currency (from
    * `PRICE_DISPLAY_CONTRACT` when set, else the Stripe price the env id
-   * points to), and the currency to show first.
+   * points to), and the one currency to show.
    */
   getContractPricing: protectedProcedure.query(async ({ ctx }) => {
     if (!features.stripeEnabled) {
@@ -43,8 +37,13 @@ export const billingRouter = createTRPCRouter({
           select: { id: true, metadata: true, stripeCustomerId: true },
         })
       : null;
-    const locale = localeFromRequest((await headers()).get("cookie"));
-    const defaultCurrency = chooseCurrency({ stored: storedCurrency(customer?.metadata), locale });
+    const requestHeaders = await headers();
+    const locale = localeFromRequest(requestHeaders.get("cookie"));
+    // One currency per visitor: their switch choice, else the account's
+    // billing currency, else the region guess.
+    const defaultCurrency = toBillingCurrency(
+      resolveVisitorCurrencyFromHeaders(requestHeaders, preferredCurrency(customer?.metadata)),
+    );
     const table = await getPriceTable();
     const shown = (currency: BillingCurrency) =>
       displayPrice("contract", currency, { stripeMinor: table?.contract[currency]?.amount, locale });

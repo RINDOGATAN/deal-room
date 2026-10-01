@@ -3,7 +3,9 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 import { useState } from "react";
+import Link from "next/link";
 import { useLocale, useTranslations } from "next-intl";
+import { features } from "@/config/features";
 import {
   ChevronDown,
   Globe,
@@ -323,6 +325,23 @@ export function A2aSkillsCatalog({ skills }: { skills: Skill[] }) {
             <p className="text-xs text-muted-foreground">{t("step3Desc")}</p>
           </div>
         </div>
+      </div>
+
+      {/* Weekly limits */}
+      <div className="space-y-2" data-testid="a2a-limits">
+        <h2 className="text-xl font-bold">{t("limitsTitle")}</h2>
+        <p className="text-sm text-muted-foreground">
+          {t("limitsBody")}
+          {features.stripeEnabled && (
+            <>
+              {" "}
+              {t("limitsBuy")}{" "}
+              <Link href="/pricing" className="text-primary underline underline-offset-2">
+                {t("limitsPricingLink")}
+              </Link>
+            </>
+          )}
+        </p>
       </div>
 
       {/* Catalog */}

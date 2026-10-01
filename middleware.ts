@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { localeCleanupSetCookies } from "@/lib/locale-cookie";
-import { currencyForCountry } from "@/lib/currency";
+import { REGION_COOKIE, regionCurrency } from "@/lib/currency";
 import { isHostedPilotEnv } from "@/lib/pilot";
 import { readAdminSession, readSupervisorSession } from "@/lib/portal-session";
 import { SECOND_FACTOR_COOKIE, verifySecondFactor } from "@/lib/portal-2fa";
@@ -26,15 +26,16 @@ async function route(request: NextRequest) {
   // one on a first request, with no cookies yet) can skip them.
   const response = await gate(request);
 
-  // Set currency cookie based on geo-IP (a known non-US country → EUR,
-  // otherwise USD), on whatever response the gate produced, redirects included.
-  if (!request.cookies.has("currency")) {
-    const currency = currencyForCountry(request.headers.get("x-vercel-ip-country"));
-    response.cookies.set("currency", currency, {
-      path: "/",
-      maxAge: 60 * 60 * 24 * 30, // 30 days
-      sameSite: "lax",
-    });
+  // The region guess for the browser (Europe → EUR, otherwise USD; see
+  // `src/lib/currency.ts`), on whatever response the gate produced,
+  // redirects included. A session cookie, rewritten whenever the guess
+  // changes, so a cookie left by the earlier 30-day rule is corrected.
+  const currency = regionCurrency({
+    country: request.headers.get("x-vercel-ip-country"),
+    acceptLanguage: request.headers.get("accept-language"),
+  });
+  if (request.cookies.get(REGION_COOKIE)?.value !== currency) {
+    response.cookies.set(REGION_COOKIE, currency, { path: "/", sameSite: "lax" });
   }
 
   return response;

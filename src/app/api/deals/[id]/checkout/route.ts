@@ -20,6 +20,7 @@ import { features } from "@/config/features";
 import { apiError } from "@/lib/api-response";
 import { createBillingCheckout, getOrCreateStripeCustomer } from "@/lib/stripe";
 import { priceIdFor } from "@/lib/contract-billing";
+import { resolveVisitorCurrencyFromHeaders, toBillingCurrency } from "@/lib/currency";
 import { isDealSignable, validateDealAccess } from "@/server/services/document/generator";
 import { isDealPaid } from "@/server/services/billing/deal-entitlement";
 import {
@@ -63,7 +64,11 @@ export async function POST(
       session.user.email,
       session.user.name || undefined,
     );
-    const currency = await currencyForCustomer(customerId, body.currency, locale);
+    const currency = await currencyForCustomer(
+      customerId,
+      body.currency,
+      toBillingCurrency(resolveVisitorCurrencyFromHeaders(request.headers)),
+    );
     const priceId = priceIdFor("contract", currency);
     if (!priceId) {
       return NextResponse.json({ error: "The contract price is not configured" }, { status: 503 });

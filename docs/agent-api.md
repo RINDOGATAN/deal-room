@@ -1354,12 +1354,17 @@ contract itself is paid per contract with a prepaid credit (see
 
 | Tier | Limits |
 |------|--------|
-| **Standard** | 5 invocations per skill per week per customer |
-| **Extended** | 300 total invocations per week per customer |
+| **Standard** | 5 negotiations per contract type per week per customer |
+| **Extended** | 300 negotiations a week in total per customer |
 
-When the rate limit is exceeded, the API returns `429 Too Many Requests` with a `Retry-After` header.
+Accounts holding credits have the extended limit automatically: a credit
+balance above zero, a credit pack bought since the billing start, or a
+contract paid since then. To lift the standard limit, buy credits (the
+`buy_credits` MCP tool or `POST /api/v1/agent/credits/checkout`; prices at
+https://dealroom.todo.law/pricing). An administrator can also grant the
+extended limit with the `premiumA2A` flag in the customer metadata.
 
-The extended tier is set by an administrator through the `premiumA2A` flag in the customer metadata (admin panel).
+When the limit is exceeded, the API returns `429 Too Many Requests` with a `Retry-After` header.
 
 ### Gavel Dispute Resolution
 

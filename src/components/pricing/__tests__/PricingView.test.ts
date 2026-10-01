@@ -4,7 +4,8 @@
 /**
  * The public pricing page: every amount and the billing start date come
  * from the price configuration (`PRICE_DISPLAY_*`, Stripe amounts,
- * `CONTRACT_BILLING_START`), in both currencies and both languages.
+ * `CONTRACT_BILLING_START`), in the visitor's one currency, in both
+ * languages; the structured data keeps both currencies.
  */
 import { describe, it, expect } from "vitest";
 import { createElement, type ComponentType } from "react";
@@ -14,6 +15,7 @@ import en from "@/messages/en.json";
 import es from "@/messages/es.json";
 import { PricingView } from "@/components/pricing/PricingView";
 import { pricingFacts, pricingJsonLd, type PricingFacts } from "@/lib/pricing-page";
+import type { Currency } from "@/lib/currency";
 
 const ENV = {
   PRICE_DISPLAY_CONTRACT: "31",
@@ -21,34 +23,51 @@ const ENV = {
   CONTRACT_BILLING_START: "2026-10-01",
 };
 
-function render(facts: PricingFacts, billingOn = true, locale: "en" | "es" = "en") {
+function render(
+  facts: PricingFacts,
+  billingOn = true,
+  locale: "en" | "es" = "en",
+  currency: Currency = "USD",
+) {
   return renderToStaticMarkup(
     createElement(
       NextIntlClientProvider as ComponentType<Record<string, unknown>>,
       { locale, messages: locale === "es" ? es : en, timeZone: "UTC" },
-      createElement(PricingView, { facts, billingOn }),
+      createElement(PricingView, { facts, billingOn, currency }),
     ),
   );
 }
 
 describe("pricing page", () => {
-  it("renders both amounts in both currencies and the billing start date from the configuration", () => {
+  it("renders the amounts in one currency and the billing start date from the configuration", () => {
     const html = render(pricingFacts({ locale: "en", env: ENV }));
-    expect(html).toContain("$31 or €31 per contract");
-    expect(html).toContain("The same $31 or €31 per contract");
-    expect(html).toContain("Credits are sold in packs of 10, at 25 percent off: $232.50 or €232.50 a pack.");
+    expect(html).toContain("$31 per contract");
+    expect(html).toContain("The same $31 per contract");
+    expect(html).toContain("Credits are sold in packs of 10, at 25 percent off: $232.50 a pack.");
+    expect(html).not.toContain("€");
+    expect(html).toContain("Prices in EUR");
     expect(html).toContain("Contracts in deals created before 1 October 2026 are not charged.");
     expect(html).toContain("https://www.todo.law/run");
     expect(html).toContain("https://www.todo.law/marketplace");
     expect(html).toContain('href="/docs/agent-api"');
   });
 
+  it("renders euros only for a European visitor, with the switch back to dollars", () => {
+    const html = render(pricingFacts({ locale: "en", env: ENV }), true, "en", "EUR");
+    expect(html).toContain("€31 per contract");
+    expect(html).toContain("€232.50 a pack");
+    expect(html).not.toContain("$");
+    expect(html).toContain("Prices in USD");
+  });
+
   it("renders in Spanish with the date in Spanish", () => {
-    const html = render(pricingFacts({ locale: "es", env: ENV }), true, "es");
+    const html = render(pricingFacts({ locale: "es", env: ENV }), true, "es", "EUR");
     expect(html).toContain("por contrato");
     expect(html).toContain("31");
     expect(html).toContain("232,50");
     expect(html).toContain("1 de octubre de 2026");
+    expect(html).toContain("Precios en USD");
+    expect(html).not.toContain("$");
   });
 
   it("falls back to the Stripe amounts when no display amount is set", () => {
@@ -58,8 +77,8 @@ describe("pricing page", () => {
       minor: { contract: { usd: 2900, eur: 2900 }, credits10: { usd: 21750, eur: 21750 } },
     });
     const html = render(facts);
-    expect(html).toContain("$29 or €29 per contract");
-    expect(html).toContain("$217.50 or €217.50 a pack");
+    expect(html).toContain("$29 per contract");
+    expect(html).toContain("$217.50 a pack");
   });
 
   it("states no number and no discount when no amount is known", () => {

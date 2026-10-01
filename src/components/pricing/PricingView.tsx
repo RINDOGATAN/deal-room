@@ -4,6 +4,8 @@
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import type { PricingFacts } from "@/lib/pricing-page";
+import type { Currency } from "@/lib/currency";
+import { CurrencySwitch } from "@/components/pricing/CurrencySwitch";
 
 const STOREFRONT_URL = "https://www.todo.law/marketplace";
 const RUN_URL = "https://www.todo.law/run";
@@ -13,12 +15,20 @@ const RUN_URL = "https://www.todo.law/run";
  * come in `facts` (from the price configuration); with billing off the
  * page says so and lists no amounts.
  */
-export function PricingView({ facts, billingOn }: { facts: PricingFacts; billingOn: boolean }) {
+export function PricingView({
+  facts,
+  billingOn,
+  currency,
+}: {
+  facts: PricingFacts;
+  billingOn: boolean;
+  /** The one currency shown to this visitor (`resolveVisitorCurrency`). */
+  currency: Currency;
+}) {
   const t = useTranslations("pricing");
-  const both = (amounts: { usd: string | null; eur: string | null }) =>
-    amounts.usd && amounts.eur ? t("amountBoth", { usd: amounts.usd, eur: amounts.eur }) : amounts.usd ?? amounts.eur;
-  const contractPrice = both(facts.contract);
-  const packPrice = both(facts.pack);
+  const key = currency === "EUR" ? "eur" : "usd";
+  const contractPrice = facts.contract[key];
+  const packPrice = facts.pack[key];
 
   const free = ["freeDrafting", "freeNegotiating", "freeCompromise", "freeSupervision", "freeVetting", "freeMarketplace"] as const;
 
@@ -27,6 +37,7 @@ export function PricingView({ facts, billingOn }: { facts: PricingFacts; billing
       <div className="space-y-4">
         <h1 className="text-4xl font-bold">{t("title")}</h1>
         <p className="text-xl text-muted-foreground max-w-2xl">{billingOn ? t("lead") : t("leadOff")}</p>
+        {billingOn && (contractPrice || packPrice) && <CurrencySwitch current={currency} reload />}
       </div>
 
       {billingOn && (
