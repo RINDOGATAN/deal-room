@@ -1115,7 +1115,15 @@
     "receipts": "Receipts and payment details",
     "legacyTitle": "Earlier add-on subscriptions",
     "legacyBody": "Skills are no longer sold one by one. You can cancel these; every template stays available.",
-    "pricingLink": "See the pricing page"
+    "pricingLink": "See the pricing page",
+    "paymentsTitle": "Payments and invoices",
+    "paymentsEmpty": "No payments yet.",
+    "paymentContract": "Contract: {name}",
+    "paymentPack": "Credit pack, {credits} contracts",
+    "paymentRefunded": "Refunded",
+    "invoiceView": "View invoice",
+    "invoicePdf": "PDF",
+    "invoiceNone": "No invoice (paid before invoices were issued)"
   },
   "lawyerWarning": {
     "title": "Proceeding Without a Lawyer",
@@ -1513,6 +1521,7 @@
     "coversNothingRecurring": "Nothing recurring: you pay once for that contract.",
     "whenTitle": "When it is charged",
     "whenBody": "When the contract is first downloaded, or when its signature starts, whichever comes first.",
+    "whenInvoice": "Each payment comes with an invoice.",
     "startBody": "Contracts in deals created before {date} are not charged. This includes every contract agreed before that date.",
     "agentsTitle": "For agents",
     "agentsPrice": "The same {price} per contract",
@@ -1921,6 +1930,7 @@
     "purposeSubscribe": "Retired: answers 410. There is no subscription; contracts are paid with credits",
     "purposeBuyCredits": "Buy a pack of ten contract credits for your account (hosted Dealroom; 409 where payments are off)",
     "purposeCreditBalance": "Your account's credit balance, shared by all of its API keys",
+    "purposeCreditInvoices": "The invoices of your account's credit packs",
     "sectionWebhooks": "Webhooks",
     "webhooksDesc": "Register webhook endpoints to receive real-time event notifications. Payloads are signed with HMAC-SHA256 using your webhook secret.",
     "purposeRegisterWebhook": "Register a new webhook endpoint",

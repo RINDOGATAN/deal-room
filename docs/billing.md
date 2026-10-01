@@ -69,6 +69,8 @@ new Stripe price, point the variable at it, and update the display variable.
 | `CONTRACT_BILLING_START` | Required. ISO date (for example `2026-10-01`), the deploy date. Deals created before it are never charged. |
 | `PRICE_DISPLAY_CONTRACT` | Optional. The amount to show for one contract, for example `29`. A plain number is shown in the reader's currency ("$29", "29 €"); other text is shown as written. |
 | `PRICE_DISPLAY_CREDITS_10` | Optional. The amount to show for a pack of ten, for example `217.50`. |
+| `INVOICE_SELLER_NAME` | Optional. The seller's legal name, printed in the invoice footer. |
+| `INVOICE_SELLER_ADDRESS` | Optional. The seller's address, printed in the invoice footer under the name. With both unset the invoice has no footer. |
 
 ### Which currency a person sees (2026-10-01)
 
@@ -104,7 +106,7 @@ When billing is on:
 - the confidentiality cautions stay everywhere they were (hosted Dealroom
   offers no contractual safeguards; do not enter privileged or
   confidential information);
-- `/billing` is available (price, receipts, and cancellation of any earlier
+- `/billing` is available (price, receipts, invoices, and cancellation of any earlier
   per-skill subscription), and the marketplace lists every skill as part of
   the catalogue with no per-skill purchase.
 
@@ -148,6 +150,34 @@ The `customer.subscription.*` and `invoice.*` events serve only the earlier
 per-skill subscribers, whose webhook handling is unchanged. Its signing
 secret goes in `STRIPE_WEBHOOK_SECRET`. The handler records each event id
 once (`stripe_webhook_events`), so redeliveries are harmless.
+
+### Invoices (2026-10-01)
+
+Every checkout (a contract or a credit pack) issues a Stripe invoice the
+buyer can book. At checkout the buyer must give a billing address and may
+give a tax id (for example an EU VAT number); both are saved on their Stripe
+customer for next time. The invoice carries a description (the deal's name,
+or "Dealroom credit pack, 10 contracts"), the checkout metadata, and a
+footer with `INVOICE_SELLER_NAME` and `INVOICE_SELLER_ADDRESS` when set.
+
+No tax is calculated: `automatic_tax` is off, and the amounts are the
+Stripe prices as before. The seller's own tax id, invoice numbering prefix
+and any other legal mentions are set in the Stripe dashboard (Settings →
+Business → Public details, and Settings → Billing → Invoices).
+
+No invoice id is stored. The links (hosted page and PDF) are read from
+Stripe on demand through the payment's checkout session id:
+
+- `/billing` → "Payments and invoices" lists the person's paid contracts and
+  the account's credit packs, each with its invoice;
+- agents: `GET /api/v1/agent/credits/invoices` (scope `billing:read`) lists
+  the customer's pack purchases with their invoices. Contracts paid with a
+  credit have no invoice of their own; the pack's invoice covers them.
+
+Payments made before invoices were switched on show "No invoice".
+
+Stripe sends `invoice.*` events for these invoices. The per-skill handlers
+ignore any invoice without a subscription, so they change nothing.
 
 ### Customer portal
 

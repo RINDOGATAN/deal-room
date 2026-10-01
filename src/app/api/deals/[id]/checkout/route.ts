@@ -74,6 +74,7 @@ export async function POST(
       return NextResponse.json({ error: "The contract price is not configured" }, { status: 503 });
     }
 
+    const deal = await prisma.dealRoom.findUnique({ where: { id: dealRoomId }, select: { name: true } });
     const base = appBaseUrl();
     const checkout = await createBillingCheckout({
       mode: "payment",
@@ -81,6 +82,7 @@ export async function POST(
       stripeCustomerId,
       locale,
       metadata: { kind: "contract", dealRoomId, customerId, userId: session.user.id },
+      invoiceDescription: `Dealroom contract: ${deal?.name || dealRoomId}`,
       successUrl: `${base}/deals/${dealRoomId}?paid=1&session_id={CHECKOUT_SESSION_ID}`,
       cancelUrl: `${base}/deals/${dealRoomId}`,
     });

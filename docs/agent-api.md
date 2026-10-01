@@ -1031,6 +1031,40 @@ Scope: billing:read
 The balance is the customer's: every key of the customer sees the same
 number.
 
+### Invoices of the credit packs
+
+```
+GET /credits/invoices
+Scope: billing:read
+```
+
+Every pack purchase comes with an invoice (billing address and, optionally,
+a tax id are collected at checkout). This lists the customer's latest 20
+purchases, whichever key bought them, with the invoice's number, hosted page
+and PDF, read from Stripe on demand. A pack bought before invoices were
+switched on has `"invoice": null`. Contracts paid with a credit have no
+invoice of their own; the pack's invoice covers them.
+
+```json
+{
+  "billing": "per_contract",
+  "purchases": [
+    {
+      "credits": 10,
+      "apiKeyId": "clkey1...",
+      "createdAt": "2026-10-01T09:00:00.000Z",
+      "invoice": {
+        "number": "ABCD1234-0001",
+        "hostedInvoiceUrl": "https://invoice.stripe.com/i/...",
+        "invoicePdf": "https://pay.stripe.com/invoice/.../pdf"
+      }
+    }
+  ]
+}
+```
+
+With payments off the answer is `{ "billing": "off", "purchases": [] }`.
+
 ### Subscriptions (retired)
 
 ```

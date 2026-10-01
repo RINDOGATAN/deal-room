@@ -27,13 +27,24 @@ export function getStripe(): Stripe {
   return stripeClient;
 }
 
+/** Stripe caps an invoice description and footer; keep well inside it. */
+const INVOICE_TEXT_LIMIT = 500;
+
+type Env = Record<string, string | undefined>;
+
 /**
- * Hosted checkout for pay per contract: a contract or a credit pack, both
- * one-off payments. The metadata (`kind` plus the deal id or the customer
- * id) is copied onto the payment intent, so refunds can be traced back
- * without a lookup.
+ * The seller's legal name and address for the invoice footer, from
+ * `INVOICE_SELLER_NAME` and `INVOICE_SELLER_ADDRESS`. Either may be unset;
+ * with both unset there is no footer.
  */
-export async function createBillingCheckout(params: {
+export function invoiceSellerFooter(env: Env = process.env): string | undefined {
+  const lines = [env.INVOICE_SELLER_NAME, env.INVOICE_SELLER_ADDRESS]
+    .map((v) => v?.trim())
+    .filter((v): v is string => !!v);
+  return lines.length ? lines.join("\n").slice(0, INVOICE_TEXT_LIMIT) : undefined;
+}
+
+export interface BillingCheckoutParams {
   mode: "payment";
   priceId: string;
   stripeCustomerId: string;
@@ -41,9 +52,23 @@ export async function createBillingCheckout(params: {
   successUrl: string;
   cancelUrl: string;
   locale?: "en" | "es";
-}): Promise<Stripe.Checkout.Session> {
-  const stripe = getStripe();
-  const sessionParams: Stripe.Checkout.SessionCreateParams = {
+  /** What the invoice is for: the deal's name, or the credit pack. */
+  invoiceDescription: string;
+}
+
+/**
+ * The Checkout session parameters. Every payment produces an invoice the
+ * buyer can book: billing address required, tax id offered, and both saved
+ * on the Stripe customer (`customer_update`, which Stripe requires for an
+ * existing customer with tax id collection). No tax is calculated here:
+ * `automatic_tax` stays off until the tax decision is made.
+ */
+export function buildBillingCheckoutParams(
+  params: BillingCheckoutParams,
+  env: Env = process.env,
+): Stripe.Checkout.SessionCreateParams {
+  const footer = invoiceSellerFooter(env);
+  return {
     mode: params.mode,
     customer: params.stripeCustomerId,
     line_items: [{ price: params.priceId, quantity: 1 }],
@@ -53,12 +78,68 @@ export async function createBillingCheckout(params: {
     metadata: params.metadata,
     ...(params.locale ? { locale: params.locale } : {}),
     payment_intent_data: { metadata: params.metadata },
+    invoice_creation: {
+      enabled: true,
+      invoice_data: {
+        description: params.invoiceDescription.slice(0, INVOICE_TEXT_LIMIT),
+        ...(footer ? { footer } : {}),
+        metadata: params.metadata,
+      },
+    },
+    billing_address_collection: "required",
+    tax_id_collection: { enabled: true },
+    customer_update: { name: "auto", address: "auto" },
   };
-  return stripe.checkout.sessions.create(sessionParams);
+}
+
+/**
+ * Hosted checkout for pay per contract: a contract or a credit pack, both
+ * one-off payments. The metadata (`kind` plus the deal id or the customer
+ * id) is copied onto the payment intent and the invoice, so refunds can be
+ * traced back without a lookup.
+ */
+export async function createBillingCheckout(params: BillingCheckoutParams): Promise<Stripe.Checkout.Session> {
+  return getStripe().checkout.sessions.create(buildBillingCheckoutParams(params));
 }
 
 export async function retrieveCheckoutSession(sessionId: string): Promise<Stripe.Checkout.Session> {
   return getStripe().checkout.sessions.retrieve(sessionId);
+}
+
+export interface InvoiceLinks {
+  invoiceId: string;
+  number: string | null;
+  hostedInvoiceUrl: string | null;
+  invoicePdf: string | null;
+}
+
+/**
+ * The invoice of a paid checkout, read from Stripe on demand (no invoice
+ * id is stored). Null for a session without an invoice: those opened
+ * before invoices were switched on, or one Stripe cannot find.
+ */
+export async function getCheckoutInvoiceLinks(sessionId: string): Promise<InvoiceLinks | null> {
+  const session = await getStripe().checkout.sessions.retrieve(sessionId, { expand: ["invoice"] });
+  const invoice = session.invoice;
+  if (!invoice || typeof invoice === "string") return null;
+  return {
+    invoiceId: invoice.id,
+    number: invoice.number ?? null,
+    hostedInvoiceUrl: invoice.hosted_invoice_url ?? null,
+    invoicePdf: invoice.invoice_pdf ?? null,
+  };
+}
+
+/**
+ * Invoice links for a list of checkout sessions, fetched in parallel. A
+ * lookup that fails leaves that entry null rather than failing the list.
+ */
+export async function getInvoiceLinksForSessions(
+  sessionIds: (string | null)[],
+): Promise<(InvoiceLinks | null)[]> {
+  return Promise.all(
+    sessionIds.map((id) => (id ? getCheckoutInvoiceLinks(id).catch(() => null) : Promise.resolve(null))),
+  );
 }
 
 export async function createCustomer(params: {

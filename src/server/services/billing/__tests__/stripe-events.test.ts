@@ -30,6 +30,7 @@ import {
   fulfilCheckoutSession,
   handleChargeRefunded,
   handleCheckoutPaymentFailed,
+  invoiceIdOf,
 } from "../stripe-events";
 
 const unique = () => new Prisma.PrismaClientKnownRequestError("unique", { code: "P2002", clientVersion: "5" });
@@ -104,6 +105,25 @@ describe("checkout.session.completed", () => {
     await fulfilCheckoutSession(noKey);
     expect(db.customerCreditEntry.create).toHaveBeenCalledWith({
       data: expect.objectContaining({ customerId: "cust_2", apiKeyId: null, delta: 10 }),
+    });
+  });
+
+  it("records a payment whether or not the session carries an invoice", async () => {
+    const older = { ...fx.contractSessionPaid, invoice: null } as typeof fx.contractSessionPaid;
+    const invoiced = { ...fx.creditsSessionPaid, invoice: "in_test_1" } as typeof fx.creditsSessionPaid;
+    expect(invoiceIdOf(older)).toBeNull();
+    expect(invoiceIdOf(fx.contractSessionPaid)).toBeNull(); // field absent altogether
+    expect(invoiceIdOf(invoiced)).toBe("in_test_1");
+    expect(invoiceIdOf({ ...invoiced, invoice: { id: "in_test_2" } } as unknown as typeof invoiced)).toBe("in_test_2");
+
+    await expect(fulfilCheckoutSession(older)).resolves.toBe(true);
+    expect(db.dealPayment.upsert).toHaveBeenCalledWith(
+      expect.objectContaining({ create: expect.objectContaining({ dealRoomId: "deal_1", status: "PAID" }) }),
+    );
+    await expect(fulfilCheckoutSession(invoiced)).resolves.toBe(true);
+    expect(db.customerCredit.update).toHaveBeenCalledWith({
+      where: { customerId: "cust_2" },
+      data: { balance: { increment: 10 } },
     });
   });
 

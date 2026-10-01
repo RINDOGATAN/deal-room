@@ -35,6 +35,15 @@ function idOf(ref: string | { id: string } | null | undefined): string | null {
   return typeof ref === "string" ? ref : ref.id;
 }
 
+/**
+ * The invoice Stripe issued for the session, for the log only: no column
+ * holds it, and the billing page and agent API read it on demand from the
+ * checkout session id. Null for sessions opened before invoices were on.
+ */
+export function invoiceIdOf(session: Stripe.Checkout.Session): string | null {
+  return idOf(session.invoice as string | Stripe.Invoice | null | undefined);
+}
+
 function isUniqueViolation(err: unknown) {
   return err instanceof Prisma.PrismaClientKnownRequestError && err.code === "P2002";
 }
@@ -63,7 +72,7 @@ async function fulfilContract(session: Stripe.Checkout.Session) {
     update: { stripePaymentIntentId: data.stripePaymentIntentId },
     create: data,
   });
-  logger.info("contract paid", { dealRoomId: meta.dealRoomId, sessionId: session.id });
+  logger.info("contract paid", { dealRoomId: meta.dealRoomId, sessionId: session.id, invoiceId: invoiceIdOf(session) });
 }
 
 /**
@@ -102,7 +111,7 @@ async function fulfilCredits(session: Stripe.Checkout.Session) {
         data: { balance: { increment: credits } },
       });
     });
-    logger.info("credits added", { customerId, credits, sessionId: session.id });
+    logger.info("credits added", { customerId, credits, sessionId: session.id, invoiceId: invoiceIdOf(session) });
   } catch (err) {
     if (isUniqueViolation(err)) return; // already credited
     throw err;
