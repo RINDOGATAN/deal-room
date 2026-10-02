@@ -30,7 +30,7 @@ export function PricingView({
   const contractPrice = facts.contract[key];
   const packPrice = facts.pack[key];
 
-  const free = ["freeDrafting", "freeNegotiating", "freeCompromise", "freeSupervision", "freeVetting", "freeMarketplace"] as const;
+  const free = ["freeDrafting", "freeNegotiating", "freeCompromise", "freeSupervision", "freeMarketplace"] as const;
 
   return (
     <div className="space-y-12" data-testid="pricing-page">

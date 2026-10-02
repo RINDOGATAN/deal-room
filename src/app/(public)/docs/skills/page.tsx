@@ -11,11 +11,10 @@ import {
   Lock,
   Unlock,
   CheckCircle,
-  AlertTriangle,
 } from "lucide-react";
 
 export default function SkillsPage() {
-  const t = useTranslations("skills");
+  const t = useTranslations("docsSkills");
 
   return (
     <div className="space-y-12">
@@ -75,36 +74,32 @@ export default function SkillsPage() {
         <p className="text-muted-foreground">{t("packageDesc")}</p>
         <div className="p-5 border border-border bg-card font-mono text-sm rounded-2xl">
           <div className="space-y-1">
-            <p className="text-muted-foreground">skill-package.zip/</p>
+            <p className="text-muted-foreground">example.skill/</p>
             <p className="pl-4">
               <span className="text-primary">manifest.json</span>
               <span className="text-muted-foreground ml-4">
                 # {t("packageManifestComment")}
               </span>
             </p>
-            <p className="pl-4">
-              <span className="text-foreground">contract-template.json</span>
+            <p className="pl-4 text-foreground">content/</p>
+            <p className="pl-8">
+              <span className="text-foreground">clauses.json</span>
               <span className="text-muted-foreground ml-4">
                 # {t("packageContractComment")}
               </span>
             </p>
-            <p className="pl-4">
-              <span className="text-foreground">clauses/</span>
+            <p className="pl-8">
+              <span className="text-foreground">boilerplate.json</span>
               <span className="text-muted-foreground ml-4">
                 # {t("packageClausesComment")}
               </span>
             </p>
-            <p className="pl-8 text-muted-foreground">payment-terms.json</p>
-            <p className="pl-8 text-muted-foreground">liability.json</p>
-            <p className="pl-8 text-muted-foreground">termination.json</p>
-            <p className="pl-4">
-              <span className="text-foreground">i18n/</span>
+            <p className="pl-8">
+              <span className="text-foreground">metadata.json</span>
               <span className="text-muted-foreground ml-4">
                 # {t("packageI18nComment")}
               </span>
             </p>
-            <p className="pl-8 text-muted-foreground">en.json</p>
-            <p className="pl-8 text-muted-foreground">es.json</p>
           </div>
         </div>
       </div>
@@ -223,12 +218,12 @@ export default function SkillsPage() {
                 <CheckCircle className="w-4 h-4 text-primary" />
                 <span>{t("tasterFeature2")}</span>
               </li>
-              <li className="flex items-center gap-2 text-muted-foreground">
-                <AlertTriangle className="w-4 h-4 text-muted-foreground" />
+              <li className="flex items-center gap-2">
+                <CheckCircle className="w-4 h-4 text-primary" />
                 <span>{t("tasterLimit1")}</span>
               </li>
-              <li className="flex items-center gap-2 text-muted-foreground">
-                <AlertTriangle className="w-4 h-4 text-muted-foreground" />
+              <li className="flex items-center gap-2">
+                <CheckCircle className="w-4 h-4 text-primary" />
                 <span>{t("tasterLimit2")}</span>
               </li>
             </ul>

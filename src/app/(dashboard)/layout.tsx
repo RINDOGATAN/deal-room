@@ -349,6 +349,9 @@ export default function DashboardLayout({
             >
               {tFooter("privacyNotice")}
             </a>
+            <Link href="/licenses" className="hover:text-foreground transition-colors">
+              {tFooter("licences")}
+            </Link>
             <div className="col-span-2 flex justify-center pt-1">
               <LanguageSwitcher />
             </div>
@@ -409,6 +412,10 @@ export default function DashboardLayout({
             >
               {tFooter("privacyNotice")}
             </a>
+            <span className="text-border">&middot;</span>
+            <Link href="/licenses" className="hover:text-foreground transition-colors">
+              {tFooter("licences")}
+            </Link>
             <span className="text-border">&middot;</span>
             <LanguageSwitcher />
           </div>

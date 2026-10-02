@@ -142,6 +142,10 @@ export default function PublicLayout({
               {tFooter("privacyNotice")}
             </a>
             <span className="text-border">&middot;</span>
+            <Link href="/licenses" className="hover:text-foreground transition-colors">
+              {tFooter("licences")}
+            </Link>
+            <span className="text-border">&middot;</span>
             <LanguageSwitcher />
           </div>
         </div>

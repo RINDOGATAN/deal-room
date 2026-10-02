@@ -53,6 +53,10 @@ export default function AuthLayout({
             {t("terms")}
           </a>
           <span className="hidden sm:inline">&middot;</span>
+          <Link href="/licenses" className="hover:text-foreground transition-colors">
+            {t("licences")}
+          </Link>
+          <span className="hidden sm:inline">&middot;</span>
           <Link
             href="/docs/how-it-works"
             className="hover:text-foreground transition-colors"

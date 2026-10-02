@@ -44,6 +44,10 @@ export function ContractsShell({
           <a href={brand.links.privacy} target="_blank" rel="noopener noreferrer" className="hover:text-foreground">
             {locale === "es" ? "Política de Privacidad" : "Privacy Policy"}
           </a>
+          <span className="text-border">&middot;</span>
+          <Link href="/licenses" className="hover:text-foreground">
+            {locale === "es" ? "Licencias" : "Licences"}
+          </Link>
         </div>
       </footer>
     </div>
