@@ -1,11 +1,11 @@
 # Dealroom — LLM Context
 
-> Dealroom is a two-party asynchronous contract negotiation platform built by TODO.LAW. It replaces emailing Word files back and forth with a secure, AI-powered workspace that finds the optimal compromise for both parties.
+> Dealroom is a two-party asynchronous contract negotiation platform built by TODO.LAW. It replaces emailing Word files back and forth with a shared workspace that proposes a compromise for each clause using a fixed, published weighted formula (no AI model decides the outcome).
 
 ## Hosted and the kit
 
-- **dealroom.todo.law charges per contract.** Drafting and negotiating are free. Each contract is paid once, $29 or €29, when it is first downloaded (PDF, DOCX or TXT) or when its signature starts. Every contract skill, premium ones included, is covered by that price. There is no monthly plan.
-- **Agents pay per contract too.** An agent pays for each agreed contract with one prepaid credit, spent when the contract document is first fetched. Credits are sold in packs of ten at 25 percent off ($217.50 or €217.50 a pack) and belong to the customer account, so any of its API keys can spend them. The current amounts are in the agent card (/.well-known/agent.json, under "pricing").
+- **dealroom.todo.law charges per contract.** Drafting and negotiating are free. Each contract is paid once, at the price shown on the pricing page, when it is first downloaded (PDF, DOCX or TXT) or when its signature starts. Every contract skill, premium ones included, is covered by that price. There is no monthly plan.
+- **Agents pay per contract too.** An agent pays for each agreed contract with one prepaid credit, spent when the contract document is first fetched. Credits are sold in packs of ten and belong to the customer account, so any of its API keys can spend them. The current amounts are in the agent card (/.well-known/agent.json, under "pricing").
 - **The kit (self-hosted Dealroom) has no caps.** Premium skills are sold only for the kit: 60 a year each in the kit (in your currency), bought on the todo.law storefront and activated offline with a licence file.
 
 ## Public Pages
@@ -17,12 +17,11 @@
 - [How It Works](https://dealroom.todo.law/docs/how-it-works): Step-by-step negotiation workflow
 - [Compromise Algorithm](https://dealroom.todo.law/docs/compromise): Weighted compromise methodology
 - [Contract Skills](https://dealroom.todo.law/docs/skills): Supported contract types and templates
-- [Supervision Mode](https://dealroom.todo.law/docs/supervision): Human oversight for AI-assisted negotiation
-- [Vetting](https://dealroom.todo.law/docs/vetting): Counterparty vetting and due diligence
+- [Supervision](https://dealroom.todo.law/docs/supervision): Platform administration, supervisor roles and assignment-based oversight of deals
+- [A2A Skills Catalog](https://dealroom.todo.law/docs/a2a-skills): Contract types available for agent-to-agent negotiation
 - [Agent API](https://dealroom.todo.law/docs/agent-api): A2A agent integration documentation
 - [Agent Preparation](https://dealroom.todo.law/docs/agent-preparation): Guide for preparing agents for contract negotiation and dispute resolution
 - [Local Deployment](https://dealroom.todo.law/docs/local-deployment): Self-hosted deployment guide
-- [Marketplace](https://dealroom.todo.law/marketplace): Browse the contract skills (all included in the per-contract price on hosted Dealroom)
 - [Premium skills for the kit](https://todo.law/marketplace): 60 a year each in the kit (in your currency), for your own instance
 
 ## Contract Guides
@@ -69,11 +68,11 @@ One page per contract type, in English and Castilian Spanish: what the contract 
 
 ## What Dealroom Does
 
-- **Two-Party Negotiation**: Asynchronous contract negotiation between two parties on a shared, encrypted workspace
-- **AI-Powered Compromise**: Weighted algorithm that suggests optimal middle ground between competing positions
-- **End-to-End Encryption**: All contract data encrypted in transit and at rest
+- **Two-Party Negotiation**: Asynchronous contract negotiation between two parties on a shared workspace
+- **Weighted Compromise**: A fixed formula, stake = ((5 - flexibility) / 5 × 0.6) + (|bias| × 0.4), proposes a compromise for each clause from each party's firmness and the bias of each option; it is documented at /docs/compromise
+- **Access and transport**: Connections use HTTPS; access to each deal is checked on the server and only the deal's parties can download its documents. Contract content is stored in the service's database and is not end-to-end encrypted
 - **Cross-Border Ready**: Supports California, England & Wales, and Spain jurisdictions
-- **Contract Types**: 32 contract skills including NDA, MSA, SaaS Agreement, DPA, Privacy Notice, Joint Venture, Employment, Consulting, and more
+- **Contract Types**: 37 contract types, each with a guide listed above, including NDA, MSA, SaaS Agreement, DPA, Privacy Notice, Joint Venture, Employment, Consulting, and more
 - **Export & Sign**: Generate final documents for signing after negotiation completes
 - **A2A Agent Protocol**: Machine-readable agent card at /.well-known/agent.json for agent-to-agent negotiation
 

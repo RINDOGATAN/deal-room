@@ -16,12 +16,11 @@ const WORD = /pilot/i; // also matches "piloto"
 
 /**
  * Values allowed to keep the word because it names a kind of contract a
- * customer negotiates (a pilot agreement), not Dealroom itself.
+ * customer negotiates (a pilot agreement), not Dealroom itself. Empty since
+ * 2026-10-02: the landing no longer lists "Pilot Contracts", which was not a
+ * contract type Dealroom offers.
  */
-const ALLOWED: Record<string, string[]> = {
-  "landing/i18n/en/dealroom-startups.json": ["feat.export.desc"],
-  "landing/i18n/es/dealroom-startups.json": ["feat.export.desc"],
-};
+const ALLOWED: Record<string, string[]> = {};
 
 function jsonFiles(dir: string): string[] {
   return readdirSync(dir).flatMap((name) => {

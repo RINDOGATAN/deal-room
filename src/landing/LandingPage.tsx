@@ -3,7 +3,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 import { useState, useEffect, useCallback } from "react";
-import { Lock, Brain, Globe, FileSignature } from "lucide-react";
+import { Lock, Scale, Globe, FileSignature } from "lucide-react";
 import StartupProductPage from "./components/StartupProductPage";
 import StartupsHeader from "./components/StartupsHeader";
 import StartupsFooter from "./components/StartupsFooter";
@@ -52,7 +52,7 @@ export default function LandingPage() {
     },
     {
       id: "ai",
-      icon: Brain,
+      icon: Scale,
       title: t("feat.ai.title"),
       headline: t("feat.ai.headline"),
       description: t("feat.ai.desc"),

@@ -16,7 +16,7 @@ export const todo: BrandConfig = {
   name: BRAND_NAME,
   shortName: BRAND_NAME,
   tagline: "Contract Negotiation Platform",
-  description: "Two-party asynchronous contract negotiation platform with intelligent compromise suggestions",
+  description: "Two-party asynchronous contract negotiation platform with weighted compromise suggestions",
   // Hosted with pay per contract (features.stripeEnabled): the site title
   // and description must not read as a free service.
   taglinePerContract: "Contract negotiation, pay per contract",

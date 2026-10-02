@@ -33,6 +33,12 @@ const StartupsFooter = ({ t }: StartupsFooterProps) => {
               {t("footer.terms")}
             </a>
             <a
+              href="/licenses"
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              {t("footer.licences")}
+            </a>
+            <a
               href="/docs/how-it-works"
               className="text-sm text-muted-foreground hover:text-foreground transition-colors"
             >

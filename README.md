@@ -9,7 +9,7 @@ Two-party async contract negotiation platform with weighted compromise algorithm
 - **Contract Negotiation** — Structured clause-by-clause negotiation workflow
 - **Weighted Compromise** — Algorithm suggests fair compromises based on party firmness and option bias
 - **Contract Skills** — Built-in templates (NDA, DPA, MSA, etc.) plus premium skills for your own instance
-- **Multilingual Support** — Cross-language negotiation (Party A in English, Party B in Spanish)
+- **Bilingual Contracts** — English and Castilian Spanish; the contract language is chosen when the deal is created and both parties negotiate in it
 - **Two-Level Admin** — Platform admins manage marketplace; supervisors monitor deals
 - **Self-Hostable** — AGPL-licensed sovereign kit for running on your own hardware (see below)
 
@@ -26,9 +26,10 @@ Two-party async contract negotiation platform with weighted compromise algorithm
   storefront, installed and
   activated offline with a licence file.
 
-The hosted limits switch on when the build runs on Vercel production
-(`VERCEL_ENV=production`) or with `AUTH_COOKIE_DOMAIN=.todo.law`; the rules
-live in `src/lib/pilot.ts`.
+The free-pilot limits (edit window, record ceilings) apply only to the hosted
+build (Vercel production, `VERCEL_ENV=production`, or `AUTH_COOKIE_DOMAIN=.todo.law`)
+while hosted billing is off; once billing is on they no longer apply. The
+rules live in `src/lib/pilot.ts` and `src/config/features.ts`.
 
 > **Note:** the earlier dual-brand system (todo.law + northend.law) was retired
 > in May 2026; the codebase now ships a single brand (`src/config/brand.ts`
