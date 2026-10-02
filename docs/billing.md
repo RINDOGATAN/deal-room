@@ -76,11 +76,12 @@ One currency per visitor, never both. Euros for a visitor in the EU, the
 EEA, the United Kingdom or Switzerland; dollars for everyone else. The
 region comes from the `x-vercel-ip-country` header, else the region of the
 `Accept-Language` header, else dollars (`src/lib/currency.ts`). A signed-in
-customer's stored billing currency (`Customer.metadata.preferredCurrency`,
-written at checkout) wins over the region guess, and the quiet "Prices in
-USD" / "Precios en EUR" link wins over both for the browser session
-(cookie `currency_choice`). The pricing page's structured data, the agent
-card and `llms.txt` keep both amounts.
+customer's stored billing currency (`Customer.metadata.preferredCurrency`)
+wins over the region guess. There is no currency switch (removed
+2026-10-02, with its `currency_choice` cookie; a leftover cookie is
+ignored). The app sends no currency to the contract checkout, so the
+server charges the currency it showed. The pricing page's structured
+data, the agent card and `llms.txt` keep both amounts.
 
 `STRIPE_PRICE_MONTHLY_USD` and `STRIPE_PRICE_MONTHLY_EUR` are no longer read.
 If they are set on the deployment they can be removed.

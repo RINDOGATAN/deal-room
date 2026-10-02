@@ -154,6 +154,19 @@ export const lawyerRouter = createTRPCRouter({
     });
   }),
 
+  /**
+   * How many requests the signed-in person has sent or received. The
+   * footer link to /lawyers/requests shows only when this is above zero:
+   * to most people the inbox means nothing until they have a request.
+   */
+  myRequestCount: protectedProcedure.query(async ({ ctx }) => {
+    return ctx.prisma.recommendationRequest.count({
+      where: {
+        OR: [{ requesterId: ctx.session.user.id }, { lawyerId: ctx.session.user.id }],
+      },
+    });
+  }),
+
   /** Expert accepts or declines a pending request */
   respondToRequest: lawyerProcedure
     .input(

@@ -16,6 +16,8 @@
  * construction, and every pilot cap below is counted per account.
  */
 
+import { contractBillingConfigured } from "@/lib/contract-billing";
+
 type Env = Record<string, string | undefined>;
 
 /**
@@ -32,6 +34,25 @@ export function isHostedPilotEnv(env: Env): boolean {
   if (env.VERCEL_ENV === "production") return true;
   const domain = env.AUTH_COOKIE_DOMAIN?.trim().toLowerCase();
   return !!domain && (domain === ".todo.law" || domain === "todo.law");
+}
+
+/**
+ * Billing on: Stripe configured and, on the hosted deployment, the contract
+ * prices and start date as well. The rule behind `features.stripeEnabled`,
+ * as a pure function of the environment so the middleware can apply the
+ * same answer per request.
+ */
+export function billingOnEnv(env: Env): boolean {
+  const pricesReady = env.NEXT_PUBLIC_CONTRACT_BILLING === "true" || contractBillingConfigured(env);
+  return (
+    (!isHostedPilotEnv(env) || pricesReady) &&
+    (!!env.STRIPE_SECRET_KEY || env.NEXT_PUBLIC_STRIPE_ENABLED === "true")
+  );
+}
+
+/** The free hosted pilot: the hosted deployment while billing is off (`features.hostedPilot`). */
+export function isPilotPostureEnv(env: Env): boolean {
+  return isHostedPilotEnv(env) && !billingOnEnv(env);
 }
 
 export const PILOT_CAPS = {

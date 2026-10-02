@@ -39,7 +39,7 @@
     "myDeals": "My Deals",
     "newDeal": "New Deal",
     "launch": "Launch",
-    "requests": "Requests",
+    "requests": "Requests for expert help",
     "signOut": "Sign Out",
     "skills": "Skills"
   },
@@ -322,6 +322,8 @@
       "yourDetailsMissing": "Add your execution details",
       "yourDetailsMissingDescription": "Provide your legal name, address, tax ID, and signatory before either party can start signing.",
       "addDetails": "Add details",
+      "getContractTitle": "Your contract is ready",
+      "getContractDescription": "Get it to download and sign it. If your execution details are missing, you add them in the same step.",
       "theirDetailsMissing": "Waiting for {name} to add execution details",
       "theirDetailsMissingDescription": "They need to provide their legal name, address, tax ID, and signatory before either party can start signing.",
       "yourTurn": "Your turn to sign",
@@ -634,11 +636,6 @@
     "signatureConfirmation": "I confirm that I am authorized to sign this contract and that my typed name above constitutes my legal electronic signature with the same validity as a handwritten signature.",
     "signContract": "Sign Contract",
     "signingInProgress": "Signing...",
-    "readyForSignatures": "Ready for Signatures",
-    "readyForSignaturesDescription": "All terms have been agreed upon. Start the signing process and both parties can sign by typing their full legal name.",
-    "startSigningProcess": "Final Details",
-    "starting": "Starting...",
-    "canSignImmediately": "Please confirm your execution details above before starting",
     "failedToLoad": "Failed to load deal",
     "attorneyReviewInProgress": "Attorney Review In Progress",
     "signingAfterReview": "Signing will be available once all attorney reviews are complete.",
@@ -651,7 +648,6 @@
     "simpleSignatureNotice": "Signature type:",
     "simpleSignatureNoticeText": "This is a simple electronic signature (typed name). It is enforceable for most contracts under the U.S. ESIGN Act and EU eIDAS Regulation. Some legal acts (notarial deeds, certain real-estate transfers) require a qualified electronic signature, which this product does not provide.",
     "toastMessages": {
-      "signingStarted": "Signing process started. You can now sign below.",
       "initiationFailed": "Failed to initiate signing: {error}",
       "signatureRecorded": "Signature recorded successfully!",
       "signatureFailed": "Failed to record signature: {error}",
@@ -683,21 +679,15 @@
       "copyLink": "Copy link",
       "signedTitle": "Signed by {name}",
       "signedFromRegion": "from {region}",
-      "signedAt": "at {time}",
-      "downloadBundle": "Download signed bundle"
+      "signedAt": "at {time}"
     },
     "theOtherParty": "the other party",
     "blocked": {
-      "yourDetails": "Add your execution details first.",
       "theirDetails": "Waiting for {name} to add execution details."
     },
     "signingDetails": {
       "title": "Execution Details",
       "description": "These fields are not subject to negotiation but are essential for the contract to be legally valid. Please provide the accurate legal name, registered address, and signatory details for your side.",
-      "importantNote": "Complete this section before signing. The information you provide here will appear in the final contract document.",
-      "yourDetails": "Your Details",
-      "otherPartyDetails": "Other Party",
-      "confirmed": "Confirmed",
       "legalName": "Legal Entity Name",
       "legalNamePlaceholder": "e.g., Acme Corp, Inc.",
       "address": "Registered Address",
@@ -708,13 +698,10 @@
       "signatoryNamePlaceholder": "e.g., John Smith",
       "signatoryTitle": "Signatory Title",
       "signatoryTitlePlaceholder": "e.g., CEO, Managing Director",
-      "confirmDetails": "Confirm Details",
       "saving": "Saving...",
       "saved": "Execution details saved",
-      "edit": "Edit details",
       "frozenAfterSigning": "Details are locked after signing",
       "waitingForOtherParty": "The other party has not yet submitted their details",
-      "requiredBeforeSigning": "Please confirm your execution details above before signing",
       "completeAs": "Complete this agreement as",
       "completeAsHint": "Pick your role. We fill your side and leave the other party's block blank for them to complete.",
       "role": {
@@ -722,7 +709,11 @@
         "controller": "Controller (we decide why and how data is processed)",
         "businessAssociate": "Business Associate (the vendor that may handle PHI)",
         "coveredEntity": "Covered Entity (the healthcare provider, plan, or clearinghouse)"
-      }
+      },
+      "change": "Change",
+      "keepSaved": "Keep the saved details",
+      "saveAndContinue": "Save and continue",
+      "otherSaved": "{name}'s details are saved."
     }
   },
   "settings": {
@@ -1491,9 +1482,6 @@
     "troubleEntitlementDesc": "Use the download link sent to the email address used for the purchase. Download links expire after 7 days; contact support for a fresh link.",
     "troubleActivationTitle": "\"Activation limit reached\"",
     "troubleActivationDesc": "Each license allows a limited number of machine activations. Deactivate unused machines with the CLI (npm run skill:deactivate), or contact support to increase your activation limit."
-  },
-  "currency": {
-    "pricesIn": "Prices in {currency}"
   },
   "pricing": {
     "metaTitle": "Dealroom pricing: pay per contract",

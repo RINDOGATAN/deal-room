@@ -10,18 +10,16 @@
  * the region of the first `Accept-Language` tag that names one; without
  * either, dollars.
  *
- * Two cookies, both for the browser session only:
- * - `currency`: the region guess, written by the middleware.
- * - `currency_choice`: the visitor's own choice from the "Prices in …"
- *   switch. It wins over everything.
- * A signed-in customer's stored billing currency wins over the region
- * guess (server side, `resolveVisitorCurrency`).
+ * There is no currency switch (owner decision 2 October 2026): the region
+ * decides. One cookie, for the browser session only: `currency`, the
+ * region guess, written by the middleware. A signed-in customer's stored
+ * billing currency wins over the region guess (server side,
+ * `resolveVisitorCurrency`).
  */
 
 export type Currency = "USD" | "EUR";
 
 export const REGION_COOKIE = "currency";
-export const CHOICE_COOKIE = "currency_choice";
 
 /** ISO 3166-1 alpha-2 codes that see euros. */
 export const EUROPE_COUNTRIES: ReadonlySet<string> = new Set([
@@ -97,28 +95,21 @@ function readCookie(cookie: string | null | undefined, name: string): string | n
   return match ? decodeURIComponent(match[1]) : null;
 }
 
-/** The visitor's own choice from the switch, if any. */
-export function choiceFromCookieHeader(cookie: string | null | undefined): Currency | null {
-  return parseCurrency(readCookie(cookie, CHOICE_COOKIE));
-}
-
-/** The currency the browser should show: the choice, else the region guess, else dollars. */
+/** The currency the browser should show: the region guess, else dollars. */
 export function currencyFromCookieHeader(cookie: string | null | undefined): Currency {
-  return choiceFromCookieHeader(cookie) ?? parseCurrency(readCookie(cookie, REGION_COOKIE)) ?? "USD";
+  return parseCurrency(readCookie(cookie, REGION_COOKIE)) ?? "USD";
 }
 
 /**
- * Server side: the visitor's choice wins, then a signed-in customer's
- * stored billing currency, then the region guess from the request headers.
+ * Server side: a signed-in customer's stored billing currency, else the
+ * region guess from the request headers.
  */
 export function resolveVisitorCurrency(opts: {
-  cookie?: string | null;
   stored?: unknown;
   country?: string | null;
   acceptLanguage?: string | null;
 }): Currency {
   return (
-    choiceFromCookieHeader(opts.cookie) ??
     parseCurrency(opts.stored) ??
     regionCurrency({ country: opts.country, acceptLanguage: opts.acceptLanguage })
   );
@@ -130,7 +121,6 @@ export function resolveVisitorCurrencyFromHeaders(
   stored?: unknown,
 ): Currency {
   return resolveVisitorCurrency({
-    cookie: headers.get("cookie"),
     stored,
     country: headers.get("x-vercel-ip-country"),
     acceptLanguage: headers.get("accept-language"),
@@ -142,28 +132,14 @@ export function toBillingCurrency(currency: Currency): "usd" | "eur" {
   return currency === "EUR" ? "eur" : "usd";
 }
 
-export function otherCurrency(currency: Currency): Currency {
-  return currency === "USD" ? "EUR" : "USD";
-}
-
 export function getCurrency(): Currency {
   if (typeof document === "undefined") return "USD";
   return currencyFromCookieHeader(document.cookie);
 }
 
-const listeners = new Set<() => void>();
-
-/** Subscribe to changes of the visitor's choice (for `useSyncExternalStore`). */
-export function subscribeCurrency(listener: () => void): () => void {
-  listeners.add(listener);
-  return () => listeners.delete(listener);
-}
-
-/** Store the visitor's choice for the browser session and tell every subscriber. */
-export function setCurrencyChoice(currency: Currency): void {
-  if (typeof document === "undefined") return;
-  document.cookie = `${CHOICE_COOKIE}=${currency}; path=/; samesite=lax`;
-  listeners.forEach((listener) => listener());
+/** For `useSyncExternalStore`: the region cookie does not change while a page is open. */
+export function subscribeCurrency(): () => void {
+  return () => {};
 }
 
 export function formatPrice(amount: number, currency: Currency = getCurrency()): string {

@@ -45,7 +45,8 @@ describe("pricing page", () => {
     expect(html).toContain("The same $31 per contract");
     expect(html).toContain("Credits are sold in packs of 10, at 25 percent off: $232.50 a pack.");
     expect(html).not.toContain("€");
-    expect(html).toContain("Prices in EUR");
+    expect(html).not.toContain("Prices in");
+    expect(html).not.toContain('data-testid="currency-switch"');
     expect(html).toContain("Contracts in deals created before 1 October 2026 are not charged.");
     // The confidentiality question went with the hosted caution (2026-10-01).
     expect(html).not.toContain("Can I enter confidential information?");
@@ -53,12 +54,12 @@ describe("pricing page", () => {
     expect(html).toContain('href="/docs/agent-api"');
   });
 
-  it("renders euros only for a European visitor, with the switch back to dollars", () => {
+  it("renders euros only for a European visitor, with no switch to dollars", () => {
     const html = render(pricingFacts({ locale: "en", env: ENV }), true, "en", "EUR");
     expect(html).toContain("€31 per contract");
     expect(html).toContain("€232.50 a pack");
     expect(html).not.toContain("$");
-    expect(html).toContain("Prices in USD");
+    expect(html).not.toContain("Prices in");
   });
 
   it("renders in Spanish with the date in Spanish", () => {
@@ -67,7 +68,7 @@ describe("pricing page", () => {
     expect(html).toContain("31");
     expect(html).toContain("232,50");
     expect(html).toContain("1 de octubre de 2026");
-    expect(html).toContain("Precios en USD");
+    expect(html).not.toContain("Precios en");
     expect(html).not.toContain("$");
   });
 

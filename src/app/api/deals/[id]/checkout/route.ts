@@ -6,10 +6,11 @@
  *
  * Opens a hosted Stripe checkout for one contract (the per-contract price
  * in the person's currency), with the deal id in the metadata. On success
- * Stripe returns to the deal page, which confirms the session and unlocks
- * the download; the webhook records the same payment independently.
+ * Stripe returns to the signing page, which confirms the session and shows
+ * the signature; the webhook records the same payment independently.
  *
- * Body (optional): { currency?: "usd" | "eur" }.
+ * Body (optional): { currency?: "usd" | "eur" } for API callers. The app
+ * sends none: the stored billing currency, else the region, decides.
  */
 
 import { NextRequest, NextResponse } from "next/server";
@@ -82,8 +83,9 @@ export async function POST(
       locale,
       currency,
       metadata: { kind: "contract", dealRoomId, customerId, userId: session.user.id },
-      successUrl: `${base}/deals/${dealRoomId}?paid=1&session_id={CHECKOUT_SESSION_ID}`,
-      cancelUrl: `${base}/deals/${dealRoomId}`,
+      // Back to the signing page: after paying, the next step is the signature.
+      successUrl: `${base}/deals/${dealRoomId}/sign?paid=1&session_id={CHECKOUT_SESSION_ID}`,
+      cancelUrl: `${base}/deals/${dealRoomId}/sign`,
     });
 
     return NextResponse.json({ url: checkout.url, currency });

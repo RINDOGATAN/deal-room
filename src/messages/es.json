@@ -39,7 +39,7 @@
     "myDeals": "Mis Acuerdos",
     "newDeal": "Nuevo Acuerdo",
     "launch": "Lanzar",
-    "requests": "Solicitudes",
+    "requests": "Solicitudes de ayuda experta",
     "signOut": "Cerrar Sesión",
     "skills": "Skills"
   },
@@ -323,6 +323,8 @@
       "yourDetailsMissing": "Añade tus datos de firma",
       "yourDetailsMissingDescription": "Indica tu denominación social, domicilio, NIF/CIF y firmante antes de que cualquiera de las partes pueda iniciar la firma.",
       "addDetails": "Añadir datos",
+      "getContractTitle": "Tu contrato está listo",
+      "getContractDescription": "Obtenlo para descargarlo y firmarlo. Si faltan tus datos de ejecución, los añades en ese mismo paso.",
       "theirDetailsMissing": "Esperando a que {name} añada sus datos de firma",
       "theirDetailsMissingDescription": "Debe indicar su denominación social, domicilio, NIF/CIF y firmante antes de que cualquiera de las partes pueda iniciar la firma.",
       "yourTurn": "Es tu turno de firmar",
@@ -635,11 +637,6 @@
     "signatureConfirmation": "Confirmo que estoy autorizado/a para firmar este contrato y que mi nombre escrito arriba constituye mi firma electrónica legal con la misma validez que una firma manuscrita.",
     "signContract": "Firmar Contrato",
     "signingInProgress": "Firmando...",
-    "readyForSignatures": "Listo para Firmas",
-    "readyForSignaturesDescription": "Todos los términos han sido acordados. Inicia el proceso de firma y ambas partes podrán firmar escribiendo su nombre legal completo.",
-    "startSigningProcess": "Últimos detalles",
-    "starting": "Iniciando...",
-    "canSignImmediately": "Confirma tus datos de ejecución arriba antes de comenzar",
     "failedToLoad": "Error al cargar el acuerdo",
     "attorneyReviewInProgress": "Revisión del Abogado/a en Curso",
     "signingAfterReview": "La firma estará disponible cuando se completen todas las revisiones legales.",
@@ -652,7 +649,6 @@
     "simpleSignatureNotice": "Tipo de firma:",
     "simpleSignatureNoticeText": "Esta es una firma electrónica simple (nombre escrito). Es exigible para la mayoría de contratos según el Reglamento eIDAS de la UE y la ESIGN Act de EE. UU. Algunos actos legales (escrituras notariales, ciertas transmisiones inmobiliarias) requieren una firma electrónica cualificada, que este producto no ofrece.",
     "toastMessages": {
-      "signingStarted": "Proceso de firma iniciado. Ahora puedes firmar abajo.",
       "initiationFailed": "Error al iniciar la firma: {error}",
       "signatureRecorded": "¡Firma registrada correctamente!",
       "signatureFailed": "Error al registrar firma: {error}",
@@ -684,21 +680,15 @@
       "copyLink": "Copiar enlace",
       "signedTitle": "Firmado por {name}",
       "signedFromRegion": "desde {region}",
-      "signedAt": "el {time}",
-      "downloadBundle": "Descargar paquete firmado"
+      "signedAt": "el {time}"
     },
     "theOtherParty": "la otra parte",
     "blocked": {
-      "yourDetails": "Añade primero tus datos de firma.",
       "theirDetails": "Esperando a que {name} añada sus datos de firma."
     },
     "signingDetails": {
       "title": "Datos de Ejecución",
       "description": "Estos datos no son objeto de negociación, pero son imprescindibles para que el contrato tenga validez legal. Introduce la denominación social, el domicilio registrado y los datos del firmante de tu parte.",
-      "importantNote": "Completa esta sección antes de firmar. La información que facilites aquí aparecerá en el documento final del contrato.",
-      "yourDetails": "Tus Datos",
-      "otherPartyDetails": "Otra Parte",
-      "confirmed": "Confirmado",
       "legalName": "Denominación Social",
       "legalNamePlaceholder": "ej., Acme Corp, S.L.",
       "address": "Domicilio Social",
@@ -709,13 +699,10 @@
       "signatoryNamePlaceholder": "ej., Juan Pérez García",
       "signatoryTitle": "Cargo del Firmante",
       "signatoryTitlePlaceholder": "ej., Administrador/a Único/a, CEO",
-      "confirmDetails": "Confirmar Datos",
       "saving": "Guardando...",
       "saved": "Datos de ejecución guardados",
-      "edit": "Editar datos",
       "frozenAfterSigning": "Los datos quedan bloqueados tras firmar",
       "waitingForOtherParty": "La otra parte aún no ha enviado sus datos",
-      "requiredBeforeSigning": "Confirma tus datos de ejecución arriba antes de firmar",
       "completeAs": "Completar este acuerdo como",
       "completeAsHint": "Elija su rol. Rellenamos su parte y dejamos en blanco el bloque de la otra parte para que lo complete.",
       "role": {
@@ -723,7 +710,11 @@
         "controller": "Responsable (decidimos por qué y cómo se tratan los datos)",
         "businessAssociate": "Business Associate (el proveedor que puede tratar PHI)",
         "coveredEntity": "Covered Entity (el prestador sanitario, plan de salud o cámara de compensación)"
-      }
+      },
+      "change": "Cambiar",
+      "keepSaved": "Mantener los datos guardados",
+      "saveAndContinue": "Guardar y continuar",
+      "otherSaved": "Los datos de {name} están guardados."
     }
   },
   "settings": {
@@ -1492,9 +1483,6 @@
     "troubleEntitlementDesc": "Usa el enlace de descarga enviado a la dirección de correo con la que compraste. Los enlaces de descarga caducan a los 7 días; contacta con soporte para obtener uno nuevo.",
     "troubleActivationTitle": "\"Límite de activaciones alcanzado\"",
     "troubleActivationDesc": "Cada licencia permite un número limitado de activaciones por equipo. Desactiva los equipos que no utilices con la CLI (npm run skill:deactivate), o contacta con soporte para aumentar tu límite de activaciones."
-  },
-  "currency": {
-    "pricesIn": "Precios en {currency}"
   },
   "pricing": {
     "metaTitle": "Precios de Dealroom: pago por contrato",

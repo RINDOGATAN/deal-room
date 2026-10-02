@@ -4,9 +4,8 @@
 
 import { useTranslations } from "next-intl";
 import Link from "next/link";
-import { useCurrency, useKitPrice } from "@/hooks/useCurrency";
+import { useKitPrice } from "@/hooks/useCurrency";
 import { features } from "@/config/features";
-import { CurrencySwitch } from "@/components/pricing/CurrencySwitch";
 import {
   Bot,
   Key,
@@ -30,7 +29,6 @@ import {
 export default function AgentApiPage() {
   const t = useTranslations("agentApi");
   const price = useKitPrice();
-  const currency = useCurrency();
   // Pay per contract: once billing is on, hosted no longer "sells nothing".
   const billing = features.stripeEnabled;
 
@@ -208,9 +206,7 @@ export default function AgentApiPage() {
         </div>
 
         <div className="p-3 border border-primary/30 bg-primary/5 rounded-xl text-sm">
-          {billing ? t("entitlementPricingPerContract") : t("entitlementPricing", { price })}
-          {!billing && <CurrencySwitch current={currency} className="ml-2" />}
-        </div>
+          {billing ? t("entitlementPricingPerContract") : t("entitlementPricing", { price })}        </div>
       </div>
 
       {/* Rate Limits */}
