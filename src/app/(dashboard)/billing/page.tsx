@@ -19,9 +19,6 @@ import { Loader2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
-import { toBillingCurrency } from "@/lib/currency";
-import { useCurrencyChoice } from "@/hooks/useCurrency";
-import { CurrencySwitch } from "@/components/pricing/CurrencySwitch";
 import {
   Dialog,
   DialogContent,
@@ -39,7 +36,6 @@ export default function BillingPage() {
   const [cancelTarget, setCancelTarget] = useState<{ entitlementId: string; name: string } | null>(null);
 
   const { data: pricing, isLoading } = trpc.billing.getContractPricing.useQuery();
-  const choice = useCurrencyChoice();
   const { data: status } = trpc.billing.getSubscriptionStatus.useQuery();
 
   const cancelMutation = trpc.billing.cancelSubscription.useMutation({
@@ -79,8 +75,7 @@ export default function BillingPage() {
     );
   }
 
-  const currency = choice ? toBillingCurrency(choice) : pricing.defaultCurrency;
-  const contractPrice = pricing.display?.contract[currency] ?? null;
+  const contractPrice = pricing.display?.contract[pricing.defaultCurrency] ?? null;
   const legacy = (status?.entitlements ?? []).filter((e) => e.status === "ACTIVE");
 
   return (
@@ -95,7 +90,6 @@ export default function BillingPage() {
         <p className="text-sm text-foreground">
           {contractPrice ? t("perContractBody", { price: contractPrice }) : t("perContractBodyNoPrice")}
         </p>
-        {contractPrice && <CurrencySwitch current={currency === "eur" ? "EUR" : "USD"} className="block" />}
         <Link href="/pricing" className="text-sm text-primary underline underline-offset-2 block">
           {t("pricingLink")}
         </Link>

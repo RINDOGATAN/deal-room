@@ -6,7 +6,6 @@ import { useLocale, useTranslations } from "next-intl";
 import { contractPath } from "@/lib/contract-pages-paths";
 import type { PricingFacts } from "@/lib/pricing-page";
 import type { Currency } from "@/lib/currency";
-import { CurrencySwitch } from "@/components/pricing/CurrencySwitch";
 
 const STOREFRONT_URL = "https://www.todo.law/marketplace";
 
@@ -38,7 +37,6 @@ export function PricingView({
       <div className="space-y-4">
         <h1 className="text-4xl font-bold">{t("title")}</h1>
         <p className="text-xl text-muted-foreground max-w-2xl">{billingOn ? t("lead") : t("leadOff")}</p>
-        {billingOn && (contractPrice || packPrice) && <CurrencySwitch current={currency} reload />}
       </div>
 
       {billingOn && (

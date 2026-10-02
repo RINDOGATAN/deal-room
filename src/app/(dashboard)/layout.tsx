@@ -34,6 +34,7 @@ import { FeedbackDialog } from "@/components/FeedbackDialog";
 import { OnboardingModal } from "@/components/OnboardingModal";
 import { TesterBar } from "@/components/TesterBar";
 import { UserRoleProvider } from "@/contexts/UserRoleContext";
+import { shouldShowRequestsLink } from "@/lib/app-links";
 
 export default function DashboardLayout({
   children,
@@ -56,6 +57,14 @@ export default function DashboardLayout({
     undefined,
     { enabled: status === "authenticated", retry: false }
   );
+
+  // The requests inbox means nothing to most people: its footer link
+  // appears only once the person has sent or received a request.
+  const { data: requestCount } = trpc.lawyer.myRequestCount.useQuery(undefined, {
+    enabled: status === "authenticated" && features.lawyerInvolvement,
+    retry: false,
+  });
+  const showRequestsLink = shouldShowRequestsLink(requestCount);
 
   const userRole = session?.user?.role ?? null;
   // Founders arriving on /launch have self-identified as startup owners;
@@ -253,20 +262,22 @@ export default function DashboardLayout({
       {/* Footer */}
       <footer className="py-4 px-4 md:px-6 border-t border-border">
         <div className="max-w-7xl mx-auto flex flex-col items-center gap-2 text-sm text-muted-foreground">
-          {/* Role badge + directory link */}
-          {features.lawyerInvolvement && userRole && (
+          {/* Role badge + requests link (the link only once there is a request) */}
+          {features.lawyerInvolvement && (userRole || showRequestsLink) && (
             <div className="flex items-center gap-3 pb-1">
-              <button
-                onClick={() => setShowOnboardingOverride(true)}
-                className="flex items-center gap-1.5 px-3 py-1.5 text-xs text-muted-foreground rounded-full border border-border hover:border-muted-foreground/50 transition-colors"
-              >
-                {userRole === "LAWYER" ? <Scale className="w-3.5 h-3.5" /> : <Briefcase className="w-3.5 h-3.5" />}
-                <span>{userRole === "LAWYER" ? tOnboarding("roleLawyer") : tOnboarding("roleBusiness")}</span>
-                <ArrowRightLeft className="w-3 h-3 ml-0.5 text-primary" />
-              </button>
-              {userRole === "LAWYER" && (
+              {userRole && (
+                <button
+                  onClick={() => setShowOnboardingOverride(true)}
+                  className="flex items-center gap-1.5 px-3 py-1.5 text-xs text-muted-foreground rounded-full border border-border hover:border-muted-foreground/50 transition-colors"
+                >
+                  {userRole === "LAWYER" ? <Scale className="w-3.5 h-3.5" /> : <Briefcase className="w-3.5 h-3.5" />}
+                  <span>{userRole === "LAWYER" ? tOnboarding("roleLawyer") : tOnboarding("roleBusiness")}</span>
+                  <ArrowRightLeft className="w-3 h-3 ml-0.5 text-primary" />
+                </button>
+              )}
+              {showRequestsLink && (
                 <>
-                  <span className="text-border">&middot;</span>
+                  {userRole && <span className="text-border">&middot;</span>}
                   <Link
                     href="/lawyers/requests"
                     className="flex items-center gap-1.5 hover:text-foreground transition-colors"

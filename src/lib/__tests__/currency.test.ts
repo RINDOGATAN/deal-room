@@ -4,13 +4,12 @@
 /**
  * One currency per visitor: euros in Europe (EU, EEA, United Kingdom,
  * Switzerland), dollars elsewhere. Country header first, then the
- * Accept-Language region, then dollars; the visitor's switch choice wins,
- * then a stored billing currency.
+ * Accept-Language region, then dollars; a stored billing currency wins.
+ * There is no switch (owner decision 2 October 2026).
  */
 import { describe, it, expect } from "vitest";
 import {
   EUROPE_COUNTRIES,
-  choiceFromCookieHeader,
   currencyForCountry,
   currencyFromCookieHeader,
   formatPrice,
@@ -72,8 +71,7 @@ describe("regionCurrency", () => {
 });
 
 describe("resolveVisitorCurrency", () => {
-  it("prefers the visitor's choice, then the stored billing currency, then the region", () => {
-    expect(resolveVisitorCurrency({ cookie: "currency_choice=USD", stored: "eur", country: "ES" })).toBe("USD");
+  it("prefers the stored billing currency, then the region", () => {
     expect(resolveVisitorCurrency({ stored: "eur", country: "US" })).toBe("EUR");
     expect(resolveVisitorCurrency({ stored: "usd", country: "ES" })).toBe("USD");
     expect(resolveVisitorCurrency({ stored: "gbp", country: "ES" })).toBe("EUR");
@@ -88,13 +86,17 @@ describe("resolveVisitorCurrency", () => {
 });
 
 describe("cookies", () => {
-  it("reads the choice first, then the region guess, else dollars", () => {
+  it("reads the region guess, else dollars; a leftover switch cookie is ignored", () => {
     expect(currencyFromCookieHeader("locale=es; currency=EUR")).toBe("EUR");
-    expect(currencyFromCookieHeader("currency=EUR; currency_choice=USD")).toBe("USD");
+    expect(currencyFromCookieHeader("currency=EUR; currency_choice=USD")).toBe("EUR");
     expect(currencyFromCookieHeader("currency=USD")).toBe("USD");
     expect(currencyFromCookieHeader("")).toBe("USD");
     expect(currencyFromCookieHeader(undefined)).toBe("USD");
-    expect(choiceFromCookieHeader("currency=EUR")).toBeNull();
+  });
+
+  it("ignores a leftover switch cookie on the server too", () => {
+    const headers = new Headers({ cookie: "currency_choice=USD", "x-vercel-ip-country": "ES" });
+    expect(resolveVisitorCurrencyFromHeaders(headers)).toBe("EUR");
   });
 
   it("formats with the matching symbol", () => {
@@ -103,10 +105,10 @@ describe("cookies", () => {
   });
 });
 
-describe("switch copy", () => {
-  it("names the other currency in both languages", () => {
-    expect(en.currency.pricesIn).toBe("Prices in {currency}");
-    expect(es.currency.pricesIn).toBe("Precios en {currency}");
+describe("no currency switch", () => {
+  it("has no switch strings in either language", () => {
+    expect((en as Record<string, unknown>).currency).toBeUndefined();
+    expect((es as Record<string, unknown>).currency).toBeUndefined();
   });
 });
 

@@ -15,19 +15,15 @@ import {
   Clock,
   Loader2,
   FileText,
-  Building,
-  User,
   PenTool,
   Shield,
-  MapPin,
-  Hash,
-  Briefcase,
   ShieldCheck,
   ShieldAlert,
   Smartphone,
   Copy,
   Sparkles,
   BellRing,
+  CreditCard,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -42,7 +38,9 @@ import {
 import { roleConfigFor, type ContractRole } from "@/lib/contractRoles";
 import { AiDraftPanel } from "@/components/ai/AiDraftPanel";
 import { StatusNote } from "@/components/ui/status-note";
-import { ContractPaymentPanel, PaidDownloads } from "@/components/billing/ContractPayment";
+import { CheckoutReturn, useDealPayment, useGetContract } from "@/components/billing/ContractPayment";
+import { features } from "@/config/features";
+import { signingFlow } from "@/lib/signing-flow";
 
 /**
  * Stall notice + manual reminder. Renders only once the counterparty has been
@@ -146,23 +144,6 @@ function MarkdownishDigest({ text }: { text: string }) {
   );
 }
 
-function DownloadLinks({ dealId, className }: { dealId: string; className?: string }) {
-  // Pay per contract: the purchase action replaces the links until the
-  // contract is paid (unchanged when Stripe is off).
-  return (
-    <PaidDownloads dealId={dealId}>
-    <div className={`flex items-center justify-center gap-1.5 text-xs text-muted-foreground ${className ?? ""}`}>
-      <Download className="w-3.5 h-3.5 flex-shrink-0" />
-      <a href={`/api/deals/${dealId}/document`} className="hover:text-foreground underline underline-offset-2">PDF</a>
-      <span aria-hidden>·</span>
-      <a href={`/api/deals/${dealId}/document/docx`} className="hover:text-foreground underline underline-offset-2">DOCX</a>
-      <span aria-hidden>·</span>
-      <a href={`/api/deals/${dealId}/document/txt`} className="hover:text-foreground underline underline-offset-2">TXT</a>
-    </div>
-    </PaidDownloads>
-  );
-}
-
 /** Outer wrapper: determines contract language and provides correct locale */
 export default function SigningPage() {
   const params = useParams();
@@ -182,6 +163,8 @@ export default function SigningPage() {
 
   return (
     <NextIntlClientProvider locale={contractLang} messages={messages}>
+      {/* Stripe returns here after "Get this contract". */}
+      <CheckoutReturn dealId={dealId} />
       <SigningContent dealId={dealId} />
     </NextIntlClientProvider>
   );
@@ -193,9 +176,12 @@ function SigningContent({ dealId }: { dealId: string }) {
   const t = useTranslations("signing");
   const tCommon = useTranslations("common");
   const tAi = useTranslations("ai");
+  const tBilling = useTranslations("contractBilling");
   const locale = useLocale();
   const [typedSignature, setTypedSignature] = useState("");
   const [confirmChecked, setConfirmChecked] = useState(false);
+  // Saved execution details show as a quiet "Saved" line; this opens the form again.
+  const [editingDetails, setEditingDetails] = useState(false);
 
   // Execution details form state
   const [detailsForm, setDetailsForm] = useState<{
@@ -218,6 +204,8 @@ function SigningContent({ dealId }: { dealId: string }) {
   const { data: signingRequest, isLoading: signingLoading, refetch } = trpc.signing.getRequest.useQuery({ dealRoomId: dealId });
   const { data: reviewStatus } = trpc.attorneyReview.getReviewStatus.useQuery({ dealRoomId: dealId });
   const { data: signingDetails, isLoading: detailsLoading, refetch: refetchDetails } = trpc.signing.getSigningDetails.useQuery({ dealRoomId: dealId });
+  const { data: payment, isLoading: paymentLoading } = useDealPayment(dealId);
+  const getContract = useGetContract(dealId);
 
   // Declared-parameter [tokens] still unfilled in the agreed texts — the
   // document would print a visible blank for each (e.g. the custom
@@ -287,6 +275,7 @@ function SigningContent({ dealId }: { dealId: string }) {
   const submitDetails = trpc.signing.submitSigningDetails.useMutation({
     onSuccess: () => {
       toast.success(t("signingDetails.saved"));
+      setEditingDetails(false);
       refetchDetails();
     },
     onError: (error) => {
@@ -294,9 +283,9 @@ function SigningContent({ dealId }: { dealId: string }) {
     },
   });
 
+  // Signing starts with the first signature (handleSign), so no toast of its own.
   const initiateSigning = trpc.signing.initiate.useMutation({
     onSuccess: () => {
-      toast.success(t("toastMessages.signingStarted"));
       refetch();
     },
     onError: (error) => {
@@ -383,7 +372,8 @@ function SigningContent({ dealId }: { dealId: string }) {
     }
   }, [initiatorFirmasSignedAt, respondentFirmasSignedAt, refetch]);
 
-  const isLoading = dealLoading || signingLoading || detailsLoading;
+  const isLoading =
+    dealLoading || signingLoading || detailsLoading || (features.stripeEnabled && paymentLoading);
 
   if (isLoading) {
     return (
@@ -486,7 +476,6 @@ function SigningContent({ dealId }: { dealId: string }) {
   // Execution details state
   const ownDetailsConfirmed = !!signingDetails?.own.signingDetails;
   const otherDetailsConfirmed = !!signingDetails?.other?.signingDetails;
-  const otherDetails = signingDetails?.other?.signingDetails;
 
   // Determine if current party has already signed (frozen details)
   const currentPartySigned = signingRequest
@@ -501,17 +490,66 @@ function SigningContent({ dealId }: { dealId: string }) {
     detailsForm.signatoryName.trim() &&
     detailsForm.signatoryTitle.trim();
 
+  const detailsPayload = {
+    dealRoomId: dealId,
+    details: {
+      legalName: detailsForm.legalName.trim(),
+      address: detailsForm.address.trim(),
+      taxId: detailsForm.taxId.trim() || undefined,
+      signatoryName: detailsForm.signatoryName.trim(),
+      signatoryTitle: detailsForm.signatoryTitle.trim(),
+      ...(isRoleSolo ? { fillRole: detailsForm.fillRole } : {}),
+    },
+  };
+
   function handleSaveDetails() {
-    submitDetails.mutate({
-      dealRoomId: dealId,
-      details: {
-        legalName: detailsForm.legalName.trim(),
-        address: detailsForm.address.trim(),
-        taxId: detailsForm.taxId.trim() || undefined,
-        signatoryName: detailsForm.signatoryName.trim(),
-        signatoryTitle: detailsForm.signatoryTitle.trim(),
-        ...(isRoleSolo ? { fillRole: detailsForm.fillRole } : {}),
-      },
+    submitDetails.mutate(detailsPayload);
+  }
+
+  // One step, one primary action (src/lib/signing-flow.ts).
+  const myHandoffToken =
+    deal.currentUserRole === "INITIATOR"
+      ? signingRequest?.initiatorFirmasToken
+      : signingRequest?.respondentFirmasToken;
+  const flow = signingFlow({
+    completed: signingRequest?.status === "COMPLETED",
+    iSigned: currentPartySigned,
+    myHandoffActive: !!myHandoffToken,
+    ownDetails: ownDetailsConfirmed,
+    otherDetails: isSoloMode || otherDetailsConfirmed,
+    editingDetails,
+    needsPayment: features.stripeEnabled && !!payment && !payment.paid,
+  });
+  const otherParty = isInitiator ? respondent : initiator;
+  const otherName =
+    otherParty?.user?.name || otherParty?.name || otherParty?.email || t("theOtherParty");
+  const savedDetails = signingDetails?.own.signingDetails;
+
+  /** First visit, unpaid: save the details, then open the payment page. */
+  async function saveDetailsThenGetContract() {
+    try {
+      await submitDetails.mutateAsync(detailsPayload);
+    } catch {
+      return; // onError already said why
+    }
+    await getContract.open();
+  }
+
+  /** Signing starts with the first signature: create the request if needed, then sign. */
+  async function handleSign() {
+    if (!deal?.currentUserRole) return;
+    let requestId = signingRequest?.id;
+    if (!requestId) {
+      try {
+        requestId = (await initiateSigning.mutateAsync({ dealRoomId: dealId })).id;
+      } catch {
+        return; // onError already said why
+      }
+    }
+    recordSignature.mutate({
+      signingRequestId: requestId,
+      partyRole: deal.currentUserRole,
+      signature: typedSignature,
     });
   }
 
@@ -645,313 +683,42 @@ function SigningContent({ dealId }: { dealId: string }) {
         </div>
       )}
 
-      {/* Execution Details Alert */}
-      {!ownDetailsConfirmed && (
-        <div className="card-brutal border-warning-mark bg-warning-surface">
-          <div className="flex items-start gap-3">
-            <AlertCircle className="w-5 h-5 text-warning mt-0.5 flex-shrink-0" />
-            <div>
-              <p className="font-semibold text-warning">{t("signingDetails.importantNote")}</p>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Execution Details */}
-      <div className="card-brutal">
-        <h2 className="font-semibold mb-4 flex items-center gap-2">
-          <Building className="w-5 h-5 text-muted-foreground" />
-          {t("signingDetails.title")}
-        </h2>
-        <p className="text-sm text-muted-foreground mb-6">
-          {t("signingDetails.description")}
-        </p>
-
-        <div className={`grid grid-cols-1 ${isSoloMode ? "" : "sm:grid-cols-2"} gap-6`}>
-          {/* Own Details */}
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
-                {t("signingDetails.yourDetails")}
-              </h3>
-              {ownDetailsConfirmed && (
-                <Badge className="bg-info-surface text-primary">
-                  <Check className="w-3 h-3 mr-1" />
-                  {t("signingDetails.confirmed")}
-                </Badge>
-              )}
-            </div>
-
-            {ownDetailsConfirmed && !currentPartySigned ? (
-              // Show confirmed details with edit option
-              <div className="space-y-3 p-4 bg-primary/5 border border-primary/20 rounded-xl">
-                <div className="flex items-start gap-2">
-                  <Building className="w-4 h-4 text-muted-foreground mt-0.5" />
-                  <div>
-                    <p className="text-sm font-medium">{signingDetails!.own.signingDetails!.legalName}</p>
-                    <p className="text-xs text-muted-foreground">{t("signingDetails.legalName")}</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-2">
-                  <MapPin className="w-4 h-4 text-muted-foreground mt-0.5" />
-                  <div>
-                    <p className="text-sm">{signingDetails!.own.signingDetails!.address}</p>
-                    <p className="text-xs text-muted-foreground">{t("signingDetails.address")}</p>
-                  </div>
-                </div>
-                {signingDetails!.own.signingDetails!.taxId && (
-                  <div className="flex items-start gap-2">
-                    <Hash className="w-4 h-4 text-muted-foreground mt-0.5" />
-                    <div>
-                      <p className="text-sm">{signingDetails!.own.signingDetails!.taxId}</p>
-                      <p className="text-xs text-muted-foreground">{t("signingDetails.taxId")}</p>
-                    </div>
-                  </div>
-                )}
-                <div className="flex items-start gap-2">
-                  <User className="w-4 h-4 text-muted-foreground mt-0.5" />
-                  <div>
-                    <p className="text-sm">{signingDetails!.own.signingDetails!.signatoryName}</p>
-                    <p className="text-xs text-muted-foreground">{t("signingDetails.signatoryName")}</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-2">
-                  <Briefcase className="w-4 h-4 text-muted-foreground mt-0.5" />
-                  <div>
-                    <p className="text-sm">{signingDetails!.own.signingDetails!.signatoryTitle}</p>
-                    <p className="text-xs text-muted-foreground">{t("signingDetails.signatoryTitle")}</p>
-                  </div>
-                </div>
-                <button
-                  onClick={() => {
-                    const saved = signingDetails!.own.signingDetails!;
-                    setDetailsForm((prev) => ({
-                      legalName: saved.legalName,
-                      address: saved.address,
-                      taxId: saved.taxId || "",
-                      signatoryName: saved.signatoryName,
-                      signatoryTitle: saved.signatoryTitle,
-                      fillRole: (saved as { fillRole?: ContractRole }).fillRole || prev.fillRole,
-                    }));
-                    // Clear saved to show form again
-                    submitDetails.reset();
-                    refetchDetails();
-                  }}
-                  className="text-xs text-primary hover:underline mt-2"
-                >
-                  {t("signingDetails.edit")}
-                </button>
-              </div>
-            ) : currentPartySigned ? (
-              // Frozen after signing
-              <div className="space-y-3 p-4 bg-muted/30 border border-border rounded-xl opacity-75">
-                <div className="flex items-start gap-2">
-                  <Building className="w-4 h-4 text-muted-foreground mt-0.5" />
-                  <p className="text-sm">{signingDetails?.own.signingDetails?.legalName}</p>
-                </div>
-                <div className="flex items-start gap-2">
-                  <MapPin className="w-4 h-4 text-muted-foreground mt-0.5" />
-                  <p className="text-sm">{signingDetails?.own.signingDetails?.address}</p>
-                </div>
-                <div className="flex items-start gap-2">
-                  <User className="w-4 h-4 text-muted-foreground mt-0.5" />
-                  <p className="text-sm">{signingDetails?.own.signingDetails?.signatoryName}</p>
-                </div>
-                <div className="flex items-start gap-2">
-                  <Briefcase className="w-4 h-4 text-muted-foreground mt-0.5" />
-                  <p className="text-sm">{signingDetails?.own.signingDetails?.signatoryTitle}</p>
-                </div>
-                <p className="text-xs text-muted-foreground italic">{t("signingDetails.frozenAfterSigning")}</p>
-              </div>
-            ) : (
-              // Editable form
-              <div className="space-y-3">
-                {soloRoleConfig && (
-                  <div>
-                    <label className="block text-sm font-medium mb-1">
-                      {t("signingDetails.completeAs")}
-                    </label>
-                    <p className="text-xs text-muted-foreground mb-2">
-                      {t("signingDetails.completeAsHint")}
-                    </p>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                      {soloRoleConfig.options.map(({ role, signingKey }) => (
-                        <button
-                          key={role}
-                          type="button"
-                          onClick={() => setDetailsForm((f) => ({ ...f, fillRole: role }))}
-                          aria-pressed={detailsForm.fillRole === role}
-                          className={`p-3 text-sm border rounded-xl text-left transition-colors min-h-[44px] ${
-                            detailsForm.fillRole === role
-                              ? "border-primary bg-primary/5 font-medium"
-                              : "border-border hover:border-primary/50"
-                          }`}
-                        >
-                          {t(`signingDetails.role.${signingKey}`)}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                )}
-                <div>
-                  <label className="block text-sm font-medium mb-1">{t("signingDetails.legalName")}</label>
-                  <Input
-                    value={detailsForm.legalName}
-                    onChange={(e) => setDetailsForm((f) => ({ ...f, legalName: e.target.value }))}
-                    placeholder={t("signingDetails.legalNamePlaceholder")}
-                    className="input-brutal"
-                    autoComplete="organization"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1">{t("signingDetails.address")}</label>
-                  <Input
-                    value={detailsForm.address}
-                    onChange={(e) => setDetailsForm((f) => ({ ...f, address: e.target.value }))}
-                    placeholder={t("signingDetails.addressPlaceholder")}
-                    className="input-brutal"
-                    autoComplete="street-address"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1">
-                    {t("signingDetails.taxId")}
-                    <span className="text-muted-foreground font-normal ml-1">({tCommon("optional")})</span>
-                  </label>
-                  <Input
-                    value={detailsForm.taxId}
-                    onChange={(e) => setDetailsForm((f) => ({ ...f, taxId: e.target.value }))}
-                    placeholder={t("signingDetails.taxIdPlaceholder")}
-                    className="input-brutal"
-                    autoComplete="off"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1">{t("signingDetails.signatoryName")}</label>
-                  <Input
-                    value={detailsForm.signatoryName}
-                    onChange={(e) => setDetailsForm((f) => ({ ...f, signatoryName: e.target.value }))}
-                    placeholder={t("signingDetails.signatoryNamePlaceholder")}
-                    className="input-brutal"
-                    autoComplete="name"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1">{t("signingDetails.signatoryTitle")}</label>
-                  <Input
-                    value={detailsForm.signatoryTitle}
-                    onChange={(e) => setDetailsForm((f) => ({ ...f, signatoryTitle: e.target.value }))}
-                    placeholder={t("signingDetails.signatoryTitlePlaceholder")}
-                    className="input-brutal"
-                    autoComplete="organization-title"
-                  />
-                </div>
-                <button
-                  onClick={handleSaveDetails}
-                  disabled={!detailsFormValid || submitDetails.isPending}
-                  className="w-full btn-brutal flex items-center justify-center gap-2 disabled:opacity-50"
-                >
-                  {submitDetails.isPending ? (
-                    <>
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                      {t("signingDetails.saving")}
-                    </>
-                  ) : (
-                    <>
-                      <Check className="w-4 h-4" />
-                      {t("signingDetails.confirmDetails")}
-                    </>
-                  )}
-                </button>
-              </div>
+      {/* Execution details, once saved: a quiet line, not a second call to
+          action. The form itself only appears inside the step below. */}
+      {flow.showSavedDetails && savedDetails && (
+        <div className="card-brutal py-3 flex items-start gap-3" data-testid="details-saved">
+          <Check className="w-4 h-4 text-success-mark flex-shrink-0 mt-0.5" aria-hidden="true" />
+          <div className="flex-1 min-w-0 text-sm">
+            <p>
+              <span className="font-medium">{t("signingDetails.saved")}</span>
+              <span className="text-muted-foreground">
+                {" · "}
+                {savedDetails.legalName}
+                {" · "}
+                {savedDetails.signatoryName}, {savedDetails.signatoryTitle}
+              </span>
+            </p>
+            {!isSoloMode && (
+              <p className="text-xs text-muted-foreground mt-1">
+                {otherDetailsConfirmed
+                  ? t("signingDetails.otherSaved", { name: otherName })
+                  : t("signingDetails.waitingForOtherParty")}
+              </p>
             )}
           </div>
-
-          {/* Other Party Details (hidden in SOLO mode) */}
-          {!isSoloMode && (
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
-                  {t("signingDetails.otherPartyDetails")}
-                </h3>
-                {otherDetailsConfirmed ? (
-                  <Badge className="bg-info-surface text-primary">
-                    <Check className="w-3 h-3 mr-1" />
-                    {t("signingDetails.confirmed")}
-                  </Badge>
-                ) : (
-                  <Badge variant="outline">
-                    <Clock className="w-3 h-3 mr-1" />
-                    {tCommon("pending")}
-                  </Badge>
-                )}
-              </div>
-
-              {otherDetailsConfirmed && otherDetails ? (
-                <div className="space-y-3 p-4 bg-muted/30 border border-border rounded-xl">
-                  <div className="flex items-start gap-2">
-                    <Building className="w-4 h-4 text-muted-foreground mt-0.5" />
-                    <div>
-                      <p className="text-sm font-medium">{otherDetails.legalName}</p>
-                      <p className="text-xs text-muted-foreground">{t("signingDetails.legalName")}</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <MapPin className="w-4 h-4 text-muted-foreground mt-0.5" />
-                    <div>
-                      <p className="text-sm">{otherDetails.address}</p>
-                      <p className="text-xs text-muted-foreground">{t("signingDetails.address")}</p>
-                    </div>
-                  </div>
-                  {otherDetails.taxId && (
-                    <div className="flex items-start gap-2">
-                      <Hash className="w-4 h-4 text-muted-foreground mt-0.5" />
-                      <div>
-                        <p className="text-sm">{otherDetails.taxId}</p>
-                        <p className="text-xs text-muted-foreground">{t("signingDetails.taxId")}</p>
-                      </div>
-                    </div>
-                  )}
-                  <div className="flex items-start gap-2">
-                    <User className="w-4 h-4 text-muted-foreground mt-0.5" />
-                    <div>
-                      <p className="text-sm">{otherDetails.signatoryName}</p>
-                      <p className="text-xs text-muted-foreground">{t("signingDetails.signatoryName")}</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <Briefcase className="w-4 h-4 text-muted-foreground mt-0.5" />
-                    <div>
-                      <p className="text-sm">{otherDetails.signatoryTitle}</p>
-                      <p className="text-xs text-muted-foreground">{t("signingDetails.signatoryTitle")}</p>
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                <div className="p-6 border border-dashed border-border rounded-xl text-center">
-                  <Clock className="w-8 h-8 text-muted-foreground mx-auto mb-3" />
-                  <p className="text-sm text-muted-foreground">
-                    {t("signingDetails.waitingForOtherParty")}
-                  </p>
-                  {signingRequest && !isSoloMode && (
-                    <SigningStallNotice
-                      dealId={dealId}
-                      since={new Date(signingRequest.createdAt)}
-                      manualReminderSentAt={
-                        signingRequest.manualReminderSentAt
-                          ? new Date(signingRequest.manualReminderSentAt)
-                          : null
-                      }
-                      onSent={() => refetch()}
-                      governingLaw={deal?.governingLaw}
-                    />
-                  )}
-                </div>
-              )}
-            </div>
+          {currentPartySigned ? (
+            <span className="text-xs text-muted-foreground">{t("signingDetails.frozenAfterSigning")}</span>
+          ) : (
+            <button
+              type="button"
+              onClick={() => setEditingDetails(true)}
+              className="text-xs text-muted-foreground hover:text-foreground underline underline-offset-2 flex-shrink-0"
+            >
+              {t("signingDetails.change")}
+            </button>
           )}
         </div>
-      </div>
+      )}
 
       {/* Per-party Firmas hand-off cards. Each party with an active
           hand-off (token minted, not yet signed) OR a completed
@@ -994,7 +761,6 @@ function SigningContent({ dealId }: { dealId: string }) {
                     }
                     attestedName={firmasStatusData?.initiator?.attestedName ?? null}
                     attestedRegion={firmasStatusData?.initiator?.attestedRegion ?? null}
-                    dealId={dealId}
                     locale={locale}
                     governingLaw={governingLaw}
                   />
@@ -1016,7 +782,6 @@ function SigningContent({ dealId }: { dealId: string }) {
                     }
                     attestedName={firmasStatusData?.respondent?.attestedName ?? null}
                     attestedRegion={firmasStatusData?.respondent?.attestedRegion ?? null}
-                    dealId={dealId}
                     locale={locale}
                     governingLaw={governingLaw}
                   />
@@ -1107,14 +872,15 @@ function SigningContent({ dealId }: { dealId: string }) {
         );
       })()}
 
-      {/* Signing Status */}
-      {signingRequest ? (
-        <div className="card-brutal">
-          <h2 className="font-semibold mb-4 flex items-center gap-2">
-            <FileSignature className="w-5 h-5 text-muted-foreground" />
-            {t("signingStatus")}
-          </h2>
+      {/* The one step. Each state shows at most one primary action
+          (src/lib/signing-flow.ts); no unsigned copy is offered here. */}
+      <div className="card-brutal" data-testid="signing-step" data-step={flow.step}>
+        <h2 className="font-semibold mb-4 flex items-center gap-2">
+          <FileSignature className="w-5 h-5 text-muted-foreground" />
+          {flow.step === "details" ? t("signingDetails.title") : t("signingStatus")}
+        </h2>
 
+        {signingRequest && flow.step !== "details" && (
           <div className={`grid grid-cols-1 ${isSoloMode ? "" : "sm:grid-cols-2"} gap-4 mb-6`}>
             <div className="p-4 border border-border">
               <div className="flex items-center justify-between mb-2">
@@ -1177,380 +943,399 @@ function SigningContent({ dealId }: { dealId: string }) {
               </div>
             )}
           </div>
+        )}
 
-          {signingRequest.status === "COMPLETED" ? (
-            <div className="text-center py-6 border-t border-border">
-              <Check className="w-8 h-8 text-primary mx-auto mb-3" />
-              <h3 className="text-lg font-semibold mb-2">{t("contractSigned")}</h3>
-              <p className="text-sm text-muted-foreground mb-4">
-                {t("contractSignedDescription")}
-              </p>
-              <div className="flex items-center justify-center gap-4 flex-wrap">
-                <a
-                  href={`/api/deals/${dealId}/document`}
-                  className="btn-brutal inline-flex items-center gap-2"
-                >
-                  <Download className="w-4 h-4" />
-                  {t("downloadSignedContract")}
-                </a>
-                <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
-                  <a href={`/api/deals/${dealId}/document/docx`} className="hover:text-foreground underline underline-offset-2">DOCX</a>
-                  <span aria-hidden>·</span>
-                  <a href={`/api/deals/${dealId}/document/txt`} className="hover:text-foreground underline underline-offset-2">TXT</a>
+        {flow.step === "completed" && (
+          <div className="text-center py-6 border-t border-border">
+            <Check className="w-8 h-8 text-primary mx-auto mb-3" />
+            <h3 className="text-lg font-semibold mb-2">{t("contractSigned")}</h3>
+            <p className="text-sm text-muted-foreground mb-4">
+              {t("contractSignedDescription")}
+            </p>
+            {/* The one download on this page: the signed contract. */}
+            <a
+              href={`/api/deals/${dealId}/document`}
+              data-testid="signed-download"
+              className="btn-brutal inline-flex items-center gap-2"
+            >
+              <Download className="w-4 h-4" />
+              {t("downloadSignedContract")}
+            </a>
+          </div>
+        )}
+
+        {flow.step === "signed-waiting" && (() => {
+          const currentPartySignedAt = isInitiator
+            ? signingRequest?.initiatorSignedAt
+            : signingRequest?.respondentSignedAt;
+          const currentPartySignature = isInitiator
+            ? signingRequest?.initiatorSignature
+            : signingRequest?.respondentSignature;
+          const otherPartyHasSigned = isInitiator
+            ? signingRequest?.respondentSignedAt
+            : signingRequest?.initiatorSignedAt;
+          // Undo is only available while the other party hasn't yet
+          // committed. After both signatures, the contract is COMPLETED.
+          const canUndo = !otherPartyHasSigned;
+          return (
+            <div className="py-6 border-t border-border">
+              <div className="text-center mb-4">
+                <Check className="w-8 h-8 text-primary mx-auto mb-3" />
+                <h3 className="text-lg font-semibold mb-2">{t("youHaveSigned")}</h3>
+                <p className="text-muted-foreground">
+                  {otherPartyHasSigned ? t("waitingForDocument") : t("waitingForOtherParty")}
+                </p>
+              </div>
+              {!otherPartyHasSigned && !isSoloMode && signingRequest && currentPartySignedAt && (
+                <SigningStallNotice
+                  dealId={dealId}
+                  since={new Date(currentPartySignedAt)}
+                  manualReminderSentAt={
+                    signingRequest.manualReminderSentAt
+                      ? new Date(signingRequest.manualReminderSentAt)
+                      : null
+                  }
+                  onSent={() => refetch()}
+                  governingLaw={deal?.governingLaw}
+                />
+              )}
+              {currentPartySignature && (
+                <div className="max-w-md mx-auto">
+                  <p className="text-xs text-muted-foreground mb-2 text-center">{t("yourSignature")}</p>
+                  <div className="p-4 border border-primary/30 bg-muted/20">
+                    <p
+                      className="text-2xl text-center text-primary break-words overflow-hidden"
+                      style={{ fontFamily: "var(--font-signature), 'Brush Script MT', cursive" }}
+                    >
+                      {currentPartySignature}
+                    </p>
+                  </div>
+                </div>
+              )}
+              {canUndo && (
+                <div className="text-center mt-4">
+                  <button
+                    onClick={() => undoSignature.mutate({ dealRoomId: dealId })}
+                    disabled={undoSignature.isPending}
+                    className="text-sm text-muted-foreground hover:text-foreground underline underline-offset-2 disabled:opacity-50"
+                  >
+                    {undoSignature.isPending ? t("undoingSignature") : t("undoSignature")}
+                  </button>
+                </div>
+              )}
+            </div>
+          );
+        })()}
+
+        {flow.step === "firmas" && (
+          // The FirmasHandoffCard above is doing the work. "Switch back"
+          // lets the party abandon the phone hand-off for type-to-sign.
+          <div className="py-6 border-t border-border text-center">
+            <Smartphone className="w-8 h-8 text-primary mx-auto mb-3" />
+            <p className="font-semibold mb-1">{t("firmas.usingFirmas")}</p>
+            <p className="text-sm text-muted-foreground mb-3">
+              {t("firmas.usingFirmasDescription")}
+            </p>
+            <button
+              onClick={() => cancelFirmasHandoff.mutate({ dealRoomId: dealId })}
+              disabled={cancelFirmasHandoff.isPending}
+              className="text-sm text-muted-foreground hover:text-foreground underline underline-offset-2 disabled:opacity-50"
+            >
+              {cancelFirmasHandoff.isPending ? t("firmas.cancelling") : t("firmas.cancelAndType")}
+            </button>
+          </div>
+        )}
+
+        {flow.step === "details" && (
+          // Asked only while missing (or being changed). On a first visit
+          // to an unpaid contract the button saves and opens the payment.
+          <div className="space-y-3 max-w-md">
+            <p className="text-sm text-muted-foreground mb-2">{t("signingDetails.description")}</p>
+            {soloRoleConfig && (
+              <div>
+                <label className="block text-sm font-medium mb-1">
+                  {t("signingDetails.completeAs")}
+                </label>
+                <p className="text-xs text-muted-foreground mb-2">
+                  {t("signingDetails.completeAsHint")}
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  {soloRoleConfig.options.map(({ role, signingKey }) => (
+                    <button
+                      key={role}
+                      type="button"
+                      onClick={() => setDetailsForm((f) => ({ ...f, fillRole: role }))}
+                      aria-pressed={detailsForm.fillRole === role}
+                      className={`p-3 text-sm border rounded-xl text-left transition-colors min-h-[44px] ${
+                        detailsForm.fillRole === role
+                          ? "border-primary bg-primary/5 font-medium"
+                          : "border-border hover:border-primary/50"
+                      }`}
+                    >
+                      {t(`signingDetails.role.${signingKey}`)}
+                    </button>
+                  ))}
                 </div>
               </div>
+            )}
+            <div>
+              <label htmlFor="sd-legal-name" className="block text-sm font-medium mb-1">{t("signingDetails.legalName")}</label>
+              <Input
+                id="sd-legal-name"
+                value={detailsForm.legalName}
+                onChange={(e) => setDetailsForm((f) => ({ ...f, legalName: e.target.value }))}
+                placeholder={t("signingDetails.legalNamePlaceholder")}
+                className="input-brutal"
+                autoComplete="organization"
+              />
             </div>
-          ) : (
-            <>
-              {/* Type-to-Sign Section */}
-              {(() => {
-                const currentPartyHasSigned = deal.currentUserRole === "INITIATOR"
-                  ? signingRequest.initiatorSignedAt
-                  : signingRequest.respondentSignedAt;
-                const currentPartySignature = deal.currentUserRole === "INITIATOR"
-                  ? signingRequest.initiatorSignature
-                  : signingRequest.respondentSignature;
-                const otherPartyHasSigned = deal.currentUserRole === "INITIATOR"
-                  ? signingRequest.respondentSignedAt
-                  : signingRequest.initiatorSignedAt;
-
-                if (currentPartyHasSigned) {
-                  // Undo is only available while the other party
-                  // hasn't yet committed. After both signatures, the
-                  // contract is COMPLETED and locked in.
-                  const canUndo = !otherPartyHasSigned;
-                  return (
-                    <div className="py-6 border-t border-border">
-                      <div className="text-center mb-4">
-                        <Check className="w-8 h-8 text-primary mx-auto mb-3" />
-                        <h3 className="text-lg font-semibold mb-2">{t("youHaveSigned")}</h3>
-                        <p className="text-muted-foreground">
-                          {otherPartyHasSigned
-                            ? t("waitingForDocument")
-                            : t("waitingForOtherParty")}
-                        </p>
-                      </div>
-                      {!otherPartyHasSigned && !isSoloMode && (
-                        <SigningStallNotice
-                          dealId={dealId}
-                          since={new Date(currentPartyHasSigned)}
-                          manualReminderSentAt={
-                            signingRequest.manualReminderSentAt
-                              ? new Date(signingRequest.manualReminderSentAt)
-                              : null
-                          }
-                          onSent={() => refetch()}
-                          governingLaw={deal?.governingLaw}
-                        />
-                      )}
-                      {currentPartySignature && (
-                        <div className="max-w-md mx-auto">
-                          <p className="text-xs text-muted-foreground mb-2 text-center">{t("yourSignature")}</p>
-                          <div className="p-4 border border-primary/30 bg-muted/20">
-                            <p
-                              className="text-2xl text-center text-primary break-words overflow-hidden"
-                              style={{ fontFamily: "var(--font-signature), 'Brush Script MT', cursive" }}
-                            >
-                              {currentPartySignature}
-                            </p>
-                          </div>
-                        </div>
-                      )}
-                      {canUndo && (
-                        <div className="text-center mt-4">
-                          <button
-                            onClick={() =>
-                              undoSignature.mutate({ dealRoomId: dealId })
-                            }
-                            disabled={undoSignature.isPending}
-                            className="text-sm text-muted-foreground hover:text-foreground underline underline-offset-2 disabled:opacity-50"
-                          >
-                            {undoSignature.isPending
-                              ? t("undoingSignature")
-                              : t("undoSignature")}
-                          </button>
-                        </div>
-                      )}
-                      <DownloadLinks dealId={dealId} className="mt-6" />
-                    </div>
-                  );
-                }
-
-                // Gate: require execution details before signing
-                if (!ownDetailsConfirmed) {
-                  return (
-                    <div className="py-6 border-t border-border text-center">
-                      <AlertCircle className="w-8 h-8 text-warning mx-auto mb-3" />
-                      <p className="text-sm text-muted-foreground">
-                        {t("signingDetails.requiredBeforeSigning")}
-                      </p>
-                    </div>
-                  );
-                }
-
-                // If this party already requested a Firmas hand-off,
-                // the FirmasHandoffCard at the top of the page is
-                // doing the work. Replace the type-to-sign UI with a
-                // pointer so the user doesn't accidentally do both.
-                // "Switch back" lets them abandon Firmas in favour of
-                // type-to-sign, since they may have picked it by
-                // mistake or changed their mind.
-                const myFirmasToken = deal.currentUserRole === "INITIATOR"
-                  ? signingRequest.initiatorFirmasToken
-                  : signingRequest.respondentFirmasToken;
-                if (myFirmasToken) {
-                  return (
-                    <div className="py-6 border-t border-border text-center">
-                      <Smartphone className="w-8 h-8 text-primary mx-auto mb-3" />
-                      <p className="font-semibold mb-1">{t("firmas.usingFirmas")}</p>
-                      <p className="text-sm text-muted-foreground mb-3">
-                        {t("firmas.usingFirmasDescription")}
-                      </p>
-                      <button
-                        onClick={() =>
-                          cancelFirmasHandoff.mutate({ dealRoomId: dealId })
-                        }
-                        disabled={cancelFirmasHandoff.isPending}
-                        className="text-sm text-muted-foreground hover:text-foreground underline underline-offset-2 disabled:opacity-50"
-                      >
-                        {cancelFirmasHandoff.isPending
-                          ? t("firmas.cancelling")
-                          : t("firmas.cancelAndType")}
-                      </button>
-                    </div>
-                  );
-                }
-
-                return (
-                  <div className="py-6 border-t border-border">
-                    <div className="max-w-md mx-auto">
-                      <div className="text-center mb-6">
-                        <PenTool className="w-8 h-8 text-primary mx-auto mb-3" />
-                        <h3 className="text-lg font-semibold mb-2">{t("signTheContract")}</h3>
-                        <p className="text-sm text-muted-foreground">
-                          {t("typeYourFullName")}
-                        </p>
-                      </div>
-
-                      {/* Signature Input */}
-                      <div className="space-y-4">
-                        <div>
-                          <label className="block text-sm font-medium mb-2">
-                            {t("typeFullName")}
-                          </label>
-                          <Input
-                            type="text"
-                            value={typedSignature}
-                            onChange={(e) => setTypedSignature(e.target.value)}
-                            placeholder={t("typeFullNamePlaceholder")}
-                            className="input-brutal text-lg"
-                          />
-                        </div>
-
-                        {/* Signature Preview */}
-                        {typedSignature && (
-                          <div>
-                            <label className="block text-xs text-muted-foreground mb-2">
-                              {t("signaturePreview")}
-                            </label>
-                            <div className="p-6 border-2 border-dashed border-border bg-muted/20 text-center overflow-hidden">
-                              <p
-                                className="text-xl sm:text-2xl md:text-3xl text-foreground break-words"
-                                style={{ fontFamily: "var(--font-signature), 'Brush Script MT', cursive" }}
-                              >
-                                {typedSignature}
-                              </p>
-                            </div>
-                          </div>
-                        )}
-
-                        {/* Confirmation Checkbox */}
-                        <label className="flex items-start gap-3 p-3 border border-border hover:bg-muted/20 cursor-pointer">
-                          <input
-                            type="checkbox"
-                            checked={confirmChecked}
-                            onChange={(e) => setConfirmChecked(e.target.checked)}
-                            className="mt-1 accent-primary"
-                          />
-                          <span className="text-sm text-muted-foreground">
-                            {t("signatureConfirmation")}
-                          </span>
-                        </label>
-
-                        {/* Sign Button */}
-                        <button
-                          onClick={() => {
-                            if (!signingRequest || !deal.currentUserRole) return;
-                            recordSignature.mutate({
-                              signingRequestId: signingRequest.id,
-                              partyRole: deal.currentUserRole,
-                              signature: typedSignature,
-                            });
-                          }}
-                          disabled={
-                            !typedSignature.trim() ||
-                            !confirmChecked ||
-                            recordSignature.isPending
-                          }
-                          className="w-full btn-brutal flex items-center justify-center gap-2 disabled:opacity-50"
-                        >
-                          {recordSignature.isPending ? (
-                            <>
-                              <Loader2 className="w-4 h-4 animate-spin" />
-                              {t("signingInProgress")}
-                            </>
-                          ) : (
-                            <>
-                              <FileSignature className="w-4 h-4" />
-                              {t("signContract")}
-                            </>
-                          )}
-                        </button>
-                      </div>
-
-                      {/* Alternate signing method — Firmas on phone.
-                          Mints a token for the current user's role
-                          and pivots the UI into the hand-off panel
-                          above. Available to either party. */}
-                      {!isSoloMode && (
-                        <div className="mt-6 pt-6 border-t border-border text-center">
-                          <p className="text-xs text-muted-foreground mb-3 uppercase tracking-wider">
-                            {t("firmas.orInsteadHeader")}
-                          </p>
-                          <button
-                            onClick={() =>
-                              requestFirmasHandoff.mutate({ dealRoomId: dealId })
-                            }
-                            disabled={requestFirmasHandoff.isPending}
-                            className="btn-brutal-outline inline-flex items-center gap-2 disabled:opacity-50"
-                          >
-                            {requestFirmasHandoff.isPending ? (
-                              <>
-                                <Loader2 className="w-4 h-4 animate-spin" />
-                                {t("firmas.sending")}
-                              </>
-                            ) : (
-                              <>
-                                <Smartphone className="w-4 h-4" />
-                                {t("firmas.signWithFirmas")}
-                              </>
-                            )}
-                          </button>
-                          <p className="text-xs text-muted-foreground mt-2 max-w-xs mx-auto">
-                            {t("firmas.signWithFirmasDescription")}
-                          </p>
-                        </div>
-                      )}
-                    </div>
-
-                    <DownloadLinks dealId={dealId} className="mt-6" />
-                  </div>
-                );
-              })()}
-            </>
-          )}
-        </div>
-      ) : (() => {
-        // Dual-fill gate. Mirrors the server-side precondition in
-        // signing.initiate / signing.requestFirmasHandoff. We render the buttons
-        // either way so users see what's possible, but disable them
-        // with a tooltip explaining *why* until both parties' details
-        // are submitted. The asymmetric messaging — "add yours" vs
-        // "waiting for them" — gives each side a clear next action.
-        const ownDetailsFilled = !!signingDetails?.own.signingDetails;
-        const otherDetailsFilled = !!signingDetails?.other?.signingDetails;
-        const otherName =
-          (deal.parties.find((p) => p.role !== deal.currentUserRole) as
-            | { user?: { name?: string | null } | null; name?: string | null; email?: string | null }
-            | undefined)?.user?.name ||
-          (deal.parties.find((p) => p.role !== deal.currentUserRole) as
-            | { name?: string | null; email?: string | null }
-            | undefined)?.name ||
-          (deal.parties.find((p) => p.role !== deal.currentUserRole) as
-            | { email?: string | null }
-            | undefined)?.email ||
-          t("theOtherParty");
-
-        // SOLO has no respondent, so the dual-fill collapses to
-        // "your details only."
-        const dualFillSatisfied = isSoloMode
-          ? ownDetailsFilled
-          : ownDetailsFilled && otherDetailsFilled;
-
-        let blockReason: string | null = null;
-        if (!ownDetailsFilled) {
-          blockReason = t("blocked.yourDetails");
-        } else if (!isSoloMode && !otherDetailsFilled) {
-          blockReason = t("blocked.theirDetails", { name: otherName });
-        }
-
-        const startDisabled = initiateSigning.isPending || !dualFillSatisfied;
-        const firmasDisabled = requestFirmasHandoff.isPending || !dualFillSatisfied;
-
-        return (
-          <div className="card-brutal text-center py-6">
-            <FileSignature className="w-8 h-8 text-muted-foreground mx-auto mb-3" />
-            <h2 className="text-lg font-semibold mb-2">{t("readyForSignatures")}</h2>
-            <p className="text-sm text-muted-foreground mb-4 max-w-md mx-auto">
-              {t("readyForSignaturesDescription")}
-            </p>
-            {/* Pay per contract: signing starts once the contract is paid. */}
-            <ContractPaymentPanel dealId={dealId} className="max-w-md mx-auto mb-4 text-left" />
-            <div className="flex items-center justify-center gap-3 mb-4 flex-wrap">
+            <div>
+              <label htmlFor="sd-address" className="block text-sm font-medium mb-1">{t("signingDetails.address")}</label>
+              <Input
+                id="sd-address"
+                value={detailsForm.address}
+                onChange={(e) => setDetailsForm((f) => ({ ...f, address: e.target.value }))}
+                placeholder={t("signingDetails.addressPlaceholder")}
+                className="input-brutal"
+                autoComplete="street-address"
+              />
+            </div>
+            <div>
+              <label htmlFor="sd-tax-id" className="block text-sm font-medium mb-1">
+                {t("signingDetails.taxId")}
+                <span className="text-muted-foreground font-normal ml-1">({tCommon("optional")})</span>
+              </label>
+              <Input
+                id="sd-tax-id"
+                value={detailsForm.taxId}
+                onChange={(e) => setDetailsForm((f) => ({ ...f, taxId: e.target.value }))}
+                placeholder={t("signingDetails.taxIdPlaceholder")}
+                className="input-brutal"
+                autoComplete="off"
+              />
+            </div>
+            <div>
+              <label htmlFor="sd-signatory-name" className="block text-sm font-medium mb-1">{t("signingDetails.signatoryName")}</label>
+              <Input
+                id="sd-signatory-name"
+                value={detailsForm.signatoryName}
+                onChange={(e) => setDetailsForm((f) => ({ ...f, signatoryName: e.target.value }))}
+                placeholder={t("signingDetails.signatoryNamePlaceholder")}
+                className="input-brutal"
+                autoComplete="name"
+              />
+            </div>
+            <div>
+              <label htmlFor="sd-signatory-title" className="block text-sm font-medium mb-1">{t("signingDetails.signatoryTitle")}</label>
+              <Input
+                id="sd-signatory-title"
+                value={detailsForm.signatoryTitle}
+                onChange={(e) => setDetailsForm((f) => ({ ...f, signatoryTitle: e.target.value }))}
+                placeholder={t("signingDetails.signatoryTitlePlaceholder")}
+                className="input-brutal"
+                autoComplete="organization-title"
+              />
+            </div>
+            {flow.primary === "get-contract" ? (
+              <>
+                <p className="text-xs text-muted-foreground pt-1">{tBilling("explain")}</p>
+                <button
+                  type="button"
+                  onClick={saveDetailsThenGetContract}
+                  disabled={!detailsFormValid || submitDetails.isPending || getContract.busy}
+                  data-testid="get-contract"
+                  className="w-full btn-brutal flex items-center justify-center gap-2 disabled:opacity-50"
+                >
+                  {submitDetails.isPending || getContract.busy ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <CreditCard className="w-4 h-4" />
+                  )}
+                  {getContract.label}
+                </button>
+              </>
+            ) : (
               <button
-                onClick={() => initiateSigning.mutate({ dealRoomId: dealId })}
-                disabled={startDisabled}
-                title={blockReason ?? undefined}
-                aria-disabled={startDisabled}
-                className="btn-brutal flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                type="button"
+                onClick={handleSaveDetails}
+                disabled={!detailsFormValid || submitDetails.isPending}
+                className="w-full btn-brutal flex items-center justify-center gap-2 disabled:opacity-50"
               >
-                {initiateSigning.isPending ? (
+                {submitDetails.isPending ? (
                   <>
                     <Loader2 className="w-4 h-4 animate-spin" />
-                    {t("starting")}
+                    {t("signingDetails.saving")}
                   </>
                 ) : (
                   <>
-                    <PenTool className="w-4 h-4" />
-                    {t("startSigningProcess")}
+                    <Check className="w-4 h-4" />
+                    {t("signingDetails.saveAndContinue")}
                   </>
                 )}
               </button>
-              {!isSoloMode && (
+            )}
+            {editingDetails && (
+              <button
+                type="button"
+                onClick={() => setEditingDetails(false)}
+                className="w-full text-xs text-muted-foreground hover:text-foreground underline underline-offset-2"
+              >
+                {t("signingDetails.keepSaved")}
+              </button>
+            )}
+          </div>
+        )}
+
+        {flow.step === "pay" && (
+          <div className="max-w-md mx-auto text-center space-y-4 py-2">
+            <p className="text-sm text-foreground">{tBilling("explain")}</p>
+            <button
+              type="button"
+              onClick={getContract.open}
+              disabled={getContract.busy}
+              data-testid="get-contract"
+              className="btn-brutal inline-flex items-center gap-2 disabled:opacity-50"
+            >
+              {getContract.busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <CreditCard className="w-4 h-4" />}
+              {getContract.label}
+            </button>
+          </div>
+        )}
+
+        {flow.step === "waiting-details" && (
+          <div className="p-6 border border-dashed border-border rounded-xl text-center">
+            <Clock className="w-8 h-8 text-muted-foreground mx-auto mb-3" />
+            <p className="text-sm text-muted-foreground">
+              {t("blocked.theirDetails", { name: otherName })}
+            </p>
+            {signingRequest && (
+              <SigningStallNotice
+                dealId={dealId}
+                since={new Date(signingRequest.createdAt)}
+                manualReminderSentAt={
+                  signingRequest.manualReminderSentAt
+                    ? new Date(signingRequest.manualReminderSentAt)
+                    : null
+                }
+                onSent={() => refetch()}
+                governingLaw={deal?.governingLaw}
+              />
+            )}
+          </div>
+        )}
+
+        {flow.step === "sign" && (
+          <div className={signingRequest ? "py-6 border-t border-border" : "py-2"}>
+            <div className="max-w-md mx-auto">
+              <div className="text-center mb-6">
+                <PenTool className="w-8 h-8 text-primary mx-auto mb-3" />
+                <h3 className="text-lg font-semibold mb-2">{t("signTheContract")}</h3>
+                <p className="text-sm text-muted-foreground">
+                  {t("typeYourFullName")}
+                </p>
+              </div>
+
+              <div className="space-y-4">
+                <div>
+                  <label htmlFor="typed-signature" className="block text-sm font-medium mb-2">
+                    {t("typeFullName")}
+                  </label>
+                  <Input
+                    id="typed-signature"
+                    type="text"
+                    value={typedSignature}
+                    onChange={(e) => setTypedSignature(e.target.value)}
+                    placeholder={t("typeFullNamePlaceholder")}
+                    className="input-brutal text-lg"
+                  />
+                </div>
+
+                {typedSignature && (
+                  <div>
+                    <p className="block text-xs text-muted-foreground mb-2">
+                      {t("signaturePreview")}
+                    </p>
+                    <div className="p-6 border-2 border-dashed border-border bg-muted/20 text-center overflow-hidden">
+                      <p
+                        className="text-xl sm:text-2xl md:text-3xl text-foreground break-words"
+                        style={{ fontFamily: "var(--font-signature), 'Brush Script MT', cursive" }}
+                      >
+                        {typedSignature}
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                <label className="flex items-start gap-3 p-3 border border-border hover:bg-muted/20 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={confirmChecked}
+                    onChange={(e) => setConfirmChecked(e.target.checked)}
+                    className="mt-1 accent-primary"
+                  />
+                  <span className="text-sm text-muted-foreground">
+                    {t("signatureConfirmation")}
+                  </span>
+                </label>
+
                 <button
-                  onClick={() => requestFirmasHandoff.mutate({ dealRoomId: dealId })}
-                  disabled={firmasDisabled}
-                  title={blockReason ?? undefined}
-                  aria-disabled={firmasDisabled}
-                  className="btn-brutal-outline flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                  onClick={handleSign}
+                  disabled={
+                    !typedSignature.trim() ||
+                    !confirmChecked ||
+                    recordSignature.isPending ||
+                    initiateSigning.isPending
+                  }
+                  className="w-full btn-brutal flex items-center justify-center gap-2 disabled:opacity-50"
                 >
-                  {requestFirmasHandoff.isPending ? (
+                  {recordSignature.isPending || initiateSigning.isPending ? (
                     <>
                       <Loader2 className="w-4 h-4 animate-spin" />
-                      {t("firmas.sending")}
+                      {t("signingInProgress")}
                     </>
                   ) : (
                     <>
-                      <Smartphone className="w-4 h-4" />
-                      {t("firmas.signWithFirmas")}
+                      <FileSignature className="w-4 h-4" />
+                      {t("signContract")}
                     </>
                   )}
                 </button>
+              </div>
+
+              {/* Alternate signing method: Firmas on the phone. Mints a
+                  token for this party and pivots the page into the
+                  hand-off card above. Two-party deals only. */}
+              {!isSoloMode && (
+                <div className="mt-6 pt-6 border-t border-border text-center">
+                  <p className="text-xs text-muted-foreground mb-3 uppercase tracking-wider">
+                    {t("firmas.orInsteadHeader")}
+                  </p>
+                  <button
+                    onClick={() => requestFirmasHandoff.mutate({ dealRoomId: dealId })}
+                    disabled={requestFirmasHandoff.isPending}
+                    className="btn-brutal-outline inline-flex items-center gap-2 disabled:opacity-50"
+                  >
+                    {requestFirmasHandoff.isPending ? (
+                      <>
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                        {t("firmas.sending")}
+                      </>
+                    ) : (
+                      <>
+                        <Smartphone className="w-4 h-4" />
+                        {t("firmas.signWithFirmas")}
+                      </>
+                    )}
+                  </button>
+                  <p className="text-xs text-muted-foreground mt-2 max-w-xs mx-auto">
+                    {t("firmas.signWithFirmasDescription")}
+                  </p>
+                </div>
               )}
             </div>
-            {blockReason && (
-              <div className="card-brutal border-border bg-muted/30 max-w-md mx-auto mb-4 flex items-start gap-3 text-left">
-                <AlertCircle className="w-5 h-5 text-muted-foreground flex-shrink-0 mt-0.5" />
-                <p className="text-sm text-muted-foreground">{blockReason}</p>
-              </div>
-            )}
-            <DownloadLinks dealId={dealId} className="mb-4" />
-            <p className="text-xs text-muted-foreground">
-              {t("canSignImmediately")}
-            </p>
           </div>
-        );
-      })()}
+        )}
+      </div>
 
       {/* Legal Notice */}
       <div className="card-brutal bg-muted/30 space-y-2">
@@ -1575,7 +1360,6 @@ interface FirmasHandoffCardProps {
   signedAt: Date | null;
   attestedName: string | null;
   attestedRegion: string | null;
-  dealId: string;
   locale: string;
   governingLaw: string | null;
 }
@@ -1587,8 +1371,8 @@ interface FirmasHandoffCardProps {
  *     own phone.
  *   - OTHER + waiting:  "Waiting for {name} to sign on their phone…"
  *     Read-only status — we don't surface their token to the watcher.
- *   - Signed (either):  "Signed by {attestedName} at {time}" with a
- *     download link.
+ *   - Signed (either):  "Signed by {attestedName} at {time}". No download
+ *     here: the signed contract is offered once every party has signed.
  *
  * Pure renderer — parent owns the polling and feeds in the resolved
  * fields. Same component covers initiator and respondent hand-offs.
@@ -1601,7 +1385,6 @@ function FirmasHandoffCard({
   signedAt,
   attestedName,
   attestedRegion,
-  dealId,
   locale,
   governingLaw,
 }: FirmasHandoffCardProps) {
@@ -1673,15 +1456,8 @@ function FirmasHandoffCard({
                 }),
               })}
             </p>
-            <div className="mt-3">
-              <a
-                href={`/api/deals/${dealId}/document`}
-                className="text-sm inline-flex items-center gap-1.5 text-primary hover:underline"
-              >
-                <Download className="w-4 h-4" />
-                {t("firmas.downloadBundle")}
-              </a>
-            </div>
+            {/* No download here: the signing page's one download is the
+                signed contract, offered once every party has signed. */}
           </div>
         </div>
       </div>

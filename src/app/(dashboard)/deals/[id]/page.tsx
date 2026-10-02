@@ -29,6 +29,7 @@ import {
   PenTool,
   Hourglass,
   History,
+  CreditCard,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
@@ -49,13 +50,15 @@ import { useContractMessages } from "@/lib/use-contract-messages";
 import { dealHasTia } from "@/lib/dpa-checks";
 import { buildObligationsLedger } from "@/lib/obligations";
 import { StatusNote } from "@/components/ui/status-note";
-import { CheckoutReturn, PaidDownloads } from "@/components/billing/ContractPayment";
+import { CheckoutReturn, PaidDownloads, useDealPayment } from "@/components/billing/ContractPayment";
+import { features } from "@/config/features";
 
 function DownloadLinks({ dealId, className, showTia }: { dealId: string; className?: string; showTia?: boolean }) {
-  // Pay per contract: the purchase action replaces the links until the
-  // contract is paid (unchanged when Stripe is off).
+  // Pay per contract: hidden until the contract is paid (unchanged when
+  // Stripe is off). The readiness card below is the one "Get this
+  // contract" action on this page.
   return (
-    <PaidDownloads dealId={dealId}>
+    <PaidDownloads dealId={dealId} unpaid="hide">
     <div className={`flex items-center gap-1.5 text-xs text-muted-foreground ${className ?? ""}`}>
       <Download className="w-3.5 h-3.5 flex-shrink-0" />
       <a href={`/api/deals/${dealId}/document`} className="hover:text-foreground underline underline-offset-2">PDF</a>
@@ -191,6 +194,9 @@ function DealDetailContent({ dealId }: { dealId: string }) {
   const { data: deal, isLoading, error, refetch } = trpc.deal.getById.useQuery({ id: dealId });
   const { data: progress } = trpc.deal.getProgress.useQuery({ id: dealId });
   const { data: signingRequest, isLoading: signingRequestLoading } = trpc.signing.getRequest.useQuery({ dealRoomId: dealId });
+  const { data: payment } = useDealPayment(dealId);
+  const tBilling = useTranslations("contractBilling");
+  const needsPayment = features.stripeEnabled && !!payment && !payment.paid;
 
   // Map status keys to translation keys
   const statusLabels: Record<string, string> = {
@@ -288,6 +294,27 @@ function DealDetailContent({ dealId }: { dealId: string }) {
   // repeating the disclaimer per document is just noise).
   const myParty = deal.parties.find((p) => p.id === deal.currentPartyId);
   const journeyGenerated = !!deal.journeyId;
+  // Unpaid: the one primary action is "Get this contract". It opens the
+  // signing page, which asks for missing execution details in the same step.
+  const getContractCard = (signUrl: string) => (
+    <div
+      className="card-brutal border-primary/40 bg-primary/5 flex items-start gap-3"
+      data-testid="readiness-get-contract"
+    >
+      <CreditCard className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+      <div className="flex-1 min-w-0">
+        <p className="font-semibold">{t("readiness.getContractTitle")}</p>
+        <p className="text-sm text-muted-foreground mt-1">
+          {t("readiness.getContractDescription")}
+        </p>
+        <Link href={signUrl} className="btn-brutal inline-flex items-center gap-2 mt-3">
+          <CreditCard className="w-4 h-4" />
+          {tBilling("getContract")}
+        </Link>
+      </div>
+    </div>
+  );
+
   const showLawyerWarning = !isLawyer &&
     !deal.lawyerVettingId &&
     !journeyGenerated &&
@@ -462,6 +489,7 @@ function DealDetailContent({ dealId }: { dealId: string }) {
           const mySignedAt = signingRequest?.initiatorSignedAt;
           const signUrl = `/deals/${deal.id}/sign`;
 
+          if (needsPayment) return getContractCard(signUrl);
           if (!myDetailsFilled) {
             return (
               <div className="card-brutal border-primary/40 bg-primary/5 flex items-start gap-3">
@@ -556,6 +584,9 @@ function DealDetailContent({ dealId }: { dealId: string }) {
 
           // State machine: each branch renders one card. Order matters —
           // earlier branches are higher-priority blockers.
+          if (needsPayment && (!myDetailsFilled || theirDetailsFilled)) {
+            return getContractCard(signUrl);
+          }
           if (!myDetailsFilled) {
             return (
               <div className="card-brutal border-primary/40 bg-primary/5 flex items-start gap-3">
