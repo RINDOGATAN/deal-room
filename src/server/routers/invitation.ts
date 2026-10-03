@@ -2,7 +2,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 import { z } from "zod";
-import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
+import { createTRPCRouter, protectedProcedure, rateLimitedPublicProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
 import {
   DealRoomStatus,
@@ -134,7 +134,7 @@ export const invitationRouter = createTRPCRouter({
     }),
 
   // Get invitation details (for respondent viewing)
-  getByToken: publicProcedure
+  getByToken: rateLimitedPublicProcedure("invitation-lookup")
     .input(z.object({ token: z.string() }))
     .query(async ({ ctx, input }) => {
       const invitation = await ctx.prisma.invitation.findUnique({

@@ -5,6 +5,7 @@ import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 import { appRouter } from "@/server/routers";
 import { createTRPCContext } from "@/server/trpc";
 import { createLogger } from "@/lib/logger";
+import { retryAfterMeta } from "@/server/trpc-response-meta";
 
 const logger = createLogger("trpc");
 
@@ -14,6 +15,7 @@ const handler = (req: Request) =>
     req,
     router: appRouter,
     createContext: () => createTRPCContext({ req }),
+    responseMeta: ({ errors }) => retryAfterMeta(errors),
     onError:
       process.env.NODE_ENV === "development"
         ? ({ path, error }) => {
