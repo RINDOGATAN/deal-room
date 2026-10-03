@@ -137,6 +137,10 @@ jobs:
           else
             echo "Stripe mock server"
             export STRIPE_MOCK_URL=http://localhost:12111
+            # stripe-mock wants a bearer key and accepts any test-shaped one; no real key is involved.
+            export STRIPE_SECRET_KEY="${STRIPE_SECRET_KEY:-sk_test_123}"
+            export STRIPE_PRICE_CONTRACT_USD="${STRIPE_PRICE_CONTRACT_USD:-price_mock_contract_usd}"
+            export STRIPE_PRICE_CONTRACT_EUR="${STRIPE_PRICE_CONTRACT_EUR:-price_mock_contract_eur}"
           fi
           npm run test:integration
 
