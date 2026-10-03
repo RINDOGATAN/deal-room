@@ -9,7 +9,51 @@ history was not tracked per-release and lives only in git.
 
 ## [Unreleased]
 
+## [0.1.34] - prepared 2026-10-02 (not yet tagged)
+
+For self-hosters: three additive migrations (`users.pilotStartedAt`, the
+`deal_payments` table, the customer credit tables). None changes or removes an
+existing column, and none applies to the kit's behaviour: the kit sets no
+Stripe variables, so every contract stays free and downloadable. Built-in skill
+content changes (MSA, NDA, SaaS) reach existing installs through the migrator's
+catalog refresh on the next boot.
+
+### Security
+- **Rate limits on every public route that signs in, sends a link or takes an
+  intake (cycle 15, 2026-10-02).** Added to the existing database-backed
+  limits (sign-in 20 per 15 minutes, magic links 5 per hour, skill download
+  and install, health check): the in-app feedback form (5 per minute per
+  client), the invitation look-up by token (30 per minute), the Firmas signing
+  bundle look-up (30 per minute) and the Firmas signing callback (10 per
+  minute). Over the limit the answer is HTTP 429 with `Retry-After`. The
+  counter lives in the database, so the limits hold across instances.
+- **The cycle 12 findings are closed.** The caller-driven signing webhook is
+  removed and the signing request is visible to the deal's parties only; the
+  administrator and supervisor portals each read only session tokens issued
+  by their own sign-in; the second-factor cookies are signed and bound to the
+  account and the sign-in, and every privileged procedure checks them, with a
+  limit on code attempts.
+- **Passwordless sign-in providers are refused on production builds** where
+  they do not belong (hosted production always; tester and end-to-end
+  providers on any production build unless `ALLOW_TEST_AUTH_PROVIDERS=true`).
+  Local sign-in on a self-hosted install is unchanged.
+- **Dependencies:** nodemailer 10.0.13 and a brace-expansion fix; CI now fails
+  on any high or critical advisory.
+
 ### Added
+- **Pay per contract on the hosted service (2026-09-29).** Drafting and
+  negotiating are free; a contract is paid at its first download or at the
+  start of its signature (HTTP 402 until then), with agent credit packs for
+  the agent API. Switched on only when the five billing variables are set; see
+  `docs/billing.md`. The kit sets none of them and is unaffected.
+- **An end-to-end test of the paid path in CI (cycle 15).** Draft, agree, the
+  402 at download, the checkout on Stripe's official mock server, the webhook
+  signed with a test secret, the download and the signature, through the real
+  procedures and routes on a throwaway database (`npm run test:integration`,
+  CI job `paid-path`).
+- **A fresh-install smoke walk in CI.** Every migration on an empty database,
+  the seed, a production build and a Playwright walk at 1280 and 390 pixels.
+- **The SAFE agreement** in the hosted premium catalogue, with its guide.
 - **Contract search and public contract guides (2026-10-01).** One contract
   matcher (`src/lib/contract-search.ts`) for the new-deal wizard, the
   marketplace and the agent template listing (`GET /api/v1/agent/templates?q=`,
@@ -36,6 +80,18 @@ history was not tracked per-release and lives only in git.
   duplicate nested `bias` object (56 disagreed with `biasPartyA/B`); the seed
   always used `biasPartyA/B`, and the skill loader and installer now prefer it
   too. `check:skills` fails when an option carries disagreeing bias fields.
+
+- **Error pages and health check.** Every page group has an error page with a
+  reference id; a failure on our side is logged under that id and never shows
+  a stack trace. `/api/health` answers 200 only when the database answers and
+  its last applied migration is the one the build ships, and reports the
+  build's own version.
+- **Sign-out clears the cookie the sign-in set**, also on a production build
+  served over plain http without `AUTH_COOKIE_DOMAIN`.
+- **One sender name for every e-mail** ("Dealroom by TODO.LAW").
+- **The public text describes what Dealroom does today** (no claims of AI
+  compromise or end-to-end encryption), and one clear path leads from an
+  agreed contract to its signature.
 
 ### Changed
 - **No friction (2026-10-01).** Checkout asks for a card and nothing else (no
