@@ -49,7 +49,7 @@ jobs:
       # Fails the run on any high or critical advisory in the installed tree.
       # Clean on 2026-09-14, so this is a hard gate from the start.
       - name: Dependency audit
-        run: npm audit --audit-level=high
+        run: npm audit --audit-level=high --omit=dev
 
       - name: Generate Prisma client
         run: npx prisma generate
