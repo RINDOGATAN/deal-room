@@ -34,9 +34,9 @@ describe("currencyForCountry", () => {
     }
   });
 
-  it("lists the 27 EU members, 3 EEA states, the UK and Switzerland, two aliases, and eight microstates and territories", () => {
-    expect(EUROPE_COUNTRIES.size).toBe(27 + 3 + 2 + 2 + 8);
-    for (const c of ["AD", "MC", "SM", "VA", "GI", "JE", "GG", "IM"]) expect(EUROPE_COUNTRIES.has(c)).toBe(true);
+  it("lists the 27 EU members, 3 EEA states, the UK and Switzerland, two aliases, eight microstates and territories, and the two euro users outside the EU", () => {
+    expect(EUROPE_COUNTRIES.size).toBe(27 + 3 + 2 + 2 + 8 + 2);
+    for (const c of ["AD", "MC", "SM", "VA", "GI", "JE", "GG", "IM", "ME", "XK"]) expect(EUROPE_COUNTRIES.has(c)).toBe(true);
   });
 });
 
