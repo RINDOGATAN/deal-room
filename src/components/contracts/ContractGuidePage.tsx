@@ -134,10 +134,6 @@ export function ContractGuidePage({ slug, locale }: { slug: string; locale: Page
                 {copy.makeAgentTitle}
               </h3>
               <p className="mt-2 text-sm text-muted-foreground">{copy.makeAgentText}</p>
-              <p className="mt-2 text-sm text-muted-foreground">
-                MCP: <code>list_templates</code> (<code>query: &quot;{def.contractType}&quot;</code>),{" "}
-                <code>get_template</code>, <code>create_playbook</code>, <code>initiate_negotiation</code>.
-              </p>
               <Link
                 href="/docs/agent-api"
                 className="mt-3 inline-flex items-center gap-1 text-sm text-primary hover:underline"
@@ -147,9 +143,19 @@ export function ContractGuidePage({ slug, locale }: { slug: string; locale: Page
               </Link>
             </div>
           </div>
-          <pre className="mt-4 text-xs bg-card border border-border rounded-lg p-4 overflow-x-auto">
-            <code>{example}</code>
-          </pre>
+          {/* The developer example stays in the page (search engines and AI
+              models read it) but closed, under a heading that says what it is. */}
+          <details className="mt-4 border border-border rounded-lg bg-card p-4">
+            <summary className="text-sm font-semibold cursor-pointer">{copy.devSummary}</summary>
+            <p className="mt-3 text-sm text-muted-foreground">{copy.devIntro}</p>
+            <pre className="mt-3 text-xs bg-background border border-border rounded-lg p-4 overflow-x-auto">
+              <code>{example}</code>
+            </pre>
+            <p className="mt-3 text-sm text-muted-foreground">
+              {copy.devTools} <code>list_templates</code> (<code>query: &quot;{def.contractType}&quot;</code>),{" "}
+              <code>get_template</code>, <code>create_playbook</code>, <code>initiate_negotiation</code>.
+            </p>
+          </details>
           <div className="mt-4">
             <PriceLine locale={locale} />
           </div>
