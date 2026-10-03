@@ -34,6 +34,8 @@ export const EUROPE_COUNTRIES: ReadonlySet<string> = new Set([
   "EL", "UK",
   // Euro microstates and the British Crown dependencies and Gibraltar (owner, 1 October 2026)
   "AD", "MC", "SM", "VA", "GI", "JE", "GG", "IM",
+  // Montenegro and Kosovo use the euro; same list as the storefront (owner, 3 October 2026)
+  "ME", "XK",
 ]);
 
 function normalise(code: string | null | undefined): string {
