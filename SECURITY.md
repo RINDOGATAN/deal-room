@@ -6,7 +6,7 @@ report problems. It is not aspirational.
 
 ## Reporting a vulnerability
 
-Email **security@rindogatan.com** with subject `SECURITY: <short summary>`.
+Email **info@rindogatan.com** with subject `SECURITY: <short summary>`.
 Include reproduction steps and the deployment mode (hosted vs. sovereign/self-hosted).
 
 - You will get an acknowledgement within 5 business days.
