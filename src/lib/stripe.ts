@@ -7,6 +7,28 @@ import type { ExtendedPrismaClient } from "@/lib/prisma";
 
 let stripeClient: Stripe | null = null;
 
+/**
+ * Point the client at Stripe's official mock server (stripe/stripe-mock)
+ * when `STRIPE_MOCK_URL` is set, for the paid-path test in CI. Honoured
+ * only with a test-mode key (`sk_test_…`), so a live key can never be sent
+ * anywhere but Stripe.
+ */
+export function stripeMockServer(env: Record<string, string | undefined>): {
+  host?: string;
+  port?: number;
+  protocol?: "http" | "https";
+} {
+  const raw = env.STRIPE_MOCK_URL?.trim();
+  if (!raw || !env.STRIPE_SECRET_KEY?.startsWith("sk_test_")) return {};
+  const url = new URL(raw);
+  const protocol = url.protocol === "http:" ? "http" : "https";
+  return {
+    host: url.hostname,
+    port: Number(url.port) || (protocol === "http" ? 80 : 443),
+    protocol,
+  };
+}
+
 export function getStripe(): Stripe {
   if (!features.stripeEnabled) {
     throw new Error("Stripe is not enabled. Set STRIPE_SECRET_KEY");
@@ -21,6 +43,7 @@ export function getStripe(): Stripe {
     stripeClient = new Stripe(secretKey, {
       apiVersion: "2026-01-28.clover",
       typescript: true,
+      ...stripeMockServer(process.env),
     });
   }
 

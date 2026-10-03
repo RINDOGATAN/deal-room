@@ -28,6 +28,11 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { generateContractData } from "@/server/services/document/generator";
 import { apiError } from "@/lib/api-response";
+import {
+  checkPublicRateLimit,
+  clientIp,
+  tooManyRequests,
+} from "@/server/middleware/public-rate-limit";
 import { createHash } from "crypto";
 
 const FIRMAS_WEB_ORIGIN = process.env.FIRMAS_BASE_URL ?? "https://www.firmas.io";
@@ -58,8 +63,11 @@ interface RouteContext {
   params: Promise<{ token: string }>;
 }
 
-export async function GET(_request: NextRequest, ctx: RouteContext) {
+export async function GET(request: NextRequest, ctx: RouteContext) {
   try {
+    const limited = await checkPublicRateLimit("signing-bundle", clientIp(request.headers));
+    if (!limited.allowed) return tooManyRequests(limited, corsHeaders);
+
     const { token } = await ctx.params;
     if (!token) {
       return corsJson({ error: "missing_token" }, { status: 400 });

@@ -18,12 +18,20 @@ import { presentInternalError } from "@/server/internal-error";
 import { features } from "@/config/features";
 import { pilotMutationExempt } from "@/lib/pilot";
 import { PilotCapError, assertPilotCanEdit } from "@/server/services/pilot";
+import {
+  RateLimitedError,
+  checkPublicRateLimit,
+  clientIp,
+  type PublicLimitName,
+} from "@/server/middleware/public-rate-limit";
 
 interface CreateContextOptions {
   session: Session | null;
   adminSession: AdminPortalSession | null;
   supervisorSession: SupervisorPortalSession | null;
   getCookie: (name: string) => string | undefined;
+  /** Client IP for per-client rate limits; "unknown" when absent. */
+  clientIp?: string;
 }
 
 export const createInnerTRPCContext = (opts: CreateContextOptions) => {
@@ -33,10 +41,11 @@ export const createInnerTRPCContext = (opts: CreateContextOptions) => {
     supervisorSession: opts.supervisorSession,
     prisma,
     getCookie: opts.getCookie,
+    clientIp: opts.clientIp ?? "unknown",
   };
 };
 
-export const createTRPCContext = async (_opts: { req: Request }) => {
+export const createTRPCContext = async (opts: { req: Request }) => {
   const session = await getServerSession(authOptions);
   const cookieStore = await cookies();
 
@@ -52,6 +61,7 @@ export const createTRPCContext = async (_opts: { req: Request }) => {
     adminSession,
     supervisorSession,
     getCookie: (name: string) => cookieStore.get(name)?.value,
+    clientIp: clientIp(opts.req.headers),
   });
 };
 
@@ -82,6 +92,21 @@ const t = initTRPC.context<typeof createTRPCContext>().create({
 
 export const createTRPCRouter = t.router;
 export const publicProcedure = t.procedure;
+
+/**
+ * A public procedure limited per client IP (shared DB counter, see
+ * `public-rate-limit.ts`). Over the limit it throws TOO_MANY_REQUESTS; the
+ * tRPC route turns the cause into a Retry-After header.
+ */
+export const rateLimitedPublicProcedure = (name: PublicLimitName) =>
+  t.procedure.use(async ({ ctx, next }) => {
+    const result = await checkPublicRateLimit(name, ctx.clientIp);
+    if (!result.allowed) {
+      const cause = new RateLimitedError(result.retryAfter ?? 60);
+      throw new TRPCError({ code: "TOO_MANY_REQUESTS", message: cause.message, cause });
+    }
+    return next();
+  });
 
 const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
   // The id check is redundant in the types but real at runtime: the jwt

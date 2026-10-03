@@ -2,10 +2,10 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 import { z } from "zod";
-import { createTRPCRouter, publicProcedure } from "../trpc";
+import { createTRPCRouter, rateLimitedPublicProcedure } from "../trpc";
 
 export const feedbackRouter = createTRPCRouter({
-  submit: publicProcedure
+  submit: rateLimitedPublicProcedure("feedback")
     .input(
       z.object({
         message: z.string().min(1).max(2000),

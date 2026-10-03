@@ -4,7 +4,9 @@
 /**
  * Rate limits for public and session routes that the agent-API limits in
  * `apiKeyAuth.ts` do not cover: sign-in attempts, magic-link e-mails, the
- * skill download/install path and the health check.
+ * skill download/install path, the health check, and the unauthenticated
+ * intake and token look-ups (feedback form, invitation look-up, the Firmas
+ * signing bundle and callback).
  *
  * Reuses the same DB-backed fixed-bucket counter (`claimSlot`), so limits
  * hold across Vercel instances and cold starts.
@@ -30,7 +32,11 @@ export type PublicLimitName =
   | "magic-link"
   | "skill-install"
   | "skill-download"
-  | "health";
+  | "health"
+  | "feedback"
+  | "invitation-lookup"
+  | "signing-bundle"
+  | "signing-callback";
 
 /** Per-identity limits. Identity is the client IP unless noted. */
 export const PUBLIC_LIMITS: Record<
@@ -47,6 +53,14 @@ export const PUBLIC_LIMITS: Record<
   "skill-download": { limit: 30, windowMs: HOUR },
   // Generous: uptime monitors poll once a minute or so.
   health: { limit: 60, windowMs: MINUTE },
+  // tRPC feedback.submit: anonymous, writes a row each time.
+  feedback: { limit: 5, windowMs: MINUTE },
+  // tRPC invitation.getByToken: anonymous token look-up.
+  "invitation-lookup": { limit: 30, windowMs: MINUTE },
+  // GET /api/signing/firmas-bundle/[token]: anonymous token look-up.
+  "signing-bundle": { limit: 30, windowMs: MINUTE },
+  // POST /api/signing/firmas-callback: anonymous intake, verifies signatures.
+  "signing-callback": { limit: 10, windowMs: MINUTE },
 };
 
 type HeaderSource = { get(name: string): string | null };
@@ -78,17 +92,32 @@ export async function checkPublicRateLimit(
   }
 }
 
-export function tooManyRequests(result: RateLimitResult): NextResponse {
+export function tooManyRequests(
+  result: RateLimitResult,
+  extraHeaders: Record<string, string> = {},
+): NextResponse {
   return NextResponse.json(
     { error: "Too many requests. Please wait and try again." },
     {
       status: 429,
       headers: {
+        ...extraHeaders,
         "Retry-After": String(result.retryAfter ?? 60),
         "Cache-Control": "no-store",
       },
     },
   );
+}
+
+/**
+ * Thrown (as the `cause` of a TOO_MANY_REQUESTS TRPCError) by tRPC
+ * procedures that are limited, so the tRPC route can set Retry-After.
+ */
+export class RateLimitedError extends Error {
+  constructor(readonly retryAfter: number) {
+    super("Too many requests. Please wait and try again.");
+    this.name = "RateLimitedError";
+  }
 }
 
 /**

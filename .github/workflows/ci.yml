@@ -49,7 +49,7 @@ jobs:
       # Fails the run on any high or critical advisory in the installed tree.
       # Clean on 2026-09-14, so this is a hard gate from the start.
       - name: Dependency audit
-        run: npm audit --audit-level=high
+        run: npm audit --audit-level=high --omit=dev
 
       - name: Generate Prisma client
         run: npx prisma generate
@@ -71,6 +71,78 @@ jobs:
 
       - name: Build
         run: npm run build
+
+  # The paid path, end to end: draft, agree, the 402 at download, a checkout
+  # on Stripe's official mock server (stripe/stripe-mock), the webhook signed
+  # with a test secret, the download and the signature
+  # (integration/paid-path.int.ts). Throwaway Postgres; no real keys.
+  # Optional: set the repository secrets STRIPE_TEST_SECRET_KEY (sk_test_…),
+  # STRIPE_TEST_PRICE_CONTRACT_USD and STRIPE_TEST_PRICE_CONTRACT_EUR (test
+  # price ids) to run the same test against Stripe test mode instead.
+  paid-path:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: dealroom
+          POSTGRES_PASSWORD: dealroom
+          POSTGRES_DB: dealroom_paid
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U dealroom"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+      stripe-mock:
+        image: stripe/stripe-mock:latest
+        ports:
+          - 12111:12111
+
+    env:
+      DATABASE_URL: postgresql://dealroom:dealroom@localhost:5432/dealroom_paid
+      DATABASE_URL_UNPOOLED: postgresql://dealroom:dealroom@localhost:5432/dealroom_paid
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Migrate and seed the built-in skills
+        run: |
+          npx prisma migrate deploy
+          npx prisma db seed
+
+      - name: Paid path (Stripe mock server, or test mode when its secrets are set)
+        env:
+          STRIPE_TEST_SECRET_KEY: ${{ secrets.STRIPE_TEST_SECRET_KEY }}
+          STRIPE_TEST_PRICE_CONTRACT_USD: ${{ secrets.STRIPE_TEST_PRICE_CONTRACT_USD }}
+          STRIPE_TEST_PRICE_CONTRACT_EUR: ${{ secrets.STRIPE_TEST_PRICE_CONTRACT_EUR }}
+        run: |
+          if [ -n "$STRIPE_TEST_SECRET_KEY" ]; then
+            echo "Stripe test mode"
+            export STRIPE_SECRET_KEY="$STRIPE_TEST_SECRET_KEY"
+            export STRIPE_PRICE_CONTRACT_USD="$STRIPE_TEST_PRICE_CONTRACT_USD"
+            export STRIPE_PRICE_CONTRACT_EUR="$STRIPE_TEST_PRICE_CONTRACT_EUR"
+          else
+            echo "Stripe mock server"
+            export STRIPE_MOCK_URL=http://localhost:12111
+            # stripe-mock wants a bearer key and accepts any test-shaped one; no real key is involved.
+            export STRIPE_SECRET_KEY="${STRIPE_SECRET_KEY:-sk_test_123}"
+            export STRIPE_PRICE_CONTRACT_USD="${STRIPE_PRICE_CONTRACT_USD:-price_mock_contract_usd}"
+            export STRIPE_PRICE_CONTRACT_EUR="${STRIPE_PRICE_CONTRACT_EUR:-price_mock_contract_eur}"
+          fi
+          npm run test:integration
 
   # A fresh self-hosted install from zero, then a pilot user's walk through
   # it: every migration in order on an EMPTY database, the seed, a

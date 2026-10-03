@@ -38,6 +38,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import prisma from "@/lib/prisma";
+import {
+  checkPublicRateLimit,
+  clientIp,
+  tooManyRequests,
+} from "@/server/middleware/public-rate-limit";
 
 const FIRMAS_ISSUER = process.env.FIRMAS_ISSUER ?? "https://www.firmas.io";
 const FIRMAS_WEB_ORIGIN = process.env.FIRMAS_BASE_URL ?? "https://www.firmas.io";
@@ -241,6 +246,9 @@ async function verifyContractHashSignature(
 // ── Handler ──────────────────────────────────────────────────────────
 
 export async function POST(request: NextRequest) {
+  const limited = await checkPublicRateLimit("signing-callback", clientIp(request.headers));
+  if (!limited.allowed) return tooManyRequests(limited, corsHeaders);
+
   let body: z.infer<typeof callbackBodySchema>;
   try {
     body = callbackBodySchema.parse(await request.json());
