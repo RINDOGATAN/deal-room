@@ -34,8 +34,12 @@ export const CONTRACT_COPY = {
     makeSelfButton: "Start in Dealroom",
     makeAgentTitle: "Have your agent draft and negotiate it",
     makeAgentText:
-      "Your AI agent can read the clause library and create the contract through the agent API or the MCP server. A short example:",
+      "If you use an AI agent or your own software, it can read the clause library and create this contract for you, without opening the website.",
     makeAgentDocs: "Read the agent API guide",
+    devSummary: "For developers: the API calls",
+    devIntro:
+      "These are the requests a program sends to read this contract's clauses and create a draft. You do not need them to use Dealroom in the browser. They need a Dealroom API key in place of drk_YOUR_KEY; the agent API guide explains the rest.",
+    devTools: "MCP tools:",
     faqTitle: "Frequently asked questions",
     relatedTitle: "Related contracts",
     allContracts: "All contracts",
@@ -73,8 +77,12 @@ export const CONTRACT_COPY = {
     makeSelfButton: "Empezar en Dealroom",
     makeAgentTitle: "Encargue a su agente que lo redacte y lo negocie",
     makeAgentText:
-      "Su agente de IA puede consultar la biblioteca de cláusulas y crear el contrato mediante la API para agentes o el servidor MCP. Un ejemplo breve:",
+      "Si usa un agente de IA o su propio programa, puede consultar la biblioteca de cláusulas y crear este contrato por usted, sin abrir la web.",
     makeAgentDocs: "Leer la guía de la API para agentes",
+    devSummary: "Para desarrolladores: las llamadas a la API",
+    devIntro:
+      "Son las peticiones que envía un programa para leer las cláusulas de este contrato y crear un borrador. No las necesita para usar Dealroom en el navegador. Requieren una clave de la API de Dealroom en lugar de drk_YOUR_KEY; la guía de la API para agentes explica el resto.",
+    devTools: "Herramientas MCP:",
     faqTitle: "Preguntas frecuentes",
     relatedTitle: "Contratos relacionados",
     allContracts: "Todos los contratos",
