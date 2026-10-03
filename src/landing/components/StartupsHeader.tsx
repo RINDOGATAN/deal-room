@@ -20,8 +20,12 @@ const StartupsHeader = ({ t, locale, onLocaleToggle, onSignup }: StartupsHeaderP
   const contractsHref = contractPath(locale);
 
   return (
-    <header className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-2rem)] max-w-5xl">
-      <div className="nav-header px-6">
+    // Sticky, not fixed: the header keeps its place in the page, so the content
+    // always starts below it whatever the text size (a fixed header covered the
+    // top of the page on phones with larger text). The opaque band behind it
+    // keeps scrolled content from showing through the gap above the bar.
+    <header className="sticky top-0 z-50 bg-background px-4 pt-4 pb-2">
+      <div className="nav-header px-6 max-w-5xl mx-auto">
         <div className="flex items-center justify-between h-14">
           <a href={brand.links.website} className="flex items-center gap-3">
             <img src="/logo-negative.svg" alt={brand.company} style={{ height: "28px", width: "auto" }} />
