@@ -28,7 +28,7 @@ export const todo: BrandConfig = {
   companyShort: "TODO",
   domain: "todo.law",
   appDomain: "dealroom.todo.law",
-  contactEmail: "info@rindogatan.com",
+  contactEmail: "hello@rindogatan.com",
 
   // Brand colors (used in CSS variables and email templates)
   colors: {

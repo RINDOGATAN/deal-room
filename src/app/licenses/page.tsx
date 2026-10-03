@@ -69,10 +69,10 @@ export default function LicensesPage() {
             source repository is being finalised; until it is published, request
             the corresponding source by emailing{" "}
             <a
-              href="mailto:support@rindogatan.com?subject=AGPL%20corresponding%20source%20request"
+              href="mailto:hello@rindogatan.com?subject=AGPL%20corresponding%20source%20request"
               className="text-primary underline decoration-primary/30 hover:decoration-primary"
             >
-              support@rindogatan.com
+              hello@rindogatan.com
             </a>{" "}
             and we will provide it.
           </p>
