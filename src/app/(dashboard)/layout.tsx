@@ -110,7 +110,7 @@ export default function DashboardLayout({
     <UserRoleProvider>
     <div className="min-h-screen bg-background">
       {/* Floating Glassmorphism Header */}
-      <header className="sticky top-0 z-20 px-4 pt-3">
+      <header className="sticky top-0 z-20 px-4 pt-3 pb-1 bg-background">
         <div className="max-w-7xl mx-auto bg-card/80 backdrop-blur-sm border border-border rounded-xl md:rounded-full px-4 md:px-6 py-3">
           <div className="flex items-center justify-between">
             <Link href="/deals" className="flex items-center gap-2">
