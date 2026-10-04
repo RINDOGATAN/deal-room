@@ -1238,7 +1238,7 @@
     "withTitle": "Con Preparación",
     "withDesc": "Tu agente sabe qué cláusulas son más importantes. Una flexibilidad baja en las condiciones críticas implica un mayor interés, lo que otorga más peso a tu posición. Las líneas rojas impiden que el algoritmo transija en posiciones innegociables. Los índices de satisfacción pasan de ~60% a ~85%+.",
     "withDrcTitle": "Con Configuración DRC",
-    "withDrcDesc": "Si el contrato acordado se incumple posteriormente, las disputas se resuelven en horas o días mediante el arbitraje automatizado de Gavel, no en meses ante los tribunales. El depósito en garantía asegura la posible recuperación. Tu organización queda protegida de extremo a extremo.",
+    "withDrcDesc": "Si el contrato acordado se incumple más adelante, las partes pueden acudir al arbitraje de Gavel, pensado para ser más rápido que un procedimiento judicial. Cuando el contrato prevé un depósito en garantía, este puede asegurar parte de lo que se recupere.",
     "flowTitle": "Flujo de Preparación",
     "flowStep1": "Auditar Necesidades",
     "flowStep1Desc": "Revisa los tipos de contrato disponibles e identifica qué cláusulas importan a tu negocio.",

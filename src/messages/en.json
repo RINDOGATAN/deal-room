@@ -1237,7 +1237,7 @@
     "withTitle": "With Preparation",
     "withDesc": "Your agent knows which clauses matter most. Low flexibility on critical terms means higher stakes, giving your position more weight. Red lines prevent the algorithm from compromising on non-negotiable positions. Satisfaction scores rise from ~60% to ~85%+.",
     "withDrcTitle": "With DRC Configuration",
-    "withDrcDesc": "If the agreed contract is later breached, disputes resolve in hours or days through Gavel's automated arbitration — not months in court. Escrow secures potential recovery. Your organization is protected end-to-end.",
+    "withDrcDesc": "If the agreed contract is later breached, the parties can use Gavel's arbitration, which is designed to be faster than going to court. Where the contract sets up an escrow, it can secure part of the recovery.",
     "flowTitle": "Preparation Flow",
     "flowStep1": "Audit Needs",
     "flowStep1Desc": "Review available contract types and identify which clauses matter to your business.",
