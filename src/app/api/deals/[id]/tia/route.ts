@@ -25,6 +25,10 @@ import {
 } from "@/server/services/document/generator";
 import { TiaPDF } from "@/server/services/document/ContractPDF";
 import { apiError } from "@/lib/api-response";
+import {
+  dealAccessForUser,
+  paymentRequiredResponse,
+} from "@/server/services/billing/deal-entitlement";
 
 export async function GET(
   request: NextRequest,
@@ -53,6 +57,10 @@ export async function GET(
         { status: 400 }
       );
     }
+
+    // The annex is part of the paid contract, like the other downloads.
+    const access = await dealAccessForUser(dealRoomId, session.user);
+    if (!access.paid) return paymentRequiredResponse(dealRoomId);
 
     const contractData = await generateContractData(dealRoomId);
     if (!contractData) {
