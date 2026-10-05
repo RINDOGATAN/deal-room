@@ -472,6 +472,13 @@ model DealRoom {
   // two-party swaps the counterparty into the other role. Null for symmetric-role
   // skills. (DB column kept as "soloFillRole" — predates two-party support.)
   soloFillRole               String? // "CONTROLLER" | "PROCESSOR"
+  // SOLO deals have no RESPONDENT party. When the filling side knows the
+  // other side's details (the one-call agent generation, POST
+  // /api/v1/agent/contracts), they are kept here in the signing-details
+  // shape (legalName, address, taxId, signatoryName, signatoryTitle, email)
+  // and the generator places them in the other party's block. Null: that
+  // block stays blank for the other side to complete, as before.
+  soloCounterparty           Json?
   status                     DealRoomStatus @default(DRAFT)
   currentRound               Int            @default(0)
   lawyerVettingId            String?

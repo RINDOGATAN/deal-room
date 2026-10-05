@@ -75,6 +75,11 @@ export function pageForSlug(slug: string): ContractPageDef | undefined {
   return CONTRACT_PAGES.find((p) => p.slug === slug);
 }
 
+/** The developer quick start in a language. */
+export function developersPath(locale: PageLocale): string {
+  return locale === "es" ? "/es/developers" : "/developers";
+}
+
 /** Path of a page (or of the index, without a slug) in a language. */
 export function contractPath(locale: PageLocale, slug?: string): string {
   const base = locale === "es" ? "/es/contracts" : "/contracts";

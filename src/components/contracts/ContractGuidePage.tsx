@@ -6,6 +6,7 @@ import { notFound } from "next/navigation";
 import { ArrowRight, Bot, FileText } from "lucide-react";
 import {
   contractPath,
+  developersPath,
   loadContractPage,
   pageForSlug,
   sectionHeadings,
@@ -152,8 +153,14 @@ export function ContractGuidePage({ slug, locale }: { slug: string; locale: Page
               <code>{example}</code>
             </pre>
             <p className="mt-3 text-sm text-muted-foreground">
-              {copy.devTools} <code>list_templates</code> (<code>query: &quot;{def.contractType}&quot;</code>),{" "}
-              <code>get_template</code>, <code>create_playbook</code>, <code>initiate_negotiation</code>.
+              {copy.devTools} <code>generate_contract</code> (<code>contractType: &quot;{def.contractType}&quot;</code>),{" "}
+              <code>list_contract_types</code>, <code>get_template</code>, <code>create_playbook</code>,{" "}
+              <code>initiate_negotiation</code>.
+            </p>
+            <p className="mt-2 text-sm">
+              <Link href={developersPath(locale)} className="text-primary hover:underline">
+                {copy.devQuickStart}
+              </Link>
             </p>
           </details>
           <div className="mt-4">

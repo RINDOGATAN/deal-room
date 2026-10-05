@@ -4,6 +4,47 @@ REST API for automated contract negotiation between AI agents. Companies pre-con
 
 **Base URL:** `https://dealroom.todo.law/api/v1/agent`
 
+Quick start for developers (keys, credits, MCP client setup): https://dealroom.todo.law/developers
+
+---
+
+## Make a contract in one call
+
+### List contract types (public)
+
+`GET /contract-types[?lang=es]`, no key. Every type the one call accepts (agent-to-agent `A2A_` protocols excluded): `contractType` code, guide `slug`, `governingLaws`, `languages`, `roles` (DPA and BAA; default first), `inputs` (id, label, type, required, `onlyUnder` governing laws, options, default, hint), `clauseCount`, the guide URLs and the `details` URL (`/templates/:contractType`, behind a key).
+
+### Generate a contract
+
+`POST /contracts`. Scopes `negotiate` and `deals:read`. Honors `Idempotency-Key`. Hourly limit of the `negotiate` group (100 per customer).
+
+```json
+{
+  "contractType": "NDA",
+  "governingLaw": "CALIFORNIA",
+  "language": "en",
+  "title": "optional deal name",
+  "party": { "legalName": "Your Company, Inc.", "address": "...", "taxId": "...", "signatoryName": "...", "signatoryTitle": "CEO", "email": "..." },
+  "counterparty": { "legalName": "Other Company, LLC" },
+  "role": "PROCESSOR",
+  "terms": { "input-id": "value" },
+  "clauses": { "clause-id": "option-code" },
+  "includeText": false
+}
+```
+
+- `contractType`: the code, the code in any case, or the guide slug. `party.legalName` is the only other required field.
+- `governingLaw`: required only when the type offers more than one (Delaware formations run under `CALIFORNIA` and need none).
+- `terms`: inputs left out take their default (as the wizard pre-fills them); required inputs without a default must be sent, else 422 `Missing required parameters` with the list.
+- Clauses left out take the skill's baseline option (solo intake with `selectionPolicy: "defaults"`). The deal is a SOLO deal: `party` becomes the initiator's signing details, `counterparty` is stored on the deal (`soloCounterparty`) and fills the other block; without it that block stays blank.
+- Payment: with billing on, a customer with no credit gets **402** `PAYMENT_REQUIRED` before anything is created. Otherwise the deal is paid exactly as the first document download (`dealAccessForAgent`: one credit), so later downloads are free. If the last credit is spent elsewhere in between, the answer is 402 with the `dealId` (fetch `/deals/:id/document` once a credit is back).
+- Answer **201**: `dealId` (agent deal id, for `/deals/:id/...`), `dealRoomId`, `status: "AGREED"`, `contractType`, `governingLaw`, `language`, `paid`, `dealUrl` (opens in the browser for the person whose e-mail is the customer's; null with `dealUrlNote` when no such account exists), `documents.{pdf,docx,txt}`, `guide`, and `text` with `includeText`.
+- Errors: 400 invalid body, 401 no key, 403 scope, 404 unknown type (with a hint), 422 law, language, role, inputs, selections or an unsettled clause (nothing charged), 429 limit.
+
+### MCP
+
+`POST /mcp` is the MCP server (Streamable HTTP, JSON answers, no sessions; methods `initialize`, `ping`, `tools/list`, `tools/call`). The key goes in the `Authorization` header; connecting and listing tools work without it. Each tool runs its REST route, so prices and limits are the same. `GET /mcp` still returns the tool list as JSON with each tool's endpoint. Tools: `list_contract_types` (public), `generate_contract`, `list_templates`, `get_template`, `create_playbook`, `initiate_negotiation`, `join_negotiation`, `get_deal`, `download_contract` (PDF and DOCX come back as embedded resources), `buy_credits`, `get_credit_balance`, `get_subscriptions`.
+
 ---
 
 ## Authentication

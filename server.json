@@ -2,9 +2,9 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.sergiomaldo/dealroom",
   "title": "Dealroom",
-  "description": "Draft and negotiate contracts clause by clause; a published formula proposes the compromise.",
-  "version": "1.0.0",
-  "websiteUrl": "https://dealroom.todo.law",
+  "description": "Make a contract in one call, or negotiate it clause by clause with a published compromise formula.",
+  "version": "1.1.0",
+  "websiteUrl": "https://dealroom.todo.law/developers",
   "repository": {
     "url": "https://github.com/RINDOGATAN/deal-room",
     "source": "github"

@@ -139,8 +139,25 @@ describe("agent example", () => {
       dealName: "Example NDA",
     });
     expect(example).toContain("/api/v1/agent/templates/NDA");
-    expect(example).toContain('"schema": "dealroom.solo-intake/1"');
+    // Step 2 is the one-call generation.
+    expect(example).toContain("curl -X POST https://dealroom.todo.law/api/v1/agent/contracts");
+    expect(example).toContain('"contractType": "NDA"');
     expect(example).toContain('"governingLaw": "ENGLAND_WALES"');
+    expect(example).toContain('"legalName": "Your company"');
+  });
+
+  it("leaves the governing law out where the type offers only one (Delaware runs under California)", () => {
+    const example = agentExample({
+      contractType: "DELAWARE_CERT_OF_INCORPORATION",
+      jurisdictions: ["DELAWARE"],
+      languages: ["en"],
+      locale: "es",
+      dealName: "Prueba",
+    });
+    expect(example).toContain("/api/v1/agent/contracts");
+    expect(example).not.toContain("governingLaw");
+    expect(example).toContain('"language": "en"');
+    expect(example).toContain("una sola llamada");
   });
 });
 

@@ -9,6 +9,7 @@
 
 import prisma from "@/lib/prisma";
 import { roleRequiresSwap } from "@/lib/contractRoles";
+import { readSoloCounterparty } from "@/lib/solo-counterparty";
 import { resolveLocalizedString } from "@/server/services/skills/i18n";
 import {
   interpolateParameters,
@@ -624,7 +625,12 @@ export async function generateContractData(
 
   // Extract signing details
   const sdA = initiator.signingDetails as { legalName?: string; address?: string; taxId?: string; signatoryName?: string; signatoryTitle?: string } | null;
-  const sdB = respondent?.signingDetails as { legalName?: string; address?: string; taxId?: string; signatoryName?: string; signatoryTitle?: string } | null;
+  // A SOLO deal has no respondent; the other side's details, when the
+  // filling side supplied them (one-call agent generation), live on the deal.
+  const soloCounterparty =
+    isSolo && !respondent ? readSoloCounterparty(deal.soloCounterparty) : null;
+  const sdB = (respondent?.signingDetails ?? soloCounterparty) as { legalName?: string; address?: string; taxId?: string; signatoryName?: string; signatoryTitle?: string } | null;
+  const hasPartyB = !!respondent || !!soloCounterparty;
 
   // Build party names with signing details → company → name fallback.
   // A login email is never a party or signatory name: a signable document
@@ -634,18 +640,18 @@ export async function generateContractData(
   const nonEmail = (v?: string | null) => (v && !v.includes("@") ? v : undefined);
   const partyAName =
     sdA?.legalName || initiator.company || nonEmail(initiator.name) || namePlaceholder;
-  const partyBName = respondent
-    ? sdB?.legalName || respondent.company || nonEmail(respondent.name) || namePlaceholder
+  const partyBName = hasPartyB
+    ? sdB?.legalName || respondent?.company || nonEmail(respondent?.name) || namePlaceholder
     : namePlaceholder;
 
   const partyAAddress = sdA?.address || "[Address]";
-  const partyBAddress = respondent ? (sdB?.address || "[Address]") : namePlaceholder;
+  const partyBAddress = hasPartyB ? (sdB?.address || "[Address]") : namePlaceholder;
   const partyASignatoryName = sdA?.signatoryName || nonEmail(initiator.name) || namePlaceholder;
-  const partyBSignatoryName = respondent
-    ? sdB?.signatoryName || nonEmail(respondent.name) || namePlaceholder
+  const partyBSignatoryName = hasPartyB
+    ? sdB?.signatoryName || nonEmail(respondent?.name) || namePlaceholder
     : namePlaceholder;
   const partyASignatoryTitle = sdA?.signatoryTitle || "[_________________]";
-  const partyBSignatoryTitle = respondent ? (sdB?.signatoryTitle || "[_________________]") : "[_________________]";
+  const partyBSignatoryTitle = hasPartyB ? (sdB?.signatoryTitle || "[_________________]") : "[_________________]";
 
   // Variables for boilerplate interpolation
   const variables: Record<string, string> = {
@@ -905,10 +911,24 @@ export async function generateContractData(
         signature: deal.signingRequest?.respondentSignature || undefined,
         signedAt: deal.signingRequest?.respondentSignedAt || undefined,
       }
-    : null;
+    : soloCounterparty
+      ? {
+          name: soloCounterparty.signatoryName || soloCounterparty.legalName || namePlaceholder,
+          email: soloCounterparty.email || "",
+          company: soloCounterparty.legalName,
+          legalName: soloCounterparty.legalName,
+          address: soloCounterparty.address,
+          taxId: soloCounterparty.taxId,
+          signatoryName: soloCounterparty.signatoryName,
+          signatoryTitle: soloCounterparty.signatoryTitle,
+        }
+      : null;
 
   if (swapRoles) {
-    if (isSolo || !outPartyB) {
+    // A solo deal without the other side's details blanks the Party-A role
+    // slot; with them (soloCounterparty), the two blocks swap as in a
+    // two-party deal.
+    if (!outPartyB) {
       outPartyB = outPartyA; // filling party → Party-B role slot
       outPartyA = { name: "[_________________]", email: "" }; // Party-A role slot left blank
     } else {

@@ -5,7 +5,7 @@ import { Globe, Menu, X } from "lucide-react";
 import { useState } from "react";
 import { brand } from "@/config/brand";
 import { features } from "@/config/features";
-import { contractPath } from "@/lib/contract-pages-paths";
+import { contractPath, developersPath } from "@/lib/contract-pages-paths";
 
 interface StartupsHeaderProps {
   t: (key: string) => string;
@@ -18,6 +18,7 @@ const StartupsHeader = ({ t, locale, onLocaleToggle, onSignup }: StartupsHeaderP
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const closeMenu = () => setIsMenuOpen(false);
   const contractsHref = contractPath(locale);
+  const developersHref = developersPath(locale);
 
   return (
     // Sticky, not fixed: the header keeps its place in the page, so the content
@@ -37,6 +38,9 @@ const StartupsHeader = ({ t, locale, onLocaleToggle, onSignup }: StartupsHeaderP
           <div className="hidden md:flex items-center gap-3">
             <a href={contractsHref} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
               {t("header.contracts")}
+            </a>
+            <a href={developersHref} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+              {t("header.developers")}
             </a>
             {features.stripeEnabled && (
               <a href="/pricing" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
@@ -65,6 +69,9 @@ const StartupsHeader = ({ t, locale, onLocaleToggle, onSignup }: StartupsHeaderP
             <div className="flex flex-col gap-3">
               <a href={contractsHref} onClick={closeMenu} className="text-sm text-muted-foreground px-2 py-1">
                 {t("header.contracts")}
+              </a>
+              <a href={developersHref} onClick={closeMenu} className="text-sm text-muted-foreground px-2 py-1">
+                {t("header.developers")}
               </a>
               {features.stripeEnabled && (
                 <a href="/pricing" onClick={closeMenu} className="text-sm text-muted-foreground px-2 py-1">

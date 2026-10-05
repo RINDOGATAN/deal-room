@@ -1208,6 +1208,7 @@
     "localDeployment": "Local Deployment",
     "agentApi": "Agent API",
     "negotiationApi": "Negotiation API",
+    "developersQuickStart": "Developer quick start",
     "administration": "Administration",
     "supervision": "Supervision",
     "a2aSkillsCatalog": "A2A Skills Catalog",

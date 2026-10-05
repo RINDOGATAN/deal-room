@@ -2,12 +2,12 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 import type { MetadataRoute } from "next";
-import { CONTRACT_PAGES, SITE_URL, contractPath } from "@/lib/contract-pages-paths";
+import { CONTRACT_PAGES, SITE_URL, contractPath, developersPath } from "@/lib/contract-pages-paths";
 
 /**
  * /sitemap.xml: the public pages (no signed-in routes such as
  * /marketplace), plus every contract guide in English and Spanish with
- * its language alternates. Replaces the former static public/sitemap.xml.
+ * its language alternates, and the developer quick start in both. Replaces the former static public/sitemap.xml.
  */
 
 export const dynamic = "force-static";
@@ -44,6 +44,17 @@ function contractEntries(slug: string | undefined, priority: number): Entry[] {
   }));
 }
 
+/** The developer quick start, in both languages. */
+function developerEntries(): Entry[] {
+  const languages = { en: `${SITE_URL}${developersPath("en")}`, es: `${SITE_URL}${developersPath("es")}` };
+  return (["en", "es"] as const).map((locale) => ({
+    url: languages[locale],
+    changeFrequency: "monthly",
+    priority: 0.8,
+    alternates: { languages },
+  }));
+}
+
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
     ...STATIC_PAGES.map(([path, changeFrequency, priority]) => ({
@@ -51,6 +62,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency,
       priority,
     })),
+    ...developerEntries(),
     ...contractEntries(undefined, 0.8),
     ...CONTRACT_PAGES.flatMap((p) => contractEntries(p.slug, 0.7)),
   ];

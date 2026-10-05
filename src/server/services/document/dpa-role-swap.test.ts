@@ -209,3 +209,47 @@ describe("solo DPA Controller/Processor fill", () => {
     expect(pre.indexOf("Acme")).toBeLessThan(pre.indexOf("DATA PROCESSOR"));
   });
 });
+
+// One-call agent generation: the filling side supplied the other side's
+// details, kept on the deal as soloCounterparty (no RESPONDENT row).
+describe("solo DPA with the other side's details (soloCounterparty)", () => {
+  const COUNTERPARTY = {
+    legalName: "Globex Controller GmbH",
+    address: "5 Hauptstrasse, Berlin",
+    signatoryName: "Cyril Controller",
+    signatoryTitle: "DPO",
+  };
+
+  it("CONTROLLER: the other side fills the Processor block", async () => {
+    currentDeal = { ...buildSoloDpa("CONTROLLER"), soloCounterparty: COUNTERPARTY };
+    const data = (await generateContractData("deal-1"))!;
+
+    expect(data.partyA.company).toBe("Acme Processing SL");
+    expect(data.partyB?.legalName).toBe("Globex Controller GmbH");
+    expect(data.coverPartyBName).toContain("Globex");
+
+    const pre = data.boilerplate!.preamble;
+    expect(pre.indexOf("DATA PROCESSOR")).toBeLessThan(pre.indexOf("Globex"));
+    expect(pre).not.toContain(BLANK);
+  });
+
+  it("PROCESSOR: a true swap, the other side takes the Controller block", async () => {
+    currentDeal = { ...buildSoloDpa("PROCESSOR"), soloCounterparty: COUNTERPARTY };
+    const data = (await generateContractData("deal-1"))!;
+
+    expect(data.partyA.legalName).toBe("Globex Controller GmbH");
+    expect(data.partyB?.company).toBe("Acme Processing SL");
+    expect(data.coverPartyAName).toContain("Globex");
+
+    const txt = generateContractTxt(data);
+    expect(txt).toMatch(/Controller:\n\s+Globex Controller GmbH/);
+    expect(txt).toMatch(/Processor:\n\s+Acme Processing SL/);
+  });
+
+  it("ignores malformed stored details and keeps the blank block", async () => {
+    currentDeal = { ...buildSoloDpa("CONTROLLER"), soloCounterparty: { address: "no name" } };
+    const data = (await generateContractData("deal-1"))!;
+    expect(data.partyB).toBeNull();
+    expect(data.coverPartyBName).toBe(BLANK);
+  });
+});

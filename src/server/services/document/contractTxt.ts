@@ -91,7 +91,7 @@ export function generateContractTxt(data: ContractData): string {
   if (data.partyA.legalName) lines.push(`  Legal Name: ${data.partyA.legalName}`);
   if (data.partyA.address) lines.push(`  Address: ${data.partyA.address}`);
   if (data.partyA.taxId) lines.push(`  Tax ID: ${data.partyA.taxId}`);
-  lines.push(`  Contact: ${data.partyA.name} (${data.partyA.email})`);
+  lines.push(`  Contact: ${data.partyA.name}${data.partyA.email ? ` (${data.partyA.email})` : ""}`);
   lines.push("");
 
   if (data.partyB) {
@@ -100,7 +100,7 @@ export function generateContractTxt(data: ContractData): string {
     if (data.partyB.legalName) lines.push(`  Legal Name: ${data.partyB.legalName}`);
     if (data.partyB.address) lines.push(`  Address: ${data.partyB.address}`);
     if (data.partyB.taxId) lines.push(`  Tax ID: ${data.partyB.taxId}`);
-    lines.push(`  Contact: ${data.partyB.name} (${data.partyB.email})`);
+    lines.push(`  Contact: ${data.partyB.name}${data.partyB.email ? ` (${data.partyB.email})` : ""}`);
     lines.push("");
   }
 
