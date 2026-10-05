@@ -36,6 +36,7 @@ import { TesterBar } from "@/components/TesterBar";
 import { UserRoleProvider } from "@/contexts/UserRoleContext";
 import { shouldShowRequestsLink } from "@/lib/app-links";
 import { signInHref } from "@/lib/sign-in-next";
+import { API_KEYS_SETTINGS_PATH } from "@/lib/api-key-scopes";
 
 export default function DashboardLayout({
   children,
@@ -108,6 +109,11 @@ export default function DashboardLayout({
     // Hosted pilot counters (days left, ceilings). No such page on the kit.
     ...(features.hostedPilot
       ? [{ href: "/settings", label: tPilot("settingsNav"), icon: Settings }]
+      : []),
+    // Settings, API keys: the person's own agent API keys (hosted with
+    // billing on; the pilot entry above and this one never show together).
+    ...(features.selfServiceApiKeys
+      ? [{ href: API_KEYS_SETTINGS_PATH, label: t("apiKeys"), icon: KeyRound }]
       : []),
   ];
 

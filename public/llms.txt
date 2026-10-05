@@ -6,6 +6,7 @@
 
 - **dealroom.todo.law charges per contract.** Drafting and negotiating are free. Each contract is paid once, at the price shown on the pricing page, when it is first downloaded (PDF, DOCX or TXT) or when its signature starts. Every contract skill, premium ones included, is covered by that price. There is no monthly plan.
 - **Agents pay per contract too.** An agent pays for each agreed contract with one prepaid credit, spent when the contract document is first fetched. Credits are sold in packs of ten and belong to the customer account, so any of its API keys can spend them. The current amounts are in the agent card (/.well-known/agent.json, under "pricing").
+- **An agent's API key is created by its user, without contacting us.** Sign in at https://dealroom.todo.law, open Settings, API keys (https://dealroom.todo.law/settings/api-keys) and choose Create key. The full key (it starts with drk_) is shown once, so copy it then. The same page lists your keys with their last use, revokes them, shows the credit balance and sells credit packs. An account can hold up to 5 active keys.
 - **The kit (self-hosted Dealroom) has no caps.** Premium skills are sold only for the kit: 60 a year each in the kit (in your currency), bought on the todo.law storefront and activated offline with a licence file.
 
 ## Public Pages
@@ -20,6 +21,7 @@
 - [Supervision](https://dealroom.todo.law/docs/supervision): Platform administration, supervisor roles and assignment-based oversight of deals
 - [A2A Skills Catalog](https://dealroom.todo.law/docs/a2a-skills): Contract types available for agent-to-agent negotiation
 - [Agent API](https://dealroom.todo.law/docs/agent-api): A2A agent integration documentation
+- [API keys](https://dealroom.todo.law/settings/api-keys): Where a signed-in user creates and revokes the agent's API keys and buys credits
 - [Agent Preparation](https://dealroom.todo.law/docs/agent-preparation): Guide for preparing agents for contract negotiation and dispute resolution
 - [Local Deployment](https://dealroom.todo.law/docs/local-deployment): Self-hosted deployment guide
 - [Premium skills for the kit](https://todo.law/marketplace): 60 a year each in the kit (in your currency), for your own instance

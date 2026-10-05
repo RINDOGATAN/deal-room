@@ -64,6 +64,9 @@ const stripeConfigured =
  */
 const hostedPilot = hosted && !stripeConfigured;
 
+/** The agent API (/api/v1/agent): on in every posture. */
+const agentApi = true;
+
 // All features that used to be gated to brand.id === "todo" are now
 // always on — the second brand was retired on 2026-05-02. The flag
 // shape is kept (rather than inlining `true`) so call-site reads
@@ -97,7 +100,15 @@ export const features = {
   // link still hides during an explicit promo window (promoBanner).
   marketplace: true,
   clientInvitations: true,
-  agentApi: true,
+  agentApi,
+  /**
+   * Settings, API keys: a signed-in person creates and revokes their own
+   * agent API keys and buys credits. Needs the agent API and billing on
+   * (agents pay per contract with prepaid credits), so it exists on hosted
+   * with billing on and never on the kit, where keys stay with the
+   * platform administrator.
+   */
+  selfServiceApiKeys: agentApi && stripeConfigured,
   expertsApi: true,
   publicDocs: true,
   /** Cloud Intelligence API — data-driven biases, quality scoring, conflict detection */

@@ -36,7 +36,9 @@ export type PublicLimitName =
   | "feedback"
   | "invitation-lookup"
   | "signing-bundle"
-  | "signing-callback";
+  | "signing-callback"
+  | "api-key-create"
+  | "credits-checkout";
 
 /** Per-identity limits. Identity is the client IP unless noted. */
 export const PUBLIC_LIMITS: Record<
@@ -61,6 +63,10 @@ export const PUBLIC_LIMITS: Record<
   "signing-bundle": { limit: 30, windowMs: MINUTE },
   // POST /api/signing/firmas-callback: anonymous intake, verifies signatures.
   "signing-callback": { limit: 10, windowMs: MINUTE },
+  // Keyed by user id: Settings, API keys (create a key).
+  "api-key-create": { limit: 10, windowMs: HOUR },
+  // Keyed by user id: Settings, API keys (open a credit-pack checkout).
+  "credits-checkout": { limit: 10, windowMs: HOUR },
 };
 
 type HeaderSource = { get(name: string): string | null };

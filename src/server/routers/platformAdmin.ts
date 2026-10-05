@@ -5,7 +5,8 @@ import { z } from "zod";
 import { randomBytes } from "crypto";
 import { createTRPCRouter, adminProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
-import { generateLicenseKey, sha256 } from "@/lib/crypto";
+import { generateLicenseKey } from "@/lib/crypto";
+import { generateApiKey, API_KEY_PUBLIC_SELECT } from "../services/api-keys";
 import {
   createEntitlement,
   suspendEntitlement,
@@ -583,16 +584,7 @@ export const platformAdminRouter = createTRPCRouter({
       return ctx.prisma.apiKey.findMany({
         where: { customerId: input.customerId },
         orderBy: { createdAt: "desc" },
-        select: {
-          id: true,
-          name: true,
-          keyPrefix: true,
-          scopes: true,
-          isActive: true,
-          lastUsedAt: true,
-          expiresAt: true,
-          createdAt: true,
-        },
+        select: API_KEY_PUBLIC_SELECT,
       });
     }),
 
@@ -617,10 +609,8 @@ export const platformAdminRouter = createTRPCRouter({
         });
       }
 
-      // Generate the raw API key
-      const rawKey = `drk_${randomBytes(32).toString("hex")}`;
-      const keyHash = sha256(rawKey);
-      const keyPrefix = rawKey.slice(0, 12); // "drk_" + 8 hex chars
+      // Generate the raw API key (same generator as the self-service page)
+      const { rawKey, keyHash, keyPrefix } = generateApiKey();
 
       const apiKey = await ctx.prisma.apiKey.create({
         data: {

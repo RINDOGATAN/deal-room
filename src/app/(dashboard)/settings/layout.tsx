@@ -4,9 +4,11 @@
 import { features } from "@/config/features";
 import { notFound } from "next/navigation";
 
-// Settings holds the hosted pilot counters only; the kit has no caps, so the
-// route does not exist there (same pattern as /skills and /billing).
+// Settings holds the hosted pilot counters while the pilot runs, and the
+// person's agent API keys once billing is on (`features.selfServiceApiKeys`).
+// The kit has neither, so the route does not exist there (same pattern as
+// /skills and /billing).
 export default function SettingsLayout({ children }: { children: React.ReactNode }) {
-  if (!features.hostedPilot) notFound();
+  if (!features.hostedPilot && !features.selfServiceApiKeys) notFound();
   return <>{children}</>;
 }

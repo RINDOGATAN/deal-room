@@ -14,7 +14,7 @@ All requests require a Bearer token with the `drk_` prefix:
 Authorization: Bearer drk_exampleexampleexample
 ```
 
-API keys are created by a Platform Admin at `/admin/customers`. The raw key is shown **once** on creation and cannot be retrieved later — only a prefix (`drk_example`) and hash are stored.
+On hosted Dealroom (agent API and billing on), you create your key yourself: sign in, open **Settings, API keys** (https://dealroom.todo.law/settings/api-keys) and choose **Create key**. An account can hold up to 5 active keys; the same page lists them (name, prefix, created, last used), revokes them, shows the credit balance and opens a checkout for a credit pack. On the kit (self-hosted), keys are created by a Platform Admin at `/admin/customers`. Either way the raw key is shown **once** on creation and cannot be retrieved later; only a prefix (`drk_example`) and a hash are stored.
 
 ### Scopes
 

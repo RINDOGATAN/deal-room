@@ -6,6 +6,8 @@ import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useKitPrice } from "@/hooks/useCurrency";
 import { features } from "@/config/features";
+import { brand } from "@/config/brand";
+import { API_KEYS_SETTINGS_PATH, MAX_ACTIVE_KEYS_PER_CUSTOMER } from "@/lib/api-key-scopes";
 import {
   Bot,
   Key,
@@ -145,7 +147,14 @@ export default function AgentApiPage() {
       {/* Authentication */}
       <div className="space-y-4">
         <h2 className="text-xl font-bold">{t("authentication")}</h2>
-        <p className="text-muted-foreground">{t("authDescription")}</p>
+        <p className="text-muted-foreground">
+          {features.selfServiceApiKeys
+            ? t("authDescriptionSelfService", {
+                url: `https://${brand.appDomain}${API_KEYS_SETTINGS_PATH}`,
+                max: MAX_ACTIVE_KEYS_PER_CUSTOMER,
+              })
+            : t("authDescription")}
+        </p>
 
         <div className="p-4 border border-border bg-card font-mono text-sm rounded-2xl">
           <span className="text-muted-foreground">Authorization:</span>{" "}
