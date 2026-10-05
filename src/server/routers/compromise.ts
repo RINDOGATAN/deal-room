@@ -16,6 +16,7 @@ import {
 } from "../services/ai/prompts/compromise-reasoning";
 import { createLogger } from "@/lib/logger";
 import { offerableOptionsWhere } from "@/lib/clause-retirement";
+import { notifyDealReady, notifyTurn } from "../services/notifications/deal-emails";
 
 const logger = createLogger("compromise");
 
@@ -290,6 +291,8 @@ export const compromiseRouter = createTRPCRouter({
       } catch (error) {
         logger.error("Cross-clause validation failed", { err: String(error) });
       }
+
+      if (allAlreadyAgreed) await notifyDealReady(input.dealRoomId);
 
       return { roundNumber, suggestions, validation };
     }),
@@ -857,6 +860,9 @@ export const compromiseRouter = createTRPCRouter({
         },
       });
 
+      // Only acts when this answer made the deal agreed (it reads the status).
+      if (input.accept) await notifyDealReady(clause.dealRoomId);
+
       return updated;
     }),
 
@@ -1085,6 +1091,14 @@ export const compromiseRouter = createTRPCRouter({
         },
       });
 
+      // The other party's turn: one email per round, however many clauses are countered.
+      await notifyTurn({
+        dealRoomId: clause.dealRoomId,
+        fromPartyId: party.id,
+        kind: "TURN_COUNTER",
+        roundId: currentRound.id,
+      });
+
       return counterProposal;
     }),
 
@@ -1193,6 +1207,8 @@ export const compromiseRouter = createTRPCRouter({
             },
           },
         });
+
+        if (allAgreed) await notifyDealReady(dealRoom.id);
 
         return { accepted: true, allAgreed };
       } else {
@@ -1667,6 +1683,14 @@ export const compromiseRouter = createTRPCRouter({
             proposedValue: input.proposedValue,
           },
         },
+      });
+
+      // A parameter counter-proposal is a counter-proposal too (same once-per-round email).
+      await notifyTurn({
+        dealRoomId: input.dealRoomId,
+        fromPartyId: party.id,
+        kind: "TURN_COUNTER",
+        roundId: round.id,
       });
 
       return proposal;

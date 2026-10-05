@@ -55,6 +55,7 @@ import { PilotCapNotice } from "@/components/pilot/PilotNotice";
 import { EnableFeatureModal } from "@/components/premium/enable-feature-modal";
 import { marketplaceSkillUrl } from "@/lib/marketplace";
 import { searchContracts, type SearchableContract } from "@/lib/contract-search";
+import { defaultDealMode } from "@/lib/deal-mode";
 
 const contractIcons: Record<string, typeof FileText> = {
   NDA: Shield,
@@ -763,18 +764,9 @@ export default function NewDealPage() {
                       setSelectedType(family.primaryTemplate.contractType);
                       setResolvedNativeTemplate(null);
                       setSetupChoice(null);
-                      // Auto-set deal mode based on template config
-                      // Self-hosted has no counterparty invite, so prefer solo whenever the
-                      // template supports it.
-                      if (
-                        family.primaryTemplate.soloModeOnly ||
-                        family.primaryTemplate.soloModeDefault ||
-                        (IS_SELF_HOST && family.primaryTemplate.soloModeSupported)
-                      ) {
-                        setDealMode("SOLO");
-                      } else {
-                        setDealMode("NEGOTIATION");
-                      }
+                      // Solo first (owner, 4 Oct 2026): solo whenever the template
+                      // supports it; the mode step keeps two-party one click away.
+                      setDealMode(defaultDealMode(family.primaryTemplate));
                       // For soloModeOnly, auto-set jurisdiction (user picks multi-jurisdiction via parameters)
                       if (family.primaryTemplate.soloModeOnly && family.primaryTemplate.jurisdictions.length > 0) {
                         // Jurisdiction tags may be more specific than GoverningLaw

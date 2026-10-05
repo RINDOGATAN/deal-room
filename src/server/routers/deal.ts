@@ -15,6 +15,7 @@ import { autoAgreeSingleOptionClauses } from "../services/deal/autoAgreeSingleOp
 import { applyPresetSelections, findPreset } from "../services/deal/applyPreset";
 import { features } from "@/config/features";
 import { assertPilotRecordRoom } from "../services/pilot";
+import { notifyDealReady, notifyTurn } from "../services/notifications/deal-emails";
 
 // Map GoverningLaw enum to jurisdiction strings for entitlement checking
 const GOVERNING_LAW_TO_JURISDICTION: Record<string, string> = {
@@ -912,6 +913,8 @@ export const dealRouter = createTRPCRouter({
           },
         });
 
+        await notifyDealReady(input.dealRoomId);
+
         return { success: true, bothSubmitted: false, soloCompleted: true };
       }
 
@@ -944,6 +947,10 @@ export const dealRouter = createTRPCRouter({
           },
         },
       });
+
+      // The other party's turn (only once it has joined the deal; before
+      // that, the invitation and its reminders do the work).
+      await notifyTurn({ dealRoomId: input.dealRoomId, fromPartyId: party.id, kind: "TURN_SELECTIONS" });
 
       return { success: true, bothSubmitted, soloCompleted: false };
     }),
