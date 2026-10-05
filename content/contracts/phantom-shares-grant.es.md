@@ -85,7 +85,7 @@ Cuando las partes no se ponen de acuerdo, Dealroom propone las posiciones equili
 
 Dealroom redacta la asignación únicamente conforme al Derecho **español** y en **castellano**. La sociedad y el beneficiario pueden indicar cada uno sus preferencias en Dealroom, o la sociedad puede prepararla por su cuenta.
 
-Las controversias con un trabajador que traigan causa de la relación laboral corresponden a la jurisdicción social conforme al artículo 2 de la Ley 36/2011, sea cual sea el fuero pactado; los tribunales civiles de la ciudad elegida solo conocen de las relaciones exclusivamente mercantiles y de las demás cuestiones civiles. Si el beneficiario es administrador o consejero, la asignación queda condicionada a la cobertura estatutaria, al acuerdo de junta y, para consejeros ejecutivos, al contrato aprobado por el consejo, como prevé el plan. Para las condiciones laborales del beneficiario, consulte el [contrato de trabajo](/es/contracts/employment-contract-spain).
+Las controversias con un trabajador que traigan causa de la relación laboral corresponden a la jurisdicción social conforme al artículo 2 de la Ley 36/2011, sea cual sea el fuero pactado; los tribunales civiles de la ciudad elegida solo conocen de las relaciones exclusivamente mercantiles y de las demás cuestiones civiles. Si el beneficiario es administrador o consejero, la asignación queda condicionada a la cobertura estatutaria, al acuerdo de junta y, para consejeros ejecutivos, al contrato aprobado por el consejo, como prevé el plan. Para las condiciones laborales del beneficiario, consulta el [contrato de trabajo](/es/contracts/employment-contract-spain).
 
 ## Errores frecuentes
 
@@ -93,6 +93,6 @@ Las controversias con un trabajador que traigan causa de la relación laboral co
 - **Pactar 12 meses de no competencia con un trabajador ordinario.** La ley la limita a seis meses; el exceso no produce efecto.
 - **Considerar las phantom shares como compensación de la no competencia.** Su valor es incierto y no computa; hace falta una compensación propia y específica.
 - **Combinar secreto retributivo y pérdida de unidades consolidadas.** El trabajador puede revelar su retribución, y perder lo consolidado por incumplir la confidencialidad es desproporcionado.
-- **Calcular la aceleración como tiempo transcurrido sobre tiempo total aplicado a lo no consolidado.** Use uno de los mecanismos estándar y compruebe el resultado con un ejemplo numérico.
+- **Calcular la aceleración como tiempo transcurrido sobre tiempo total aplicado a lo no consolidado.** Usa uno de los mecanismos estándar y comprueba el resultado con un ejemplo numérico.
 - **Prometer beneficios fiscales de empresa emergente.** Solo se aplican a la entrega de participaciones reales, no a pagos en metálico.
 - **Declarar que el cobro no es salario.** La denominación no decide la cuestión frente a trabajadores.

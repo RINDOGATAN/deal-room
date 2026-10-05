@@ -81,8 +81,8 @@ const COPY = {
   },
   es: {
     title: "Contratos redactados y acordados en línea",
-    lead: "Elija un contrato, responda a unas pocas preguntas y acuerde cada cláusula con la otra parte en un único espacio compartido. Sin enviar archivos de Word por correo.",
-    searchLabel: "¿Qué contrato necesita?",
+    lead: "Elige un contrato, responde a unas pocas preguntas y acuerda cada cláusula con la otra parte en un único espacio compartido. Sin enviar archivos de Word por correo.",
+    searchLabel: "¿Qué contrato necesitas?",
     searchPlaceholder: "Por ejemplo: NDA, contrato laboral, arrendamiento",
     noMatch: "Ningún contrato coincide.",
     start: "Empezar un contrato",
@@ -90,15 +90,15 @@ const COPY = {
     popular: "Contratos más usados",
     howTitle: "Cómo funciona",
     steps: [
-      ["Elija", "Escoja el contrato, la ley aplicable y el idioma."],
+      ["Elige", "Escoge el contrato, la ley aplicable y el idioma."],
       [
-        "Acuerde",
+        "Acuerda",
         "Cada parte marca su opción preferida en cada cláusula. Donde difieren, una fórmula publicada propone un punto intermedio.",
       ],
-      ["Firme", "Descargue el contrato acordado o fírmelo en línea."],
+      ["Firma", "Descarga el contrato acordado o fírmalo en línea."],
     ],
-    finalTitle: "Empiece cuando quiera",
-    login: "¿Ya tiene cuenta? Inicie sesión",
+    finalTitle: "Empieza cuando quieras",
+    login: "¿Ya tienes cuenta? Inicia sesión",
   },
 } as const;
 

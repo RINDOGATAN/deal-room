@@ -82,14 +82,14 @@ El acta incluye además una disposición final de Derecho español: las normas q
 
 ## Jurisdicciones e idiomas que admite Dealroom
 
-Dealroom ofrece este documento únicamente para **España** y lo redacta únicamente en **castellano**, ya que es un documento de una sociedad española sujeto al Derecho español. Puede prepararlo una sola persona. Para los acuerdos de los socios, y no del consejo, consulte el [acta de junta general](/es/contracts/general-meeting-minutes-spain).
+Dealroom ofrece este documento únicamente para **España** y lo redacta únicamente en **castellano**, ya que es un documento de una sociedad española sujeto al Derecho español. Puede prepararlo una sola persona. Para los acuerdos de los socios, y no del consejo, consulta el [acta de junta general](/es/contracts/general-meeting-minutes-spain).
 
 ## Errores frecuentes
 
-- **Citar una base equivocada para el consejo telemático.** El artículo 182 bis se refiere solo a la junta exclusivamente telemática, no al consejo, y los regímenes de 2020 y 2021 están agotados. Antes de inscribir acuerdos adoptados en sesión telemática, compruebe la doctrina registral vigente.
+- **Citar una base equivocada para el consejo telemático.** El artículo 182 bis se refiere solo a la junta exclusivamente telemática, no al consejo, y los regímenes de 2020 y 2021 están agotados. Antes de inscribir acuerdos adoptados en sesión telemática, comprueba la doctrina registral vigente.
 - **Delegar facultades indelegables.** La delegación de materias del artículo 249 bis es inválida y el Registro denegará su inscripción.
 - **Olvidar los dos tercios y la inscripción.** La delegación permanente y el nombramiento de consejero delegado exigen dos tercios del consejo y no surten efecto hasta su inscripción.
-- **Presentar la abstención como causa de exoneración.** Haga constar el voto en contra y la oposición expresa.
+- **Presentar la abstención como causa de exoneración.** Haz constar el voto en contra y la oposición expresa.
 - **Votar por escrito cuando alguien se opone.** Basta la oposición de un solo miembro para impedir el procedimiento, que además no conviene para asuntos que exijan deliberación.
-- **Mezclar el régimen de la S.A. y el de la S.L.** Quórum, mayorías y plazos son distintos; aplique los de la forma social que corresponda.
+- **Mezclar el régimen de la S.A. y el de la S.L.** Quórum, mayorías y plazos son distintos; aplica los de la forma social que corresponda.
 - **Citar el régimen de las cuentas anuales sin que estén en el orden del día.** El artículo 253 solo procede si el consejo formula las cuentas en esa sesión.

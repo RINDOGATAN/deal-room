@@ -22,7 +22,7 @@ faq:
 
 El contrato de licencia de tecnología se utiliza cuando el titular de una tecnología (software, algoritmos, una plataforma o una invención patentada) permite a otra empresa usarla en las condiciones pactadas, normalmente a cambio de un precio o de cánones, conservando la titularidad. Es especialmente útil cuando el negocio depende de la tecnología licenciada, cuando la operación es internacional o cuando los cánones exigen auditoría y pagos mínimos.
 
-Si se quiere transmitir la titularidad, consulte el [contrato de cesión de propiedad intelectual](/es/contracts/ip-assignment-agreement); si el software aún debe crearse, el [contrato de desarrollo de software](/es/contracts/software-development-agreement).
+Si se quiere transmitir la titularidad, consulta el [contrato de cesión de propiedad intelectual](/es/contracts/ip-assignment-agreement); si el software aún debe crearse, el [contrato de desarrollo de software](/es/contracts/software-development-agreement).
 
 ## Quién lo firma y en qué calidad
 
@@ -105,9 +105,9 @@ Dealroom redacta este contrato conforme al Derecho de **California**, de **Ingla
 
 ## Errores frecuentes
 
-- **Escrow que se libera con la solicitud de concurso.** En las tres jurisdicciones esa condición es nula, está restringida o se tiene por no puesta; vincule la liberación al cese del cumplimiento o a un incumplimiento no subsanado.
+- **Escrow que se libera con la solicitud de concurso.** En las tres jurisdicciones esa condición es nula, está restringida o se tiene por no puesta; vincula la liberación al cese del cumplimiento o a un incumplimiento no subsanado.
 - **No incluir control de exportaciones para tecnología controlada.** El acceso al código fuente por personas de otra nacionalidad puede ser ya una exportación.
 - **Exclusiones de garantía que ignoran los mínimos legales.** Los derechos de copia de seguridad, descompilación y prueba del software no pueden suprimirse por contrato en Inglaterra y Gales ni en España.
 - **Citar el antiguo reglamento europeo de exención de transferencia de tecnología.** La skill advierte de que el Reglamento 316/2014 expiró el 30 de abril de 2026 y ha sido sustituido, con una nueva norma paralela en el Reino Unido.
-- **Cánones de patente posteriores a su caducidad en Estados Unidos.** Allí no son exigibles; utilice reducciones escalonadas o tarifas separadas por know-how.
+- **Cánones de patente posteriores a su caducidad en Estados Unidos.** Allí no son exigibles; utiliza reducciones escalonadas o tarifas separadas por know-how.
 - **Citar un artículo equivocado de la Ley de Patentes.** La inscripción y la eficacia frente a terceros se rigen por el artículo 79.2, no por el 83.

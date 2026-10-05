@@ -66,22 +66,22 @@ export const CONTRACT_COPY = {
     indexDescription:
       "Guías claras de cada contrato que Dealroom redacta y negocia: confidencialidad, encargo del tratamiento, SaaS, contrato marco, laboral, pacto de socios y más.",
     indexLead:
-      "Cada guía explica para qué sirve el contrato, quién lo firma, sus cláusulas principales y los puntos que las partes suelen negociar. Después puede preparar el contrato usted mismo en Dealroom o encargar a su agente de IA que lo redacte y lo negocie.",
+      "Cada guía explica para qué sirve el contrato, quién lo firma, sus cláusulas principales y los puntos que las partes suelen negociar. Después puedes preparar el contrato tú mismo en Dealroom o encargar a tu agente de IA que lo redacte y lo negocie.",
     contents: "En esta página",
     jurisdictions: "Jurisdicciones",
     languages: "Idiomas del contrato",
     makeTitle: "Dos formas de prepararlo",
-    makeSelfTitle: "Créelo en Dealroom",
+    makeSelfTitle: "Créalo en Dealroom",
     makeSelfText:
-      "Elija la jurisdicción y el idioma, responda a unas pocas preguntas y negocie cada cláusula con la otra parte, o prepárelo usted solo.",
+      "Elige la jurisdicción y el idioma, responde a unas pocas preguntas y negocia cada cláusula con la otra parte, o prepáralo tú solo.",
     makeSelfButton: "Empezar en Dealroom",
-    makeAgentTitle: "Encargue a su agente que lo redacte y lo negocie",
+    makeAgentTitle: "Encarga a tu agente que lo redacte y lo negocie",
     makeAgentText:
-      "Si usa un agente de IA o su propio programa, puede consultar la biblioteca de cláusulas y crear este contrato por usted, sin abrir la web.",
+      "Si usas un agente de IA o tu propio programa, este puede consultar la biblioteca de cláusulas y crear este contrato por ti, sin abrir la web.",
     makeAgentDocs: "Leer la guía de la API para agentes",
     devSummary: "Para desarrolladores: las llamadas a la API",
     devIntro:
-      "Son las peticiones que envía un programa para leer las cláusulas de este contrato y crear un borrador. No las necesita para usar Dealroom en el navegador. Requieren una clave de la API de Dealroom en lugar de drk_YOUR_KEY; la guía de la API para agentes explica el resto.",
+      "Son las peticiones que envía un programa para leer las cláusulas de este contrato y crear un borrador. No las necesitas para usar Dealroom en el navegador. Requieren una clave de la API de Dealroom en lugar de drk_YOUR_KEY; la guía de la API para agentes explica el resto.",
     devTools: "Herramientas MCP:",
     faqTitle: "Preguntas frecuentes",
     relatedTitle: "Contratos relacionados",

@@ -91,7 +91,7 @@ El marco recoge además que los acuerdos son ejecutivos desde la aprobación del
 
 ## Jurisdicciones e idiomas que admite Dealroom
 
-Dealroom ofrece este documento únicamente para **España** y lo redacta únicamente en **castellano**, ya que es un documento de una sociedad española sujeto al Derecho español. Puede prepararlo una sola persona. Para los acuerdos del consejo, y no de los socios, consulte el [acta de consejo de administración](/es/contracts/board-minutes-spain).
+Dealroom ofrece este documento únicamente para **España** y lo redacta únicamente en **castellano**, ya que es un documento de una sociedad española sujeto al Derecho español. Puede prepararlo una sola persona. Para los acuerdos del consejo, y no de los socios, consulta el [acta de consejo de administración](/es/contracts/board-minutes-spain).
 
 ## Errores frecuentes
 
@@ -100,5 +100,5 @@ Dealroom ofrece este documento únicamente para **España** y lo redacta únicam
 - **Celebrar una junta universal sin todos.** Exige la totalidad del capital presente o representado y la aceptación unánime de la reunión y del orden del día.
 - **Modificar estatutos sin el texto íntegro.** Los socios deben haber conocido la propuesta completa y el voto debe alcanzar la mayoría exigida.
 - **Usar la redacción de la S.L. en una S.A.** Participaciones, duración del cargo y mayorías son distintas y deben adaptarse.
-- **Celebrar la junta ordinaria sin las cuentas.** La ordinaria existe para aprobar las cuentas y resolver sobre el resultado; si se omiten, deje constancia del motivo.
+- **Celebrar la junta ordinaria sin las cuentas.** La ordinaria existe para aprobar las cuentas y resolver sobre el resultado; si se omiten, deja constancia del motivo.
 - **Hacer constar una abstención que no se produjo.** En una operación vinculada, la abstención del socio en conflicto debe reflejar lo que realmente ocurrió.

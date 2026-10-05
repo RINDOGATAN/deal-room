@@ -22,7 +22,7 @@ faq:
 
 El contrato de consultoría (también llamado contrato con profesional independiente o contrato de autónomo) es el contrato que utiliza una empresa para encargar a un/a profesional externo/a servicios de consultoría, asesoramiento u otros servicios profesionales. Las partes dejan claro desde el principio que el/la consultor/a actúa como profesional independiente y no como empleado/a del cliente.
 
-Se usa para proyectos definidos en una descripción de servicios (statement of work), para retenciones mensuales y para encargos pagados por hitos. Además del alcance y el pago, regula dos riesgos propios de los profesionales independientes: a quién pertenece el resultado del trabajo y si la relación podría recalificarse como laboral. Para un encargo sujeto a Derecho español, consulte el [contrato de prestación de servicios](/es/contracts/services-agreement-spain).
+Se usa para proyectos definidos en una descripción de servicios (statement of work), para retenciones mensuales y para encargos pagados por hitos. Además del alcance y el pago, regula dos riesgos propios de los profesionales independientes: a quién pertenece el resultado del trabajo y si la relación podría recalificarse como laboral. Para un encargo sujeto a Derecho español, consulta el [contrato de prestación de servicios](/es/contracts/services-agreement-spain).
 
 ## Quién lo firma y en qué calidad
 
