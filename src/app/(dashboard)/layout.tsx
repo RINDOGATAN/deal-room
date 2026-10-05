@@ -35,6 +35,7 @@ import { OnboardingModal } from "@/components/OnboardingModal";
 import { TesterBar } from "@/components/TesterBar";
 import { UserRoleProvider } from "@/contexts/UserRoleContext";
 import { shouldShowRequestsLink } from "@/lib/app-links";
+import { signInHref } from "@/lib/sign-in-next";
 
 export default function DashboardLayout({
   children,
@@ -84,7 +85,11 @@ export default function DashboardLayout({
   }
 
   if (status === "unauthenticated") {
-    redirect("/sign-in");
+    // Keep the destination (links in signing and review emails), so the
+    // person lands where they were going after signing in.
+    const here =
+      typeof window !== "undefined" ? window.location.pathname + window.location.search : pathname;
+    redirect(signInHref(here || "/deals"));
   }
 
   const navItems = [
