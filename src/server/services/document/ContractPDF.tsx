@@ -666,7 +666,7 @@ const PDF_LABELS: Record<string, Record<string, string>> = {
     certificationId: "ID de Certificación",
     signatureTimestamps: "Marcas de Tiempo de Firma",
     verificationUrl: "Verificación",
-    verifyInstructions: "Para verificar este documento, visite la URL anterior e introduzca el hash del documento.",
+    verifyInstructions: "Para verificar este documento, visita la URL anterior e introduce el hash del documento.",
     confidential: "Privado y Confidencial",
   },
 };

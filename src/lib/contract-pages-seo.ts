@@ -203,7 +203,7 @@ export function agentExample(opts: {
     ...read,
     "",
     opts.locale === "es"
-      ? "# 2. Crear el contrato (las cláusulas que no indique toman la opción por defecto)"
+      ? "# 2. Crear el contrato (las cláusulas que no indiques toman la opción por defecto)"
       : "# 2. Create the contract (clauses you leave out take the default option)",
     `curl -X POST ${base}/deals \\`,
     `  -H "Authorization: Bearer drk_YOUR_KEY" \\`,

@@ -24,7 +24,7 @@ El contrato laboral (o contrato de trabajo) documenta la contratación de un/a t
 
 Se utiliza para cualquier contratación en España: un puesto ordinario por tiempo indefinido, una actividad de temporada, un contrato formativo o un puesto directivo con una indemnización reforzada. La ley y el convenio fijan mínimos que el contrato puede mejorar, pero no rebajar. Por eso lo primero que deben identificar las partes, antes de elegir ninguna cláusula, es el convenio colectivo aplicable: sus tablas salariales, su jornada, su periodo de prueba y sus preavisos prevalecen sobre cualquier cifra inferior del contrato.
 
-Para trabajadores/as sujetos/as al Derecho de California o al inglés, consulte el [contrato de trabajo para California e Inglaterra y Gales](/es/contracts/employment-agreement). Para un/a profesional autónomo/a, consulte el [contrato de prestación de servicios](/es/contracts/services-agreement-spain).
+Para trabajadores/as sujetos/as al Derecho de California o al inglés, consulta el [contrato de trabajo para California e Inglaterra y Gales](/es/contracts/employment-agreement). Para un/a profesional autónomo/a, consulta el [contrato de prestación de servicios](/es/contracts/services-agreement-spain).
 
 ## Quién lo firma y en qué calidad
 

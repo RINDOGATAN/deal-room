@@ -22,7 +22,7 @@ faq:
 
 El contrato de joint venture se utiliza cuando dos empresas deciden perseguir juntas un objeto empresarial, compartiendo aportaciones, control y resultados, sin dejar de ser negocios independientes. Son casos típicos los consorcios de proyecto en construcción, ingeniería y licitaciones públicas, la nueva sociedad creada para un negocio común, la cooperación en investigación o especialización entre competidores reales o potenciales, y la entrada en un mercado de socios con activos complementarios.
 
-El contrato fija desde el principio el objeto y el territorio del proyecto y lo rige hasta su liquidación. Si el joint venture es una sociedad, sus estatutos y el pacto de socios deben recoger los mismos términos; consulte el [pacto de socios](/es/contracts/shareholders-agreement).
+El contrato fija desde el principio el objeto y el territorio del proyecto y lo rige hasta su liquidación. Si el joint venture es una sociedad, sus estatutos y el pacto de socios deben recoger los mismos términos; consulta el [pacto de socios](/es/contracts/shareholders-agreement).
 
 ## Quién lo firma y en qué calidad
 
@@ -105,7 +105,7 @@ Dealroom redacta este contrato conforme al Derecho de **California**, de **Ingla
 
 - **Pactar una no competencia posterior entre socios sin análisis de competencia.** En la UE y el Reino Unido necesita una justificación propia y puede ser nula.
 - **Olvidar la UTE en un consorcio español o usarla fuera de España.** Solo existe en el Derecho español.
-- **Combinar una UTE con una duración indefinida.** La ley vincula su duración al proyecto; elija una duración por proyecto o a plazo fijo.
-- **Dejar la propiedad intelectual común a las reglas supletorias.** Difieren entre Estados Unidos, el Reino Unido y España; regule expresamente su explotación.
+- **Combinar una UTE con una duración indefinida.** La ley vincula su duración al proyecto; elige una duración por proyecto o a plazo fijo.
+- **Dejar la propiedad intelectual común a las reglas supletorias.** Difieren entre Estados Unidos, el Reino Unido y España; regula expresamente su explotación.
 - **Ignorar la sociedad de hecho.** Un joint venture puramente contractual puede tratarse como sociedad por la conducta de las partes, con responsabilidad conjunta.
 - **Exigir informe de experto para aportaciones no dinerarias a una sociedad limitada.** Esa regla es propia de la sociedad anónima; en la limitada los socios responden solidariamente de la valoración.

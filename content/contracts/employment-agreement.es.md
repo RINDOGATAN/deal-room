@@ -22,7 +22,7 @@ faq:
 
 El contrato de trabajo recoge las condiciones en que una empresa contrata a un/a empleado/a. Fija la naturaleza de la relación (at-will, indefinida o de duración determinada), el paquete retributivo, la jornada y el lugar de trabajo, y las reglas que siguen vigentes cuando termina el empleo, como la confidencialidad y una posible restricción de competencia.
 
-Se utiliza para contratar personal asalariado, comerciales con retribución parcialmente a comisión y empleados/as que reciben opciones sobre acciones (stock options) o unidades de acciones restringidas (RSU). Es la alternativa al [contrato de consultoría](/es/contracts/consulting-agreement), que vincula a un/a profesional independiente. Para una relación laboral sujeta al Derecho español, consulte el [contrato laboral español](/es/contracts/employment-contract-spain).
+Se utiliza para contratar personal asalariado, comerciales con retribución parcialmente a comisión y empleados/as que reciben opciones sobre acciones (stock options) o unidades de acciones restringidas (RSU). Es la alternativa al [contrato de consultoría](/es/contracts/consulting-agreement), que vincula a un/a profesional independiente. Para una relación laboral sujeta al Derecho español, consulta el [contrato laboral español](/es/contracts/employment-contract-spain).
 
 ## Quién lo firma y en qué calidad
 

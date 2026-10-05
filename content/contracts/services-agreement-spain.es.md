@@ -24,7 +24,7 @@ El contrato de prestación de servicios (arrendamiento de servicios) se utiliza 
 
 El principal riesgo jurídico es la recalificación: si el/la profesional trabaja como un/a empleado/a, la jurisdicción social puede declarar la relación laboral y aplicar íntegramente el Estatuto de los Trabajadores. Por eso el contrato exige un objeto preciso y permite a las partes elegir el grado de autonomía. También contempla al/a la profesional que depende económicamente del cliente (régimen TRADE), que tiene sus propias reglas imperativas.
 
-Para encargos sujetos al Derecho de California o al inglés, consulte el [contrato de consultoría](/es/contracts/consulting-agreement). Para una relación laboral, consulte el [contrato laboral](/es/contracts/employment-contract-spain).
+Para encargos sujetos al Derecho de California o al inglés, consulta el [contrato de consultoría](/es/contracts/consulting-agreement). Para una relación laboral, consulta el [contrato laboral](/es/contracts/employment-contract-spain).
 
 ## Quién lo firma y en qué calidad
 

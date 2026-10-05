@@ -86,7 +86,7 @@ En exclusividad y duración, las opciones más próximas al centro son la exclus
 
 ## Jurisdicciones e idiomas que admite Dealroom
 
-Se ofrece solo para **España**, en **español** o en **inglés**. Todas las cláusulas son específicas del Derecho español. Aplica el principio de buena fe del Código Civil y la interpretación restrictiva del artículo 43.1 LPI, con las reglas de programas de ordenador de los artículos 95 a 104 LPI cuando se cede software. Para California o Inglaterra y Gales, consulte el [contrato de cesión de propiedad intelectual](/es/contracts/ip-assignment-agreement).
+Se ofrece solo para **España**, en **español** o en **inglés**. Todas las cláusulas son específicas del Derecho español. Aplica el principio de buena fe del Código Civil y la interpretación restrictiva del artículo 43.1 LPI, con las reglas de programas de ordenador de los artículos 95 a 104 LPI cuando se cede software. Para California o Inglaterra y Gales, consulta el [contrato de cesión de propiedad intelectual](/es/contracts/ip-assignment-agreement).
 
 ## Errores frecuentes
 

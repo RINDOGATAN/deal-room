@@ -92,7 +92,7 @@ Cuando las partes no se ponen de acuerdo, Dealroom propone las posiciones equili
 
 Dealroom redacta el plan únicamente conforme al Derecho **español** y en **castellano**. Puede prepararlo la sociedad por su cuenta o negociarlo con una contraparte.
 
-Las controversias con empleados que traigan causa de la relación laboral corresponden a la jurisdicción social conforme al artículo 2 de la Ley 36/2011, y ninguna sumisión pactada puede excluirla. Los tribunales civiles de la ciudad elegida solo conocen de los asuntos con beneficiarios de relación exclusivamente mercantil y de las demás cuestiones civiles o mercantiles. Si la empresa prefiere conceder capital real, consulte el [plan de incentivos en capital](/es/contracts/equity-incentive-plan).
+Las controversias con empleados que traigan causa de la relación laboral corresponden a la jurisdicción social conforme al artículo 2 de la Ley 36/2011, y ninguna sumisión pactada puede excluirla. Los tribunales civiles de la ciudad elegida solo conocen de los asuntos con beneficiarios de relación exclusivamente mercantil y de las demás cuestiones civiles o mercantiles. Si la empresa prefiere conceder capital real, consulta el [plan de incentivos en capital](/es/contracts/equity-incentive-plan).
 
 ## Errores frecuentes
 
