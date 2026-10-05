@@ -1,6 +1,6 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
-  "name": "io.github.RINDOGATAN/dealroom",
+  "name": "io.github.sergiomaldo/dealroom",
   "title": "Dealroom",
   "description": "Draft and negotiate contracts clause by clause; a published formula proposes the compromise.",
   "version": "1.0.0",
