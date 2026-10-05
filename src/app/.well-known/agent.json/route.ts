@@ -11,6 +11,11 @@ import prisma from "@/lib/prisma";
 import { features } from "@/config/features";
 import { brand } from "@/config/brand";
 import { agentPricingBlock } from "@/server/services/billing/pricing";
+import {
+  AGENT_API_SCOPES,
+  API_KEYS_SETTINGS_PATH,
+  MAX_ACTIVE_KEYS_PER_CUSTOMER,
+} from "@/lib/api-key-scopes";
 
 export async function GET() {
   if (!features.agentApi) {
@@ -71,18 +76,13 @@ export async function GET() {
       schemes: [
         {
           scheme: "bearer",
-          description:
-            "API key with drk_ prefix. Issued per customer via admin panel.",
-          scopes: [
-            { name: "templates:read", description: "List and view contract templates" },
-            { name: "playbook:read", description: "List and view playbooks" },
-            { name: "playbook:write", description: "Create, update, delete playbooks" },
-            { name: "negotiate", description: "Initiate and join negotiations" },
-            { name: "deals:read", description: "View deals and download documents" },
-            { name: "billing:read", description: "View the customer's credit balance and buy credit packs" },
-            { name: "webhooks:manage", description: "Manage webhook endpoints" },
-            { name: "disputes:create", description: "Escalate failed/agreed deals to Gavel ADR" },
-          ],
+          description: features.selfServiceApiKeys
+            ? `API key with drk_ prefix. A person creates it after signing in, under Settings, API keys (${baseUrl}${API_KEYS_SETTINGS_PATH}). The full key is shown once. Up to ${MAX_ACTIVE_KEYS_PER_CUSTOMER} active keys per account; all of them spend the account's credits.`
+            : "API key with drk_ prefix. Issued per customer via admin panel.",
+          ...(features.selfServiceApiKeys
+            ? { keyCreationUrl: `${baseUrl}${API_KEYS_SETTINGS_PATH}` }
+            : {}),
+          scopes: AGENT_API_SCOPES.map(({ name, description }) => ({ name, description })),
         },
       ],
     },
