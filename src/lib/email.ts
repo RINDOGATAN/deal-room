@@ -5,6 +5,8 @@ import { Resend } from "resend";
 import { brand } from "@/config/brand";
 import { createLogger } from "@/lib/logger";
 import { mailFrom } from "@/lib/mail-from";
+import dealEmailsEn from "@/messages/en.json";
+import dealEmailsEs from "@/messages/es.json";
 
 const logger = createLogger("email");
 
@@ -463,5 +465,173 @@ export async function sendFirmasSigningEmail({
     });
   } catch (error) {
     logger.error("Failed to send Firmas signing email", { err: String(error) });
+  }
+}
+
+// ────────────────────────────────────────────────────────────
+// Transactional deal emails (owner decisions of 2026-10-04):
+// "your turn", invitation reminders, "your contract is ready" and the
+// unfinished-draft reminder. Wording lives in the `dealEmails` namespace of
+// src/messages/{en,es}.json; who gets what and when is decided in
+// src/lib/deal-notifications.ts.
+// ────────────────────────────────────────────────────────────
+
+export type DealEmailKind =
+  | "TURN_SELECTIONS"
+  | "TURN_COUNTER"
+  | "INVITE_DAY3"
+  | "INVITE_DAY10"
+  | "READY"
+  | "DRAFT";
+
+export type DealEmailLanguage = "en" | "es";
+
+export interface DealEmailInput {
+  kind: DealEmailKind;
+  language: DealEmailLanguage;
+  /** Absolute link for the button (also printed as plain text). */
+  url: string;
+  dealName: string;
+  /** Recipient's name, for the greeting; omitted when unknown. */
+  recipientName?: string | null;
+  /** The other party (turn emails) or the person who invited (invitation reminders). */
+  otherName?: string | null;
+  /** Display price for READY, already formatted in the recipient's currency. */
+  price?: string | null;
+  /** Invitation expiry, for INVITE_DAY10. */
+  expiresAt?: Date;
+}
+
+export interface RenderedDealEmail {
+  subject: string;
+  html: string;
+  text: string;
+}
+
+type DealEmailMessages = (typeof dealEmailsEn)["dealEmails"];
+
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+/** Fill `{name}` placeholders; in HTML the values are escaped and the deal name and price are bold. */
+function fill(template: string, vars: Record<string, string>, html: boolean): string {
+  return template.replace(/\{(\w+)\}/g, (match, key: string) => {
+    const value = vars[key];
+    if (value === undefined) return match;
+    if (!html) return value;
+    const safe = escapeHtml(value);
+    return key === "dealName" || key === "price"
+      ? `<strong style="color: ${brand.colors.foreground};">${safe}</strong>`
+      : safe;
+  });
+}
+
+function formatExpiry(date: Date, language: DealEmailLanguage): string {
+  return new Intl.DateTimeFormat(language === "es" ? "es-ES" : "en-US", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    timeZone: "UTC",
+  }).format(date);
+}
+
+/** Subject and body of one deal email, in the recipient's language. Pure; exported for tests. */
+export function renderDealEmail(input: DealEmailInput): RenderedDealEmail {
+  const m: DealEmailMessages = (input.language === "es" ? dealEmailsEs : dealEmailsEn).dealEmails;
+  const other = input.otherName?.trim() || m.otherParty;
+  const vars: Record<string, string> = {
+    dealName: input.dealName,
+    name: other,
+    inviter: other,
+    price: input.price ?? "",
+    expiry: input.expiresAt ? formatExpiry(input.expiresAt, input.language) : "",
+  };
+
+  let subject: string;
+  let lines: string[];
+  let button: string;
+  let footer: string = m.footer;
+  switch (input.kind) {
+    case "TURN_SELECTIONS":
+    case "TURN_COUNTER":
+      subject = m.turnSubject;
+      lines = [input.kind === "TURN_SELECTIONS" ? m.turnSelectionsBody : m.turnCounterBody];
+      button = m.turnButton;
+      break;
+    case "INVITE_DAY3":
+      subject = m.inviteDay3Subject;
+      lines = [m.inviteDay3Body];
+      button = m.inviteButton;
+      footer = m.inviteFooter;
+      break;
+    case "INVITE_DAY10":
+      subject = m.inviteDay10Subject;
+      lines = [m.inviteDay10Body];
+      button = m.inviteButton;
+      footer = m.inviteFooter;
+      break;
+    case "READY":
+      subject = m.readySubject;
+      lines = [m.readyBody, input.price ? m.readyPrice : m.readyNoPrice];
+      button = m.readyButton;
+      footer = m.readyFooter;
+      break;
+    case "DRAFT":
+      subject = m.draftSubject;
+      lines = [m.draftBody];
+      button = m.draftButton;
+      break;
+  }
+
+  const recipient = input.recipientName?.trim();
+  const greeting = recipient && !recipient.includes("@") ? m.greeting : null;
+  const greetingVars = { name: recipient ?? "" };
+  const url = escapeHtml(input.url);
+
+  const html = emailWrapper(
+    escapeHtml(m.subtitle),
+    [
+      greeting ? emailParagraph(fill(greeting, greetingVars, true)) : "",
+      ...lines.map((line) => emailParagraph(fill(line, vars, true))),
+      emailButton(url, escapeHtml(button)),
+      emailMuted(`<a href="${url}" style="color: ${brand.colors.primary};">${url}</a>`),
+      emailMuted(escapeHtml(footer)),
+    ].join("\n"),
+  );
+
+  const text = [
+    greeting ? fill(greeting, greetingVars, false) : null,
+    ...lines.map((line) => fill(line, vars, false)),
+    `${button}: ${input.url}`,
+    footer,
+  ]
+    .filter((part): part is string => !!part)
+    .join("\n\n");
+
+  return { subject: fill(subject, vars, false), html, text };
+}
+
+/** Send one deal email. True when the provider accepted it (or no provider is configured). */
+export async function sendDealEmail(to: string, input: DealEmailInput): Promise<boolean> {
+  const { subject, html, text } = renderDealEmail(input);
+  try {
+    const result = await getResend().emails.send({ from: mailFrom(), to, subject, html, text });
+    if (result?.error) {
+      logger.error("Deal email rejected by the provider", {
+        kind: input.kind,
+        err: String(result.error.message ?? result.error),
+      });
+      return false;
+    }
+    return true;
+  } catch (error) {
+    logger.error("Failed to send deal email", { kind: input.kind, err: String(error) });
+    return false;
   }
 }

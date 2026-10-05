@@ -4,7 +4,7 @@
 /**
  * Daily cron — runs once per day, scheduled via vercel.json.
  *
- * Four jobs run in sequence. Each job is independent — if one fails,
+ * Seven jobs run in sequence. Each job is independent — if one fails,
  * the others still run, and the failure is reported in the response so
  * Vercel's cron logs surface it.
  *
@@ -35,6 +35,14 @@
  *    limits (sign-in, magic links, health) write one row per client per
  *    window, so without the purge the table grows without bound.
  *
+ * 5-7. Transactional deal emails (owner decisions of 2026-10-04)
+ *    Invitation reminders on about day 3 and day 10 of an invitation that
+ *    has not been accepted; the unfinished-draft reminder two days after
+ *    the last activity; and a catch-up for "your contract is ready" on
+ *    agreed, unpaid deals whose parties were not told yet. Only deals
+ *    created on or after CONTRACT_BILLING_START; each email at most once
+ *    (`deal_notifications`). Rules: src/lib/deal-notifications.ts.
+ *
  * Auth: caller must present the CRON_SECRET as a Bearer token. Vercel's
  * scheduled function runner sets this automatically when the env var
  * is configured. Any other caller is rejected with 401.
@@ -47,6 +55,11 @@ import {
   sendSigningExpiredEmail,
 } from "@/lib/email";
 import { createLogger } from "@/lib/logger";
+import {
+  runDraftReminderJob,
+  runInvitationReminderJob,
+  runReadySweepJob,
+} from "@/server/services/notifications/deal-emails";
 
 const logger = createLogger("cron");
 
@@ -79,6 +92,9 @@ export async function GET(req: NextRequest) {
     const signingExpiryJob = await runSigningExpiryJob();
     const vettingExpiryJob = await runVettingExpiryJob();
     const rateLimitPurgeJob = await runRateLimitPurgeJob();
+    const invitationReminderJob = await isolated("invitationReminders", runInvitationReminderJob);
+    const draftReminderJob = await isolated("draftReminders", runDraftReminderJob);
+    const readySweepJob = await isolated("contractReady", runReadySweepJob);
 
     return NextResponse.json({
       ok: true,
@@ -88,10 +104,23 @@ export async function GET(req: NextRequest) {
         signingExpiry: signingExpiryJob,
         vettingExpiry: vettingExpiryJob,
         rateLimitPurge: rateLimitPurgeJob,
+        invitationReminders: invitationReminderJob,
+        draftReminders: draftReminderJob,
+        contractReady: readySweepJob,
       },
     });
   } catch (error) {
     return apiError(error, "Daily cron failed");
+  }
+}
+
+/** Run a job so that its failure is reported without stopping the others. */
+async function isolated(name: string, job: () => Promise<JobResult>): Promise<JobResult> {
+  try {
+    return await job();
+  } catch (err) {
+    logger.error(`${name}: job failed`, { err: String(err) });
+    return { ran: 0, errors: 1 };
   }
 }
 

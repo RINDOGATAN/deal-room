@@ -502,6 +502,7 @@ model DealRoom {
   parameterProposals     ParameterProposal[]
   aiGenerations          AiGeneration[]
   payments               DealPayment[]
+  notifications          DealNotification[]
 
   @@index([journeyId])
   @@map("deal_rooms")
@@ -1518,4 +1519,26 @@ model ContractPlan {
 
   @@index([customerId])
   @@map("contract_plans")
+}
+
+// Transactional emails about a person's own deal (owner decisions of
+// 2026-10-04): "your turn", invitation reminders on days 3 and 10, "your
+// contract is ready" and the unfinished-draft reminder. One row per email
+// claimed; the unique dedupe key stops the same email from going out twice
+// (claimed before the send, released if the send fails). Rules in
+// src/lib/deal-notifications.ts, sending in
+// src/server/services/notifications/deal-emails.ts.
+model DealNotification {
+  id             String   @id @default(cuid())
+  dealRoomId     String
+  // TURN_SELECTIONS | TURN_COUNTER | INVITE_DAY3 | INVITE_DAY10 | READY | DRAFT
+  kind           String
+  recipientEmail String
+  dedupeKey      String   @unique
+  sentAt         DateTime @default(now())
+
+  dealRoom DealRoom @relation(fields: [dealRoomId], references: [id], onDelete: Cascade)
+
+  @@index([dealRoomId])
+  @@map("deal_notifications")
 }
