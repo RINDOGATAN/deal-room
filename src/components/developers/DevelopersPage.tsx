@@ -154,6 +154,56 @@ export function DevelopersPage({ doc }: { doc: DevelopersDoc }) {
           </dl>
         </Section>
 
+        <Section id="agents" title={h.agents}>
+          <p className="mt-3 text-muted-foreground">{doc.agents.intro}</p>
+          <table className={`${TABLE} mt-4`}>
+            <caption className="sr-only">{doc.agents.caption}</caption>
+            <thead className={THEAD}>
+              <tr>
+                <th scope="col" className={TH_COL}>{doc.agents.columns.rank}</th>
+                <th scope="col" className={TH_COL}>{doc.agents.columns.name}</th>
+                <th scope="col" className={TH_COL}>{doc.agents.columns.code}</th>
+                <th scope="col" className={TH_COL}>{doc.agents.columns.inputs}</th>
+                <th scope="col" className={TH_COL}>{doc.agents.columns.call}</th>
+              </tr>
+            </thead>
+            <tbody className={TBODY}>
+              {doc.agents.rows.map((r) => (
+                <tr key={r.code} id={`agent-${r.code}`} className={TR}>
+                  <td data-label={doc.agents.columns.rank} className={`${CELL} text-muted-foreground`}>{r.rank}</td>
+                  <th scope="row" data-label={doc.agents.columns.name} className={`${CELL} font-medium`}>
+                    <Link href={r.href} className="text-primary hover:underline">
+                      {r.name}
+                    </Link>
+                  </th>
+                  <td data-label={doc.agents.columns.code} className={CELL}>
+                    <code className="text-xs break-all">{r.code}</code>
+                  </td>
+                  <td data-label={doc.agents.columns.inputs} className={CELL}>
+                    {r.inputs.length === 0 ? (
+                      <span className="text-muted-foreground">{copy.inputsNone}</span>
+                    ) : (
+                      <ul className="space-y-0.5">
+                        {r.inputs.map((i) => (
+                          <li key={i}>
+                            <code className="text-xs break-words">{i}</code>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </td>
+                  <td data-label={doc.agents.columns.call} className={CELL}>
+                    <Link href={r.callHref} className="inline-flex items-center gap-1 text-primary hover:underline">
+                      {doc.agents.callLabel}
+                      <ArrowRight className="w-3.5 h-3.5" aria-hidden />
+                    </Link>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </Section>
+
         <Section id="rest" title={h.rest}>
           <p className="mt-3 text-muted-foreground">{doc.rest.intro}</p>
           <table className={`${TABLE} mt-4`}>

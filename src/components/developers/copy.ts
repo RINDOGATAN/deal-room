@@ -13,6 +13,7 @@ export type SectionId =
   | "steps"
   | "one-call"
   | "mcp"
+  | "agents"
   | "rest"
   | "contract-types"
   | "formats"
@@ -23,6 +24,7 @@ export const SECTION_ORDER: SectionId[] = [
   "steps",
   "one-call",
   "mcp",
+  "agents",
   "rest",
   "contract-types",
   "formats",
@@ -43,6 +45,7 @@ export const DEVELOPERS_COPY = {
       steps: "Three steps",
       "one-call": "The one call",
       mcp: "Connect an AI agent through MCP",
+      agents: "Contracts for AI agents",
       rest: "REST API",
       "contract-types": "Contract types",
       formats: "Formats",
@@ -53,6 +56,7 @@ export const DEVELOPERS_COPY = {
       steps: "Three steps",
       "one-call": "The one call",
       mcp: "MCP",
+      agents: "Contracts for agents",
       rest: "REST API",
       "contract-types": "Contract types",
       formats: "Formats",
@@ -146,6 +150,25 @@ export const DEVELOPERS_COPY = {
     restExampleTitle: "Example",
     restDocs: "Read the full agent API guide",
 
+    agentsIntro:
+      "The contracts agents make most often, in order. Each link opens the contract's guide at its one-call example, filled in with its code and required inputs. Every other contract is under Contract types below.",
+    agentsCaption: "The most common contracts, with the code to send and the one-call example of each",
+    agentsColumns: { rank: "#", name: "Contract", code: "Code", inputs: "Required inputs", call: "One call" },
+    agentsCallLink: "See the call",
+    commonNames: {
+      NDA: "Non-disclosure agreement (NDA)",
+      DPA: "Data processing agreement (DPA)",
+      MSA: "Master services agreement (MSA)",
+      SAAS: "SaaS subscription agreement",
+      CONSULTING: "Consulting agreement",
+      EMPLOYMENT: "Employment agreement",
+      IP_ASSIGNMENT: "IP assignment agreement",
+      SAFE: "SAFE (simple agreement for future equity)",
+      CONVERTIBLE_NOTE: "Convertible note",
+      ADVISORY: "Advisory agreement",
+      PRIVACY_NOTICE: "Privacy notice",
+    } as Record<string, string>,
+
     typesIntro:
       "Every contract the one call can make, grouped as in the contract guides. Send the code as contractType. Inputs marked with a default can be left out.",
     typesCaption: "Contract types, with the code to send and the facts each one needs",
@@ -183,7 +206,10 @@ export const DEVELOPERS_COPY = {
       { label: "Contract types and the facts each one needs (JSON)", path: "/api/v1/agent/contract-types" },
       { label: "MCP tools with their REST endpoints (JSON)", path: "/api/v1/agent/mcp" },
       { label: "Agent card", path: "/.well-known/agent.json" },
+      { label: "MCP server card", path: "/.well-known/mcp/server-card.json" },
+      { label: "MCP discovery", path: "/.well-known/mcp.json" },
       { label: "Summary for AI models", path: "/llms.txt" },
+      { label: "Every contract type with its code and inputs, for AI models", path: "/llms-full.txt" },
     ],
 
     disclaimer:
@@ -204,6 +230,7 @@ export const DEVELOPERS_COPY = {
       steps: "Tres pasos",
       "one-call": "La llamada",
       mcp: "Conecta un agente de IA con MCP",
+      agents: "Contratos para agentes de IA",
       rest: "API REST",
       "contract-types": "Tipos de contrato",
       formats: "Formatos",
@@ -214,6 +241,7 @@ export const DEVELOPERS_COPY = {
       steps: "Tres pasos",
       "one-call": "La llamada",
       mcp: "MCP",
+      agents: "Contratos para agentes",
       rest: "API REST",
       "contract-types": "Tipos de contrato",
       formats: "Formatos",
@@ -307,6 +335,25 @@ export const DEVELOPERS_COPY = {
     restExampleTitle: "Ejemplo",
     restDocs: "Leer la guía completa de la API de agentes",
 
+    agentsIntro:
+      "Los contratos que más crean los agentes, por orden. Cada enlace abre la guía del contrato en su ejemplo de la llamada, ya rellenado con su código y sus datos obligatorios. El resto de contratos está en Tipos de contrato, más abajo.",
+    agentsCaption: "Los contratos más habituales, con el código que hay que enviar y el ejemplo de la llamada de cada uno",
+    agentsColumns: { rank: "N.º", name: "Contrato", code: "Código", inputs: "Datos obligatorios", call: "La llamada" },
+    agentsCallLink: "Ver la llamada",
+    commonNames: {
+      NDA: "Acuerdo de confidencialidad (NDA)",
+      DPA: "Contrato de encargo del tratamiento (DPA)",
+      MSA: "Contrato marco de prestación de servicios (MSA)",
+      SAAS: "Contrato de suscripción SaaS",
+      CONSULTING: "Contrato de consultoría",
+      EMPLOYMENT: "Contrato de trabajo",
+      IP_ASSIGNMENT: "Contrato de cesión de propiedad intelectual",
+      SAFE: "Acuerdo SAFE (acuerdo simple de capital futuro)",
+      CONVERTIBLE_NOTE: "Préstamo convertible",
+      ADVISORY: "Contrato de asesoramiento",
+      PRIVACY_NOTICE: "Aviso de privacidad",
+    } as Record<string, string>,
+
     typesIntro:
       "Todos los contratos que puede crear la llamada, agrupados como en las guías de contratos. Envía el código como contractType. Los datos con valor por defecto se pueden omitir.",
     typesCaption: "Tipos de contrato, con el código que hay que enviar y los datos que pide cada uno",
@@ -344,7 +391,10 @@ export const DEVELOPERS_COPY = {
       { label: "Tipos de contrato y los datos que pide cada uno (JSON)", path: "/api/v1/agent/contract-types?lang=es" },
       { label: "Herramientas MCP con sus endpoints REST (JSON)", path: "/api/v1/agent/mcp" },
       { label: "Tarjeta del agente", path: "/.well-known/agent.json" },
+      { label: "Tarjeta del servidor MCP", path: "/.well-known/mcp/server-card.json" },
+      { label: "Descubrimiento MCP", path: "/.well-known/mcp.json" },
       { label: "Resumen para modelos de IA", path: "/llms.txt" },
+      { label: "Todos los tipos de contrato con su código y sus datos, para modelos de IA", path: "/llms-full.txt" },
     ],
 
     disclaimer:

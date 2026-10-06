@@ -15,7 +15,7 @@ import {
   parseFrontMatter,
 } from "../contract-pages";
 import { catalogueEntries } from "../skill-catalogue";
-import { agentExample, allContractPaths, contractAlternates, exampleGoverningLaw } from "../contract-pages-seo";
+import { allContractPaths, contractAlternates } from "../contract-pages-seo";
 import { safeNextPath, signInHref } from "../sign-in-next";
 import sitemap from "@/app/sitemap";
 
@@ -121,43 +121,6 @@ describe("discovery", () => {
       canonical: "/es/contracts/nda",
       languages: { en: "/contracts/nda", es: "/es/contracts/nda", "x-default": "/contracts/nda" },
     });
-  });
-});
-
-describe("agent example", () => {
-  it("creates the deal under a governing law the template offers", () => {
-    expect(exampleGoverningLaw(["CALIFORNIA", "ENGLAND_WALES", "SPAIN"], "es")).toBe("SPAIN");
-    expect(exampleGoverningLaw(["CALIFORNIA", "ENGLAND_WALES", "SPAIN"], "en")).toBe("ENGLAND_WALES");
-    expect(exampleGoverningLaw(["CALIFORNIA"], "es")).toBe("CALIFORNIA");
-    // Delaware is not a deal governing law: the example only reads the template.
-    expect(exampleGoverningLaw(["DELAWARE"], "en")).toBeNull();
-    const example = agentExample({
-      contractType: "NDA",
-      jurisdictions: ["CALIFORNIA", "ENGLAND_WALES", "SPAIN"],
-      languages: ["en", "es"],
-      locale: "en",
-      dealName: "Example NDA",
-    });
-    expect(example).toContain("/api/v1/agent/templates/NDA");
-    // Step 2 is the one-call generation.
-    expect(example).toContain("curl -X POST https://dealroom.todo.law/api/v1/agent/contracts");
-    expect(example).toContain('"contractType": "NDA"');
-    expect(example).toContain('"governingLaw": "ENGLAND_WALES"');
-    expect(example).toContain('"legalName": "Your company"');
-  });
-
-  it("leaves the governing law out where the type offers only one (Delaware runs under California)", () => {
-    const example = agentExample({
-      contractType: "DELAWARE_CERT_OF_INCORPORATION",
-      jurisdictions: ["DELAWARE"],
-      languages: ["en"],
-      locale: "es",
-      dealName: "Prueba",
-    });
-    expect(example).toContain("/api/v1/agent/contracts");
-    expect(example).not.toContain("governingLaw");
-    expect(example).toContain('"language": "en"');
-    expect(example).toContain("una sola llamada");
   });
 });
 

@@ -1,0 +1,975 @@
+{
+  "source": "/api/v1/agent/contract-types",
+  "contractTypes": [
+    {
+      "contractType": "ACTA_CONSEJO_ADMINISTRACION",
+      "slug": "board-minutes-spain",
+      "governingLaws": [
+        "SPAIN"
+      ],
+      "languages": [
+        "es"
+      ],
+      "roles": null,
+      "requiredInputs": [
+        {
+          "id": "company-name",
+          "type": "text"
+        },
+        {
+          "id": "cif",
+          "type": "text"
+        },
+        {
+          "id": "registered-address",
+          "type": "text"
+        },
+        {
+          "id": "meeting-date",
+          "type": "date"
+        },
+        {
+          "id": "president-name",
+          "type": "text"
+        },
+        {
+          "id": "secretary-name",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "contractType": "ACTA_JUNTA_GENERAL",
+      "slug": "general-meeting-minutes-spain",
+      "governingLaws": [
+        "SPAIN"
+      ],
+      "languages": [
+        "es"
+      ],
+      "roles": null,
+      "requiredInputs": [
+        {
+          "id": "company-name",
+          "type": "text"
+        },
+        {
+          "id": "cif",
+          "type": "text"
+        },
+        {
+          "id": "registered-address",
+          "type": "text"
+        },
+        {
+          "id": "meeting-date",
+          "type": "date"
+        },
+        {
+          "id": "meeting-type",
+          "type": "choice",
+          "options": [
+            "Ordinaria",
+            "Extraordinaria",
+            "Universal"
+          ]
+        },
+        {
+          "id": "quorum-percentage",
+          "type": "text"
+        },
+        {
+          "id": "secretary-name",
+          "type": "text"
+        },
+        {
+          "id": "president-name",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "contractType": "ADVERTISING_IO",
+      "slug": "advertising-insertion-order",
+      "governingLaws": [
+        "CALIFORNIA",
+        "ENGLAND_WALES",
+        "SPAIN"
+      ],
+      "languages": [
+        "en",
+        "es"
+      ],
+      "roles": null,
+      "requiredInputs": [
+        {
+          "id": "campaign-name",
+          "type": "text"
+        },
+        {
+          "id": "total-budget",
+          "type": "currency"
+        },
+        {
+          "id": "start-date",
+          "type": "date"
+        },
+        {
+          "id": "end-date",
+          "type": "date"
+        }
+      ]
+    },
+    {
+      "contractType": "ADVISORY",
+      "slug": "advisory-agreement",
+      "governingLaws": [
+        "CALIFORNIA",
+        "ENGLAND_WALES",
+        "SPAIN"
+      ],
+      "languages": [
+        "en",
+        "es"
+      ],
+      "roles": null,
+      "requiredInputs": [
+        {
+          "id": "advisor-name",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "contractType": "AFFILIATE_PROGRAM",
+      "slug": "affiliate-agreement",
+      "governingLaws": [
+        "CALIFORNIA",
+        "ENGLAND_WALES",
+        "SPAIN"
+      ],
+      "languages": [
+        "en",
+        "es"
+      ],
+      "roles": null,
+      "requiredInputs": [
+        {
+          "id": "program-name",
+          "type": "text"
+        },
+        {
+          "id": "base-commission",
+          "type": "percentage"
+        }
+      ]
+    },
+    {
+      "contractType": "BAA_NEGOTIATOR",
+      "slug": "business-associate-agreement",
+      "governingLaws": [
+        "CALIFORNIA"
+      ],
+      "languages": [
+        "en"
+      ],
+      "roles": [
+        "BUSINESS_ASSOCIATE",
+        "COVERED_ENTITY"
+      ],
+      "requiredInputs": []
+    },
+    {
+      "contractType": "CESION_PI",
+      "slug": "ip-assignment-spain",
+      "governingLaws": [
+        "SPAIN"
+      ],
+      "languages": [
+        "es",
+        "en"
+      ],
+      "roles": null,
+      "requiredInputs": []
+    },
+    {
+      "contractType": "CONSULTING",
+      "slug": "consulting-agreement",
+      "governingLaws": [
+        "CALIFORNIA",
+        "ENGLAND_WALES"
+      ],
+      "languages": [
+        "en",
+        "es"
+      ],
+      "roles": null,
+      "requiredInputs": [
+        {
+          "id": "service-description",
+          "type": "text"
+        },
+        {
+          "id": "hourly-rate",
+          "type": "currency"
+        },
+        {
+          "id": "rate-currency",
+          "type": "text",
+          "default": "USD"
+        }
+      ]
+    },
+    {
+      "contractType": "CONTRATO_LABORAL",
+      "slug": "employment-contract-spain",
+      "governingLaws": [
+        "SPAIN"
+      ],
+      "languages": [
+        "es",
+        "en"
+      ],
+      "roles": null,
+      "requiredInputs": [
+        {
+          "id": "convenio-colectivo",
+          "type": "text"
+        },
+        {
+          "id": "salario-bruto-anual",
+          "type": "currency"
+        },
+        {
+          "id": "puesto-grupo-profesional",
+          "type": "text"
+        },
+        {
+          "id": "centro-trabajo",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "contractType": "CONTRATO_SERVICIOS",
+      "slug": "services-agreement-spain",
+      "governingLaws": [
+        "SPAIN"
+      ],
+      "languages": [
+        "es",
+        "en"
+      ],
+      "roles": null,
+      "requiredInputs": [
+        {
+          "id": "objeto-entregables",
+          "type": "text"
+        },
+        {
+          "id": "honorarios",
+          "type": "currency"
+        },
+        {
+          "id": "plazo-pago-dias",
+          "type": "number",
+          "default": "30"
+        }
+      ]
+    },
+    {
+      "contractType": "CONVERTIBLE_NOTE",
+      "slug": "convertible-note",
+      "governingLaws": [
+        "CALIFORNIA",
+        "ENGLAND_WALES",
+        "SPAIN"
+      ],
+      "languages": [
+        "en",
+        "es"
+      ],
+      "roles": null,
+      "requiredInputs": [
+        {
+          "id": "principal-amount",
+          "type": "currency"
+        },
+        {
+          "id": "valuation-cap-amount",
+          "type": "currency"
+        },
+        {
+          "id": "qualified-financing-threshold",
+          "type": "currency"
+        }
+      ]
+    },
+    {
+      "contractType": "DATA_LICENSING",
+      "slug": "data-licensing-agreement",
+      "governingLaws": [
+        "CALIFORNIA",
+        "ENGLAND_WALES",
+        "SPAIN"
+      ],
+      "languages": [
+        "en",
+        "es"
+      ],
+      "roles": null,
+      "requiredInputs": [
+        {
+          "id": "data-categories",
+          "type": "text"
+        },
+        {
+          "id": "license-fee",
+          "type": "currency"
+        },
+        {
+          "id": "license-term",
+          "type": "number",
+          "default": "12"
+        }
+      ]
+    },
+    {
+      "contractType": "DELAWARE_CERT_OF_INCORPORATION",
+      "slug": "delaware-certificate-of-incorporation",
+      "governingLaws": [
+        "CALIFORNIA"
+      ],
+      "languages": [
+        "en"
+      ],
+      "roles": null,
+      "requiredInputs": [
+        {
+          "id": "company-name",
+          "type": "text"
+        },
+        {
+          "id": "registered-agent",
+          "type": "text"
+        },
+        {
+          "id": "par-value",
+          "type": "text"
+        },
+        {
+          "id": "incorporator",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "contractType": "DPA",
+      "slug": "data-processing-agreement",
+      "governingLaws": [
+        "CALIFORNIA",
+        "ENGLAND_WALES",
+        "SPAIN"
+      ],
+      "languages": [
+        "en",
+        "es"
+      ],
+      "roles": [
+        "PROCESSOR",
+        "CONTROLLER"
+      ],
+      "requiredInputs": [
+        {
+          "id": "processing-purpose",
+          "type": "textarea"
+        },
+        {
+          "id": "data-categories",
+          "type": "multiSelect",
+          "options": [
+            "contact-details",
+            "identification-data",
+            "financial-data",
+            "account-credentials",
+            "usage-technical",
+            "location-data",
+            "professional-data",
+            "marketing-comms",
+            "support-content",
+            "special-category",
+            "children-data"
+          ]
+        },
+        {
+          "id": "processor-establishment",
+          "type": "choice",
+          "options": [
+            "EEA",
+            "UK",
+            "US",
+            "OTHER"
+          ],
+          "default": "EEA"
+        }
+      ]
+    },
+    {
+      "contractType": "EMPLOYMENT",
+      "slug": "employment-agreement",
+      "governingLaws": [
+        "CALIFORNIA",
+        "ENGLAND_WALES"
+      ],
+      "languages": [
+        "en",
+        "es"
+      ],
+      "roles": null,
+      "requiredInputs": [
+        {
+          "id": "start-date",
+          "type": "date"
+        },
+        {
+          "id": "base-salary",
+          "type": "currency"
+        },
+        {
+          "id": "salary-currency",
+          "type": "text",
+          "default": "USD"
+        }
+      ]
+    },
+    {
+      "contractType": "EQUITY_INCENTIVE",
+      "slug": "equity-incentive-plan",
+      "governingLaws": [
+        "CALIFORNIA",
+        "ENGLAND_WALES",
+        "SPAIN"
+      ],
+      "languages": [
+        "en",
+        "es"
+      ],
+      "roles": null,
+      "requiredInputs": [
+        {
+          "id": "plan-name",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "contractType": "FOUNDERS",
+      "slug": "founders-agreement",
+      "governingLaws": [
+        "CALIFORNIA",
+        "ENGLAND_WALES",
+        "SPAIN"
+      ],
+      "languages": [
+        "en",
+        "es"
+      ],
+      "roles": null,
+      "requiredInputs": []
+    },
+    {
+      "contractType": "INFLUENCER_MARKETING",
+      "slug": "influencer-marketing-agreement",
+      "governingLaws": [
+        "CALIFORNIA",
+        "ENGLAND_WALES",
+        "SPAIN"
+      ],
+      "languages": [
+        "en",
+        "es"
+      ],
+      "roles": null,
+      "requiredInputs": [
+        {
+          "id": "campaign-name",
+          "type": "text"
+        },
+        {
+          "id": "total-compensation",
+          "type": "currency"
+        },
+        {
+          "id": "num-deliverables",
+          "type": "number"
+        }
+      ]
+    },
+    {
+      "contractType": "IP_ASSIGNMENT",
+      "slug": "ip-assignment-agreement",
+      "governingLaws": [
+        "CALIFORNIA",
+        "ENGLAND_WALES",
+        "SPAIN"
+      ],
+      "languages": [
+        "en",
+        "es"
+      ],
+      "roles": null,
+      "requiredInputs": [
+        {
+          "id": "subject-matter",
+          "type": "text"
+        },
+        {
+          "id": "assignment-fee",
+          "type": "currency"
+        }
+      ]
+    },
+    {
+      "contractType": "JOINT_VENTURE",
+      "slug": "joint-venture-agreement",
+      "governingLaws": [
+        "CALIFORNIA",
+        "ENGLAND_WALES",
+        "SPAIN"
+      ],
+      "languages": [
+        "en",
+        "es"
+      ],
+      "roles": null,
+      "requiredInputs": [
+        {
+          "id": "jv-name",
+          "type": "text"
+        },
+        {
+          "id": "jv-purpose",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "contractType": "MSA",
+      "slug": "master-services-agreement",
+      "governingLaws": [
+        "CALIFORNIA",
+        "ENGLAND_WALES",
+        "SPAIN"
+      ],
+      "languages": [
+        "en",
+        "es"
+      ],
+      "roles": null,
+      "requiredInputs": []
+    },
+    {
+      "contractType": "NDA",
+      "slug": "nda",
+      "governingLaws": [
+        "CALIFORNIA",
+        "ENGLAND_WALES",
+        "SPAIN"
+      ],
+      "languages": [
+        "en",
+        "es"
+      ],
+      "roles": null,
+      "requiredInputs": [
+        {
+          "id": "dispute-forum-city",
+          "type": "text",
+          "default": "Madrid",
+          "onlyUnder": [
+            "SPAIN"
+          ]
+        }
+      ]
+    },
+    {
+      "contractType": "PACTO_SOCIOS",
+      "slug": "shareholders-agreement-spain",
+      "governingLaws": [
+        "SPAIN"
+      ],
+      "languages": [
+        "es",
+        "en"
+      ],
+      "roles": null,
+      "requiredInputs": []
+    },
+    {
+      "contractType": "PHANTOM_SHARES_GRANT",
+      "slug": "phantom-shares-grant",
+      "governingLaws": [
+        "SPAIN"
+      ],
+      "languages": [
+        "es"
+      ],
+      "roles": null,
+      "requiredInputs": [
+        {
+          "id": "employee-name",
+          "type": "text"
+        },
+        {
+          "id": "phantom-count",
+          "type": "text"
+        },
+        {
+          "id": "grant-date",
+          "type": "date"
+        },
+        {
+          "id": "plan-date",
+          "type": "date"
+        },
+        {
+          "id": "individual-vesting-months",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "contractType": "PHANTOM_SHARES_PLAN",
+      "slug": "phantom-shares-plan",
+      "governingLaws": [
+        "SPAIN"
+      ],
+      "languages": [
+        "es"
+      ],
+      "roles": null,
+      "requiredInputs": [
+        {
+          "id": "company-name",
+          "type": "text"
+        },
+        {
+          "id": "cif",
+          "type": "text"
+        },
+        {
+          "id": "total-pool-percentage",
+          "type": "text"
+        },
+        {
+          "id": "cliff-months",
+          "type": "text"
+        },
+        {
+          "id": "vesting-months",
+          "type": "text"
+        },
+        {
+          "id": "plan-effective-date",
+          "type": "date"
+        },
+        {
+          "id": "payment-term-days",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "contractType": "PRIVACY_NOTICE",
+      "slug": "privacy-notice",
+      "governingLaws": [
+        "CALIFORNIA",
+        "ENGLAND_WALES",
+        "SPAIN"
+      ],
+      "languages": [
+        "en",
+        "es"
+      ],
+      "roles": null,
+      "requiredInputs": [
+        {
+          "id": "jurisdictions",
+          "type": "multiSelect",
+          "options": [
+            "CALIFORNIA",
+            "ENGLAND_WALES",
+            "SPAIN"
+          ]
+        },
+        {
+          "id": "company-name",
+          "type": "text"
+        },
+        {
+          "id": "company-website",
+          "type": "text"
+        },
+        {
+          "id": "dpo-email",
+          "type": "text"
+        },
+        {
+          "id": "effective-date",
+          "type": "date"
+        }
+      ]
+    },
+    {
+      "contractType": "RESIDENTIAL_TENANCY_ES",
+      "slug": "residential-lease-spain",
+      "governingLaws": [
+        "SPAIN"
+      ],
+      "languages": [
+        "es"
+      ],
+      "roles": null,
+      "requiredInputs": [
+        {
+          "id": "property-address",
+          "type": "text"
+        },
+        {
+          "id": "monthly-rent",
+          "type": "currency"
+        }
+      ]
+    },
+    {
+      "contractType": "RESIDENTIAL_TENANCY_GB",
+      "slug": "assured-periodic-tenancy",
+      "governingLaws": [
+        "ENGLAND_WALES"
+      ],
+      "languages": [
+        "en"
+      ],
+      "roles": null,
+      "requiredInputs": [
+        {
+          "id": "property-address",
+          "type": "text"
+        },
+        {
+          "id": "monthly-rent",
+          "type": "currency"
+        },
+        {
+          "id": "annual-rent",
+          "type": "currency",
+          "onlyUnder": [
+            "ENGLAND_WALES"
+          ]
+        }
+      ]
+    },
+    {
+      "contractType": "RESIDENTIAL_TENANCY_US_CA",
+      "slug": "california-residential-lease",
+      "governingLaws": [
+        "CALIFORNIA"
+      ],
+      "languages": [
+        "en"
+      ],
+      "roles": null,
+      "requiredInputs": [
+        {
+          "id": "property-address",
+          "type": "text"
+        },
+        {
+          "id": "monthly-rent",
+          "type": "currency"
+        }
+      ]
+    },
+    {
+      "contractType": "SAAS",
+      "slug": "saas-agreement",
+      "governingLaws": [
+        "CALIFORNIA",
+        "ENGLAND_WALES",
+        "SPAIN"
+      ],
+      "languages": [
+        "en",
+        "es"
+      ],
+      "roles": null,
+      "requiredInputs": []
+    },
+    {
+      "contractType": "SAFE",
+      "slug": "safe-agreement",
+      "governingLaws": [
+        "CALIFORNIA",
+        "ENGLAND_WALES",
+        "SPAIN"
+      ],
+      "languages": [
+        "en",
+        "es"
+      ],
+      "roles": null,
+      "requiredInputs": [
+        {
+          "id": "valuation-cap-amount",
+          "type": "currency"
+        }
+      ]
+    },
+    {
+      "contractType": "SEED_INVESTMENT",
+      "slug": "seed-investment-agreement",
+      "governingLaws": [
+        "CALIFORNIA",
+        "ENGLAND_WALES",
+        "SPAIN"
+      ],
+      "languages": [
+        "en",
+        "es"
+      ],
+      "roles": null,
+      "requiredInputs": [
+        {
+          "id": "pre-money-valuation",
+          "type": "currency"
+        },
+        {
+          "id": "investment-amount",
+          "type": "currency"
+        },
+        {
+          "id": "share-count",
+          "type": "number"
+        },
+        {
+          "id": "share-price",
+          "type": "currency"
+        },
+        {
+          "id": "board-size",
+          "type": "number"
+        }
+      ]
+    },
+    {
+      "contractType": "SHAREHOLDERS",
+      "slug": "shareholders-agreement",
+      "governingLaws": [
+        "CALIFORNIA",
+        "ENGLAND_WALES"
+      ],
+      "languages": [
+        "en",
+        "es"
+      ],
+      "roles": null,
+      "requiredInputs": [
+        {
+          "id": "company-name",
+          "type": "text"
+        },
+        {
+          "id": "company-jurisdiction",
+          "type": "text"
+        },
+        {
+          "id": "board-size",
+          "type": "number"
+        }
+      ]
+    },
+    {
+      "contractType": "SOFTWARE_DEVELOPMENT",
+      "slug": "software-development-agreement",
+      "governingLaws": [
+        "CALIFORNIA",
+        "ENGLAND_WALES",
+        "SPAIN"
+      ],
+      "languages": [
+        "en",
+        "es"
+      ],
+      "roles": null,
+      "requiredInputs": [
+        {
+          "id": "project-name",
+          "type": "text"
+        },
+        {
+          "id": "project-description",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "contractType": "TECHNOLOGY_LICENSE",
+      "slug": "technology-license-agreement",
+      "governingLaws": [
+        "CALIFORNIA",
+        "ENGLAND_WALES",
+        "SPAIN"
+      ],
+      "languages": [
+        "en",
+        "es"
+      ],
+      "roles": null,
+      "requiredInputs": [
+        {
+          "id": "technology-description",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "contractType": "TERM_SHEET",
+      "slug": "term-sheet",
+      "governingLaws": [
+        "CALIFORNIA",
+        "ENGLAND_WALES",
+        "SPAIN"
+      ],
+      "languages": [
+        "en",
+        "es"
+      ],
+      "roles": null,
+      "requiredInputs": [
+        {
+          "id": "round-amount",
+          "type": "currency"
+        },
+        {
+          "id": "pre-money-valuation",
+          "type": "currency"
+        }
+      ]
+    },
+    {
+      "contractType": "WHITE_LABEL_RESELLER",
+      "slug": "reseller-agreement",
+      "governingLaws": [
+        "CALIFORNIA",
+        "ENGLAND_WALES",
+        "SPAIN"
+      ],
+      "languages": [
+        "en",
+        "es"
+      ],
+      "roles": null,
+      "requiredInputs": []
+    }
+  ]
+}

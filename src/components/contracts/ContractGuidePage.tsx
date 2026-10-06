@@ -6,15 +6,16 @@ import { notFound } from "next/navigation";
 import { ArrowRight, Bot, FileText } from "lucide-react";
 import {
   contractPath,
-  developersPath,
   loadContractPage,
   pageForSlug,
   sectionHeadings,
   type PageLocale,
 } from "@/lib/contract-pages";
 import { catalogueEntry } from "@/lib/skill-catalogue";
-import { agentExample, contractPageJsonLd, jsonLdScript } from "@/lib/contract-pages-seo";
+import { contractPageJsonLd, jsonLdScript } from "@/lib/contract-pages-seo";
+import { contractAgentJsonLd } from "@/lib/agent-discovery";
 import { CONTRACT_COPY, JURISDICTION_NAMES, LANGUAGE_NAMES } from "./copy";
+import { AgentBlock } from "./AgentBlock";
 import { ContractsShell } from "./ContractsShell";
 import { CreateLink } from "./CreateLink";
 import { PriceLine } from "./PriceLine";
@@ -34,19 +35,20 @@ export function ContractGuidePage({ slug, locale }: { slug: string; locale: Page
     .map((s) => ({ slug: s, page: pageForSlug(s) ? loadContractPage(s, locale) : null }))
     .filter((r) => r.page);
   const other: PageLocale = locale === "en" ? "es" : "en";
-  const example = agentExample({
-    contractType: def.contractType,
-    jurisdictions,
-    languages,
+  const agentJsonLd = contractAgentJsonLd({
     locale,
-    dealName: `${locale === "es" ? "Prueba" : "Example"} ${def.contractType}`,
+    slug,
+    code: def.contractType,
+    name: page.heading || page.title,
+    apiName: copy.agentApiName,
+    actionName: copy.agentActionName,
   });
 
   return (
     <ContractsShell locale={locale} alternateHref={contractPath(other, slug)}>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: jsonLdScript(contractPageJsonLd(page, copy.indexTitle)) }}
+        dangerouslySetInnerHTML={{ __html: jsonLdScript(contractPageJsonLd(page, copy.indexTitle, [agentJsonLd])) }}
       />
       <article lang={locale} className="max-w-3xl mx-auto px-6 py-10">
         <nav aria-label="Breadcrumb" className="text-sm text-muted-foreground mb-6">
@@ -74,6 +76,8 @@ export function ContractGuidePage({ slug, locale }: { slug: string; locale: Page
             </div>
           )}
         </dl>
+
+        <AgentBlock contractType={def.contractType} locale={locale} />
 
         {headings.length > 2 && (
           <nav aria-label={copy.contents} className="mt-8 border border-border rounded-lg p-4 bg-card">
@@ -144,25 +148,6 @@ export function ContractGuidePage({ slug, locale }: { slug: string; locale: Page
               </Link>
             </div>
           </div>
-          {/* The developer example stays in the page (search engines and AI
-              models read it) but closed, under a heading that says what it is. */}
-          <details className="mt-4 border border-border rounded-lg bg-card p-4">
-            <summary className="text-sm font-semibold cursor-pointer">{copy.devSummary}</summary>
-            <p className="mt-3 text-sm text-muted-foreground">{copy.devIntro}</p>
-            <pre className="mt-3 text-xs bg-background border border-border rounded-lg p-4 overflow-x-auto">
-              <code>{example}</code>
-            </pre>
-            <p className="mt-3 text-sm text-muted-foreground">
-              {copy.devTools} <code>generate_contract</code> (<code>contractType: &quot;{def.contractType}&quot;</code>),{" "}
-              <code>list_contract_types</code>, <code>get_template</code>, <code>create_playbook</code>,{" "}
-              <code>initiate_negotiation</code>.
-            </p>
-            <p className="mt-2 text-sm">
-              <Link href={developersPath(locale)} className="text-primary hover:underline">
-                {copy.devQuickStart}
-              </Link>
-            </p>
-          </details>
           <div className="mt-4">
             <PriceLine locale={locale} />
           </div>
