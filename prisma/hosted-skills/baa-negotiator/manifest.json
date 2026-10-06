@@ -1,8 +1,8 @@
 {
   "skillId": "com.nel.skills.baa-negotiator",
   "name": "BAA_NEGOTIATOR",
-  "displayName": "HIPAA Business Associate Agreement Negotiator",
-  "version": "1.2.0",
+  "displayName": "Business Associate Agreement (HIPAA)",
+  "version": "1.3.0",
   "jurisdictions": [
     "CALIFORNIA"
   ],

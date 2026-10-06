@@ -1,0 +1,94 @@
+{
+  "version": "1.0",
+  "parameters": [
+    {
+      "id": "services-description",
+      "token": "services description",
+      "scope": "*",
+      "type": "text",
+      "required": true,
+      "boilerplateVariable": "servicesDescription",
+      "label": {
+        "en": "What services does the business associate provide?",
+        "es": "¿Qué servicios presta el socio comercial (business associate)?"
+      },
+      "hint": {
+        "en": "A short description, written into the Background as \"Company provides ... (the Services)\". No full stop at the end.",
+        "es": "Una descripción breve, que se incluye en los Antecedentes como \"Company provides ... (the Services)\". Sin punto final."
+      },
+      "placeholder": {
+        "en": "e.g. hosted contract drafting software and related support",
+        "es": "p. ej. software alojado de redacción de contratos y soporte relacionado"
+      }
+    },
+    {
+      "id": "phi-by-design",
+      "token": "phi by design",
+      "scope": "*",
+      "type": "choice",
+      "required": true,
+      "default": "no",
+      "boilerplateVariable": "phiByDesign",
+      "label": {
+        "en": "Are the services designed to create, receive, maintain or transmit PHI?",
+        "es": "¿Están los servicios diseñados para crear, recibir, conservar o transmitir PHI?"
+      },
+      "hint": {
+        "en": "No (the default): the agreement is precautionary and applies only if the business associate in fact handles PHI. Yes: the agreement applies to all the PHI the services handle.",
+        "es": "No (por defecto): el acuerdo es preventivo y solo se aplica si el socio comercial llega a tratar PHI. Sí: el acuerdo se aplica a toda la PHI que tratan los servicios."
+      },
+      "options": ["no", "yes"],
+      "optionLabels": {
+        "no": {
+          "en": "No, the services are not designed to handle PHI",
+          "es": "No, los servicios no están diseñados para tratar PHI"
+        },
+        "yes": {
+          "en": "Yes, the services handle PHI",
+          "es": "Sí, los servicios tratan PHI"
+        }
+      }
+    },
+    {
+      "id": "underlying-agreement",
+      "token": "underlying agreement",
+      "scope": "*",
+      "type": "text",
+      "required": false,
+      "boilerplateVariable": "underlyingAgreement",
+      "label": {
+        "en": "Underlying agreement (title and date)",
+        "es": "Contrato principal (título y fecha)"
+      },
+      "hint": {
+        "en": "The services agreement this agreement supports, by title and date. If left out, the agreement refers to the services agreements between the parties in general.",
+        "es": "El contrato de servicios al que acompaña este acuerdo, con su título y fecha. Si no lo indicas, el acuerdo se refiere en general a los contratos de servicios entre las partes."
+      },
+      "placeholder": {
+        "en": "e.g. the Master Services Agreement dated 1 March 2026",
+        "es": "p. ej. the Master Services Agreement dated 1 March 2026"
+      }
+    },
+    {
+      "id": "dispute-venue",
+      "token": "dispute venue",
+      "scope": "*",
+      "type": "text",
+      "required": false,
+      "default": "the court or arbitration forum designated for disputes in the Underlying Agreement or, if the Underlying Agreement designates none, the state and federal courts located in the State of California",
+      "boilerplateVariable": "disputeVenue",
+      "label": {
+        "en": "Courts or forum for disputes",
+        "es": "Tribunales o foro para las controversias"
+      },
+      "hint": {
+        "en": "Written into Section 21(c). If left out, the forum of the Underlying Agreement applies, and failing that the state and federal courts located in California.",
+        "es": "Se incluye en la cláusula 21(c). Si no lo indicas, se aplica el foro del contrato principal y, en su defecto, los tribunales estatales y federales con sede en California."
+      },
+      "placeholder": {
+        "en": "e.g. the state and federal courts located in Los Angeles County, California",
+        "es": "p. ej. the state and federal courts located in Los Angeles County, California"
+      }
+    }
+  ]
+}

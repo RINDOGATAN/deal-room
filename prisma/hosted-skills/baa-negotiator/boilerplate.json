@@ -1,12 +1,88 @@
 {
   "contractTitle": "BUSINESS ASSOCIATE AGREEMENT",
-  "preamble": "This Business Associate Agreement (this \"Agreement\") is entered into between {partyAName} (\"Company\") and the customer agreeing to the terms below (\"Customer\"), and addresses the parties' respective obligations under the Health Insurance Portability and Accountability Act of 1996, as amended, and its implementing regulations at 45 CFR Parts 160 and 164 (\"HIPAA\").",
-  "background": "Customer is a \"covered entity\" or a \"business associate\" of covered-entity clients, as those terms are defined in HIPAA. Company provides services (\"Services\") to Customer under one or more agreements (each an \"Underlying Agreement\"). The Services are not designed to, and do not require, the creation, receipt, maintenance, or transmission of Protected Health Information (\"PHI\"), and Company does not solicit or accept PHI from Customer through the Services.\n\nThe parties enter into this Agreement as a precautionary measure. Its obligations apply only if, and only to the extent that, Company in fact creates, receives, maintains, or transmits PHI on behalf of Customer, notwithstanding the parties' intention and agreement that no such event occur.",
+  "preamble": "This Business Associate Agreement (this \"Agreement\") is entered into between {partyAName} (\"Company\"), as business associate, and {partyBName} (\"Customer\"), as covered entity or as a business associate of covered-entity clients (in which case Company acts as its subcontractor), and addresses the parties' respective obligations under the Health Insurance Portability and Accountability Act of 1996, as amended, and its implementing regulations at 45 CFR Parts 160 and 164 (\"HIPAA\").",
+  "background": "Customer is a \"covered entity\" or a \"business associate\" of covered-entity clients, as those terms are defined in HIPAA.",
+  "backgroundSections": [
+    {
+      "showIf": [
+        {
+          "variable": "servicesDescription",
+          "present": true
+        },
+        {
+          "variable": "underlyingAgreement",
+          "present": true
+        }
+      ],
+      "text": "Company provides {servicesDescription} (the \"Services\") to Customer under {underlyingAgreement} (as further defined below, the \"Underlying Agreement\")."
+    },
+    {
+      "showIf": [
+        {
+          "variable": "servicesDescription",
+          "present": true
+        },
+        {
+          "variable": "underlyingAgreement",
+          "present": false
+        }
+      ],
+      "text": "Company provides {servicesDescription} (the \"Services\") to Customer under one or more agreements (each an \"Underlying Agreement\")."
+    },
+    {
+      "showIf": [
+        {
+          "variable": "servicesDescription",
+          "present": false
+        },
+        {
+          "variable": "underlyingAgreement",
+          "present": true
+        }
+      ],
+      "text": "Company provides services (the \"Services\") to Customer under {underlyingAgreement} (as further defined below, the \"Underlying Agreement\")."
+    },
+    {
+      "showIf": [
+        {
+          "variable": "servicesDescription",
+          "present": false
+        },
+        {
+          "variable": "underlyingAgreement",
+          "present": false
+        }
+      ],
+      "text": "Company provides services (\"Services\") to Customer under one or more agreements (each an \"Underlying Agreement\")."
+    },
+    {
+      "showIf": [
+        {
+          "variable": "phiByDesign",
+          "notIn": [
+            "yes"
+          ]
+        }
+      ],
+      "text": "The Services are not designed to, and do not require, the creation, receipt, maintenance, or transmission of Protected Health Information (\"PHI\"), and Company does not solicit or accept PHI from Customer through the Services.\n\nThe parties enter into this Agreement as a precautionary measure. Its obligations apply only if, and only to the extent that, Company in fact creates, receives, maintains, or transmits PHI on behalf of Customer, notwithstanding the parties' intention and agreement that no such event occur."
+    },
+    {
+      "showIf": [
+        {
+          "variable": "phiByDesign",
+          "in": [
+            "yes"
+          ]
+        }
+      ],
+      "text": "In providing the Services, Company creates, receives, maintains, or transmits Protected Health Information (\"PHI\") on behalf of Customer. This Agreement sets out the terms on which Company does so and applies to all PHI that Company creates, receives, maintains, or transmits on behalf of Customer."
+    }
+  ],
   "sequentialNumbering": true,
   "definitions": [
     {
       "term": "Underlying Agreement",
-      "definition": "means the service agreement(s) between Covered Entity and Business Associate pursuant to which Business Associate creates, receives, maintains, or transmits Protected Health Information on behalf of Covered Entity, however titled, including any applicable order forms or statements of work; where the parties have executed no separate service agreement, references to the Underlying Agreement are to this BAA. Where the parties have also executed a data processing agreement, references there to the \"Principal Agreement\" describe the same underlying relationship."
+      "definition": "means the service agreement or agreements between Customer and Company under which Company provides the Services (including the agreement named in the Background, where one is named), however titled, including any applicable order forms or statements of work; where the parties have executed no separate service agreement, references to the Underlying Agreement are to this Agreement. Where the parties have also executed a data processing agreement, references there to the \"Principal Agreement\" describe the same underlying relationship."
     }
   ],
   "standardClauses": [
@@ -20,13 +96,57 @@
       "sectionNumber": 2,
       "title": "No PHI to Be Transmitted",
       "satisfies": "",
+      "showIf": [
+        {
+          "variable": "phiByDesign",
+          "notIn": [
+            "yes"
+          ]
+        }
+      ],
       "text": "Customer will use commercially reasonable efforts not to transmit, upload, disclose, or otherwise make available PHI to Company or through the Services, and to configure its use of the Services so that no PHI is collected by or submitted to the Services, in each case absent Company's prior written agreement. This covenant is a material term of this Agreement and of the Underlying Agreement."
+    },
+    {
+      "sectionNumber": 2,
+      "title": "Scope of PHI",
+      "satisfies": "",
+      "showIf": [
+        {
+          "variable": "phiByDesign",
+          "in": [
+            "yes"
+          ]
+        }
+      ],
+      "text": "Customer will make available to Company only the PHI that is necessary for Company to provide the Services and, absent Company's prior written agreement, will use commercially reasonable efforts not to transmit, upload, disclose, or otherwise make available to Company any other PHI. This covenant is a material term of this Agreement and of the Underlying Agreement."
     },
     {
       "sectionNumber": 3,
       "title": "Inadvertent Receipt of PHI",
       "satisfies": "",
+      "showIf": [
+        {
+          "variable": "phiByDesign",
+          "notIn": [
+            "yes"
+          ]
+        }
+      ],
       "text": "If Company discovers that PHI has been transmitted to it or through the Services in violation of Section 2, Company will: (a) notify Customer without unreasonable delay and in any event within five (5) business days of discovery; (b) delete such PHI without retaining copies, or, if Customer so requests in writing within that period, return it to Customer, except to the extent retention is required by law; and (c) have no further obligation under this Agreement with respect to such PHI once deletion or return is complete. Deletion or return pursuant to this Section satisfies Section 16 (Return or Destruction of PHI) as to the PHI concerned. The parties intend and agree that Company's receipt of PHI in violation of Section 2 does not, standing alone, establish an engagement of Company to create, receive, maintain, or transmit PHI on behalf of Customer."
+    },
+    {
+      "sectionNumber": 3,
+      "title": "PHI Outside the Scope of the Services",
+      "satisfies": "",
+      "showIf": [
+        {
+          "variable": "phiByDesign",
+          "in": [
+            "yes"
+          ]
+        }
+      ],
+      "text": "If Company discovers that PHI has been transmitted to it in violation of Section 2, Company will: (a) notify Customer without unreasonable delay and in any event within five (5) business days of discovery; (b) delete such PHI without retaining copies, or, if Customer so requests in writing within that period, return it to Customer, except to the extent retention is required by law; and (c) have no further obligation under this Agreement with respect to such PHI once deletion or return is complete. Deletion or return pursuant to this Section satisfies Section 16 (Return or Destruction of PHI) as to the PHI concerned."
     },
     {
       "sectionNumber": 4,
@@ -38,13 +158,57 @@
       "sectionNumber": 5,
       "title": "Use and Disclosure of PHI",
       "satisfies": "satisfies 45 CFR 164.504(e)(2)(i) and 45 CFR 164.504(e)(2)(ii)(A)",
+      "showIf": [
+        {
+          "variable": "phiByDesign",
+          "notIn": [
+            "yes"
+          ]
+        }
+      ],
       "text": "Company shall not use or disclose PHI other than as permitted or required by this Agreement or as Required by Law. Company's use and disclosure of PHI shall comply with the provisions of HIPAA applicable to business associates, including 45 CFR 164.504(e). Any PHI received by Company through inadvertent transmission shall be handled solely as necessary to identify, quarantine, report, and delete or return it in accordance with Section 3, or as Required by Law. Company may use and disclose PHI, in each case only if and to the extent such PHI is in fact received by Company: (a) for the proper management and administration of Company, or to carry out its legal responsibilities, provided that any disclosure is Required by Law or Company obtains reasonable assurances from the recipient that the PHI will be held confidentially and used or further disclosed only as Required by Law or for the purposes for which it was disclosed, and that the recipient will notify Company of any instance of which it becomes aware in which the confidentiality of the PHI has been breached, consistent with 45 CFR 164.504(e)(4); and (b) to provide data aggregation services relating to the health care operations of Customer, if and to the extent expressly requested by Customer in writing. If Company is compelled by legal process to disclose PHI, Company shall, to the extent legally permitted, promptly notify Customer to allow Customer to seek a protective order or other appropriate remedy. Customer shall not request Company to use or disclose PHI in any manner that would not be permissible under HIPAA if done by Customer."
+    },
+    {
+      "sectionNumber": 5,
+      "title": "Use and Disclosure of PHI",
+      "satisfies": "satisfies 45 CFR 164.504(e)(2)(i) and 45 CFR 164.504(e)(2)(ii)(A)",
+      "showIf": [
+        {
+          "variable": "phiByDesign",
+          "in": [
+            "yes"
+          ]
+        }
+      ],
+      "text": "Company may use or disclose PHI as necessary to perform the Services for, or on behalf of, Customer, provided that such use or disclosure would not violate the Privacy Rule if done by Customer. Company shall not otherwise use or disclose PHI other than as permitted or required by this Agreement or as Required by Law. Company's use and disclosure of PHI shall comply with the provisions of HIPAA applicable to business associates, including 45 CFR 164.504(e). Any PHI received by Company in violation of Section 2 shall be handled solely as necessary to identify, quarantine, report, and delete or return it in accordance with Section 3, or as Required by Law. Company may also use and disclose PHI: (a) for the proper management and administration of Company, or to carry out its legal responsibilities, provided that any disclosure is Required by Law or Company obtains reasonable assurances from the recipient that the PHI will be held confidentially and used or further disclosed only as Required by Law or for the purposes for which it was disclosed, and that the recipient will notify Company of any instance of which it becomes aware in which the confidentiality of the PHI has been breached, consistent with 45 CFR 164.504(e)(4); and (b) to provide data aggregation services relating to the health care operations of Customer, if and to the extent expressly requested by Customer in writing. If Company is compelled by legal process to disclose PHI, Company shall, to the extent legally permitted, promptly notify Customer to allow Customer to seek a protective order or other appropriate remedy. Customer shall not request Company to use or disclose PHI in any manner that would not be permissible under HIPAA if done by Customer."
     },
     {
       "sectionNumber": 6,
       "title": "Safeguards",
       "satisfies": "satisfies 45 CFR 164.504(e)(2)(ii)(B); satisfies 45 CFR 164.314(a)(2)(i)",
+      "showIf": [
+        {
+          "variable": "phiByDesign",
+          "notIn": [
+            "yes"
+          ]
+        }
+      ],
       "text": "Company will use appropriate safeguards, and comply with Subpart C of 45 CFR Part 164 with respect to electronic PHI, to prevent use or disclosure of PHI other than as provided for by this Agreement. Customer acknowledges that the Services are not designed to create, receive, maintain, or transmit PHI and that Company's safeguards are those appropriate to a service of that character; nothing in this sentence qualifies Company's obligation to comply with Subpart C to the extent Company in fact creates, receives, maintains, or transmits electronic PHI."
+    },
+    {
+      "sectionNumber": 6,
+      "title": "Safeguards",
+      "satisfies": "satisfies 45 CFR 164.504(e)(2)(ii)(B); satisfies 45 CFR 164.314(a)(2)(i)",
+      "showIf": [
+        {
+          "variable": "phiByDesign",
+          "in": [
+            "yes"
+          ]
+        }
+      ],
+      "text": "Company will use appropriate safeguards, and comply with Subpart C of 45 CFR Part 164 with respect to electronic PHI, to prevent use or disclosure of PHI other than as provided for by this Agreement."
     },
     {
       "sectionNumber": 7,
@@ -92,7 +256,7 @@
       "sectionNumber": 21,
       "title": "Miscellaneous",
       "satisfies": "",
-      "text": "(a) Order of Precedence. In the event of a conflict between this Agreement and the Underlying Agreement with respect to the use, disclosure, or protection of PHI or the parties' obligations under HIPAA, this Agreement controls.\n\n(b) Interpretation. Any ambiguity in this Agreement shall be resolved in favor of a meaning that permits the parties to comply with HIPAA.\n\n(c) Governing Law; Venue. This Agreement is governed by and construed in accordance with the laws of the State of California, without regard to its conflict-of-laws principles, except to the extent preempted by federal law (including HIPAA). The parties consent to the exclusive jurisdiction of the exclusive court or arbitration forum designated by the parties in the Underlying Agreement (or, absent such designation, the state and federal courts of the state whose law governs this Agreement) for any action arising out of or relating to this Agreement, and waive any objection to venue in such forum.\n\n(d) Notices. Notices under this Agreement shall be given in accordance with the notice provisions of the Underlying Agreement, or, if none, to the addresses set forth on the signature page.\n\n(e) Entire Agreement. This Agreement, together with the Underlying Agreement, constitutes the entire agreement of the parties with respect to its subject matter and supersedes all prior discussions and agreements with respect thereto.\n\n(f) Counterparts; Electronic Signatures. This Agreement may be executed in counterparts and by electronic signature, each of which shall be deemed an original."
+      "text": "(a) Order of Precedence. In the event of a conflict between this Agreement and the Underlying Agreement with respect to the use, disclosure, or protection of PHI or the parties' obligations under HIPAA, this Agreement controls.\n\n(b) Interpretation. Any ambiguity in this Agreement shall be resolved in favor of a meaning that permits the parties to comply with HIPAA.\n\n(c) Governing Law; Venue. This Agreement is governed by and construed in accordance with the laws of the State of California, without regard to its conflict-of-laws principles, except to the extent preempted by federal law (including HIPAA). For any action arising out of or relating to this Agreement, the parties consent to the exclusive jurisdiction of {disputeVenue}, and waive any objection to venue in that forum.\n\n(d) Notices. Notices under this Agreement shall be given in accordance with the notice provisions of the Underlying Agreement, or, if none, to the addresses set forth on the signature page.\n\n(e) Entire Agreement. This Agreement, together with the Underlying Agreement, constitutes the entire agreement of the parties with respect to its subject matter and supersedes all prior discussions and agreements with respect thereto.\n\n(f) Counterparts; Electronic Signatures. This Agreement may be executed in counterparts and by electronic signature, each of which shall be deemed an original."
     }
   ],
   "generalProvisions": [

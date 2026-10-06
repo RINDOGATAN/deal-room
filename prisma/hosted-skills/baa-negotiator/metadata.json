@@ -1,12 +1,12 @@
 {
-  "_comment": "Catalog-facing metadata consumed by todolaw/scripts/generate-catalog.mjs. Governing law: CALIFORNIA. HIPAA is federal and the instrument is otherwise state-agnostic; Section 21(c) carries a California governing-law default with a party-designated venue/forum bracket the parties complete before use.",
+  "_comment": "Catalog-facing metadata consumed by todolaw/scripts/generate-catalog.mjs. Governing law: CALIFORNIA. HIPAA is federal and the instrument is otherwise state-agnostic; Section 21(c) carries a California governing-law default and takes its forum from the dispute-venue input, falling back to the forum of the Underlying Agreement and then to the state and federal courts located in California.",
   "displayName": {
-    "en": "HIPAA BAA Negotiator",
-    "es": "Negociador de BAA (HIPAA)"
+    "en": "Business Associate Agreement (HIPAA)",
+    "es": "Acuerdo de socio comercial (BAA, HIPAA)"
   },
   "description": {
-    "en": "Two-party negotiation companion for HIPAA Business Associate Agreements under 45 CFR Parts 160 and 164: sixteen trade-off cards explaining every negotiable point to both sides with the regulatory floor marked, plain-language favor indicators on every rung, an attested springing no-PHI-by-design base template, an instrument screen asking whether a BAA is even the right instrument, a GDPR-rider exposure check, and the official HHS sample provisions mapped card by card.",
-    "es": "Asistente de negociación bilateral para Acuerdos de Socio Comercial (BAA) de la HIPAA conforme a 45 CFR partes 160 y 164: dieciséis fichas de negociación que explican cada punto negociable a las dos partes con el mínimo regulatorio señalado, indicadores en lenguaje llano de a quién favorece cada opción, una plantilla base atestada de activación condicionada (sin PHI por diseño), un filtro previo que valida si el BAA es siquiera el instrumento adecuado, una comprobación de exposición al RGPD y las cláusulas modelo oficiales del HHS asignadas ficha a ficha."
+    "en": "A HIPAA Business Associate Agreement (45 CFR Parts 160 and 164) between a service provider, as business associate, and its customer, as covered entity or as an upstream business associate. By default it is a precautionary agreement for services not designed to handle protected health information (PHI), which applies only if the provider in fact handles PHI; when the services are designed to handle PHI, it applies to all of it. The parties choose the security incident and breach reporting periods, the access and amendment turnaround, the cure period, the period to return or destroy PHI, and the liability terms. Governed by California law, except where federal law applies.",
+    "es": "Un acuerdo de socio comercial (Business Associate Agreement) de la HIPAA (45 CFR partes 160 y 164) entre un proveedor de servicios, como socio comercial, y su cliente, como entidad cubierta o como socio comercial de nivel superior. Por defecto es un acuerdo preventivo para servicios no diseñados para tratar información sanitaria protegida (PHI), que solo se aplica si el proveedor llega a tratarla; cuando los servicios están diseñados para tratar PHI, se aplica a toda ella. Las partes eligen los plazos de notificación de incidentes de seguridad y de brechas, los plazos de acceso y rectificación, el plazo de subsanación, el plazo para devolver o destruir la PHI y el régimen de responsabilidad. Se rige por la ley de California, salvo donde se aplica el derecho federal."
   },
   "category": {
     "en": "Privacy & Data Protection",
@@ -15,5 +15,5 @@
   "application": "Dealroom",
   "contractType": "BAA_NEGOTIATOR",
   "clauseCount": 7,
-  "version": "1.2.0"
+  "version": "1.3.0"
 }
