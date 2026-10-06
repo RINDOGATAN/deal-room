@@ -12,7 +12,8 @@
 import { DEVELOPERS_COPY, SECTION_ORDER, type SectionId } from "@/components/developers/copy";
 import { JURISDICTION_NAMES, LANGUAGE_NAMES } from "@/components/contracts/copy";
 import { CONTRACT_PAGES, SITE_URL, contractPath, developersPath, type PageLocale } from "./contract-pages-paths";
-import { COMMON_CONTRACTS, agentBlockPath, agentContractType, mustSendInputs } from "./agent-discovery";
+import { COMMON_CONTRACTS, agentBlockPath, agentContractType } from "./agent-discovery";
+import { describeInput, requiredInputs } from "./agent-inputs";
 import { API_KEYS_SETTINGS_PATH } from "./api-key-scopes";
 import type { PricingFacts } from "./pricing-page";
 import {
@@ -69,10 +70,8 @@ export function agentRows(locale: PageLocale): DocAgentRow[] {
         name: copy.commonNames[code] ?? code,
         href: contractPath(locale, page.slug),
         callHref: agentBlockPath(locale, page.slug),
-        inputs: mustSendInputs(agentContractType(code)).map((input) =>
-          input.onlyUnder?.length
-            ? `${input.id} (${copy.inputOnlyUnder(list(input.onlyUnder, JURISDICTION_NAMES, locale))})`
-            : input.id,
+        inputs: requiredInputs(agentContractType(code)?.requiredInputs).map((input) =>
+          describeInput(input, locale, lawName(locale)),
         ),
       },
     ];
@@ -162,17 +161,10 @@ function list(values: string[], names: Record<string, Record<PageLocale, string>
   return values.map((v) => names[v]?.[locale] ?? v).join(", ");
 }
 
+const lawName = (locale: PageLocale) => (law: string) => JURISDICTION_NAMES[law]?.[locale] ?? law;
+
 export function typeRow(t: DocContractType, locale: PageLocale): DocTypeRow {
-  const copy = DEVELOPERS_COPY[locale];
-  const inputs = t.inputs
-    .filter((i) => i.required)
-    .map((i) => {
-      const notes = [
-        ...(i.onlyUnder?.length ? [copy.inputOnlyUnder(list(i.onlyUnder, JURISDICTION_NAMES, locale))] : []),
-        ...(i.default ? [copy.inputDefault(i.default)] : []),
-      ];
-      return notes.length ? `${i.id} (${notes.join("; ")})` : i.id;
-    });
+  const inputs = requiredInputs(t.inputs).map((i) => describeInput(i, locale, lawName(locale)));
   return {
     code: t.contractType,
     name: t.name,

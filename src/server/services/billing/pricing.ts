@@ -106,7 +106,7 @@ export async function agentPricingBlock() {
     creditsNote:
       "Credits belong to the customer that owns the API keys. Any of its keys spends from the one balance; rotating or revoking a key changes nothing.",
     chargedWhen:
-      "An agent fetches the document of an agreed deal for the first time (PDF, DOCX or TXT). Negotiation is free.",
+      "A contract made in one call (POST /api/v1/agent/contracts, MCP tool generate_contract) spends one credit when it is made. A negotiated deal spends one credit when the document of the agreed contract is first fetched, in any format. Negotiation is free, and later downloads of a paid contract are free.",
     buyCredits: "POST /api/v1/agent/credits/checkout",
     balance: "GET /api/v1/agent/credits/balance",
     unpaidResponse: "HTTP 402 with code PAYMENT_REQUIRED",

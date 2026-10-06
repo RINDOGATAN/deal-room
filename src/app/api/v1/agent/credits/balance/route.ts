@@ -18,6 +18,7 @@ import {
   requireScope,
   ApiScopeError,
 } from "@/server/middleware/apiKeyAuth";
+import { unauthorizedResponse } from "@/server/middleware/unauthorized";
 import { apiError } from "@/lib/api-response";
 
 export async function GET(req: NextRequest) {
@@ -28,7 +29,7 @@ export async function GET(req: NextRequest) {
 
     const auth = await authenticateApiKey(req);
     if (!auth) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return unauthorizedResponse();
     }
     try {
       requireScope(auth, "billing:read");

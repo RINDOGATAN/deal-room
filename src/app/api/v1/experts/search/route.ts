@@ -15,6 +15,7 @@ import {
   requireScope,
   ApiScopeError,
 } from "@/server/middleware/apiKeyAuth";
+import { unauthorizedResponse } from "@/server/middleware/unauthorized";
 import { features } from "@/config/features";
 import {
   EXPERT_TYPES,
@@ -87,7 +88,7 @@ export async function POST(req: NextRequest) {
 
     const auth = await authenticateApiKey(req);
     if (!auth) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return unauthorizedResponse();
     }
 
     try {

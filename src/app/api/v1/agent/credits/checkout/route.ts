@@ -24,6 +24,7 @@ import {
   requireScope,
   ApiScopeError,
 } from "@/server/middleware/apiKeyAuth";
+import { unauthorizedResponse } from "@/server/middleware/unauthorized";
 import { apiError } from "@/lib/api-response";
 import { CREDITS_PER_PACK, chooseCurrency, priceIdFor } from "@/lib/contract-billing";
 import { appBaseUrl } from "@/server/services/billing/checkout";
@@ -52,7 +53,7 @@ export async function POST(req: NextRequest) {
 
     const auth = await authenticateApiKey(req);
     if (!auth) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return unauthorizedResponse();
     }
     try {
       requireScope(auth, "billing:read");

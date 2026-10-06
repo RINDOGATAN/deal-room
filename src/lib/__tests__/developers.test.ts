@@ -115,7 +115,7 @@ describe("developer quick start", () => {
     // Contract types: one table per group, same columns for every row.
     expect(md).toContain("### Commercial and technology");
     expect(md).toContain(
-      "| [Non-Disclosure Agreement](https://dealroom.todo.law/contracts/nda) | `NDA` | California, England and Wales, Spain | English, Spanish | `dispute-forum-city (only under Spain; default Madrid)` |",
+      "| [Non-Disclosure Agreement](https://dealroom.todo.law/contracts/nda) | `NDA` | California, England and Wales, Spain | English, Spanish | `dispute-forum-city (only under Spain; if left out, the default Madrid is applied)` |",
     );
     expect(md).toContain("| [Data Processing Agreement](https://dealroom.todo.law/contracts/data-processing-agreement) | `DPA` | California, Spain | English | `processing-purpose` |");
     const rows = md.split("\n").filter((l) => l.startsWith("| ["));
@@ -127,7 +127,7 @@ describe("developer quick start", () => {
   });
 
   it("describes the inputs in Spanish too, and says when there are none", () => {
-    expect(typeRow(TYPES[0], "es").inputs).toEqual(["dispute-forum-city (solo con España; por defecto Madrid)"]);
+    expect(typeRow(TYPES[0], "es").inputs).toEqual(["dispute-forum-city (solo con España; si no lo envías, se aplica el valor por defecto Madrid)"]);
     expect(typeRow({ ...TYPES[1], inputs: [] }, "es").inputs).toEqual([]);
     const md = developersMarkdown(buildDevelopersDoc({ locale: "es", types: [{ ...TYPES[1], inputs: [] }], prices: [], billingOn: false }));
     expect(md).toContain("| Ninguno |");

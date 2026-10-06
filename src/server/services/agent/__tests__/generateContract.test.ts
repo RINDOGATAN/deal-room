@@ -49,6 +49,7 @@ const CATALOGUE = [
   },
   { contractType: "DELAWARE_CERT_OF_INCORPORATION", displayName: "Certificate of Incorporation", jurisdictions: ["DELAWARE"], languages: ["en"] },
   { contractType: "A2A_SERVICE_LEVEL", displayName: "A2A SLA", jurisdictions: ["CALIFORNIA"], languages: ["en"] },
+  { contractType: "TEMPLATE", displayName: "Template Agreement", jurisdictions: ["CALIFORNIA"], languages: ["en"] },
 ];
 
 function db(opts: { balance?: number | null; owner?: { id: string } | null } = {}) {
@@ -174,6 +175,14 @@ describe("generateContract", () => {
     const res = await generateContract(db({ balance: 1 }) as never, AUTH, input({ contractType: "LEASE_ON_MARS" }));
     expect(res.status).toBe(404);
     expect(String(res.body.hint)).toContain("/api/v1/agent/contract-types");
+    expect(intake.createSoloDealFromFacts).not.toHaveBeenCalled();
+  });
+
+  it("refuses the placeholder template as an unknown contract type, in any case", async () => {
+    for (const code of ["TEMPLATE", "template"]) {
+      const res = await generateContract(db({ balance: 1 }) as never, AUTH, input({ contractType: code }));
+      expect(res.status).toBe(404);
+    }
     expect(intake.createSoloDealFromFacts).not.toHaveBeenCalled();
   });
 

@@ -55,13 +55,14 @@ describe("contract types", () => {
         label: "Ciudad de los juzgados",
         type: "text",
         required: true,
+        mustSend: false,
         onlyUnder: ["SPAIN"],
         default: "Madrid",
       },
     ]);
   });
 
-  it("lists the catalogue without agent-to-agent templates, with guides and roles", async () => {
+  it("lists the catalogue without agent-to-agent templates or the placeholder, with guides and roles", async () => {
     const findMany = vi.fn(async () => [
       {
         contractType: "DPA",
@@ -94,7 +95,10 @@ describe("contract types", () => {
     const list = await listContractTypes({ contractTemplate: { findMany } } as never, { lang: "es" });
     expect(findMany).toHaveBeenCalledWith(
       expect.objectContaining({
-        where: { isActive: true, NOT: { contractType: { startsWith: "A2A_" } } },
+        where: {
+          isActive: true,
+          NOT: [{ contractType: { startsWith: "A2A_" } }, { contractType: "TEMPLATE" }],
+        },
       }),
     );
     expect(list).toHaveLength(1); // the clause-less stub is left out

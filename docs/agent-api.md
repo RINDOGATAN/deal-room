@@ -983,8 +983,9 @@ credits. See [Paying per contract](#paying-per-contract).
 
 Every template, premium ones included, is available to every API key
 without a skill entitlement. Negotiating is always free. Where payments are
-on, what is paid is the **contract**, when its document is first fetched
-(see [Paying per contract](#paying-per-contract)).
+on, what is paid is the **contract**: when it is made, for a contract made
+in one call (`POST /api/v1/agent/contracts`), or when its document is first
+fetched, for a negotiated one (see [Paying per contract](#paying-per-contract)).
 
 ---
 

@@ -15,7 +15,7 @@ import {
   type McpContext,
 } from "@/server/services/agent/mcp-protocol";
 
-const tools = buildMcpTools({ baseUrl: "https://dealroom.test/api/v1/agent", contractTypes: ["NDA"], stripeEnabled: true });
+const tools = buildMcpTools({ baseUrl: "https://dealroom.test/api/v1/agent", stripeEnabled: true });
 
 function ctx(over: Partial<McpContext> = {}): McpContext {
   return {

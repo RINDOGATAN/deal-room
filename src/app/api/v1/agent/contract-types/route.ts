@@ -17,6 +17,7 @@ import prisma from "@/lib/prisma";
 import { features } from "@/config/features";
 import { apiError } from "@/lib/api-response";
 import { listContractTypes } from "@/server/services/agent/contractTypes";
+import { REQUIRED_INPUTS_RULE } from "@/lib/agent-inputs";
 
 export async function GET(req: NextRequest) {
   try {
@@ -31,7 +32,7 @@ export async function GET(req: NextRequest) {
         generate: {
           method: "POST",
           url: "/api/v1/agent/contracts",
-          note: "Send contractType (the code or the guide slug), party and, where more than one is offered, governingLaw. Inputs marked required go in terms.",
+          note: `Send contractType (the code or the guide slug), party and, where more than one is offered, governingLaw. ${REQUIRED_INPUTS_RULE.en} mustSend marks the required inputs without a default.`,
         },
       },
       { headers: { "Cache-Control": "public, max-age=300, s-maxage=600" } },

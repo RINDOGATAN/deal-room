@@ -15,14 +15,13 @@ import { DEVELOPERS_COPY } from "@/components/developers/copy";
 import { CLIENT_ORDER } from "@/lib/developers-doc";
 import { MCP_SNIPPETS } from "@/lib/developer-snippets";
 import { CONTRACT_PAGES, loadContractPage } from "@/lib/contract-pages";
-import { allContractCodes, llmsFullText, mcpDiscovery, mcpServerCard } from "@/lib/agent-discovery";
+import { llmsFullText, mcpDiscovery, mcpServerCard } from "@/lib/agent-discovery";
 import { buildMcpTools } from "./mcp-tools";
 import { LATEST_PROTOCOL_VERSION } from "./mcp-protocol";
 
 export function discoveryTools() {
   return buildMcpTools({
     baseUrl: `https://${brand.appDomain}/api/v1/agent`,
-    contractTypes: allContractCodes(),
     stripeEnabled: features.stripeEnabled,
   });
 }

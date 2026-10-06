@@ -19,6 +19,7 @@ import {
   checkRateLimit,
   checkA2aRateLimit,
 } from "@/server/middleware/apiKeyAuth";
+import { unauthorizedResponse } from "@/server/middleware/unauthorized";
 import { withIdempotency } from "@/server/middleware/idempotency";
 import { checkDealCreationEntitlement } from "@/server/services/licensing/entitlement";
 import { features } from "@/config/features";
@@ -37,7 +38,7 @@ export async function POST(req: NextRequest) {
 
     const auth = await authenticateApiKey(req);
     if (!auth) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return unauthorizedResponse();
     }
 
     try {

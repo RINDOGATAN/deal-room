@@ -16,13 +16,12 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import prisma from "@/lib/prisma";
 import { features } from "@/config/features";
 import { brand } from "@/config/brand";
 import { apiError } from "@/lib/api-response";
 import { API_KEYS_SETTINGS_PATH } from "@/lib/api-key-scopes";
 import { agentPricingBlock } from "@/server/services/billing/pricing";
-import { buildMcpTools } from "@/server/services/agent/mcp-tools";
+import { discoveryTools } from "@/server/services/agent/discovery";
 import { handlePayload, rpcError, RPC } from "@/server/services/agent/mcp-protocol";
 import { invokeTool } from "@/server/services/agent/mcp-invoke";
 import { MCP_SERVER_VERSION } from "@/lib/agent-discovery";
@@ -30,17 +29,9 @@ import { MCP_SERVER_VERSION } from "@/lib/agent-discovery";
 // One version for the server, server.json and the server card.
 const SERVER_VERSION = MCP_SERVER_VERSION;
 
+// The same tool definitions as the prerendered server card.
 async function tools() {
-  const templates = await prisma.contractTemplate.findMany({
-    where: { isActive: true },
-    select: { contractType: true },
-    orderBy: { displayName: "asc" },
-  });
-  return buildMcpTools({
-    baseUrl: `https://${brand.appDomain}/api/v1/agent`,
-    contractTypes: templates.map((t) => t.contractType),
-    stripeEnabled: features.stripeEnabled,
-  });
+  return discoveryTools();
 }
 
 function notAllowed() {

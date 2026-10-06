@@ -15,6 +15,7 @@ import {
   requireScope,
   ApiScopeError,
 } from "@/server/middleware/apiKeyAuth";
+import { unauthorizedResponse } from "@/server/middleware/unauthorized";
 import { withIdempotency } from "@/server/middleware/idempotency";
 import { features } from "@/config/features";
 import { fireWebhook } from "@/server/services/agent/webhooks";
@@ -33,7 +34,7 @@ export async function POST(
 
     const auth = await authenticateApiKey(req);
     if (!auth) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return unauthorizedResponse();
     }
 
     try {

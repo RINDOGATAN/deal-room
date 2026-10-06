@@ -6,7 +6,16 @@
  * discovery JSON (GET /api/v1/agent/mcp) and by the MCP server itself
  * (POST /api/v1/agent/mcp, `tools/list`). Each tool runs one REST route,
  * named in `endpoint`, so the REST API and the MCP server cannot differ.
+ *
+ * The tools hold no list of contract codes of their own: the codes come
+ * from list_contract_types (the contract types the one call makes, the
+ * same list as the guides, the server card and the agent card) and, for
+ * the negotiation tools only, also the A2A_ agent-to-agent protocol types
+ * that list_templates shows. So the live server and the prerendered
+ * server card describe the same tools.
  */
+
+import { REQUIRED_INPUTS_RULE } from "@/lib/agent-inputs";
 
 export interface McpToolDef {
   name: string;
@@ -25,7 +34,11 @@ export interface McpToolDef {
   errors?: { status: number; code: string; fix: string }[];
 }
 
-const GOVERNING_LAWS = ["CALIFORNIA", "NEW_YORK", "ENGLAND_WALES", "SPAIN"];
+/** The governing laws some contract type offers (no type offers New York today). */
+export const OFFERED_GOVERNING_LAWS = ["CALIFORNIA", "ENGLAND_WALES", "SPAIN"];
+
+const NEGOTIATION_CONTRACT_TYPE =
+  "Contract type code: one from list_contract_types, or an A2A_ agent-to-agent protocol type from list_templates (those are negotiated only, never made with generate_contract)";
 
 const partySchema = (who: string) => ({
   type: "object",
@@ -41,18 +54,14 @@ const partySchema = (who: string) => ({
   required: ["legalName"],
 });
 
-export function buildMcpTools(opts: {
-  baseUrl: string;
-  contractTypes: string[];
-  stripeEnabled: boolean;
-}): McpToolDef[] {
-  const { baseUrl, contractTypes, stripeEnabled } = opts;
+export function buildMcpTools(opts: { baseUrl: string; stripeEnabled: boolean }): McpToolDef[] {
+  const { baseUrl, stripeEnabled } = opts;
   return [
     {
       name: "list_contract_types",
       title: "List contract types",
       description:
-        "Every contract type Dealroom can make, with the code to use as contractType, the guide slug, the governing laws and languages it is offered in, the role the caller can take (DPA and BAA only) and the inputs it asks for. Call this first to know what to ask the user. No API key needed.",
+        `Every contract type Dealroom can make, with the code to use as contractType, the guide slug, the governing laws and languages it is offered in, the role the caller can take (DPA and BAA only) and the inputs it asks for. Each input says whether it is required and, when it has one, its default; mustSend marks the required inputs without a default. ${REQUIRED_INPUTS_RULE.en} Call this first to know what to ask the user. No API key needed.`,
       inputSchema: {
         type: "object",
         properties: {
@@ -80,7 +89,7 @@ export function buildMcpTools(opts: {
           },
           governingLaw: {
             type: "string",
-            enum: GOVERNING_LAWS,
+            enum: OFFERED_GOVERNING_LAWS,
             description: "Required when the contract type offers more than one",
           },
           language: { type: "string", enum: ["en", "es"], default: "en" },
@@ -94,7 +103,7 @@ export function buildMcpTools(opts: {
           terms: {
             type: "object",
             additionalProperties: { type: "string" },
-            description: "Inputs by id (see inputs in list_contract_types); required ones must be given",
+            description: `Inputs by id (see inputs in list_contract_types). ${REQUIRED_INPUTS_RULE.en}`,
           },
           clauses: {
             type: "object",
@@ -147,11 +156,7 @@ export function buildMcpTools(opts: {
       inputSchema: {
         type: "object",
         properties: {
-          contractType: {
-            type: "string",
-            description: "Contract type identifier",
-            enum: contractTypes,
-          },
+          contractType: { type: "string", description: NEGOTIATION_CONTRACT_TYPE },
         },
         required: ["contractType"],
       },
@@ -168,12 +173,8 @@ export function buildMcpTools(opts: {
         type: "object",
         properties: {
           name: { type: "string", description: "Unique playbook name" },
-          contractType: {
-            type: "string",
-            description: "Contract type",
-            enum: contractTypes,
-          },
-          governingLaw: { type: "string", enum: GOVERNING_LAWS },
+          contractType: { type: "string", description: NEGOTIATION_CONTRACT_TYPE },
+          governingLaw: { type: "string", enum: OFFERED_GOVERNING_LAWS },
           contractLanguage: { type: "string", enum: ["en", "es"], default: "en" },
           entries: {
             type: "array",

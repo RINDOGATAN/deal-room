@@ -14,29 +14,30 @@ Disallow: /auth/
 Disallow: /account/
 Disallow: /deals/
 
+# Named AI crawlers: a group of their own overrides the * group, so it
+# repeats the same Disallows.
 User-agent: GPTBot
-Allow: /
-
 User-agent: ChatGPT-User
-Allow: /
-
 User-agent: OAI-SearchBot
-Allow: /
-
 User-agent: ClaudeBot
-Allow: /
-
 User-agent: Claude-User
-Allow: /
-
 User-agent: Claude-SearchBot
-Allow: /
-
 User-agent: Claude-Web
-Allow: /
-
 User-agent: PerplexityBot
 Allow: /
+Allow: /.well-known/
+Allow: /llms.txt
+Allow: /llms-full.txt
+Allow: /developers.md
+Allow: /es/developers.md
+Allow: /api/v1/agent/contract-types
+Allow: /api/v1/agent/mcp
+Disallow: /api/
+Disallow: /sign-in
+Disallow: /verify-request
+Disallow: /auth/
+Disallow: /account/
+Disallow: /deals/
 
 User-agent: Bytespider
 Disallow: /

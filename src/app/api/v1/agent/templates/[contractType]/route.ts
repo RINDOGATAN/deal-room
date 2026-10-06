@@ -15,10 +15,12 @@ import {
   requireScope,
   ApiScopeError,
 } from "@/server/middleware/apiKeyAuth";
+import { unauthorizedResponse } from "@/server/middleware/unauthorized";
 import { checkEntitlement } from "@/server/services/licensing/entitlement";
 import { features } from "@/config/features";
 import { createLogger } from "@/lib/logger";
 import { LIVE_ROWS } from "@/lib/clause-retirement";
+import { isPlaceholderContractType } from "@/server/services/agent/contractTypes";
 
 const logger = createLogger("agent-api");
 
@@ -33,7 +35,7 @@ export async function GET(
 
     const auth = await authenticateApiKey(req);
     if (!auth) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return unauthorizedResponse();
     }
 
     try {
@@ -47,7 +49,8 @@ export async function GET(
 
     const { contractType } = await params;
 
-    const template = await prisma.contractTemplate.findUnique({
+    // The placeholder template is not a contract: answer as for any unknown code.
+    const template = isPlaceholderContractType(contractType) ? null : await prisma.contractTemplate.findUnique({
       where: { contractType },
       include: {
         skillPackage: true,

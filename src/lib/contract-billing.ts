@@ -143,7 +143,7 @@ export const CHECKOUT_GONE_MESSAGE =
 
 /** HTTP 410 from the retired agent subscription (`POST /api/v1/agent/subscribe`). */
 export const AGENT_SUBSCRIBE_GONE_MESSAGE =
-  "Subscriptions are no longer offered. Every template is included, and each contract is paid with one prepaid credit when its document is first fetched. Buy credits in packs of ten at POST /api/v1/agent/credits/checkout.";
+  "Subscriptions are no longer offered. Every template is included, and each contract is paid with one prepaid credit: when it is made, for a contract made in one call, or when its document is first fetched, for a negotiated one. Buy credits in packs of ten at POST /api/v1/agent/credits/checkout.";
 
 /** Display amount, for example 2900 + "eur" → "€29" and 950 + "usd" → "$9.50". */
 export function formatAmount(minor: number, currency: string, locale = "en"): string {

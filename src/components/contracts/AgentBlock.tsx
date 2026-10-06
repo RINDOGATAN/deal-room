@@ -4,7 +4,8 @@
 import Link from "next/link";
 import { ArrowRight, Bot } from "lucide-react";
 import type { PageLocale } from "@/lib/contract-pages-paths";
-import { MCP_URL, agentContractType, developersMcpPath, mustSendInputs, oneCallCurl } from "@/lib/agent-discovery";
+import { MCP_URL, agentContractType, developersMcpPath, oneCallCurl } from "@/lib/agent-discovery";
+import { describeInput, requiredInputs } from "@/lib/agent-inputs";
 import { CodeBlock } from "@/components/developers/CodeBlock";
 import { CONTRACT_COPY, JURISDICTION_NAMES } from "./copy";
 
@@ -15,10 +16,10 @@ import { CONTRACT_COPY, JURISDICTION_NAMES } from "./copy";
  */
 export function AgentBlock({ contractType, locale }: { contractType: string; locale: PageLocale }) {
   const copy = CONTRACT_COPY[locale];
-  const inputs = mustSendInputs(agentContractType(contractType)).map((i) =>
-    i.onlyUnder?.length
-      ? `${i.id} (${copy.agentOnlyUnder(i.onlyUnder.map((l) => JURISDICTION_NAMES[l]?.[locale] ?? l).join(", "))})`
-      : i.id,
+  // Every required input, with the default applied when one is left out
+  // (the same rule as /developers, mcp.json, llms-full.txt and the API).
+  const inputs = requiredInputs(agentContractType(contractType)?.requiredInputs).map((i) =>
+    describeInput(i, locale, (l) => JURISDICTION_NAMES[l]?.[locale] ?? l),
   );
 
   return (
