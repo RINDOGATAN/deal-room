@@ -163,15 +163,25 @@ export interface ContractData {
   };
 }
 
-/** The UETA / E-SIGN statement that the agreement was formed by the parties' electronic agents. */
-export const UETA_PREAMBLE =
-  "This agreement was formed by the interaction of electronic agents of the parties pursuant to the Uniform Electronic Transactions Act § 14 and the Electronic Signatures in Global and National Commerce Act (15 U.S.C. § 7001 et seq.). Each party authorized its electronic agent to negotiate and accept the terms herein.";
+/**
+ * The UETA / E-SIGN statement that the agreement was formed by the two
+ * parties' agentic systems negotiating with each other (wording: owner,
+ * 5 Oct 2026), in the contract's language.
+ */
+export const UETA_PREAMBLE: Record<"en" | "es", string> = {
+  en: "This agreement was formed by two agentic systems negotiating with each other, pursuant to the Uniform Electronic Transactions Act § 14 and the Electronic Signatures in Global and National Commerce Act (15 U.S.C. § 7001 et seq.). Each party authorized its electronic agent to negotiate and accept the terms herein.",
+  es: "El presente acuerdo ha sido formado por dos sistemas agénticos que negociaron entre sí, de conformidad con el § 14 de la Uniform Electronic Transactions Act y la Electronic Signatures in Global and National Commerce Act (15 U.S.C. § 7001 y ss.). Cada parte autorizó a su agente electrónico para negociar y aceptar los términos del presente acuerdo.",
+};
+
+export function uetaPreamble(language: string | null | undefined): string {
+  return language === "es" ? UETA_PREAMBLE.es : UETA_PREAMBLE.en;
+}
 
 /**
  * The agent attestation of a deal, only when it is true: both sides acted
  * through agents (the deal was initiated and joined with a playbook each).
  * A single-party contract made by one agent (solo intake, the one call)
- * was not formed by the interaction of two electronic agents, so it gets
+ * was not formed by two agentic systems negotiating with each other, so it gets
  * none (owner, 5 Oct 2026).
  */
 export function agentAttestationFor(
@@ -181,17 +191,18 @@ export function agentAttestationFor(
     attestingBarNumber: string | null;
     attestingAttorneyName: string | null;
   } | null,
+  language: string = "en",
 ): ContractData["agentAttestation"] {
   if (!agentDeal?.initiatorPlaybookId || !agentDeal.respondentPlaybookId) return undefined;
   if (agentDeal.attestingBarNumber && agentDeal.attestingAttorneyName) {
     return {
       attorneyName: agentDeal.attestingAttorneyName,
       barNumber: agentDeal.attestingBarNumber,
-      uetaPreamble: UETA_PREAMBLE,
+      uetaPreamble: uetaPreamble(language),
       attestationFooter: `The legal provisions in this contract have been reviewed and attested by ${agentDeal.attestingAttorneyName} (Bar No. ${agentDeal.attestingBarNumber}) pursuant to UETA § 14 and the federal E-SIGN Act.`,
     };
   }
-  return { attorneyName: "", barNumber: "", uetaPreamble: UETA_PREAMBLE, attestationFooter: "" };
+  return { attorneyName: "", barNumber: "", uetaPreamble: uetaPreamble(language), attestationFooter: "" };
 }
 
 const GOVERNING_LAW_DISPLAY: Record<string, Record<string, string>> = {
@@ -893,7 +904,7 @@ export async function generateContractData(
     where: { dealRoomId },
   });
 
-  const agentAttestation = agentAttestationFor(agentDeal);
+  const agentAttestation = agentAttestationFor(agentDeal, language);
 
   // Build the party objects, then apply the role swap to the objects
   // themselves (not just the boilerplate variables) so EVERY renderer — cover,

@@ -122,7 +122,7 @@ describe("Markdown", () => {
 
   it("adds no long dash of its own and no notice on a single-party contract", () => {
     expect(md).not.toMatch(LONG_DASH);
-    expect(md).not.toContain("electronic agents");
+    expect(md).not.toContain("agentic systems");
   });
 });
 
@@ -173,30 +173,36 @@ describe("agent formation notice", () => {
     expect(agentAttestationFor({ ...twoAgents, initiatorPlaybookId: null, respondentPlaybookId: null })).toBeUndefined();
     // Initiated, never joined.
     expect(agentAttestationFor({ ...twoAgents, respondentPlaybookId: null })).toBeUndefined();
-    expect(agentAttestationFor(twoAgents)?.uetaPreamble).toBe(UETA_PREAMBLE);
+    expect(agentAttestationFor(twoAgents)?.uetaPreamble).toBe(UETA_PREAMBLE.en);
     expect(
       agentAttestationFor({ ...twoAgents, attestingBarNumber: "CA-1", attestingAttorneyName: "J. Doe" })?.attestationFooter,
     ).toContain("J. Doe (Bar No. CA-1)");
   });
 
-  it("keeps the existing wording", () => {
-    expect(UETA_PREAMBLE).toBe(
-      "This agreement was formed by the interaction of electronic agents of the parties pursuant to the Uniform Electronic Transactions Act § 14 and the Electronic Signatures in Global and National Commerce Act (15 U.S.C. § 7001 et seq.). Each party authorized its electronic agent to negotiate and accept the terms herein.",
+  it("uses the owner's wording, in the contract's language", () => {
+    expect(UETA_PREAMBLE.en).toBe(
+      "This agreement was formed by two agentic systems negotiating with each other, pursuant to the Uniform Electronic Transactions Act § 14 and the Electronic Signatures in Global and National Commerce Act (15 U.S.C. § 7001 et seq.). Each party authorized its electronic agent to negotiate and accept the terms herein.",
     );
+    expect(UETA_PREAMBLE.es).toContain("formado por dos sistemas agénticos que negociaron entre sí");
+    expect(agentAttestationFor(twoAgents, "es")?.uetaPreamble).toBe(UETA_PREAMBLE.es);
+    for (const text of Object.values(UETA_PREAMBLE)) {
+      expect(text).not.toContain("interaction of electronic agents");
+      expect(text).not.toMatch(/[\u2013\u2014]/);
+    }
   });
 
   it("is printed in every text format of a two-agent contract, and in none of a single-party one", async () => {
     const withNotice = sample({ agentAttestation: agentAttestationFor(twoAgents) });
     for (const out of [generateContractMarkdown(withNotice), generateContractHtml(withNotice), generateContractTxt(withNotice)]) {
-      expect(out).toContain("formed by the interaction of electronic agents");
+      expect(out).toContain("formed by two agentic systems negotiating with each other");
     }
     const without = sample();
     for (const out of [generateContractMarkdown(without), generateContractHtml(without), generateContractTxt(without)]) {
-      expect(out).not.toContain("electronic agents");
+      expect(out).not.toContain("agentic systems");
     }
     const docx = async (d: ContractData) => zipEntry(await generateContractDocx(d), "word/document.xml");
-    expect(await docx(withNotice)).toContain("formed by the interaction of electronic agents");
-    expect(await docx(without)).not.toContain("electronic agents");
+    expect(await docx(withNotice)).toContain("formed by two agentic systems negotiating with each other");
+    expect(await docx(without)).not.toContain("agentic systems");
   });
 });
 
@@ -247,7 +253,7 @@ describe("real DPA skill", () => {
     for (const out of [md, html]) {
       expect(out).toContain("Acme Controller SL");
       expect(out).toContain("Globex Processor GmbH");
-      expect(out).not.toContain("electronic agents");
+      expect(out).not.toContain("agentic systems");
     }
     // No long dash beyond those in the skill's own text.
     const source = JSON.stringify(data);
@@ -264,7 +270,7 @@ describe("real DPA skill", () => {
       attestingAttorneyName: null,
     };
     const data = (await generateContractData("deal-1"))!;
-    expect(generateContractMarkdown(data)).toContain("> This agreement was formed by the interaction of electronic agents");
+    expect(generateContractMarkdown(data)).toContain("> This agreement was formed by two agentic systems negotiating with each other");
   });
 
   it("leaves it out of a single-party contract made by one agent", async () => {
@@ -276,6 +282,6 @@ describe("real DPA skill", () => {
     };
     const data = (await generateContractData("deal-1"))!;
     expect(data.agentAttestation).toBeUndefined();
-    expect(generateContractTxt(data)).not.toContain("electronic agents");
+    expect(generateContractTxt(data)).not.toContain("agentic systems");
   });
 });

@@ -1289,7 +1289,13 @@ When a supervising attorney has approved (vetted) a skill's clauses for a given 
 
 Contracts negotiated between two agents (initiated and joined, each side with its own playbook) open with a UETA § 14 / E-SIGN Act notice, in every format (PDF, DOCX, TXT, Markdown, HTML), followed by the attorney attestation when there is one. Single-party contracts made by one agent (`POST /deals`, `POST /contracts`) do not carry it, because no second agent took part:
 
-> "This agreement was formed by the interaction of electronic agents of the parties pursuant to the Uniform Electronic Transactions Act § 14 and the Electronic Signatures in Global and National Commerce Act (15 U.S.C. § 7001 et seq.). Each party authorized its electronic agent to negotiate and accept the terms herein."
+English contracts:
+
+> "This agreement was formed by two agentic systems negotiating with each other, pursuant to the Uniform Electronic Transactions Act § 14 and the Electronic Signatures in Global and National Commerce Act (15 U.S.C. § 7001 et seq.). Each party authorized its electronic agent to negotiate and accept the terms herein."
+
+Spanish contracts:
+
+> "El presente acuerdo ha sido formado por dos sistemas agénticos que negociaron entre sí, de conformidad con el § 14 de la Uniform Electronic Transactions Act y la Electronic Signatures in Global and National Commerce Act (15 U.S.C. § 7001 y ss.). Cada parte autorizó a su agente electrónico para negociar y aceptar los términos del presente acuerdo."
 
 ---
 

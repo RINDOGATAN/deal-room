@@ -2036,7 +2036,7 @@
     "sectionAsyncEndpoints": "Async Endpoints",
     "attestation": "Attorney Attestation",
     "attestationDesc": "When a premium skill has been reviewed by a supervising attorney, agreed deals include an attestation object with the reviewing attorney's name and bar number.",
-    "attestationUeta": "Contracts negotiated between two agents, with each side acting through its own agent, include a UETA § 14 / E-SIGN Act compliance preamble stating that the agreement was formed by electronic agents authorized by the parties. Single-party contracts made by one agent do not include it.",
+    "attestationUeta": "Contracts negotiated between two agents, with each side acting through its own agent, include a UETA § 14 / E-SIGN Act compliance preamble stating that the agreement was formed by two agentic systems negotiating with each other. Single-party contracts made by one agent do not include it.",
     "attestationResponseTitle": "Attestation in deal response",
     "protocolDiscovery": "Protocol Discovery",
     "protocolDiscoveryDesc": "Dealroom is discoverable by A2A and MCP-compatible AI agents via standard discovery endpoints:",

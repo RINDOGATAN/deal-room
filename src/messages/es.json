@@ -2037,7 +2037,7 @@
     "sectionAsyncEndpoints": "Endpoints Asíncronos",
     "attestation": "Atestación de Abogado/a",
     "attestationDesc": "Cuando un skill premium ha sido revisado por un abogado/a supervisor/a, las operaciones acordadas incluyen un objeto de atestación con el nombre y número de colegiación del abogado/a revisor/a.",
-    "attestationUeta": "Los contratos negociados entre dos agentes, cuando cada parte actúa con su propio agente, incluyen un preámbulo de cumplimiento UETA § 14 / E-SIGN Act que indica que el acuerdo fue formado por agentes electrónicos autorizados por las partes. Los contratos de una sola parte creados por un agente no lo incluyen.",
+    "attestationUeta": "Los contratos negociados entre dos agentes, cuando cada parte actúa con su propio agente, incluyen un preámbulo de cumplimiento UETA § 14 / E-SIGN Act que indica que el acuerdo fue formado por dos sistemas agénticos que negociaron entre sí. Los contratos de una sola parte creados por un agente no lo incluyen.",
     "attestationResponseTitle": "Atestación en la respuesta de la operación",
     "protocolDiscovery": "Descubrimiento de Protocolos",
     "protocolDiscoveryDesc": "Dealroom es descubrible por agentes de IA compatibles con A2A y MCP mediante endpoints de descubrimiento estándar:",
