@@ -2,14 +2,16 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * Search-engine parts of the developer quick start: metadata with
- * canonical and hreflang alternates, and the JSON-LD (a HowTo for the three
- * steps, the list of contract guides, breadcrumbs).
+ * Search-engine and agent-facing parts of the developer quick start:
+ * metadata (canonical, hreflang, the Markdown twin as an alternate) and the
+ * JSON-LD (WebPage, HowTo for the three steps, ItemList of the contract
+ * types, WebAPI, BreadcrumbList), all from the page's own data.
  */
 
 import type { Metadata } from "next";
-import { PAGE_LOCALES, SITE_URL, contractPath, developersPath, type PageLocale } from "./contract-pages-paths";
+import { PAGE_LOCALES, SITE_URL, developersPath, type PageLocale } from "./contract-pages-paths";
 import { OG_IMAGE_PATH } from "./contract-pages-seo";
+import type { DevelopersDoc } from "./developers-doc";
 
 const OG_LOCALE: Record<PageLocale, string> = { en: "en_US", es: "es_ES" };
 
@@ -20,6 +22,8 @@ export function developersMetadata(locale: PageLocale, title: string, descriptio
     alternates: {
       canonical: developersPath(locale),
       languages: { en: developersPath("en"), es: developersPath("es"), "x-default": developersPath("en") },
+      // <link rel="alternate" type="text/markdown" href="/developers.md">
+      types: { "text/markdown": `${developersPath(locale)}.md` },
     },
     openGraph: {
       title,
@@ -35,16 +39,12 @@ export function developersMetadata(locale: PageLocale, title: string, descriptio
   };
 }
 
-export function developersJsonLd(opts: {
-  locale: PageLocale;
-  title: string;
-  description: string;
-  howToName: string;
-  steps: { title: string; body: string }[];
-  breadcrumb: string;
-  contracts: { slug: string; name: string }[];
-}): Record<string, unknown> {
-  const url = `${SITE_URL}${developersPath(opts.locale)}`;
+export function developersJsonLd(
+  doc: DevelopersDoc,
+  opts: { description: string; howToName: string; apiName: string; apiDescription: string; breadcrumb: string },
+): Record<string, unknown> {
+  const url = doc.url;
+  const rows = doc.types.groups.flatMap((g) => g.rows);
   return {
     "@context": "https://schema.org",
     "@graph": [
@@ -52,34 +52,46 @@ export function developersJsonLd(opts: {
         "@type": "WebPage",
         "@id": `${url}#page`,
         url,
-        name: opts.title,
+        name: doc.title,
         description: opts.description,
-        inLanguage: opts.locale,
+        inLanguage: doc.locale,
         isPartOf: { "@type": "WebSite", name: "Dealroom", url: SITE_URL },
+        about: { "@id": `${url}#api` },
+        encoding: { "@type": "MediaObject", encodingFormat: "text/markdown", contentUrl: doc.markdownUrl },
       },
       {
         "@type": "HowTo",
-        "@id": `${url}#howto`,
+        "@id": `${url}#steps`,
         name: opts.howToName,
-        inLanguage: opts.locale,
-        step: opts.steps.map((s, i) => ({
-          "@type": "HowToStep",
-          position: i + 1,
-          name: s.title,
-          text: s.body,
-          url: `${url}#step-${i + 1}`,
-        })),
+        inLanguage: doc.locale,
+        step: doc.steps.map((s, i) => ({ "@type": "HowToStep", position: i + 1, name: s.title, text: s.body })),
+      },
+      {
+        "@type": "WebAPI",
+        "@id": `${url}#api`,
+        name: opts.apiName,
+        description: opts.apiDescription,
+        url: `${SITE_URL}/api/v1/agent`,
+        documentation: `${SITE_URL}/docs/agent-api`,
+        provider: { "@type": "Organization", name: "TODO.LAW", url: "https://todo.law" },
+        potentialAction: {
+          "@type": "CreateAction",
+          name: doc.headings["one-call"],
+          target: { "@type": "EntryPoint", httpMethod: "POST", urlTemplate: `${SITE_URL}/api/v1/agent/contracts`, contentType: "application/json" },
+        },
       },
       {
         "@type": "ItemList",
-        "@id": `${url}#contracts`,
-        inLanguage: opts.locale,
-        numberOfItems: opts.contracts.length,
-        itemListElement: opts.contracts.map((c, i) => ({
+        "@id": `${url}#contract-types`,
+        name: doc.headings["contract-types"],
+        inLanguage: doc.locale,
+        numberOfItems: rows.length,
+        itemListElement: rows.map((r, i) => ({
           "@type": "ListItem",
           position: i + 1,
-          name: c.name,
-          url: `${SITE_URL}${contractPath(opts.locale, c.slug)}`,
+          name: r.name,
+          identifier: r.code,
+          ...(r.href ? { url: `${SITE_URL}${r.href}` } : {}),
         })),
       },
       {

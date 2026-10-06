@@ -29,7 +29,7 @@ Quick start for developers (keys, credits, MCP client setup): https://dealroom.t
   "role": "PROCESSOR",
   "terms": { "input-id": "value" },
   "clauses": { "clause-id": "option-code" },
-  "includeText": false
+  "inline": "md"
 }
 ```
 
@@ -38,12 +38,26 @@ Quick start for developers (keys, credits, MCP client setup): https://dealroom.t
 - `terms`: inputs left out take their default (as the wizard pre-fills them); required inputs without a default must be sent, else 422 `Missing required parameters` with the list.
 - Clauses left out take the skill's baseline option (solo intake with `selectionPolicy: "defaults"`). The deal is a SOLO deal: `party` becomes the initiator's signing details, `counterparty` is stored on the deal (`soloCounterparty`) and fills the other block; without it that block stays blank.
 - Payment: with billing on, a customer with no credit gets **402** `PAYMENT_REQUIRED` before anything is created. Otherwise the deal is paid exactly as the first document download (`dealAccessForAgent`: one credit), so later downloads are free. If the last credit is spent elsewhere in between, the answer is 402 with the `dealId` (fetch `/deals/:id/document` once a credit is back).
-- Answer **201**: `dealId` (agent deal id, for `/deals/:id/...`), `dealRoomId`, `status: "AGREED"`, `contractType`, `governingLaw`, `language`, `paid`, `dealUrl` (opens in the browser for the person whose e-mail is the customer's; null with `dealUrlNote` when no such account exists), `documents.{pdf,docx,txt}`, `guide`, and `text` with `includeText`.
+- Answer **201**: `dealId` (agent deal id, for `/deals/:id/...`), `dealRoomId`, `status: "AGREED"`, `contractType`, `governingLaw`, `language`, `paid`, `dealUrl` (opens in the browser for the person whose e-mail is the customer's; null with `dealUrlNote` when no such account exists), `documents.{pdf,docx,txt,md,html}`, `guide`, and with `inline` (`md`, `html` or `txt`) `document: { format, content }`.
+
+### Formats
+
+Every agreed contract is available in five formats, all rendered from the same document model (`generateContractData`) that feeds the PDF; the Markdown and HTML renderers walk one shared outline (`contractOutline.ts`), so they list the same sections. Paid once per contract (first fetch of any format spends the credit); every later fetch, in any format, is free.
+
+| Format | Path | Media type | Notes |
+| --- | --- | --- | --- |
+| Markdown | `/deals/:id/document/md` | `text/markdown` | `#` title, `##` sections, `### N. Title` per negotiated clause, parties as field lists, signature blocks, annexes after a rule. Best for agents. |
+| HTML | `/deals/:id/document/html` | `text/html` | One self-contained file: no scripts, no external assets, inline styles only (sent with a CSP that allows nothing else). `<article>`, one `<section id="clause-{clauseId}">` per clause, `<dl>` for parties and definitions, `<dfn>` for defined terms. |
+| Text | `/deals/:id/document/txt` | `text/plain` | |
+| PDF | `/deals/:id/document` | `application/pdf` | |
+| DOCX | `/deals/:id/document/docx` | Word | |
+
+The one call returns the Markdown, HTML or text in the answer with `inline`; MCP `generate_contract` asks for Markdown by default and puts it first in the tool result; `download_contract` defaults to Markdown.
 - Errors: 400 invalid body, 401 no key, 403 scope, 404 unknown type (with a hint), 422 law, language, role, inputs, selections or an unsettled clause (nothing charged), 429 limit.
 
 ### MCP
 
-`POST /mcp` is the MCP server (Streamable HTTP, JSON answers, no sessions; methods `initialize`, `ping`, `tools/list`, `tools/call`). The key goes in the `Authorization` header; connecting and listing tools work without it. Each tool runs its REST route, so prices and limits are the same. `GET /mcp` still returns the tool list as JSON with each tool's endpoint. Tools: `list_contract_types` (public), `generate_contract`, `list_templates`, `get_template`, `create_playbook`, `initiate_negotiation`, `join_negotiation`, `get_deal`, `download_contract` (PDF and DOCX come back as embedded resources), `buy_credits`, `get_credit_balance`, `get_subscriptions`.
+`POST /mcp` is the MCP server (Streamable HTTP, JSON answers, no sessions; methods `initialize`, `ping`, `tools/list`, `tools/call`). The key goes in the `Authorization` header; connecting and listing tools work without it. Each tool runs its REST route, so prices and limits are the same. `GET /mcp` still returns the tool list as JSON with each tool's endpoint. Tools: `list_contract_types` (public), `generate_contract`, `list_templates`, `get_template`, `create_playbook`, `initiate_negotiation`, `join_negotiation`, `get_deal`, `download_contract` (Markdown by default; Markdown, HTML and text come back as text, PDF and DOCX as embedded resources), `buy_credits`, `get_credit_balance`, `get_subscriptions`.
 
 ---
 
@@ -1273,7 +1287,7 @@ When a supervising attorney has approved (vetted) a skill's clauses for a given 
 }
 ```
 
-All agent-generated contracts include a UETA § 14 / E-SIGN Act preamble:
+Contracts negotiated between two agents (initiated and joined, each side with its own playbook) open with a UETA § 14 / E-SIGN Act notice, in every format (PDF, DOCX, TXT, Markdown, HTML), followed by the attorney attestation when there is one. Single-party contracts made by one agent (`POST /deals`, `POST /contracts`) do not carry it, because no second agent took part:
 
 > "This agreement was formed by the interaction of electronic agents of the parties pursuant to the Uniform Electronic Transactions Act § 14 and the Electronic Signatures in Global and National Commerce Act (15 U.S.C. § 7001 et seq.). Each party authorized its electronic agent to negotiate and accept the terms herein."
 

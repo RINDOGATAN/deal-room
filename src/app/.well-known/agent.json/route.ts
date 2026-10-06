@@ -95,7 +95,7 @@ export async function GET() {
         description:
           "Make a finished single-party contract in one call (POST /api/v1/agent/contracts): contract type, your side's details, optionally the other side's, and the required inputs. Clauses left out take the standard option. Spends one credit where billing is on. GET /api/v1/agent/contract-types lists what each type needs (no key).",
         inputModes: ["application/json"],
-        outputModes: ["application/json", "application/pdf"],
+        outputModes: ["application/json", "text/markdown", "text/html", "text/plain", "application/pdf"],
       },
       {
         id: "negotiate-contract",

@@ -19,6 +19,7 @@ import {
   ShadingType,
 } from "docx";
 import { buildSequentialSections } from "./generator";
+import { agentNoticeParagraphs } from "./agentNotice";
 import type { ContractData, CertificationData } from "./generator";
 
 const LABELS: Record<string, Record<string, string>> = {
@@ -131,6 +132,17 @@ export async function generateContractDocx(
       ],
     })
   );
+
+  // Agent formation notice (two-agent negotiations only)
+  for (const text of agentNoticeParagraphs(data)) {
+    children.push(
+      new Paragraph({
+        alignment: AlignmentType.JUSTIFIED,
+        spacing: { after: 200 },
+        children: [new TextRun({ text, italics: true, size: 20, font: "Times New Roman" })],
+      })
+    );
+  }
 
   if (hasBoilerplate) {
     const bp = data.boilerplate!;

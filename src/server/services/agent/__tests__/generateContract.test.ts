@@ -24,6 +24,12 @@ vi.mock("@/server/services/document/generator", () => ({
 vi.mock("@/server/services/document/contractTxt", () => ({
   generateContractTxt: vi.fn(() => "MUTUAL NON-DISCLOSURE AGREEMENT ..."),
 }));
+vi.mock("@/server/services/document/contractMarkdown", () => ({
+  generateContractMarkdown: vi.fn(() => "# Mutual Non-Disclosure Agreement\n"),
+}));
+vi.mock("@/server/services/document/contractHtml", () => ({
+  generateContractHtml: vi.fn(() => "<!doctype html><title>NDA</title>"),
+}));
 
 import { generateContract, generateContractSchema } from "@/server/services/agent/generateContract";
 
@@ -103,10 +109,12 @@ describe("generateContract", () => {
         pdf: "https://dealroom.test/api/v1/agent/deals/adr_1/document",
         docx: "https://dealroom.test/api/v1/agent/deals/adr_1/document/docx",
         txt: "https://dealroom.test/api/v1/agent/deals/adr_1/document/txt",
+        md: "https://dealroom.test/api/v1/agent/deals/adr_1/document/md",
+        html: "https://dealroom.test/api/v1/agent/deals/adr_1/document/html",
       },
       guide: "https://dealroom.test/contracts/nda",
     });
-    expect(res.body).not.toHaveProperty("text");
+    expect(res.body).not.toHaveProperty("document");
 
     expect(intake.createSoloDealFromFacts).toHaveBeenCalledWith(
       prisma,
@@ -248,9 +256,14 @@ describe("generateContract", () => {
     );
   });
 
-  it("returns the text on request", async () => {
-    const res = await generateContract(db({ balance: 1 }) as never, AUTH, input({ includeText: true }));
-    expect(res.body.text).toContain("NON-DISCLOSURE");
+  it("returns the contract inline in the asked format", async () => {
+    const md = await generateContract(db({ balance: 1 }) as never, AUTH, input({ inline: "md" }));
+    expect(md.body.document).toEqual({ format: "md", content: "# Mutual Non-Disclosure Agreement\n" });
+    const html = await generateContract(db({ balance: 1 }) as never, AUTH, input({ inline: "html" }));
+    expect((html.body.document as { content: string }).content).toContain("<!doctype html>");
+    const txt = await generateContract(db({ balance: 1 }) as never, AUTH, input({ inline: "txt" }));
+    expect((txt.body.document as { content: string }).content).toContain("NON-DISCLOSURE");
+    expect(generateContractSchema.safeParse({ contractType: "NDA", party: { legalName: "A" }, inline: "pdf" }).success).toBe(false);
   });
 
   it("gives no browser link when no account uses the customer's e-mail", async () => {

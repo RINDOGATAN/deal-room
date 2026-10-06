@@ -94,6 +94,19 @@ describe("MCP protocol", () => {
     expect(res?.result).toMatchObject({ isError: false, structuredContent: { ok: true } });
   });
 
+  it("puts an inline contract first, as its own text block", async () => {
+    const c = ctx({
+      invoke: vi.fn(async () =>
+        Response.json({ dealId: "adr_1", document: { format: "md", content: "# NDA\n\n## Parties\n" } }, { status: 201 }),
+      ),
+    });
+    const res = await handleMessage(call("generate_contract", { contractType: "NDA" }), c);
+    const result = res?.result as { content: { text: string }[]; structuredContent: Record<string, unknown> };
+    expect(result.content[0].text).toBe("# NDA\n\n## Parties\n");
+    expect(JSON.parse(result.content[1].text)).toEqual({ dealId: "adr_1" });
+    expect(result.structuredContent.dealId).toBe("adr_1");
+  });
+
   it("turns a 402 into a tool error the agent can read", async () => {
     const c = ctx({
       invoke: vi.fn(async () => Response.json({ code: "PAYMENT_REQUIRED" }, { status: 402 })),

@@ -44,15 +44,13 @@ function contractEntries(slug: string | undefined, priority: number): Entry[] {
   }));
 }
 
-/** The developer quick start, in both languages. */
+/** The developer quick start, in both languages, and its Markdown twins. */
 function developerEntries(): Entry[] {
   const languages = { en: `${SITE_URL}${developersPath("en")}`, es: `${SITE_URL}${developersPath("es")}` };
-  return (["en", "es"] as const).map((locale) => ({
-    url: languages[locale],
-    changeFrequency: "monthly",
-    priority: 0.8,
-    alternates: { languages },
-  }));
+  return (["en", "es"] as const).flatMap((locale) => [
+    { url: languages[locale], changeFrequency: "weekly" as const, priority: 0.8, alternates: { languages } },
+    { url: `${languages[locale]}.md`, changeFrequency: "weekly" as const, priority: 0.5 },
+  ]);
 }
 
 export default function sitemap(): MetadataRoute.Sitemap {

@@ -79,6 +79,22 @@ export async function toolResult(res: Response, tool: McpToolDef): Promise<Recor
       // keep the raw text
     }
     const text = typeof parsed === "string" ? parsed : JSON.stringify(parsed, null, 2);
+    // A contract returned inline (generate_contract): the contract text comes
+    // first, as its own content block, then the rest of the answer.
+    const doc = isObject(parsed) && isObject(parsed.document) ? parsed.document : null;
+    if (!isError && doc && typeof doc.content === "string") {
+      const rest = Object.fromEntries(
+        Object.entries(parsed as Record<string, unknown>).filter(([k]) => k !== "document"),
+      );
+      return {
+        content: [
+          { type: "text", text: doc.content },
+          { type: "text", text: JSON.stringify(rest, null, 2) },
+        ],
+        structuredContent: parsed,
+        isError,
+      };
+    }
     return {
       content: [{ type: "text", text: isError ? `HTTP ${res.status}: ${text}` : text }],
       ...(isObject(parsed) && !isError ? { structuredContent: parsed } : {}),

@@ -9,8 +9,10 @@
  */
 
 import { buildSequentialSections, type ContractData } from "./generator";
+import { agentNoticeParagraphs } from "./agentNotice";
 
-const LABELS: Record<string, Record<string, string>> = {
+/** Section labels by language, shared with the Markdown and HTML renderers. */
+export const LABELS: Record<string, Record<string, string>> = {
   en: {
     effectiveDate: "Effective Date",
     background: "Background",
@@ -43,7 +45,7 @@ const LABELS: Record<string, Record<string, string>> = {
   },
 };
 
-function formatDate(date: Date, language: string = "en"): string {
+export function formatDate(date: Date, language: string = "en"): string {
   const locale = language === "es" ? "es-ES" : "en-US";
   return date.toLocaleDateString(locale, {
     year: "numeric",
@@ -76,6 +78,12 @@ export function generateContractTxt(data: ContractData): string {
   lines.push(`${l.effectiveDate}: ${formatDate(data.createdAt, lang)}`);
   lines.push(`${l.governingLaw}: ${data.governingLaw}`);
   lines.push("");
+
+  // Agent formation notice (two-agent negotiations only)
+  for (const p of agentNoticeParagraphs(data)) {
+    lines.push(p);
+    lines.push("");
+  }
 
   // Preamble
   if (data.boilerplate?.preamble) {

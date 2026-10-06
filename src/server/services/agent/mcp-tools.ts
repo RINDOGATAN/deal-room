@@ -65,8 +65,8 @@ export function buildMcpTools(opts: {
       name: "generate_contract",
       title: "Make a contract in one call",
       description: stripeEnabled
-        ? "Make a finished contract in one call: give the contract type, your side's details and, if you know them, the other side's. Clauses you leave out take the standard option. One prepaid credit is spent (the same price as any contract); with no credit the answer is HTTP 402 with code PAYMENT_REQUIRED and nothing is created. Returns the deal id, the link where the person can read it in Dealroom, the PDF, DOCX and TXT links (free to fetch again) and, with includeText, the text."
-        : "Make a finished contract in one call: give the contract type, your side's details and, if you know them, the other side's. Clauses you leave out take the standard option. Payments are off on this deployment. Returns the deal id, the link where the person can read it in Dealroom, the PDF, DOCX and TXT links and, with includeText, the text.",
+        ? "Make a finished contract in one call: give the contract type, your side's details and, if you know them, the other side's. Clauses you leave out take the standard option. One prepaid credit is spent (the same price as any contract); with no credit the answer is HTTP 402 with code PAYMENT_REQUIRED and nothing is created. Returns the contract as Markdown, then the deal id, the link where the person can read it in Dealroom and the Markdown, HTML, PDF, DOCX and TXT links (free to fetch again)."
+        : "Make a finished contract in one call: give the contract type, your side's details and, if you know them, the other side's. Clauses you leave out take the standard option. Payments are off on this deployment. Returns the contract as Markdown, then the deal id, the link where the person can read it in Dealroom and the Markdown, HTML, PDF, DOCX and TXT links.",
       inputSchema: {
         type: "object",
         properties: {
@@ -97,7 +97,12 @@ export function buildMcpTools(opts: {
             additionalProperties: { type: "string" },
             description: "Optional clause choices: clause id to option code (see get_template)",
           },
-          includeText: { type: "boolean", default: false, description: "Also return the contract text" },
+          inline: {
+            type: "string",
+            enum: ["md", "html", "txt"],
+            default: "md",
+            description: "The contract itself in the answer: md (Markdown, the default here), html or txt",
+          },
           idempotencyKey: {
             type: "string",
             description: "Send the same value when retrying, so a retry never makes or charges a second contract",
@@ -245,17 +250,17 @@ export function buildMcpTools(opts: {
       name: "download_contract",
       title: "Download a contract",
       description: stripeEnabled
-        ? "Download the agreed contract (PDF, DOCX or TXT). Negotiation is free; the contract is paid when its document is first fetched: one prepaid credit of the customer is spent (any of its keys draws on the one balance). Later fetches of the same deal are free. With no credit left the answer is HTTP 402 with code PAYMENT_REQUIRED and the link to buy credits."
-        : "Download the agreed contract (PDF, DOCX or TXT). Payments are off on this deployment; every contract is free.",
+        ? "Download the agreed contract as Markdown, HTML, PDF, DOCX or TXT (Markdown by default: agents read it best). Negotiation is free; the contract is paid when its document is first fetched: one prepaid credit of the customer is spent (any of its keys draws on the one balance). Later fetches of the same deal are free. With no credit left the answer is HTTP 402 with code PAYMENT_REQUIRED and the link to buy credits."
+        : "Download the agreed contract as Markdown, HTML, PDF, DOCX or TXT (Markdown by default). Payments are off on this deployment; every contract is free.",
       inputSchema: {
         type: "object",
         properties: {
           dealId: { type: "string", description: "Agent deal room ID" },
           format: {
             type: "string",
-            enum: ["pdf", "docx", "txt"],
-            default: "pdf",
-            description: "pdf → /document, docx → /document/docx, txt → /document/txt",
+            enum: ["pdf", "docx", "txt", "md", "html"],
+            default: "md",
+            description: "md (Markdown) or html for agents and tools; pdf, docx or txt for people and printers",
           },
         },
         required: ["dealId"],

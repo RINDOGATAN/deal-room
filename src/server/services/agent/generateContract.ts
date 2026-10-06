@@ -16,7 +16,8 @@
  *      out with the skill's baseline option;
  *   4. pays for it exactly as the first document download does
  *      (`dealAccessForAgent`: one credit, or nothing where billing is off);
- *   5. returns the deal, the document links and, on request, the text.
+ *   5. returns the deal, the document links and, on request, the contract
+ *      itself in an agent-readable format (Markdown, HTML or plain text).
  *
  * There is no free path: a contract made here costs what a contract
  * downloaded through /deals/:id/document costs, and later downloads of the
@@ -40,7 +41,10 @@ import { dealAccessForAgent } from "@/server/services/billing/deal-entitlement";
 import { AGENT_PAYMENT_REQUIRED_MESSAGE } from "@/lib/contract-billing";
 import { generateContractData } from "@/server/services/document/generator";
 import { generateContractTxt } from "@/server/services/document/contractTxt";
+import { generateContractMarkdown } from "@/server/services/document/contractMarkdown";
+import { generateContractHtml } from "@/server/services/document/contractHtml";
 import type { ParameterSchema } from "@/lib/parameters";
+import { LIVE_ROWS } from "@/lib/clause-retirement";
 
 export const generateContractSchema = z.object({
   contractType: z.string().trim().min(1).max(100),
@@ -52,7 +56,8 @@ export const generateContractSchema = z.object({
   role: z.string().trim().min(1).max(40).optional(),
   terms: z.record(z.string(), z.string().max(10_000)).optional(),
   clauses: z.record(z.string(), z.string().max(200)).optional(),
-  includeText: z.boolean().optional(),
+  /** Return the contract in the answer: Markdown, HTML or plain text. */
+  inline: z.enum(["md", "html", "txt"]).optional(),
 });
 
 export type GenerateContractInput = z.infer<typeof generateContractSchema>;
@@ -110,11 +115,20 @@ export async function generateContract(
   // 1. The contract type, governing law and language.
   const catalogue = await prisma.contractTemplate.findMany({
     where: { isActive: true },
-    select: { contractType: true, displayName: true, jurisdictions: true, languages: true, parameterSchema: true },
+    select: {
+      contractType: true,
+      displayName: true,
+      jurisdictions: true,
+      languages: true,
+      parameterSchema: true,
+      _count: { select: { clauses: { where: LIVE_ROWS } } },
+    },
   });
+  // A template without clauses (a catalogue-only stub) cannot make a contract.
+  const usable = catalogue.filter((t) => (t._count?.clauses ?? 1) > 0);
   const contractType = contractTypeFromInput(
     input.contractType,
-    catalogue.map((t) => t.contractType),
+    usable.map((t) => t.contractType),
   );
   if (!contractType) {
     return fail(404, `Unknown contract type: ${input.contractType}`, { hint: CONTRACT_TYPES_HINT });
@@ -122,7 +136,7 @@ export async function generateContract(
   if (contractType.startsWith(A2A_PREFIX)) {
     return fail(422, `${contractType} is an agent-to-agent protocol; negotiate it with POST /api/v1/agent/negotiate.`);
   }
-  const template = catalogue.find((t) => t.contractType === contractType)!;
+  const template = usable.find((t) => t.contractType === contractType)!;
 
   const laws = governingLawsFor(template.jurisdictions);
   let governingLaw = input.governingLaw?.toUpperCase();
@@ -212,10 +226,13 @@ export async function generateContract(
   }
 
   // 5. The answer.
-  let text: string | undefined;
-  if (input.includeText) {
+  let inline: { format: string; content: string } | undefined;
+  if (input.inline) {
     const data = await generateContractData(created.dealRoomId);
-    if (data) text = generateContractTxt(data);
+    if (data) {
+      const render = { md: generateContractMarkdown, html: generateContractHtml, txt: generateContractTxt }[input.inline];
+      inline = { format: input.inline, content: render(data) };
+    }
   }
 
   const slug = slugForContractType(contractType);
@@ -241,9 +258,11 @@ export async function generateContract(
         pdf: `${api}/document`,
         docx: `${api}/document/docx`,
         txt: `${api}/document/txt`,
+        md: `${api}/document/md`,
+        html: `${api}/document/html`,
       },
       guide: slug ? `${base}/contracts/${slug}` : null,
-      ...(text !== undefined ? { text } : {}),
+      ...(inline ? { document: inline } : {}),
     },
   };
 }

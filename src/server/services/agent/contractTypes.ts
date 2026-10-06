@@ -14,6 +14,7 @@
 
 import type { ExtendedPrismaClient } from "@/lib/prisma";
 import {
+  CONTRACT_GROUPS,
   CONTRACT_PAGES,
   SITE_URL,
   contractPath,
@@ -41,6 +42,11 @@ export interface ContractTypeInput {
 export interface ContractTypeDescriptor {
   /** Code to send as `contractType` (the slug works too). */
   contractType: string;
+  /**
+   * The group it is listed under: the group of its public guide (the same
+   * groups as /contracts), else the template's own category.
+   */
+  group: { id: string; name: string };
   /** Address of the public guide, when there is one. */
   slug: string | null;
   name: string;
@@ -112,11 +118,64 @@ export function contractTypeFromInput(value: string, knownCodes: string[]): stri
   return null;
 }
 
+/** The list's group of a type: its guide's group, else the template category. */
+export function groupFor(
+  contractType: string,
+  category: string | null,
+  categoryLocalized: unknown,
+  lang: "en" | "es",
+): { id: string; name: string } {
+  const page = CONTRACT_PAGES.find((p) => p.contractType === contractType);
+  const group = page && CONTRACT_GROUPS.find((g) => g.id === page.group);
+  if (group) return { id: group.id, name: group.name[lang] };
+  const name = localized(categoryLocalized, category, lang);
+  return name ? { id: `category-${name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`, name } : { id: "other", name: lang === "es" ? "Otros" : "Other" };
+}
+
+/** Group order as on /contracts, then any other group by name; names sorted within a group. */
+export function sortContractTypes(list: ContractTypeDescriptor[], lang: "en" | "es"): ContractTypeDescriptor[] {
+  const rank = (id: string) => {
+    const i = CONTRACT_GROUPS.findIndex((g) => g.id === id);
+    return i === -1 ? CONTRACT_GROUPS.length : i;
+  };
+  const collator = new Intl.Collator(lang, { sensitivity: "base" });
+  return [...list].sort(
+    (a, b) =>
+      rank(a.group.id) - rank(b.group.id) ||
+      collator.compare(a.group.name, b.group.name) ||
+      collator.compare(a.name, b.name),
+  );
+}
+
+const TTL_MS = 5 * 60 * 1000;
+const cache = new Map<string, { at: number; list: ContractTypeDescriptor[] }>();
+
+/** Test hook. */
+export function resetContractTypesCache() {
+  cache.clear();
+}
+
+/**
+ * Every contract type the one call accepts, grouped and sorted. The single
+ * source for the JSON endpoint, the /developers page and /developers.md.
+ * Cached for five minutes per server instance.
+ */
 export async function listContractTypes(
   prisma: ExtendedPrismaClient,
   opts: { lang?: string } = {},
 ): Promise<ContractTypeDescriptor[]> {
   const lang = opts.lang === "es" ? "es" : "en";
+  const hit = cache.get(lang);
+  if (hit && Date.now() - hit.at < TTL_MS) return hit.list;
+  const list = await loadContractTypes(prisma, lang);
+  cache.set(lang, { at: Date.now(), list });
+  return list;
+}
+
+async function loadContractTypes(
+  prisma: ExtendedPrismaClient,
+  lang: "en" | "es",
+): Promise<ContractTypeDescriptor[]> {
   const templates = await prisma.contractTemplate.findMany({
     where: { isActive: true, NOT: { contractType: { startsWith: A2A_PREFIX } } },
     select: {
@@ -128,16 +187,21 @@ export async function listContractTypes(
       jurisdictions: true,
       languages: true,
       parameterSchema: true,
+      category: true,
+      categoryLocalized: true,
       _count: { select: { clauses: { where: LIVE_ROWS } } },
     },
     orderBy: { displayName: "asc" },
   });
 
-  return templates.map((t) => {
+  // A template without clauses (a catalogue-only stub) cannot make a contract.
+  const usable = templates.filter((t) => t._count.clauses > 0);
+  const list = usable.map((t) => {
     const slug = slugForContractType(t.contractType);
     const role = roleConfigFor(t.contractType);
     return {
       contractType: t.contractType,
+      group: groupFor(t.contractType, t.category, t.categoryLocalized, lang),
       slug,
       name: localized(t.displayNameLocalized, t.displayName, lang) ?? t.displayName,
       description: localized(t.descriptionLocalized, t.description, lang),
@@ -154,4 +218,5 @@ export async function listContractTypes(
       details: `https://${brand.appDomain}/api/v1/agent/templates/${t.contractType}`,
     };
   });
+  return sortContractTypes(list, lang);
 }

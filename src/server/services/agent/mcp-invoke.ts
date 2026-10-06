@@ -22,6 +22,8 @@ import { GET as dealGET } from "@/app/api/v1/agent/deals/[id]/route";
 import { GET as pdfGET } from "@/app/api/v1/agent/deals/[id]/document/route";
 import { GET as docxGET } from "@/app/api/v1/agent/deals/[id]/document/docx/route";
 import { GET as txtGET } from "@/app/api/v1/agent/deals/[id]/document/txt/route";
+import { GET as mdGET } from "@/app/api/v1/agent/deals/[id]/document/md/route";
+import { GET as htmlGET } from "@/app/api/v1/agent/deals/[id]/document/html/route";
 import { POST as checkoutPOST } from "@/app/api/v1/agent/credits/checkout/route";
 import { GET as balanceGET } from "@/app/api/v1/agent/credits/balance/route";
 import { GET as subscriptionsGET } from "@/app/api/v1/agent/subscriptions/route";
@@ -57,7 +59,9 @@ export const invokeTool: ToolInvoker = async (tool: McpToolDef, args, authorizat
       return contractTypesGET(request(`/contract-types?lang=${lang}`, authorization));
     }
     case "generate_contract": {
-      const { idempotencyKey, ...body } = args;
+      // Agents read text best: the contract comes back as Markdown unless asked otherwise.
+      const { idempotencyKey, ...rest } = args;
+      const body = { inline: "md", ...rest };
       return contractsPOST(
         request("/contracts", authorization, {
           method: "POST",
@@ -89,9 +93,10 @@ export const invokeTool: ToolInvoker = async (tool: McpToolDef, args, authorizat
     }
     case "download_contract": {
       const id = str(args.dealId);
-      const format = str(args.format) || "pdf";
-      const handler = format === "docx" ? docxGET : format === "txt" ? txtGET : pdfGET;
-      const suffix = format === "docx" || format === "txt" ? `/${format}` : "";
+      const format = str(args.format) || "md";
+      const handlers = { pdf: pdfGET, docx: docxGET, txt: txtGET, md: mdGET, html: htmlGET } as const;
+      const handler = handlers[format as keyof typeof handlers] ?? mdGET;
+      const suffix = format === "pdf" ? "" : `/${format in handlers ? format : "md"}`;
       return handler(request(`/deals/${encodeURIComponent(id)}/document${suffix}`, authorization), params({ id }));
     }
     case "buy_credits":

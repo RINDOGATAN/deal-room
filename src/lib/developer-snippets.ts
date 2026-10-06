@@ -72,6 +72,7 @@ export function generateBody(locale: "en" | "es") {
       email: es ? "ana@tuempresa.example" : "alex@yourcompany.example",
     },
     counterparty: { legalName: es ? "Otra Empresa, S.A." : "Other Company, LLC" },
+    inline: "md",
   };
 }
 
@@ -105,7 +106,13 @@ export function exampleAnswer(locale: "en" | "es"): string {
       pdf: `${API_BASE}/deals/cm9abc123/document`,
       docx: `${API_BASE}/deals/cm9abc123/document/docx`,
       txt: `${API_BASE}/deals/cm9abc123/document/txt`,
+      md: `${API_BASE}/deals/cm9abc123/document/md`,
+      html: `${API_BASE}/deals/cm9abc123/document/html`,
     },
     guide: `${SITE_URL}/contracts/nda`,
+    document: {
+      format: "md",
+      content: locale === "es" ? "# Acuerdo de confidencialidad\n\n## Partes\n..." : "# Mutual Non-Disclosure Agreement\n\n## Parties\n...",
+    },
   });
 }

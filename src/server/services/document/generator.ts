@@ -42,6 +42,8 @@ export interface ClauseData {
   category: string;
   agreedOption: string;
   legalText: string;
+  /** The clause id as authored in the skill (stable across reseeds); used for anchors. */
+  clauseId?: string;
   /** True 1-based section number in the final agreement. Only consumed when the
    *  boilerplate opts into sequential numbering (see BoilerplateData.sequentialNumbering);
    *  ignored for the default grouped "Negotiated Terms" layout. */
@@ -152,13 +154,44 @@ export interface ContractData {
   language: string;
   /** Present when document has been certified via Cloud API */
   certification?: CertificationData;
-  /** Present when deal is from agent negotiation with attorney attestation */
+  /** Present only when both sides negotiated through agents (see agentAttestationFor) */
   agentAttestation?: {
     attorneyName: string;
     barNumber: string;
     uetaPreamble: string;
     attestationFooter: string;
   };
+}
+
+/** The UETA / E-SIGN statement that the agreement was formed by the parties' electronic agents. */
+export const UETA_PREAMBLE =
+  "This agreement was formed by the interaction of electronic agents of the parties pursuant to the Uniform Electronic Transactions Act § 14 and the Electronic Signatures in Global and National Commerce Act (15 U.S.C. § 7001 et seq.). Each party authorized its electronic agent to negotiate and accept the terms herein.";
+
+/**
+ * The agent attestation of a deal, only when it is true: both sides acted
+ * through agents (the deal was initiated and joined with a playbook each).
+ * A single-party contract made by one agent (solo intake, the one call)
+ * was not formed by the interaction of two electronic agents, so it gets
+ * none (owner, 5 Oct 2026).
+ */
+export function agentAttestationFor(
+  agentDeal: {
+    initiatorPlaybookId: string | null;
+    respondentPlaybookId: string | null;
+    attestingBarNumber: string | null;
+    attestingAttorneyName: string | null;
+  } | null,
+): ContractData["agentAttestation"] {
+  if (!agentDeal?.initiatorPlaybookId || !agentDeal.respondentPlaybookId) return undefined;
+  if (agentDeal.attestingBarNumber && agentDeal.attestingAttorneyName) {
+    return {
+      attorneyName: agentDeal.attestingAttorneyName,
+      barNumber: agentDeal.attestingBarNumber,
+      uetaPreamble: UETA_PREAMBLE,
+      attestationFooter: `The legal provisions in this contract have been reviewed and attested by ${agentDeal.attestingAttorneyName} (Bar No. ${agentDeal.attestingBarNumber}) pursuant to UETA § 14 and the federal E-SIGN Act.`,
+    };
+  }
+  return { attorneyName: "", barNumber: "", uetaPreamble: UETA_PREAMBLE, attestationFooter: "" };
 }
 
 const GOVERNING_LAW_DISPLAY: Record<string, Record<string, string>> = {
@@ -533,7 +566,7 @@ export async function generateContractData(
       const lead = optionCode === "custom-law-forum" ? "" : govLawLead;
       governingLawArticle = { title: entry.title, text: lead + entry.legalText };
     } else {
-      clauses.push(entry);
+      clauses.push({ ...entry, clauseId });
     }
   };
 
@@ -860,27 +893,7 @@ export async function generateContractData(
     where: { dealRoomId },
   });
 
-  let agentAttestation: ContractData["agentAttestation"];
-  if (agentDeal) {
-    const uetaPreamble = `This agreement was formed by the interaction of electronic agents of the parties pursuant to the Uniform Electronic Transactions Act § 14 and the Electronic Signatures in Global and National Commerce Act (15 U.S.C. § 7001 et seq.). Each party authorized its electronic agent to negotiate and accept the terms herein.`;
-
-    if (agentDeal.attestingBarNumber && agentDeal.attestingAttorneyName) {
-      agentAttestation = {
-        attorneyName: agentDeal.attestingAttorneyName,
-        barNumber: agentDeal.attestingBarNumber,
-        uetaPreamble,
-        attestationFooter: `The legal provisions in this contract have been reviewed and attested by ${agentDeal.attestingAttorneyName} (Bar No. ${agentDeal.attestingBarNumber}) pursuant to UETA § 14 and the federal E-SIGN Act.`,
-      };
-    } else {
-      // Still include UETA preamble for agent deals even without attorney attestation
-      agentAttestation = {
-        attorneyName: "",
-        barNumber: "",
-        uetaPreamble,
-        attestationFooter: "",
-      };
-    }
-  }
+  const agentAttestation = agentAttestationFor(agentDeal);
 
   // Build the party objects, then apply the role swap to the objects
   // themselves (not just the boilerplate variables) so EVERY renderer — cover,

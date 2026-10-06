@@ -7,6 +7,8 @@ vi.mock("@/config/brand", () => ({ brand: { appDomain: "dealroom.test" } }));
 
 import {
   contractTypeFromInput,
+  resetContractTypesCache,
+  sortContractTypes,
   governingLawsFor,
   inputsFor,
   listContractTypes,
@@ -70,17 +72,35 @@ describe("contract types", () => {
         jurisdictions: ["CALIFORNIA", "SPAIN"],
         languages: ["en", "es"],
         parameterSchema: null,
+        category: "privacy",
+        categoryLocalized: null,
         _count: { clauses: 12 },
       },
+      {
+        contractType: "STUB",
+        displayName: "Catalogue stub",
+        displayNameLocalized: null,
+        description: null,
+        descriptionLocalized: null,
+        jurisdictions: ["CALIFORNIA"],
+        languages: ["en"],
+        parameterSchema: null,
+        category: null,
+        categoryLocalized: null,
+        _count: { clauses: 0 },
+      },
     ]);
+    resetContractTypesCache();
     const list = await listContractTypes({ contractTemplate: { findMany } } as never, { lang: "es" });
     expect(findMany).toHaveBeenCalledWith(
       expect.objectContaining({
         where: { isActive: true, NOT: { contractType: { startsWith: "A2A_" } } },
       }),
     );
+    expect(list).toHaveLength(1); // the clause-less stub is left out
     expect(list[0]).toMatchObject({
       contractType: "DPA",
+      group: { id: "privacy", name: "Protección de datos y privacidad" },
       slug: "data-processing-agreement",
       name: "Contrato de encargo del tratamiento",
       governingLaws: ["CALIFORNIA", "SPAIN"],
@@ -92,5 +112,15 @@ describe("contract types", () => {
       },
       details: "https://dealroom.test/api/v1/agent/templates/DPA",
     });
+  });
+
+  it("orders by the /contracts groups, then by name within a group", () => {
+    const t = (contractType: string, name: string, group: string) =>
+      ({ contractType, name, group: { id: group, name: group } }) as never;
+    const sorted = sortContractTypes(
+      [t("SAAS", "SaaS", "commercial"), t("X", "Zeta", "category-misc"), t("DPA", "DPA", "privacy"), t("NDA", "NDA", "commercial")],
+      "en",
+    );
+    expect(sorted.map((x: { contractType: string }) => x.contractType)).toEqual(["NDA", "SAAS", "DPA", "X"]);
   });
 });
