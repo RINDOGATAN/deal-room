@@ -54,8 +54,129 @@ const partySchema = (who: string) => ({
   required: ["legalName"],
 });
 
-export function buildMcpTools(opts: { baseUrl: string; stripeEnabled: boolean }): McpToolDef[] {
+/**
+ * The startup-coverage tools (owner's decisions T3, T4 and E1 step 1, 6
+ * October 2026), listed only while `features.startupCoverage` is on. All
+ * free: none spends a credit.
+ */
+export const COVERAGE_TOOL_NAMES = [
+  "find_template",
+  "explain_options",
+  "list_obligations",
+  "get_deadlines",
+  "share_with_attorney",
+] as const;
+
+function coverageTools(baseUrl: string): McpToolDef[] {
+  return [
+    {
+      name: "find_template",
+      title: "Find a template",
+      description:
+        "Describe the matter in your own words; Dealroom answers with the contract types whose names or usual terms appear in the description (code, title, guide link), or \"No template covers this. Such matters are usually handled by a lawyer.\" The matching is by words, with no AI model. A lawsuit or claim received, a subpoena, a data breach or a letter from a regulator is flagged as a time-sensitive matter outside the templates (outsideTemplates). It does not say what the user needs and names no lawyer. Free; no API key needed.",
+      inputSchema: {
+        type: "object",
+        properties: {
+          query: { type: "string", maxLength: 500, description: "The matter in plain words, in English or Spanish" },
+          lang: { type: "string", enum: ["en", "es"], default: "en", description: "Language of titles, links and the message" },
+        },
+        required: ["query"],
+      },
+      endpoint: { method: "GET", url: `${baseUrl}/find-template?q={query}&lang={lang}` },
+      requiredScopes: [],
+      public: true,
+      readOnly: true,
+    },
+    {
+      name: "explain_options",
+      title: "Explain a clause's options",
+      description:
+        "The options of one clause, each with its description and its pros and cons for each party, plus the clause's trade-off text, exactly as the template holds them. Nothing is ranked or recommended; when the template has no such text, the answer says so. Free (no credit).",
+      inputSchema: {
+        type: "object",
+        properties: {
+          contractType: { type: "string", description: NEGOTIATION_CONTRACT_TYPE },
+          clause: { type: "string", description: "Clause id (from get_template) or the clause title" },
+          lang: { type: "string", enum: ["en", "es"], default: "en" },
+        },
+        required: ["contractType", "clause"],
+      },
+      endpoint: { method: "GET", url: `${baseUrl}/templates/{contractType}/options?clause={clause}&lang={lang}` },
+      requiredScopes: ["templates:read"],
+      readOnly: true,
+    },
+    {
+      name: "list_obligations",
+      title: "Obligations and dates of a contract",
+      description:
+        "What a contract commits its parties to and the dates it states: the obligations ledger (recurring and event-driven duties, for the DPA today) and, for every contract type, the date inputs, the term, notice and renewal inputs and the agreed option of each term, renewal, termination, notice or duration clause. Facts as the contract states them; the contract text governs. Free (no credit).",
+      inputSchema: {
+        type: "object",
+        properties: {
+          dealId: { type: "string", description: "Agent deal id (dealId from generate_contract)" },
+          lang: { type: "string", enum: ["en", "es"], default: "en" },
+        },
+        required: ["dealId"],
+      },
+      endpoint: { method: "GET", url: `${baseUrl}/deals/{dealId}/obligations?lang={lang}` },
+      requiredScopes: ["deals:read"],
+      readOnly: true,
+    },
+    {
+      name: "get_deadlines",
+      title: "Public statutory deadlines",
+      description:
+        "A small public calendar of statutory dates: the Section 83(b) election (30 days after the stock is transferred), the SEC Form D notice (15 calendar days after the first sale) and the Delaware annual report and franchise tax (1 March). Give grantDate or firstSaleDate to count the due date. Each item carries its official source and is marked \"Verify with the official source.\" General public dates, not advice. Free; no API key needed.",
+      inputSchema: {
+        type: "object",
+        properties: {
+          grantDate: { type: "string", format: "date", description: "Date the stock was transferred or granted (YYYY-MM-DD), for the 83(b) election" },
+          firstSaleDate: { type: "string", format: "date", description: "Date of the first sale of securities (YYYY-MM-DD), for Form D" },
+          year: { type: "integer", description: "Year of the Delaware due date; left out, the next 1 March" },
+          lang: { type: "string", enum: ["en", "es"], default: "en" },
+        },
+        required: [],
+      },
+      endpoint: { method: "GET", url: `${baseUrl}/deadlines?grantDate={grantDate}&firstSaleDate={firstSaleDate}&year={year}&lang={lang}` },
+      requiredScopes: [],
+      public: true,
+      readOnly: true,
+    },
+    {
+      name: "share_with_attorney",
+      title: "Invite your own lawyer to review",
+      description:
+        "Invite a lawyer of the user's choice, by e-mail, to review the contract in Dealroom's attorney review. Available to any lawyer the user invites. The lawyer works for the user and bills the user directly; Dealroom takes no fee and makes no recommendation. Signing waits until the lawyer approves or the user cancels the review in Dealroom. Free (no credit).",
+      inputSchema: {
+        type: "object",
+        properties: {
+          dealId: { type: "string", description: "Agent deal id (dealId from generate_contract)" },
+          email: { type: "string", format: "email", description: "The lawyer's e-mail address" },
+          name: { type: "string", description: "The lawyer's name, for the e-mail greeting" },
+          lang: { type: "string", enum: ["en", "es"], description: "Language of the e-mail; left out, the contract's language" },
+        },
+        required: ["dealId", "email"],
+      },
+      endpoint: { method: "POST", url: `${baseUrl}/deals/{dealId}/attorney` },
+      requiredScopes: ["negotiate"],
+      errors: [
+        { status: 404, code: "NOT_FOUND", fix: "check the dealId" },
+        { status: 409, code: "REVIEW_ALREADY_REQUESTED", fix: "a review is already requested for this side; the user cancels it in Dealroom first" },
+        { status: 409, code: "NOT_READY", fix: "the contract must be agreed or the selections submitted first" },
+      ],
+    },
+  ];
+}
+
+export function buildMcpTools(opts: { baseUrl: string; stripeEnabled: boolean; coverage?: boolean }): McpToolDef[] {
   const { baseUrl, stripeEnabled } = opts;
+  return [
+    ...baseTools(baseUrl, stripeEnabled),
+    ...(opts.coverage ? coverageTools(baseUrl) : []),
+  ];
+}
+
+function baseTools(baseUrl: string, stripeEnabled: boolean): McpToolDef[] {
   return [
     {
       name: "list_contract_types",

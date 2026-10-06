@@ -7,6 +7,8 @@ import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
 import { sendAttorneyReviewRequestEmail } from "@/lib/email";
 import { createLogger } from "@/lib/logger";
+import { features } from "@/config/features";
+import { inviteOwnLawyer } from "@/server/services/attorney/ownLawyer";
 
 const logger = createLogger("attorney-review");
 
@@ -218,6 +220,52 @@ export const attorneyReviewRouter = createTRPCRouter({
       );
 
       return { success: true };
+    }),
+
+  /**
+   * Invite a lawyer of the caller's choice, by e-mail, to review this
+   * deal for the caller's side (owner's decision E1, step 1). Same review
+   * stage as requestReview; no fee, no recommendation, no directory.
+   * Behind `features.startupCoverage`.
+   */
+  inviteOwnLawyer: protectedProcedure
+    .input(
+      z.object({
+        dealRoomId: z.string(),
+        email: z.string().trim().email().max(254),
+        name: z.string().trim().max(120).optional(),
+        lang: z.enum(["en", "es"]).optional(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      if (!features.startupCoverage) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Not available" });
+      }
+      const party = await ctx.prisma.dealRoomParty.findFirst({
+        where: { dealRoomId: input.dealRoomId, userId: ctx.session.user.id },
+        select: { id: true },
+      });
+      if (!party) {
+        throw new TRPCError({ code: "FORBIDDEN", message: "You are not a party to this deal" });
+      }
+      const result = await inviteOwnLawyer(ctx.prisma, {
+        partyId: party.id,
+        lawyerEmail: input.email,
+        lawyerName: input.name,
+        actorUserId: ctx.session.user.id,
+        via: "app",
+        lang: input.lang,
+      });
+      if (!result.ok) {
+        const code =
+          result.status === 404 ? "NOT_FOUND"
+          : result.status === 403 ? "FORBIDDEN"
+          : result.status === 429 ? "TOO_MANY_REQUESTS"
+          : result.status === 409 ? "CONFLICT"
+          : "BAD_REQUEST";
+        throw new TRPCError({ code, message: result.error });
+      }
+      return { success: true, emailSent: result.emailSent };
     }),
 
   /**

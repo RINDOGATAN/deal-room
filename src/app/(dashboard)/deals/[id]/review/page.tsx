@@ -41,6 +41,8 @@ import { AiDraftPanel } from "@/components/ai/AiDraftPanel";
 import { useContractMessages } from "@/lib/use-contract-messages";
 import { StatusNote } from "@/components/ui/status-note";
 import { PaidDownloads } from "@/components/billing/ContractPayment";
+import { OwnLawyerInvite } from "@/components/attorney/OwnLawyerInvite";
+import { features } from "@/config/features";
 
 function DownloadLinks({ dealId, className, showTia }: { dealId: string; className?: string; showTia?: boolean }) {
   // Pay per contract: the purchase action replaces the links until the
@@ -1488,6 +1490,16 @@ function ReviewContent({ dealId }: { dealId: string }) {
                 {requestReview.isPending ? t("requesting") : t("assignAttorney")}
               </button>
             </div>
+            {features.startupCoverage && (
+              <OwnLawyerInvite
+                dealRoomId={dealId}
+                onInvited={() => {
+                  setShowAttorneyModal(false);
+                  setSelectedAttorneyId("");
+                  refetchReviewStatus();
+                }}
+              />
+            )}
           </div>
         </div>
       )}

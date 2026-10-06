@@ -129,6 +129,64 @@ export async function sendAttorneyReviewRequestEmail({
   }
 }
 
+/**
+ * "Invite your own lawyer" (owner's decision E1, step 1, 6 October 2026):
+ * a party invites a lawyer of its choice to review the draft in the
+ * attorney review. Same path as the attorney review request above (the
+ * supervisor portal); the wording says that the lawyer and the client deal
+ * with each other directly and that Dealroom takes no fee.
+ */
+export const OWN_LAWYER_EMAIL_TEXT = {
+  en: {
+    subject: (deal: string) => `Review requested: ${deal}`,
+    subtitle: "Attorney review",
+    greeting: (name: string) => `Dear ${name},`,
+    invited: (party: string, deal: string) => `${party} has invited you to review the contract ${deal} in Dealroom.`,
+    direct: "You and your client agree the engagement and the fee directly. Dealroom takes no fee and makes no recommendation.",
+    button: "Open the review portal",
+    signIn: "Sign in with this e-mail address. The first time, the portal asks you to set up two-factor authentication.",
+  },
+  es: {
+    subject: (deal: string) => `Solicitud de revisión: ${deal}`,
+    subtitle: "Revisión de abogado",
+    greeting: (name: string) => `Hola, ${name}:`,
+    invited: (party: string, deal: string) => `${party} te invita a revisar el contrato ${deal} en Dealroom.`,
+    direct: "El encargo y los honorarios los acordáis directamente tu cliente y tú. Dealroom no cobra nada por ello ni hace recomendaciones.",
+    button: "Abrir el portal de revisión",
+    signIn: "Inicia sesión con esta dirección de correo. La primera vez, el portal te pide configurar la verificación en dos pasos.",
+  },
+} as const;
+
+export async function sendOwnLawyerInviteEmail(input: {
+  to: string;
+  lawyerName?: string | null;
+  partyName: string;
+  dealName: string;
+  lang?: string;
+}): Promise<boolean> {
+  const t = OWN_LAWYER_EMAIL_TEXT[input.lang === "es" ? "es" : "en"];
+  const portalUrl = `${process.env.NEXTAUTH_URL}/supervise`;
+  const strong = (v: string) => `<strong style="color: ${brand.colors.foreground};">${escapeHtml(v)}</strong>`;
+  try {
+    await getResend().emails.send({
+      from: mailFrom(),
+      to: input.to,
+      subject: t.subject(input.dealName),
+      html: emailWrapper(t.subtitle, `
+        ${input.lawyerName ? emailParagraph(escapeHtml(t.greeting(input.lawyerName))) : ""}
+        ${emailParagraph(t.invited(strong(input.partyName), strong(input.dealName)))}
+        ${emailParagraph(t.direct)}
+        ${emailButton(portalUrl, t.button)}
+        ${emailMuted(t.signIn)}
+      `),
+    });
+    return true;
+  } catch (error) {
+    logger.error("Failed to send own-lawyer invitation email", { err: String(error) });
+    return false;
+  }
+}
+
 interface SendRecommendationRequestEmailParams {
   to: string;
   bcc?: string[];

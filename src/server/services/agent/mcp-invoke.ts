@@ -27,11 +27,28 @@ import { GET as htmlGET } from "@/app/api/v1/agent/deals/[id]/document/html/rout
 import { POST as checkoutPOST } from "@/app/api/v1/agent/credits/checkout/route";
 import { GET as balanceGET } from "@/app/api/v1/agent/credits/balance/route";
 import { GET as subscriptionsGET } from "@/app/api/v1/agent/subscriptions/route";
+import { GET as findTemplateGET } from "@/app/api/v1/agent/find-template/route";
+import { GET as optionsGET } from "@/app/api/v1/agent/templates/[contractType]/options/route";
+import { GET as obligationsGET } from "@/app/api/v1/agent/deals/[id]/obligations/route";
+import { GET as deadlinesGET } from "@/app/api/v1/agent/deadlines/route";
+import { POST as attorneyPOST } from "@/app/api/v1/agent/deals/[id]/attorney/route";
 
 const API = "http://internal/api/v1/agent";
 
 function str(v: unknown): string {
   return typeof v === "string" ? v : "";
+}
+
+/** A query string from the arguments that are set (strings and numbers). */
+function query(args: Record<string, unknown>, keys: Record<string, string>): string {
+  const sp = new URLSearchParams();
+  for (const [arg, param] of Object.entries(keys)) {
+    const v = args[arg];
+    if (typeof v === "string" && v) sp.set(param, v);
+    else if (typeof v === "number" && Number.isFinite(v)) sp.set(param, String(v));
+  }
+  const q = sp.toString();
+  return q ? `?${q}` : "";
 }
 
 function request(
@@ -112,6 +129,35 @@ export const invokeTool: ToolInvoker = async (tool: McpToolDef, args, authorizat
       return balanceGET(request("/credits/balance", authorization));
     case "get_subscriptions":
       return subscriptionsGET(request("/subscriptions", authorization));
+    case "find_template":
+      return findTemplateGET(request(`/find-template${query(args, { query: "q", lang: "lang" })}`, authorization));
+    case "explain_options": {
+      const contractType = str(args.contractType);
+      return optionsGET(
+        request(`/templates/${encodeURIComponent(contractType)}/options${query(args, { clause: "clause", lang: "lang" })}`, authorization),
+        params({ contractType }),
+      );
+    }
+    case "list_obligations": {
+      const id = str(args.dealId);
+      return obligationsGET(
+        request(`/deals/${encodeURIComponent(id)}/obligations${query(args, { lang: "lang" })}`, authorization),
+        params({ id }),
+      );
+    }
+    case "get_deadlines":
+      return deadlinesGET(
+        request(`/deadlines${query(args, { grantDate: "grantDate", firstSaleDate: "firstSaleDate", year: "year", lang: "lang" })}`, authorization),
+      );
+    case "share_with_attorney": {
+      const id = str(args.dealId);
+      const { dealId: _dealId, ...body } = args;
+      void _dealId;
+      return attorneyPOST(
+        request(`/deals/${encodeURIComponent(id)}/attorney`, authorization, { method: "POST", body }),
+        params({ id }),
+      );
+    }
     default:
       return new Response(JSON.stringify({ error: `Unknown tool: ${tool.name}` }), {
         status: 404,

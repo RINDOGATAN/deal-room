@@ -8,6 +8,47 @@
  */
 
 import type { PageLocale } from "@/lib/contract-pages-paths";
+import { features } from "@/config/features";
+
+/**
+ * The startup-coverage tools and routes (owner's decisions of 6 October
+ * 2026), listed only while `features.startupCoverage` is on, so the page
+ * names exactly the live tools.
+ */
+export const COVERAGE_COPY = {
+  en: {
+    tools: [
+      { name: "find_template", text: "Describe the matter; get the matching templates, or \"No template covers this. Such matters are usually handled by a lawyer.\" Matching by words, no AI model. No key needed." },
+      { name: "explain_options", text: "The options of one clause, with each side's pros and cons as the template states them. Nothing is recommended." },
+      { name: "list_obligations", text: "The duties and the dates a contract states: term, renewal, notice and date inputs." },
+      { name: "get_deadlines", text: "Public statutory dates (83(b), Form D, Delaware 1 March), each with its official source to verify. No key needed." },
+      { name: "share_with_attorney", text: "Invite any lawyer you choose to review a contract in Dealroom. The lawyer works for you and bills you directly; Dealroom takes no fee and makes no recommendation." },
+    ],
+    restRows: [
+      { method: "GET", path: "/api/v1/agent/find-template?q=...", what: "The templates that match a description", key: false },
+      { method: "GET", path: "/api/v1/agent/templates/{code}/options?clause=...", what: "The options of one clause, from both sides", key: true },
+      { method: "GET", path: "/api/v1/agent/deals/{dealId}/obligations", what: "The duties and dates of a contract", key: true },
+      { method: "GET", path: "/api/v1/agent/deadlines", what: "Public statutory dates with their sources", key: false },
+      { method: "POST", path: "/api/v1/agent/deals/{dealId}/attorney", what: "Invite your own lawyer to review", key: true },
+    ],
+  },
+  es: {
+    tools: [
+      { name: "find_template", text: "Describe el asunto y recibe las plantillas que coinciden, o \"Ninguna plantilla cubre esto. De estos asuntos suele ocuparse un abogado o una abogada.\" Búsqueda por palabras, sin modelo de IA. Sin clave." },
+      { name: "explain_options", text: "Las opciones de una cláusula, con las ventajas e inconvenientes de cada parte tal como los recoge la plantilla. No se recomienda ninguna." },
+      { name: "list_obligations", text: "Las obligaciones y las fechas que fija un contrato: duración, renovación, preaviso y fechas indicadas." },
+      { name: "get_deadlines", text: "Fechas legales públicas (83(b), Form D, Delaware 1 de marzo), cada una con su fuente oficial para comprobarla. Sin clave." },
+      { name: "share_with_attorney", text: "Invita al abogado o la abogada que elijas a revisar un contrato en Dealroom. Trabaja para ti y te factura directamente; Dealroom no cobra nada por ello ni hace recomendaciones." },
+    ],
+    restRows: [
+      { method: "GET", path: "/api/v1/agent/find-template?q=...", what: "Las plantillas que coinciden con una descripción", key: false },
+      { method: "GET", path: "/api/v1/agent/templates/{code}/options?clause=...", what: "Las opciones de una cláusula, desde las dos partes", key: true },
+      { method: "GET", path: "/api/v1/agent/deals/{dealId}/obligations", what: "Las obligaciones y fechas de un contrato", key: true },
+      { method: "GET", path: "/api/v1/agent/deadlines", what: "Fechas legales públicas con sus fuentes", key: false },
+      { method: "POST", path: "/api/v1/agent/deals/{dealId}/attorney", what: "Invitar a tu propio abogado o abogada a revisar", key: true },
+    ],
+  },
+} satisfies Record<PageLocale, { tools: { name: string; text: string }[]; restRows: { method: string; path: string; what: string; key: boolean }[] }>;
 
 export type SectionId =
   | "steps"
@@ -130,6 +171,8 @@ export const DEVELOPERS_COPY = {
       { name: "get_subscriptions", text: "Earlier per-skill subscriptions and their status. Every template is now included." },
       { name: "list_templates, get_template", text: "Clauses and options of each contract, and of the A2A_ agent-to-agent protocol types." },
       { name: "create_playbook, initiate_negotiation, join_negotiation", text: "Negotiate a contract between two agents, including the A2A_ protocol types (negotiation only)." },
+
+      ...(features.startupCoverage ? COVERAGE_COPY.en.tools : []),
     ],
 
     restIntro: "Any language that can send HTTP requests works. All paths start with https://dealroom.todo.law.",
@@ -145,6 +188,8 @@ export const DEVELOPERS_COPY = {
       { method: "GET", path: "/api/v1/agent/templates/{code}", what: "Clauses and options of one contract", key: true },
       { method: "POST", path: "/api/v1/agent/negotiate", what: "Start a negotiation between two agents", key: true },
       { method: "POST", path: "/api/v1/agent/mcp", what: "The MCP server", key: true },
+
+      ...(features.startupCoverage ? COVERAGE_COPY.en.restRows : []),
     ],
     keyYes: "Yes",
     keyNo: "No",
@@ -314,6 +359,8 @@ export const DEVELOPERS_COPY = {
       { name: "get_subscriptions", text: "Las suscripciones anteriores por skill y su estado. Hoy todas las plantillas están incluidas." },
       { name: "list_templates, get_template", text: "Las cláusulas y opciones de cada contrato, y de los tipos de protocolo entre agentes A2A_." },
       { name: "create_playbook, initiate_negotiation, join_negotiation", text: "Negociar un contrato entre dos agentes, también los tipos de protocolo A2A_ (solo por negociación)." },
+
+      ...(features.startupCoverage ? COVERAGE_COPY.es.tools : []),
     ],
 
     restIntro: "Sirve cualquier lenguaje que pueda enviar peticiones HTTP. Todas las rutas empiezan por https://dealroom.todo.law.",
@@ -329,6 +376,7 @@ export const DEVELOPERS_COPY = {
       { method: "GET", path: "/api/v1/agent/templates/{code}", what: "Cláusulas y opciones de un contrato", key: true },
       { method: "POST", path: "/api/v1/agent/negotiate", what: "Iniciar una negociación entre dos agentes", key: true },
       { method: "POST", path: "/api/v1/agent/mcp", what: "El servidor MCP", key: true },
+      ...(features.startupCoverage ? COVERAGE_COPY.es.restRows : []),
     ],
     keyYes: "Sí",
     keyNo: "No",
