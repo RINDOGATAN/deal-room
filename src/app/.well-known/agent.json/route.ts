@@ -16,6 +16,14 @@ import {
   API_KEYS_SETTINGS_PATH,
   MAX_ACTIVE_KEYS_PER_CUSTOMER,
 } from "@/lib/api-key-scopes";
+import {
+  COMMON_CONTRACTS,
+  CONTRACT_TYPES_URL,
+  DISCOVERY_PATHS,
+  ONE_CALL_URL,
+  allContractCodes,
+  oneCallBody,
+} from "@/lib/agent-discovery";
 
 export async function GET() {
   if (!features.agentApi) {
@@ -38,6 +46,9 @@ export async function GET() {
   });
 
   const baseUrl = `https://${brand.appDomain}`;
+  // Every contract the one call makes, the common ones first (the same
+  // list as the guides, the MCP server card and llms-full.txt).
+  const codes = allContractCodes();
 
   const agentCard = {
     name: "Dealroom",
@@ -96,6 +107,23 @@ export async function GET() {
           "Make a finished single-party contract in one call (POST /api/v1/agent/contracts): contract type, your side's details, optionally the other side's, and the required inputs. Clauses left out take the standard option. Spends one credit where billing is on. GET /api/v1/agent/contract-types lists what each type needs (no key).",
         inputModes: ["application/json"],
         outputModes: ["application/json", "text/markdown", "text/html", "text/plain", "application/pdf"],
+        endpoint: { method: "POST", url: ONE_CALL_URL },
+        mcpTool: "generate_contract",
+        tags: ["contracts", "one-call", ...codes],
+        contractTypes: codes,
+        examples: COMMON_CONTRACTS.slice(0, 3).map((code) => JSON.stringify(oneCallBody(code, "en"))),
+      },
+      {
+        id: "list-contract-types",
+        name: "List Contract Types",
+        description:
+          "Every contract type the one call makes, with its code (send it as contractType), guide, governing laws, languages, roles and required inputs (GET /api/v1/agent/contract-types, no key; ?lang=es for Spanish). MCP tool: list_contract_types.",
+        inputModes: ["application/json"],
+        outputModes: ["application/json"],
+        endpoint: { method: "GET", url: CONTRACT_TYPES_URL },
+        mcpTool: "list_contract_types",
+        tags: ["contracts", "catalogue", ...codes],
+        contractTypes: codes,
       },
       {
         id: "delete-deal",
@@ -166,6 +194,10 @@ export async function GET() {
       creditsBalance: `${baseUrl}/api/v1/agent/credits/balance`,
       webhooks: `${baseUrl}/api/v1/agent/webhooks`,
       mcp: `${baseUrl}/api/v1/agent/mcp`,
+      mcpServerCard: `${baseUrl}${DISCOVERY_PATHS.serverCard}`,
+      mcpDiscovery: `${baseUrl}${DISCOVERY_PATHS.mcp}`,
+      llms: `${baseUrl}${DISCOVERY_PATHS.llms}`,
+      llmsFull: `${baseUrl}${DISCOVERY_PATHS.llmsFull}`,
     },
     // Machine-readable price. Amounts are minor units (2900 = 29.00), read
     // from the Stripe prices this deployment is configured with; `display`

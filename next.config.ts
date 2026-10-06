@@ -68,6 +68,18 @@ const nextConfig: NextConfig = {
   outputFileTracingIncludes: {
     "/api/**": ["./src/server/services/document/fonts/**"],
   },
+  // Agents that fetch the home page or the developer quick start find the
+  // MCP server card and llms.txt from the response headers alone.
+  async headers() {
+    const link = [
+      '</.well-known/mcp/server-card.json>; rel="service-desc"; type="application/json"',
+      '</llms.txt>; rel="alternate"; type="text/plain"',
+    ].join(", ");
+    return ["/", "/developers", "/es/developers"].map((source) => ({
+      source,
+      headers: [{ key: "Link", value: link }],
+    }));
+  },
 };
 
 export default withNextIntl(nextConfig);

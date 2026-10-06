@@ -4,7 +4,8 @@
 /**
  * Search-engine and agent-facing parts of the contract pages: page
  * metadata (title, description, canonical, hreflang alternates, Open
- * Graph), the JSON-LD blocks and the short agent API example.
+ * Graph) and the JSON-LD blocks. The agent example of each guide is in
+ * `agent-discovery.ts`.
  */
 
 import type { Metadata } from "next";
@@ -16,7 +17,6 @@ import {
   type PageLocale,
 } from "./contract-pages-paths";
 import type { ContractPageContent } from "./contract-pages";
-import { SKILL_JURISDICTION_TO_GOVERNING_LAW } from "./jurisdictions";
 
 export const OG_IMAGE_PATH = "/og/contracts.png";
 const OG_LOCALE: Record<PageLocale, string> = { en: "en_US", es: "es_ES" };
@@ -80,8 +80,11 @@ function breadcrumbs(locale: PageLocale, items: { name: string; path: string }[]
   };
 }
 
-/** Article + FAQPage + BreadcrumbList for one contract page. */
-export function contractPageJsonLd(page: ContractPageContent, indexName: string): JsonLd {
+/**
+ * Article + FAQPage + BreadcrumbList for one contract page, plus any extra
+ * nodes (the guide's agent block adds a WebAPI node).
+ */
+export function contractPageJsonLd(page: ContractPageContent, indexName: string, extra: JsonLd[] = []): JsonLd {
   const url = `${SITE_URL}${contractPath(page.locale, page.slug)}`;
   return {
     "@context": "https://schema.org",
@@ -115,6 +118,7 @@ export function contractPageJsonLd(page: ContractPageContent, indexName: string)
         { name: indexName, path: contractPath(page.locale) },
         { name: page.heading || page.title, path: contractPath(page.locale, page.slug) },
       ]),
+      ...extra,
     ],
   };
 }
@@ -151,72 +155,6 @@ export function contractIndexJsonLd(
 /** A JSON-LD object as the text of a script element (`<` escaped). */
 export function jsonLdScript(data: JsonLd): string {
   return JSON.stringify(data).replace(/</g, "\\u003c");
-}
-
-// ---------------------------------------------------------------------------
-// The agent example
-
-const LAW_PREFERENCE: Record<PageLocale, string[]> = {
-  en: ["ENGLAND_WALES", "CALIFORNIA", "SPAIN"],
-  es: ["SPAIN", "ENGLAND_WALES", "CALIFORNIA"],
-};
-
-/**
- * The governing law the example uses: one the template itself lists that
- * is also a deal governing law (Spain first on Spanish pages), else null
- * (the agent intake cannot create that type; the example then only reads
- * the template).
- */
-export function exampleGoverningLaw(jurisdictions: string[], locale: PageLocale): string | null {
-  const usable = jurisdictions.filter((j) => SKILL_JURISDICTION_TO_GOVERNING_LAW[j] === j);
-  return LAW_PREFERENCE[locale].find((l) => usable.includes(l)) ?? usable[0] ?? null;
-}
-
-export function agentExample(opts: {
-  contractType: string;
-  jurisdictions: string[];
-  languages: string[];
-  locale: PageLocale;
-  dealName: string;
-}): string {
-  const base = `${SITE_URL}/api/v1/agent`;
-  const read = [
-    opts.locale === "es"
-      ? "# 1. Leer las cláusulas, las opciones y los datos que pide"
-      : "# 1. Read the clauses, options and the facts it needs",
-    `curl ${base}/templates/${opts.contractType} \\`,
-    `  -H "Authorization: Bearer drk_YOUR_KEY"`,
-  ];
-  // The governing law: one the page prefers, or none to send when the type
-  // offers exactly one (Delaware runs under California).
-  const law = exampleGoverningLaw(opts.jurisdictions, opts.locale);
-  const mapped = new Set(
-    opts.jurisdictions.map((j) => SKILL_JURISDICTION_TO_GOVERNING_LAW[j]).filter(Boolean),
-  );
-  if (!law && mapped.size !== 1) return read.join("\n");
-
-  const es = opts.locale === "es";
-  const language = opts.languages.includes(opts.locale) ? opts.locale : (opts.languages[0] ?? "en");
-  const body = {
-    contractType: opts.contractType,
-    ...(law ? { governingLaw: law } : {}),
-    language,
-    title: opts.dealName,
-    party: { legalName: es ? "Tu empresa" : "Your company" },
-    counterparty: { legalName: es ? "La otra empresa" : "The other company" },
-  };
-  return [
-    ...read,
-    "",
-    es
-      ? "# 2. Crear el contrato en una sola llamada (gasta un crédito; las cláusulas que no indiques toman la opción estándar)"
-      : "# 2. Make the contract in one call (spends one credit; clauses you leave out take the standard option)",
-    `curl -X POST ${base}/contracts \\`,
-    `  -H "Authorization: Bearer drk_YOUR_KEY" \\`,
-    `  -H "Content-Type: application/json" \\`,
-    `  -H "Idempotency-Key: $(uuidgen)" \\`,
-    `  -d '${JSON.stringify(body, null, 2).replace(/\n/g, "\n  ")}'`,
-  ].join("\n");
 }
 
 /** Every page path in both languages (for the sitemap and llms.txt checks). */

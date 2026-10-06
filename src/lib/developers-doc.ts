@@ -11,7 +11,8 @@
 
 import { DEVELOPERS_COPY, SECTION_ORDER, type SectionId } from "@/components/developers/copy";
 import { JURISDICTION_NAMES, LANGUAGE_NAMES } from "@/components/contracts/copy";
-import { SITE_URL, contractPath, developersPath, type PageLocale } from "./contract-pages-paths";
+import { CONTRACT_PAGES, SITE_URL, contractPath, developersPath, type PageLocale } from "./contract-pages-paths";
+import { COMMON_CONTRACTS, agentBlockPath, agentContractType, mustSendInputs } from "./agent-discovery";
 import { API_KEYS_SETTINGS_PATH } from "./api-key-scopes";
 import type { PricingFacts } from "./pricing-page";
 import {
@@ -43,6 +44,41 @@ export interface DocTypeRow {
   inputs: string[];
 }
 
+/** One row of "Contracts for AI agents": a common contract and its one-call example. */
+export interface DocAgentRow {
+  rank: number;
+  code: string;
+  name: string;
+  /** The guide. */
+  href: string;
+  /** The guide's agent block (the one call pre-filled for this contract). */
+  callHref: string;
+  inputs: string[];
+}
+
+/** The most common contracts, in order, from the same source as the guides' agent blocks. */
+export function agentRows(locale: PageLocale): DocAgentRow[] {
+  const copy = DEVELOPERS_COPY[locale];
+  return COMMON_CONTRACTS.flatMap((code, i) => {
+    const page = CONTRACT_PAGES.find((p) => p.contractType === code);
+    if (!page) return [];
+    return [
+      {
+        rank: i + 1,
+        code,
+        name: copy.commonNames[code] ?? code,
+        href: contractPath(locale, page.slug),
+        callHref: agentBlockPath(locale, page.slug),
+        inputs: mustSendInputs(agentContractType(code)).map((input) =>
+          input.onlyUnder?.length
+            ? `${input.id} (${copy.inputOnlyUnder(list(input.onlyUnder, JURISDICTION_NAMES, locale))})`
+            : input.id,
+        ),
+      },
+    ];
+  });
+}
+
 export interface DevelopersDoc {
   locale: PageLocale;
   url: string;
@@ -71,6 +107,13 @@ export interface DevelopersDoc {
     clients: { id: SnippetId; name: string; note: string; code: string }[];
     toolsTitle: string;
     tools: { name: string; text: string }[];
+  };
+  agents: {
+    intro: string;
+    caption: string;
+    columns: { rank: string; name: string; code: string; inputs: string; call: string };
+    callLabel: string;
+    rows: DocAgentRow[];
   };
   rest: {
     intro: string;
@@ -193,6 +236,13 @@ export function buildDevelopersDoc(opts: {
       toolsTitle: copy.toolsTitle,
       tools: copy.tools,
     },
+    agents: {
+      intro: copy.agentsIntro,
+      caption: copy.agentsCaption,
+      columns: copy.agentsColumns,
+      callLabel: copy.agentsCallLink,
+      rows: agentRows(locale),
+    },
     rest: {
       intro: copy.restIntro,
       columns: copy.restColumns,
@@ -257,6 +307,17 @@ export function developersMarkdown(doc: DevelopersDoc): string {
   }
   out.push(`### ${doc.mcp.toolsTitle}`, "");
   for (const t of doc.mcp.tools) out.push(`- \`${t.name}\`: ${t.text}`);
+  out.push("");
+
+  out.push(`<a id="agents"></a>`, "", `## ${h.agents}`, "", doc.agents.intro, "");
+  const ac = doc.agents.columns;
+  out.push(`| ${ac.rank} | ${ac.name} | ${ac.code} | ${ac.inputs} | ${ac.call} |`, "| --- | --- | --- | --- | --- |");
+  for (const r of doc.agents.rows) {
+    const inputs = r.inputs.length ? r.inputs.map((i) => `\`${cell(i)}\``).join(", ") : DEVELOPERS_COPY[doc.locale].inputsNone;
+    out.push(
+      `| ${r.rank} | [${cell(r.name)}](${abs(r.href)}) | \`${r.code}\` | ${inputs} | [${doc.agents.callLabel}](${abs(r.callHref)}) |`,
+    );
+  }
   out.push("");
 
   out.push(`<a id="rest"></a>`, "", `## ${h.rest}`, "", doc.rest.intro, "");

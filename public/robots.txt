@@ -1,5 +1,12 @@
 User-agent: *
 Allow: /
+Allow: /.well-known/
+Allow: /llms.txt
+Allow: /llms-full.txt
+Allow: /developers.md
+Allow: /es/developers.md
+Allow: /api/v1/agent/contract-types
+Allow: /api/v1/agent/mcp
 Disallow: /api/
 Disallow: /sign-in
 Disallow: /verify-request
@@ -11,6 +18,18 @@ User-agent: GPTBot
 Allow: /
 
 User-agent: ChatGPT-User
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-User
+Allow: /
+
+User-agent: Claude-SearchBot
 Allow: /
 
 User-agent: Claude-Web

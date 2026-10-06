@@ -25,8 +25,10 @@ import { agentPricingBlock } from "@/server/services/billing/pricing";
 import { buildMcpTools } from "@/server/services/agent/mcp-tools";
 import { handlePayload, rpcError, RPC } from "@/server/services/agent/mcp-protocol";
 import { invokeTool } from "@/server/services/agent/mcp-invoke";
+import { MCP_SERVER_VERSION } from "@/lib/agent-discovery";
 
-const SERVER_VERSION = "1.1.0";
+// One version for the server, server.json and the server card.
+const SERVER_VERSION = MCP_SERVER_VERSION;
 
 async function tools() {
   const templates = await prisma.contractTemplate.findMany({
@@ -66,6 +68,7 @@ export async function GET(req: NextRequest) {
           transport: "streamable-http",
           url: `${baseUrl}/api/v1/agent/mcp`,
           setup: `${baseUrl}/developers`,
+          serverCard: `${baseUrl}/.well-known/mcp/server-card.json`,
         },
         tools: (await tools()).map((t) => ({
           name: t.name,
