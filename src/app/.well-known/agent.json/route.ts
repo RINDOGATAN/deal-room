@@ -98,6 +98,14 @@ export async function GET() {
         outputModes: ["application/json", "text/markdown", "text/html", "text/plain", "application/pdf"],
       },
       {
+        id: "delete-deal",
+        name: "Delete a Deal",
+        description:
+          "Delete one of your single-party deals and its data (DELETE /api/v1/agent/deals/:id, scope negotiate): the parties, the other side's details, the clause choices, the inputs and the contract. Answers 204. Only the account that made the deal can delete it; any other account, or a repeat, gets 404. A deal another party takes part in is refused with 409. The payment record is kept for billing, without names or contract text. MCP tool: delete_deal.",
+        inputModes: ["application/json"],
+        outputModes: ["application/json"],
+      },
+      {
         id: "negotiate-contract",
         name: "Negotiate Contract",
         description:

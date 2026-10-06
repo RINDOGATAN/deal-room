@@ -1436,6 +1436,40 @@ model DealPayment {
   @@map("deal_payments")
 }
 
+// The billing record of a payment whose deal was deleted through the agent
+// API (DELETE /api/v1/agent/deals/:id, 2026-10-06). Deleting a deal
+// cascades its `deal_payments` rows, so each one is copied here first: the
+// same columns (amount, currency, date, account, Stripe references, deal
+// id), never a party name or contract text. A later refund still marks the
+// copy REVOKED. The credit ledger (`customer_credit_entries`) has no foreign
+// key to the deal and is kept as it is.
+model DeletedDealPayment {
+  id                      String            @id // the deal_payments id
+  dealRoomId              String
+  agentDealRoomId         String?
+  payerUserId             String?
+  payerApiKeyId           String?
+  customerId              String?
+  kind                    DealPaymentKind
+  status                  DealPaymentStatus
+  stripeCheckoutSessionId String?
+  stripePaymentIntentId   String?
+  stripeSubscriptionId    String?
+  amount                  Int?
+  currency                String?
+  paidAt                  DateTime
+  revokedAt               DateTime?
+  revokedReason           String?
+  createdAt               DateTime
+  deletedAt               DateTime          @default(now())
+
+  @@index([dealRoomId])
+  @@index([customerId])
+  @@index([stripeCheckoutSessionId])
+  @@index([stripePaymentIntentId])
+  @@map("deleted_deal_payments")
+}
+
 enum AgentCreditReason {
   PURCHASE
   CONSUME

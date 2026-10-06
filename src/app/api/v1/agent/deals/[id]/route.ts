@@ -6,6 +6,13 @@
  *
  * GET /api/v1/agent/deals/:id
  * Returns deal outcome with agreed clauses and satisfaction scores.
+ *
+ * DELETE /api/v1/agent/deals/:id
+ * Deletes one of the caller's single-party deals and its data (204). Not
+ * the caller's deal, or already deleted: 404. A deal another party takes
+ * part in: 409. What is deleted and what is kept:
+ * `src/server/services/agent/deleteDeal.ts`. The MCP tool `delete_deal`
+ * calls this route.
  */
 
 import { NextRequest, NextResponse } from "next/server";
@@ -17,6 +24,8 @@ import {
 } from "@/server/middleware/apiKeyAuth";
 import { features } from "@/config/features";
 import { createLogger } from "@/lib/logger";
+import { apiError } from "@/lib/api-response";
+import { deleteAgentDeal } from "@/server/services/agent/deleteDeal";
 
 const logger = createLogger("agent-api");
 
@@ -154,5 +163,50 @@ export async function GET(
       { error: "Internal server error" },
       { status: 500 }
     );
+  }
+}
+
+export async function DELETE(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    if (!features.agentApi) {
+      return NextResponse.json({ error: "Not available" }, { status: 404 });
+    }
+
+    const auth = await authenticateApiKey(req);
+    if (!auth) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    try {
+      // The scope that creates deals also removes them.
+      requireScope(auth, "negotiate");
+    } catch (e) {
+      if (e instanceof ApiScopeError) {
+        return NextResponse.json({ error: e.message }, { status: 403 });
+      }
+      throw e;
+    }
+
+    const { id } = await params;
+    const result = await deleteAgentDeal(prisma, auth.customer.id, id);
+    if (!result.ok) {
+      return NextResponse.json(
+        { error: result.error, code: result.code },
+        { status: result.status }
+      );
+    }
+
+    logger.info("Agent deal deleted", {
+      customerId: auth.customer.id,
+      dealId: id,
+      paymentsKept: result.paymentsKept,
+    });
+    return new NextResponse(null, { status: 204 });
+  } catch (error) {
+    logger.error("Error deleting agent deal", { err: String(error) });
+    return apiError(error, "Failed to delete the deal");
   }
 }

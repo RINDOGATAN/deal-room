@@ -135,6 +135,37 @@ describe("MCP protocol", () => {
     expect(Buffer.from(resource!.blob, "base64").toString()).toBe("%PDF-1.4 test");
   });
 
+  it("lists delete_deal as destructive and runs it through the DELETE route", async () => {
+    const res = await handleMessage({ jsonrpc: "2.0", id: 2, method: "tools/list" }, ctx());
+    const listed = (res?.result as { tools: { name: string; annotations: Record<string, unknown>; inputSchema: { required: string[] } }[] }).tools;
+    const del = listed.find((t) => t.name === "delete_deal");
+    expect(del?.annotations).toMatchObject({ destructiveHint: true, readOnlyHint: false });
+    expect(del?.inputSchema.required).toEqual(["dealId"]);
+    expect(listed.find((t) => t.name === "get_deal")?.annotations.destructiveHint).toBeUndefined();
+    expect(tools.find((t) => t.name === "delete_deal")?.endpoint).toEqual({
+      method: "DELETE",
+      url: "https://dealroom.test/api/v1/agent/deals/{dealId}",
+    });
+
+    const c = ctx({ invoke: vi.fn(async () => new Response(null, { status: 204 })) });
+    const done = await handleMessage(call("delete_deal", { dealId: "adr_1" }), c);
+    expect(c.invoke).toHaveBeenCalledWith(expect.objectContaining({ name: "delete_deal" }), { dealId: "adr_1" }, "Bearer drk_test");
+    const result = done?.result as { isError: boolean; content: { text: string }[] };
+    expect(result.isError).toBe(false);
+    expect(result.content[0].text).toMatch(/^Deleted\./);
+  });
+
+  it("turns a refused delete (409) into a tool error the agent can read", async () => {
+    const c = ctx({
+      invoke: vi.fn(async () => Response.json({ error: "Only single-party deals can be deleted.", code: "NOT_SINGLE_PARTY" }, { status: 409 })),
+    });
+    const res = await handleMessage(call("delete_deal", { dealId: "adr_2" }), c);
+    const result = res?.result as { isError: boolean; content: { text: string }[] };
+    expect(result.isError).toBe(true);
+    expect(result.content[0].text).toContain("HTTP 409");
+    expect(result.content[0].text).toContain("NOT_SINGLE_PARTY");
+  });
+
   it("rejects an unknown tool and an unknown method", async () => {
     expect((await handleMessage(call("delete_everything"), ctx()))?.error?.code).toBe(RPC.INVALID_PARAMS);
     expect((await handleMessage({ jsonrpc: "2.0", id: 3, method: "resources/list" }, ctx()))?.error?.code).toBe(

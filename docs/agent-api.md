@@ -52,12 +52,24 @@ Every agreed contract is available in five formats, all rendered from the same d
 | PDF | `/deals/:id/document` | `application/pdf` | |
 | DOCX | `/deals/:id/document/docx` | Word | |
 
+### Delete a deal
+
+`DELETE /deals/:id` (`:id` is the `dealId` of the one call). Scope `negotiate`. Deletes one of your single-party deals and its data; it cannot be undone.
+
+- Who: only the account that made the deal (the API key's customer). For any other account the deal does not exist: **404**, as it does once deleted, so a repeated delete answers 404.
+- Which deals: single-party (SOLO) deals made through the agent API (`POST /contracts` or the solo intake `POST /deals`). A deal another party takes part in (a two-party negotiation, a deal another account joined, a dispute, an accepted invitation) is refused with **409** `NOT_SINGLE_PARTY` and nothing is deleted.
+- Deleted: the deal, its parties and their signing details, the other side's details (`soloCounterparty`), the clause choices, the inputs (terms), compromise records, rounds, invitations, the signing request, notification records, the deal's audit entries and the cached idempotent answers that hold it. Documents are made on request and never stored, so no file remains.
+- Kept, for billing and the law: the payment record (amount, currency, date, account, payment references and deal id, copied to `deleted_deal_payments`), the credit ledger entry (one credit spent, date, account, deal id), the usage meter and one audit entry that the deletion happened, all without party names or contract text. A spent credit is not given back.
+- Answer **204** with no body. Errors: 401 no key, 403 scope, 404 not found, 409 not a single-party deal.
+
+MCP: `delete_deal` with `{ "dealId": "..." }` runs this route (same rules); a 404 or 409 comes back as a tool error.
+
 The one call returns the Markdown, HTML or text in the answer with `inline`; MCP `generate_contract` asks for Markdown by default and puts it first in the tool result; `download_contract` defaults to Markdown.
 - Errors: 400 invalid body, 401 no key, 403 scope, 404 unknown type (with a hint), 422 law, language, role, inputs, selections or an unsettled clause (nothing charged), 429 limit.
 
 ### MCP
 
-`POST /mcp` is the MCP server (Streamable HTTP, JSON answers, no sessions; methods `initialize`, `ping`, `tools/list`, `tools/call`). The key goes in the `Authorization` header; connecting and listing tools work without it. Each tool runs its REST route, so prices and limits are the same. `GET /mcp` still returns the tool list as JSON with each tool's endpoint. Tools: `list_contract_types` (public), `generate_contract`, `list_templates`, `get_template`, `create_playbook`, `initiate_negotiation`, `join_negotiation`, `get_deal`, `download_contract` (Markdown by default; Markdown, HTML and text come back as text, PDF and DOCX as embedded resources), `buy_credits`, `get_credit_balance`, `get_subscriptions`.
+`POST /mcp` is the MCP server (Streamable HTTP, JSON answers, no sessions; methods `initialize`, `ping`, `tools/list`, `tools/call`). The key goes in the `Authorization` header; connecting and listing tools work without it. Each tool runs its REST route, so prices and limits are the same. `GET /mcp` still returns the tool list as JSON with each tool's endpoint. Tools: `list_contract_types` (public), `generate_contract`, `list_templates`, `get_template`, `create_playbook`, `initiate_negotiation`, `join_negotiation`, `get_deal`, `download_contract` (Markdown by default; Markdown, HTML and text come back as text, PDF and DOCX as embedded resources), `delete_deal` (marked destructive), `buy_credits`, `get_credit_balance`, `get_subscriptions`.
 
 ---
 
@@ -80,7 +92,7 @@ Each API key has a set of scopes that control access:
 | `templates:read` | List and view contract templates |
 | `playbook:read` | List and view own playbooks |
 | `playbook:write` | Create, update, and delete playbooks |
-| `negotiate` | Initiate and join negotiations |
+| `negotiate` | Make contracts, initiate and join negotiations, delete your single-party deals |
 | `deals:read` | List deals, view details, download documents |
 
 A key missing a required scope receives `403 Forbidden`.
@@ -806,6 +818,15 @@ Content-Type: application/vnd.openxmlformats-officedocument.wordprocessingml.doc
 Content-Disposition: attachment; filename="alpha_beta_dpa_2026_contract.docx"
 ```
 
+#### Delete a Deal
+
+```
+DELETE /deals/:id
+Scope: negotiate
+```
+
+Deletes one of your single-party deals and its data (see "Delete a deal" above for what is deleted and what is kept). **204** with no body; **404** when the deal is not yours or is already deleted; **409** `NOT_SINGLE_PARTY` when another party takes part in it.
+
 ---
 
 ## Compromise Algorithm
@@ -1365,7 +1386,7 @@ Returns a standard A2A Agent Card describing Dealroom's negotiation capabilities
 GET /api/v1/agent/mcp
 ```
 
-Returns MCP-compatible tool definitions for Dealroom operations (discovery-only — execution goes through REST endpoints). Includes tools: `list_templates`, `get_template`, `create_playbook`, `initiate_negotiation`, `join_negotiation`, `get_deal`, `download_contract` (documents the 402 behaviour), `get_subscriptions`, `buy_credits`, `get_credit_balance` (the customer's shared balance), plus a `pricing` block with the per-contract amounts. There is no `subscribe` tool: subscriptions are retired.
+Returns MCP-compatible tool definitions for Dealroom operations, each with the REST endpoint it runs (`POST /api/v1/agent/mcp` runs them). Includes tools: `list_templates`, `get_template`, `create_playbook`, `initiate_negotiation`, `join_negotiation`, `get_deal`, `download_contract` (documents the 402 behaviour), `delete_deal`, `get_subscriptions`, `buy_credits`, `get_credit_balance` (the customer's shared balance), plus a `pricing` block with the per-contract amounts. There is no `subscribe` tool: subscriptions are retired.
 
 ---
 
@@ -1376,7 +1397,7 @@ Returns MCP-compatible tool definitions for Dealroom operations (discovery-only 
 | `templates:read` | List and view contract templates |
 | `playbook:read` | List and view own playbooks |
 | `playbook:write` | Create, update, and delete playbooks |
-| `negotiate` | Initiate and join negotiations, counter-propose, accept/reject |
+| `negotiate` | Make contracts, initiate and join negotiations, counter-propose, accept/reject, delete your single-party deals |
 | `deals:read` | List deals, view details, poll status, download documents |
 | `billing:read` | View the customer's credit balance and earlier subscriptions, buy credit packs |
 | `webhooks:manage` | Register, list, and delete webhook endpoints |

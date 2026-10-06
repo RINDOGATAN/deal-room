@@ -12,7 +12,7 @@ export const AGENT_API_SCOPES = [
   { name: "templates:read", description: "List and view contract templates" },
   { name: "playbook:read", description: "List and view playbooks" },
   { name: "playbook:write", description: "Create, update, delete playbooks" },
-  { name: "negotiate", description: "Initiate and join negotiations" },
+  { name: "negotiate", description: "Make contracts, initiate and join negotiations, delete your single-party deals" },
   { name: "deals:read", description: "View deals and download documents" },
   { name: "billing:read", description: "View the customer's credit balance and buy credit packs" },
   { name: "webhooks:manage", description: "Manage webhook endpoints" },
