@@ -127,8 +127,9 @@ export const DEVELOPERS_COPY = {
       { name: "delete_deal", text: "Delete one of your single-party deals and its data." },
       { name: "buy_credits", text: "A payment link for a pack of credits, for a person to open." },
       { name: "get_credit_balance", text: "Credits left on the account." },
-      { name: "list_templates, get_template", text: "Clauses and options of each contract." },
-      { name: "create_playbook, initiate_negotiation, join_negotiation", text: "Negotiate a contract between two agents." },
+      { name: "get_subscriptions", text: "Earlier per-skill subscriptions and their status. Every template is now included." },
+      { name: "list_templates, get_template", text: "Clauses and options of each contract, and of the A2A_ agent-to-agent protocol types." },
+      { name: "create_playbook, initiate_negotiation, join_negotiation", text: "Negotiate a contract between two agents, including the A2A_ protocol types (negotiation only)." },
     ],
 
     restIntro: "Any language that can send HTTP requests works. All paths start with https://dealroom.todo.law.",
@@ -170,12 +171,10 @@ export const DEVELOPERS_COPY = {
     } as Record<string, string>,
 
     typesIntro:
-      "Every contract the one call can make, grouped as in the contract guides. Send the code as contractType. Inputs marked with a default can be left out.",
+      "Every contract the one call can make, grouped as in the contract guides. Send the code as contractType. Send every required input in terms. A required input with a default can be left out: the default is applied.",
     typesCaption: "Contract types, with the code to send and the facts each one needs",
     typesColumns: { name: "Contract", code: "Code", laws: "Governing laws", languages: "Languages", inputs: "Required inputs" },
     inputsNone: "None",
-    inputOnlyUnder: (laws: string) => `only under ${laws}`,
-    inputDefault: (value: string) => `default ${value}`,
     typesEmpty: "The list of contract types could not be loaded. GET /api/v1/agent/contract-types returns it.",
 
     formatsIntro:
@@ -312,8 +311,9 @@ export const DEVELOPERS_COPY = {
       { name: "delete_deal", text: "Elimina uno de tus acuerdos de una sola parte y sus datos." },
       { name: "buy_credits", text: "Un enlace de pago de un pack de créditos, para que lo abra una persona." },
       { name: "get_credit_balance", text: "Los créditos que quedan en la cuenta." },
-      { name: "list_templates, get_template", text: "Las cláusulas y opciones de cada contrato." },
-      { name: "create_playbook, initiate_negotiation, join_negotiation", text: "Negociar un contrato entre dos agentes." },
+      { name: "get_subscriptions", text: "Las suscripciones anteriores por skill y su estado. Hoy todas las plantillas están incluidas." },
+      { name: "list_templates, get_template", text: "Las cláusulas y opciones de cada contrato, y de los tipos de protocolo entre agentes A2A_." },
+      { name: "create_playbook, initiate_negotiation, join_negotiation", text: "Negociar un contrato entre dos agentes, también los tipos de protocolo A2A_ (solo por negociación)." },
     ],
 
     restIntro: "Sirve cualquier lenguaje que pueda enviar peticiones HTTP. Todas las rutas empiezan por https://dealroom.todo.law.",
@@ -355,12 +355,10 @@ export const DEVELOPERS_COPY = {
     } as Record<string, string>,
 
     typesIntro:
-      "Todos los contratos que puede crear la llamada, agrupados como en las guías de contratos. Envía el código como contractType. Los datos con valor por defecto se pueden omitir.",
+      "Todos los contratos que puede crear la llamada, agrupados como en las guías de contratos. Envía el código como contractType. Envía en terms todos los datos obligatorios. Un dato obligatorio con valor por defecto puede omitirse: se aplica ese valor.",
     typesCaption: "Tipos de contrato, con el código que hay que enviar y los datos que pide cada uno",
     typesColumns: { name: "Contrato", code: "Código", laws: "Leyes aplicables", languages: "Idiomas", inputs: "Datos obligatorios" },
     inputsNone: "Ninguno",
-    inputOnlyUnder: (laws: string) => `solo con ${laws}`,
-    inputDefault: (value: string) => `por defecto ${value}`,
     typesEmpty: "No se ha podido cargar la lista de tipos de contrato. GET /api/v1/agent/contract-types la devuelve.",
 
     formatsIntro:

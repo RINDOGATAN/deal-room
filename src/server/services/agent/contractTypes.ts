@@ -24,14 +24,33 @@ import { resolveParamString, type ParameterSchema } from "@/lib/parameters";
 import { roleConfigFor } from "@/lib/contractRoles";
 import { LIVE_ROWS } from "@/lib/clause-retirement";
 import { brand } from "@/config/brand";
+import { mustSend } from "@/lib/agent-inputs";
 
 export const A2A_PREFIX = "A2A_";
+
+/**
+ * The seeded placeholder template (no guide, a dummy description). It is
+ * not a contract: no agent-facing list shows it and no agent tool accepts
+ * it, as the /deals/new skill list already does (skills router).
+ */
+export const PLACEHOLDER_CONTRACT_TYPE = "TEMPLATE";
+
+/** Whether a code is the placeholder template, in any case. */
+export function isPlaceholderContractType(code: string | null | undefined): boolean {
+  return (code ?? "").trim().toUpperCase() === PLACEHOLDER_CONTRACT_TYPE;
+}
 
 export interface ContractTypeInput {
   id: string;
   label: string;
   type: string;
   required: boolean;
+  /**
+   * Required and without a default: the one call refuses the contract
+   * without it. A required input with a default can be left out and the
+   * default is applied.
+   */
+  mustSend: boolean;
   /** Only asked under these governing laws (absent: under all of them). */
   onlyUnder?: string[];
   options?: string[];
@@ -88,12 +107,14 @@ export function inputsFor(schema: ParameterSchema | null | undefined, lang: stri
       label: resolveParamString(p.label, lang, p.id),
       type: p.type,
       required: !!p.required,
+      mustSend: false,
     };
     if (p.jurisdictions?.length) input.onlyUnder = p.jurisdictions;
     if (p.options?.length) input.options = p.options;
     if (p.default !== undefined) input.default = p.default;
     const hint = resolveParamString(p.hint, lang);
     if (hint) input.hint = hint;
+    input.mustSend = mustSend(input);
     return input;
   });
 }
@@ -177,7 +198,10 @@ async function loadContractTypes(
   lang: "en" | "es",
 ): Promise<ContractTypeDescriptor[]> {
   const templates = await prisma.contractTemplate.findMany({
-    where: { isActive: true, NOT: { contractType: { startsWith: A2A_PREFIX } } },
+    where: {
+      isActive: true,
+      NOT: [{ contractType: { startsWith: A2A_PREFIX } }, { contractType: PLACEHOLDER_CONTRACT_TYPE }],
+    },
     select: {
       contractType: true,
       displayName: true,

@@ -34,6 +34,7 @@ import { createSoloDealFromFacts } from "@/server/services/agent/soloIntake";
 import {
   A2A_PREFIX,
   contractTypeFromInput,
+  isPlaceholderContractType,
   governingLawsFor,
   slugForContractType,
 } from "@/server/services/agent/contractTypes";
@@ -124,8 +125,11 @@ export async function generateContract(
       _count: { select: { clauses: { where: LIVE_ROWS } } },
     },
   });
-  // A template without clauses (a catalogue-only stub) cannot make a contract.
-  const usable = catalogue.filter((t) => (t._count?.clauses ?? 1) > 0);
+  // A template without clauses (a catalogue-only stub) cannot make a
+  // contract, and the placeholder template is not a contract at all.
+  const usable = catalogue.filter(
+    (t) => (t._count?.clauses ?? 1) > 0 && !isPlaceholderContractType(t.contractType),
+  );
   const contractType = contractTypeFromInput(
     input.contractType,
     usable.map((t) => t.contractType),

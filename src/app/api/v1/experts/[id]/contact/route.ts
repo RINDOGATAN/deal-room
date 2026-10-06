@@ -19,6 +19,7 @@ import {
   ApiScopeError,
   checkExpertContactRateLimit,
 } from "@/server/middleware/apiKeyAuth";
+import { unauthorizedResponse } from "@/server/middleware/unauthorized";
 import { features } from "@/config/features";
 import { sendRecommendationRequestEmail } from "@/lib/email";
 import { createLogger } from "@/lib/logger";
@@ -36,7 +37,7 @@ export async function POST(
 
     const auth = await authenticateApiKey(req);
     if (!auth) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return unauthorizedResponse();
     }
 
     try {

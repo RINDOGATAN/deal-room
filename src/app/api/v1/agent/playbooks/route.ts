@@ -15,10 +15,12 @@ import {
   requireScope,
   ApiScopeError,
 } from "@/server/middleware/apiKeyAuth";
+import { unauthorizedResponse } from "@/server/middleware/unauthorized";
 import { withIdempotency } from "@/server/middleware/idempotency";
 import { features } from "@/config/features";
 import { createLogger } from "@/lib/logger";
 import { LIVE_ROWS } from "@/lib/clause-retirement";
+import { isPlaceholderContractType } from "@/server/services/agent/contractTypes";
 
 const logger = createLogger("agent-api");
 
@@ -30,7 +32,7 @@ export async function GET(req: NextRequest) {
 
     const auth = await authenticateApiKey(req);
     if (!auth) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return unauthorizedResponse();
     }
 
     try {
@@ -80,7 +82,7 @@ export async function POST(req: NextRequest) {
 
     const auth = await authenticateApiKey(req);
     if (!auth) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return unauthorizedResponse();
     }
 
     try {
@@ -121,7 +123,8 @@ export async function POST(req: NextRequest) {
     }
 
     // Validate the contract template exists and entries reference valid clause/option IDs
-    const template = await prisma.contractTemplate.findUnique({
+    // The placeholder template is not a contract: answer as for any unknown code.
+    const template = isPlaceholderContractType(contractType) ? null : await prisma.contractTemplate.findUnique({
       where: { contractType },
       include: {
         clauses: {

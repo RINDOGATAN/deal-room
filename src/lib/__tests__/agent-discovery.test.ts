@@ -273,7 +273,7 @@ describe("Contracts for AI agents on /developers", () => {
     const md = developersMarkdown(buildDevelopersDoc({ locale: "en", types: [], prices: [], billingOn: false }));
     expect(md).toContain("## Contracts for AI agents");
     expect(md).toContain(
-      "| 1 | [Non-disclosure agreement (NDA)](https://dealroom.todo.law/contracts/nda) | `NDA` | None | [See the call](https://dealroom.todo.law/contracts/nda#agent) |",
+      "| 1 | [Non-disclosure agreement (NDA)](https://dealroom.todo.law/contracts/nda) | `NDA` | `dispute-forum-city (only under Spain; if left out, the default Madrid is applied)` | [See the call](https://dealroom.todo.law/contracts/nda#agent) |",
     );
     expect(md).toContain("`processing-purpose`, `data-categories`");
   });

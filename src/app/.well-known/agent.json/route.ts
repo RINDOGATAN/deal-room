@@ -1,9 +1,17 @@
 /**
- * A2A Agent Card
+ * Agent card
  *
- * GET /.well-known/agent.json
- * Returns a standard A2A Agent Card describing Dealroom's
- * negotiation capabilities, supported contract types, and auth.
+ * GET /.well-known/agent.json (and /.well-known/agent-card.json)
+ * Describes Dealroom for agents: what it does, the contract types, auth,
+ * price and where to connect. Dealroom does not speak the A2A protocol:
+ * `url` is the MCP endpoint and `interfaces` names MCP and REST, so an A2A
+ * client is not sent to an HTML page as if it were an A2A endpoint.
+ *
+ * Contract types: `supportedContractTypes` is the one list of contract
+ * types agents can make (the same codes as the guides, the MCP server
+ * card, list_contract_types and llms-full.txt); `a2aProtocolTypes` are the
+ * agent-to-agent protocol templates, negotiated only. The placeholder
+ * template is in neither.
  */
 
 import { NextResponse } from "next/server";
@@ -17,13 +25,16 @@ import {
   MAX_ACTIVE_KEYS_PER_CUSTOMER,
 } from "@/lib/api-key-scopes";
 import {
+  API_BASE,
   COMMON_CONTRACTS,
   CONTRACT_TYPES_URL,
   DISCOVERY_PATHS,
+  MCP_URL,
   ONE_CALL_URL,
   allContractCodes,
   oneCallBody,
 } from "@/lib/agent-discovery";
+import { A2A_PREFIX, PLACEHOLDER_CONTRACT_TYPE } from "@/server/services/agent/contractTypes";
 
 export async function GET() {
   if (!features.agentApi) {
@@ -32,7 +43,7 @@ export async function GET() {
 
   // Fetch active templates to reflect current capabilities
   const templates = await prisma.contractTemplate.findMany({
-    where: { isActive: true },
+    where: { isActive: true, NOT: { contractType: PLACEHOLDER_CONTRACT_TYPE } },
     select: {
       contractType: true,
       displayName: true,
@@ -49,13 +60,36 @@ export async function GET() {
   // Every contract the one call makes, the common ones first (the same
   // list as the guides, the MCP server card and llms-full.txt).
   const codes = allContractCodes();
+  const byCode = new Map(templates.map((t) => [t.contractType, t]));
+  const describe = (t: (typeof templates)[number]) => ({
+    contractType: t.contractType,
+    displayName: t.displayName,
+    jurisdictions: t.jurisdictions,
+    languages: t.languages,
+    isPremium: t.skillPackage?.isPremium ?? false,
+  });
 
   const agentCard = {
     name: "Dealroom",
     description: features.stripeEnabled
       ? "Two-party contract negotiation platform. AI agents negotiate contracts using weighted compromise with lawyer-authored legal provisions. Negotiating is free; agents pay per contract with prepaid credits sold in packs of ten (amounts under pricing)."
       : "Two-party contract negotiation platform. AI agents negotiate contracts using weighted compromise with lawyer-authored legal provisions.",
-    url: baseUrl,
+    // Not an A2A endpoint: Dealroom is reached through MCP or REST.
+    url: MCP_URL,
+    interfaces: [
+      {
+        protocol: "mcp",
+        transport: "streamable-http",
+        url: MCP_URL,
+        serverCard: `${baseUrl}${DISCOVERY_PATHS.serverCard}`,
+      },
+      { protocol: "rest", url: API_BASE, documentation: `${baseUrl}/developers` },
+    ],
+    a2a: {
+      supported: false,
+      note: `This card describes the service. Dealroom does not speak the A2A protocol: connect through the MCP server at ${MCP_URL} or the REST API at ${API_BASE}.`,
+    },
+    website: baseUrl,
     version: "1.0.0",
     provider: {
       organization: brand.company,
@@ -175,13 +209,15 @@ export async function GET() {
         outputModes: ["application/json"],
       },
     ],
-    supportedContractTypes: templates.map((t) => ({
-      contractType: t.contractType,
-      displayName: t.displayName,
-      jurisdictions: t.jurisdictions,
-      languages: t.languages,
-      isPremium: t.skillPackage?.isPremium ?? false,
-    })),
+    // The contract types agents can make and negotiate: the same codes as
+    // the guides, the server card and list_contract_types.
+    supportedContractTypes: codes.flatMap((code) => {
+      const t = byCode.get(code);
+      return t ? [describe(t)] : [];
+    }),
+    // Agent-to-agent protocol templates: negotiated only (get_template,
+    // create_playbook, initiate_negotiation), never made in one call.
+    a2aProtocolTypes: templates.filter((t) => t.contractType.startsWith(A2A_PREFIX)).map(describe),
     endpoints: {
       contracts: `${baseUrl}/api/v1/agent/contracts`,
       contractTypes: `${baseUrl}/api/v1/agent/contract-types`,

@@ -78,9 +78,16 @@ describe("POST /api/v1/agent/contracts", () => {
     expect((await res.json()).code).toBe("PAYMENT_REQUIRED");
   });
 
-  it("needs a key", async () => {
+  it("needs a key, and says where to create one", async () => {
     auth.authenticateApiKey.mockResolvedValue(null);
-    expect((await POST(req(GOOD))).status).toBe(401);
+    const res = await POST(req(GOOD));
+    expect(res.status).toBe(401);
+    expect(res.headers.get("WWW-Authenticate")).toMatch(/^Bearer\b/);
+    const body = await res.json();
+    expect(body.error).toBe("Unauthorized");
+    expect(body.keyCreationUrl).toMatch(/^https:\/\/.+\/settings\/api-keys$/);
+    expect(body.message).toContain(body.keyCreationUrl);
+    expect(body.message).toContain("Bearer drk_");
   });
 
   it("needs both the negotiate and deals:read scopes", async () => {

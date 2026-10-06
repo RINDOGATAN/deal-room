@@ -15,6 +15,7 @@ import {
   requireScope,
   ApiScopeError,
 } from "@/server/middleware/apiKeyAuth";
+import { unauthorizedResponse } from "@/server/middleware/unauthorized";
 import { generateContractData } from "@/server/services/document/generator";
 import { generateContractTxt } from "@/server/services/document/contractTxt";
 import { features } from "@/config/features";
@@ -37,7 +38,7 @@ export async function GET(
 
     const auth = await authenticateApiKey(req);
     if (!auth) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return unauthorizedResponse();
     }
 
     try {

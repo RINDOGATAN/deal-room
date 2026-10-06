@@ -7,6 +7,7 @@ import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
 import { features } from "@/config/features";
 import { LIVE_ROWS } from "@/lib/clause-retirement";
+import { PLACEHOLDER_CONTRACT_TYPE } from "@/server/services/agent/contractTypes";
 import { localizedValues } from "@/lib/contract-search";
 
 export const skillsRouter = createTRPCRouter({
@@ -70,7 +71,7 @@ export const skillsRouter = createTRPCRouter({
     const templates = await ctx.prisma.contractTemplate.findMany({
       where: {
         isActive: true,
-        NOT: { contractType: "TEMPLATE" },
+        NOT: { contractType: PLACEHOLDER_CONTRACT_TYPE },
       },
       select: {
         id: true,

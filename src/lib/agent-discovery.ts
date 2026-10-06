@@ -19,6 +19,7 @@ import snapshot from "./agent-contract-types.json";
 import serverJson from "../../server.json";
 import { CONTRACT_PAGES, SITE_URL, contractPath, developersPath, type PageLocale } from "./contract-pages-paths";
 import { API_BASE, KEY_PLACEHOLDER, MCP_URL } from "./developer-snippets";
+import { REQUIRED_INPUTS_RULE, defaultsIfLeftOut, inputNotes, mustSend, requiredInputs } from "./agent-inputs";
 
 export { API_BASE, KEY_PLACEHOLDER, MCP_URL };
 export const ONE_CALL_URL = `${API_BASE}/contracts`;
@@ -98,11 +99,13 @@ export function allContractCodes(): string[] {
   return rankedContractPages().map((p) => p.contractType);
 }
 
-/** Inputs a caller must send: required, with no default. */
+/**
+ * Inputs a caller must send: required, with no default (under `law`, when
+ * given). Used to fill the examples only; every listing shows all the
+ * required inputs with their defaults (`agent-inputs.ts`).
+ */
 export function mustSendInputs(t: AgentContractType | undefined, law?: string | null): AgentInput[] {
-  return (t?.requiredInputs ?? []).filter(
-    (i) => i.default === undefined && (!law || !i.onlyUnder?.length || i.onlyUnder.includes(law)),
-  );
+  return requiredInputs(t?.requiredInputs, law).filter(mustSend);
 }
 
 const LAW_PREFERENCE: Record<PageLocale, string[]> = {
@@ -256,7 +259,7 @@ export function mcpServerCard(opts: { tools: CardTool[]; protocolVersion: string
     capabilities: { tools: { listChanged: false } },
     authentication: AUTH,
     instructions:
-      "Call list_contract_types to learn the code and required inputs of a contract, then generate_contract with contractType, party and those inputs in terms. Clauses left out take the standard option. Each contract made spends one prepaid credit.",
+      `Call list_contract_types to learn the code and required inputs of a contract, then generate_contract with contractType, party and those inputs in terms. ${REQUIRED_INPUTS_RULE.en} Clauses left out take the standard option. Each contract made spends one prepaid credit.`,
     tools: opts.tools.map((t) => ({
       name: t.name,
       ...(t.title ? { title: t.title } : {}),
@@ -296,6 +299,7 @@ export function mcpDiscovery(opts: { toolNames: string[] }): Record<string, unkn
     },
     contractTypes: {
       list: CONTRACT_TYPES_URL,
+      requiredInputsRule: REQUIRED_INPUTS_RULE.en,
       items: rankedContractPages().map((p) => {
         const t = agentContractType(p.contractType);
         return {
@@ -304,7 +308,12 @@ export function mcpDiscovery(opts: { toolNames: string[] }): Record<string, unkn
           agentExample: abs(agentBlockPath("en", p.slug)),
           governingLaws: t?.governingLaws ?? [],
           languages: t?.languages ?? [],
-          requiredInputs: mustSendInputs(t).map((i) => i.id),
+          // Every required input; those with a default may be left out
+          // and take the default listed here.
+          requiredInputs: requiredInputs(t?.requiredInputs).map((i) => i.id),
+          ...(Object.keys(defaultsIfLeftOut(t?.requiredInputs)).length
+            ? { defaultsIfLeftOut: defaultsIfLeftOut(t?.requiredInputs) }
+            : {}),
         };
       }),
     },
@@ -315,12 +324,7 @@ export function mcpDiscovery(opts: { toolNames: string[] }): Record<string, unkn
 // /llms-full.txt
 
 function inputLine(i: AgentInput): string {
-  const notes = [
-    i.type,
-    ...(i.options?.length ? [`one of ${i.options.join(", ")}`] : []),
-    ...(i.default !== undefined ? [`default ${i.default}`] : []),
-    ...(i.onlyUnder?.length ? [`only under ${i.onlyUnder.join(", ")}`] : []),
-  ];
+  const notes = [i.type, ...(i.options?.length ? [`one of ${i.options.join(", ")}`] : []), ...inputNotes(i, "en")];
   return `\`${i.id}\` (${notes.join("; ")})`;
 }
 
@@ -342,7 +346,7 @@ export function llmsFullText(opts: {
     "",
     `- MCP server card: ${abs(DISCOVERY_PATHS.serverCard)}`,
     `- MCP discovery: ${abs(DISCOVERY_PATHS.mcp)}`,
-    `- A2A agent card: ${abs(DISCOVERY_PATHS.agentCard)}`,
+    `- Agent card (describes the service; connect through the MCP server or the REST API, not A2A): ${abs(DISCOVERY_PATHS.agentCard)}`,
     `- Developer quick start: ${abs("/developers")} (Markdown: ${abs(DISCOVERY_PATHS.developersMd)}; Spanish: ${abs("/es/developers")})`,
     `- Contract types and the inputs each needs (JSON, no key): ${CONTRACT_TYPES_URL} (Spanish: ${CONTRACT_TYPES_URL}?lang=es)`,
     "",
@@ -379,13 +383,13 @@ export function llmsFullText(opts: {
   out.push(
     `## Contract types (${pages.length})`,
     "",
-    "Send the code as `contractType`. The most common contracts come first. Inputs with a default can be left out.",
+    `Send the code as \`contractType\`. The most common contracts come first. ${REQUIRED_INPUTS_RULE.en}`,
     "",
   );
   for (const p of pages) {
     const t = agentContractType(p.contractType);
     const name = opts.names[p.contractType] ?? p.contractType;
-    const required = t?.requiredInputs ?? [];
+    const required = requiredInputs(t?.requiredInputs);
     out.push(
       `### ${name} (\`${p.contractType}\`)`,
       "",
