@@ -74,6 +74,7 @@ export async function GET(req: NextRequest) {
           endpoint: t.endpoint,
           requiredScopes: t.requiredScopes,
           ...(t.public ? { public: true } : {}),
+          ...(t.destructive ? { destructive: true } : {}),
           ...(t.errors ? { errors: t.errors } : {}),
         })),
         pricing: await agentPricingBlock(),

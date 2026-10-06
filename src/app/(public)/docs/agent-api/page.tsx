@@ -96,6 +96,7 @@ export default function AgentApiPage() {
     ["GET", "/deals/:id", t("purposeDealOutcome")],
     ["GET", "/deals/:id/document", t("purposeDownloadPdf")],
     ["GET", "/deals/:id/document/docx", t("purposeDownloadDocx")],
+    ["DELETE", "/deals/:id", t("purposeDeleteDeal")],
   ];
 
   const asyncEndpoints: [string, string, string][] = [

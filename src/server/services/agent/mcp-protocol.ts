@@ -55,7 +55,7 @@ export function rpcError(id: JsonRpcId | null, code: number, message: string): J
 }
 
 const INSTRUCTIONS =
-  "Dealroom drafts and negotiates contracts. To make a contract, call list_contract_types to see what each type needs, then generate_contract with the type, your side's details and the required inputs. With billing on, each contract spends one prepaid credit (buy_credits); drafting and negotiating are free.";
+  "Dealroom drafts and negotiates contracts. To make a contract, call list_contract_types to see what each type needs, then generate_contract with the type, your side's details and the required inputs. With billing on, each contract spends one prepaid credit (buy_credits); drafting and negotiating are free. delete_deal removes one of your single-party deals and its data for good.";
 
 function isObject(v: unknown): v is Record<string, unknown> {
   return !!v && typeof v === "object" && !Array.isArray(v);
@@ -69,6 +69,11 @@ function hasKey(authorization: string | null): boolean {
 export async function toolResult(res: Response, tool: McpToolDef): Promise<Record<string, unknown>> {
   const type = (res.headers.get("Content-Type") || "").toLowerCase();
   const isError = !res.ok;
+
+  // Done, nothing to return (delete_deal).
+  if (res.status === 204) {
+    return { content: [{ type: "text", text: tool.doneText ?? "Done." }], isError: false };
+  }
 
   if (type.includes("application/json")) {
     const raw = await res.text();
@@ -165,7 +170,12 @@ export async function handleMessage(msg: unknown, ctx: McpContext): Promise<Json
             title: t.title,
             description: t.description,
             inputSchema: t.inputSchema,
-            annotations: { title: t.title, readOnlyHint: !!t.readOnly, openWorldHint: false },
+            annotations: {
+              title: t.title,
+              readOnlyHint: !!t.readOnly,
+              ...(t.destructive ? { destructiveHint: true } : {}),
+              openWorldHint: false,
+            },
           })),
         },
       };

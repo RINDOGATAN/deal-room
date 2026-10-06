@@ -18,7 +18,7 @@ import { GET as templateGET } from "@/app/api/v1/agent/templates/[contractType]/
 import { POST as playbooksPOST } from "@/app/api/v1/agent/playbooks/route";
 import { POST as negotiatePOST } from "@/app/api/v1/agent/negotiate/route";
 import { POST as joinPOST } from "@/app/api/v1/agent/negotiate/join/route";
-import { GET as dealGET } from "@/app/api/v1/agent/deals/[id]/route";
+import { GET as dealGET, DELETE as dealDELETE } from "@/app/api/v1/agent/deals/[id]/route";
 import { GET as pdfGET } from "@/app/api/v1/agent/deals/[id]/document/route";
 import { GET as docxGET } from "@/app/api/v1/agent/deals/[id]/document/docx/route";
 import { GET as txtGET } from "@/app/api/v1/agent/deals/[id]/document/txt/route";
@@ -37,7 +37,7 @@ function str(v: unknown): string {
 function request(
   path: string,
   authorization: string | null,
-  opts: { method?: "GET" | "POST"; body?: unknown; idempotencyKey?: string } = {},
+  opts: { method?: "GET" | "POST" | "DELETE"; body?: unknown; idempotencyKey?: string } = {},
 ): NextRequest {
   const headers = new Headers();
   if (authorization) headers.set("Authorization", authorization);
@@ -90,6 +90,13 @@ export const invokeTool: ToolInvoker = async (tool: McpToolDef, args, authorizat
     case "get_deal": {
       const id = str(args.dealId);
       return dealGET(request(`/deals/${encodeURIComponent(id)}`, authorization), params({ id }));
+    }
+    case "delete_deal": {
+      const id = str(args.dealId);
+      return dealDELETE(
+        request(`/deals/${encodeURIComponent(id)}`, authorization, { method: "DELETE" }),
+        params({ id }),
+      );
     }
     case "download_contract": {
       const id = str(args.dealId);

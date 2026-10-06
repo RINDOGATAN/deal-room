@@ -130,12 +130,22 @@ export async function fulfilCheckoutSession(session: Stripe.Checkout.Session) {
 }
 
 /** Revert a contract payment: the deal is unpaid again. */
-async function revokeContractPayments(where: Prisma.DealPaymentWhereInput, reason: string) {
+async function revokeContractPayments(
+  where: { stripeCheckoutSessionId: string } | { stripePaymentIntentId: string },
+  reason: string,
+) {
+  const data = { status: "REVOKED" as const, revokedAt: new Date(), revokedReason: reason };
   const res = await prisma.dealPayment.updateMany({
     where: { ...where, kind: "CONTRACT", status: "PAID" },
-    data: { status: "REVOKED", revokedAt: new Date(), revokedReason: reason },
+    data,
   });
-  return res.count;
+  // The billing record of a deal deleted through the agent API keeps the
+  // refund too.
+  const kept = await prisma.deletedDealPayment.updateMany({
+    where: { ...where, kind: "CONTRACT", status: "PAID" },
+    data,
+  });
+  return res.count + kept.count;
 }
 
 /** Take back an unspent pack. The balance may go below zero; it then blocks new spending. */

@@ -13,11 +13,15 @@ export interface McpToolDef {
   title: string;
   description: string;
   inputSchema: Record<string, unknown>;
-  endpoint: { method: "GET" | "POST"; url: string };
+  endpoint: { method: "GET" | "POST" | "DELETE"; url: string };
   requiredScopes: string[];
   /** Public tools run without an API key. */
   public?: boolean;
   readOnly?: boolean;
+  /** Removes data for good (MCP destructiveHint). */
+  destructive?: boolean;
+  /** The tool result when the route answers 204 (no body). */
+  doneText?: string;
   errors?: { status: number; code: string; fix: string }[];
 }
 
@@ -270,6 +274,27 @@ export function buildMcpTools(opts: {
       errors: stripeEnabled
         ? [{ status: 402, code: "PAYMENT_REQUIRED", fix: "buy_credits, then retry" }]
         : [],
+    },
+    {
+      name: "delete_deal",
+      title: "Delete a deal",
+      description:
+        "Delete one of your single-party deals and its data: the parties, the other side's details, the clause choices, the inputs and the contract (documents are made on request and never stored). This cannot be undone. Only the account that made the deal can delete it; for any other account it does not exist (HTTP 404, also when it was already deleted). A deal another party takes part in, such as a two-party negotiation, is refused with HTTP 409 and nothing is deleted. The payment record is kept for billing (amount, date, account and deal id, no names or contract text), and a spent credit is not given back.",
+      inputSchema: {
+        type: "object",
+        properties: {
+          dealId: { type: "string", description: "Agent deal id (dealId from generate_contract)" },
+        },
+        required: ["dealId"],
+      },
+      endpoint: { method: "DELETE", url: `${baseUrl}/deals/{dealId}` },
+      requiredScopes: ["negotiate"],
+      destructive: true,
+      doneText: "Deleted. The deal and its data are gone; only the payment record is kept for billing.",
+      errors: [
+        { status: 404, code: "NOT_FOUND", fix: "check the dealId; a deal already deleted is not found" },
+        { status: 409, code: "NOT_SINGLE_PARTY", fix: "only single-party deals can be deleted" },
+      ],
     },
     {
       name: "buy_credits",

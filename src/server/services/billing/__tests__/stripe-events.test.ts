@@ -12,6 +12,7 @@ import * as fx from "./fixtures/stripe-events";
 const db = vi.hoisted(() => {
   const p = {
     dealPayment: { upsert: vi.fn(), updateMany: vi.fn() },
+    deletedDealPayment: { updateMany: vi.fn() },
     customerCredit: { upsert: vi.fn(), update: vi.fn() },
     customerCreditEntry: { create: vi.fn(), findFirst: vi.fn() },
     // Round-1 tables: must never be touched any more.
@@ -38,6 +39,7 @@ beforeEach(() => {
   vi.clearAllMocks();
   db.$transaction.mockImplementation(async (fn: (tx: typeof db) => unknown) => fn(db));
   db.dealPayment.updateMany.mockResolvedValue({ count: 1 });
+  db.deletedDealPayment.updateMany.mockResolvedValue({ count: 0 });
   db.customerCreditEntry.findFirst.mockResolvedValue(null);
 });
 
@@ -131,6 +133,14 @@ describe("failed and refunded payments revert the entitlement", () => {
   it("revokes a contract on a full refund", async () => {
     await handleChargeRefunded(fx.chargeFullyRefunded);
     expect(db.dealPayment.updateMany).toHaveBeenCalledWith({
+      where: { stripePaymentIntentId: "pi_test_contract_1", kind: "CONTRACT", status: "PAID" },
+      data: expect.objectContaining({ status: "REVOKED", revokedReason: "refunded" }),
+    });
+  });
+
+  it("also marks the kept billing record of a deleted deal refunded", async () => {
+    await handleChargeRefunded(fx.chargeFullyRefunded);
+    expect(db.deletedDealPayment.updateMany).toHaveBeenCalledWith({
       where: { stripePaymentIntentId: "pi_test_contract_1", kind: "CONTRACT", status: "PAID" },
       data: expect.objectContaining({ status: "REVOKED", revokedReason: "refunded" }),
     });
