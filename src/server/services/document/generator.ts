@@ -9,6 +9,7 @@
 
 import prisma from "@/lib/prisma";
 import { roleRequiresSwap } from "@/lib/contractRoles";
+import { readSoloCounterparty } from "@/lib/solo-counterparty";
 import { resolveLocalizedString } from "@/server/services/skills/i18n";
 import {
   interpolateParameters,
@@ -41,6 +42,8 @@ export interface ClauseData {
   category: string;
   agreedOption: string;
   legalText: string;
+  /** The clause id as authored in the skill (stable across reseeds); used for anchors. */
+  clauseId?: string;
   /** True 1-based section number in the final agreement. Only consumed when the
    *  boilerplate opts into sequential numbering (see BoilerplateData.sequentialNumbering);
    *  ignored for the default grouped "Negotiated Terms" layout. */
@@ -151,13 +154,55 @@ export interface ContractData {
   language: string;
   /** Present when document has been certified via Cloud API */
   certification?: CertificationData;
-  /** Present when deal is from agent negotiation with attorney attestation */
+  /** Present only when both sides negotiated through agents (see agentAttestationFor) */
   agentAttestation?: {
     attorneyName: string;
     barNumber: string;
     uetaPreamble: string;
     attestationFooter: string;
   };
+}
+
+/**
+ * The UETA / E-SIGN statement that the agreement was formed by the two
+ * parties' agentic systems negotiating with each other (wording: owner,
+ * 5 Oct 2026), in the contract's language.
+ */
+export const UETA_PREAMBLE: Record<"en" | "es", string> = {
+  en: "This agreement was formed by two agentic systems negotiating with each other, pursuant to the Uniform Electronic Transactions Act § 14 and the Electronic Signatures in Global and National Commerce Act (15 U.S.C. § 7001 et seq.). Each party authorized its electronic agent to negotiate and accept the terms herein.",
+  es: "El presente acuerdo ha sido formado por dos sistemas agénticos que negociaron entre sí, de conformidad con el § 14 de la Uniform Electronic Transactions Act y la Electronic Signatures in Global and National Commerce Act (15 U.S.C. § 7001 y ss.). Cada parte autorizó a su agente electrónico para negociar y aceptar los términos del presente acuerdo.",
+};
+
+export function uetaPreamble(language: string | null | undefined): string {
+  return language === "es" ? UETA_PREAMBLE.es : UETA_PREAMBLE.en;
+}
+
+/**
+ * The agent attestation of a deal, only when it is true: both sides acted
+ * through agents (the deal was initiated and joined with a playbook each).
+ * A single-party contract made by one agent (solo intake, the one call)
+ * was not formed by two agentic systems negotiating with each other, so it gets
+ * none (owner, 5 Oct 2026).
+ */
+export function agentAttestationFor(
+  agentDeal: {
+    initiatorPlaybookId: string | null;
+    respondentPlaybookId: string | null;
+    attestingBarNumber: string | null;
+    attestingAttorneyName: string | null;
+  } | null,
+  language: string = "en",
+): ContractData["agentAttestation"] {
+  if (!agentDeal?.initiatorPlaybookId || !agentDeal.respondentPlaybookId) return undefined;
+  if (agentDeal.attestingBarNumber && agentDeal.attestingAttorneyName) {
+    return {
+      attorneyName: agentDeal.attestingAttorneyName,
+      barNumber: agentDeal.attestingBarNumber,
+      uetaPreamble: uetaPreamble(language),
+      attestationFooter: `The legal provisions in this contract have been reviewed and attested by ${agentDeal.attestingAttorneyName} (Bar No. ${agentDeal.attestingBarNumber}) pursuant to UETA § 14 and the federal E-SIGN Act.`,
+    };
+  }
+  return { attorneyName: "", barNumber: "", uetaPreamble: uetaPreamble(language), attestationFooter: "" };
 }
 
 const GOVERNING_LAW_DISPLAY: Record<string, Record<string, string>> = {
@@ -532,7 +577,7 @@ export async function generateContractData(
       const lead = optionCode === "custom-law-forum" ? "" : govLawLead;
       governingLawArticle = { title: entry.title, text: lead + entry.legalText };
     } else {
-      clauses.push(entry);
+      clauses.push({ ...entry, clauseId });
     }
   };
 
@@ -624,7 +669,12 @@ export async function generateContractData(
 
   // Extract signing details
   const sdA = initiator.signingDetails as { legalName?: string; address?: string; taxId?: string; signatoryName?: string; signatoryTitle?: string } | null;
-  const sdB = respondent?.signingDetails as { legalName?: string; address?: string; taxId?: string; signatoryName?: string; signatoryTitle?: string } | null;
+  // A SOLO deal has no respondent; the other side's details, when the
+  // filling side supplied them (one-call agent generation), live on the deal.
+  const soloCounterparty =
+    isSolo && !respondent ? readSoloCounterparty(deal.soloCounterparty) : null;
+  const sdB = (respondent?.signingDetails ?? soloCounterparty) as { legalName?: string; address?: string; taxId?: string; signatoryName?: string; signatoryTitle?: string } | null;
+  const hasPartyB = !!respondent || !!soloCounterparty;
 
   // Build party names with signing details → company → name fallback.
   // A login email is never a party or signatory name: a signable document
@@ -634,18 +684,18 @@ export async function generateContractData(
   const nonEmail = (v?: string | null) => (v && !v.includes("@") ? v : undefined);
   const partyAName =
     sdA?.legalName || initiator.company || nonEmail(initiator.name) || namePlaceholder;
-  const partyBName = respondent
-    ? sdB?.legalName || respondent.company || nonEmail(respondent.name) || namePlaceholder
+  const partyBName = hasPartyB
+    ? sdB?.legalName || respondent?.company || nonEmail(respondent?.name) || namePlaceholder
     : namePlaceholder;
 
   const partyAAddress = sdA?.address || "[Address]";
-  const partyBAddress = respondent ? (sdB?.address || "[Address]") : namePlaceholder;
+  const partyBAddress = hasPartyB ? (sdB?.address || "[Address]") : namePlaceholder;
   const partyASignatoryName = sdA?.signatoryName || nonEmail(initiator.name) || namePlaceholder;
-  const partyBSignatoryName = respondent
-    ? sdB?.signatoryName || nonEmail(respondent.name) || namePlaceholder
+  const partyBSignatoryName = hasPartyB
+    ? sdB?.signatoryName || nonEmail(respondent?.name) || namePlaceholder
     : namePlaceholder;
   const partyASignatoryTitle = sdA?.signatoryTitle || "[_________________]";
-  const partyBSignatoryTitle = respondent ? (sdB?.signatoryTitle || "[_________________]") : "[_________________]";
+  const partyBSignatoryTitle = hasPartyB ? (sdB?.signatoryTitle || "[_________________]") : "[_________________]";
 
   // Variables for boilerplate interpolation
   const variables: Record<string, string> = {
@@ -854,27 +904,7 @@ export async function generateContractData(
     where: { dealRoomId },
   });
 
-  let agentAttestation: ContractData["agentAttestation"];
-  if (agentDeal) {
-    const uetaPreamble = `This agreement was formed by the interaction of electronic agents of the parties pursuant to the Uniform Electronic Transactions Act § 14 and the Electronic Signatures in Global and National Commerce Act (15 U.S.C. § 7001 et seq.). Each party authorized its electronic agent to negotiate and accept the terms herein.`;
-
-    if (agentDeal.attestingBarNumber && agentDeal.attestingAttorneyName) {
-      agentAttestation = {
-        attorneyName: agentDeal.attestingAttorneyName,
-        barNumber: agentDeal.attestingBarNumber,
-        uetaPreamble,
-        attestationFooter: `The legal provisions in this contract have been reviewed and attested by ${agentDeal.attestingAttorneyName} (Bar No. ${agentDeal.attestingBarNumber}) pursuant to UETA § 14 and the federal E-SIGN Act.`,
-      };
-    } else {
-      // Still include UETA preamble for agent deals even without attorney attestation
-      agentAttestation = {
-        attorneyName: "",
-        barNumber: "",
-        uetaPreamble,
-        attestationFooter: "",
-      };
-    }
-  }
+  const agentAttestation = agentAttestationFor(agentDeal, language);
 
   // Build the party objects, then apply the role swap to the objects
   // themselves (not just the boilerplate variables) so EVERY renderer — cover,
@@ -905,10 +935,24 @@ export async function generateContractData(
         signature: deal.signingRequest?.respondentSignature || undefined,
         signedAt: deal.signingRequest?.respondentSignedAt || undefined,
       }
-    : null;
+    : soloCounterparty
+      ? {
+          name: soloCounterparty.signatoryName || soloCounterparty.legalName || namePlaceholder,
+          email: soloCounterparty.email || "",
+          company: soloCounterparty.legalName,
+          legalName: soloCounterparty.legalName,
+          address: soloCounterparty.address,
+          taxId: soloCounterparty.taxId,
+          signatoryName: soloCounterparty.signatoryName,
+          signatoryTitle: soloCounterparty.signatoryTitle,
+        }
+      : null;
 
   if (swapRoles) {
-    if (isSolo || !outPartyB) {
+    // A solo deal without the other side's details blanks the Party-A role
+    // slot; with them (soloCounterparty), the two blocks swap as in a
+    // two-party deal.
+    if (!outPartyB) {
       outPartyB = outPartyA; // filling party → Party-B role slot
       outPartyA = { name: "[_________________]", email: "" }; // Party-A role slot left blank
     } else {

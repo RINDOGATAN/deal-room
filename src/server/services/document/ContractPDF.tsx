@@ -20,6 +20,7 @@ import {
 } from "@react-pdf/renderer";
 import type { Style } from "@react-pdf/types";
 import { buildSequentialSections } from "./generator";
+import { agentNoticeParagraphs } from "./agentNotice";
 import type { ContractData, CertificationData } from "./generator";
 import { brand } from "@/config/brand";
 
@@ -1013,6 +1014,13 @@ export function ContractPDF({ data, whiteLabel }: ContractPDFProps) {
       {/* Page 1: Preamble, Definitions, Standard Clauses */}
       <Page size="A4" style={styles.page}>
         <RunningHeader title={coverTitle} dealName={data.dealName} />
+
+        {/* Agent formation notice (two-agent negotiations only) */}
+        {agentNoticeParagraphs(data).map((text) => (
+          <View key={text} style={styles.section}>
+            <ParagraphText style={styles.preambleText}>{text}</ParagraphText>
+          </View>
+        ))}
 
         {hasBoilerplate ? (
           <>

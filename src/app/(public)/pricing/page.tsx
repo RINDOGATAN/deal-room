@@ -11,8 +11,8 @@ import { resolveVisitorCurrencyFromHeaders } from "@/lib/currency";
 import { preferredCurrency } from "@/lib/contract-billing";
 import { features } from "@/config/features";
 import { brand } from "@/config/brand";
-import { getPriceTable } from "@/server/services/billing/pricing";
-import { pricingFacts, pricingJsonLd, type MinorAmounts } from "@/lib/pricing-page";
+import { loadPricingFacts } from "@/server/services/billing/pricing-facts";
+import { pricingJsonLd } from "@/lib/pricing-page";
 import { PricingView } from "@/components/pricing/PricingView";
 
 // Amounts and the start date are read from the environment and Stripe per
@@ -26,22 +26,6 @@ export async function generateMetadata(): Promise<Metadata> {
     description: t("metaDescription"),
     alternates: { canonical: "/pricing" },
   };
-}
-
-async function minorAmounts(): Promise<MinorAmounts | null> {
-  if (!features.stripeEnabled) return null;
-  try {
-    const table = await getPriceTable();
-    if (!table) return null;
-    return {
-      contract: { usd: table.contract.usd?.amount ?? null, eur: table.contract.eur?.amount ?? null },
-      credits10: { usd: table.credits10.usd?.amount ?? null, eur: table.credits10.eur?.amount ?? null },
-    };
-  } catch {
-    // Without the Stripe amounts the page still renders, from
-    // PRICE_DISPLAY_* when set, otherwise with no number.
-    return null;
-  }
 }
 
 /** A signed-in customer's stored billing currency, if any (never fails the page). */
@@ -63,7 +47,7 @@ async function storedCurrency(): Promise<unknown> {
 export default async function PricingPage() {
   const locale = await getLocale();
   const billingOn = features.stripeEnabled;
-  const facts = pricingFacts({ minor: await minorAmounts(), locale });
+  const facts = await loadPricingFacts(locale);
   const currency = resolveVisitorCurrencyFromHeaders(
     await headers(),
     billingOn ? await storedCurrency() : undefined,

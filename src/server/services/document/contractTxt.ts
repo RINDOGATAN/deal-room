@@ -9,8 +9,10 @@
  */
 
 import { buildSequentialSections, type ContractData } from "./generator";
+import { agentNoticeParagraphs } from "./agentNotice";
 
-const LABELS: Record<string, Record<string, string>> = {
+/** Section labels by language, shared with the Markdown and HTML renderers. */
+export const LABELS: Record<string, Record<string, string>> = {
   en: {
     effectiveDate: "Effective Date",
     background: "Background",
@@ -43,7 +45,7 @@ const LABELS: Record<string, Record<string, string>> = {
   },
 };
 
-function formatDate(date: Date, language: string = "en"): string {
+export function formatDate(date: Date, language: string = "en"): string {
   const locale = language === "es" ? "es-ES" : "en-US";
   return date.toLocaleDateString(locale, {
     year: "numeric",
@@ -77,6 +79,12 @@ export function generateContractTxt(data: ContractData): string {
   lines.push(`${l.governingLaw}: ${data.governingLaw}`);
   lines.push("");
 
+  // Agent formation notice (two-agent negotiations only)
+  for (const p of agentNoticeParagraphs(data)) {
+    lines.push(p);
+    lines.push("");
+  }
+
   // Preamble
   if (data.boilerplate?.preamble) {
     lines.push(data.boilerplate.preamble);
@@ -91,7 +99,7 @@ export function generateContractTxt(data: ContractData): string {
   if (data.partyA.legalName) lines.push(`  Legal Name: ${data.partyA.legalName}`);
   if (data.partyA.address) lines.push(`  Address: ${data.partyA.address}`);
   if (data.partyA.taxId) lines.push(`  Tax ID: ${data.partyA.taxId}`);
-  lines.push(`  Contact: ${data.partyA.name} (${data.partyA.email})`);
+  lines.push(`  Contact: ${data.partyA.name}${data.partyA.email ? ` (${data.partyA.email})` : ""}`);
   lines.push("");
 
   if (data.partyB) {
@@ -100,7 +108,7 @@ export function generateContractTxt(data: ContractData): string {
     if (data.partyB.legalName) lines.push(`  Legal Name: ${data.partyB.legalName}`);
     if (data.partyB.address) lines.push(`  Address: ${data.partyB.address}`);
     if (data.partyB.taxId) lines.push(`  Tax ID: ${data.partyB.taxId}`);
-    lines.push(`  Contact: ${data.partyB.name} (${data.partyB.email})`);
+    lines.push(`  Contact: ${data.partyB.name}${data.partyB.email ? ` (${data.partyB.email})` : ""}`);
     lines.push("");
   }
 

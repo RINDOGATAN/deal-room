@@ -187,25 +187,31 @@ export function agentExample(opts: {
     `curl ${base}/templates/${opts.contractType} \\`,
     `  -H "Authorization: Bearer drk_YOUR_KEY"`,
   ];
+  // The governing law: one the page prefers, or none to send when the type
+  // offers exactly one (Delaware runs under California).
   const law = exampleGoverningLaw(opts.jurisdictions, opts.locale);
-  if (!law) return read.join("\n");
+  const mapped = new Set(
+    opts.jurisdictions.map((j) => SKILL_JURISDICTION_TO_GOVERNING_LAW[j]).filter(Boolean),
+  );
+  if (!law && mapped.size !== 1) return read.join("\n");
 
+  const es = opts.locale === "es";
   const language = opts.languages.includes(opts.locale) ? opts.locale : (opts.languages[0] ?? "en");
   const body = {
-    schema: "dealroom.solo-intake/1",
     contractType: opts.contractType,
-    governingLaw: law,
+    ...(law ? { governingLaw: law } : {}),
     language,
-    dealName: opts.dealName,
-    selectionPolicy: "defaults",
+    title: opts.dealName,
+    party: { legalName: es ? "Tu empresa" : "Your company" },
+    counterparty: { legalName: es ? "La otra empresa" : "The other company" },
   };
   return [
     ...read,
     "",
-    opts.locale === "es"
-      ? "# 2. Crear el contrato (las cláusulas que no indiques toman la opción por defecto)"
-      : "# 2. Create the contract (clauses you leave out take the default option)",
-    `curl -X POST ${base}/deals \\`,
+    es
+      ? "# 2. Crear el contrato en una sola llamada (gasta un crédito; las cláusulas que no indiques toman la opción estándar)"
+      : "# 2. Make the contract in one call (spends one credit; clauses you leave out take the standard option)",
+    `curl -X POST ${base}/contracts \\`,
     `  -H "Authorization: Bearer drk_YOUR_KEY" \\`,
     `  -H "Content-Type: application/json" \\`,
     `  -H "Idempotency-Key: $(uuidgen)" \\`,

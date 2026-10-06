@@ -59,6 +59,8 @@ export async function GET() {
         header: "Idempotency-Key",
         ttlSeconds: 24 * 60 * 60,
         appliesTo: [
+          "POST /api/v1/agent/contracts",
+          "POST /api/v1/agent/deals",
           "POST /api/v1/agent/negotiate",
           "POST /api/v1/agent/negotiate/join",
           "POST /api/v1/agent/playbooks",
@@ -87,6 +89,14 @@ export async function GET() {
       ],
     },
     skills: [
+      {
+        id: "generate-contract",
+        name: "Make a Contract in One Call",
+        description:
+          "Make a finished single-party contract in one call (POST /api/v1/agent/contracts): contract type, your side's details, optionally the other side's, and the required inputs. Clauses left out take the standard option. Spends one credit where billing is on. GET /api/v1/agent/contract-types lists what each type needs (no key).",
+        inputModes: ["application/json"],
+        outputModes: ["application/json", "text/markdown", "text/html", "text/plain", "application/pdf"],
+      },
       {
         id: "negotiate-contract",
         name: "Negotiate Contract",
@@ -137,6 +147,8 @@ export async function GET() {
       isPremium: t.skillPackage?.isPremium ?? false,
     })),
     endpoints: {
+      contracts: `${baseUrl}/api/v1/agent/contracts`,
+      contractTypes: `${baseUrl}/api/v1/agent/contract-types`,
       templates: `${baseUrl}/api/v1/agent/templates`,
       playbooks: `${baseUrl}/api/v1/agent/playbooks`,
       negotiate: `${baseUrl}/api/v1/agent/negotiate`,
@@ -152,6 +164,7 @@ export async function GET() {
     // follows PRICE_DISPLAY_* when set. Credits are held per customer.
     pricing: await agentPricingBlock(),
     documentation: `${baseUrl}/docs/agent-api`,
+    quickStart: `${baseUrl}/developers`,
   };
 
   return NextResponse.json(agentCard, {

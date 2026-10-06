@@ -37,6 +37,8 @@ import {
   validateRequiredParameters,
   type ParameterSchema,
 } from "@/lib/parameters";
+import { governingLawForSkillJurisdiction } from "@/lib/jurisdictions";
+import { compactPartyDetails, type PartyDetails } from "@/lib/solo-counterparty";
 
 export interface SoloIntakeInput {
   contractType: string;
@@ -53,6 +55,12 @@ export interface SoloIntakeInput {
   /** "defaults" fills unspecified clauses with the skill baseline;
    *  "explicit" (default) leaves them unresolved and reports them. */
   selectionPolicy?: "explicit" | "defaults";
+  /** The caller's own side, written as the initiator's signing details. */
+  initiatorDetails?: PartyDetails;
+  /** The other side (SOLO has no party row for it): the deal's soloCounterparty. */
+  counterparty?: PartyDetails;
+  /** The person the initiator party belongs to, so they can open the deal in the browser. */
+  initiatorUserId?: string;
 }
 
 export type SoloIntakeResult =
@@ -98,9 +106,13 @@ export async function createSoloDealFromFacts(
   if (!Object.values(GoverningLaw).includes(input.governingLaw as GoverningLaw)) {
     return { ok: false, status: 422, error: `Unknown governing law: ${input.governingLaw}` };
   }
+  // A template tag may be narrower than the governing-law values (DELAWARE
+  // runs under CALIFORNIA, see src/lib/jurisdictions.ts).
   if (
     template.jurisdictions.length > 0 &&
-    !template.jurisdictions.includes(input.governingLaw)
+    !template.jurisdictions.some(
+      (j) => j === input.governingLaw || governingLawForSkillJurisdiction(j) === input.governingLaw
+    )
   ) {
     return {
       ok: false,
@@ -191,12 +203,21 @@ export async function createSoloDealFromFacts(
       status: DealRoomStatus.DRAFT,
       parameters: Object.keys(parameters).length > 0 ? parameters : undefined,
       soloFillRole,
+      soloCounterparty: input.counterparty ? compactPartyDetails(input.counterparty) : undefined,
       parties: {
         create: {
           role: PartyRole.INITIATOR,
           status: PartyStatus.PENDING,
+          userId: input.initiatorUserId,
           email: input.initiatorEmail || customer.email,
+          name: input.initiatorDetails?.signatoryName,
           company: input.initiatorCompany || customer.name,
+          signingDetails: input.initiatorDetails
+            ? {
+                ...compactPartyDetails(input.initiatorDetails),
+                ...(soloFillRole ? { fillRole: soloFillRole } : {}),
+              }
+            : undefined,
         },
       },
       clauses: {

@@ -5,7 +5,8 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import { developersPath } from "@/lib/contract-pages-paths";
 import {
   BookOpen,
   Scale,
@@ -58,6 +59,7 @@ const navSectionsDef: NavSection[] = [
     labelKey: "agentApi",
     icon: Bot,
     items: [
+      { href: "/developers", labelKey: "developersQuickStart" },
       { href: "/docs/agent-api", labelKey: "negotiationApi" },
       { href: "/docs/a2a-skills", labelKey: "a2aSkillsCatalog" },
     ],
@@ -95,6 +97,7 @@ function getSectionForPath(pathname: string): string | null {
 export function DocsNav({ onNavigate }: { onNavigate?: () => void }) {
   const pathname = usePathname();
   const t = useTranslations("docs");
+  const locale = useLocale();
   const activeSection = getSectionForPath(pathname);
 
   const [openSections, setOpenSections] = useState<Set<string>>(() => {
@@ -174,7 +177,10 @@ export function DocsNav({ onNavigate }: { onNavigate?: () => void }) {
                   return (
                     <Link
                       key={item.href}
-                      href={item.href}
+                      href={
+                        // The quick start lives outside /docs, in the URL's language.
+                        item.href === "/developers" ? developersPath(locale === "es" ? "es" : "en") : item.href
+                      }
                       onClick={onNavigate}
                       className={`
                         block px-3 py-1.5 text-sm rounded-md transition-colors

@@ -4,11 +4,11 @@
 
 import Link from "next/link";
 import { useSession } from "next-auth/react";
-import { BookOpen, FileText, Globe, Library } from "lucide-react";
+import { BookOpen, Code, FileText, Globe, Library } from "lucide-react";
 import { brand } from "@/config/brand";
 import { features } from "@/config/features";
 import { writeLocaleCookie } from "@/lib/locale-cookie";
-import { contractPath, type PageLocale } from "@/lib/contract-pages-paths";
+import { contractPath, developersPath, type PageLocale } from "@/lib/contract-pages-paths";
 import { CONTRACT_COPY } from "./copy";
 
 /**
@@ -19,17 +19,21 @@ import { CONTRACT_COPY } from "./copy";
 export function ContractsHeader({
   locale,
   alternateHref,
+  active = "contracts",
 }: {
   locale: PageLocale;
   /** The same page in the other language. */
   alternateHref: string;
+  /** The link shown as the current section. */
+  active?: "contracts" | "developers";
 }) {
   const copy = CONTRACT_COPY[locale];
   const { status } = useSession();
   const other: PageLocale = locale === "en" ? "es" : "en";
 
   const pill =
-    "flex items-center gap-2 px-3 sm:px-4 py-2 text-sm font-medium rounded-full transition-colors text-muted-foreground hover:text-foreground hover:bg-secondary";
+    "flex items-center gap-2 px-2 sm:px-4 py-2 text-sm font-medium rounded-full transition-colors text-muted-foreground hover:text-foreground hover:bg-secondary";
+  const current = `${pill} bg-primary/10 text-primary hover:text-primary`;
 
   return (
     <header className="sticky top-0 z-20 px-4 pt-3">
@@ -45,10 +49,14 @@ export function ContractsHeader({
             </span>
           </Link>
 
-          <nav className="flex items-center gap-1">
-            <Link href={contractPath(locale)} className={`${pill} bg-primary/10 text-primary hover:text-primary`}>
+          <nav className="flex items-center gap-0.5 sm:gap-1">
+            <Link href={contractPath(locale)} className={active === "contracts" ? current : pill}>
               <Library className="w-4 h-4" />
               <span className="hidden sm:inline">{copy.navContracts}</span>
+            </Link>
+            <Link href={developersPath(locale)} className={active === "developers" ? current : pill}>
+              <Code className="w-4 h-4" />
+              <span className="hidden sm:inline">{copy.navDevelopers}</span>
             </Link>
             {features.publicDocs && (
               <Link href="/docs" className={pill}>
@@ -77,7 +85,7 @@ export function ContractsHeader({
             ) : (
               <Link
                 href="/sign-in"
-                className="px-4 py-1.5 text-sm font-medium whitespace-nowrap text-primary border border-primary rounded-full hover:bg-secondary transition-colors"
+                className="px-2 sm:px-4 py-1.5 text-sm font-medium whitespace-nowrap text-primary border border-primary rounded-full hover:bg-secondary transition-colors"
               >
                 {copy.signIn}
               </Link>

@@ -9,9 +9,19 @@
 - **An agent's API key is created by its user, without contacting us.** Sign in at https://dealroom.todo.law, open Settings, API keys (https://dealroom.todo.law/settings/api-keys) and choose Create key. The full key (it starts with drk_) is shown once, so copy it then. The same page lists your keys with their last use, revokes them, shows the credit balance and sells credit packs. An account can hold up to 5 active keys.
 - **The kit (self-hosted Dealroom) has no caps.** Premium skills are sold only for the kit: 60 a year each in the kit (in your currency), bought on the todo.law storefront and activated offline with a licence file.
 
+## Make a contract in one call (developers and agents)
+
+- **Quick start:** https://dealroom.todo.law/developers (Spanish: https://dealroom.todo.law/es/developers). Three steps: create an API key at /settings/api-keys, buy credits on the same page, make the call. Plain Markdown of the same page: https://dealroom.todo.law/developers.md (Spanish: https://dealroom.todo.law/es/developers.md), with every contract type in a table.
+- **One REST call:** `POST https://dealroom.todo.law/api/v1/agent/contracts` with `Authorization: Bearer drk_...` and a JSON body: `contractType` (code such as `NDA`, or the guide slug such as `nda`), `party` (your side: `legalName`, optional `address`, `taxId`, `signatoryName`, `signatoryTitle`, `email`), optional `counterparty` (same shape; left out, the other side's block stays blank), `governingLaw` (needed only when the type offers more than one), optional `language`, `role` (DPA and BAA), `terms` (inputs by id), `clauses` (clause id to option code) and `inline` (`md`, `html` or `txt`: the contract itself in the answer). Clauses left out take the standard option. The answer gives `dealId`, `dealUrl` (to read it in Dealroom), the Markdown, HTML, TXT, PDF and DOCX links and, with `inline`, the contract.
+- **Formats:** every contract can be fetched as Markdown (`/api/v1/agent/deals/{dealId}/document/md`, best for agents), self-contained HTML (`/document/html`, one section per clause with stable ids), plain text (`/document/txt`), PDF (`/document`) or DOCX (`/document/docx`). All come from the same contract text; once the contract is paid, every format is free.
+- **What it costs:** the same as any contract. One prepaid credit is spent; with no credit the answer is HTTP 402 with code PAYMENT_REQUIRED and nothing is created. Later downloads of the same contract are free. Send an `Idempotency-Key` header on retries so a retry is not charged again.
+- **What each type needs:** `GET https://dealroom.todo.law/api/v1/agent/contract-types` (no key; `?lang=es` for Spanish): codes, slugs, governing laws, languages, roles and inputs.
+- **MCP server:** `https://dealroom.todo.law/api/v1/agent/mcp` (Streamable HTTP; API key in the Authorization header). Tools include `list_contract_types`, `generate_contract` (returns the contract as Markdown by default), `download_contract` (Markdown by default; also HTML, PDF, DOCX, TXT), `buy_credits` and `get_credit_balance`, plus the negotiation tools. Claude Code: `claude mcp add --transport http dealroom https://dealroom.todo.law/api/v1/agent/mcp --header "Authorization: Bearer drk_YOUR_KEY"`. Setup for Claude Desktop, Cursor and VS Code is on the quick start page.
+
 ## Public Pages
 
 - [Homepage](https://dealroom.todo.law): Platform overview, feature descriptions, how it works
+- [Developers](https://dealroom.todo.law/developers): Quick start for developers and startups: make a contract in one call through the API or MCP, with setup for MCP clients (Spanish: https://dealroom.todo.law/es/developers; Markdown: https://dealroom.todo.law/developers.md)
 - [Pricing](https://dealroom.todo.law/pricing): Pay per contract for people and agents, what is free, and the kit
 - [Contract guides](https://dealroom.todo.law/contracts): Plain-language guide to every contract type Dealroom drafts and negotiates (Spanish: https://dealroom.todo.law/es/contracts)
 - [Documentation Hub](https://dealroom.todo.law/docs): Full platform documentation
@@ -28,7 +38,7 @@
 
 ## Contract Guides
 
-One page per contract type, in English and Castilian Spanish: what the contract is, who signs it, the key clauses, what the two sides usually negotiate and the middle ground Dealroom proposes, supported jurisdictions, common mistakes, and how to create it in Dealroom or through the agent API (`GET /api/v1/agent/templates?q=nda`, MCP `list_templates` with `query`).
+One page per contract type, in English and Castilian Spanish: what the contract is, who signs it, the key clauses, what the two sides usually negotiate and the middle ground Dealroom proposes, supported jurisdictions, common mistakes, and how to create it in Dealroom or through the agent API (`GET /api/v1/agent/templates?q=nda`, MCP `list_templates` with `query`; one-call creation with `POST /api/v1/agent/contracts` or MCP `generate_contract`).
 
 - [Non-disclosure agreement (NDA)](https://dealroom.todo.law/contracts/nda) · [ES: Acuerdo de confidencialidad (NDA)](https://dealroom.todo.law/es/contracts/nda)
 - [Master services agreement (MSA)](https://dealroom.todo.law/contracts/master-services-agreement) · [ES: Contrato marco de prestación de servicios (MSA)](https://dealroom.todo.law/es/contracts/master-services-agreement)
@@ -77,6 +87,7 @@ One page per contract type, in English and Castilian Spanish: what the contract 
 - **Contract Types**: 37 contract types, each with a guide listed above, including NDA, MSA, SaaS Agreement, DPA, Privacy Notice, Joint Venture, Employment, Consulting, and more
 - **Export & Sign**: Generate final documents for signing after negotiation completes
 - **A2A Agent Protocol**: Machine-readable agent card at /.well-known/agent.json for agent-to-agent negotiation
+- **MCP server**: https://dealroom.todo.law/api/v1/agent/mcp, listed in the MCP registry as io.github.sergiomaldo/dealroom
 
 ## TODO.LAW Ecosystem
 
