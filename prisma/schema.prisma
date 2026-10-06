@@ -1474,6 +1474,9 @@ enum AgentCreditReason {
   PURCHASE
   CONSUME
   REVERSAL
+  // Credits given without payment, always with a note saying why (owner,
+  // 6 Oct 2026: the law firm's pre-launch testing allowance). Never revenue.
+  GRANT
 }
 
 // UNUSED since round 2 (2026-09-29): credits were first held per API key.
@@ -1535,6 +1538,8 @@ model CustomerCreditEntry {
   dealRoomId              String?
   stripeCheckoutSessionId String?
   stripePaymentIntentId   String?
+  // Why a GRANT was made (required for GRANT, empty otherwise).
+  note                    String?
   createdAt               DateTime          @default(now())
 
   credit CustomerCredit @relation(fields: [customerId], references: [customerId], onDelete: Cascade)
