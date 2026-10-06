@@ -71,6 +71,20 @@ The one call returns the Markdown, HTML or text in the answer with `inline`; MCP
 
 `POST /mcp` is the MCP server (Streamable HTTP, JSON answers, no sessions; methods `initialize`, `ping`, `tools/list`, `tools/call`). The key goes in the `Authorization` header; connecting and listing tools work without it. Each tool runs its REST route, so prices and limits are the same. `GET /mcp` still returns the tool list as JSON with each tool's endpoint. Tools: `list_contract_types` (public), `generate_contract`, `list_templates`, `get_template`, `create_playbook`, `initiate_negotiation`, `join_negotiation`, `get_deal`, `download_contract` (Markdown by default; Markdown, HTML and text come back as text, PDF and DOCX as embedded resources), `delete_deal` (marked destructive), `buy_credits`, `get_credit_balance`, `get_subscriptions`.
 
+### Startup coverage tools (behind a flag)
+
+Owner's decisions of 6 October 2026 (T3, T4, E1 step 1). Live only when `NEXT_PUBLIC_STARTUP_COVERAGE=true` is set at build time; while off, the routes answer 404 and no discovery surface lists the tools. All free (no credit). When the flag goes on, also add the five tool names to the static `public/llms.txt`; every other surface follows the flag by itself.
+
+| MCP tool | REST | Key | What it does |
+|---|---|---|---|
+| `find_template` | `GET /find-template?q=...&lang=en\|es` | none | Matches the words of a description with the contract search (`src/lib/contract-search.ts`), no AI model. Returns codes, titles and guide links, or "No template covers this. Such matters are usually handled by a lawyer." A lawsuit or claim received, a subpoena, a data breach or a regulator letter is flagged in `outsideTemplates`; documents with no template yet (Terms of Service, bylaws, 83(b) stock purchase, offer letter...) are listed in `notYetCovered` instead of a near alias. Never names a lawyer, never says what the user needs. |
+| `explain_options` | `GET /templates/:code/options?clause=...` | `templates:read` | Each option of one clause with its description and both parties' pros and cons, plus the clause's trade-off text (`legalContext`), exactly as the template holds them. Says so when the template has no such text. |
+| `list_obligations` | `GET /deals/:id/obligations` | `deals:read` | The obligations ledger (DPA today) plus `contractDates` for every type: date inputs, term, notice and renewal inputs, and the agreed option of each term, renewal, termination, notice or duration clause. |
+| `get_deadlines` | `GET /deadlines?grantDate=&firstSaleDate=&year=` | none | 83(b) election (30 days after transfer), Form D (15 calendar days after first sale), Delaware annual report and franchise tax (1 March), each with `source` and "Verify with the official source." Due dates counted in calendar days from the dates given. |
+| `share_with_attorney` | `POST /deals/:id/attorney` `{ email, name?, lang? }` | `negotiate` | Invites any lawyer the user chooses into the existing attorney review for the caller's side (a supervisor of that one deal, no bar admission, so never listed elsewhere). E-mail through the transactional path. The lawyer works for the user and bills the user directly; Dealroom takes no fee and makes no recommendation. 5 invitations per deal per 24 hours. Errors: 404, 409 `NOT_READY` / `REVIEW_ALREADY_REQUESTED` / `LAWYER_ACTS_FOR_OTHER_PARTY`, 429. |
+
+Later rounds (not built): `compare_to_playbook`, `send_notice` and the 15 new templates of T2.
+
 ---
 
 ## Authentication

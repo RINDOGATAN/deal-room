@@ -590,7 +590,18 @@
       "attorneyReviewCancelled": "Attorney review cancelled",
       "cancelFailed": "Failed to cancel review: {error}"
     },
-    "barNumber": "Bar #{number}"
+    "barNumber": "Bar #{number}",
+    "ownLawyer": {
+      "title": "Invite your own lawyer",
+      "intro": "Any lawyer you choose can review this contract in Dealroom. They receive an e-mail with a link to the review portal.",
+      "emailLabel": "Lawyer's e-mail",
+      "nameLabel": "Lawyer's name (optional)",
+      "send": "Send invitation",
+      "sending": "Sending...",
+      "note": "The lawyer you invite works for you and bills you directly; Dealroom takes no fee and makes no recommendation.",
+      "sent": "Invitation sent",
+      "failed": "Could not send the invitation: {error}"
+    }
   },
   "signing": {
     "eSignature": "E-Signature",

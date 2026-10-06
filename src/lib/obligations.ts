@@ -177,3 +177,74 @@ export function buildObligationsLedger({
 
   return out;
 }
+
+// ---------------------------------------------------------------------------
+// Contract dates (owner's decision T4, 6 October 2026)
+
+/**
+ * The dates and periods a deal states, for every contract type: date
+ * inputs (start, end, effective, closing...), period inputs (term, notice,
+ * renewal) and the agreed option of each clause about term, renewal,
+ * termination, notice or duration. Facts as the contract states them,
+ * nothing computed or judged.
+ */
+export interface ContractDate {
+  id: string;
+  kind: "date" | "period" | "clause";
+  label: string;
+  value: string;
+}
+
+/** Input ids that hold a period of the contract. */
+const PERIOD_INPUT = /(^|-)(term|period|notice|duration|renewal|renew|expiry|expiration)(-|$)|-(days|months|years)$/;
+/** Input ids that are payment periods, not contract dates. */
+const NOT_A_CONTRACT_DATE = /(^|-)payment(-|$)/;
+/** Clause ids about the life of the contract. */
+const DATE_CLAUSE = /(^|-)(term|renewal|termination|notice|duration)(-|$)/;
+
+interface DateParameter {
+  id: string;
+  type: string;
+  label: unknown;
+}
+
+function localizedLabel(label: unknown, lang: string, fallback: string): string {
+  if (typeof label === "string" && label.trim()) return label;
+  if (label && typeof label === "object") {
+    const l = label as Record<string, unknown>;
+    const v = l[lang] ?? l.en;
+    if (typeof v === "string" && v.trim()) return v;
+  }
+  return fallback;
+}
+
+export function buildContractDates({
+  parameterSchema,
+  parameters,
+  agreedClauses,
+  lang = "en",
+}: {
+  parameterSchema?: DateParameter[] | null;
+  parameters?: Record<string, string> | null;
+  /** Agreed clauses with their localized title and agreed option label. */
+  agreedClauses: Array<{ clauseId: string; title: string; optionLabel: string }>;
+  lang?: string;
+}): ContractDate[] {
+  const out: ContractDate[] = [];
+  const p = parameters ?? {};
+  for (const def of parameterSchema ?? []) {
+    const value = (p[def.id] ?? "").toString().trim();
+    if (!value) continue;
+    if (def.type === "date") {
+      out.push({ id: def.id, kind: "date", label: localizedLabel(def.label, lang, def.id), value });
+    } else if (PERIOD_INPUT.test(def.id) && !NOT_A_CONTRACT_DATE.test(def.id)) {
+      out.push({ id: def.id, kind: "period", label: localizedLabel(def.label, lang, def.id), value });
+    }
+  }
+  for (const c of agreedClauses) {
+    if (DATE_CLAUSE.test(c.clauseId) && c.optionLabel) {
+      out.push({ id: c.clauseId, kind: "clause", label: c.title, value: c.optionLabel });
+    }
+  }
+  return out;
+}

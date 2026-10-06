@@ -23,6 +23,7 @@ export function discoveryTools() {
   return buildMcpTools({
     baseUrl: `https://${brand.appDomain}/api/v1/agent`,
     stripeEnabled: features.stripeEnabled,
+    coverage: features.startupCoverage,
   });
 }
 

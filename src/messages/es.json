@@ -591,7 +591,18 @@
       "attorneyReviewCancelled": "Revisión legal cancelada",
       "cancelFailed": "Error al cancelar revisión: {error}"
     },
-    "barNumber": "Colegiado/a #{number}"
+    "barNumber": "Colegiado/a #{number}",
+    "ownLawyer": {
+      "title": "Invita a tu propio abogado o abogada",
+      "intro": "Cualquier abogado o abogada que elijas puede revisar este contrato en Dealroom. Recibe un correo con un enlace al portal de revisión.",
+      "emailLabel": "Correo del abogado o abogada",
+      "nameLabel": "Nombre del abogado o abogada (opcional)",
+      "send": "Enviar invitación",
+      "sending": "Enviando...",
+      "note": "El abogado o la abogada que invites trabaja para ti y te factura directamente; Dealroom no cobra nada por ello ni hace recomendaciones.",
+      "sent": "Invitación enviada",
+      "failed": "No se ha podido enviar la invitación: {error}"
+    }
   },
   "signing": {
     "eSignature": "Firma Electrónica",
