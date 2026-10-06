@@ -594,7 +594,7 @@
     "barNumber": "Colegiado/a #{number}",
     "ownLawyer": {
       "title": "Invita a tu propio abogado o abogada",
-      "intro": "Cualquier abogado o abogada que elijas puede revisar este contrato en Dealroom. Recibe un correo con un enlace al portal de revisión.",
+      "intro": "Cualquier abogado o abogada que elijas puede revisar este contrato en Dealroom. Recibirá un correo con un enlace al portal de revisión.",
       "emailLabel": "Correo del abogado o abogada",
       "nameLabel": "Nombre del abogado o abogada (opcional)",
       "send": "Enviar invitación",
