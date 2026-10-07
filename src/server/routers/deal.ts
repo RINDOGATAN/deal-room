@@ -8,6 +8,7 @@ import { Prisma, DealRoomStatus, DealMode, PartyRole, PartyStatus, ClauseStatus,
 import { checkDealCreationEntitlement } from "../services/licensing/entitlement";
 import { resolveLocalizedString, resolveLocalizedArray } from "../services/skills/i18n";
 import { validateRequiredParameters, type ParameterSchema } from "@/lib/parameters";
+import { baaPostureRefusal } from "@/lib/baa-posture";
 import { governingLawForSkillJurisdiction } from "@/lib/jurisdictions";
 import { roleConfigFor } from "@/lib/contractRoles";
 import { LIVE_ROWS, offerableOptionsWhere } from "@/lib/clause-retirement";
@@ -550,6 +551,10 @@ export const dealRouter = createTRPCRouter({
         ...(preset?.parameters ?? {}),
         ...(input.parameters ?? {}),
       };
+      const postureRefusal = baaPostureRefusal(template.contractType, dealParameters);
+      if (postureRefusal) {
+        throw new TRPCError({ code: "BAD_REQUEST", message: postureRefusal });
+      }
       if (parameterSchema?.parameters?.length) {
         const missing = validateRequiredParameters(
           dealParameters,

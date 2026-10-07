@@ -172,6 +172,13 @@ const StandardClauseSchema = z.object({
   // every other contract's boilerplate validates unchanged.
   sectionNumber: z.number().optional(),
   satisfies: BoilerplateStringSchema.optional(),
+  // Conditional rendering (see processBoilerplate in the document generator).
+  showIf: z.unknown().optional(),
+});
+
+const ConditionalTextSchema = z.object({
+  text: BoilerplateStringSchema,
+  showIf: z.unknown().optional(),
 });
 
 const JurisdictionProvisionSchema = z.object({
@@ -188,6 +195,8 @@ const BoilerplateSchema = z.object({
   contractTitle: BoilerplateStringSchema,
   preamble: BoilerplateStringSchema,
   background: BoilerplateStringSchema.optional(),
+  // Further background paragraphs, each shown when its condition holds.
+  backgroundSections: z.array(ConditionalTextSchema).optional(),
   definitions: z.array(DefinitionSchema),
   standardClauses: z.array(StandardClauseSchema),
   generalProvisions: z.array(StandardClauseSchema),

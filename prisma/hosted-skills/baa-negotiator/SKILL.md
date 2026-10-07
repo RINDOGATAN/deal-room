@@ -323,8 +323,17 @@ For each clause in scope, the full trade-off card:
 - **Manifest jurisdictions carry the house enum** (SPAIN / CALIFORNIA / NEW_YORK /
   ENGLAND_WALES). HIPAA is federal and this instrument is otherwise state-agnostic, so
   the skill is tagged CALIFORNIA and the template's attested Section 21(c) carries a
-  California governing-law default with a party-designated venue/forum bracket the
-  parties complete before use (rather than a hardcoded venue).
+  California governing-law default. The forum comes from the `dispute-venue` input; if
+  it is left out, the forum of the Underlying Agreement applies, and failing that the
+  state and federal courts located in California (rather than a hardcoded venue).
+- **Dealroom inputs (v1.3.0, 2026-10-06).** The generated agreement names both parties
+  in the preamble and takes four inputs: `services-description` (required),
+  `phi-by-design` (required, default `no`: the springing posture, and for now the only
+  value offered; the conventional wording for `yes` of Sections 2, 3, 5 and 6 and of
+  the Background, drafted 2026-10-06, stays in boilerplate.json but is not offered
+  until the supervising lawyer reviews it: `BAA_CONVENTIONAL_ENABLED` in
+  `src/lib/baa-posture.ts`, owner 2026-10-06), `underlying-agreement`
+  (title and date, optional) and `dispute-venue` (optional).
 - **2025 HHS Security Rule NPRM**: PROPOSED, not final, as of 2026-07-23. On any final
   rule: re-verify the §6/§8 cards and the §18 mechanic, bump `lawReviewedAsOf`.
 - **State overlays deliberately out of scope** — decide whether a state-overlay

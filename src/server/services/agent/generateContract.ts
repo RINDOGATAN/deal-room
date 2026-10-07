@@ -46,6 +46,7 @@ import { generateContractMarkdown } from "@/server/services/document/contractMar
 import { generateContractHtml } from "@/server/services/document/contractHtml";
 import type { ParameterSchema } from "@/lib/parameters";
 import { LIVE_ROWS } from "@/lib/clause-retirement";
+import { baaPostureRefusal } from "@/lib/baa-posture";
 
 export const generateContractSchema = z.object({
   contractType: z.string().trim().min(1).max(100),
@@ -87,7 +88,12 @@ function paymentRequired(extra: Record<string, unknown> = {}): GenerateContractR
   });
 }
 
-/** The caller's inputs plus the default of every input it left out (under this law). */
+/**
+ * The caller's inputs plus the default of every input it left out (under
+ * this law). A choice sent in another case or with spaces ("Yes ") is
+ * written as the listed option ("yes"), since the contract text is chosen
+ * by exact match on it.
+ */
 export function withDefaults(
   terms: Record<string, string>,
   schema: ParameterSchema | null | undefined,
@@ -97,6 +103,11 @@ export function withDefaults(
   for (const p of schema?.parameters ?? []) {
     if (p.jurisdictions?.length && !p.jurisdictions.includes(governingLaw)) continue;
     if (p.default !== undefined && p.default !== "" && !out[p.id]?.trim()) out[p.id] = p.default;
+    const sent = out[p.id]?.trim().toLowerCase();
+    if (p.type === "choice" && sent) {
+      const listed = p.options?.find((o) => o.toLowerCase() === sent);
+      if (listed) out[p.id] = listed;
+    }
   }
   return out;
 }
@@ -163,6 +174,11 @@ export async function generateContract(
     template.parameterSchema as unknown as ParameterSchema | null,
     governingLaw,
   );
+
+  // A BAA posture that is not offered: refused before any credit check,
+  // so nothing is charged (src/lib/baa-posture.ts).
+  const postureRefusal = baaPostureRefusal(contractType, terms);
+  if (postureRefusal) return fail(422, postureRefusal);
 
   // 2. No credit, no contract: refuse before anything is created.
   if (features.stripeEnabled) {

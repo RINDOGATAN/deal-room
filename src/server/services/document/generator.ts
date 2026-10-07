@@ -386,28 +386,18 @@ export function processBoilerplate(
     definition: resolve(d.definition),
   }));
 
-  const standardClauses = (bp.standardClauses as Array<Record<string, unknown>> || []).map((c) => ({
-    title: resolveLocalizedString(c.title, language),
-    text: resolve(c.text),
-    sectionNumber: typeof c.sectionNumber === "number" ? c.sectionNumber : undefined,
-    // Authored as a plain string today (a citation rarely translates), but
-    // resolved through the same helper so a future localised one just works.
-    source: c.source ? resolveLocalizedString(c.source, language) || undefined : undefined,
-  }));
-
-  const generalProvisions = (bp.generalProvisions as Array<Record<string, unknown>> || []).map((p) => ({
-    title: resolveLocalizedString(p.title, language),
-    text: resolve(p.text),
-  }));
-
-  // Conditional annexes and sections: an annex (or one of its `sections`)
-  // may declare `showIf` — one condition or an array (ANDed) of either
-  // `{ variable, in: [...] }` (exact match) or `{ variable, contains: "x" }`
-  // (membership in a comma-joined multiselect value) — evaluated against the
+  // Conditional boilerplate: an annex, one of its `sections`, a standard
+  // clause or one of the `backgroundSections` may declare `showIf`: one
+  // condition or an array (ANDed) of `{ variable, in: [...] }` (exact
+  // match), `{ variable, notIn: [...] }` (any other value, empty included),
+  // `{ variable, contains: "x" }` (membership in a comma-joined
+  // multiselect value) or `{ variable, present: true | false }` (a free-text
+  // answer exists, or does not). Conditions are evaluated against the
   // interpolation variables (which include every deal parameter that
-  // declares a boilerplateVariable). Absent showIf keeps the always-render
-  // behaviour. Used by the DPA for the SCC/TIA annexes and to compose
-  // Annex II from a modest baseline plus individually confirmed measures.
+  // declares a boilerplateVariable, its default standing in when the deal
+  // recorded none). Absent showIf keeps the always-render behaviour. Used by
+  // the DPA for the SCC/TIA annexes and Annex II, and by the BAA for its two
+  // PHI postures (springing or conventional), which share section numbers.
   const conditionsMet = (showIf: unknown): boolean => {
     if (!showIf) return true;
     const conditions = Array.isArray(showIf) ? showIf : [showIf];
@@ -415,6 +405,7 @@ export function processBoilerplate(
       conditions as Array<{
         variable?: string;
         in?: string[];
+        notIn?: string[];
         contains?: string;
         present?: boolean;
       }>
@@ -422,17 +413,36 @@ export function processBoilerplate(
       if (!c.variable) return false;
       const value = variables[c.variable] ?? "";
       if (Array.isArray(c.in)) return c.in.includes(value);
+      if (Array.isArray(c.notIn)) return !c.notIn.includes(value);
       if (typeof c.contains === "string") {
         return value
           .split(",")
           .map((s) => s.trim())
           .includes(c.contains);
       }
-      // `present: true` — render only when a free-text answer exists
+      // `present: true`: render only when a free-text answer exists;
+      // `present: false`: only when it does not (the fallback wording).
       if (c.present === true) return value.trim() !== "";
+      if (c.present === false) return value.trim() === "";
       return false;
     });
   };
+
+  const standardClauses = (bp.standardClauses as Array<Record<string, unknown>> || [])
+    .filter((c) => conditionsMet(c.showIf))
+    .map((c) => ({
+      title: resolveLocalizedString(c.title, language),
+      text: resolve(c.text),
+      sectionNumber: typeof c.sectionNumber === "number" ? c.sectionNumber : undefined,
+      // Authored as a plain string today (a citation rarely translates), but
+      // resolved through the same helper so a future localised one just works.
+      source: c.source ? resolveLocalizedString(c.source, language) || undefined : undefined,
+    }));
+
+  const generalProvisions = (bp.generalProvisions as Array<Record<string, unknown>> || []).map((p) => ({
+    title: resolveLocalizedString(p.title, language),
+    text: resolve(p.text),
+  }));
 
   const annexes = (bp.annexes as Array<Record<string, unknown>> || [])
     .filter((a) => conditionsMet(a.showIf))
@@ -448,12 +458,24 @@ export function processBoilerplate(
       };
     });
 
+  // The background: its fixed text, then each of its `backgroundSections`
+  // whose condition holds, as separate paragraphs.
+  const resolveBackground = (): string | undefined => {
+    const parts: string[] = [];
+    if (bp.background) parts.push(resolve(bp.background));
+    for (const s of (bp.backgroundSections as Array<Record<string, unknown>> | undefined) ?? []) {
+      if (conditionsMet(s.showIf)) parts.push(resolve(s.text));
+    }
+    const text = parts.filter((p) => p.trim()).join("\n\n");
+    return text || undefined;
+  };
+
   const partyLabels = bp.partyLabels as Record<string, unknown> | undefined;
 
   return {
     contractTitle: resolve(bp.contractTitle) || "",
     preamble: resolve(bp.preamble),
-    background: bp.background ? resolve(bp.background) : undefined,
+    background: resolveBackground(),
     definitions,
     standardClauses,
     generalProvisions,

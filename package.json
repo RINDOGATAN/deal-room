@@ -16,7 +16,7 @@
     "test:run": "vitest run",
     "test:integration": "vitest run -c vitest.integration.config.mts",
     "check:api": "node scripts/check-api-error-handling.mjs",
-    "check:skills": "node scripts/check-skills.mjs",
+    "check:skills": "node scripts/check-skills.mjs && SKILLS_DIR=prisma/hosted-skills node scripts/check-skills.mjs",
     "check:upgrade": "bash scripts/upgrade-check.sh",
     "report:contrast": "tsx scripts/contrast-report.ts",
     "skills:manifest": "node scripts/skills-sync.mjs manifest",

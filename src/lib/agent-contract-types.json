@@ -177,7 +177,20 @@
         "BUSINESS_ASSOCIATE",
         "COVERED_ENTITY"
       ],
-      "requiredInputs": []
+      "requiredInputs": [
+        {
+          "id": "services-description",
+          "type": "text"
+        },
+        {
+          "id": "phi-by-design",
+          "type": "choice",
+          "options": [
+            "no"
+          ],
+          "default": "no"
+        }
+      ]
     },
     {
       "contractType": "CESION_PI",

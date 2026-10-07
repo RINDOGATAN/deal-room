@@ -37,6 +37,7 @@ import {
   validateRequiredParameters,
   type ParameterSchema,
 } from "@/lib/parameters";
+import { baaPostureRefusal } from "@/lib/baa-posture";
 import { governingLawForSkillJurisdiction } from "@/lib/jurisdictions";
 import { compactPartyDetails, type PartyDetails } from "@/lib/solo-counterparty";
 
@@ -123,6 +124,12 @@ export async function createSoloDealFromFacts(
   const language = input.language || "en";
   if (template.languages.length > 0 && !template.languages.includes(language)) {
     return { ok: false, status: 422, error: `Language ${language} is not offered by ${input.contractType}` };
+  }
+
+  // A BAA posture that is not offered (src/lib/baa-posture.ts).
+  const postureRefusal = baaPostureRefusal(input.contractType, input.parameters);
+  if (postureRefusal) {
+    return { ok: false, status: 422, error: postureRefusal };
   }
 
   // Required parameters — same rule as the wizard

@@ -1,12 +1,12 @@
 {
   "contractType": "BAA_NEGOTIATOR",
   "displayName": {
-    "en": "HIPAA Business Associate Agreement Negotiator"
+    "en": "Business Associate Agreement (HIPAA)"
   },
   "description": {
-    "en": "Two-party negotiation companion for HIPAA Business Associate Agreements under 45 CFR Parts 160 and 164, built on an attested springing, no-PHI-by-design base template. Instrument screen (run before negotiating any option): a BAA is required only when the vendor creates, receives, maintains, or transmits PHI on behalf of a covered entity or business associate; if the vendor never touches PHI in any form, a BAA is not required, and signing one anyway is not free protection; if the services DO involve PHI, by design or in routine fact, this springing template is the wrong instrument and the deal needs a conventional BAA. Housing (choose before the options): HHS expressly blesses both routes, a standalone BAA or provisions incorporated into an agreement for the provision of services; this pack is the standalone instrument, which references and leans on the Underlying Agreement. GDPR note: a HIPAA-compliant BAA does not satisfy Art. 28 GDPR, and a GDPR-compliant DPA does not satisfy 45 CFR 164.504(e); where personal data of EU/EEA data subjects can reach the vendor, the deal needs the BAA plus a GDPR rider or a standalone DPA, and a springing DPA is not a recognised GDPR instrument. Governing law carries a California default and venue is a party-designated bracket the parties complete in Section 21(c); confirm before use. Software work-product tooling, not legal advice; requires supervised use by a licensed professional."
+    "en": "A HIPAA Business Associate Agreement (45 CFR Parts 160 and 164) between a service provider, as business associate, and its customer, as covered entity or as an upstream business associate. By default it is a precautionary agreement for services not designed to handle protected health information (PHI), which applies only if the provider in fact handles PHI; when the services are designed to handle PHI, it applies to all of it. The parties choose the security incident and breach reporting periods, the access and amendment turnaround, the cure period, the period to return or destroy PHI, and the liability terms. Governed by California law, except where federal law applies."
   },
-  "version": "1.2.0",
+  "version": "1.3.0",
   "languages": [
     "en"
   ],
@@ -799,7 +799,7 @@
             ]
           },
           "legalText": {
-            "en": "(a) Customer Indemnity for Section 2 Violations. Customer shall defend, indemnify, and hold harmless Company and its affiliates, officers, directors, employees, and agents from and against any and all third-party claims, losses, liabilities, damages, fines, penalties, and reasonable costs and expenses (including reasonable attorneys' fees) arising out of or relating to Customer's transmission of PHI to Company or through the Services in violation of Section 2, except to the extent caused by Company's failure to comply with the Security Rule or this Agreement.\n\n(b) Interaction with Underlying Agreement. Except as expressly set forth in Section 19(a), the parties' respective indemnification obligations and limitations of liability under the Underlying Agreement shall govern claims arising under or relating to this Agreement. this Agreement is subject to the aggregate liability cap in the Underlying Agreement."
+            "en": "(a) Customer Indemnity for Section 2 Violations. Customer shall defend, indemnify, and hold harmless Company and its affiliates, officers, directors, employees, and agents from and against any and all third-party claims, losses, liabilities, damages, fines, penalties, and reasonable costs and expenses (including reasonable attorneys' fees) arising out of or relating to Customer's transmission of PHI to Company or through the Services in violation of Section 2, except to the extent caused by Company's failure to comply with the Security Rule or this Agreement.\n\n(b) Interaction with Underlying Agreement. Except as expressly set forth in Section 19(a), the parties' respective indemnification obligations and limitations of liability under the Underlying Agreement shall govern claims arising under or relating to this Agreement. This Agreement is subject to the aggregate liability cap in the Underlying Agreement."
           },
           "biasPartyA": 0.3,
           "biasPartyB": -0.3
@@ -869,7 +869,7 @@
             ]
           },
           "legalText": {
-            "en": "(a) Customer Indemnity for Section 2 Violations. Customer shall defend, indemnify, and hold harmless Company and its affiliates, officers, directors, employees, and agents from and against any and all third-party claims, losses, liabilities, damages, fines, penalties, and reasonable costs and expenses (including reasonable attorneys' fees) arising out of or relating to Customer's transmission of PHI to Company or through the Services in violation of Section 2, except to the extent caused by Company's failure to comply with the Security Rule or this Agreement.\n\n(b) Interaction with Underlying Agreement. Except as expressly set forth in Section 19(a), the parties' respective indemnification obligations and limitations of liability under the Underlying Agreement shall govern claims arising under or relating to this Agreement. this Agreement is subject to the aggregate liability cap in the Underlying Agreement, except that such cap does not apply to liability arising from Company's willful misconduct."
+            "en": "(a) Customer Indemnity for Section 2 Violations. Customer shall defend, indemnify, and hold harmless Company and its affiliates, officers, directors, employees, and agents from and against any and all third-party claims, losses, liabilities, damages, fines, penalties, and reasonable costs and expenses (including reasonable attorneys' fees) arising out of or relating to Customer's transmission of PHI to Company or through the Services in violation of Section 2, except to the extent caused by Company's failure to comply with the Security Rule or this Agreement.\n\n(b) Interaction with Underlying Agreement. Except as expressly set forth in Section 19(a), the parties' respective indemnification obligations and limitations of liability under the Underlying Agreement shall govern claims arising under or relating to this Agreement. This Agreement is subject to the aggregate liability cap in the Underlying Agreement, except that such cap does not apply to liability arising from Company's willful misconduct."
           },
           "biasPartyA": -0.3,
           "biasPartyB": 0.3
