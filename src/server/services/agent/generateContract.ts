@@ -46,6 +46,7 @@ import { generateContractMarkdown } from "@/server/services/document/contractMar
 import { generateContractHtml } from "@/server/services/document/contractHtml";
 import type { ParameterSchema } from "@/lib/parameters";
 import { LIVE_ROWS } from "@/lib/clause-retirement";
+import { baaPostureRefusal } from "@/lib/baa-posture";
 
 export const generateContractSchema = z.object({
   contractType: z.string().trim().min(1).max(100),
@@ -173,6 +174,11 @@ export async function generateContract(
     template.parameterSchema as unknown as ParameterSchema | null,
     governingLaw,
   );
+
+  // A BAA posture that is not offered: refused before any credit check,
+  // so nothing is charged (src/lib/baa-posture.ts).
+  const postureRefusal = baaPostureRefusal(contractType, terms);
+  if (postureRefusal) return fail(422, postureRefusal);
 
   // 2. No credit, no contract: refuse before anything is created.
   if (features.stripeEnabled) {

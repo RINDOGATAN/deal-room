@@ -38,7 +38,9 @@ vi.mock("@/lib/prisma", () => ({
 
 import { generateContractData } from "./generator";
 import { generateContractTxt } from "./contractTxt";
-import { withDefaults } from "@/server/services/agent/generateContract";
+import { generateContract, generateContractSchema, withDefaults } from "@/server/services/agent/generateContract";
+import { createSoloDealFromFacts } from "@/server/services/agent/soloIntake";
+import { BAA_CONVENTIONAL_ENABLED, BAA_CONVENTIONAL_REFUSAL, baaPostureRefusal } from "@/lib/baa-posture";
 import type { ParameterSchema } from "@/lib/parameters";
 
 const VENDOR = {
@@ -202,7 +204,10 @@ describe("the two PHI postures", () => {
     expect(sectionNumbers(txt)).toEqual(ALL_SECTIONS);
   });
 
-  it("conventional when the services are designed to handle PHI: no springing wording, every section once", async () => {
+  // The conventional wording stays in the skill for the lawyer's review but
+  // is not offered (BAA_CONVENTIONAL_ENABLED is false): this renders it
+  // directly, as no request can reach it.
+  it("conventional wording (not offered yet): no springing wording, every section once", async () => {
     const { txt } = await render({ params: { ...TERMS, "phi-by-design": "yes" } });
     expect(txt).toContain("In providing the Services, Company creates, receives, maintains, or transmits Protected Health Information");
     expect(txt).toContain("Company may use or disclose PHI as necessary to perform the Services");
@@ -214,8 +219,88 @@ describe("the two PHI postures", () => {
   });
 
   it("the one call writes a choice sent in another case as the listed option", () => {
-    const terms = withDefaults({ "phi-by-design": " Yes " }, parameters as ParameterSchema, "CALIFORNIA");
-    expect(terms["phi-by-design"]).toBe("yes");
+    const terms = withDefaults({ "phi-by-design": " No " }, parameters as ParameterSchema, "CALIFORNIA");
+    expect(terms["phi-by-design"]).toBe("no");
     expect(withDefaults({}, parameters as ParameterSchema, "CALIFORNIA")["phi-by-design"]).toBe("no");
+  });
+});
+
+describe("the conventional posture is not offered (owner, 6 October 2026)", () => {
+  it("is switched off", () => {
+    expect(BAA_CONVENTIONAL_ENABLED).toBe(false);
+  });
+
+  it("lists only \"no\" for phi-by-design", () => {
+    const p = (parameters as ParameterSchema).parameters.find((x) => x.id === "phi-by-design")!;
+    expect(p.options).toEqual(["no"]);
+    expect(p.default).toBe("no");
+  });
+
+  it("refuses \"yes\" in any case with the plain message, and lets \"no\" and an absent value through", () => {
+    for (const v of ["yes", "Yes", " YES "]) {
+      expect(baaPostureRefusal("BAA_NEGOTIATOR", { "phi-by-design": v })).toBe(BAA_CONVENTIONAL_REFUSAL);
+    }
+    expect(baaPostureRefusal("BAA_NEGOTIATOR", { "phi-by-design": "no" })).toBeNull();
+    expect(baaPostureRefusal("BAA_NEGOTIATOR", {})).toBeNull();
+    expect(baaPostureRefusal("NDA", { "phi-by-design": "yes" })).toBeNull();
+    expect(BAA_CONVENTIONAL_REFUSAL).toBe(
+      "This agreement is offered only for services designed not to receive protected health information. For services that handle it, a lawyer should prepare the agreement.",
+    );
+  });
+
+  it("the one call (REST and MCP) refuses \"yes\" before any credit check or deal", async () => {
+    const findUnique = vi.fn();
+    const prisma = {
+      contractTemplate: {
+        findMany: vi.fn(async () => [
+          {
+            contractType: "BAA_NEGOTIATOR",
+            displayName: "Business Associate Agreement (HIPAA)",
+            jurisdictions: ["CALIFORNIA"],
+            languages: ["en"],
+            parameterSchema: parameters,
+            _count: { clauses: 7 },
+          },
+        ]),
+      },
+      customerCredit: { findUnique },
+    };
+    const res = await generateContract(
+      prisma as never,
+      { customer: { id: "c", name: "Firm", email: "firm@example.com" }, apiKey: { id: "k" } } as never,
+      generateContractSchema.parse({
+        contractType: "BAA_NEGOTIATOR",
+        party: { legalName: "Vendor Software Inc.", signatoryName: "Vera Vendor", signatoryTitle: "CEO" },
+        terms: { "services-description": "hosted software", "phi-by-design": "yes" },
+      }),
+    );
+    expect(res.status).toBe(422);
+    expect(JSON.stringify(res.body)).toContain(BAA_CONVENTIONAL_REFUSAL);
+    expect(findUnique).not.toHaveBeenCalled();
+  });
+
+  it("the agent deals endpoint refuses \"yes\" before creating anything", async () => {
+    const create = vi.fn();
+    const prisma = {
+      contractTemplate: {
+        findUnique: vi.fn(async () => ({
+          contractType: "BAA_NEGOTIATOR",
+          isActive: true,
+          jurisdictions: ["CALIFORNIA"],
+          languages: ["en"],
+          parameterSchema: parameters,
+          clauses: [],
+        })),
+      },
+      dealRoom: { create },
+    };
+    const res = await createSoloDealFromFacts(prisma as never, { id: "c", name: "Firm", email: "firm@example.com" }, {
+      contractType: "BAA_NEGOTIATOR",
+      governingLaw: "CALIFORNIA",
+      dealName: "BAA",
+      parameters: { "services-description": "hosted software", "phi-by-design": "Yes" },
+    });
+    expect(res).toEqual({ ok: false, status: 422, error: BAA_CONVENTIONAL_REFUSAL });
+    expect(create).not.toHaveBeenCalled();
   });
 });

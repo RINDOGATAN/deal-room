@@ -186,8 +186,7 @@
           "id": "phi-by-design",
           "type": "choice",
           "options": [
-            "no",
-            "yes"
+            "no"
           ],
           "default": "no"
         }

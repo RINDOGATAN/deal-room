@@ -34,18 +34,16 @@
         "es": "¿Están los servicios diseñados para crear, recibir, conservar o transmitir PHI?"
       },
       "hint": {
-        "en": "No (the default): the agreement is precautionary and applies only if the business associate in fact handles PHI. Yes: the agreement applies to all the PHI the services handle.",
-        "es": "No (por defecto): el acuerdo es preventivo y solo se aplica si el socio comercial llega a tratar PHI. Sí: el acuerdo se aplica a toda la PHI que tratan los servicios."
+        "en": "Only \"no\" is offered: the agreement is precautionary and applies only if the business associate in fact handles PHI. For services that handle PHI, a lawyer should prepare the agreement.",
+        "es": "Solo se ofrece \"no\": el acuerdo es preventivo y solo se aplica si el socio comercial llega a tratar PHI. Para servicios que tratan PHI, el acuerdo debe prepararlo un abogado."
       },
-      "options": ["no", "yes"],
+      "options": [
+        "no"
+      ],
       "optionLabels": {
         "no": {
           "en": "No, the services are not designed to handle PHI",
           "es": "No, los servicios no están diseñados para tratar PHI"
-        },
-        "yes": {
-          "en": "Yes, the services handle PHI",
-          "es": "Sí, los servicios tratan PHI"
         }
       }
     },
