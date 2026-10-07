@@ -2,6 +2,8 @@
 
 Lawyers can participate at three distinct stages of a deal. Each stage is independent — parties may use any combination (all three, just one, or none).
 
+**Own lawyer only (owner's decision, 6 October 2026).** Dealroom keeps no list of lawyers for parties and states no fee for legal review. A technology company that lists lawyers and states their fee looks like a lawyer referral service, which Dealroom does not run (US) and which European bars restrict. A party always brings its own lawyer: in Stage A it invites one by e-mail, in Stage B the initiator names one by e-mail. The lawyer works for the client and bills the client directly; Dealroom takes no fee and makes no recommendation. The in-app invitation works whatever the `startupCoverage` feature flag says (the flag gates only the agent tools and discovery).
+
 ---
 
 ## Overview
@@ -56,7 +58,7 @@ Before the deal is created. The lawyer sets up the deal framework, then sends an
 
 ### What It Is
 
-After submitting their selections, a party can independently hire an attorney to review their position. This is a private action — the other party is not notified and does not know whether the opposing side has counsel.
+After submitting their selections, a party can invite its own lawyer, by e-mail, to review its position. This is a private action — the other party is not notified and does not know whether the opposing side has counsel.
 
 ### When It Happens
 
@@ -69,23 +71,14 @@ From the moment a party submits their selections. Available during the following
 ### How It Works
 
 1. Party navigates to `/deals/[id]/review`
-2. Opens the attorney selection modal
-3. Sees a list of available supervisors **filtered by jurisdiction** (only attorneys admitted to the deal's governing law)
-4. Selects an attorney — bar number is displayed alongside each name
-5. The selected attorney receives an email notification
-6. The attorney reviews the party's position via `/supervise`
-7. The attorney approves the review
-8. The party can proceed
+2. Clicks "Invite your own lawyer"
+3. Enters the lawyer's e-mail (and, optionally, name). The dialog says: "The lawyer you invite works for you and bills you directly; Dealroom takes no fee and makes no recommendation."
+4. The lawyer becomes a supervisor of this one deal (an existing account is reused; a new one has no bar admission) and receives an e-mail with a link to the review portal
+5. The lawyer signs in to `/supervise` with that address (two-factor authentication is set up on first sign-in) and reviews the party's position
+6. The lawyer approves the review
+7. The party can proceed
 
-### Jurisdiction Filtering
-
-Attorneys must have a `SupervisorBarAdmission` record matching the deal's `governingLaw` to appear in the selection list. For example:
-
-| Deal governing law | Attorney must be admitted in |
-|-------------------|----------------------------|
-| CALIFORNIA | California (State Bar) |
-| ENGLAND_WALES | England & Wales (SRA) |
-| SPAIN | Spain (Colegio de Abogados) |
+There is no list of lawyers and no jurisdiction filter: the party chooses its lawyer. Guards: the other party's address is refused; a lawyer already reviewing for the other party is refused; a deactivated account cannot be invited; five invitations per deal per 24 hours. The same invitation is available to agents (`share_with_attorney`, `POST /api/v1/agent/deals/{id}/attorney`) while `startupCoverage` is on.
 
 ### Key Details
 
@@ -99,8 +92,7 @@ Attorneys must have a `SupervisorBarAdmission` record matching the deal's `gover
 
 | Router | Procedure | Description |
 |--------|-----------|-------------|
-| `attorneyReview` | `listAvailableAttorneys` | Jurisdiction-filtered list with conflict-of-interest markers |
-| `attorneyReview` | `requestReview` | Assign supervisor + send email |
+| `attorneyReview` | `inviteOwnLawyer` | Invite a lawyer of the party's choice by e-mail (open the review + send email) |
 | `attorneyReview` | `cancelReview` | Cancel pending review |
 | `attorneyReview` | `getReviewStatus` | Both parties' review status |
 
@@ -110,7 +102,7 @@ Attorneys must have a `SupervisorBarAdmission` record matching the deal's `gover
 
 ### What It Is
 
-A neutral attorney who helps both parties finalize the deal after all clauses are agreed. Unlike Stage A (which is private per-party), Stage B is a shared resource visible to both parties.
+A lawyer named by the initiator, by e-mail, who helps both parties finalize the deal after all clauses are agreed. Unlike Stage A (which is private per-party), Stage B is a shared resource visible to both parties.
 
 ### When It Happens
 
@@ -120,16 +112,17 @@ Only after all clauses reach `AGREED` status.
 
 1. **Initiator** navigates to `/deals/[id]/review`
 2. Clicks "Request Joint Closing Counsel"
-3. Sees a list of available supervisors:
-   - Filtered by jurisdiction (same as Stage A)
-   - **Excludes** any attorney already involved in Stage A for either party (conflict prevention)
-4. Selects an attorney
-5. Two emails are sent:
-   - To the **attorney**: assignment notification
+3. Enters the lawyer's e-mail (and, optionally, name). The dialog says: "The lawyer you name works for both parties and bills them directly; Dealroom takes no fee and makes no recommendation."
+   - A party's own address is refused
+   - A lawyer already involved in Stage A for either party is refused (conflict prevention)
+4. Two emails are sent:
+   - To the **lawyer**: an invitation to the review portal
    - To the **other party**: notification to acknowledge or decline
-6. **Other party** reviews the request and either:
+5. **Other party** reviews the request and either:
    - **Acknowledges** — joint counsel proceeds; signing can begin
    - **Declines** — joint counsel is cancelled; signing can begin without counsel
+
+One request per deal: after a decline, the parties sign without joint counsel.
 
 ### State Machine
 
@@ -182,14 +175,13 @@ When acknowledging joint counsel, each party sees waiver text tailored to their 
 |--------|--------|
 | **Platform fields** | `DealRoom.jointCounselSupervisorId`, `jointCounselRequestedAt`, `jointCounselRequestedBy`, `jointCounselAcknowledgedAt`, `jointCounselDeclinedAt` |
 | **Signing gate** | Pending requests block signing for both parties |
-| **Conflict prevention** | Stage A attorneys for either party are excluded from the Stage B candidate list |
+| **Conflict prevention** | A Stage A lawyer for either party cannot be named as joint counsel |
 
 ### tRPC Procedures
 
 | Router | Procedure | Description |
 |--------|-----------|-------------|
-| `jointCounsel` | `listAvailable` | Jurisdiction-filtered, Stage A-excluded list |
-| `jointCounsel` | `request` | Initiator requests joint counsel |
+| `jointCounsel` | `request` | Initiator names joint counsel by e-mail |
 | `jointCounsel` | `acknowledge` | Other party acknowledges |
 | `jointCounsel` | `decline` | Other party declines |
 | `jointCounsel` | `getStatus` | Current state + adaptive waiver text |
@@ -218,8 +210,8 @@ The modal displays:
 1. **Risk warning** — brief statement about proceeding without legal counsel
 2. **Stage timeline** — visual summary of the three lawyer involvement stages:
    - Stage 0 shown as "skipped" (since the deal has no pre-vetting lawyer)
-   - Stage A described as available after submission
-   - Stage B described as available after agreement
+   - Stage A described as available after submission (invite your own lawyer)
+   - Stage B described as available after agreement (the initiator names a shared lawyer by e-mail)
 
 ### Dismissal
 
@@ -237,7 +229,7 @@ The modal renders on:
 
 ### Overview
 
-Supervisors (attorneys) must have bar admissions registered on the platform to appear in attorney selection lists. Bar admissions are jurisdiction-specific and managed by Platform Admins.
+Platform Admins can record bar admissions for supervisors (attorneys). Since 6 October 2026 they no longer drive any list shown to parties, which choose their own lawyers; they remain as admin records and for admin assignment.
 
 ### Management
 
@@ -264,10 +256,7 @@ model SupervisorBarAdmission {
 
 ### Impact on Attorney Selection
 
-| Stage | Filtering rule |
-|-------|---------------|
-| **Stage A** | Only supervisors with a bar admission matching the deal's `governingLaw` |
-| **Stage B** | Same jurisdiction filter + excludes any Stage A attorneys for either party |
+None for parties: there is no attorney selection list (owner's decision, 6 October 2026). Existing supervisors and their bar admissions are kept intact and stay visible in the admin views.
 
 ---
 

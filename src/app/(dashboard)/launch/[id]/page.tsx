@@ -6,7 +6,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { toast } from "sonner";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { trpc } from "@/lib/trpc";
 import {
   STEP_ORDER,
@@ -419,14 +419,13 @@ function RequestReviewDialog({
   onClose: () => void;
   onSuccess: () => void;
 }) {
+  // Invite your own lawyer by e-mail (owner's decision, 6 October 2026):
+  // there is no platform list of lawyers to pick from.
   const tReview = useTranslations("launch.hub.reviewDialog");
   const tSteps = useTranslations("launch.steps");
-  const [supervisorId, setSupervisorId] = useState<string | null>(null);
-  const firstDealId = dealIdsInStep[0];
-  const { data: attorneys, isLoading } = trpc.attorneyReview.listAvailableAttorneys.useQuery(
-    firstDealId ? { dealRoomId: firstDealId } : { dealRoomId: "" },
-    { enabled: !!firstDealId },
-  );
+  const locale = useLocale();
+  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
 
   const request = trpc.journey.requestStepReview.useMutation({
     onSuccess: (res) => {
@@ -455,75 +454,66 @@ function RequestReviewDialog({
           </DialogDescription>
         </DialogHeader>
 
-        {isLoading ? (
-          <div className="py-6 text-center text-muted-foreground">
-            <Loader2 className="w-5 h-5 animate-spin mx-auto" />
-          </div>
-        ) : !attorneys?.length ? (
-          <div className="py-6 text-center space-y-2">
-            <p className="text-sm text-muted-foreground">
-              {tReview("noAttorneys")}
-            </p>
-          </div>
-        ) : (
-          <div className="space-y-2 max-h-80 overflow-y-auto">
-            {attorneys.map((a) => (
-              <button
-                key={a.id}
-                onClick={() => !a.unavailable && setSupervisorId(a.id)}
-                disabled={a.unavailable}
-                className={`w-full text-left p-3 border transition-colors ${
-                  supervisorId === a.id
-                    ? "border-primary bg-primary/5"
-                    : a.unavailable
-                      ? "border-border opacity-50 cursor-not-allowed"
-                      : "border-border hover:border-primary/40"
-                }`}
-              >
-                <div className="flex items-start justify-between gap-3">
-                  <div className="min-w-0">
-                    <p className="font-medium">{a.name}</p>
-                    <p className="text-xs text-muted-foreground">
-                      {a.email}
-                      {a.barNumber ? ` · ${tReview("barNumber", { n: a.barNumber })}` : ""}
-                    </p>
-                    {a.unavailable && (
-                      <p className="text-xs text-warning mt-1">
-                        {a.unavailable}
-                      </p>
-                    )}
-                  </div>
-                  {supervisorId === a.id && <Check className="w-4 h-4 text-primary flex-shrink-0" />}
-                </div>
-              </button>
-            ))}
-          </div>
-        )}
+        <form
+          className="space-y-3"
+          onSubmit={(e) => {
+            e.preventDefault();
+            if (!email.trim()) return;
+            request.mutate({
+              journeyId,
+              stepKey,
+              email: email.trim(),
+              name: name.trim() || undefined,
+              lang: locale === "es" ? "es" : "en",
+            });
+          }}
+        >
+          <label className="block text-sm">
+            <span className="block mb-1">{tReview("emailLabel")}</span>
+            <input
+              type="email"
+              required
+              autoComplete="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full px-3 py-2 bg-background border border-border rounded-md"
+            />
+          </label>
+          <label className="block text-sm">
+            <span className="block mb-1">{tReview("nameLabel")}</span>
+            <input
+              type="text"
+              autoComplete="name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="w-full px-3 py-2 bg-background border border-border rounded-md"
+            />
+          </label>
+          <p className="text-xs text-muted-foreground">{tReview("note")}</p>
 
-        <div className="flex justify-end gap-3 pt-2">
-          <button
-            onClick={onClose}
-            className="px-4 py-2 text-sm text-muted-foreground hover:text-foreground"
-          >
-            {tReview("cancel")}
-          </button>
-          <button
-            disabled={!supervisorId || request.isPending}
-            onClick={() =>
-              supervisorId &&
-              request.mutate({ journeyId, stepKey, supervisorId })
-            }
-            className="btn-brutal inline-flex items-center gap-2 disabled:opacity-40"
-          >
-            {request.isPending ? (
-              <>
-                <Loader2 className="w-4 h-4 animate-spin" /> {tReview("requesting")}
-              </>
-            ) : (
-              <>{tReview("request")}</>
-            )}
-          </button>
-        </div>
+          <div className="flex justify-end gap-3 pt-2">
+            <button
+              type="button"
+              onClick={onClose}
+              className="px-4 py-2 text-sm text-muted-foreground hover:text-foreground"
+            >
+              {tReview("cancel")}
+            </button>
+            <button
+              type="submit"
+              disabled={!email.trim() || request.isPending}
+              className="btn-brutal inline-flex items-center gap-2 disabled:opacity-40"
+            >
+              {request.isPending ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" /> {tReview("requesting")}
+                </>
+              ) : (
+                <>{tReview("request")}</>
+              )}
+            </button>
+          </div>
+        </form>
       </DialogContent>
     </Dialog>
   );

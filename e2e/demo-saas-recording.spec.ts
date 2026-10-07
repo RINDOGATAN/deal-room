@@ -13,7 +13,7 @@
  *   5. Both parties submit → compromise algorithm runs
  *   6. Both review AI compromise suggestions — see how firmness affects outcomes
  *   7. Both accept compromises
- *   8. Alice requests attorney review (lawyer directory modal)
+ *   8. Alice invites her own lawyer to review (by e-mail)
  *   9. Both parties sign the contract
  *   10. Final PDF download
  *
@@ -526,9 +526,10 @@ test.describe("SaaS Agreement Demo Recording", () => {
     await page.goto(`${BASE_URL}/deals/${dealId}/review`);
     await page.waitForTimeout(3_000);
 
-    // Look for "Request Attorney Review" button
+    // Look for the "Invite your own lawyer" button (no platform list since
+    // the owner's decision of 6 October 2026)
     const reviewBtn = page.locator("button").filter({
-      hasText: /Request Attorney Review|Solicitar Revisión/i,
+      hasText: /Invite your own lawyer|Invita a tu propio abogado/i,
     });
     const hasReviewBtn = await reviewBtn.first()
       .waitFor({ state: "visible", timeout: 5_000 })
@@ -538,48 +539,20 @@ test.describe("SaaS Agreement Demo Recording", () => {
     if (hasReviewBtn) {
       await page.waitForTimeout(PAUSE_SHORT);
       await reviewBtn.first().click();
-      log("Attorney review modal opened");
+      log("Invite-your-own-lawyer dialog opened");
 
-      // Wait for the attorney selection dialog
       const dialog = page.locator("[role=dialog]");
       await expect(dialog).toBeVisible({ timeout: 5_000 });
       await page.waitForTimeout(PAUSE_MEDIUM);
 
-      // Select the first available attorney (if any listed)
-      const attorneyCards = dialog.locator("button").filter({
-        hasNotText: /Cancel|Cancelar|Assign|Asignar|Close/i,
-      });
-      const hasAttorneys = await attorneyCards.first()
-        .waitFor({ state: "visible", timeout: 3_000 })
-        .then(() => true)
-        .catch(() => false);
-
-      if (hasAttorneys) {
-        await attorneyCards.first().click();
-        await page.waitForTimeout(PAUSE_SHORT);
-
-        // Click "Assign Attorney"
-        const assignBtn = dialog.locator("button").filter({
-          hasText: /Assign Attorney|Asignar Abogado/i,
-        });
-        const canAssign = await assignBtn.first()
-          .waitFor({ state: "visible", timeout: 3_000 })
-          .then(() => true)
-          .catch(() => false);
-
-        if (canAssign) {
-          await assignBtn.first().click();
-          await page.waitForTimeout(PAUSE_MEDIUM);
-          log("Attorney assigned — review requested");
-        }
-      } else {
-        // No attorneys available — close dialog and continue
-        const closeBtn = dialog.locator("button").filter({ hasText: /Cancel|Close|Cancelar/i });
-        if (await closeBtn.first().isVisible().catch(() => false)) {
-          await closeBtn.first().click();
-        }
-        log("No attorneys available — skipping review request");
-      }
+      await dialog.locator("input[type=email]").fill("counsel@lawyers.example");
+      await page.waitForTimeout(PAUSE_SHORT);
+      // Shown, not sent: a sent invitation would hold signing until the
+      // lawyer approves, and this script goes on to sign.
+      await page.keyboard.press("Escape");
+      await dialog.locator("button[aria-label]").first().click().catch(() => {});
+      await page.waitForTimeout(PAUSE_MEDIUM);
+      log("Own-lawyer invitation shown (not sent)");
     } else {
       log("Attorney review button not visible — contract may be lawyer-vetted");
     }

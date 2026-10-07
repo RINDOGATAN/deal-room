@@ -274,8 +274,8 @@ export async function sendJointCounselNotificationEmail({
       to,
       subject: `Joint closing counsel requested: ${dealName}`,
       html: emailWrapper("Joint Counsel", `
-        <p style="color: #e5e5e5; font-size: 15px; line-height: 1.6; margin: 0 0 16px;">Dear <strong style="color: ${brand.colors.foreground};">${partyName}</strong>,</p>
-        ${emailParagraph(`The other party has requested <strong style="color: ${brand.colors.foreground};">${supervisorName}</strong> as joint closing counsel for <strong style="color: ${brand.colors.foreground};">${dealName}</strong>. Please review and acknowledge or decline.`)}
+        <p style="color: #e5e5e5; font-size: 15px; line-height: 1.6; margin: 0 0 16px;">Dear <strong style="color: ${brand.colors.foreground};">${escapeHtml(partyName)}</strong>,</p>
+        ${emailParagraph(`The other party has named <strong style="color: ${brand.colors.foreground};">${escapeHtml(supervisorName)}</strong> as joint closing counsel for <strong style="color: ${brand.colors.foreground};">${escapeHtml(dealName)}</strong>. Please review and acknowledge or decline.`)}
         ${emailButton(dealUrl, "Review Request")}
       `),
     });
@@ -284,37 +284,61 @@ export async function sendJointCounselNotificationEmail({
   }
 }
 
-interface SendJointCounselAssignmentEmailParams {
+/**
+ * Joint closing counsel by invitation (owner's decision, 6 October 2026):
+ * the initiator names a lawyer by e-mail; the wording says that the lawyer
+ * and the parties deal with each other directly and that Dealroom takes no
+ * fee. Replaces the assignment e-mail sent to a lawyer picked from the
+ * platform list.
+ */
+export const JOINT_COUNSEL_EMAIL_TEXT = {
+  en: {
+    subject: (deal: string) => `Joint closing counsel requested: ${deal}`,
+    subtitle: "Joint closing counsel",
+    greeting: (name: string) => `Dear ${name},`,
+    invited: (party: string, deal: string) => `${party} has named you as joint closing counsel for the contract ${deal} in Dealroom. The other party will accept or decline.`,
+    direct: "You and the parties agree the engagement and the fee directly. Dealroom takes no fee and makes no recommendation.",
+    button: "Open the review portal",
+    signIn: "Sign in with this e-mail address. The first time, the portal asks you to set up two-factor authentication.",
+  },
+  es: {
+    subject: (deal: string) => `Solicitud de abogado o abogada de cierre conjunto: ${deal}`,
+    subtitle: "Cierre conjunto",
+    greeting: (name: string) => `Hola, ${name}:`,
+    invited: (party: string, deal: string) => `${party} te propone como abogado o abogada de cierre conjunto del contrato ${deal} en Dealroom. La otra parte lo aceptará o lo rechazará.`,
+    direct: "El encargo y los honorarios los acordáis directamente las partes y tú. Dealroom no cobra nada por ello ni hace recomendaciones.",
+    button: "Abrir el portal de revisión",
+    signIn: "Inicia sesión con esta dirección de correo. La primera vez, el portal te pide configurar la verificación en dos pasos.",
+  },
+} as const;
+
+export async function sendJointCounselInviteEmail(input: {
   to: string;
-  supervisorName: string;
+  lawyerName?: string | null;
+  partyName: string;
   dealName: string;
-  initiatorName: string;
-  dealRoomId: string;
-}
-
-export async function sendJointCounselAssignmentEmail({
-  to,
-  supervisorName,
-  dealName,
-  initiatorName,
-  // dealRoomId intentionally not destructured — the email links to the
-  // supervisor portal, not the deal; callers still pass it (interface shape kept).
-}: SendJointCounselAssignmentEmailParams) {
+  lang?: string;
+}): Promise<boolean> {
+  const t = JOINT_COUNSEL_EMAIL_TEXT[input.lang === "es" ? "es" : "en"];
   const portalUrl = `${process.env.NEXTAUTH_URL}/supervise`;
-
+  const strong = (v: string) => `<strong style="color: ${brand.colors.foreground};">${escapeHtml(v)}</strong>`;
   try {
     await getResend().emails.send({
       from: mailFrom(),
-      to,
-      subject: `Joint closing counsel assignment: ${dealName}`,
-      html: emailWrapper("Joint Counsel Assignment", `
-        <p style="color: #e5e5e5; font-size: 15px; line-height: 1.6; margin: 0 0 16px;">Dear <strong style="color: ${brand.colors.foreground};">${supervisorName}</strong>,</p>
-        ${emailParagraph(`You have been requested as joint closing counsel for <strong style="color: ${brand.colors.foreground};">${dealName}</strong> by <strong style="color: ${brand.colors.foreground};">${initiatorName}</strong>. Both parties will need your guidance to finalize the agreement.`)}
-        ${emailButton(portalUrl, "Open Supervisor Portal")}
+      to: input.to,
+      subject: t.subject(input.dealName),
+      html: emailWrapper(t.subtitle, `
+        ${input.lawyerName ? emailParagraph(escapeHtml(t.greeting(input.lawyerName))) : ""}
+        ${emailParagraph(t.invited(strong(input.partyName), strong(input.dealName)))}
+        ${emailParagraph(t.direct)}
+        ${emailButton(portalUrl, t.button)}
+        ${emailMuted(t.signIn)}
       `),
     });
+    return true;
   } catch (error) {
-    logger.error("Failed to send joint counsel assignment email", { err: String(error) });
+    logger.error("Failed to send joint counsel invitation email", { err: String(error) });
+    return false;
   }
 }
 

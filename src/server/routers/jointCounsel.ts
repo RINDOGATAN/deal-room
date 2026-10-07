@@ -5,249 +5,48 @@ import { z } from "zod";
 import type { Prisma } from "@prisma/client";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
-import {
-  sendJointCounselAssignmentEmail,
-  sendJointCounselNotificationEmail,
-} from "@/lib/email";
-import { createLogger } from "@/lib/logger";
-
-const logger = createLogger("joint-counsel");
+import { requestJointCounsel } from "@/server/services/attorney/jointCounsel";
 
 export const jointCounselRouter = createTRPCRouter({
   /**
-   * List available supervisors for joint closing counsel (Stage B).
-   * Only the INITIATOR can browse this list.
-   * Supervisors must have bar admission matching the deal's governing law
-   * and must NOT already be a Stage A attorney for either party.
-   */
-  listAvailable: protectedProcedure
-    .input(z.object({ dealRoomId: z.string() }))
-    .query(async ({ ctx, input }) => {
-      const party = await ctx.prisma.dealRoomParty.findFirst({
-        where: {
-          dealRoomId: input.dealRoomId,
-          userId: ctx.session.user.id,
-        },
-        include: {
-          dealRoom: {
-            include: {
-              parties: true,
-            },
-          },
-        },
-      });
-
-      if (!party) {
-        throw new TRPCError({
-          code: "FORBIDDEN",
-          message: "You are not a party to this deal",
-        });
-      }
-
-      if (party.dealRoom.status !== "AGREED") {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "Deal must be in AGREED status to request joint counsel",
-        });
-      }
-
-      if (party.role !== "INITIATOR") {
-        throw new TRPCError({
-          code: "FORBIDDEN",
-          message: "Only the initiator can request joint closing counsel",
-        });
-      }
-
-      // Collect Stage A attorney IDs from both parties to exclude
-      const stageAAttorneyIds = party.dealRoom.parties
-        .map((p) => p.attorneySupervisorId)
-        .filter((id): id is string => id !== null);
-
-      // Find active supervisors with bar admission for this jurisdiction
-      const supervisors = await ctx.prisma.supervisor.findMany({
-        where: {
-          isActive: true,
-          id: { notIn: stageAAttorneyIds },
-          barAdmissions: {
-            some: {
-              jurisdiction: party.dealRoom.governingLaw,
-            },
-          },
-        },
-        select: {
-          id: true,
-          name: true,
-          email: true,
-          barAdmissions: {
-            where: {
-              jurisdiction: party.dealRoom.governingLaw,
-            },
-            select: {
-              barNumber: true,
-            },
-          },
-        },
-      });
-
-      return supervisors.map((s) => ({
-        id: s.id,
-        name: s.name,
-        email: s.email,
-        barNumber: s.barAdmissions[0]?.barNumber ?? null,
-      }));
-    }),
-
-  /**
-   * Request a joint closing counsel supervisor for the deal.
-   * Only the INITIATOR may request, and the deal must not already have one.
+   * Request joint closing counsel (Stage B) by naming a lawyer by e-mail
+   * (owner's decision, 6 October 2026). Only the INITIATOR may request,
+   * once per deal; the other party then acknowledges or declines. There is
+   * no list of lawyers to choose from and no supervisor id is accepted.
    */
   request: protectedProcedure
     .input(
       z.object({
         dealRoomId: z.string(),
-        supervisorId: z.string(),
+        email: z.string().trim().email().max(254),
+        name: z.string().trim().max(120).optional(),
+        lang: z.enum(["en", "es"]).optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {
       const party = await ctx.prisma.dealRoomParty.findFirst({
-        where: {
-          dealRoomId: input.dealRoomId,
-          userId: ctx.session.user.id,
-        },
-        include: {
-          dealRoom: {
-            include: {
-              parties: true,
-            },
-          },
-        },
+        where: { dealRoomId: input.dealRoomId, userId: ctx.session.user.id },
+        select: { id: true },
       });
-
       if (!party) {
-        throw new TRPCError({
-          code: "FORBIDDEN",
-          message: "You are not a party to this deal",
-        });
+        throw new TRPCError({ code: "FORBIDDEN", message: "You are not a party to this deal" });
       }
-
-      if (party.dealRoom.status !== "AGREED") {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "Deal must be in AGREED status",
-        });
-      }
-
-      if (party.role !== "INITIATOR") {
-        throw new TRPCError({
-          code: "FORBIDDEN",
-          message: "Only the initiator can request joint closing counsel",
-        });
-      }
-
-      if (party.dealRoom.jointCounselSupervisorId) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "Joint closing counsel has already been requested for this deal",
-        });
-      }
-
-      // Verify supervisor is active and has bar admission for this jurisdiction
-      const supervisor = await ctx.prisma.supervisor.findUnique({
-        where: { id: input.supervisorId },
-        include: {
-          barAdmissions: {
-            where: {
-              jurisdiction: party.dealRoom.governingLaw,
-            },
-          },
-        },
+      const result = await requestJointCounsel(ctx.prisma, {
+        partyId: party.id,
+        lawyerEmail: input.email,
+        lawyerName: input.name,
+        actorUserId: ctx.session.user.id,
+        lang: input.lang,
       });
-
-      if (!supervisor || !supervisor.isActive) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "Selected supervisor is not available",
-        });
+      if (!result.ok) {
+        const code =
+          result.status === 404 ? "NOT_FOUND"
+          : result.status === 403 ? "FORBIDDEN"
+          : result.status === 409 ? "CONFLICT"
+          : "BAD_REQUEST";
+        throw new TRPCError({ code, message: result.error });
       }
-
-      if (supervisor.barAdmissions.length === 0) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message:
-            "Selected supervisor is not admitted to practice in this jurisdiction",
-        });
-      }
-
-      const otherParty = party.dealRoom.parties.find(
-        (p) => p.id !== party.id
-      );
-
-      await ctx.prisma.$transaction([
-        // Update DealRoom with joint counsel fields
-        ctx.prisma.dealRoom.update({
-          where: { id: input.dealRoomId },
-          data: {
-            jointCounselSupervisorId: input.supervisorId,
-            jointCounselRequestedAt: new Date(),
-            jointCounselRequestedBy: party.id,
-          },
-        }),
-        // Upsert supervisor assignment so they can see the deal
-        ctx.prisma.supervisorAssignment.upsert({
-          where: {
-            supervisorId_dealRoomId: {
-              supervisorId: input.supervisorId,
-              dealRoomId: input.dealRoomId,
-            },
-          },
-          update: {},
-          create: {
-            supervisorId: input.supervisorId,
-            dealRoomId: input.dealRoomId,
-            assignedBy: null, // Party-initiated, not admin-assigned
-          },
-        }),
-        // Audit log
-        ctx.prisma.auditLog.create({
-          data: {
-            dealRoomId: input.dealRoomId,
-            userId: ctx.session.user.id,
-            action: "JOINT_COUNSEL_REQUESTED",
-            details: {
-              supervisorId: input.supervisorId,
-              supervisorName: supervisor.name,
-              supervisorEmail: supervisor.email,
-              partyRole: party.role,
-            },
-          },
-        }),
-      ]);
-
-      // Fire-and-forget: notify the supervisor
-      sendJointCounselAssignmentEmail({
-        to: supervisor.email,
-        supervisorName: supervisor.name || supervisor.email,
-        dealName: party.dealRoom.name || "Untitled Deal",
-        initiatorName: party.name || "A party",
-        dealRoomId: input.dealRoomId,
-      }).catch((err) =>
-        logger.error("Failed to send joint counsel assignment email", { err: String(err) })
-      );
-
-      // Fire-and-forget: notify the other party
-      if (otherParty?.email) {
-        sendJointCounselNotificationEmail({
-          to: otherParty.email,
-          partyName: otherParty.name || otherParty.email,
-          dealName: party.dealRoom.name || "Untitled Deal",
-          supervisorName: supervisor.name || supervisor.email,
-          dealRoomId: input.dealRoomId,
-        }).catch((err) =>
-          logger.error("Failed to send joint counsel notification email", { err: String(err) })
-        );
-      }
-
-      return { success: true };
+      return { success: true, emailSent: result.emailSent };
     }),
 
   /**

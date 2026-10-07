@@ -41,7 +41,7 @@ The same email address can have access to multiple contexts simultaneously.
 - Activate/deactivate supervisors
 - See deal assignment counts per supervisor
 - Manage bar admissions per supervisor (jurisdiction + bar number)
-- Bar admissions control which deals a supervisor can review (Stage A and B jurisdiction filtering)
+- Bar admissions are admin records only: since 6 October 2026 parties choose their own lawyers by e-mail and never see a list of supervisors
 
 #### Deal Management (`/admin/deals`)
 - View all deals platform-wide
@@ -603,27 +603,27 @@ A lawyer with platform access can invite their client to a deal they have pre-co
 
 #### Stage A — Party Counsel (After Submission)
 
-After a party submits their selections, they can independently hire an attorney to review their position before compromise begins. Each party chooses their own attorney — the other party is unaware of this review.
+After a party submits their selections, they can invite their own lawyer, by e-mail, to review their position. Each party chooses their own lawyer (there is no platform list) — the other party is unaware of this review.
 
 | Aspect | Detail |
 |--------|--------|
 | **When** | After party submits selections (`SUBMITTED`, `REVIEWING`, `ACCEPTED`) |
 | **Who initiates** | Each party independently |
 | **Attorney role** | Advisory review of that party's position only |
-| **Jurisdiction filter** | Only attorneys admitted in the deal's governing law appear |
+| **Lawyer** | Any lawyer the party invites by e-mail; no list, no jurisdiction filter, no fee stated |
 | **Platform field** | `DealRoomParty.attorneyReviewRequested`, `attorneySupervisorId`, `attorneyReviewApprovedAt` |
-| **UI** | `/deals/[id]/review` — attorney selection modal + status banners |
+| **UI** | `/deals/[id]/review` — "Invite your own lawyer" dialog + status banners |
 
 #### Stage B — Joint Closing Counsel (After Agreement)
 
-Once all clauses are agreed, the **initiator** can request a joint closing attorney to help both parties finalize the deal. The other party must acknowledge or decline the request. A joint counsel request blocks signing until resolved.
+Once all clauses are agreed, the **initiator** can name a joint closing lawyer, by e-mail, to help both parties finalize the deal. The other party must acknowledge or decline the request. A joint counsel request blocks signing until resolved.
 
 | Aspect | Detail |
 |--------|--------|
 | **When** | After all clauses agreed (`AGREED` status) |
 | **Who initiates** | Initiator only |
 | **Attorney role** | Helps both parties close; neutral position |
-| **Jurisdiction filter** | Admitted in deal's governing law; **excludes** any Stage A attorneys for either party |
+| **Lawyer** | Named by e-mail; a Stage A lawyer for either party or a party's own address is refused; one request per deal |
 | **Acknowledgment** | Other party must acknowledge or decline before signing proceeds |
 | **Platform fields** | `DealRoom.jointCounselSupervisorId`, `jointCounselRequestedAt`, `jointCounselRequestedBy`, `jointCounselAcknowledgedAt`, `jointCounselDeclinedAt` |
 | **UI** | `/deals/[id]/review` — request/acknowledge/decline cards |
@@ -1072,12 +1072,10 @@ All emails follow the same dark-themed template as invitation emails.
 | `signing` | `initiate` | Create `SigningRequest`, transition to SIGNING |
 | `signing` | `getRequest` | Get signing request status and signatures |
 | `signing` | `recordSignature` | Record typed signature for current party |
-| `attorneyReview` | `listAvailableAttorneys` | List active supervisors (jurisdiction-filtered, marks conflict-of-interest) |
-| `attorneyReview` | `requestReview` | Assign supervisor + send email notification |
+| `attorneyReview` | `inviteOwnLawyer` | Invite a lawyer of the party's choice by e-mail + send email notification |
 | `attorneyReview` | `cancelReview` | Cancel pending (unapproved) review |
 | `attorneyReview` | `getReviewStatus` | Review status for both parties |
-| `jointCounsel` | `listAvailable` | Supervisors admitted in deal jurisdiction, excluding Stage A attorneys |
-| `jointCounsel` | `request` | Initiator requests joint closing counsel |
+| `jointCounsel` | `request` | Initiator names joint closing counsel by e-mail |
 | `jointCounsel` | `acknowledge` | Other party acknowledges joint counsel request |
 | `jointCounsel` | `decline` | Other party declines joint counsel request |
 | `jointCounsel` | `getStatus` | Joint counsel state + adaptive waiver text |
