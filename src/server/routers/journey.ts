@@ -32,6 +32,8 @@ import { autoAgreeSingleOptionClauses } from "../services/deal/autoAgreeSingleOp
 import { createLogger } from "@/lib/logger";
 import { LIVE_ROWS } from "@/lib/clause-retirement";
 import { assertPilotRecordRoom } from "../services/pilot";
+import { findOrCreateInvitedLawyer } from "../services/attorney/ownLawyer";
+import { sendOwnLawyerInviteEmail } from "@/lib/email";
 
 const logger = createLogger("journey");
 
@@ -420,16 +422,20 @@ export const journeyRouter = createTRPCRouter({
     }),
 
   /**
-   * Request lawyer review of every deal in a step by batching Stage A requests.
-   * Returns counts of successful + failed assignments. Deals already under review
-   * are skipped quietly.
+   * Invite the founder's own lawyer, by e-mail, to review every deal in a
+   * step, by batching Stage A requests (owner's decision, 6 October 2026:
+   * no platform list of lawyers, no supervisor id from the caller).
+   * Returns counts of successful + failed assignments. Deals already under
+   * review are skipped quietly; the lawyer receives one e-mail.
    */
   requestStepReview: protectedProcedure
     .input(
       z.object({
         journeyId: z.string(),
         stepKey: z.string(),
-        supervisorId: z.string(),
+        email: z.string().trim().email().max(254),
+        name: z.string().trim().max(120).optional(),
+        lang: z.enum(["en", "es"]).optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -448,15 +454,21 @@ export const journeyRouter = createTRPCRouter({
         throw new TRPCError({ code: "NOT_FOUND", message: "Journey not found" });
       }
 
-      const supervisor = await ctx.prisma.supervisor.findUnique({
-        where: { id: input.supervisorId },
-      });
-      if (!supervisor || !supervisor.isActive) {
+      const lawyerEmail = input.email.trim().toLowerCase();
+      if (journey.dealRooms.some((d) => d.parties.some((p) => p.email.toLowerCase() === lawyerEmail))) {
         throw new TRPCError({
           code: "BAD_REQUEST",
-          message: "Selected attorney is not available",
+          message: "This is the e-mail address of a party to these documents",
         });
       }
+      const found = await findOrCreateInvitedLawyer(ctx.prisma, lawyerEmail, input.name);
+      if (!found) {
+        throw new TRPCError({
+          code: "CONFLICT",
+          message: "This e-mail address cannot be invited",
+        });
+      }
+      const { supervisor } = found;
 
       const results: { dealId: string; status: "assigned" | "skipped" | "error"; reason?: string }[] = [];
 
@@ -468,6 +480,10 @@ export const journeyRouter = createTRPCRouter({
         }
         if (party.attorneyReviewRequested) {
           results.push({ dealId: deal.id, status: "skipped", reason: "already requested" });
+          continue;
+        }
+        if (deal.parties.some((p) => p.id !== party.id && p.attorneySupervisorId === supervisor.id)) {
+          results.push({ dealId: deal.id, status: "skipped", reason: "lawyer acts for another party" });
           continue;
         }
 
@@ -527,6 +543,23 @@ export const journeyRouter = createTRPCRouter({
         where: { id: journey.id },
         data: { stepStatuses: updatedSteps as Prisma.InputJsonValue },
       });
+
+      const assignedDeals = journey.dealRooms.filter((d) =>
+        results.some((r) => r.dealId === d.id && r.status === "assigned"),
+      );
+      if (assignedDeals.length > 0) {
+        const me = assignedDeals[0].parties.find((p) => p.userId === userId);
+        await sendOwnLawyerInviteEmail({
+          to: supervisor.email,
+          lawyerName: supervisor.name,
+          partyName: journey.companyName || me?.name || me?.email || "Your client",
+          dealName: assignedDeals.map((d) => d.name || "Untitled deal").join(", "),
+          lang: input.lang,
+        }).catch((err) => {
+          logger.error("Journey review invitation e-mail failed", { err: String(err) });
+          return false;
+        });
+      }
 
       return { results };
     }),

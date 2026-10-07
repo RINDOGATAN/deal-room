@@ -4,12 +4,11 @@
 "use client";
 
 /**
- * "Invite your own lawyer" (owner's decision E1, step 1, 6 October 2026):
- * an e-mail field, an optional name, and the one plain sentence that the
- * lawyer works for the client and Dealroom takes no fee. Since the
- * owner's decision of the same day to remove the platform list of
- * lawyers, this form is the whole attorney review dialog, whatever
- * `features.startupCoverage` says. The dialog supplies the title.
+ * Joint closing counsel by invitation (owner's decision, 6 October 2026):
+ * the initiator names a lawyer by e-mail, with an optional name and the
+ * one plain sentence that the lawyer works for both parties and Dealroom
+ * takes no fee. The other party then acknowledges or declines. There is
+ * no list of lawyers to choose from.
  */
 
 import { useState } from "react";
@@ -18,19 +17,29 @@ import { toast } from "sonner";
 import { Mail } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 
-export function OwnLawyerInvite({ dealRoomId, onInvited }: { dealRoomId: string; onInvited: () => void }) {
-  const t = useTranslations("review.ownLawyer");
+export function JointCounselInvite({
+  dealRoomId,
+  onRequested,
+  onCancel,
+  cancelLabel,
+}: {
+  dealRoomId: string;
+  onRequested: () => void;
+  onCancel: () => void;
+  cancelLabel: string;
+}) {
+  const t = useTranslations("jointCounsel");
   const locale = useLocale();
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
-  const invite = trpc.attorneyReview.inviteOwnLawyer.useMutation({
+  const request = trpc.jointCounsel.request.useMutation({
     onSuccess: () => {
-      toast.success(t("sent"));
+      toast.success(t("toastMessages.requested"));
       setEmail("");
       setName("");
-      onInvited();
+      onRequested();
     },
-    onError: (error) => toast.error(t("failed", { error: error.message })),
+    onError: (error) => toast.error(t("toastMessages.requestFailed", { error: error.message })),
   });
 
   return (
@@ -39,7 +48,7 @@ export function OwnLawyerInvite({ dealRoomId, onInvited }: { dealRoomId: string;
       onSubmit={(e) => {
         e.preventDefault();
         if (!email.trim()) return;
-        invite.mutate({
+        request.mutate({
           dealRoomId,
           email: email.trim(),
           name: name.trim() || undefined,
@@ -47,7 +56,7 @@ export function OwnLawyerInvite({ dealRoomId, onInvited }: { dealRoomId: string;
         });
       }}
     >
-      <p className="text-sm text-muted-foreground">{t("intro")}</p>
+      <p className="text-sm text-muted-foreground">{t("selectCounselDescription")}</p>
       <label className="block text-sm">
         <span className="block mb-1">{t("emailLabel")}</span>
         <input
@@ -70,14 +79,21 @@ export function OwnLawyerInvite({ dealRoomId, onInvited }: { dealRoomId: string;
         />
       </label>
       <p className="text-xs text-muted-foreground">{t("note")}</p>
-      <div className="flex justify-end">
+      <div className="flex items-center justify-end gap-3">
+        <button
+          type="button"
+          onClick={onCancel}
+          className="px-4 py-2 text-muted-foreground hover:text-foreground"
+        >
+          {cancelLabel}
+        </button>
         <button
           type="submit"
-          disabled={!email.trim() || invite.isPending}
-          className="btn-brutal-outline inline-flex items-center gap-2 text-sm disabled:opacity-50"
+          disabled={!email.trim() || request.isPending}
+          className="btn-brutal inline-flex items-center gap-2 text-sm disabled:opacity-50"
         >
           <Mail className="w-4 h-4" />
-          {invite.isPending ? t("sending") : t("send")}
+          {request.isPending ? t("requesting") : t("assignCounsel")}
         </button>
       </div>
     </form>

@@ -2,6 +2,8 @@
 
 Los abogados pueden participar en tres fases distintas de una operación. Cada fase es independiente — las partes pueden utilizar cualquier combinación (las tres, solo una, o ninguna).
 
+**Solo tu propio abogado o abogada (decisión del propietario, 6 de octubre de 2026).** Dealroom no ofrece a las partes ninguna lista de abogados ni indica tarifas de revisión legal. Una empresa tecnológica que lista abogados e indica sus honorarios parece un servicio de derivación a abogados, que Dealroom no presta (EE. UU.) y que los colegios de abogados europeos restringen. Cada parte trae siempre a su propio abogado o abogada: en la Fase A lo invita por correo y en la Fase B el promotor lo propone por correo. El abogado o la abogada trabaja para su cliente y le factura directamente; Dealroom no cobra nada por ello ni hace recomendaciones. La invitación dentro de la aplicación funciona con independencia del indicador `startupCoverage` (que solo controla las herramientas para agentes y su descubrimiento).
+
 ---
 
 ## Resumen General
@@ -57,7 +59,7 @@ Antes de la creación de la operación. El abogado/a configura el marco de la op
 
 ### Qué Es
 
-Tras enviar sus selecciones, una parte puede contratar de forma independiente a un abogado/a para que revise su posición. Es una acción privada — la otra parte no recibe notificación y desconoce si la parte contraria tiene asesoramiento.
+Tras enviar sus selecciones, una parte puede invitar por correo a su propio abogado o abogada para que revise su posición. Es una acción privada — la otra parte no recibe notificación y desconoce si la parte contraria tiene asesoramiento.
 
 ### Cuándo Ocurre
 
@@ -70,23 +72,14 @@ Desde el momento en que una parte envía sus selecciones. Disponible durante los
 ### Cómo Funciona
 
 1. La parte accede a `/deals/[id]/review`
-2. Abre el diálogo de selección de abogado/a
-3. Ve una lista de supervisores disponibles **filtrada por jurisdicción** (solo abogados colegiados en la legislación aplicable de la operación)
-4. Selecciona un abogado/a — el número de colegiado/a aparece junto al nombre
-5. El abogado/a seleccionado recibe una notificación por correo electrónico
-6. El abogado/a revisa la posición de la parte desde `/supervise`
-7. El abogado/a aprueba la revisión
-8. La parte puede continuar
+2. Pulsa "Invita a tu propio abogado o abogada"
+3. Introduce el correo del abogado o abogada (y, si quiere, su nombre). El diálogo dice: "El abogado o la abogada que invites trabaja para ti y te factura directamente; Dealroom no cobra nada por ello ni hace recomendaciones."
+4. El abogado o la abogada pasa a ser supervisor de esa operación (se reutiliza la cuenta si ya existe; una cuenta nueva no tiene colegiación registrada) y recibe un correo con un enlace al portal de revisión
+5. Inicia sesión en `/supervise` con esa dirección (la primera vez configura la verificación en dos pasos) y revisa la posición de la parte
+6. Aprueba la revisión
+7. La parte puede continuar
 
-### Filtro por Jurisdicción
-
-Los abogados deben tener un registro de `SupervisorBarAdmission` que coincida con el `governingLaw` de la operación para aparecer en la lista de selección. Por ejemplo:
-
-| Legislación aplicable | El abogado/a debe estar colegiado/a en |
-|----------------------|---------------------------------------|
-| CALIFORNIA | California (State Bar) |
-| ENGLAND_WALES | Inglaterra y Gales (SRA) |
-| SPAIN | España (Colegio de Abogados) |
+No hay lista de abogados ni filtro por jurisdicción: la parte elige a su abogado o abogada. Controles: se rechaza la dirección de la otra parte; se rechaza a quien ya revisa para la otra parte; no se puede invitar a una cuenta desactivada; cinco invitaciones por operación cada 24 horas. Los agentes disponen de la misma invitación (`share_with_attorney`, `POST /api/v1/agent/deals/{id}/attorney`) mientras `startupCoverage` está activado.
 
 ### Datos Clave
 
@@ -100,8 +93,7 @@ Los abogados deben tener un registro de `SupervisorBarAdmission` que coincida co
 
 | Router | Procedimiento | Descripción |
 |--------|--------------|-------------|
-| `attorneyReview` | `listAvailableAttorneys` | Lista filtrada por jurisdicción con marcas de conflicto de interés |
-| `attorneyReview` | `requestReview` | Asignar supervisor + enviar correo |
+| `attorneyReview` | `inviteOwnLawyer` | Invitar por correo al abogado o abogada que elija la parte (abrir la revisión + enviar correo) |
 | `attorneyReview` | `cancelReview` | Cancelar revisión pendiente |
 | `attorneyReview` | `getReviewStatus` | Estado de revisión de ambas partes |
 
@@ -111,7 +103,7 @@ Los abogados deben tener un registro de `SupervisorBarAdmission` que coincida co
 
 ### Qué Es
 
-Un abogado/a neutral que ayuda a ambas partes a cerrar la operación una vez acordadas todas las cláusulas. A diferencia de la Fase A (que es privada por parte), la Fase B es un recurso compartido visible para ambas partes.
+Un abogado o una abogada que el promotor propone por correo y que ayuda a ambas partes a cerrar la operación una vez acordadas todas las cláusulas. A diferencia de la Fase A (que es privada por parte), la Fase B es un recurso compartido visible para ambas partes.
 
 ### Cuándo Ocurre
 
@@ -120,17 +112,18 @@ Solo después de que todas las cláusulas alcancen el estado `AGREED` (acordado)
 ### Cómo Funciona
 
 1. El **promotor** accede a `/deals/[id]/review`
-2. Pulsa "Solicitar Asesor de Cierre Conjunto"
-3. Ve una lista de supervisores disponibles:
-   - Filtrada por jurisdicción (igual que la Fase A)
-   - **Excluye** cualquier abogado/a ya involucrado en la Fase A de cualquier parte (prevención de conflictos)
-4. Selecciona un abogado/a
-5. Se envían dos correos electrónicos:
-   - Al **abogado/a**: notificación de asignación
+2. Pulsa "Solicitar Abogado/a de Cierre Conjunto"
+3. Introduce el correo del abogado o abogada (y, si quiere, su nombre). El diálogo dice: "El abogado o la abogada que propongas trabaja para ambas partes y os factura directamente; Dealroom no cobra nada por ello ni hace recomendaciones."
+   - Se rechaza la dirección de cualquiera de las partes
+   - Se rechaza a quien ya intervino en la Fase A de cualquiera de las partes (prevención de conflictos)
+4. Se envían dos correos electrónicos:
+   - Al **abogado o abogada**: invitación al portal de revisión
    - A la **otra parte**: notificación para confirmar o rechazar
-6. La **otra parte** revisa la solicitud y:
+5. La **otra parte** revisa la solicitud y:
    - **Confirma** — el asesor conjunto procede; se puede iniciar la firma
    - **Rechaza** — se cancela el asesor conjunto; se puede firmar sin asesoramiento
+
+Una sola solicitud por operación: tras un rechazo, las partes firman sin asesor conjunto.
 
 ### Máquina de Estados
 
@@ -184,14 +177,13 @@ Al confirmar el asesor conjunto, cada parte ve un texto de renuncia adaptado a s
 |---------|---------|
 | **Campos en la plataforma** | `DealRoom.jointCounselSupervisorId`, `jointCounselRequestedAt`, `jointCounselRequestedBy`, `jointCounselAcknowledgedAt`, `jointCounselDeclinedAt` |
 | **Bloqueo de firma** | Las solicitudes pendientes bloquean la firma para ambas partes |
-| **Prevención de conflictos** | Los abogados de la Fase A de cualquier parte quedan excluidos de la lista de candidatos de la Fase B |
+| **Prevención de conflictos** | No se puede proponer como asesor conjunto a quien intervino en la Fase A de cualquiera de las partes |
 
 ### Procedimientos tRPC
 
 | Router | Procedimiento | Descripción |
 |--------|--------------|-------------|
-| `jointCounsel` | `listAvailable` | Lista filtrada por jurisdicción, excluidos abogados de Fase A |
-| `jointCounsel` | `request` | El promotor solicita asesor conjunto |
+| `jointCounsel` | `request` | El promotor propone por correo al asesor conjunto |
 | `jointCounsel` | `acknowledge` | La otra parte confirma |
 | `jointCounsel` | `decline` | La otra parte rechaza |
 | `jointCounsel` | `getStatus` | Estado actual + texto de renuncia adaptativo |
@@ -220,8 +212,8 @@ El aviso muestra:
 1. **Advertencia de riesgo** — declaración breve sobre continuar sin asesoramiento legal
 2. **Cronología de fases** — resumen visual de las tres fases de intervención de abogado/a:
    - Fase 0 mostrada como "omitida" (al no tener abogado/a de pre-revisión)
-   - Fase A descrita como disponible tras el envío de selecciones
-   - Fase B descrita como disponible tras el acuerdo
+   - Fase A descrita como disponible tras el envío de selecciones (invita a tu propio abogado o abogada)
+   - Fase B descrita como disponible tras el acuerdo (el promotor propone por correo un abogado o una abogada común)
 
 ### Cierre del Aviso
 
@@ -239,7 +231,7 @@ El aviso se muestra en:
 
 ### Resumen
 
-Los supervisores (abogados) deben tener colegiaciones registradas en la plataforma para aparecer en las listas de selección de abogado/a. Las colegiaciones son específicas de cada jurisdicción y las gestionan los Administradores de Plataforma.
+Los Administradores de Plataforma pueden registrar las colegiaciones de los supervisores (abogados). Desde el 6 de octubre de 2026 ya no determinan ninguna lista que vean las partes, que eligen a sus propios abogados; se mantienen como registro de administración y para las asignaciones que hace el administrador.
 
 ### Gestión
 
@@ -266,10 +258,7 @@ model SupervisorBarAdmission {
 
 ### Impacto en la Selección de Abogado/a
 
-| Fase | Regla de filtrado |
-|------|------------------|
-| **Fase A** | Solo supervisores con colegiación en la `governingLaw` de la operación |
-| **Fase B** | Mismo filtro de jurisdicción + excluye abogados de la Fase A de cualquier parte |
+Ninguno para las partes: no hay lista de selección de abogados (decisión del propietario, 6 de octubre de 2026). Los supervisores existentes y sus colegiaciones se conservan intactos y siguen visibles en las vistas de administración.
 
 ---
 

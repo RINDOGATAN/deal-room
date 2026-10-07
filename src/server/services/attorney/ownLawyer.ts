@@ -6,9 +6,8 @@
  *
  * A party invites any lawyer it chooses, by e-mail, to review the draft in
  * the existing attorney review: the lawyer becomes a supervisor of this
- * one deal (a `Supervisor` row found or created by e-mail, with no bar
- * admission, so it never appears in the attorney list of any other deal),
- * the party's review is marked requested, and the lawyer receives the
+ * one deal (a `Supervisor` row found or created by e-mail), the party's
+ * review is marked requested, and the lawyer receives the
  * invitation through the same transactional e-mail path as the attorney
  * review request. The lawyer then signs in to the supervisor portal and
  * approves or not, exactly as in the existing flow; until then, signing
@@ -17,6 +16,11 @@
  * The lawyer works for the client and bills the client directly. Dealroom
  * takes no fee, makes no recommendation, keeps no directory and charges
  * nothing per invitation. The same rules apply to every jurisdiction.
+ *
+ * Since the owner's decision of 6 October 2026 this is the only way a
+ * party involves a lawyer: the platform list of lawyers (and its flat fee
+ * note) was removed, because a technology company that lists lawyers and
+ * states their fee looks like a lawyer referral service.
  */
 
 import type { ExtendedPrismaClient } from "@/lib/prisma";
@@ -45,6 +49,27 @@ const fail = (
   code: string,
   error: string,
 ): InviteOwnLawyerResult => ({ ok: false, status, code, error });
+
+/**
+ * The lawyer a party names by e-mail, as a supervisor of the deal: the
+ * existing account when there is one, else a new one with no bar
+ * admission. Null when that account has been deactivated. Shared by the
+ * party review (Stage A), joint closing counsel (Stage B) and the launch
+ * journey's step review, so that no party ever picks from a platform list.
+ */
+export async function findOrCreateInvitedLawyer(
+  db: ExtendedPrismaClient,
+  rawEmail: string,
+  name?: string | null,
+): Promise<{ supervisor: { id: string; email: string; name: string | null }; created: boolean } | null> {
+  const email = rawEmail.trim().toLowerCase();
+  const existing = await db.supervisor.findUnique({ where: { email } });
+  if (existing) return existing.isActive ? { supervisor: existing, created: false } : null;
+  const supervisor = await db.supervisor.create({
+    data: { email, name: name?.trim() || null, isActive: true },
+  });
+  return { supervisor, created: true };
+}
 
 export async function inviteOwnLawyer(
   db: ExtendedPrismaClient,
@@ -90,16 +115,11 @@ export async function inviteOwnLawyer(
     return fail(429, "TOO_MANY_INVITATIONS", "Too many invitations for this deal today; try again tomorrow");
   }
 
-  let supervisor = await db.supervisor.findUnique({ where: { email } });
-  if (supervisor && !supervisor.isActive) {
+  const found = await findOrCreateInvitedLawyer(db, email, input.lawyerName);
+  if (!found) {
     return fail(409, "LAWYER_UNAVAILABLE", "This e-mail address cannot be invited");
   }
-  const created = !supervisor;
-  if (!supervisor) {
-    supervisor = await db.supervisor.create({
-      data: { email, name: input.lawyerName?.trim() || null, isActive: true },
-    });
-  }
+  const { supervisor, created } = found;
 
   const other = deal.parties.find((p) => p.id !== party.id);
   if (other?.attorneySupervisorId === supervisor.id) {

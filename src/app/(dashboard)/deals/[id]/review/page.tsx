@@ -13,7 +13,6 @@ import {
   Check,
   X,
   AlertTriangle,
-  OctagonAlert,
   Scale,
   ThumbsUp,
   ThumbsDown,
@@ -25,7 +24,6 @@ import {
   ChevronUp,
   Shield,
   Download,
-  Loader2,
   UserCheck,
   XCircle,
   Info,
@@ -42,7 +40,7 @@ import { useContractMessages } from "@/lib/use-contract-messages";
 import { StatusNote } from "@/components/ui/status-note";
 import { PaidDownloads } from "@/components/billing/ContractPayment";
 import { OwnLawyerInvite } from "@/components/attorney/OwnLawyerInvite";
-import { features } from "@/config/features";
+import { JointCounselInvite } from "@/components/attorney/JointCounselInvite";
 
 function DownloadLinks({ dealId, className, showTia }: { dealId: string; className?: string; showTia?: boolean }) {
   // Pay per contract: the purchase action replaces the links until the
@@ -127,7 +125,6 @@ function ReviewContent({ dealId }: { dealId: string }) {
   const [expandedAnalysis, setExpandedAnalysis] = useState<string | null>(null);
   const [expandedHistory, setExpandedHistory] = useState<string | null>(null);
   const [showAttorneyModal, setShowAttorneyModal] = useState(false);
-  const [selectedAttorneyId, setSelectedAttorneyId] = useState<string>("");
   const [paramProposalForm, setParamProposalForm] = useState<{ parameterId: string; label: string } | null>(null);
   const [paramProposedValue, setParamProposedValue] = useState("");
   const [paramRationale, setParamRationale] = useState("");
@@ -173,10 +170,6 @@ function ReviewContent({ dealId }: { dealId: string }) {
 
   // Attorney review queries
   const { data: reviewStatus, refetch: refetchReviewStatus } = trpc.attorneyReview.getReviewStatus.useQuery({ dealRoomId: dealId });
-  const { data: availableAttorneys, isLoading: attorneysLoading, error: attorneysError } = trpc.attorneyReview.listAvailableAttorneys.useQuery(
-    { dealRoomId: dealId },
-    { enabled: showAttorneyModal }
-  );
 
   const generateCompromise = trpc.compromise.generate.useMutation({
     onSuccess: () => {
@@ -230,18 +223,6 @@ function ReviewContent({ dealId }: { dealId: string }) {
     },
   });
 
-  const requestReview = trpc.attorneyReview.requestReview.useMutation({
-    onSuccess: () => {
-      toast.success(t("toastMessages.attorneyReviewRequested"));
-      setShowAttorneyModal(false);
-      setSelectedAttorneyId("");
-      refetchReviewStatus();
-    },
-    onError: (error) => {
-      toast.error(t("toastMessages.requestFailed", { error: error.message }));
-    },
-  });
-
   const cancelReview = trpc.attorneyReview.cancelReview.useMutation({
     onSuccess: () => {
       toast.success(t("toastMessages.attorneyReviewCancelled"));
@@ -254,26 +235,8 @@ function ReviewContent({ dealId }: { dealId: string }) {
 
   // Joint counsel
   const [showJointCounselModal, setShowJointCounselModal] = useState(false);
-  const [selectedJointCounselId, setSelectedJointCounselId] = useState("");
 
   const { data: jointCounselStatus, refetch: refetchJointCounsel } = trpc.jointCounsel.getStatus.useQuery({ dealRoomId: dealId });
-  const { data: availableJointCounsel, isLoading: jointCounselLoading } = trpc.jointCounsel.listAvailable.useQuery(
-    { dealRoomId: dealId },
-    { enabled: showJointCounselModal }
-  );
-
-  const requestJointCounsel = trpc.jointCounsel.request.useMutation({
-    onSuccess: () => {
-      toast.success(tJointCounsel("toastMessages.requested"));
-      setShowJointCounselModal(false);
-      setSelectedJointCounselId("");
-      refetchJointCounsel();
-    },
-    onError: (error) => {
-      toast.error(tJointCounsel("toastMessages.requestFailed", { error: error.message }));
-    },
-  });
-
   const acknowledgeJointCounsel = trpc.jointCounsel.acknowledge.useMutation({
     onSuccess: () => {
       toast.success(tJointCounsel("toastMessages.acknowledged"));
@@ -1401,105 +1364,27 @@ function ReviewContent({ dealId }: { dealId: string }) {
         </div>
       )}
 
-      {/* Attorney Selection Modal */}
+      {/* Attorney review: invite your own lawyer (no platform list) */}
       {showAttorneyModal && (
         <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
-          <div className="card-brutal max-w-lg w-full max-h-[90vh] overflow-y-auto">
+          <div role="dialog" aria-modal="true" aria-labelledby="own-lawyer-title" className="card-brutal max-w-lg w-full max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-lg font-bold">{t("selectReviewingAttorney")}</h2>
+              <h2 id="own-lawyer-title" className="text-lg font-bold">{t("ownLawyer.title")}</h2>
               <button
-                onClick={() => {
-                  setShowAttorneyModal(false);
-                  setSelectedAttorneyId("");
-                }}
+                onClick={() => setShowAttorneyModal(false)}
+                aria-label={tCommon("cancel")}
                 className="p-2.5 text-muted-foreground hover:text-foreground rounded-full hover:bg-secondary transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
-            <p className="text-sm text-muted-foreground mb-4">
-              {t("chooseAttorneyDescription")}
-            </p>
-            <div className="space-y-2 mb-6 max-h-64 overflow-y-auto">
-              {attorneysLoading && (
-                <div className="flex items-center justify-center py-6">
-                  <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" />
-                </div>
-              )}
-              {attorneysError && (
-                <div className="flex items-center gap-2 text-sm text-foreground py-4 px-2">
-                  <OctagonAlert className="w-4 h-4 flex-shrink-0 text-danger-mark" />
-                  <span>{attorneysError.message}</span>
-                </div>
-              )}
-              {availableAttorneys?.map((attorney) => (
-                <button
-                  key={attorney.id}
-                  onClick={() => !attorney.unavailable && setSelectedAttorneyId(attorney.id)}
-                  disabled={attorney.unavailable}
-                  className={`
-                    w-full text-left p-4 border transition-colors
-                    ${attorney.unavailable
-                      ? "border-border opacity-50 cursor-not-allowed"
-                      : selectedAttorneyId === attorney.id
-                        ? "border-primary bg-primary/10"
-                        : "border-border hover:border-muted-foreground"
-                    }
-                  `}
-                >
-                  <p className="font-semibold">
-                    {attorney.name || attorney.email}
-                    {attorney.unavailable && (
-                      <span className="text-xs text-muted-foreground ml-2">{t("selectedByOtherParty")}</span>
-                    )}
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                    {attorney.email}
-                    {attorney.barNumber && <span className="ml-2 text-xs text-primary">Bar #{attorney.barNumber}</span>}
-                  </p>
-                </button>
-              ))}
-              {!attorneysLoading && !attorneysError && availableAttorneys?.length === 0 && (
-                <p className="text-sm text-muted-foreground text-center py-4">
-                  {t("noAttorneysAvailable")}
-                </p>
-              )}
-            </div>
-            <div className="flex items-center justify-end gap-3">
-              <button
-                onClick={() => {
-                  setShowAttorneyModal(false);
-                  setSelectedAttorneyId("");
-                }}
-                className="px-4 py-2 text-muted-foreground hover:text-foreground"
-              >
-                {tCommon("cancel")}
-              </button>
-              <button
-                onClick={() => {
-                  if (selectedAttorneyId) {
-                    requestReview.mutate({
-                      dealRoomId: dealId,
-                      supervisorId: selectedAttorneyId,
-                    });
-                  }
-                }}
-                disabled={!selectedAttorneyId || requestReview.isPending}
-                className="btn-brutal disabled:opacity-50"
-              >
-                {requestReview.isPending ? t("requesting") : t("assignAttorney")}
-              </button>
-            </div>
-            {features.startupCoverage && (
-              <OwnLawyerInvite
-                dealRoomId={dealId}
-                onInvited={() => {
-                  setShowAttorneyModal(false);
-                  setSelectedAttorneyId("");
-                  refetchReviewStatus();
-                }}
-              />
-            )}
+            <OwnLawyerInvite
+              dealRoomId={dealId}
+              onInvited={() => {
+                setShowAttorneyModal(false);
+                refetchReviewStatus();
+              }}
+            />
           </div>
         </div>
       )}
@@ -1590,18 +1475,13 @@ function ReviewContent({ dealId }: { dealId: string }) {
                     {!reviewStatus.suppressReviewForInitiator && ` ${t("youMayRequestReview")}`}
                   </p>
                   {!reviewStatus.suppressReviewForInitiator && (
-                    <div className="space-y-2">
-                      <button
-                        onClick={() => setShowAttorneyModal(true)}
-                        className="btn-brutal-outline inline-flex items-center gap-2 text-sm"
-                      >
-                        <Shield className="w-4 h-4" />
-                        {t("requestYourOwnReview")}
-                      </button>
-                      <p className="text-xs text-muted-foreground">
-                        {t("attorneyReviewPriceNote", { price: contractLang === "es" ? "200 €" : "$200" })}
-                      </p>
-                    </div>
+                    <button
+                      onClick={() => setShowAttorneyModal(true)}
+                      className="btn-brutal-outline inline-flex items-center gap-2 text-sm"
+                    >
+                      <Shield className="w-4 h-4" />
+                      {t("requestYourOwnReview")}
+                    </button>
                   )}
                 </div>
               </div>
@@ -1661,11 +1541,6 @@ function ReviewContent({ dealId }: { dealId: string }) {
                   </button>
                 )}
               </div>
-              {!reviewStatus.myReview && !reviewStatus.suppressReviewForInitiator && (
-                <p className="text-xs text-muted-foreground mt-4">
-                  {t("attorneyReviewPriceNote", { price: contractLang === "es" ? "200 €" : "$200" })}
-                </p>
-              )}
             </div>
           )}
 
@@ -1700,11 +1575,6 @@ function ReviewContent({ dealId }: { dealId: string }) {
                   </button>
                 )}
               </div>
-              {!reviewStatus?.suppressReviewForInitiator && (
-                <p className="text-xs text-muted-foreground mt-4">
-                  {t("attorneyReviewPriceNote", { price: contractLang === "es" ? "200 €" : "$200" })}
-                </p>
-              )}
             </div>
           )}
         </>
@@ -1713,81 +1583,29 @@ function ReviewContent({ dealId }: { dealId: string }) {
       {/* Stage B — Joint Closing Counsel */}
       {allAgreed && (
         <>
-          {/* Joint Counsel Selection Modal */}
+          {/* Joint counsel: the initiator names a lawyer by e-mail (no platform list) */}
           {showJointCounselModal && (
             <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
-              <div className="card-brutal max-w-lg w-full max-h-[90vh] overflow-y-auto">
+              <div role="dialog" aria-modal="true" aria-labelledby="joint-counsel-title" className="card-brutal max-w-lg w-full max-h-[90vh] overflow-y-auto">
                 <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-lg font-bold">{tJointCounsel("selectCounsel")}</h2>
+                  <h2 id="joint-counsel-title" className="text-lg font-bold">{tJointCounsel("selectCounsel")}</h2>
                   <button
-                    onClick={() => {
-                      setShowJointCounselModal(false);
-                      setSelectedJointCounselId("");
-                    }}
+                    onClick={() => setShowJointCounselModal(false)}
+                    aria-label={tCommon("cancel")}
                     className="p-2.5 text-muted-foreground hover:text-foreground rounded-full hover:bg-secondary transition-colors"
                   >
                     <X className="w-5 h-5" />
                   </button>
                 </div>
-                <p className="text-sm text-muted-foreground mb-4">
-                  {tJointCounsel("selectCounselDescription")}
-                </p>
-                <div className="space-y-2 mb-6 max-h-64 overflow-y-auto">
-                  {jointCounselLoading && (
-                    <div className="flex items-center justify-center py-6">
-                      <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" />
-                    </div>
-                  )}
-                  {availableJointCounsel?.map((counsel) => (
-                    <button
-                      key={counsel.id}
-                      onClick={() => setSelectedJointCounselId(counsel.id)}
-                      className={`
-                        w-full text-left p-4 border transition-colors
-                        ${selectedJointCounselId === counsel.id
-                          ? "border-primary bg-primary/10"
-                          : "border-border hover:border-muted-foreground"
-                        }
-                      `}
-                    >
-                      <p className="font-semibold">{counsel.name || counsel.email}</p>
-                      <p className="text-sm text-muted-foreground">
-                        {counsel.email}
-                        {counsel.barNumber && <span className="ml-2 text-xs text-primary">Bar #{counsel.barNumber}</span>}
-                      </p>
-                    </button>
-                  ))}
-                  {!jointCounselLoading && availableJointCounsel?.length === 0 && (
-                    <p className="text-sm text-muted-foreground text-center py-4">
-                      {tJointCounsel("noCounselAvailable")}
-                    </p>
-                  )}
-                </div>
-                <div className="flex items-center justify-end gap-3">
-                  <button
-                    onClick={() => {
-                      setShowJointCounselModal(false);
-                      setSelectedJointCounselId("");
-                    }}
-                    className="px-4 py-2 text-muted-foreground hover:text-foreground"
-                  >
-                    {tCommon("cancel")}
-                  </button>
-                  <button
-                    onClick={() => {
-                      if (selectedJointCounselId) {
-                        requestJointCounsel.mutate({
-                          dealRoomId: dealId,
-                          supervisorId: selectedJointCounselId,
-                        });
-                      }
-                    }}
-                    disabled={!selectedJointCounselId || requestJointCounsel.isPending}
-                    className="btn-brutal disabled:opacity-50"
-                  >
-                    {requestJointCounsel.isPending ? tJointCounsel("requesting") : tJointCounsel("assignCounsel")}
-                  </button>
-                </div>
+                <JointCounselInvite
+                  dealRoomId={dealId}
+                  cancelLabel={tCommon("cancel")}
+                  onCancel={() => setShowJointCounselModal(false)}
+                  onRequested={() => {
+                    setShowJointCounselModal(false);
+                    refetchJointCounsel();
+                  }}
+                />
               </div>
             </div>
           )}
