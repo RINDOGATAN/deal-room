@@ -2563,7 +2563,7 @@
               "Must request return within 30 days"
             ],
             "es": [
-              "Retención de datos post-terminación más larga",
+              "Plazo de conservación de datos post-terminación más largo",
               "Debe solicitar devolución en 30 días"
             ]
           },
@@ -2636,7 +2636,7 @@
               "Must self-serve export before termination"
             ],
             "es": [
-              "Retención de datos extendida post-terminación",
+              "Conservación de datos extendida post-terminación",
               "Sin obligación formal de devolución",
               "Debe auto-exportar antes de la terminación"
             ]
@@ -2724,7 +2724,7 @@
             "es": [
               "Puede conservar datos agregados valiosos",
               "Apoya la mejora del producto y análisis",
-              "Enfoque flexible de retención de datos"
+              "Enfoque flexible de conservación de datos"
             ]
           },
           "consPartyB": {

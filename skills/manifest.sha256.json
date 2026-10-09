@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-10-01T21:13:22.202Z",
+  "generatedAt": "2026-10-09T01:46:30.192Z",
   "skills": {
     "delaware-certificate-of-incorporation": {
       "digest": "6740010b8fb6e685d05e31e160b9647c0e0bd64e23e4b1ff77e3721d702cca0f",
@@ -12,10 +12,10 @@
       }
     },
     "dpa": {
-      "digest": "58fde009f993c55c3a4816124bedad016b8a92fed5e8cf60113cebd01e0af18b",
+      "digest": "bc53e653e1994333ae634b39af8274c94698648f654cc08d5a67aa44f54500f6",
       "files": {
         "boilerplate.json": "50476a87ccce009e992c39f74bd09d5f9c8b1bd4333cbcab6b09cb20387e2706",
-        "clauses.json": "7757fa7130518a74f439815ba34be7a04f096fffd1098c6566b10fe3fa106cac",
+        "clauses.json": "606dd42fbb75c32505fd771cb263bd64a003ab8ea7fa5550c2ae12e43bcc729f",
         "metadata.json": "2d3a5ca542882826c7273070a2e424dda2c23430d9a3e3d9798cbdccaf7a9e4c",
         "parameters.json": "d7bf6b2fad48984869fe3e996536e13a3f884980697daebf80b595604201f64c"
       }
@@ -45,10 +45,10 @@
       }
     },
     "privacy-notice": {
-      "digest": "854ba0f481c0485fddb40a8cbda4c359214a0a9571a04a95fcdfbc1da0627e09",
+      "digest": "f187fc1b91ea838b49ec502a2c096eb07cef6dc777508578bb19c1fbfcfbc614",
       "files": {
         "boilerplate.json": "ab2eb52b61d130bf54bd1c6a7bfb9ceda8cd01ae811e398919867768d673b844",
-        "clauses.json": "57680b9bbfb9ccfc45a4880398fda5bc386e561e93b04c3b91693ab5b8b6fffe",
+        "clauses.json": "e972860f5b028f37b3784308655e3161895baa39ff166f78d3fc39765be5c36e",
         "metadata.json": "baf1dc7d037db6e01438da78c64058ba749f12173fd4b2d9ee120b01786dc49f",
         "parameters.json": "f6a0fbad2c0143ec1af6055c6cc6d28f7e7cd1049a3b8742c093b8cb2ada1118"
       }
@@ -66,5 +66,5 @@
       }
     }
   },
-  "digest": "fd71909760ebe1e6f7a0fb5f17a156c2d51e28cb249251a2743a8c9da1a4ad51"
+  "digest": "30242031cdfabae58205cac20785b8911ee447a594afe8ec644a13b00537ab1e"
 }
