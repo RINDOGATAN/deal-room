@@ -85,6 +85,10 @@ export function PublicFooter({ locale }: { locale: PageLocale }) {
             {copy.privacy}
           </a>
           {dot}
+          <Link href="/subprocessors" onClick={keepLanguage} className={link}>
+            {copy.subprocessors}
+          </Link>
+          {dot}
           <Link href="/licenses" className={link}>
             {copy.licences}
           </Link>

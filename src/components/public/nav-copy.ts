@@ -25,6 +25,7 @@ export const NAV_COPY = {
     tagline: "Contract negotiation platform",
     terms: "Terms of Service",
     privacy: "Privacy Policy",
+    subprocessors: "Sub-processors",
     licences: "Licences",
   },
   es: {
@@ -41,6 +42,7 @@ export const NAV_COPY = {
     tagline: "Plataforma de negociación de contratos",
     terms: "Términos de uso",
     privacy: "Política de privacidad",
+    subprocessors: "Subencargados",
     licences: "Licencias",
   },
 } satisfies Record<PageLocale, Record<string, string>>;
