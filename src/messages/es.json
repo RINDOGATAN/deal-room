@@ -1559,7 +1559,7 @@
     "qCloudPlanA": "DPO Central, AI Sentinel y VendorWatch tienen un precio aparte, en su propio Plan nube UE, por organización.",
     "qCloudPlanLink": "Ver el Plan nube UE",
     "qKitQ": "¿Y el kit autoalojado?",
-    "qKitA": "El kit ejecuta Dealroom en tu propia infraestructura, sin cobro por contrato. Las skills premium para el kit cuestan 60 al año cada una (en tu moneda) y se compran en la tienda de todo.law.",
+    "qKitA": "El kit ejecuta Dealroom en tu propia infraestructura, sin cobro por contrato. Las skills premium para el kit cuestan {price} al año cada una y se compran en la tienda de todo.law.",
     "qKitLink": "Ir a la tienda"
   },
   "docsHome": {
