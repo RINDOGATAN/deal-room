@@ -1554,6 +1554,9 @@
     "qPaidA": "Yes. Once paid, the contract can be downloaded again from its deal page (PDF, DOCX or TXT), and its signature can go ahead. When every party has signed, the signed copy is offered on the signing page. If a payment is refunded in full, the contract becomes unpaid again: what you have already downloaded stays with you, but the next download or signature needs a new payment. A partial refund leaves the contract paid. A full refund of a credit pack takes its credits back from the balance; contracts already paid with credits stay paid.",
     "qSubscriptionQ": "Is there a subscription?",
     "qSubscriptionA": "No. There is no subscription and no monthly fee.",
+    "qCloudPlanQ": "And the privacy and AI governance tools?",
+    "qCloudPlanA": "DPO Central, AI Sentinel and VendorWatch are priced separately, in their own Cloud Plan, per organization.",
+    "qCloudPlanLink": "See the Cloud Plan",
     "qKitQ": "What about the self-hosted kit?",
     "qKitA": "The kit runs Dealroom on your own infrastructure, with no per-contract charge. Premium skills for the kit cost 60 a year each (in your currency) and are bought on the todo.law storefront.",
     "qKitLink": "Go to the storefront"
