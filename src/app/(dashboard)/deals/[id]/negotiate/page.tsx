@@ -790,7 +790,7 @@ function NegotiateContent({ dealId }: { dealId: string }) {
                       )}
                       <span className="text-foreground">
                         {hasWarning ? jurisdictionRules.warning : jurisdictionRules.note}
-                        {hasWarning && hasNote && <> — {jurisdictionRules.note}</>}
+                        {hasWarning && hasNote && <> ({jurisdictionRules.note})</>}
                       </span>
                     </div>
                   )}

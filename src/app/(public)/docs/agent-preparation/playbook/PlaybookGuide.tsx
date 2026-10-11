@@ -52,7 +52,7 @@ function localize(
 }
 
 const fullPlaybookExample = `{
-  "name": "API Consumer — Moderate Risk",
+  "name": "API Consumer, Moderate Risk",
   "contractType": "A2A_API_ACCESS",
   "governingLaw": "CALIFORNIA",
   "contractLanguage": "en",
@@ -82,7 +82,7 @@ const fullPlaybookExample = `{
       "flexibility": 1,
       "isRedLine": true,
       "acceptableOptions": ["DELETE_ON_TERMINATION", "ANONYMIZE_ON_TERMINATION"],
-      "notes": "GDPR compliance — cannot accept retention"
+      "notes": "GDPR compliance: cannot accept retention"
     },
     {
       "clauseId": "liability-cap",
@@ -100,7 +100,7 @@ const fullPlaybookExample = `{
       "flexibility": 1,
       "isRedLine": true,
       "acceptableOptions": ["IP_CONSUMER_OWNS", "IP_SHARED"],
-      "notes": "Outputs feed our models — must own or share"
+      "notes": "Outputs feed our models: must own or share"
     },
     {
       "clauseId": "indemnification",

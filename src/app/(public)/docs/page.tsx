@@ -138,9 +138,9 @@ export default function DocsPage() {
           </p>
           <ol className="list-decimal list-inside space-y-2 text-sm">
             <li>
-              <span className="text-foreground font-medium">{t("step1Label")}</span>{" "}
+              <span className="text-foreground font-medium">{t("step1Label")}:</span>{" "}
               <span className="text-muted-foreground">
-                — {t("step1Desc")}
+                {t("step1Desc")}
               </span>
             </li>
             <li>
@@ -148,7 +148,7 @@ export default function DocsPage() {
                 {t("step2Label")}
               </span>{" "}
               <span className="text-muted-foreground">
-                — {t("step2Desc")}
+                {t("step2Desc")}
               </span>
             </li>
             <li>
@@ -156,7 +156,7 @@ export default function DocsPage() {
                 {t("step3Label")}
               </span>{" "}
               <span className="text-muted-foreground">
-                — {t("step3Desc")}
+                {t("step3Desc")}
               </span>
             </li>
             <li>
@@ -164,7 +164,7 @@ export default function DocsPage() {
                 {t("step4Label")}
               </span>{" "}
               <span className="text-muted-foreground">
-                — {t("step4Desc")}
+                {t("step4Desc")}
               </span>
             </li>
             <li>
@@ -172,7 +172,7 @@ export default function DocsPage() {
                 {t("step5Label")}
               </span>{" "}
               <span className="text-muted-foreground">
-                — {t("step5Desc")}
+                {t("step5Desc")}
               </span>
             </li>
             <li>
@@ -180,7 +180,7 @@ export default function DocsPage() {
                 {t("step6Label")}
               </span>{" "}
               <span className="text-muted-foreground">
-                — {t("step6Desc")}
+                {t("step6Desc")}
               </span>
             </li>
           </ol>

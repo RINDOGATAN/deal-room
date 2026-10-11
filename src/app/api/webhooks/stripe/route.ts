@@ -263,7 +263,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
         await getResend().emails.send({
           from: mailFrom(),
           to: customer.email,
-          subject: "DEALROOM — Your Skill Packages Are Ready",
+          subject: "Dealroom: your skill packages are ready",
           html: `
             <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 500px; margin: 0 auto; background: ${brand.colors.background}; border-radius: 12px; overflow: hidden;">
               <div style="padding: 24px 24px 16px; border-bottom: 1px solid ${brand.colors.border};">
@@ -526,7 +526,7 @@ async function handlePaymentFailed(invoice: Stripe.Invoice) {
       await getResend().emails.send({
         from: mailFrom(),
         to: customer.email,
-        subject: "DEALROOM — Payment Failed",
+        subject: "Dealroom: payment failed",
         html: `
           <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 500px; margin: 0 auto; background: ${brand.colors.background}; border-radius: 12px; overflow: hidden;">
             <div style="padding: 24px 24px 16px; border-bottom: 1px solid ${brand.colors.border};">

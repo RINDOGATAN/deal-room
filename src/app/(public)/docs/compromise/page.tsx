@@ -67,18 +67,18 @@ export default function CompromisePage() {
                 <span className="text-primary font-bold">60%</span>
                 <span className="text-muted-foreground">
                   <strong className="text-foreground">
-                    {t("stakeInflexibilityLabel")}
+                    {t("stakeInflexibilityLabel")}:
                   </strong>{" "}
-                  — {t("stakeInflexibilityDesc")}
+                  {t("stakeInflexibilityDesc")}
                 </span>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-primary font-bold">40%</span>
                 <span className="text-muted-foreground">
                   <strong className="text-foreground">
-                    {t("stakeBiasLabel")}
+                    {t("stakeBiasLabel")}:
                   </strong>{" "}
-                  — {t("stakeBiasDesc")}
+                  {t("stakeBiasDesc")}
                 </span>
               </li>
             </ul>

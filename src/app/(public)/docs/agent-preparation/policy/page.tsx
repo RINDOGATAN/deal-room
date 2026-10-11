@@ -29,27 +29,27 @@ const policyTemplate = `# Agent Negotiation Policy
 
 ## Clause Priorities
 
-### Data Handling — CRITICAL
+### Data Handling (CRITICAL)
 - Preferred: Delete all data on termination
 - Reasoning: We handle PHI; retention creates compliance risk
 - Flexibility: LOW (1-2)
 
-### Liability — HIGH
+### Liability (HIGH)
 - Preferred: Cap at 12 months' fees
 - Reasoning: Board-mandated maximum exposure
 - Flexibility: LOW (2)
 
-### SLA / Uptime — MODERATE
+### SLA / Uptime (MODERATE)
 - Preferred: 99.9% uptime
 - Acceptable: 99% with service credits
 - Flexibility: MODERATE (3)
 
-### IP Ownership — HIGH
+### IP Ownership (HIGH)
 - Preferred: Consumer owns all outputs
 - Reasoning: Outputs feed our proprietary models
 - Flexibility: LOW (1-2)
 
-### Dispute Resolution — MODERATE
+### Dispute Resolution (MODERATE)
 - Preferred: Gavel automated arbitration
 - Acceptable: Any arbitration (no courts)
 - Flexibility: HIGH (4)
@@ -71,7 +71,7 @@ const policyTemplate = `# Agent Negotiation Policy
 - Require human approval for contracts > $50,000/year
 - Alert legal team if any red line is triggered`;
 
-const conservativeExample = `# Agent Policy — MedTech Solutions Inc.
+const conservativeExample = `# Agent Policy: MedTech Solutions Inc.
 # Risk Profile: CONSERVATIVE
 
 ## Identity
@@ -94,7 +94,7 @@ under BAAs with 40+ hospital systems.
 - ALWAYS require human approval
 - No autonomous contract signing`;
 
-const aggressiveExample = `# Agent Policy — Velocit AI (Startup)
+const aggressiveExample = `# Agent Policy: Velocit AI (Startup)
 # Risk Profile: AGGRESSIVE
 
 ## Identity

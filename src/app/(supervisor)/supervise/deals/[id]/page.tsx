@@ -254,7 +254,7 @@ export default function SupervisorDealDetailPage() {
               <Scale className="w-6 h-6 text-primary" />
             </div>
             <div>
-              <h2 className="text-lg font-semibold mb-1">Joint Closing Counsel — Active</h2>
+              <h2 className="text-lg font-semibold mb-1">Joint closing counsel: active</h2>
               <p className="text-sm text-muted-foreground">
                 Both parties have acknowledged your role as joint closing counsel.
                 Review both parties&apos; positions below to help finalize the agreement.
