@@ -23,8 +23,8 @@ For every variable, what it unlocks and who rotates it, see
 | Source | Builds from `main` on every push | Semver tag `vX.Y.Z` publishes `:vX.Y.Z` and `:latest` images |
 | Database | Neon PostgreSQL (pooled URL for the app, direct URL for migrations and seeds) | Postgres container in the suite compose file |
 | Sign-in | Magic link (Resend) and Google OAuth | Local email-only credentials (`NEXT_PUBLIC_LOCAL_AUTH_ENABLED=true`, baked into the image) |
-| Posture | **Pay per contract** (since 2026-09-30): hosted when `VERCEL_ENV=production` (or `AUTH_COOKIE_DOMAIN=.todo.law`). The earlier free-pilot caps (per account 1 organisation, 90 days of editing then read-only, 10 deals, 3 journeys) apply only while hosted billing is off (`features.hostedPilot`); export at `/api/account/export` | No caps |
-| Payments | Per contract, once the four price variables and `CONTRACT_BILLING_START` are set (see `docs/billing.md`); without them the hosted build stays the free pilot | Stripe off: neither set, every skill is free (`features.allSkillsFree`) |
+| Posture | **Pay per contract** (since 2026-09-30): hosted when `VERCEL_ENV=production` (or `AUTH_COOKIE_DOMAIN=.todo.law`). The earlier free-pilot caps were retired on 11 October 2026; export at `/api/account/export` | No caps |
+| Payments | Per contract, once the four price variables and `CONTRACT_BILLING_START` are set (see `docs/billing.md`); without them the hosted build sells nothing | Stripe off: neither set, every skill is free (`features.allSkillsFree`) |
 | Premium skills | All available to every account, covered by the per-contract price | 60 a year each in the kit (in your currency): `.skill` file bought on the storefront, installed on `/skills` |
 | Default deal mode | Two-party | Solo |
 | Migrations | `prisma migrate deploy` in the Vercel build | Migrator container (`deploy/sovereign/migrate.sh`), which also refreshes the built-in skill catalog on every boot |
@@ -91,7 +91,7 @@ NEXT_PUBLIC_LOCAL_AUTH_ENABLED
 TESTER_MODE_ENABLED, NEXT_PUBLIC_TESTER_MODE
 E2E_CREDENTIALS_SECRET
 ALLOW_TEST_AUTH_PROVIDERS
-FREE_TRIAL_ALL_SKILLS, NEXT_PUBLIC_FREE_TRIAL_ALL_SKILLS   # unless a promo is intended
+FREE_TRIAL_ALL_SKILLS, NEXT_PUBLIC_FREE_TRIAL_ALL_SKILLS   # no longer read (promo banner retired 11 Oct 2026)
 ```
 
 Even if one of the first three is set by mistake, `src/lib/auth-provider-policy.ts`

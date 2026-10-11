@@ -22,7 +22,6 @@ import {
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { features } from "@/config/features";
-import { PilotCapNotice } from "@/components/pilot/PilotNotice";
 import { StatusNote } from "@/components/ui/status-note";
 
 // One shape per status, so the badge reads the same to someone who cannot tell
@@ -110,7 +109,6 @@ export default function DealsPage() {
         </Link>
       </div>
 
-      <PilotCapNotice kind="deals" />
 
       {deals?.length === 0 ? (
         <div className="space-y-4">

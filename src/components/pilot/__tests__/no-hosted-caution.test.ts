@@ -34,7 +34,6 @@ describe("hosted caution", () => {
   });
 
   it("has no component left to render it", () => {
-    expect(read("src/components/pilot/PilotNotice.tsx")).not.toContain("HostedCaution");
     expect(read("src/app/(dashboard)/layout.tsx")).not.toContain("PilotBanner");
   });
 });

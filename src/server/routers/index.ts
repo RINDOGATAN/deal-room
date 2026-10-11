@@ -21,7 +21,6 @@ import { feedbackRouter } from "./feedback";
 import { analyticsRouter } from "./analytics";
 import { journeyRouter } from "./journey";
 import { aiRouter } from "./ai";
-import { pilotRouter } from "./pilot";
 import { diagnosticsRouter } from "./diagnostics";
 import { apiKeysRouter } from "./apiKeys";
 
@@ -48,7 +47,6 @@ export const appRouter = createTRPCRouter({
   analytics: analyticsRouter,
   journey: journeyRouter,
   ai: aiRouter,
-  pilot: pilotRouter,
   // Settings, API keys: the signed-in person's own agent API keys.
   apiKeys: apiKeysRouter,
   // Test-only failing procedure; off unless FAILURE_PROBE_ENABLED=true.
