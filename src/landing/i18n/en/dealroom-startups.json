@@ -64,5 +64,6 @@
   "en.ways.w2.subject": "Dealroom: managed virtual server",
   "en.ways.w3.title": "Your own hardware",
   "en.ways.w3.desc": "Dealroom on a machine in your organization. Your data never leaves your premises unless you connect an outside AI provider.",
-  "en.ways.w3.subject": "Dealroom on our own hardware"
+  "en.ways.w3.subject": "Dealroom on our own hardware",
+  "logos.label": "Organizations we have worked with"
 }

@@ -25,6 +25,7 @@ import type { LucideIcon } from "lucide-react";
 import { PublicHeader } from "@/components/public/PublicHeader";
 import { PublicFooter } from "@/components/public/PublicFooter";
 import HostingSection from "./components/HostingSection";
+import CustomerLogos from "./components/CustomerLogos";
 import en from "./i18n/en/dealroom-startups.json";
 import es from "./i18n/es/dealroom-startups.json";
 import { cleanUpLocaleCookie, readLocaleCookie, writeLocaleCookie } from "@/lib/locale-cookie";
@@ -381,6 +382,9 @@ export default function LandingPage({
         <div className="border-t border-border">
           <HostingSection key={locale} t={t} locale={locale} startHref={startHref} />
         </div>
+
+        {/* Organizations we have worked with (draft, 11 Oct 2026): near the bottom, never above the fold */}
+        <CustomerLogos label={t("logos.label")} />
 
         {/* The one call to action, again: no heading, the button and the price */}
         <section className="max-w-3xl mx-auto pb-16 text-center">

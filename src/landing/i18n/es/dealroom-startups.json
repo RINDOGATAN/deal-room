@@ -64,5 +64,6 @@
   "es.ways.w2.subject": "Dealroom: servidor virtual gestionado",
   "es.ways.w3.title": "Tu propio hardware",
   "es.ways.w3.desc": "Dealroom en un equipo de tu organización. Los datos no salen de tus instalaciones, salvo que conectes con un proveedor de IA externo.",
-  "es.ways.w3.subject": "Dealroom en mi propio hardware"
+  "es.ways.w3.subject": "Dealroom en mi propio hardware",
+  "logos.label": "Organizaciones con las que hemos trabajado"
 }
