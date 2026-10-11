@@ -1555,6 +1555,9 @@
     "qPaidA": "Sí. Una vez pagado, el contrato puede descargarse de nuevo desde la página de la operación (PDF, DOCX o TXT), y su firma puede seguir adelante. Cuando todas las partes han firmado, la copia firmada se ofrece en la página de firma. Si un pago se reembolsa por completo, el contrato vuelve a quedar sin pagar: lo que ya hayas descargado sigue siendo tuyo, pero la siguiente descarga o firma requiere un nuevo pago. Un reembolso parcial deja el contrato pagado. El reembolso completo de un pack de créditos retira esos créditos del saldo; los contratos ya pagados con créditos siguen pagados.",
     "qSubscriptionQ": "¿Hay una suscripción?",
     "qSubscriptionA": "No. No hay suscripción ni cuota mensual.",
+    "qCloudPlanQ": "¿Y las herramientas de privacidad y gobernanza de la IA?",
+    "qCloudPlanA": "DPO Central, AI Sentinel y VendorWatch tienen un precio aparte, en su propio Plan nube UE, por organización.",
+    "qCloudPlanLink": "Ver el Plan nube UE",
     "qKitQ": "¿Y el kit autoalojado?",
     "qKitA": "El kit ejecuta Dealroom en tu propia infraestructura, sin cobro por contrato. Las skills premium para el kit cuestan 60 al año cada una (en tu moneda) y se compran en la tienda de todo.law.",
     "qKitLink": "Ir a la tienda"

@@ -111,3 +111,17 @@ describe("pricing page", () => {
     expect(offers[1].priceSpecification.map((s) => s.price)).toEqual(["232.50", "232.50"]);
   });
 });
+
+describe("pricing page: the Cloud Plan line (owner, 11 Oct 2026)", () => {
+  it("points to the Cloud Plan of the privacy and AI governance tools, in the page's language, with no amount", () => {
+    const enHtml = render(pricingFacts({ locale: "en", env: ENV }), true, "en", "USD");
+    const esHtml = render(pricingFacts({ locale: "es", env: ENV }), true, "es", "EUR");
+    expect(enHtml).toContain('href="https://dpocentral.todo.law/#pricing"');
+    expect(enHtml).toContain("See the Cloud Plan");
+    expect(esHtml).toContain('href="https://dpocentral.todo.law/?lang=es#precios"');
+    expect(esHtml).toContain("Ver el Plan nube UE");
+    // The line names no price, so the page keeps its one currency.
+    expect(en.pricing.qCloudPlanA).not.toMatch(/\d|\$|€/);
+    expect(es.pricing.qCloudPlanA).not.toMatch(/\d|\$|€/);
+  });
+});
