@@ -51,9 +51,11 @@ describe.each(LOCALES)("Dealroom safeguards guide (%s)", (locale) => {
     const names = (["cloud", "managed", "deploy"] as const).map((w) => DICT[locale][`${locale}.ways.w${WAY_CARD[locale][w]}.title`]);
     expect(names).toEqual(
       locale === "en"
-        ? ["In the TODO.LAW cloud", "Managed virtual server", "Your own hardware"]
-        : ["En la nube de TODO.LAW", "Servidor virtual gestionado", "Tu propio hardware"],
+        ? ["In the TODO.LAW cloud", "Managed instance", "Your own hardware"]
+        : ["En la nube de TODO.LAW", "Instancia gestionada", "Tu propio hardware"],
     );
+    // Managed and your own hardware are priced on quotation, with no figure (owner, 11 Oct 2026).
+    expect(DICT[locale][`${locale}.ways.quote`]).toBe(locale === "en" ? "On quotation" : "Bajo presupuesto");
   });
 
   it("keeps the copy rules", () => {

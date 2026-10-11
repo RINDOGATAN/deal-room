@@ -8,7 +8,7 @@
  * to choose?") that opens in place into six questions and recommends one way. The logic,
  * the level table and the copy live in src/landing/config/safeguards.ts; the way names
  * are this landing's own box titles (`<locale>.ways.wN.title`). Three ways in both
- * languages: the TODO.LAW cloud, the managed virtual server and your own hardware.
+ * languages: the TODO.LAW cloud, the managed instance and your own hardware.
  *
  * The state (open, answers) belongs to the hosting section, which marks the recommended
  * box from it; this component only draws it. The result links to that box on the page.

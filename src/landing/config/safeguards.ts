@@ -10,7 +10,7 @@
  * lightest answer.
  *
  *   Level 0  In the TODO.LAW cloud
- *   Level 1  Managed virtual server (Asturias, Spain)
+ *   Level 1  Managed instance (Asturias, Spain)
  *   Level 2  Your own hardware
  *
  * Two changes for this product:

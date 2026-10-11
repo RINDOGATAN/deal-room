@@ -2,12 +2,12 @@
 
 > Dealroom is a two-party asynchronous contract negotiation platform built by TODO.LAW. It replaces emailing Word files back and forth with a shared workspace that proposes a compromise for each clause using a fixed, published weighted formula (no AI model decides the outcome).
 
-## Hosted and the kit
+## Hosted and your own instance
 
 - **dealroom.todo.law charges per contract.** Drafting and negotiating are free. Each contract is paid once, at the price shown on the pricing page, when it is first downloaded (PDF, DOCX or TXT) or when its signature starts. Every contract skill, premium ones included, is covered by that price. There is no monthly plan.
 - **Agents pay per contract too.** An agent pays for each contract with one prepaid credit: a contract made in one call spends it when it is made, and a negotiated contract spends it when its document is first fetched. Credits are sold in packs of ten and belong to the customer account, so any of its API keys can spend them. The current amounts are in the agent card (/.well-known/agent.json, under "pricing").
 - **An agent's API key is created by its user, without contacting us.** Sign in at https://dealroom.todo.law, open Settings, API keys (https://dealroom.todo.law/settings/api-keys) and choose Create key. The full key (it starts with drk_) is shown once, so copy it then. The same page lists your keys with their last use, revokes them, shows the credit balance and sells credit packs. An account can hold up to 5 active keys.
-- **The kit (self-hosted Dealroom) has no caps.** Premium skills are sold only for the kit: $60 a year each, bought on the todo.law storefront and activated offline with a licence file.
+- **Your own instance (self-hosted Dealroom) has no caps.** Premium skills are sold only for your own instance: $60 a year each, bought on the todo.law storefront and activated offline with a licence file.
 
 ## Make a contract in one call (developers and agents)
 
@@ -24,7 +24,7 @@
 
 - [Homepage](https://dealroom.todo.law): Platform overview, feature descriptions, how it works
 - [Developers](https://dealroom.todo.law/developers): Quick start for developers and startups: make a contract in one call through the API or MCP, with setup for MCP clients (Spanish: https://dealroom.todo.law/es/developers; Markdown: https://dealroom.todo.law/developers.md)
-- [Pricing](https://dealroom.todo.law/pricing): Pay per contract for people and agents, what is free, and the kit
+- [Pricing](https://dealroom.todo.law/pricing): Pay per contract for people and agents, what is free, and your own instance
 - [Contract guides](https://dealroom.todo.law/contracts): Plain-language guide to every contract type Dealroom drafts and negotiates (Spanish: https://dealroom.todo.law/es/contracts)
 - [Documentation Hub](https://dealroom.todo.law/docs): Full platform documentation
 - [How It Works](https://dealroom.todo.law/docs/how-it-works): Step-by-step negotiation workflow
@@ -35,7 +35,7 @@
 - [API keys](https://dealroom.todo.law/settings/api-keys): Where a signed-in user creates and revokes the agent's API keys and buys credits
 - [Agent Preparation](https://dealroom.todo.law/docs/agent-preparation): Guide for preparing agents for contract negotiation and dispute resolution
 - [Local Deployment](https://dealroom.todo.law/docs/local-deployment): Self-hosted deployment guide
-- [Premium skills for the kit](https://todo.law/marketplace): $60 a year each, for your own instance
+- [Premium skills for your own instance](https://todo.law/marketplace): $60 a year each, for your own instance
 
 ## Contract Guides
 
@@ -88,7 +88,7 @@ One page per contract type, in English and Castilian Spanish: what the contract 
 - **Contract Types**: 37 contract types, each with a guide listed above, including NDA, MSA, SaaS Agreement, DPA, Privacy Notice, Joint Venture, Employment, Consulting, and more
 - **Export & Sign**: Generate final documents for signing after negotiation completes
 - **Agent card**: Machine-readable description of the service at /.well-known/agent.json; agents connect through the MCP server or the REST API, not the A2A protocol
-- **MCP server**: https://dealroom.todo.law/api/v1/agent/mcp, listed in the MCP registry as io.github.sergiomaldo/dealroom
+- **MCP server**: https://dealroom.todo.law/api/v1/agent/mcp, listed in the official MCP registry
 
 ## TODO.LAW Ecosystem
 
@@ -98,7 +98,7 @@ Dealroom is part of the TODO.LAW platform for AI-native legal services:
 - **DPO Central** (dpocentral.todo.law): Privacy compliance management
 - **AI Sentinel** (aisentinel.todo.law): AI governance and EU AI Act compliance
 - **Seneca** (seneca.todo.law): Privacy litigation research
-- **Vendor.Watch** (vendor.watch): SaaS vendor compliance database
+- **VendorWatch** (vendor.watch): SaaS vendor compliance database
 - **Clausemaster** (clausemaster.todo.law): AI-powered contract analysis
 - **Gavel** (gavel.todo.law): Digital arbitration protocol
 
