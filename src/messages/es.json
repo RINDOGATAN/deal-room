@@ -2151,7 +2151,7 @@
         "cloud_us": "Nube"
       },
       "laneNoEngine": "Sin motor",
-      "notConfiguredWarning": "Esta postura necesita un motor de IA en el servidor: configura LLM_GATEWAY_URL + LLM_MODEL_ALIAS (cualquier endpoint compatible con OpenAI, p. ej. un Ollama local) o una OPENAI_API_KEY / ANTHROPIC_API_KEY.",
+      "notConfiguredWarning": "Esta postura necesita un motor de IA en el servidor: configura LLM_GATEWAY_URL + LLM_MODEL_ALIAS (cualquier endpoint compatible con OpenAI, p. ej. un Ollama local) o una ANTHROPIC_API_KEY.",
       "acknowledgment": "Tengo autorización para activar la asistencia de IA en esta instalación. Entiendo que los datos seleccionados de los acuerdos se enviarán al motor de IA configurado, que el resultado de la IA es una ayuda que debe revisar un profesional cualificado antes de confiar en ella y que, mientras la postura esté desactivada, no se realiza ninguna llamada a IA.",
       "save": "Guardar postura",
       "saved": "Postura de IA actualizada",

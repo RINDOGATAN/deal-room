@@ -2150,7 +2150,7 @@
         "cloud_us": "Cloud"
       },
       "laneNoEngine": "No engine",
-      "notConfiguredWarning": "This posture needs an AI engine on the server: set LLM_GATEWAY_URL + LLM_MODEL_ALIAS (any OpenAI-compatible endpoint, e.g. a local Ollama), or an OPENAI_API_KEY / ANTHROPIC_API_KEY.",
+      "notConfiguredWarning": "This posture needs an AI engine on the server: set LLM_GATEWAY_URL + LLM_MODEL_ALIAS (any OpenAI-compatible endpoint, e.g. a local Ollama), or an ANTHROPIC_API_KEY.",
       "acknowledgment": "I am authorized to enable AI assistance for this installation. I understand that the selected deal data will be sent to the configured AI engine, that AI output is an aid that must be reviewed by a qualified professional before relying on it, and that while the posture is Off no AI calls are made.",
       "save": "Save posture",
       "saved": "AI posture updated",

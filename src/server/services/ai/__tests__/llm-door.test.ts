@@ -70,19 +70,22 @@ describe("getProvider / isAIConfigured", () => {
     expect(getProvider()).toBeNull();
   });
 
-  it("falls back to OpenAI, then Anthropic", () => {
+  it("ignores OPENAI_API_KEY (the direct OpenAI path was removed)", () => {
+    vi.stubEnv("OPENAI_API_KEY", "sk-openai");
+    expect(getProvider()).toBeNull();
+    expect(isAIConfigured()).toBe(false);
+    expect(getAIProviderName()).toBeNull();
+  });
+
+  it("falls back to Anthropic when no gateway is set", () => {
     vi.stubEnv("OPENAI_API_KEY", "sk-openai");
     vi.stubEnv("ANTHROPIC_API_KEY", "sk-ant");
-    expect(getProvider()).toBe("openai");
-    expect(getAIProviderName()).toBe("OpenAI");
-
-    vi.stubEnv("OPENAI_API_KEY", "");
     expect(getProvider()).toBe("anthropic");
     expect(getAIProviderName()).toBe("Anthropic");
   });
 
   it("trims env values — whitespace-only means unset", () => {
-    vi.stubEnv("OPENAI_API_KEY", "   ");
+    vi.stubEnv("ANTHROPIC_API_KEY", "   ");
     expect(getProvider()).toBeNull();
 
     vi.stubEnv("LLM_GATEWAY_URL", "  http://ollama:11434  ");

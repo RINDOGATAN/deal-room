@@ -81,7 +81,7 @@ DEALROOM_CLOUD_API_URL, DEALROOM_CLOUD_API_KEY         # cloud intelligence
 FIRMAS_BASE_URL, FIRMAS_ISSUER, NEXT_PUBLIC_FIRMAS_BASE_URL  # verified signing
 DOWNLOAD_TOKEN_SECRET                                  # signed skill downloads
 LLM_GATEWAY_URL, LLM_GATEWAY_KEY, LLM_MODEL_ALIAS (+ _LOCAL/_EU/_US),
-OPENAI_API_KEY, ANTHROPIC_API_KEY                      # AI assist engines
+ANTHROPIC_API_KEY                                      # AI assist engines
 ```
 
 ### Must stay unset on hosted production
