@@ -4,7 +4,6 @@
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { httpBatchLink } from "@trpc/client";
-import { SessionProvider } from "next-auth/react";
 import { useState } from "react";
 import superjson from "superjson";
 import { trpc } from "@/lib/trpc";
@@ -15,6 +14,11 @@ function getBaseUrl() {
   return `http://localhost:${process.env.PORT ?? 3000}`;
 }
 
+/**
+ * tRPC and React Query, for the app's sections only (AppSection): the
+ * public pages (home, contract guides, Developers) make no tRPC call, so
+ * they no longer download this client (page speed, owner 10 Oct 2026).
+ */
 export function Providers({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(
     () =>
@@ -46,12 +50,10 @@ export function Providers({ children }: { children: React.ReactNode }) {
   );
 
   return (
-    <SessionProvider>
-      <trpc.Provider client={trpcClient} queryClient={queryClient}>
-        <QueryClientProvider client={queryClient}>
-          {children}
-        </QueryClientProvider>
-      </trpc.Provider>
-    </SessionProvider>
+    <trpc.Provider client={trpcClient} queryClient={queryClient}>
+      <QueryClientProvider client={queryClient}>
+        {children}
+      </QueryClientProvider>
+    </trpc.Provider>
   );
 }

@@ -3,8 +3,8 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 import { useSyncExternalStore } from "react";
-import { useTranslations } from "next-intl";
-import { getCurrency, subscribeCurrency, type Currency } from "@/lib/currency";
+import { useLocale, useTranslations } from "next-intl";
+import { displayCurrency, getCurrency, subscribeCurrency, type Currency } from "@/lib/currency";
 
 /**
  * The visitor's currency: the region guess the middleware wrote. There is
@@ -17,8 +17,18 @@ export function useCurrency(): Currency {
 
 const serverCurrency = (): Currency => "USD";
 
+/**
+ * The currency a page in the current language shows: euros on every Spanish
+ * page (owner's rule: nobody reading Spanish sees a dollar price), the
+ * visitor's region currency otherwise.
+ */
+export function useDisplayCurrency(): Currency {
+  const visitor = useCurrency();
+  return displayCurrency(useLocale(), visitor);
+}
+
 /** Kit premium price, one of the pair `pilot.kitPriceUSD` / `pilot.kitPriceEUR`. */
 export function useKitPrice(): string {
   const t = useTranslations("pilot");
-  return useCurrency() === "EUR" ? t("kitPriceEUR") : t("kitPriceUSD");
+  return useDisplayCurrency() === "EUR" ? t("kitPriceEUR") : t("kitPriceUSD");
 }

@@ -5,6 +5,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useCurrency } from "@/hooks/useCurrency";
+import { displayCurrency } from "@/lib/currency";
 import { CONTRACT_COPY } from "./copy";
 import type { PageLocale } from "@/lib/contract-pages-paths";
 
@@ -13,11 +14,12 @@ type PriceInfo = { billing: false; contract: null } | { billing: true; contract:
 /**
  * The one price line of a contract page. The page itself is static; the
  * price comes from the price configuration (`/api/pricing/contract`) and
- * shows in the visitor's one currency, as on /pricing.
+ * shows in the visitor's one currency, as on /pricing. Spanish pages show
+ * euros only (owner's rule: nobody reading Spanish sees a dollar price).
  */
 export function PriceLine({ locale }: { locale: PageLocale }) {
   const copy = CONTRACT_COPY[locale];
-  const currency = useCurrency();
+  const currency = displayCurrency(locale, useCurrency());
   const [info, setInfo] = useState<PriceInfo | null>(null);
 
   useEffect(() => {

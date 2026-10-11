@@ -129,6 +129,15 @@ export function resolveVisitorCurrencyFromHeaders(
   });
 }
 
+/**
+ * The currency a page shows: euros on every Spanish page (owner's rule:
+ * nobody reading Spanish sees a dollar price), the visitor's one currency
+ * otherwise.
+ */
+export function displayCurrency(locale: string, visitor: Currency): Currency {
+  return locale === "es" ? "EUR" : visitor;
+}
+
 /** "USD" → "usd", the form the billing code and Stripe use. */
 export function toBillingCurrency(currency: Currency): "usd" | "eur" {
   return currency === "EUR" ? "eur" : "usd";

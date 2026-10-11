@@ -7,7 +7,7 @@ import { getServerSession } from "next-auth";
 import { getLocale, getTranslations } from "next-intl/server";
 import { authOptions } from "@/lib/auth";
 import prisma from "@/lib/prisma";
-import { resolveVisitorCurrencyFromHeaders } from "@/lib/currency";
+import { displayCurrency, resolveVisitorCurrencyFromHeaders } from "@/lib/currency";
 import { preferredCurrency } from "@/lib/contract-billing";
 import { features } from "@/config/features";
 import { brand } from "@/config/brand";
@@ -48,11 +48,16 @@ export default async function PricingPage() {
   const locale = await getLocale();
   const billingOn = features.stripeEnabled;
   const facts = await loadPricingFacts(locale);
-  const currency = resolveVisitorCurrencyFromHeaders(
-    await headers(),
-    billingOn ? await storedCurrency() : undefined,
+  // Spanish shows euros only (owner's rule), in the page and in its JSON-LD;
+  // English keeps the visitor's one currency.
+  const es = locale === "es";
+  const currency = displayCurrency(
+    locale,
+    es ? "EUR" : resolveVisitorCurrencyFromHeaders(await headers(), billingOn ? await storedCurrency() : undefined),
   );
-  const jsonLd = billingOn ? pricingJsonLd(facts, `https://dealroom.${brand.domain}/pricing`) : null;
+  const jsonLd = billingOn
+    ? pricingJsonLd(facts, `https://dealroom.${brand.domain}/pricing`, es ? ["eur"] : undefined)
+    : null;
 
   return (
     <div className="max-w-5xl mx-auto px-6 py-8">

@@ -1202,7 +1202,7 @@
     "searchSkills": "Search skills..."
   },
   "docs": {
-    "title": "User Guide",
+    "title": "Docs",
     "gettingStarted": "Getting Started",
     "dashboardOverview": "Dashboard Overview",
     "navigation": "Deal Lifecycle",
@@ -1559,7 +1559,7 @@
     "qKitLink": "Go to the storefront"
   },
   "docsHome": {
-    "heroTitle": "Dealroom <highlight>User Guide</highlight>",
+    "heroTitle": "Dealroom <highlight>Docs</highlight>",
     "heroSubtitle": "Learn how asynchronous, algorithm-driven contract negotiation works — from deal creation through to signing.",
     "propAsyncTitle": "Asynchronous Negotiation",
     "propAsyncDesc": "Each party submits preferences independently. No scheduling, no back-and-forth calls.",
@@ -2064,7 +2064,7 @@
   },
   "footer": {
     "service": "DEALROOM is a <link>TODO.LAW</link> service.",
-    "userGuide": "User Guide",
+    "userGuide": "Docs",
     "marketplace": "Marketplace",
     "billing": "Billing",
     "termsOfUse": "Terms of Use",

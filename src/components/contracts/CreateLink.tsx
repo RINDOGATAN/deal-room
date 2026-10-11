@@ -3,13 +3,14 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 import Link from "next/link";
-import { useSession } from "next-auth/react";
 import { ArrowRight } from "lucide-react";
 import { signInHref } from "@/lib/sign-in-next";
+import { useSignedIn } from "@/components/public/use-signed-in";
 
 /**
  * "Create it in Dealroom": the new-deal wizard with the contract type as
  * its search (`/deals/new?q=NDA`); a visitor signs in first and lands there.
+ * The public pages ask the session endpoint (useSignedIn), not next-auth.
  */
 export function CreateLink({
   contractType,
@@ -20,10 +21,10 @@ export function CreateLink({
   label: string;
   className?: string;
 }) {
-  const { status } = useSession();
+  const signedIn = useSignedIn();
   const wizard = `/deals/new?q=${encodeURIComponent(contractType)}`;
   return (
-    <Link href={status === "authenticated" ? wizard : signInHref(wizard)} className={className}>
+    <Link href={signedIn ? wizard : signInHref(wizard)} className={className}>
       {label}
       <ArrowRight className="w-4 h-4" aria-hidden />
     </Link>
