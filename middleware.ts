@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { localeCleanupSetCookies } from "@/lib/locale-cookie";
 import { REGION_COOKIE, regionCurrency } from "@/lib/currency";
-import { isPilotPostureEnv } from "@/lib/pilot";
 import { readAdminSession, readSupervisorSession } from "@/lib/portal-session";
 import { SECOND_FACTOR_COOKIE, verifySecondFactor } from "@/lib/portal-2fa";
 
@@ -41,40 +40,8 @@ async function route(request: NextRequest) {
   return response;
 }
 
-/**
- * Hosted pilot: nothing is sold, so the billing page must not be reachable.
- * The `notFound()` in `(dashboard)/billing/layout.tsx` still answers 200
- * under the client dashboard layout, so the pilot redirects here instead,
- * to Settings (the pilot's account page). Read per request: the kit never
- * matches and keeps the layout's own gate.
- *
- * Only while billing is OFF (the same rule as `features.hostedPilot`). With
- * billing on, the billing page is live and Settings does not exist, so the
- * old hosted-only rule sent the footer's "Billing" link to a 404 (owner's
- * test purchase, 2 October 2026).
- */
-function hostedPilot() {
-  return isPilotPostureEnv({
-    NEXT_PUBLIC_HOSTED_PILOT: process.env.NEXT_PUBLIC_HOSTED_PILOT,
-    VERCEL_ENV: process.env.VERCEL_ENV,
-    AUTH_COOKIE_DOMAIN: process.env.AUTH_COOKIE_DOMAIN,
-    STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
-    NEXT_PUBLIC_STRIPE_ENABLED: process.env.NEXT_PUBLIC_STRIPE_ENABLED,
-    NEXT_PUBLIC_CONTRACT_BILLING: process.env.NEXT_PUBLIC_CONTRACT_BILLING,
-    STRIPE_PRICE_CONTRACT_USD: process.env.STRIPE_PRICE_CONTRACT_USD,
-    STRIPE_PRICE_CONTRACT_EUR: process.env.STRIPE_PRICE_CONTRACT_EUR,
-    STRIPE_PRICE_CREDITS_10_USD: process.env.STRIPE_PRICE_CREDITS_10_USD,
-    STRIPE_PRICE_CREDITS_10_EUR: process.env.STRIPE_PRICE_CREDITS_10_EUR,
-    CONTRACT_BILLING_START: process.env.CONTRACT_BILLING_START,
-  });
-}
-
 async function gate(request: NextRequest) {
   const path = request.nextUrl.pathname;
-
-  if ((path === "/billing" || path.startsWith("/billing/")) && hostedPilot()) {
-    return NextResponse.redirect(new URL("/settings", request.url));
-  }
 
   // Supervisor portal protection
   if (path.startsWith("/supervise")) {

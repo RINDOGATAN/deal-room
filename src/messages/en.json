@@ -87,28 +87,9 @@
     "poweredBy": "Contract Negotiation Platform",
     "secureContract": "Secure contract negotiation platform"
   },
-  "promo": {
-    "allSkillsFreeTitle": "Every premium skill is free right now",
-    "allSkillsFreeDescription": "We've unlocked the entire catalog so you can try any contract type. No subscription needed during this period."
-  },
   "pilot": {
-    "settingsTitle": "Settings",
-    "settingsNav": "Settings",
-    "sectionTitle": "Free hosted use",
-    "sectionIntro": "Hosted Dealroom is free. Every contract skill is available, with the limits below. Premium skills are sold only for your own instance, at {price} a year each.",
-    "rule": "Free hosted use includes 90 days of editing from your first sign-in, then read-only with export.",
     "kitPriceUSD": "$60",
-    "kitPriceEUR": "€60",
-    "counter": "Free hosted use: {days, plural, one {# day of editing left} other {# days of editing left}}, {used} of {limit} deals",
-    "counterEnded": "Free hosted use: editing period ended, {used} of {limit} deals",
-    "journeys": "Startup journeys: {used} of {limit}",
-    "organisations": "Organisations: {used} of {limit} (one per account)",
-    "editUntil": "You can edit until {date}. After that, this account becomes read-only and you can still export everything you created.",
-    "readOnly": "The {days} days of editing included in free hosted use have ended, so this account is read-only. To keep working, <run>run your own instance</run> or <export>export what you created</export>.",
-    "capDeals": "You have reached the free hosted limit of {limit} deals. To keep working, <run>run your own instance</run> or <export>export what you created</export>.",
-    "capJourneys": "You have reached the free hosted limit of {limit} startup journeys. To keep working, <run>run your own instance</run> or <export>export what you created</export>.",
-    "exportButton": "Export everything I created (JSON)",
-    "runButton": "Run your own instance"
+    "kitPriceEUR": "€60"
   },
   "tester": {
     "modeLabel": "Tester mode",
@@ -1185,7 +1166,6 @@
   "marketplace": {
     "title": "Skill Marketplace",
     "subtitle": "Browse and enable premium contract skills",
-    "subtitlePilot": "Every skill is available on hosted Dealroom, at no cost. For your own instance, premium skills are {price} a year each in the kit.",
     "subtitlePerContract": "Every skill is included. Drafting and negotiating are free; each contract is paid once, when you download or sign it.",
     "catalogueOnly": "Listed in the catalogue; not yet installed here.",
     "allJurisdictions": "All Jurisdictions",
@@ -2184,22 +2164,6 @@
       "ai_digest_locked": "The risk digest can no longer be regenerated. A signature has already been recorded.",
       "ai_digest_no_request": "Signing has not been initiated yet. The digest attaches to the signing request."
     }
-  },
-  "premium": {
-    "enableTitle": "Enable {name}",
-    "enableDescription": "Add this skill to your account for {price}. You can cancel anytime from the billing portal.",
-    "enableMultipleTitle": "{count, plural, one {Enable # skill} other {Enable # skills}}",
-    "enableMultipleDescription": "Add the following skills to your account:",
-    "perMonth": "{price}/month",
-    "perMonthShort": "{price}/mo",
-    "monthlyTotal": "Monthly total",
-    "subscribe": "Subscribe: {price}",
-    "redirecting": "Redirecting...",
-    "genericError": "Something went wrong. Please try again.",
-    "networkError": "Network error. Please check your connection and try again.",
-    "availableJurisdictions": "Available jurisdictions",
-    "contractLanguages": "Contract languages",
-    "jurisdictionNotice": "This skill only generates contracts for the jurisdictions listed above. Check that yours is covered before subscribing."
   },
   "apiKeys": {
     "title": "API keys",

@@ -15,9 +15,6 @@ import {
 } from "@/lib/portal-session";
 import prisma from "@/lib/prisma";
 import { presentInternalError } from "@/server/internal-error";
-import { features } from "@/config/features";
-import { pilotMutationExempt } from "@/lib/pilot";
-import { PilotCapError, assertPilotCanEdit } from "@/server/services/pilot";
 import {
   RateLimitedError,
   checkPublicRateLimit,
@@ -82,9 +79,6 @@ const t = initTRPC.context<typeof createTRPCContext>().create({
         reference: internal?.reference ?? null,
         zodError:
           error.cause instanceof ZodError ? error.cause.flatten() : null,
-        // Hosted pilot cap reached: the interface shows its own translation.
-        pilotCap:
-          error.cause instanceof PilotCapError ? error.cause.reason : null,
       },
     };
   },
@@ -123,21 +117,7 @@ const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
   });
 });
 
-// Hosted pilot: after the 90-day edit window the account is read-only.
-// Queries always pass; mutations are refused except the few in
-// `pilotAllowsMutation`. The export is a plain GET route and never passes
-// through here. No-op on the kit.
-const enforcePilotEditWindow = t.middleware(async ({ ctx, next, type, path }) => {
-  const userId = ctx.session?.user?.id;
-  if (features.hostedPilot && type === "mutation" && userId && !pilotMutationExempt(path)) {
-    await assertPilotCanEdit(ctx.prisma, userId);
-  }
-  return next();
-});
-
-export const protectedProcedure = t.procedure
-  .use(enforceUserIsAuthed)
-  .use(enforcePilotEditWindow);
+export const protectedProcedure = t.procedure.use(enforceUserIsAuthed);
 
 // Admin procedure - requires admin session
 const enforceAdminIsAuthed = t.middleware(({ ctx, next }) => {
@@ -186,6 +166,4 @@ const enforceUserIsLawyer = t.middleware(async ({ ctx, next }) => {
   });
 });
 
-export const lawyerProcedure = t.procedure
-  .use(enforceUserIsLawyer)
-  .use(enforcePilotEditWindow);
+export const lawyerProcedure = t.procedure.use(enforceUserIsLawyer);

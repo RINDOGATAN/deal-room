@@ -2,9 +2,10 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * Hosted pilot posture in the feature flags: on the hosted build every
- * skill is free and nothing is sold, even if the Stripe variables are still
- * set; the kit keeps its own posture (no pilot, installer on).
+ * Hosted posture in the feature flags: on the hosted build nothing is sold
+ * until the contract prices are set, even if the Stripe variables are; the
+ * kit keeps its own posture (installer on). The free, capped pilot
+ * mechanics were retired on 11 October 2026, so no flag for them remains.
  */
 import { describe, it, expect, afterEach, vi } from "vitest";
 
@@ -57,19 +58,18 @@ afterEach(() => {
   vi.resetModules();
 });
 
-describe("hosted pilot posture", () => {
+describe("hosted posture before billing", () => {
   it("makes every skill free and turns selling off, even with Stripe variables set", async () => {
     const features = await featuresUnder({
       VERCEL_ENV: "production",
       STRIPE_SECRET_KEY: "sk_test_dummy",
       NEXT_PUBLIC_STRIPE_ENABLED: "true",
     });
-    expect(features.hostedPilot).toBe(true);
     expect(features.allSkillsFree).toBe(true);
     expect(features.stripeEnabled).toBe(false);
     expect(features.billing).toBe(false);
     expect(features.selfServiceUpgrade).toBe(false);
-    // No .skill uploads on the pilot: every skill is already there.
+    // No .skill uploads on hosted: every skill is already there.
     expect(features.skillInstaller).toBe(false);
   });
 
@@ -78,33 +78,30 @@ describe("hosted pilot posture", () => {
       NEXT_PUBLIC_HOSTED_PILOT: "true",
       NEXT_PUBLIC_STRIPE_ENABLED: "true",
     });
-    expect(features.hostedPilot).toBe(true);
     expect(features.stripeEnabled).toBe(false);
   });
 
-  it("leaves the kit unchanged: no pilot, all skills free, installer on", async () => {
+  it("leaves the kit unchanged: all skills free, installer on", async () => {
     const features = await featuresUnder({
       NEXT_PUBLIC_LOCAL_AUTH_ENABLED: "true",
       AUTH_COOKIE_DOMAIN: "",
       NEXT_PUBLIC_HOSTED_PILOT: "false",
     });
-    expect(features.hostedPilot).toBe(false);
     expect(features.allSkillsFree).toBe(true);
     expect(features.skillInstaller).toBe(true);
   });
 
-  it("leaves a non-pilot deployment with Stripe able to sell", async () => {
+  it("leaves a non-hosted deployment with Stripe able to sell", async () => {
     const features = await featuresUnder({
       STRIPE_SECRET_KEY: "sk_test_dummy",
       NEXT_PUBLIC_STRIPE_ENABLED: "true",
     });
-    expect(features.hostedPilot).toBe(false);
     expect(features.stripeEnabled).toBe(true);
   });
 });
 
 describe("hosted pay per contract (2026-09-29, round 2: five variables)", () => {
-  it("switches billing on and the pilot mechanics off once the five variables are set", async () => {
+  it("switches billing on once the five variables are set", async () => {
     const features = await featuresUnder({
       VERCEL_ENV: "production",
       STRIPE_SECRET_KEY: "sk_test_dummy",
@@ -113,7 +110,6 @@ describe("hosted pay per contract (2026-09-29, round 2: five variables)", () => 
     });
     expect(features.stripeEnabled).toBe(true);
     expect(features.billing).toBe(true);
-    expect(features.hostedPilot).toBe(false);
     expect(features.hosted).toBe(true);
     // Every template serves; the contract is what is paid.
     expect(features.allSkillsFree).toBe(true);
@@ -129,7 +125,6 @@ describe("hosted pay per contract (2026-09-29, round 2: five variables)", () => 
       ...four,
     });
     expect(features.stripeEnabled).toBe(false);
-    expect(features.hostedPilot).toBe(true);
     expect(features.hosted).toBe(true);
   });
 
@@ -172,7 +167,6 @@ describe("hosted pay per contract (2026-09-29, round 2: five variables)", () => 
       NEXT_PUBLIC_CONTRACT_BILLING: "true",
     });
     expect(features.stripeEnabled).toBe(true);
-    expect(features.hostedPilot).toBe(false);
     expect(features.hosted).toBe(true);
   });
 

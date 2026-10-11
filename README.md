@@ -26,10 +26,10 @@ Two-party async contract negotiation platform with weighted compromise algorithm
   storefront, installed and
   activated offline with a licence file.
 
-The free-pilot limits (edit window, record ceilings) apply only to the hosted
-build (Vercel production, `VERCEL_ENV=production`, or `AUTH_COOKIE_DOMAIN=.todo.law`)
-while hosted billing is off; once billing is on they no longer apply. The
-rules live in `src/lib/pilot.ts` and `src/config/features.ts`.
+The hosted build is Vercel production (`VERCEL_ENV=production`, or
+`AUTH_COOKIE_DOMAIN=.todo.law`); the rules live in `src/lib/hosted.ts` and
+`src/config/features.ts`. The earlier free-pilot limits (edit window, record
+ceilings) were retired on 11 October 2026.
 
 > **Note:** the earlier dual-brand system (todo.law + northend.law) was retired
 > in May 2026; the codebase now ships a single brand (`src/config/brand.ts`

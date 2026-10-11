@@ -24,7 +24,6 @@ import {
   ArrowRightLeft,
   Rocket,
   KeyRound,
-  Settings,
 } from "lucide-react";
 import { brand } from "@/config/brand";
 import { features } from "@/config/features";
@@ -49,7 +48,6 @@ export default function DashboardLayout({
   const tCommon = useTranslations("common");
   const tFooter = useTranslations("footer");
   const tOnboarding = useTranslations("onboarding");
-  const tPilot = useTranslations("pilot");
   const locale = useLocale();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [showOnboardingOverride, setShowOnboardingOverride] = useState(false);
@@ -106,12 +104,8 @@ export default function DashboardLayout({
     ...(features.skillInstaller
       ? [{ href: "/skills", label: t("skills"), icon: KeyRound }]
       : []),
-    // Hosted pilot counters (days left, ceilings). No such page on the kit.
-    ...(features.hostedPilot
-      ? [{ href: "/settings", label: tPilot("settingsNav"), icon: Settings }]
-      : []),
     // Settings, API keys: the person's own agent API keys (hosted with
-    // billing on; the pilot entry above and this one never show together).
+    // billing on).
     ...(features.selfServiceApiKeys
       ? [{ href: API_KEYS_SETTINGS_PATH, label: t("apiKeys"), icon: KeyRound }]
       : []),
@@ -326,7 +320,7 @@ export default function DashboardLayout({
                 {tFooter("userGuide")}
               </Link>
             )}
-            {features.marketplace && !features.promoBanner && (
+            {features.marketplace && (
               <Link
                 href="/marketplace"
                 className="flex items-center justify-center gap-1.5 hover:text-foreground transition-colors"
@@ -382,7 +376,7 @@ export default function DashboardLayout({
                 <span className="text-border">&middot;</span>
               </>
             )}
-            {features.marketplace && !features.promoBanner && (
+            {features.marketplace && (
               <>
                 <Link
                   href="/marketplace"

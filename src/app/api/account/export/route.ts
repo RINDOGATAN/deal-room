@@ -8,8 +8,7 @@
  * Returns, as a JSON download, everything the signed-in account created or
  * joined: its deals (terms, parameters, its own selections, agreed options,
  * and links to the contract documents) and its startup journeys. Always
- * allowed, including after the hosted pilot's edit window has closed: it is
- * one of the two ways out of the pilot. Works the same on the kit.
+ * allowed. Works the same on the kit.
  */
 
 import { NextResponse } from "next/server";

@@ -31,7 +31,6 @@ import { validateEquity } from "@/lib/journey/equity";
 import { autoAgreeSingleOptionClauses } from "../services/deal/autoAgreeSingleOption";
 import { createLogger } from "@/lib/logger";
 import { LIVE_ROWS } from "@/lib/clause-retirement";
-import { assertPilotRecordRoom } from "../services/pilot";
 import { findOrCreateInvitedLawyer } from "../services/attorney/ownLawyer";
 import { sendOwnLawyerInviteEmail } from "@/lib/email";
 
@@ -93,9 +92,6 @@ export const journeyRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       const userId = ctx.session.user.id;
-
-      // Hosted pilot: journey ceiling per account (no-op on the kit).
-      await assertPilotRecordRoom(ctx.prisma, userId, "journeys");
 
       // Require exactly one primary founder (default to first if none flagged)
       const hasPrimary = input.founders.some((f) => f.isPrimary);
@@ -311,10 +307,6 @@ export const journeyRouter = createTRPCRouter({
           message: "No deals to generate for this step with the given answers",
         });
       }
-
-      // Hosted pilot: the whole step must fit under the deal ceiling, so a
-      // step never stops half-generated (no-op on the kit).
-      await assertPilotRecordRoom(ctx.prisma, userId, "deals", plan.deals.length);
 
       const createdDeals: { id: string; contractType: string; name: string }[] = [];
 

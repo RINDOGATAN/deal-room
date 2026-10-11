@@ -7,7 +7,7 @@
  * 404s once hosted billing is on).
  *
  * For every internal link in the app's headers and footers, and in every
- * posture (hosted pilot, hosted with billing, self-hosted kit):
+ * posture (hosted with billing off, hosted with billing, self-hosted kit):
  * - a page or route exists for the path;
  * - if the link shows in that posture, the middleware lets it through or
  *   redirects it, and the page it finally lands on is not switched off
@@ -18,7 +18,7 @@ import { join } from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { NextRequest } from "next/server";
 import { middleware } from "../../../middleware";
-import { billingOnEnv, isPilotPostureEnv } from "@/lib/pilot";
+import { billingOnEnv } from "@/lib/hosted";
 import { shouldShowRequestsLink } from "@/lib/app-links";
 
 vi.mock("@/lib/prisma", () => ({ prisma: {}, default: {} }));
@@ -40,7 +40,7 @@ const ENV_KEYS = [
 type Env = Partial<Record<(typeof ENV_KEYS)[number], string>>;
 
 const POSTURES: Record<string, Env> = {
-  "hosted pilot (billing off)": {
+  "hosted, billing off": {
     VERCEL_ENV: "production",
     NEXT_PUBLIC_HOSTED_PILOT: "true",
     STRIPE_SECRET_KEY: "sk_test_dummy",
@@ -206,7 +206,6 @@ describe("posture rule shared with the middleware", () => {
   it.each(Object.entries(POSTURES))("agrees with the feature flags in the %s posture", async (_name, env) => {
     const features = await featuresUnder(env);
     expect(billingOnEnv(env)).toBe(features.stripeEnabled);
-    expect(isPilotPostureEnv(env)).toBe(features.hostedPilot);
   });
 });
 

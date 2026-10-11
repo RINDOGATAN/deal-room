@@ -50,9 +50,6 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { getContactMailto } from "@/config/brand";
-import { PromoBanner } from "@/components/PromoBanner";
-import { PilotCapNotice } from "@/components/pilot/PilotNotice";
-import { EnableFeatureModal } from "@/components/premium/enable-feature-modal";
 import { marketplaceSkillUrl } from "@/lib/marketplace";
 import { searchContracts, type SearchableContract } from "@/lib/contract-search";
 import { defaultDealMode } from "@/lib/deal-mode";
@@ -261,12 +258,6 @@ export default function NewDealPage() {
   const [dealName, setDealName] = useState("");
   const [company, setCompany] = useState("");
   const [entitlementError, setEntitlementError] = useState<string | null>(null);
-  const [enableModalSkill, setEnableModalSkill] = useState<{
-    id: string;
-    name: string;
-    jurisdictions: string[];
-    languages: string[];
-  } | null>(null);
   const [resolvedNativeTemplate, setResolvedNativeTemplate] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [parameterValues, setParameterValues] = useState<Record<string, string>>({});
@@ -560,8 +551,6 @@ export default function NewDealPage() {
         </p>
       </div>
 
-      <PromoBanner />
-      <PilotCapNotice kind="deals" />
 
       {/* Entitlement Error Modal */}
       <Dialog open={!!entitlementError} onOpenChange={(open) => !open && setEntitlementError(null)}>
@@ -596,19 +585,6 @@ export default function NewDealPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-
-      {/* Self-service purchase modal for locked premium templates */}
-      {enableModalSkill && (
-        <EnableFeatureModal
-          open
-          onClose={() => setEnableModalSkill(null)}
-          skillPackageId={enableModalSkill.id}
-          skillName={enableModalSkill.name}
-          jurisdictions={enableModalSkill.jurisdictions}
-          languages={enableModalSkill.languages}
-          returnUrl="/deals/new"
-        />
-      )}
 
       {/* Step 1: Contract Type Selection */}
       <div className="space-y-4">
@@ -748,16 +724,10 @@ export default function NewDealPage() {
                         return;
                       }
                       if (isLocked) {
-                        if (family.primaryTemplate.skillPackageId) {
-                          setEnableModalSkill({
-                            id: family.primaryTemplate.skillPackageId,
-                            name: family.displayName,
-                            jurisdictions: Array.from(new Set(family.templates.flatMap((t) => t.jurisdictions))),
-                            languages: Array.from(new Set(family.templates.flatMap((t) => t.languages))),
-                          });
-                        } else {
-                          setEntitlementError(t("toUseContract"));
-                        }
+                        // Not reachable while every skill is included
+                        // (`features.allSkillsFree`); the per-skill purchase
+                        // window was retired on 11 October 2026.
+                        setEntitlementError(t("toUseContract"));
                         return;
                       }
                       setSelectedFamily(family.family);

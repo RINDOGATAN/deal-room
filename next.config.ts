@@ -5,9 +5,9 @@ import createNextIntlPlugin from "next-intl/plugin";
 
 const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 
-// Hosted pilot posture, decided at build time and inlined into the browser
+// Hosted posture, decided at build time and inlined into the browser
 // bundle (VERCEL_ENV itself is server-only). Same rule as
-// src/lib/pilot.ts:isHostedPilotEnv; self-host images build without
+// src/lib/hosted.ts:isHostedEnv; self-host images build without
 // VERCEL_ENV, so they never match. An explicit NEXT_PUBLIC_HOSTED_PILOT wins.
 const hostedPilot =
   process.env.NEXT_PUBLIC_HOSTED_PILOT === "true" ||
@@ -20,7 +20,7 @@ const hostedPilot =
 // Stripe price ids and a valid CONTRACT_BILLING_START date (same rule as
 // src/lib/contract-billing.ts:contractBillingConfigured). The browser bundle
 // cannot read them, so the answer is inlined here; on hosted this is what
-// switches billing on and the pilot mechanics off.
+// switches billing on.
 const billingStart = process.env.CONTRACT_BILLING_START?.trim();
 const contractBilling =
   process.env.NEXT_PUBLIC_CONTRACT_BILLING === "true" ||

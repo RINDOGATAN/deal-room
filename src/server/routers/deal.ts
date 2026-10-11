@@ -15,7 +15,6 @@ import { LIVE_ROWS, offerableOptionsWhere } from "@/lib/clause-retirement";
 import { autoAgreeSingleOptionClauses } from "../services/deal/autoAgreeSingleOption";
 import { applyPresetSelections, findPreset } from "../services/deal/applyPreset";
 import { features } from "@/config/features";
-import { assertPilotRecordRoom } from "../services/pilot";
 import { notifyDealReady, notifyTurn } from "../services/notifications/deal-emails";
 
 // Map GoverningLaw enum to jurisdiction strings for entitlement checking
@@ -424,9 +423,6 @@ export const dealRouter = createTRPCRouter({
       const userId = ctx.session.user.id;
       const userEmail = ctx.session.user.email!;
       const userName = ctx.session.user.name;
-
-      // Hosted pilot: deal ceiling per account (no-op on the kit).
-      await assertPilotRecordRoom(ctx.prisma, userId, "deals");
 
       // Find the contract template
       let template = await ctx.prisma.contractTemplate.findUnique({

@@ -2,13 +2,9 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 import { redirect } from "next/navigation";
-import { features } from "@/config/features";
 import { API_KEYS_SETTINGS_PATH } from "@/lib/api-key-scopes";
-import { PilotSettings } from "./PilotSettings";
 
-// The hosted pilot shows its counters here. Once billing is on there is no
-// pilot, and Settings opens on API keys (the layout 404s everywhere else).
+// Settings opens on API keys (the layout 404s where they do not exist).
 export default function SettingsPage() {
-  if (!features.hostedPilot) redirect(API_KEYS_SETTINGS_PATH);
-  return <PilotSettings />;
+  redirect(API_KEYS_SETTINGS_PATH);
 }
