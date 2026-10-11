@@ -14,9 +14,11 @@
  *   1. LLM_GATEWAY_URL + LLM_MODEL_ALIAS  -> any OpenAI-compatible gateway
  *      (LiteLLM, LQ.AI, Ollama, Groq/Scaleway OpenAI endpoints, ...);
  *      LLM_GATEWAY_KEY optional (local Ollama needs none).
- *   2. OPENAI_API_KEY                     -> api.openai.com
- *   3. ANTHROPIC_API_KEY                  -> api.anthropic.com
- *   4. nothing configured                 -> graceful null, zero network.
+ *   2. ANTHROPIC_API_KEY                  -> api.anthropic.com
+ *   3. nothing configured                 -> graceful null, zero network.
+ * (A direct OPENAI_API_KEY path existed until 11 Oct 2026; it was removed
+ * because no deployment set it and the provider was listed nowhere. An
+ * OpenAI endpoint can still be reached through the gateway, option 1.)
  *
  * Posture-routed lanes (optional): a deployment may configure DIFFERENT
  * gateway engines per confidentiality lane with suffixed variables —
@@ -51,7 +53,7 @@ const logger = {
 // Types
 // ---------------------------------------------------------------------------
 
-export type AiProvider = "gateway" | "openai" | "anthropic";
+export type AiProvider = "gateway" | "anthropic";
 
 /** Confidentiality lanes a posture can route to (mirrors AiPosture minus "off"). */
 export type AiLane = "local_gateway" | "cloud_eu" | "cloud_us";
@@ -115,7 +117,6 @@ function laneEnv(base: string, lane?: AiLane): string | undefined {
 /** Which provider would answer (for the given lane), or null when nothing is configured. */
 export function getProvider(lane?: AiLane): AiProvider | null {
   if (laneEnv("LLM_GATEWAY_URL", lane) && laneEnv("LLM_MODEL_ALIAS", lane)) return "gateway";
-  if (env("OPENAI_API_KEY")) return "openai";
   if (env("ANTHROPIC_API_KEY")) return "anthropic";
   return null;
 }
@@ -129,7 +130,6 @@ export function isAIConfigured(lane?: AiLane): boolean {
 export function getAIProviderName(lane?: AiLane): string | null {
   const provider = getProvider(lane);
   if (provider === "gateway") return `LLM gateway (${laneEnv("LLM_MODEL_ALIAS", lane)})`;
-  if (provider === "openai") return "OpenAI";
   if (provider === "anthropic") return "Anthropic";
   return null;
 }
@@ -306,14 +306,6 @@ export async function chatComplete(params: ChatParams): Promise<ChatResult | nul
         laneEnv("LLM_MODEL_ALIAS", params.lane)!,
         resolved,
         "LLM gateway"
-      );
-    } else if (provider === "openai") {
-      raw = await callOpenAICompatible(
-        "https://api.openai.com/v1/chat/completions",
-        env("OPENAI_API_KEY")!,
-        "gpt-4o",
-        resolved,
-        "OpenAI API"
       );
     } else {
       raw = await callAnthropic(env("ANTHROPIC_API_KEY")!, resolved);

@@ -46,7 +46,6 @@ rows marked "2026-08-05" are covered by that rotation. "Unknown" means no record
 | `DEALROOM_CLOUD_API_KEY` | Hosted; kit .env (optional) | Dealroom Cloud intelligence API (biases, quality, certification) | Owner | 2026-08-05 |
 | `DOWNLOAD_TOKEN_SECRET` | Hosted; kit .env (optional) | Signs short-lived skill download tokens | Owner; customer | Unknown |
 | `E2E_CREDENTIALS_SECRET` | Local / preview only; test runner | Passwordless end-to-end sign-in. Refused on hosted production by `auth-provider-policy.ts` | Owner | Unknown |
-| `OPENAI_API_KEY` | Hosted or kit .env (optional; not in compose) | Paid AI assist calls | Owner; customer | Unknown |
 | `ANTHROPIC_API_KEY` | Hosted or kit .env (optional; not in compose) | Paid AI assist calls | Owner; customer | Unknown |
 | `LLM_GATEWAY_KEY`, `LLM_GATEWAY_KEY_LOCAL`, `_EU`, `_US` | Hosted or kit .env (optional; not in compose) | OpenAI-compatible gateway per confidentiality lane | Owner; customer | Unknown |
 | `SKILL_SIGNING_PRIVATE_KEY` | Storefront (todolaw) Vercel project; a signing machine running `scripts/build-skill-packages.ts` | Signs premium skill packages and licences. Leak = forge licences for every install | Owner | Unknown |
@@ -97,7 +96,7 @@ rows marked "2026-08-05" are covered by that rotation. "Unknown" means no record
 - The rotation date for the database credentials, `DOWNLOAD_TOKEN_SECRET`, the
   skill signing private key and the blob token is not recorded anywhere in this
   repository. The owner should record it here at the next rotation.
-- The AI provider variables (`OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, `LLM_*`) and
+- The AI provider variables (`ANTHROPIC_API_KEY`, `LLM_*`) and
   `NEXT_PUBLIC_AI_ASSIST_ENABLED` are read by the code but not passed through
   `deploy/sovereign/docker-compose.yml`, so a self-hoster cannot set them through
   the kit .env today.

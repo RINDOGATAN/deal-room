@@ -36,7 +36,6 @@ const AI_ENV_KEYS = [
   "LLM_GATEWAY_URL",
   "LLM_GATEWAY_KEY",
   "LLM_MODEL_ALIAS",
-  "OPENAI_API_KEY",
   "ANTHROPIC_API_KEY",
   // Posture-routed lane triples (suffixed variables)
   "LLM_GATEWAY_URL_LOCAL",
