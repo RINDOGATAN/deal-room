@@ -2,7 +2,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * The customer logos on the landing (draft, 11 Oct 2026): ten clean, small files, each
+ * The customer logos on the landing ("Trusted by", 11 Oct 2026): ten clean, small files, each
  * with its name as alt text and its own size (no layout shift), loaded lazily, under a
  * heading in each language.
  */
@@ -30,8 +30,8 @@ describe("customer logos", () => {
   });
 
   it("carry the heading in both languages", () => {
-    expect(en["logos.label"]).toBe("Organizations we have worked with");
-    expect(es["logos.label"]).toBe("Organizaciones con las que hemos trabajado");
+    expect(en["logos.label"]).toBe("Trusted by");
+    expect(es["logos.label"]).toBe("Clientes destacados");
   });
 
   it("render sized, lazy images with alt text, and nothing for an empty list", () => {
@@ -40,6 +40,8 @@ describe("customer logos", () => {
     expect(html.match(/loading="lazy"/g)).toHaveLength(10);
     expect(html.match(/width="\d+" height="\d+"/g)).toHaveLength(10);
     expect(html).toContain('alt="Whole Foods Market"');
+    // Muted by default, own colours on hover (Tailwind 4 applies hover: only where hover exists).
+    expect(html.match(/brightness-0 invert opacity-60 [^"]*hover:filter-none hover:opacity-100/g)).toHaveLength(10);
     expect(renderToStaticMarkup(createElement(CustomerLogos, { label: "x", logos: [] }))).toBe("");
   });
 });

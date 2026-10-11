@@ -2,11 +2,15 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * A static row of customer logos, one colour: each file is black ink on a transparent
- * ground and the filter turns it into the page's light text colour, muted. Every image
- * carries its width and height, so the row reserves its space before the files arrive
- * (no layout shift); it loads lazily and wraps on phones, at 80 % size. Renders nothing
- * while the list is empty (src/landing/config/customer-logos.ts).
+ * A static row of customer logos under "Trusted by" (the heading is uppercase by CSS only, so
+ * screen readers read normal words). One file per logo, in its own colours (or white ink where
+ * the colour version is unreadable on the dark page; see public/images/clients/LOGOS.md). The
+ * filter mutes every logo to the page's light text colour; on devices that can hover (the
+ * hover: variant of Tailwind 4 applies only under @media (hover: hover)) the filter goes on
+ * hover, so the logo shows in colour. Short transition, none with reduced motion; phones stay
+ * muted. Every image carries its width and height, so the row reserves its space before the
+ * files arrive (no layout shift); it loads lazily and wraps on phones, at 80 % size. Renders
+ * nothing while the list is empty (src/landing/config/customer-logos.ts).
  */
 
 import type { CSSProperties } from "react";
@@ -37,7 +41,7 @@ export default function CustomerLogos({ label, logos = CUSTOMER_LOGOS }: Custome
                 height={logo.height}
                 loading="lazy"
                 decoding="async"
-                className="block h-auto w-[calc(var(--w)*0.8px)] sm:w-[calc(var(--w)*1px)] brightness-0 invert opacity-60"
+                className="block h-auto w-[calc(var(--w)*0.8px)] sm:w-[calc(var(--w)*1px)] brightness-0 invert opacity-60 transition-[filter,opacity] duration-200 motion-reduce:transition-none hover:filter-none hover:opacity-100"
                 style={{ "--w": logo.width } as CSSProperties}
               />
             </li>

@@ -383,7 +383,7 @@ export default function LandingPage({
           <HostingSection key={locale} t={t} locale={locale} startHref={startHref} />
         </div>
 
-        {/* Organizations we have worked with (draft, 11 Oct 2026): near the bottom, never above the fold */}
+        {/* Customer logos, "Trusted by" (11 Oct 2026): near the bottom, never above the fold */}
         <CustomerLogos label={t("logos.label")} />
 
         {/* The one call to action, again: no heading, the button and the price */}
