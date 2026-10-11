@@ -113,11 +113,12 @@ describe("pricing page", () => {
 });
 
 describe("pricing page: the Cloud Plan line (owner, 11 Oct 2026)", () => {
-  it("points to the Cloud Plan of the privacy and AI governance tools, in the page's language, with no amount", () => {
+  it("points to the Cloud Plan of the privacy and AI governance tools on the Spanish page only, with no amount", () => {
     const enHtml = render(pricingFacts({ locale: "en", env: ENV }), true, "en", "USD");
     const esHtml = render(pricingFacts({ locale: "es", env: ENV }), true, "es", "EUR");
-    expect(enHtml).toContain('href="https://dpocentral.todo.law/#pricing"');
-    expect(enHtml).toContain("See the Cloud Plan");
+    // English is held until DPO Central's English pricing section is published.
+    expect(enHtml).not.toContain("dpocentral.todo.law");
+    expect(enHtml).not.toContain("See the Cloud Plan");
     expect(esHtml).toContain('href="https://dpocentral.todo.law/?lang=es#precios"');
     expect(esHtml).toContain("Ver el Plan nube UE");
     // The line names no price, so the page keeps its one currency.

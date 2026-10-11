@@ -20,6 +20,13 @@ const CLOUD_PLAN_URL = {
 } as const;
 
 /**
+ * The page languages that show the Cloud Plan line: Spanish only for now,
+ * because DPO Central's English pricing section is not published yet
+ * (owner, 11 Oct 2026). Add "en" when that section goes live.
+ */
+const CLOUD_PLAN_LINE_LOCALES: readonly string[] = ["es"];
+
+/**
  * The public pricing page body. Every amount and the billing start date
  * come in `facts` (from the price configuration); with billing off the
  * page says so and lists no amounts.
@@ -126,19 +133,21 @@ export function PricingView({
             <dt className="font-semibold">{t("qSubscriptionQ")}</dt>
             <dd className="text-muted-foreground mt-1">{t("qSubscriptionA")}</dd>
           </div>
-          <div>
-            <dt className="font-semibold">{t("qCloudPlanQ")}</dt>
-            <dd className="text-muted-foreground mt-1">
-              {t("qCloudPlanA")}{" "}
-              <a
-                href={CLOUD_PLAN_URL[locale === "es" ? "es" : "en"]}
-                className="text-primary underline underline-offset-2"
-                data-testid="pricing-cloud-plan-link"
-              >
-                {t("qCloudPlanLink")}
-              </a>
-            </dd>
-          </div>
+          {CLOUD_PLAN_LINE_LOCALES.includes(locale) && (
+            <div>
+              <dt className="font-semibold">{t("qCloudPlanQ")}</dt>
+              <dd className="text-muted-foreground mt-1">
+                {t("qCloudPlanA")}{" "}
+                <a
+                  href={CLOUD_PLAN_URL[locale === "es" ? "es" : "en"]}
+                  className="text-primary underline underline-offset-2"
+                  data-testid="pricing-cloud-plan-link"
+                >
+                  {t("qCloudPlanLink")}
+                </a>
+              </dd>
+            </div>
+          )}
           <div>
             <dt className="font-semibold">{t("qKitQ")}</dt>
             <dd className="text-muted-foreground mt-1">
