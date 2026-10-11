@@ -84,11 +84,10 @@ describe("public claims", () => {
 
   it("links the licence page from every footer", () => {
     for (const rel of [
-      "src/app/(dashboard)/layout.tsx",
-      "src/app/(public)/layout.tsx",
-      "src/app/(auth)/layout.tsx",
-      "src/landing/components/StartupsFooter.tsx",
-      "src/components/contracts/ContractsShell.tsx",
+      "src/app/(dashboard)/client-layout.tsx",
+      "src/app/(auth)/client-layout.tsx",
+      // Every public page (home, contract guides, Developers, Docs, Pricing) uses this footer.
+      "src/components/public/PublicFooter.tsx",
     ]) {
       expect(read(rel)).toContain('href="/licenses"');
     }

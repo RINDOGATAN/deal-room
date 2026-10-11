@@ -11,7 +11,7 @@
 
 import prisma from "@/lib/prisma";
 import { features } from "@/config/features";
-import { resolveVisitorCurrencyFromHeaders, toBillingCurrency } from "@/lib/currency";
+import { displayCurrency, resolveVisitorCurrencyFromHeaders, toBillingCurrency } from "@/lib/currency";
 import type { PageLocale } from "@/lib/contract-pages-paths";
 import { buildDevelopersDoc, priceLines, type DevelopersDoc } from "@/lib/developers-doc";
 import { listContractTypes } from "@/server/services/agent/contractTypes";
@@ -31,7 +31,8 @@ export async function loadDevelopersDoc(
     }),
     features.stripeEnabled ? loadPricingFacts(locale).catch(() => null) : Promise.resolve(null),
   ]);
-  const currency = toBillingCurrency(resolveVisitorCurrencyFromHeaders(headers));
+  // Spanish pages show euros only; English follows the visitor's region.
+  const currency = toBillingCurrency(displayCurrency(locale, resolveVisitorCurrencyFromHeaders(headers)));
   return buildDevelopersDoc({
     locale,
     types,

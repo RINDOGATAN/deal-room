@@ -65,6 +65,11 @@ const nextConfig: NextConfig = {
   // The contract PDF renderer (@react-pdf/renderer) reads IBM Plex TTFs from
   // disk at render time. Force them into the serverless function bundles for
   // every API route that can generate a document, or rendering 500s in prod.
+  // Page speed (owner, 10 Oct 2026): the stylesheet is inlined in the HTML, so
+  // the first paint does not wait for a separate CSS request on phones.
+  experimental: {
+    inlineCss: true,
+  },
   outputFileTracingIncludes: {
     "/api/**": ["./src/server/services/document/fonts/**"],
   },

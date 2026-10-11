@@ -66,13 +66,11 @@ const APP = join(root, "src/app");
 
 /** The files that draw a header or a footer. */
 const CHROME_FILES = [
-  "src/app/(dashboard)/layout.tsx",
-  "src/app/(public)/layout.tsx",
-  "src/app/(auth)/layout.tsx",
-  "src/components/contracts/ContractsHeader.tsx",
-  "src/components/contracts/ContractsShell.tsx",
-  "src/landing/components/StartupsHeader.tsx",
-  "src/landing/components/StartupsFooter.tsx",
+  "src/app/(dashboard)/client-layout.tsx",
+  "src/app/(public)/client-layout.tsx",
+  "src/app/(auth)/client-layout.tsx",
+  "src/components/public/PublicHeader.tsx",
+  "src/components/public/PublicFooter.tsx",
 ];
 
 interface FoundLink {
@@ -222,7 +220,7 @@ describe("requests link", () => {
   });
 
   it("is gated on the count in the footer, not on the lawyer role", () => {
-    const src = readFileSync(join(root, "src/app/(dashboard)/layout.tsx"), "utf8");
+    const src = readFileSync(join(root, "src/app/(dashboard)/client-layout.tsx"), "utf8");
     const at = src.indexOf('href="/lawyers/requests"');
     const before = src.slice(Math.max(0, at - 300), at);
     expect(before).toContain("showRequestsLink &&");

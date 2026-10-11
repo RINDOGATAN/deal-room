@@ -102,9 +102,17 @@ export function pricingFacts(opts: {
  * credits), each priced in every currency whose amount is known. Null when
  * no amount is known at all.
  */
-export function pricingJsonLd(facts: PricingFacts, url: string): Record<string, unknown> | null {
+/**
+ * `currencies` narrows the offers to the currencies the page shows (Spanish:
+ * euros only); every billing currency by default.
+ */
+export function pricingJsonLd(
+  facts: PricingFacts,
+  url: string,
+  currencies: readonly BillingCurrency[] = BILLING_CURRENCIES,
+): Record<string, unknown> | null {
   const specs = (product: BillingProduct, unitText: string) =>
-    BILLING_CURRENCIES.flatMap((c) => {
+    currencies.flatMap((c) => {
       const price = facts.numbers[product][c];
       return price === null
         ? []

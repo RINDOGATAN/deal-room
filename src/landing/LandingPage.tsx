@@ -3,25 +3,33 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * The Dealroom home page (owner, 3 October 2026): what Dealroom does at a
+ * The Dealroom home page. 3 October 2026 (owner): what Dealroom does at a
  * glance and one call to action, in the manner of the contract template
- * sites. A headline, a "which contract do you need?" search over the public
- * contract guides (the same matcher as the new-deal wizard, so "NDA",
- * "SAFE" or "arrendamiento" find their contract), the popular contracts,
- * three steps and the price. No video, no scroll animations, and the header
- * sits in the page flow, so the top of the page is always reachable.
+ * sites: a headline, a "which contract do you need?" search over the public
+ * contract guides (the same matcher as the new-deal wizard, so "NDA", "SAFE"
+ * or "arrendamiento" find their contract), the popular contracts and the
+ * price. 10 October 2026 (owner): the core product page the other landings
+ * have, under the header every public page shares (PublicHeader): why
+ * Dealroom, a link to the documentation, how it works, the core
+ * capabilities, the links for developers and AI agents (Dealroom is one
+ * service for everyone, not an instance per customer), and at the foot the
+ * three ways to host it with the safeguards guide. Spanish shows euros only.
+ * No video and no scroll animations: nothing moves as the page scrolls.
  */
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ArrowRight, Search } from "lucide-react";
-import StartupsHeader from "./components/StartupsHeader";
-import StartupsFooter from "./components/StartupsFooter";
+import { ArrowRight, Bot, Check, Code, Globe, Lock, Scale, FileSignature, Search } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
+import { PublicHeader } from "@/components/public/PublicHeader";
+import { PublicFooter } from "@/components/public/PublicFooter";
+import HostingSection from "./components/HostingSection";
 import en from "./i18n/en/dealroom-startups.json";
 import es from "./i18n/es/dealroom-startups.json";
 import { cleanUpLocaleCookie, readLocaleCookie, writeLocaleCookie } from "@/lib/locale-cookie";
-import { contractPath, type PageLocale } from "@/lib/contract-pages-paths";
+import { contractPath, developersPath, type PageLocale } from "@/lib/contract-pages-paths";
+import { AGENTS_PATH } from "@/components/public/nav-copy";
 import { searchContracts } from "@/lib/contract-search";
 import { signInHref } from "@/lib/sign-in-next";
 import { PriceLine } from "@/components/contracts/PriceLine";
@@ -76,7 +84,6 @@ const COPY = {
       ],
       ["Sign", "Download the agreed contract or sign it online."],
     ],
-    finalTitle: "Ready when you are",
     login: "Already have an account? Log in",
   },
   es: {
@@ -97,10 +104,33 @@ const COPY = {
       ],
       ["Firma", "Descarga el contrato acordado o fírmalo en línea."],
     ],
-    finalTitle: "Empieza cuando quieras",
     login: "¿Ya tienes cuenta? Inicia sesión",
   },
 } as const;
+
+/** The core capabilities, by their keys in the landing dictionary (`feat.<id>.*`). */
+const FEATURES: { id: string; icon: LucideIcon }[] = [
+  { id: "ai", icon: Scale },
+  { id: "cross", icon: Globe },
+  { id: "export", icon: FileSignature },
+  { id: "enc", icon: Lock },
+];
+
+/** A still card: no lift under the pointer, so nothing moves as the page scrolls. */
+const CARD = "bg-card border border-border rounded-2xl p-6";
+
+function SectionHead({ label, prefix, accent, sub }: { label: string; prefix: string; accent: string; sub?: string }) {
+  return (
+    <div className="max-w-3xl mx-auto text-center mb-8 md:mb-12">
+      <span className="text-xs uppercase tracking-wider text-accent font-semibold">{label}</span>
+      <h2 className="text-2xl md:text-4xl font-bold mt-2">
+        {prefix}
+        <span className="text-accent">{accent}</span>
+      </h2>
+      {sub && <p className="mt-4 text-base md:text-lg text-muted-foreground leading-relaxed">{sub}</p>}
+    </div>
+  );
+}
 
 function detectLocale(): PageLocale {
   if (typeof window === "undefined") return "en";
@@ -109,16 +139,30 @@ function detectLocale(): PageLocale {
   return readLocaleCookie() ?? "en";
 }
 
-export default function LandingPage({ contracts }: { contracts: LandingContract[] }) {
-  const [locale, setLocale] = useState<PageLocale>("en");
+export default function LandingPage({
+  contracts,
+  initialLocale = "en",
+}: {
+  contracts: LandingContract[];
+  /** The language the server chose (`?lang=`, then the cookie). */
+  initialLocale?: PageLocale;
+}) {
+  const [locale, setLocale] = useState<PageLocale>(initialLocale);
   const [query, setQuery] = useState("");
   const router = useRouter();
 
   useEffect(() => {
+    // The server already chose the language; this only catches a cookie it
+    // could not see (the same value in practice, so no re-render).
     // eslint-disable-next-line react-hooks/set-state-in-effect -- locale detection reads cookies, which must happen after hydration; running it during render would mismatch the server-rendered markup
     setLocale(detectLocale());
     cleanUpLocaleCookie();
   }, []);
+
+  // <html lang> follows the text shown (the root layout reads only the cookie).
+  useEffect(() => {
+    document.documentElement.lang = locale;
+  }, [locale]);
 
   const toggleLocale = useCallback(() => {
     const next = locale === "en" ? "es" : "en";
@@ -149,15 +193,10 @@ export default function LandingPage({ contracts }: { contracts: LandingContract[
 
   return (
     <>
-      <StartupsHeader
-        t={t}
-        locale={locale}
-        onLocaleToggle={toggleLocale}
-        onSignup={() => router.push(startHref)}
-      />
+      <PublicHeader locale={locale} onLanguageToggle={toggleLocale} />
       <main lang={locale} className="px-6">
         {/* Headline, search and the one call to action */}
-        <section className="max-w-3xl mx-auto pt-10 pb-12 md:pt-16">
+        <section id="start" className="max-w-3xl mx-auto pt-10 pb-12 md:pt-16 scroll-mt-24">
           <h1 className="text-3xl md:text-5xl font-bold leading-tight">{copy.title}</h1>
           <p className="mt-4 text-lg text-muted-foreground">{copy.lead}</p>
 
@@ -245,6 +284,31 @@ export default function LandingPage({ contracts }: { contracts: LandingContract[
           </ul>
         </section>
 
+        {/* Why Dealroom, and the documentation */}
+        <section className="max-w-6xl mx-auto py-14 border-t border-border" data-testid="landing-value">
+          <SectionHead label={t("value.label")} prefix={t("value.heading.prefix")} accent={t("value.heading.accent")} />
+          <ul className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            {[1, 2, 3, 4].map((n) => (
+              <li key={n} className={CARD}>
+                <h3 className="text-lg font-semibold leading-snug">{t(`value.v${n}.title`)}</h3>
+                <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{t(`value.v${n}.desc`)}</p>
+              </li>
+            ))}
+          </ul>
+          <p className="mt-8 text-center">
+            {/* The docs take their language from the cookie: set it to the page's first. */}
+            <a
+              href="/docs"
+              data-testid="landing-docs-link"
+              onClick={() => writeLocaleCookie(locale)}
+              className="inline-flex items-center gap-2 text-primary font-medium hover:underline"
+            >
+              {t("value.docs")}
+              <ArrowRight className="w-4 h-4" aria-hidden />
+            </a>
+          </p>
+        </section>
+
         {/* How it works */}
         <section className="max-w-5xl mx-auto pb-14">
           <h2 className="text-2xl font-bold mb-4">{copy.howTitle}</h2>
@@ -259,10 +323,68 @@ export default function LandingPage({ contracts }: { contracts: LandingContract[
           </ol>
         </section>
 
-        {/* The one call to action, again */}
+        {/* Core capabilities */}
+        <section className="max-w-6xl mx-auto py-14 border-t border-border">
+          <SectionHead label={t("feat.label")} prefix={t("feat.heading.prefix")} accent={t("feat.heading.accent")} />
+          <ul className="grid gap-4 md:grid-cols-2">
+            {FEATURES.map(({ id, icon: Icon }) => (
+              <li key={id} className={CARD}>
+                <div className="flex items-center gap-3 mb-3">
+                  <span className="w-10 h-10 rounded-xl bg-accent/10 text-accent flex items-center justify-center shrink-0">
+                    <Icon className="w-5 h-5" aria-hidden />
+                  </span>
+                  <span className="text-xs uppercase tracking-wider text-muted-foreground font-medium">{t(`feat.${id}.title`)}</span>
+                </div>
+                <h3 className="text-lg font-semibold">{t(`feat.${id}.headline`)}</h3>
+                <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{t(`feat.${id}.desc`)}</p>
+                <ul className="mt-4 grid gap-2 sm:grid-cols-2">
+                  {[1, 2, 3, 4].map((n) => (
+                    <li key={n} className="flex items-start gap-2 text-sm text-muted-foreground">
+                      <Check className="w-4 h-4 mt-0.5 text-accent shrink-0" aria-hidden />
+                      <span>{t(`feat.${id}.h${n}`)}</span>
+                    </li>
+                  ))}
+                </ul>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        {/* For developers and AI agents: one service for everyone */}
+        <section className="max-w-6xl mx-auto py-14 border-t border-border" data-testid="landing-build">
+          <SectionHead label={t("build.label")} prefix={t("build.heading")} accent="" sub={t("build.sub")} />
+          <div className="grid gap-4 md:grid-cols-2">
+            {[
+              { k: "dev", icon: Code, href: developersPath(locale), cookie: false },
+              { k: "agents", icon: Bot, href: AGENTS_PATH, cookie: true },
+            ].map(({ k, icon: Icon, href, cookie }) => (
+              <div key={k} className={`${CARD} flex flex-col`}>
+                <span className="w-10 h-10 rounded-xl bg-accent/10 text-accent flex items-center justify-center mb-4">
+                  <Icon className="w-5 h-5" aria-hidden />
+                </span>
+                <h3 className="text-lg font-semibold">{t(`build.${k}.title`)}</h3>
+                <p className="mt-2 mb-5 text-sm text-muted-foreground leading-relaxed">{t(`build.${k}.desc`)}</p>
+                <a
+                  href={href}
+                  onClick={cookie ? () => writeLocaleCookie(locale) : undefined}
+                  className="mt-auto inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline"
+                >
+                  {t(`build.${k}.link`)}
+                  <ArrowRight className="w-4 h-4" aria-hidden />
+                </a>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* The three ways to host it, and the safeguards guide (keyed by language: the toggle starts it afresh) */}
+        <div className="border-t border-border">
+          <HostingSection key={locale} t={t} locale={locale} startHref={startHref} />
+        </div>
+
+        {/* The one call to action, again: no heading, the button and the price */}
         <section className="max-w-3xl mx-auto pb-16 text-center">
-          <h2 className="text-2xl font-bold">{copy.finalTitle}</h2>
-          <div className="mt-5 flex justify-center">
+          <div className="flex justify-center">
             <a href={startHref} className="btn-primary inline-flex items-center gap-2 py-3 px-6">
               {copy.start}
               <ArrowRight className="w-4 h-4" aria-hidden />
@@ -278,7 +400,7 @@ export default function LandingPage({ contracts }: { contracts: LandingContract[
           </div>
         </section>
       </main>
-      <StartupsFooter t={t} />
+      <PublicFooter locale={locale} />
     </>
   );
 }

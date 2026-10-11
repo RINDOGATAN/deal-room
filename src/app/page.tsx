@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Copyright (C) 2025-2026 Rindogatan LLC
 
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
@@ -9,8 +10,13 @@ import { features } from "@/config/features";
 import { CONTRACT_PAGES } from "@/lib/contract-pages-paths";
 import { loadContractPage } from "@/lib/contract-pages";
 import type { LandingContract } from "@/landing/LandingPage";
+import { resolveChosenLocale } from "@/lib/locale-cookie";
 
-export default async function HomePage() {
+export default async function HomePage({
+  searchParams,
+}: {
+  searchParams: Promise<{ lang?: string | string[] }>;
+}) {
   const session = await getServerSession(authOptions);
 
   if (session) {
@@ -36,5 +42,13 @@ export default async function HomePage() {
     };
   });
 
-  return <LandingPage contracts={contracts} />;
+  // The language is chosen on the server (`?lang=`, then the cookie), so the
+  // hero is rendered in the visitor's language and never swapped after
+  // hydration (the swap delayed the largest paint on Spanish visits).
+  const lang = (await searchParams).lang;
+  const fromUrl = Array.isArray(lang) ? lang[0] : lang;
+  const initialLocale =
+    fromUrl === "es" || fromUrl === "en" ? fromUrl : (resolveChosenLocale((await headers()).get("cookie")) ?? "en");
+
+  return <LandingPage contracts={contracts} initialLocale={initialLocale} />;
 }

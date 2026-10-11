@@ -4,23 +4,28 @@
 import type { Metadata } from "next";
 import { Inter, Dancing_Script, Jost, Archivo_Black, Space_Mono } from "next/font/google";
 import "./globals.css";
-import { Providers } from "@/components/providers";
-import { Toaster } from "@/components/ui/sonner";
 import { LegalNotice } from "@/components/legal-notice";
 import { brand } from "@/config/brand";
 import { features } from "@/config/features";
 import { NextIntlClientProvider } from "next-intl";
-import { getLocale, getMessages } from "next-intl/server";
+import { getLocale } from "next-intl/server";
 
+// Page speed (owner, 10 Oct 2026): only the two fonts every public page draws
+// with (Jost for text, Archivo Black for headings) are preloaded. Inter is not
+// used by the stylesheet, Dancing Script only on the signature page and Space
+// Mono only in code samples; preloading them held back the first paint on
+// phones. They still load, with `display: swap`, where a page uses them.
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
+  preload: false,
 });
 
 const dancingScript = Dancing_Script({
   subsets: ["latin"],
   variable: "--font-signature",
   weight: ["400", "700"],
+  preload: false,
 });
 
 const jost = Jost({
@@ -39,6 +44,7 @@ const spaceMono = Space_Mono({
   subsets: ["latin"],
   variable: "--font-space-mono",
   weight: ["400", "700"],
+  preload: false,
 });
 
 const siteUrl = `https://dealroom.${brand.domain}`;
@@ -89,7 +95,6 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const locale = await getLocale();
-  const messages = await getMessages();
 
   return (
     // suppressHydrationWarning: the prerendered Spanish contract pages set
@@ -100,11 +105,11 @@ export default async function RootLayout({
         <script async src="https://t.sealmetrics.com/t.js?id=todolaw" />
       </head>
       <body className={`${inter.variable} ${dancingScript.variable} ${jost.variable} ${archivoBlack.variable} ${spaceMono.variable} font-sans antialiased min-h-screen flex flex-col`}>
-        <NextIntlClientProvider messages={messages}>
-          <Providers>
+        {/* Nothing app-wide here (page speed, owner 10 Oct 2026): the message
+            catalogue, the session, the tRPC client and the toaster come with
+            the sections that use them (AppSection), not with every public page. */}
+        <NextIntlClientProvider messages={{}}>
           {children}
-          <Toaster />
-          </Providers>
           <LegalNotice />
         </NextIntlClientProvider>
       </body>

@@ -1203,7 +1203,7 @@
     "searchSkills": "Buscar skills..."
   },
   "docs": {
-    "title": "Guía de Usuario",
+    "title": "Documentación",
     "gettingStarted": "Primeros Pasos",
     "dashboardOverview": "Visión General",
     "navigation": "Ciclo del Acuerdo",
@@ -1560,7 +1560,7 @@
     "qKitLink": "Ir a la tienda"
   },
   "docsHome": {
-    "heroTitle": "Guía de Usuario de <highlight>Dealroom</highlight>",
+    "heroTitle": "Documentación de <highlight>Dealroom</highlight>",
     "heroSubtitle": "Descubre cómo funciona la negociación contractual asíncrona y basada en algoritmos — desde la creación de la operación hasta la firma.",
     "propAsyncTitle": "Negociación Asíncrona",
     "propAsyncDesc": "Cada parte envía sus preferencias de forma independiente. Sin necesidad de agendar reuniones ni llamadas.",
@@ -2065,7 +2065,7 @@
   },
   "footer": {
     "service": "DEALROOM es un servicio de <link>TODO.LAW</link>.",
-    "userGuide": "Guía de Usuario",
+    "userGuide": "Documentación",
     "marketplace": "Marketplace",
     "billing": "Facturación",
     "termsOfUse": "Términos de Uso",

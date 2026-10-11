@@ -54,7 +54,7 @@ export function DevelopersPage({ doc }: { doc: DevelopersDoc }) {
   });
 
   return (
-    <ContractsShell locale={locale} alternateHref={developersPath(other)} active="developers">
+    <ContractsShell locale={locale} alternateHref={developersPath(other)}>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdScript(jsonLd) }} />
       <article lang={locale} className="max-w-5xl mx-auto px-4 sm:px-6 py-10">
         {/* Top block: what it is, the three steps, the contents. */}
