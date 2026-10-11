@@ -1559,7 +1559,7 @@
     "qCloudPlanA": "DPO Central, AI Sentinel and VendorWatch are priced separately, in their own Cloud Plan, per organization.",
     "qCloudPlanLink": "See the Cloud Plan",
     "qKitQ": "What about the self-hosted kit?",
-    "qKitA": "The kit runs Dealroom on your own infrastructure, with no per-contract charge. Premium skills for the kit cost 60 a year each (in your currency) and are bought on the todo.law storefront.",
+    "qKitA": "The kit runs Dealroom on your own infrastructure, with no per-contract charge. Premium skills for the kit cost {price} a year each and are bought on the todo.law storefront.",
     "qKitLink": "Go to the storefront"
   },
   "docsHome": {

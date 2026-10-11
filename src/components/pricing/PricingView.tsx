@@ -42,8 +42,11 @@ export function PricingView({
   currency: Currency;
 }) {
   const t = useTranslations("pricing");
+  const tPilot = useTranslations("pilot");
   const locale = useLocale();
-  const key =currency === "EUR" ? "eur" : "usd";
+  const key = currency === "EUR" ? "eur" : "usd";
+  // The kit's premium skill price, in the page's one currency (the same pair the docs use).
+  const kitPrice = currency === "EUR" ? tPilot("kitPriceEUR") : tPilot("kitPriceUSD");
   const contractPrice = facts.contract[key];
   const packPrice = facts.pack[key];
 
@@ -151,7 +154,7 @@ export function PricingView({
           <div>
             <dt className="font-semibold">{t("qKitQ")}</dt>
             <dd className="text-muted-foreground mt-1">
-              {t("qKitA")}{" "}
+              {t("qKitA", { price: kitPrice })}{" "}
               <a href={STOREFRONT_URL} className="text-primary underline underline-offset-2">
                 {t("qKitLink")}
               </a>

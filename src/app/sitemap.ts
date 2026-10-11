@@ -21,7 +21,6 @@ const STATIC_PAGES: [path: string, changeFrequency: Entry["changeFrequency"], pr
   ["/docs/how-it-works", "monthly", 0.7],
   ["/docs/compromise", "monthly", 0.7],
   ["/docs/skills", "monthly", 0.7],
-  ["/docs/supervision", "monthly", 0.7],
   ["/docs/agent-api", "monthly", 0.6],
   ["/docs/agent-preparation", "monthly", 0.7],
   ["/docs/agent-preparation/policy", "monthly", 0.6],

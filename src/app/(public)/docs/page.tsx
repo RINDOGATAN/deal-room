@@ -145,7 +145,7 @@ export default function DocsPage() {
             </li>
             <li>
               <span className="text-foreground font-medium">
-                {t("step2Label")}
+                {t("step2Label")}:
               </span>{" "}
               <span className="text-muted-foreground">
                 {t("step2Desc")}
@@ -153,7 +153,7 @@ export default function DocsPage() {
             </li>
             <li>
               <span className="text-foreground font-medium">
-                {t("step3Label")}
+                {t("step3Label")}:
               </span>{" "}
               <span className="text-muted-foreground">
                 {t("step3Desc")}
@@ -161,7 +161,7 @@ export default function DocsPage() {
             </li>
             <li>
               <span className="text-foreground font-medium">
-                {t("step4Label")}
+                {t("step4Label")}:
               </span>{" "}
               <span className="text-muted-foreground">
                 {t("step4Desc")}
@@ -169,7 +169,7 @@ export default function DocsPage() {
             </li>
             <li>
               <span className="text-foreground font-medium">
-                {t("step5Label")}
+                {t("step5Label")}:
               </span>{" "}
               <span className="text-muted-foreground">
                 {t("step5Desc")}
@@ -177,7 +177,7 @@ export default function DocsPage() {
             </li>
             <li>
               <span className="text-foreground font-medium">
-                {t("step6Label")}
+                {t("step6Label")}:
               </span>{" "}
               <span className="text-muted-foreground">
                 {t("step6Desc")}
