@@ -9,8 +9,12 @@ import { brand } from "@/config/brand";
  * The providers that process personal data for the hosted Dealroom, as the
  * code uses them (hosting, database, e-mail, payments, AI, analytics); Google
  * sign-in is shown as a note, since Google is an independent controller for it.
- * DRAFT for the owner's review (11 Oct 2026): square brackets mark what our
- * own records do not yet establish. Keep this list in step with the code:
+ * DRAFT for the owner's review (11 Oct 2026). Database region confirmed from
+ * the production settings (Neon eu-central-1, Frankfurt); the server functions
+ * have no region in vercel.json, so they run in the provider's default US
+ * region (iad1), and the owner keeps Dealroom hosted in the US. The AI gateway
+ * provider is OpenRouter (owner, 11 Oct 2026); production has the gateway
+ * variables (names checked only). Keep this list in step with the code:
  * a new outbound service is a new row here and in the privacy policy.
  */
 
@@ -33,7 +37,7 @@ const COPY = {
       {
         role: "Database: stores accounts, deals, contract text and negotiation history",
         provider: "Neon, LLC (part of the Databricks group; the data processing addendum of Databricks, Inc. applies)",
-        location: "[region to be confirmed by the owner]",
+        location: "Frankfurt, Germany (European Union)",
       },
       {
         role: "E-mail: sends sign-in links and deal notices",
@@ -47,10 +51,10 @@ const COPY = {
         when: "Partly an independent controller for its own legal duties.",
       },
       {
-        role: "AI model provider, reached through the service's AI gateway: drafts and suggestions from the clauses being negotiated",
-        provider: "[AI gateway provider: name to be confirmed by the owner]",
-        location: "[location to be confirmed with the provider]",
-        when: "Only when AI assistance is switched on.",
+        role: "AI gateway and model provider: drafts and suggestions from the clauses being negotiated, routing each request to the model chosen. Its own sub-processors include large cloud and model providers that process the requests",
+        provider: "OpenRouter, Inc.",
+        location: "United States",
+        when: "Only when AI features are switched on.",
       },
       {
         role: "Web analytics: counts visits to our pages without setting cookies; receives the IP address of each page request, and we use only aggregated figures",
@@ -58,6 +62,8 @@ const COPY = {
         location: "Ireland, European Union",
       },
     ] as Row[],
+    where:
+      "Dealroom's data is stored in the European Union (Frankfurt). Its application servers run in the United States, so the data is processed there when you use the service.",
     transfers:
       "Where a provider is in the United States or may be accessed from there, the transfer relies on the EU-US Data Privacy Framework where the provider is certified to it and otherwise on the standard contractual clauses approved by the European Commission.",
     google:
@@ -82,7 +88,7 @@ const COPY = {
       {
         role: "Base de datos: guarda las cuentas, las negociaciones, el texto de los contratos y su historial",
         provider: "Neon, LLC (del grupo Databricks; se aplica el anexo de tratamiento de datos de Databricks, Inc.)",
-        location: "[región por confirmar por el propietario]",
+        location: "Fráncfort, Alemania (Unión Europea)",
       },
       {
         role: "Correo electrónico: envía los enlaces de acceso y los avisos de las negociaciones",
@@ -96,10 +102,10 @@ const COPY = {
         when: "En parte, responsable independiente para sus propias obligaciones legales.",
       },
       {
-        role: "Proveedor de modelos de IA, al que se llega a través de la pasarela de IA del servicio: genera borradores y sugerencias a partir de las cláusulas que se negocian",
-        provider: "[proveedor de la pasarela de IA: nombre por confirmar por el propietario]",
-        location: "[ubicación por confirmar con el proveedor]",
-        when: "Solo cuando la asistencia de IA está activada.",
+        role: "Pasarela y proveedor de modelos de IA: genera borradores y sugerencias a partir de las cláusulas que se negocian y envía cada petición al modelo elegido. Entre sus propios subencargados hay grandes proveedores de nube y de modelos que tratan las peticiones",
+        provider: "OpenRouter, Inc.",
+        location: "Estados Unidos",
+        when: "Solo cuando las funciones de IA están activadas.",
       },
       {
         role: "Analítica web: cuenta las visitas a nuestras páginas sin instalar cookies; recibe la dirección IP de cada petición de página y solo usamos cifras agregadas",
@@ -107,6 +113,8 @@ const COPY = {
         location: "Irlanda, Unión Europea",
       },
     ] as Row[],
+    where:
+      "Los datos de Dealroom se guardan en la Unión Europea (Fráncfort). Sus servidores de aplicación funcionan en Estados Unidos, así que los datos se tratan allí cuando usas el servicio.",
     transfers:
       "Cuando un proveedor está en Estados Unidos o se puede acceder a los datos desde allí, la transferencia se ampara en el Marco de Privacidad de Datos UE-EE. UU. si el proveedor está adherido a él y, si no, en las cláusulas contractuales tipo aprobadas por la Comisión Europea.",
     google:
@@ -165,6 +173,7 @@ export default async function SubprocessorsPage() {
       </div>
 
       <section className="space-y-3 text-sm text-muted-foreground leading-relaxed">
+        <p>{c.where}</p>
         <p>{c.google}</p>
         <p>{c.transfers}</p>
         <p>{c.changes}</p>
