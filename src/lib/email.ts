@@ -436,12 +436,12 @@ export async function sendSigningExpiringSoonEmail({
     await getResend().emails.send({
       from: mailFrom(),
       to,
-      subject: `Reminder: signing expires in ${daysRemaining} ${dayWord} — ${dealName}`,
+      subject: `Reminder: signing expires in ${daysRemaining} ${dayWord}: ${dealName}`,
       html: emailWrapper("Contract Signing", `
         <p style="color: #e5e5e5; font-size: 15px; line-height: 1.6; margin: 0 0 16px;">Dear <strong style="color: ${brand.colors.foreground};">${partyName}</strong>,</p>
         ${emailParagraph(`The signing for <strong style="color: ${brand.colors.foreground};">${dealName}</strong> expires in <strong style="color: ${brand.colors.foreground};">${daysRemaining} ${dayWord}</strong>. After that, the parties will need to start a new signing.`)}
         ${emailButton(dealUrl, "Sign Now")}
-        ${emailMuted("If you have already signed, no action is needed — this reminder will stop once the other party signs too.")}
+        ${emailMuted("If you have already signed, no action is needed. This reminder will stop once the other party signs too.")}
       `),
     });
   } catch (error) {
@@ -539,7 +539,7 @@ export async function sendFirmasSigningEmail({
       subject: `${initiatorName} asked you to sign a ${contractType}`,
       html: emailWrapper("Sign on your phone", `
         ${emailParagraph(`<strong style="color: ${brand.colors.foreground};">${initiatorName}</strong> sent you a <strong style="color: ${brand.colors.foreground};">${contractType}</strong> to sign.`)}
-        ${emailParagraph(`Open this link <strong style="color: ${brand.colors.foreground};">on your phone</strong> — it will open the Firmas app where you can read it and sign with one tap.`)}
+        ${emailParagraph(`Open this link <strong style="color: ${brand.colors.foreground};">on your phone</strong>. It will open the Firmas app where you can read it and sign with one tap.`)}
         ${emailButton(signUrl, "Open in Firmas")}
         ${emailMuted(`If you don't have Firmas yet, the same link opens a web page on your phone that walks you through signing. Either way works.`)}
         ${emailMuted(`Link: <a href="${signUrl}" style="color: ${brand.colors.primary};">${signUrl}</a>`)}

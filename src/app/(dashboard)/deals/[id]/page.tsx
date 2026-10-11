@@ -75,7 +75,7 @@ function DownloadLinks({ dealId, className, showTia }: { dealId: string; classNa
       <span aria-hidden>·</span>
       <a
         href={`/api/deals/${dealId}/document?whitelabel=1`}
-        title="PDF without platform branding — for signature-ready finals"
+        title="PDF without platform branding, for signature-ready finals"
         className="hover:text-foreground underline underline-offset-2"
       >
         White-label
@@ -161,7 +161,7 @@ function DealTimeline({ dealId, governingLaw }: { dealId: string; governingLaw?:
               <p className="text-sm">
                 {t(`history.events.${e.action}`)}
                 {e.actor && (
-                  <span className="text-muted-foreground"> — {e.actor}</span>
+                  <span className="text-muted-foreground"> · {e.actor}</span>
                 )}
               </p>
               <p className="text-xs text-muted-foreground">

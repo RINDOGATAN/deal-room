@@ -309,7 +309,7 @@ export const signingRouter = createTRPCRouter({
       ) {
         throw new TRPCError({
           code: "TOO_MANY_REQUESTS",
-          message: "A reminder was already sent recently — you can send another once 72 hours have passed",
+          message: "A reminder was already sent recently. You can send another once 72 hours have passed",
         });
       }
 
@@ -603,7 +603,7 @@ export const signingRouter = createTRPCRouter({
       if (missingDetailsParty) {
         throw new TRPCError({
           code: "BAD_REQUEST",
-          message: `Cannot sign yet — ${missingDetailsParty.name || "the other party"} has not added their signing details. The contract would be missing their information.`,
+          message: `Cannot sign yet: ${missingDetailsParty.name || "the other party"} has not added their signing details. The contract would be missing their information.`,
         });
       }
 
@@ -1117,7 +1117,7 @@ export const signingRouter = createTRPCRouter({
       if (alreadySigned) {
         throw new TRPCError({
           code: "BAD_REQUEST",
-          message: "Use undoSignature instead — your signature has already been recorded",
+          message: "Use undoSignature instead: your signature has already been recorded",
         });
       }
 
@@ -1177,7 +1177,7 @@ export const signingRouter = createTRPCRouter({
       if (!mySignedAt) {
         throw new TRPCError({
           code: "BAD_REQUEST",
-          message: "You haven't signed yet — nothing to undo",
+          message: "You haven't signed yet, so there is nothing to undo",
         });
       }
 
