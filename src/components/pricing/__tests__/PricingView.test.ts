@@ -127,13 +127,13 @@ describe("pricing page: the Cloud Plan line (owner, 11 Oct 2026)", () => {
   });
 });
 
-describe("pricing page: the kit's premium skill price (11 Oct 2026)", () => {
+describe("pricing page: the own-instance premium skill price (11 Oct 2026)", () => {
   it("names the kit price in the page's one currency, never 'in your currency'", () => {
     const usd = render(pricingFacts({ locale: "en", env: ENV }), true, "en", "USD");
     const eur = render(pricingFacts({ locale: "en", env: ENV }), true, "en", "EUR");
     const es = render(pricingFacts({ locale: "es", env: ENV }), true, "es", "EUR");
-    expect(usd).toContain("Premium skills for the kit cost $60 a year each");
-    expect(eur).toContain("Premium skills for the kit cost €60 a year each");
+    expect(usd).toContain("Premium skills for it cost $60 a year each");
+    expect(eur).toContain("Premium skills for it cost €60 a year each");
     expect(es).toContain("cuestan 60 € al año cada una");
     for (const html of [usd, eur, es]) expect(html).not.toMatch(/in your currency|en tu moneda/);
   });

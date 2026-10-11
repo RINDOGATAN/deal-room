@@ -5,8 +5,8 @@
 /**
  * Where Dealroom runs, at the foot of the home (owner, 10 Oct 2026): the three
  * ways the storefront and the DPO Central and AI Sentinel landings offer (the
- * TODO.LAW cloud, a managed virtual server, your own hardware), with the
- * owner's wording, no prices, and the safeguards guide beneath. The cloud box
+ * TODO.LAW cloud, a managed instance, your own hardware), with the
+ * owner's wording, "On quotation" under the last two and no figures, and the safeguards guide beneath. The cloud box
  * starts a contract; the other two write to us. The boxes stay still under
  * the pointer, so nothing moves as the page scrolls.
  */
@@ -89,7 +89,13 @@ export default function HostingSection({
                     {LETTERS[i]}
                   </span>
                 </div>
-                <h3 className="text-lg font-semibold mb-2">{title}</h3>
+                <h3 className={`text-lg font-semibold ${action === "mail" ? "mb-1" : "mb-2"}`}>{title}</h3>
+                {/* Managed and your own hardware: priced on quotation, as on the storefront (owner, 11 Oct 2026). */}
+                {action === "mail" && (
+                  <p className="text-sm font-medium text-accent mb-2" data-testid={`way-quote-${n}`}>
+                    {t(`${k}.quote`)}
+                  </p>
+                )}
                 <p className="text-sm text-muted-foreground leading-relaxed mb-5">{t(`${k}.w${n}.desc`)}</p>
                 {action === "start" ? (
                   <a href={startHref} className={linkClass}>
