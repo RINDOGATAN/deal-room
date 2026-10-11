@@ -7,7 +7,8 @@ import { brand } from "@/config/brand";
 
 /**
  * The providers that process personal data for the hosted Dealroom, as the
- * code uses them (hosting, database, e-mail, payments, sign-in, AI, analytics).
+ * code uses them (hosting, database, e-mail, payments, AI, analytics); Google
+ * sign-in is shown as a note, since Google is an independent controller for it.
  * DRAFT for the owner's review (11 Oct 2026): square brackets mark what our
  * own records do not yet establish. Keep this list in step with the code:
  * a new outbound service is a new row here and in the privacy policy.
@@ -31,7 +32,7 @@ const COPY = {
       },
       {
         role: "Database: stores accounts, deals, contract text and negotiation history",
-        provider: "Neon",
+        provider: "Neon, LLC (part of the Databricks group; the data processing addendum of Databricks, Inc. applies)",
         location: "[region to be confirmed by the owner]",
       },
       {
@@ -44,12 +45,6 @@ const COPY = {
         provider: "Stripe",
         location: "United States and other countries",
         when: "Partly an independent controller for its own legal duties.",
-      },
-      {
-        role: "Sign in with Google",
-        provider: "Google",
-        location: "United States and other countries",
-        when: "Only if the user chooses it.",
       },
       {
         role: "AI model provider, reached through the service's AI gateway: drafts and suggestions from the clauses being negotiated",
@@ -65,6 +60,8 @@ const COPY = {
     ] as Row[],
     transfers:
       "Where a provider is in the United States or may be accessed from there, the transfer relies on the EU-US Data Privacy Framework where the provider is certified to it and otherwise on the standard contractual clauses approved by the European Commission.",
+    google:
+      "Sign in with Google (only if the user chooses it): Google LLC acts as an independent controller of the sign-in data under its Controller-Controller Data Protection Terms. It is not a sub-processor; we mention it for transparency.",
     changes: "We update this page before we add or replace a provider.",
     privacy: "Privacy Policy",
     updated: "Last updated: [date of publication]",
@@ -84,7 +81,7 @@ const COPY = {
       },
       {
         role: "Base de datos: guarda las cuentas, las negociaciones, el texto de los contratos y su historial",
-        provider: "Neon",
+        provider: "Neon, LLC (del grupo Databricks; se aplica el anexo de tratamiento de datos de Databricks, Inc.)",
         location: "[región por confirmar por el propietario]",
       },
       {
@@ -97,12 +94,6 @@ const COPY = {
         provider: "Stripe",
         location: "Estados Unidos y otros países",
         when: "En parte, responsable independiente para sus propias obligaciones legales.",
-      },
-      {
-        role: "Inicio de sesión con Google",
-        provider: "Google",
-        location: "Estados Unidos y otros países",
-        when: "Solo si la persona usuaria lo elige.",
       },
       {
         role: "Proveedor de modelos de IA, al que se llega a través de la pasarela de IA del servicio: genera borradores y sugerencias a partir de las cláusulas que se negocian",
@@ -118,6 +109,8 @@ const COPY = {
     ] as Row[],
     transfers:
       "Cuando un proveedor está en Estados Unidos o se puede acceder a los datos desde allí, la transferencia se ampara en el Marco de Privacidad de Datos UE-EE. UU. si el proveedor está adherido a él y, si no, en las cláusulas contractuales tipo aprobadas por la Comisión Europea.",
+    google:
+      "Inicio de sesión con Google (solo si la persona usuaria lo elige): Google LLC actúa como responsable independiente de los datos de inicio de sesión conforme a sus condiciones de protección de datos entre responsables (Controller-Controller Data Protection Terms). No es un subencargado; lo mencionamos por transparencia.",
     changes: "Actualizamos esta página antes de añadir o sustituir un proveedor.",
     privacy: "Política de privacidad",
     updated: "Última actualización: [fecha de publicación]",
@@ -172,6 +165,7 @@ export default async function SubprocessorsPage() {
       </div>
 
       <section className="space-y-3 text-sm text-muted-foreground leading-relaxed">
+        <p>{c.google}</p>
         <p>{c.transfers}</p>
         <p>{c.changes}</p>
         <p>
