@@ -2,7 +2,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * Transactional deal emails (owner decisions of 4 October 2026): who gets
+ * Transactional deal emails: who gets
  * which email when, the billing-start exclusion, and the wording rules.
  */
 import { describe, expect, it } from "vitest";

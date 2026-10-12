@@ -3,7 +3,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * The one header of Dealroom's public pages (owner, 10 Oct 2026): the home,
+ * The one header of Dealroom's public pages: the home,
  * the contract guides, Developers, Docs (Agents is its agent API section) and
  * Pricing show the same links in the same order, so the navigation never
  * changes as the visitor moves between them. Dealroom is not instance-based
@@ -18,7 +18,7 @@
  *
  * Whether the visitor is signed in comes from one request to the session
  * endpoint, not from the next-auth client: the public pages do not download
- * that client (page speed, owner 10 Oct 2026).
+ * that client (page speed).
  */
 
 import Link from "next/link";

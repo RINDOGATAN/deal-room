@@ -2,7 +2,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * Selection privacy on the deal query (cycle 12, F5).
+ * Selection privacy on the deal query.
  *
  * A party's option, priority, flexibility and notes are confidential until
  * both parties have submitted. `selections.getForClause` applied that rule;

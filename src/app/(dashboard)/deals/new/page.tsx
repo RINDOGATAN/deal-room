@@ -183,7 +183,7 @@ const contractLanguageMeta = [
   { value: "es" as ContractLanguage, tKey: "spanish" as const },
 ];
 
-// New York is not a general governing-law option (owner, 2026-10-01): it is
+// New York is not a general governing-law option: it is
 // listed only for a contract whose own skill is tagged NEW_YORK, and never
 // shown greyed out. Existing New York deals are untouched.
 const jurisdictionMeta = [
@@ -734,7 +734,7 @@ export default function NewDealPage() {
                       setSelectedType(family.primaryTemplate.contractType);
                       setResolvedNativeTemplate(null);
                       setSetupChoice(null);
-                      // Solo first (owner, 4 Oct 2026): solo whenever the template
+                      // Solo first: solo whenever the template
                       // supports it; the mode step keeps two-party one click away.
                       setDealMode(defaultDealMode(family.primaryTemplate));
                       // For soloModeOnly, auto-set jurisdiction (user picks multi-jurisdiction via parameters)

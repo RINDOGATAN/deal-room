@@ -65,7 +65,7 @@ export interface BillingCheckoutParams {
 /**
  * The Checkout session parameters for pay per contract: a contract or a
  * credit pack, both one-off payments. The buyer is asked for a card and
- * nothing else (owner, 1 October 2026): no billing address, no tax id, no
+ * nothing else: no billing address, no tax id, no
  * invoice, no tax calculated; the payment provider's receipt is the record.
  * The metadata (`kind` plus the deal id or the customer id) is copied onto
  * the payment intent, so refunds can be traced back without a lookup.

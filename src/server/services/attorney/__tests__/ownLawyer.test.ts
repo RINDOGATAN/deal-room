@@ -2,7 +2,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * "Invite your own lawyer" (owner's decision E1, step 1): the lawyer is
+ * "Invite your own lawyer": the lawyer is
  * put into the existing attorney review for the inviting side, through
  * the transactional e-mail path (mocked here), with no fee, no directory
  * entry and the usual guards.

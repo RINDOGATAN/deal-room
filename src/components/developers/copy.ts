@@ -11,8 +11,7 @@ import type { PageLocale } from "@/lib/contract-pages-paths";
 import { features } from "@/config/features";
 
 /**
- * The startup-coverage tools and routes (owner's decisions of 6 October
- * 2026), listed only while `features.startupCoverage` is on, so the page
+ * The startup-coverage tools and routes, listed only while `features.startupCoverage` is on, so the page
  * names exactly the live tools.
  */
 export const COVERAGE_COPY = {

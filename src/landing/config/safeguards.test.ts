@@ -54,7 +54,7 @@ describe.each(LOCALES)("Dealroom safeguards guide (%s)", (locale) => {
         ? ["In the TODO.LAW cloud", "Managed instance", "Your own hardware"]
         : ["En la nube de TODO.LAW", "Instancia gestionada", "Tu propio hardware"],
     );
-    // Managed and your own hardware are priced on quotation, with no figure (owner, 11 Oct 2026).
+    // Managed and your own hardware are priced on quotation, with no figure.
     expect(DICT[locale][`${locale}.ways.quote`]).toBe(locale === "en" ? "On quotation" : "Bajo presupuesto");
   });
 

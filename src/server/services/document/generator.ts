@@ -165,8 +165,8 @@ export interface ContractData {
 
 /**
  * The UETA / E-SIGN statement that the agreement was formed by the two
- * parties' agentic systems negotiating with each other (wording: owner,
- * 5 Oct 2026), in the contract's language.
+ * parties' agentic systems negotiating with each other, in the contract's
+ * language.
  */
 export const UETA_PREAMBLE: Record<"en" | "es", string> = {
   en: "This agreement was formed by two agentic systems negotiating with each other, pursuant to the Uniform Electronic Transactions Act § 14 and the Electronic Signatures in Global and National Commerce Act (15 U.S.C. § 7001 et seq.). Each party authorized its electronic agent to negotiate and accept the terms herein.",
@@ -182,7 +182,7 @@ export function uetaPreamble(language: string | null | undefined): string {
  * through agents (the deal was initiated and joined with a playbook each).
  * A single-party contract made by one agent (solo intake, the one call)
  * was not formed by two agentic systems negotiating with each other, so it gets
- * none (owner, 5 Oct 2026).
+ * none.
  */
 export function agentAttestationFor(
   agentDeal: {

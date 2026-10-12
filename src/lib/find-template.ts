@@ -4,7 +4,7 @@
 /**
  * find_template: the agent describes a matter in its own words and gets
  * back the contract templates that match, or the plain answer that no
- * template covers it (owner's decision T3, 6 October 2026).
+ * template covers it.
  *
  * Deterministic: the words of the description are matched with the same
  * matcher as every other contract search (`contract-search.ts`); no AI
@@ -69,7 +69,7 @@ export const TIME_SENSITIVE_LABELS: Record<TimeSensitiveCategory, Record<PageLoc
 };
 
 /**
- * Documents Dealroom has no template for yet (owner's list T1), with the
+ * Documents Dealroom has no template for yet, with the
  * phrases that name them. Normalized phrases.
  */
 export const NOT_YET_COVERED: readonly { name: Record<PageLocale, string>; phrases: readonly string[] }[] = [
@@ -157,7 +157,7 @@ export interface FindTemplateResult {
   message: string;
 }
 
-/** The wording of the answer (for the owner's approval: every sentence is here). */
+/** The wording of the answer (every sentence is here, for review). */
 export const FIND_TEMPLATE_TEXT = {
   noTemplate: {
     en: "No template covers this. Such matters are usually handled by a lawyer.",

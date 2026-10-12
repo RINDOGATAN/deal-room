@@ -11,7 +11,7 @@ const STOREFRONT_URL = "https://www.todo.law/marketplace";
 
 /**
  * Where the privacy and AI governance tools' Cloud Plan is priced: the pricing
- * section of DPO Central's landing, in the page's language (owner, 11 Oct 2026).
+ * section of DPO Central's landing, in the page's language.
  * Dealroom is not part of that plan; the page only points to it.
  */
 const CLOUD_PLAN_URL = {
@@ -22,7 +22,7 @@ const CLOUD_PLAN_URL = {
 /**
  * The page languages that show the Cloud Plan line: Spanish only for now,
  * because DPO Central's English pricing section is not published yet
- * (owner, 11 Oct 2026). Add "en" when that section goes live.
+ * Add "en" when that section goes live.
  */
 const CLOUD_PLAN_LINE_LOCALES: readonly string[] = ["es"];
 

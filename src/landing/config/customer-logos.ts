@@ -4,9 +4,8 @@
 /**
  * Customer logos shown on the public landing, in both languages, above the footer.
  *
- * The owner's list of ten organizations (11 Oct 2026), under the heading "Trusted by" /
- * "Clientes destacados". A logo is listed here only with the owner's word
- * that the organization may be named. With an empty list the landing renders no logo
+ * Organizations shown under the heading "Trusted by" / "Clientes destacados". A logo is
+ * listed here only with permission to name the organization. With an empty list the landing renders no logo
  * section at all (no heading, no placeholder).
  *
  * Each entry: the organization's name (the image's alt text), the logo under public/

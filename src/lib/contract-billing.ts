@@ -2,14 +2,14 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * Pay per contract (owner decisions 2026-09-29), the pure rules.
+ * Pay per contract, the pure rules.
  *
  * Drafting and negotiating are free. A contract is paid at the moment of
  * value: the download (PDF, DOCX, TXT) or the start of the signature. One
  * price per contract whatever the template (premium skills fold into it).
  * Agents pay the same way through prepaid credits sold in packs of ten;
  * the credits belong to the customer, and any of its API keys spends them.
- * There is no monthly plan (discarded in round 2).
+ * There is no monthly plan.
  *
  * No price or amount is written here. Stripe price ids come from the four
  * environment variables below; the amounts shown to people come from

@@ -526,8 +526,8 @@ test.describe("SaaS Agreement Demo Recording", () => {
     await page.goto(`${BASE_URL}/deals/${dealId}/review`);
     await page.waitForTimeout(3_000);
 
-    // Look for the "Invite your own lawyer" button (no platform list since
-    // the owner's decision of 6 October 2026)
+    // Look for the "Invite your own lawyer" button (there is no platform
+    // list of lawyers)
     const reviewBtn = page.locator("button").filter({
       hasText: /Invite your own lawyer|Invita a tu propio abogado/i,
     });

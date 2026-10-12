@@ -73,7 +73,7 @@ The one call returns the Markdown, HTML or text in the answer with `inline`; MCP
 
 ### Startup coverage tools (behind a flag)
 
-Owner's decisions of 6 October 2026 (T3, T4, E1 step 1). Live only when `NEXT_PUBLIC_STARTUP_COVERAGE=true` is set at build time; while off, the routes answer 404 and no discovery surface lists the tools. All free (no credit). When the flag goes on, also add the five tool names to the static `public/llms.txt`; every other surface follows the flag by itself.
+Live only when `NEXT_PUBLIC_STARTUP_COVERAGE=true` is set at build time; while off, the routes answer 404 and no discovery surface lists the tools. All free (no credit). When the flag goes on, also add the five tool names to the static `public/llms.txt`; every other surface follows the flag by itself.
 
 | MCP tool | REST | Key | What it does |
 |---|---|---|---|

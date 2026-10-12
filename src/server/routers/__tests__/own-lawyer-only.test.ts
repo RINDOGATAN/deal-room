@@ -2,7 +2,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * Own lawyer only (owner's decision, 6 October 2026): a technology company
+ * Own lawyer only: a technology company
  * that lists lawyers and states their fee looks like a lawyer referral
  * service, so parties never pick from a platform list.
  *

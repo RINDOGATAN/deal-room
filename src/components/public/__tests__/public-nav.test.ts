@@ -2,7 +2,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * One navigation on every public page (owner, 10 Oct 2026): the home, the
+ * One navigation on every public page: the home, the
  * contract guides, Developers, Docs (and its agent API section) and Pricing
  * show the same header links in the same order; the documentation is called
  * "Docs" ("Documentación"), never "User Guide"; Spanish pages never show a

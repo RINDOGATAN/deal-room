@@ -415,8 +415,8 @@ export const journeyRouter = createTRPCRouter({
 
   /**
    * Invite the founder's own lawyer, by e-mail, to review every deal in a
-   * step, by batching Stage A requests (owner's decision, 6 October 2026:
-   * no platform list of lawyers, no supervisor id from the caller).
+   * step, by batching Stage A requests (no platform list of lawyers, no
+   * supervisor id from the caller).
    * Returns counts of successful + failed assignments. Deals already under
    * review are skipped quietly; the lawyer receives one e-mail.
    */

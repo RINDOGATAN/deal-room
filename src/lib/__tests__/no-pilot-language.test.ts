@@ -2,8 +2,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * Dealroom does not present itself as a pilot (owner's decision,
- * 2026-09-21). No string a person can read, in either language, may say
+ * Dealroom does not present itself as a pilot. No string a person can read, in either language, may say
  * "pilot" or "piloto". Message KEYS are internal names and may keep the
  * word; only values are checked.
  */

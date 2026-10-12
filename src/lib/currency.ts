@@ -2,7 +2,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * One currency per visitor (owner decision 2026-10-01).
+ * One currency per visitor.
  *
  * Euros for a visitor in Europe (the EU and EEA countries, the United
  * Kingdom, Switzerland), dollars for everyone else. The region is the
@@ -10,7 +10,7 @@
  * the region of the first `Accept-Language` tag that names one; without
  * either, dollars.
  *
- * There is no currency switch (owner decision 2 October 2026): the region
+ * There is no currency switch: the region
  * decides. One cookie, for the browser session only: `currency`, the
  * region guess, written by the middleware. A signed-in customer's stored
  * billing currency wins over the region guess (server side,
@@ -32,9 +32,9 @@ export const EUROPE_COUNTRIES: ReadonlySet<string> = new Set([
   "GB", "CH",
   // Aliases seen in the wild: EL (the EU's own code for Greece), UK
   "EL", "UK",
-  // Euro microstates and the British Crown dependencies and Gibraltar (owner, 1 October 2026)
+  // Euro microstates and the British Crown dependencies and Gibraltar
   "AD", "MC", "SM", "VA", "GI", "JE", "GG", "IM",
-  // Montenegro and Kosovo use the euro; same list as the storefront (owner, 3 October 2026)
+  // Montenegro and Kosovo use the euro; same list as the storefront
   "ME", "XK",
 ]);
 
@@ -130,8 +130,8 @@ export function resolveVisitorCurrencyFromHeaders(
 }
 
 /**
- * The currency a page shows: euros on every Spanish page (owner's rule:
- * nobody reading Spanish sees a dollar price), the visitor's one currency
+ * The currency a page shows: euros on every Spanish page (no Spanish
+ * page shows a dollar price), the visitor's one currency
  * otherwise.
  */
 export function displayCurrency(locale: string, visitor: Currency): Currency {

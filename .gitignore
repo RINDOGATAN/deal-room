@@ -66,5 +66,5 @@ dpa-purge-test-deals.cjs
 # Local reference material (user-downloaded examples), never repo content
 /DPA/
 
-# Session status for the conductor (never committed; repository is public)
+# Local session status file (never committed)
 /STATUS.md

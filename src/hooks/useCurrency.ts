@@ -19,7 +19,7 @@ const serverCurrency = (): Currency => "USD";
 
 /**
  * The currency a page in the current language shows: euros on every Spanish
- * page (owner's rule: nobody reading Spanish sees a dollar price), the
+ * page (no Spanish page shows a dollar price), the
  * visitor's region currency otherwise.
  */
 export function useDisplayCurrency(): Currency {

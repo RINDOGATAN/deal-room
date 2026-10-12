@@ -9,7 +9,7 @@ import { Toaster } from "@/components/ui/sonner";
 
 /**
  * What the app's sections need in the browser and the public pages do not
- * (page speed, owner 10 Oct 2026): the whole message catalogue (about
+ * (page speed): the whole message catalogue (about
  * 150 KB), the session (next-auth client), the tRPC and React Query client,
  * and the toaster. The root layout
  * no longer sends them with every page; the sections whose client components

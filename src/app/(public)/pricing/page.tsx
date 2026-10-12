@@ -48,7 +48,7 @@ export default async function PricingPage() {
   const locale = await getLocale();
   const billingOn = features.stripeEnabled;
   const facts = await loadPricingFacts(locale);
-  // Spanish shows euros only (owner's rule), in the page and in its JSON-LD;
+  // Spanish shows euros only, in the page and in its JSON-LD;
   // English keeps the visitor's one currency.
   const es = locale === "es";
   const currency = displayCurrency(

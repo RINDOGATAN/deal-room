@@ -3,12 +3,12 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * The Dealroom home page. 3 October 2026 (owner): what Dealroom does at a
+ * The Dealroom home page: what Dealroom does at a
  * glance and one call to action, in the manner of the contract template
  * sites: a headline, a "which contract do you need?" search over the public
  * contract guides (the same matcher as the new-deal wizard, so "NDA", "SAFE"
  * or "arrendamiento" find their contract), the popular contracts and the
- * price. 10 October 2026 (owner): the core product page the other landings
+ * price, then the core product page the other landings
  * have, under the header every public page shares (PublicHeader): why
  * Dealroom, a link to the documentation, how it works, the core
  * capabilities, the links for developers and AI agents (Dealroom is one

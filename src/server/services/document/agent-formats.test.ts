@@ -179,7 +179,7 @@ describe("agent formation notice", () => {
     ).toContain("J. Doe (Bar No. CA-1)");
   });
 
-  it("uses the owner's wording, in the contract's language", () => {
+  it("uses the fixed wording, in the contract's language", () => {
     expect(UETA_PREAMBLE.en).toBe(
       "This agreement was formed by two agentic systems negotiating with each other, pursuant to the Uniform Electronic Transactions Act § 14 and the Electronic Signatures in Global and National Commerce Act (15 U.S.C. § 7001 et seq.). Each party authorized its electronic agent to negotiate and accept the terms herein.",
     );

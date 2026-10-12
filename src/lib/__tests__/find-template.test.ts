@@ -4,7 +4,7 @@
 /**
  * find_template: deterministic matching of a described matter against the
  * contract guides, time-sensitive matters flagged, gaps named, and the
- * fixed answer when nothing fits (owner's decision T3, 6 October 2026).
+ * fixed answer when nothing fits.
  */
 import { describe, expect, it } from "vitest";
 import { FIND_TEMPLATE_TEXT, findTemplates } from "@/lib/find-template";

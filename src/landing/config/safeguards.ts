@@ -2,7 +2,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * The safeguards guide on the Dealroom home (owner, 10 Oct 2026: the same guide as the
+ * The safeguards guide on the Dealroom home (the same guide as the
  * DPO Central and AI Sentinel landings, at the foot of the page). Ported from AI
  * Sentinel's src/landing/config/safeguards.ts (itself the storefront's PR 59 logic): six
  * questions, each answer sets a minimum level, the guide takes the highest level any

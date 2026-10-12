@@ -2,8 +2,8 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * Which weekly A2A limit a customer gets (owner decision 2026-10-01: the
- * limits follow the money).
+ * Which weekly A2A limit a customer gets (the extended limit applies to
+ * paying customers).
  *
  * Standard: 5 negotiations per contract type per week. Extended: 300 a week
  * in total, for a customer that does any of the following:

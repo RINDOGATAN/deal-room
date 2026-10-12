@@ -4,7 +4,7 @@
 "use client";
 
 /**
- * Joint closing counsel by invitation (owner's decision, 6 October 2026):
+ * Joint closing counsel by invitation:
  * the initiator names a lawyer by e-mail, with an optional name and the
  * one plain sentence that the lawyer works for both parties and Dealroom
  * takes no fee. The other party then acknowledges or declines. There is

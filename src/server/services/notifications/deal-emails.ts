@@ -2,7 +2,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * Transactional deal emails (owner decisions of 4 October 2026): sending
+ * Transactional deal emails: sending
  * and recording. The rules are in `src/lib/deal-notifications.ts`.
  *
  * Every email is claimed first by writing its row in `deal_notifications`

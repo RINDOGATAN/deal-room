@@ -2,7 +2,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * Signing access (cycle 12, F1).
+ * Signing access.
  *
  * - The router exposes no "webhook" procedure: a signed-in user must not be
  *   able to record a signature or complete a signing by naming an externalId.

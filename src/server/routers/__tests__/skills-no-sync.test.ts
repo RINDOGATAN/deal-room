@@ -2,7 +2,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * No catalogue sync over the API (cycle 12, F4).
+ * No catalogue sync over the API.
  *
  * `skills.sync` was a protectedProcedure: any signed-in user could trigger
  * `syncSkillsToDatabase`, which deletes every clause template of each

@@ -20,14 +20,14 @@ catalog refresh on the next boot.
 
 ### Security
 - **Rate limits on every public route that signs in, sends a link or takes an
-  intake (cycle 15, 2026-10-02).** Added to the existing database-backed
+  intake.** Added to the existing database-backed
   limits (sign-in 20 per 15 minutes, magic links 5 per hour, skill download
   and install, health check): the in-app feedback form (5 per minute per
   client), the invitation look-up by token (30 per minute), the Firmas signing
   bundle look-up (30 per minute) and the Firmas signing callback (10 per
   minute). Over the limit the answer is HTTP 429 with `Retry-After`. The
   counter lives in the database, so the limits hold across instances.
-- **The cycle 12 findings are closed.** The caller-driven signing webhook is
+- **Security review findings are closed.** The caller-driven signing webhook is
   removed and the signing request is visible to the deal's parties only; the
   administrator and supervisor portals each read only session tokens issued
   by their own sign-in; the second-factor cookies are signed and bound to the
@@ -46,7 +46,7 @@ catalog refresh on the next boot.
   start of its signature (HTTP 402 until then), with agent credit packs for
   the agent API. Switched on only when the five billing variables are set; see
   `docs/billing.md`. The kit sets none of them and is unaffected.
-- **An end-to-end test of the paid path in CI (cycle 15).** Draft, agree, the
+- **An end-to-end test of the paid path in CI.** Draft, agree, the
   402 at download, the checkout on Stripe's official mock server, the webhook
   signed with a test secret, the download and the signature, through the real
   procedures and routes on a throwaway database (`npm run test:integration`,
@@ -94,7 +94,7 @@ catalog refresh on the next boot.
   agreed contract to its signature.
 
 ### Changed
-- **No friction (2026-10-01).** Checkout asks for a card and nothing else (no
+- **Simpler checkout and footers (2026-10-01).** Checkout asks for a card and nothing else (no
   billing address, tax id or invoice; the payment provider's receipt is the
   record, no tax calculated); the invoice links on `/billing` and
   `GET /api/v1/agent/credits/invoices` are removed, as are the

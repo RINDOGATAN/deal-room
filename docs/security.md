@@ -20,7 +20,7 @@ The operator runs the service for its users.
 | Inbound webhooks | Gavel and Stripe refuse unsigned or wrongly signed calls; the Gavel webhook answers 503 when its secret is not set. |
 | Scheduled jobs | `/api/cron/daily` runs from Vercel cron and answers 503 unless `CRON_SECRET` is set and presented. |
 | TLS | Terminated by Vercel. |
-| Backups | Neon's own history and restore. A restore rehearsal is an owner action (see `STATUS.md`, not committed). |
+| Backups | Neon's own history and restore. A restore rehearsal is an operator action. |
 | Schema changes | `prisma migrate deploy` in the Vercel build. See `docs/migrations.md`. |
 
 ## Self-hosted (TODO.LAW suite, port 8486)

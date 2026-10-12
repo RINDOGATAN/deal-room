@@ -2,7 +2,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * The BAA's PHI posture (owner, 6 October 2026).
+ * The BAA's PHI posture.
  *
  * The hosted BAA (BAA_NEGOTIATOR) is offered only in its springing posture:
  * for services designed not to receive protected health information

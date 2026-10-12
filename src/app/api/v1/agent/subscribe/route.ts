@@ -5,9 +5,8 @@
  * Agent API — subscriptions, retired (HTTP 410)
  *
  * POST /api/v1/agent/subscribe
- * This route sold per-skill subscriptions, and in round 1 of pay per
- * contract it was going to sell a monthly plan. Both are gone (owner
- * decision 2026-09-29): every template is included and each contract is
+ * This route sold per-skill subscriptions, and an earlier design of pay
+ * per contract had it sell a monthly plan. Both are gone: every template is included and each contract is
  * paid with one prepaid credit of the customer when its document is first
  * fetched. Credits: POST /api/v1/agent/credits/checkout.
  *

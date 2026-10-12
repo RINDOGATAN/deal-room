@@ -67,8 +67,7 @@ export function agentContractType(code: string): AgentContractType | undefined {
 }
 
 /**
- * The contracts agents ask for most, in that order (owner, 6 October
- * 2026). The rest follow in the order of the contract guides.
+ * The contracts agents ask for most, in that order. The rest follow in the order of the contract guides.
  */
 export const COMMON_CONTRACTS = [
   "NDA",

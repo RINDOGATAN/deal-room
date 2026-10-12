@@ -2,8 +2,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * Joint closing counsel by e-mail (Stage B, owner's decision of
- * 6 October 2026): the initiator names the lawyer, the other party is told
+ * Joint closing counsel by e-mail (Stage B): the initiator names the lawyer, the other party is told
  * and acknowledges or declines; no list, no fee.
  */
 import { beforeEach, describe, expect, it, vi } from "vitest";

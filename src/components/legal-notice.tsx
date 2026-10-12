@@ -3,7 +3,7 @@
 
 /**
  * The copyright notice, rendered once from the root layout so it closes
- * every page. Only the notice (owner, 2026-10-01): no licence name, no
+ * every page. Only the notice: no licence name, no
  * "Source & licence" link, no repeated product name. The licence and the
  * corresponding-source offer stay at /licenses.
  */

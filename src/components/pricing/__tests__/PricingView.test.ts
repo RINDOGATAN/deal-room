@@ -112,7 +112,7 @@ describe("pricing page", () => {
   });
 });
 
-describe("pricing page: the Cloud Plan line (owner, 11 Oct 2026)", () => {
+describe("pricing page: the Cloud Plan line", () => {
   it("points to the Cloud Plan of the privacy and AI governance tools on the Spanish page only, with no amount", () => {
     const enHtml = render(pricingFacts({ locale: "en", env: ENV }), true, "en", "USD");
     const esHtml = render(pricingFacts({ locale: "es", env: ENV }), true, "es", "EUR");

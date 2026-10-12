@@ -2,9 +2,8 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * No header or footer link may lead to a 404 (owner's test purchase,
- * 2 October 2026: the footer's "Billing" link went to Settings, which
- * 404s once hosted billing is on).
+ * No header or footer link may lead to a 404 (regression: the footer's
+ * "Billing" link went to Settings, which 404s once hosted billing is on).
  *
  * For every internal link in the app's headers and footers, and in every
  * posture (hosted with billing off, hosted with billing, self-hosted kit):

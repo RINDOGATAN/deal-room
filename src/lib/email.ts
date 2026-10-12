@@ -130,7 +130,7 @@ export async function sendAttorneyReviewRequestEmail({
 }
 
 /**
- * "Invite your own lawyer" (owner's decision E1, step 1, 6 October 2026):
+ * "Invite your own lawyer":
  * a party invites a lawyer of its choice to review the draft in the
  * attorney review. Same path as the attorney review request above (the
  * supervisor portal); the wording says that the lawyer and the client deal
@@ -285,7 +285,7 @@ export async function sendJointCounselNotificationEmail({
 }
 
 /**
- * Joint closing counsel by invitation (owner's decision, 6 October 2026):
+ * Joint closing counsel by invitation:
  * the initiator names a lawyer by e-mail; the wording says that the lawyer
  * and the parties deal with each other directly and that Dealroom takes no
  * fee. Replaces the assignment e-mail sent to a lawyer picked from the
@@ -551,7 +551,7 @@ export async function sendFirmasSigningEmail({
 }
 
 // ────────────────────────────────────────────────────────────
-// Transactional deal emails (owner decisions of 2026-10-04):
+// Transactional deal emails:
 // "your turn", invitation reminders, "your contract is ready" and the
 // unfinished-draft reminder. Wording lives in the `dealEmails` namespace of
 // src/messages/{en,es}.json; who gets what and when is decided in

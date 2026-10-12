@@ -2,8 +2,8 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * Agent API: delete one of the caller's single-party deals and its data
- * (owner's decision, 2026-10-06). First user: an MCP server that deletes
+ * Agent API: delete one of the caller's single-party deals and its data,
+ * for example from an MCP server that deletes
  * its client's facts 30 days after release.
  *
  * Only the account that created the deal (the initiator customer) may

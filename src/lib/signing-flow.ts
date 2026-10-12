@@ -2,7 +2,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * The signing page as one flow (owner's test purchase, 2 October 2026).
+ * The signing page as one flow.
  *
  * Once every clause is agreed, the page shows ONE step and at most ONE
  * primary action:

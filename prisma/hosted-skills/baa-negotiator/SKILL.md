@@ -332,7 +332,7 @@ For each clause in scope, the full trade-off card:
   value offered; the conventional wording for `yes` of Sections 2, 3, 5 and 6 and of
   the Background, drafted 2026-10-06, stays in boilerplate.json but is not offered
   until the supervising lawyer reviews it: `BAA_CONVENTIONAL_ENABLED` in
-  `src/lib/baa-posture.ts`, owner 2026-10-06), `underlying-agreement`
+  `src/lib/baa-posture.ts`), `underlying-agreement`
   (title and date, optional) and `dispute-venue` (optional).
 - **2025 HHS Security Rule NPRM**: PROPOSED, not final, as of 2026-07-23. On any final
   rule: re-verify the §6/§8 cards and the §18 mechanic, bump `lawReviewedAsOf`.
