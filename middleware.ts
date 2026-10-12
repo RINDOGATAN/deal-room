@@ -25,10 +25,11 @@ async function route(request: NextRequest) {
   // one on a first request, with no cookies yet) can skip them.
   const response = await gate(request);
 
-  // The region guess for the browser (Europe → EUR, otherwise USD; see
-  // `src/lib/currency.ts`), on whatever response the gate produced,
-  // redirects included. A session cookie, rewritten whenever the guess
-  // changes, so a cookie left by the earlier 30-day rule is corrected.
+  // The region guess for the browser (EU member state → EUR, otherwise
+  // USD; see `src/lib/currency.ts`), on whatever response the gate
+  // produced, redirects included. A session cookie, re-evaluated on every
+  // page request and rewritten whenever it differs, so a cookie written
+  // under an earlier rule is corrected on the next page load.
   const currency = regionCurrency({
     country: request.headers.get("x-vercel-ip-country"),
     acceptLanguage: request.headers.get("accept-language"),

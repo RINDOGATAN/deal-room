@@ -2,16 +2,17 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * One currency per visitor: euros in Europe (EU, EEA, United Kingdom,
- * Switzerland), dollars elsewhere. Country header first, then the
- * Accept-Language region, then dollars; a stored billing currency wins.
- * There is no switch.
+ * One currency per visitor: euros in the 27 EU member states, dollars
+ * everywhere else. Country header first, then the Accept-Language region
+ * (same EU list), then dollars; a stored billing currency wins; Spanish
+ * pages always show euros. There is no switch.
  */
 import { describe, it, expect } from "vitest";
 import {
   EUROPE_COUNTRIES,
   currencyForCountry,
   currencyFromCookieHeader,
+  displayCurrency,
   formatPrice,
   regionCurrency,
   regionFromAcceptLanguage,
@@ -22,21 +23,25 @@ import en from "@/messages/en.json";
 import es from "@/messages/es.json";
 
 describe("currencyForCountry", () => {
-  it("gives euros to the EU, the EEA, the United Kingdom and Switzerland", () => {
-    for (const code of ["ES", "de", "FR", "IE", "GR", "NO", "IS", "LI", "GB", "CH"]) {
+  it("gives euros to the EU member states", () => {
+    for (const code of ["DE", "ES", "IE", "de", "FR", "GR", "EL", "HR", "CY", "MT", "SE", "BG"]) {
       expect(currencyForCountry(code)).toBe("EUR");
     }
   });
 
-  it("gives dollars to everyone else and to an unknown visitor", () => {
-    for (const code of ["US", "CA", "MX", "BR", "AR", "JP", "IN", "AU", "TR", "RU", "UA", "MA", "", null]) {
+  it("gives dollars to the UK, Switzerland, the EEA outside the EU, and everyone else", () => {
+    for (const code of [
+      "GB", "UK", "CH", "NO", "IS", "LI",
+      "AD", "MC", "SM", "VA", "GI", "JE", "GG", "IM", "ME", "XK",
+      "US", "CA", "MX", "BR", "AR", "JP", "IN", "AU", "TR", "RU", "UA", "MA", "", null,
+    ]) {
       expect(currencyForCountry(code)).toBe("USD");
     }
   });
 
-  it("lists the 27 EU members, 3 EEA states, the UK and Switzerland, two aliases, eight microstates and territories, and the two euro users outside the EU", () => {
-    expect(EUROPE_COUNTRIES.size).toBe(27 + 3 + 2 + 2 + 8 + 2);
-    for (const c of ["AD", "MC", "SM", "VA", "GI", "JE", "GG", "IM", "ME", "XK"]) expect(EUROPE_COUNTRIES.has(c)).toBe(true);
+  it("lists exactly the 27 EU members plus the EL alias for Greece", () => {
+    expect(EUROPE_COUNTRIES.size).toBe(27 + 1);
+    for (const c of ["GB", "CH", "NO", "IS", "LI"]) expect(EUROPE_COUNTRIES.has(c)).toBe(false);
   });
 });
 
@@ -62,8 +67,18 @@ describe("regionCurrency", () => {
     expect(regionCurrency({ country: "ES", acceptLanguage: "en-US" })).toBe("EUR");
   });
 
-  it("falls back to the Accept-Language region, then to dollars", () => {
+  it("gives dollars for GB, CH, NO, MX, BR and US headers", () => {
+    for (const country of ["GB", "CH", "NO", "MX", "BR", "US"]) {
+      expect(regionCurrency({ country, acceptLanguage: "de-DE" })).toBe("USD");
+    }
+  });
+
+  it("falls back to the Accept-Language region (EU list), then to dollars", () => {
     expect(regionCurrency({ acceptLanguage: "de-DE,de" })).toBe("EUR");
+    expect(regionCurrency({ acceptLanguage: "en-IE" })).toBe("EUR");
+    expect(regionCurrency({ acceptLanguage: "en-GB,en" })).toBe("USD");
+    expect(regionCurrency({ acceptLanguage: "de-CH" })).toBe("USD");
+    expect(regionCurrency({ acceptLanguage: "nb-NO" })).toBe("USD");
     expect(regionCurrency({ acceptLanguage: "es-MX" })).toBe("USD");
     expect(regionCurrency({ acceptLanguage: "es" })).toBe("USD");
     expect(regionCurrency({})).toBe("USD");
@@ -80,8 +95,20 @@ describe("resolveVisitorCurrency", () => {
 
   it("reads the request headers", () => {
     const headers = new Headers({ "x-vercel-ip-country": "CH", "accept-language": "en-US" });
-    expect(resolveVisitorCurrencyFromHeaders(headers)).toBe("EUR");
+    expect(resolveVisitorCurrencyFromHeaders(headers)).toBe("USD");
+    expect(resolveVisitorCurrencyFromHeaders(new Headers({ "x-vercel-ip-country": "IE" }))).toBe("EUR");
+    expect(resolveVisitorCurrencyFromHeaders(new Headers({ "x-vercel-ip-country": "GB" }))).toBe("USD");
+    expect(resolveVisitorCurrencyFromHeaders(new Headers({ "x-vercel-ip-country": "GB" }), "eur")).toBe("EUR");
     expect(resolveVisitorCurrencyFromHeaders(new Headers({ "accept-language": "fr-FR" }))).toBe("EUR");
+  });
+});
+
+describe("displayCurrency", () => {
+  it("shows euros on every Spanish page, whatever the visitor's currency", () => {
+    expect(displayCurrency("es", "USD")).toBe("EUR");
+    expect(displayCurrency("es", "EUR")).toBe("EUR");
+    expect(displayCurrency("en", "USD")).toBe("USD");
+    expect(displayCurrency("en", "EUR")).toBe("EUR");
   });
 });
 

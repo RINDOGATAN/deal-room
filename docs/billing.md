@@ -71,10 +71,14 @@ new Stripe price, point the variable at it, and update the display variable.
 
 ### Which currency a person sees (2026-10-01)
 
-One currency per visitor, never both. Euros for a visitor in the EU, the
-EEA, the United Kingdom or Switzerland; dollars for everyone else. The
-region comes from the `x-vercel-ip-country` header, else the region of the
-`Accept-Language` header, else dollars (`src/lib/currency.ts`). A signed-in
+One currency per visitor, never both. Euros for a visitor in one of the 27
+EU member states; dollars for everyone else, including the United Kingdom,
+Switzerland and the EEA states outside the EU. The region comes from the
+`x-vercel-ip-country` header, else the region of the `Accept-Language`
+header (same EU list), else dollars (`src/lib/currency.ts`). Spanish pages
+always show euros. The `currency` session cookie is re-evaluated by the
+middleware on every page request, so a value written under an earlier rule
+is replaced on the next page load. A signed-in
 customer's stored billing currency (`Customer.metadata.preferredCurrency`)
 wins over the region guess. There is no currency switch (removed
 2026-10-02, with its `currency_choice` cookie; a leftover cookie is

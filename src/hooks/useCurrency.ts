@@ -9,7 +9,7 @@ import { displayCurrency, getCurrency, subscribeCurrency, type Currency } from "
 /**
  * The visitor's currency: the region guess the middleware wrote. There is
  * no switch. The first render (and the prerendered HTML) uses dollars; the
- * cookie switches a European visitor to euros on load.
+ * cookie switches a visitor in the EU to euros on load.
  */
 export function useCurrency(): Currency {
   return useSyncExternalStore(subscribeCurrency, getCurrency, serverCurrency);

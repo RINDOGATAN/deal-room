@@ -81,7 +81,7 @@ describe("middleware gate, first visit (no cookies)", () => {
     expect(currency).not.toMatch(/Max-Age|Expires/i);
   });
 
-  it("sets EUR for a visitor in Europe and USD for one elsewhere", async () => {
+  it("sets EUR for a visitor in the EU and USD for one elsewhere", async () => {
     const at = (headers: Record<string, string>, cookie?: string) =>
       middleware(
         new NextRequest("https://dealroom.todo.law/deals", {
@@ -91,12 +91,16 @@ describe("middleware gate, first visit (no cookies)", () => {
     const value = (res: Response) =>
       res.headers.getSetCookie().find((c) => c.startsWith("currency="))?.split(";")[0];
     expect(value(await at({ "x-vercel-ip-country": "ES" }))).toBe("currency=EUR");
-    expect(value(await at({ "x-vercel-ip-country": "GB" }))).toBe("currency=EUR");
+    expect(value(await at({ "x-vercel-ip-country": "GB" }))).toBe("currency=USD");
+    expect(value(await at({ "x-vercel-ip-country": "CH" }))).toBe("currency=USD");
     expect(value(await at({ "x-vercel-ip-country": "BR" }))).toBe("currency=USD");
     // No country header: the Accept-Language region decides.
-    expect(value(await at({ "accept-language": "de-CH,de;q=0.9" }))).toBe("currency=EUR");
-    // A cookie left by the earlier rule (any non-US country → EUR) is corrected.
+    expect(value(await at({ "accept-language": "de-DE,de;q=0.9" }))).toBe("currency=EUR");
+    expect(value(await at({ "accept-language": "de-CH,de;q=0.9" }))).toBe("currency=USD");
+    expect(value(await at({}))).toBe("currency=USD");
+    // A cookie written under an earlier rule is corrected on the next request.
     expect(value(await at({ "x-vercel-ip-country": "BR" }, "currency=EUR"))).toBe("currency=USD");
+    expect(value(await at({ "x-vercel-ip-country": "GB" }, "currency=EUR"))).toBe("currency=USD");
   });
 
   it("sets USD for a US visitor on a redirect too", async () => {
