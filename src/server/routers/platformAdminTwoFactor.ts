@@ -10,6 +10,7 @@ import {
   verifyAdminToken,
 } from "@/lib/totp-admin";
 import { claimSecondFactorAttempt } from "../services/second-factor";
+import { sealTotpSecret } from "@/lib/totp-secret-box";
 
 export const platformAdminTwoFactorRouter = createTRPCRouter({
   // Get 2FA status for current platform admin
@@ -64,11 +65,11 @@ export const platformAdminTwoFactorRouter = createTRPCRouter({
       where: { adminId: admin.id },
       create: {
         adminId: admin.id,
-        secret,
+        secret: sealTotpSecret(secret),
         verified: false,
       },
       update: {
-        secret,
+        secret: sealTotpSecret(secret),
         verified: false,
       },
     });

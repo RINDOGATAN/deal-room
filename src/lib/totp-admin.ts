@@ -4,6 +4,7 @@
 import * as OTPAuth from "otpauth";
 import QRCode from "qrcode";
 import { totpIssuers } from "@/config/brand";
+import { openTotpSecret } from "@/lib/totp-secret-box";
 
 const ISSUER = totpIssuers.admin;
 
@@ -18,13 +19,14 @@ export function generateAdminSecret(email: string): string {
   return totp.secret.base32;
 }
 
-export function verifyAdminToken(secret: string, token: string): boolean {
+/** `stored` is the column value, plain or encrypted (src/lib/totp-secret-box.ts). */
+export function verifyAdminToken(stored: string, token: string): boolean {
   const totp = new OTPAuth.TOTP({
     issuer: ISSUER,
     algorithm: "SHA1",
     digits: 6,
     period: 30,
-    secret: OTPAuth.Secret.fromBase32(secret),
+    secret: OTPAuth.Secret.fromBase32(openTotpSecret(stored)),
   });
 
   // Allow 2 period window for clock drift (60 seconds either direction)
