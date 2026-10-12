@@ -8,7 +8,7 @@
  * is its paid public service).
  */
 import { describe, it, expect } from "vitest";
-import { COPY, LADDER, WAY_CARD, levelOf, pickWay, recommend, type Answers, type Locale } from "./safeguards";
+import { COPY, HOSTING, LADDER, WAY_CARD, WAY_NAMES, hostingLine, levelOf, pickWay, recommend, type Answers, type Locale } from "./safeguards";
 import en from "../i18n/en/dealroom-startups.json";
 import es from "../i18n/es/dealroom-startups.json";
 
@@ -51,7 +51,7 @@ describe.each(LOCALES)("Dealroom safeguards guide (%s)", (locale) => {
     const names = (["cloud", "managed", "deploy"] as const).map((w) => DICT[locale][`${locale}.ways.w${WAY_CARD[locale][w]}.title`]);
     expect(names).toEqual(
       locale === "en"
-        ? ["In the TODO.LAW cloud", "Managed instance", "Your own hardware"]
+        ? ["TODO.LAW cloud", "Managed instance", "Your own hardware"]
         : ["En la nube de TODO.LAW", "Instancia gestionada", "Tu propio hardware"],
     );
     // Managed and your own hardware are priced on quotation, with no figure.
@@ -64,5 +64,19 @@ describe.each(LOCALES)("Dealroom safeguards guide (%s)", (locale) => {
     expect(text).not.toMatch(/—|–/);
     expect(text).not.toMatch(/no independent certification|without certification|sin certificación|no tenemos certificación/i);
     expect(text).not.toMatch(/pilot|piloto|six weeks|seis semanas|runbook|manual de operación/i);
+  });
+});
+
+describe("the cloud's hosting line and the way names", () => {
+  it("names the United States in both languages and to every visitor", () => {
+    expect(hostingLine(HOSTING, "es", false)).toContain("Estados Unidos");
+    expect(hostingLine(HOSTING, "en", true)).toContain("United States");
+    expect(hostingLine(HOSTING, "en", false)).toContain("United States");
+  });
+
+  it("names each way as its box on this landing does", () => {
+    const dict: Record<Locale, Record<string, string>> = { en, es };
+    for (const p of ["en", "es"] as Locale[])
+      for (const w of LADDER[p]) expect(dict[p][`${p}.ways.w${WAY_CARD[p][w]}.title`]).toBe(WAY_NAMES[p][w]);
   });
 });
