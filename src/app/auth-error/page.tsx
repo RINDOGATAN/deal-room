@@ -47,6 +47,8 @@ function AuthErrorContent() {
         return "errorVerification";
       case "AccessDenied":
         return "errorAccessDenied";
+      case "EmailNotAccepted":
+        return "errorEmailNotAccepted";
       case "Configuration":
         return "errorConfiguration";
       case "OAuthSignin":

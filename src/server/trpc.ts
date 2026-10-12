@@ -15,6 +15,7 @@ import {
 } from "@/lib/portal-session";
 import prisma from "@/lib/prisma";
 import { presentInternalError } from "@/server/internal-error";
+import { EmailNotAcceptedError } from "@/lib/email-policy-server";
 import {
   RateLimitedError,
   checkPublicRateLimit,
@@ -77,6 +78,10 @@ const t = initTRPC.context<typeof createTRPCContext>().create({
         // Never send a server stack trace to the browser.
         stack: undefined,
         reference: internal?.reference ?? null,
+        // The e-mail policy's message key (email-policy.ts), so a client
+        // can recognise the refusal without matching on the sentence.
+        messageKey:
+          error.cause instanceof EmailNotAcceptedError ? error.cause.messageKey : null,
         zodError:
           error.cause instanceof ZodError ? error.cause.flatten() : null,
       },

@@ -8,5 +8,6 @@
   "login.magicLink": "Enviar enlace mágico",
   "login.newHere": "¿Primera vez? Regístrate",
   "or": "o",
-  "continueWithGoogle": "Continuar con Google"
+  "continueWithGoogle": "Continuar con Google",
+  "emailNotAccepted": "Usa tu correo del trabajo u otra dirección personal. No podemos aceptar esta."
 }

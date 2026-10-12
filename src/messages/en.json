@@ -73,6 +73,7 @@
     "errorTitle": "Sign-in problem",
     "errorVerification": "The magic link has expired or has already been used. Request a new one.",
     "errorAccessDenied": "Access denied. You don't have permission to sign in.",
+    "errorEmailNotAccepted": "Please use your work e-mail address, or a different personal address. We can't accept this one.",
     "errorConfiguration": "Sign-in is misconfigured. Please contact support.",
     "errorOAuth": "Sign-in via Google didn't go through. Please try again.",
     "errorDefault": "Something went wrong while signing you in. Please try again.",

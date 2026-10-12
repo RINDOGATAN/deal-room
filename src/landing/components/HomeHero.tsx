@@ -18,6 +18,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { ArrowRight, Check, Loader2 } from "lucide-react";
+import { isBlockedAccountEmail } from "@/lib/email-policy";
 
 export const HERO_VIDEO = "/hero-dealroom-bg.mp4";
 export const HERO_POSTER = "/hero-dealroom-poster.webp";
@@ -43,6 +44,7 @@ const GoogleIcon = () => (
 
 /** POST to a next-auth sign-in endpoint; returns the URL next-auth answers with. */
 async function postSignIn(providerId: string, fields: Record<string, string>): Promise<{ ok: boolean; url: URL | null }> {
+  // A 400 from the e-mail policy also carries JSON with an error URL.
   const csrfRes = await fetch("/api/auth/csrf");
   const { csrfToken } = (await csrfRes.json()) as { csrfToken: string };
   const res = await fetch(`/api/auth/signin/${providerId}`, {
@@ -72,6 +74,8 @@ export default function HomeHero({ t, tAuth, callbackUrl }: HomeHeroProps) {
   const [emailInput, setEmailInput] = useState("");
   const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
+  // The e-mail policy message, shown under the e-mail field (email-policy.ts).
+  const [emailError, setEmailError] = useState("");
   const emailProviderRef = useRef<string | null>(null);
 
   // Detect which email-type provider is registered (v4 "email" vs v5 "resend").
@@ -111,10 +115,13 @@ export default function HomeHero({ t, tAuth, callbackUrl }: HomeHeroProps) {
     else vid.addEventListener("canplay", tryPlay, { once: true });
   }, [showVideo]);
 
-  const sendMagicLink = async (email: string): Promise<boolean> => {
+  const sendMagicLink = async (email: string): Promise<boolean | "refused"> => {
+    if (isBlockedAccountEmail(email)) return "refused";
     const providerId = emailProviderRef.current;
     if (!providerId) return false;
-    return (await postSignIn(providerId, { email, callbackUrl })).ok;
+    const res = await postSignIn(providerId, { email, callbackUrl });
+    if (res.url?.searchParams.get("error") === "EmailNotAccepted") return "refused";
+    return res.ok;
   };
 
   const handleMagicLink = async (e: React.FormEvent) => {
@@ -123,7 +130,9 @@ export default function HomeHero({ t, tAuth, callbackUrl }: HomeHeroProps) {
     setSending(true);
     try {
       const ok = await sendMagicLink(emailInput);
-      if (ok) {
+      if (ok === "refused") {
+        setEmailError(tAuth("emailNotAccepted"));
+      } else if (ok) {
         setCardMode("sent");
       } else {
         setError("Email sign-in is not available. Please use Google.");
@@ -140,7 +149,9 @@ export default function HomeHero({ t, tAuth, callbackUrl }: HomeHeroProps) {
     setSending(true);
     try {
       const ok = await sendMagicLink(emailInput);
-      if (!ok) {
+      if (ok === "refused") {
+        setError(tAuth("emailNotAccepted"));
+      } else if (!ok) {
         setError("Failed to resend link. Please try again.");
       }
     } catch {
@@ -181,16 +192,28 @@ export default function HomeHero({ t, tAuth, callbackUrl }: HomeHeroProps) {
   );
 
   const emailField = (
-    <input
-      type="email"
-      required
-      aria-label="Email"
-      autoComplete="email"
-      value={emailInput}
-      onChange={(e) => setEmailInput(e.target.value)}
-      placeholder="you@startup.com"
-      className="w-full px-4 py-3 bg-secondary/80 border border-border rounded-xl text-sm font-body text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent/50 transition-all"
-    />
+    <div className="space-y-2">
+      <input
+        type="email"
+        required
+        aria-label="Email"
+        autoComplete="email"
+        value={emailInput}
+        onChange={(e) => {
+          setEmailInput(e.target.value);
+          setEmailError("");
+        }}
+        aria-invalid={emailError ? true : undefined}
+        aria-describedby={emailError ? "hero-email-error" : undefined}
+        placeholder="you@startup.com"
+        className="w-full px-4 py-3 bg-secondary/80 border border-border rounded-xl text-sm font-body text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent/50 transition-all"
+      />
+      {emailError && (
+        <p id="hero-email-error" role="alert" className="text-sm text-danger font-body">
+          {emailError}
+        </p>
+      )}
+    </div>
   );
 
   const submitClass =

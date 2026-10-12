@@ -95,6 +95,22 @@ describe("inviteOwnLawyer", () => {
     expect(db.supervisor.create).not.toHaveBeenCalled();
   });
 
+  it.each(["x@hotmail.com", "X@AOL.CO.UK", "A.B.C.D@GMAIL.COM"])(
+    "refuses %s under the account e-mail policy, before any account is made",
+    async (email) => {
+      const { db } = makeDb();
+      const r = await inviteOwnLawyer(db as never, { partyId: "party_0", lawyerEmail: email, via: "app", lang: "es" });
+      expect(r).toEqual({
+        ok: false,
+        status: 400,
+        code: "email_not_accepted",
+        error: "Usa tu correo del trabajo u otra dirección personal. No podemos aceptar esta.",
+      });
+      expect(db.supervisor.create).not.toHaveBeenCalled();
+      expect(mail.sendOwnLawyerInviteEmail).not.toHaveBeenCalled();
+    },
+  );
+
   it("refuses the usual cases and sends nothing", async () => {
     const cases = [
       [makeDb({ dealStatus: "NEGOTIATING", parties: [{ status: "PENDING" }] }), "NOT_READY"],

@@ -6,6 +6,8 @@ import type { Prisma } from "@prisma/client";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
 import { requestJointCounsel } from "@/server/services/attorney/jointCounsel";
+import { BLOCKED_EMAIL_MESSAGE_KEY, blockedEmailMessage } from "@/lib/email-policy";
+import { emailNotAcceptedTrpcError, localeFromCookies } from "@/lib/email-policy-server";
 
 export const jointCounselRouter = createTRPCRouter({
   /**
@@ -38,6 +40,10 @@ export const jointCounselRouter = createTRPCRouter({
         actorUserId: ctx.session.user.id,
         lang: input.lang,
       });
+      if (!result.ok && result.code === BLOCKED_EMAIL_MESSAGE_KEY) {
+        const locale = input.lang ?? localeFromCookies(ctx.getCookie);
+        throw emailNotAcceptedTrpcError(blockedEmailMessage(locale), locale);
+      }
       if (!result.ok) {
         const code =
           result.status === 404 ? "NOT_FOUND"

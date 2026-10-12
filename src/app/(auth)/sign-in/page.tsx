@@ -13,6 +13,9 @@ import { features } from "@/config/features";
 import { TESTER_EMAILS } from "@/lib/tester";
 import { StatusNote } from "@/components/ui/status-note";
 import { nextPathFromLocation } from "@/lib/sign-in-next";
+import { isBlockedAccountEmail } from "@/lib/email-policy";
+
+const EMAIL_NOT_ACCEPTED = "EmailNotAccepted";
 
 const TESTER_MODE_ON = process.env.NEXT_PUBLIC_TESTER_MODE === "true";
 
@@ -39,10 +42,21 @@ export default function SignInPage() {
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const [emailSent, setEmailSent] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // The e-mail policy message, shown under the e-mail field (email-policy.ts).
+  const [emailError, setEmailError] = useState<string | null>(null);
+
+  /** True (and the message shown) when the address may not sign in. */
+  const refuseEmail = (): boolean => {
+    if (!isBlockedAccountEmail(email)) return false;
+    setEmailError(t("errorEmailNotAccepted"));
+    return true;
+  };
 
   const handleEmailSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email.trim()) return;
+
+    if (refuseEmail()) return;
 
     setIsEmailLoading(true);
     setError(null);
@@ -54,7 +68,10 @@ export default function SignInPage() {
         callbackUrl: nextPathFromLocation(),
       });
 
-      if (result?.error) {
+      if (result?.error === EMAIL_NOT_ACCEPTED) {
+        setEmailError(t("errorEmailNotAccepted"));
+        setIsEmailLoading(false);
+      } else if (result?.error) {
         setError(t("failedMagicLink"));
         setIsEmailLoading(false);
       } else {
@@ -70,6 +87,8 @@ export default function SignInPage() {
     e.preventDefault();
     if (!email.trim() || !code.trim()) return;
 
+    if (refuseEmail()) return;
+
     setIsEmailLoading(true);
     setError(null);
 
@@ -81,7 +100,10 @@ export default function SignInPage() {
         callbackUrl: nextPathFromLocation(),
       });
 
-      if (result?.error) {
+      if (result?.error === EMAIL_NOT_ACCEPTED) {
+        setEmailError(t("errorEmailNotAccepted"));
+        setIsEmailLoading(false);
+      } else if (result?.error) {
         setError(t("invalidInviteCode"));
         setIsEmailLoading(false);
       } else if (result?.ok) {
@@ -97,6 +119,8 @@ export default function SignInPage() {
     e.preventDefault();
     if (!email.trim()) return;
 
+    if (refuseEmail()) return;
+
     setIsEmailLoading(true);
     setError(null);
 
@@ -107,7 +131,10 @@ export default function SignInPage() {
         callbackUrl: nextPathFromLocation(),
       });
 
-      if (result?.error) {
+      if (result?.error === EMAIL_NOT_ACCEPTED) {
+        setEmailError(t("errorEmailNotAccepted"));
+        setIsEmailLoading(false);
+      } else if (result?.error) {
         setError(t("unexpectedError"));
         setIsEmailLoading(false);
       } else if (result?.ok) {
@@ -189,10 +216,20 @@ export default function SignInPage() {
                 type="email"
                 placeholder="you@company.com"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  setEmailError(null);
+                }}
                 required
+                aria-invalid={emailError ? true : undefined}
+                aria-describedby={emailError ? "email-error" : undefined}
                 className="bg-background"
               />
+              {emailError && (
+                <p id="email-error" role="alert" className="text-sm text-danger">
+                  {emailError}
+                </p>
+              )}
             </div>
 
             <button
@@ -229,10 +266,20 @@ export default function SignInPage() {
                 type="email"
                 placeholder="you@company.com"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  setEmailError(null);
+                }}
                 required
+                aria-invalid={emailError ? true : undefined}
+                aria-describedby={emailError ? "email-error" : undefined}
                 className="bg-background"
               />
+              {emailError && (
+                <p id="email-error" role="alert" className="text-sm text-danger">
+                  {emailError}
+                </p>
+              )}
             </div>
 
             <button
@@ -269,10 +316,20 @@ export default function SignInPage() {
                 type="email"
                 placeholder="you@company.com"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  setEmailError(null);
+                }}
                 required
+                aria-invalid={emailError ? true : undefined}
+                aria-describedby={emailError ? "email-error" : undefined}
                 className="bg-background"
               />
+              {emailError && (
+                <p id="email-error" role="alert" className="text-sm text-danger">
+                  {emailError}
+                </p>
+              )}
             </div>
 
             <div className="space-y-2">

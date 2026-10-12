@@ -20,6 +20,7 @@ import {
 } from "@/lib/email";
 import { createLogger } from "@/lib/logger";
 import { findOrCreateInvitedLawyer } from "./ownLawyer";
+import { BLOCKED_EMAIL_MESSAGE_KEY, blockedEmailMessage, isBlockedAccountEmail } from "@/lib/email-policy";
 
 const logger = createLogger("joint-counsel");
 
@@ -53,6 +54,11 @@ export async function requestJointCounsel(
   },
 ): Promise<RequestJointCounselResult> {
   const email = input.lawyerEmail.trim().toLowerCase();
+  // The invited lawyer signs in with this address: the account e-mail
+  // policy applies (email-policy.ts).
+  if (isBlockedAccountEmail(email)) {
+    return fail(400, BLOCKED_EMAIL_MESSAGE_KEY, blockedEmailMessage(input.lang));
+  }
   const party = await db.dealRoomParty.findUnique({
     where: { id: input.partyId },
     include: { dealRoom: { include: { parties: true } } },

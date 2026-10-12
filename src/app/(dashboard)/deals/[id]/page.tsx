@@ -52,6 +52,8 @@ import { buildObligationsLedger } from "@/lib/obligations";
 import { StatusNote } from "@/components/ui/status-note";
 import { CheckoutReturn, PaidDownloads, useDealPayment } from "@/components/billing/ContractPayment";
 import { features } from "@/config/features";
+import { blockedEmailMessage, isBlockedAccountEmail } from "@/lib/email-policy";
+import { EmailPolicyError, isEmailPolicyError } from "@/components/EmailPolicyError";
 
 function DownloadLinks({ dealId, className, showTia }: { dealId: string; className?: string; showTia?: boolean }) {
   // Pay per contract: hidden until the contract is paid (unchanged when
@@ -188,6 +190,7 @@ function DealDetailContent({ dealId }: { dealId: string }) {
 
   const [inviteOpen, setInviteOpen] = useState(false);
   const [inviteEmail, setInviteEmail] = useState("");
+  const [inviteEmailError, setInviteEmailError] = useState<string | null>(null);
   const [inviteName, setInviteName] = useState("");
   const [inviteCompany, setInviteCompany] = useState("");
 
@@ -216,6 +219,10 @@ function DealDetailContent({ dealId }: { dealId: string }) {
       refetch();
     },
     onError: (error) => {
+      if (isEmailPolicyError(error)) {
+        setInviteEmailError(error.message);
+        return;
+      }
       toast.error(t("toastMessages.invitationFailed", { error: error.message }));
     },
   });
@@ -925,10 +932,16 @@ function DealDetailContent({ dealId }: { dealId: string }) {
                 id="inviteEmail"
                 type="email"
                 value={inviteEmail}
-                onChange={(e) => setInviteEmail(e.target.value)}
+                onChange={(e) => {
+                  setInviteEmail(e.target.value);
+                  setInviteEmailError(null);
+                }}
+                aria-invalid={inviteEmailError ? true : undefined}
+                aria-describedby={inviteEmailError ? "invite-email-error" : undefined}
                 placeholder={t("inviteDialog.emailPlaceholder")}
                 className="input-brutal"
               />
+              <EmailPolicyError id="invite-email-error" message={inviteEmailError} />
             </div>
             <div className="space-y-2">
               <Label htmlFor="inviteName">{t("inviteDialog.contactName")}</Label>
@@ -962,6 +975,10 @@ function DealDetailContent({ dealId }: { dealId: string }) {
               onClick={() => {
                 if (!inviteEmail.trim()) {
                   toast.error(t("inviteDialog.emailRequired"));
+                  return;
+                }
+                if (isBlockedAccountEmail(inviteEmail)) {
+                  setInviteEmailError(blockedEmailMessage(locale));
                   return;
                 }
                 sendInvite.mutate({

@@ -4,6 +4,7 @@
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure, rateLimitedPublicProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
+import { assertAccountEmailAllowed, localeFromCookies } from "@/lib/email-policy-server";
 import {
   DealRoomStatus,
   PartyRole,
@@ -27,6 +28,10 @@ export const invitationRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       const userId = ctx.session.user.id;
+
+      // The invited party signs in with this address to accept, so the
+      // account e-mail policy applies here (email-policy.ts).
+      assertAccountEmailAllowed(input.email, localeFromCookies(ctx.getCookie));
 
       // Get the deal room
       const dealRoom = await ctx.prisma.dealRoom.findUnique({

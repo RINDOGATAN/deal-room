@@ -73,6 +73,7 @@
     "errorTitle": "No se pudo iniciar sesión",
     "errorVerification": "El enlace mágico ha caducado o ya se ha usado. Solicita uno nuevo.",
     "errorAccessDenied": "Acceso denegado. No tienes permiso para iniciar sesión.",
+    "errorEmailNotAccepted": "Usa tu correo del trabajo u otra dirección personal. No podemos aceptar esta.",
     "errorConfiguration": "El inicio de sesión está mal configurado. Contacta con soporte.",
     "errorOAuth": "El inicio de sesión con Google no se completó. Vuelve a intentarlo.",
     "errorDefault": "Ha ocurrido un problema al iniciar sesión. Vuelve a intentarlo.",
