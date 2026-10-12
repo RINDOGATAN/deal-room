@@ -1,4 +1,12 @@
 {
+  "hero.badge": "Contract Negotiation",
+  "hero.title.prefix": "Close better deals.",
+  "hero.title.accent": "",
+  "hero.title.suffix": "",
+  "hero.subtitle": "Stop emailing Word files back and forth. Move on from risky templates. Negotiate contracts on one shared platform that proposes a compromise for each clause, using a published weighted formula based on both parties' priorities.",
+  "hero.cta": "Get started",
+  "hero.cta.subtitle": "Stop emailing Word files back and forth. Move on from risky templates.",
+  "hero.login": "Already have an account? Log in",
   "value.label": "Why Dealroom",
   "value.heading.prefix": "Your contracts deserve better than ",
   "value.heading.accent": "email threads",

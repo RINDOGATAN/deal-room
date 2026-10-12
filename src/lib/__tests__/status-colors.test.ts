@@ -148,7 +148,7 @@ describe("product code only uses the palette", () => {
     );
     // The hero sits on a photograph behind a dark scrim, where no token pair
     // can be computed; everywhere else uses --foreground.
-    expect(offenders).toEqual(["src/landing/components/StartupProductPage.tsx"]);
+    expect(offenders).toEqual(["src/landing/components/HomeHero.tsx"]);
   });
 });
 

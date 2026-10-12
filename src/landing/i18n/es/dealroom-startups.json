@@ -1,4 +1,12 @@
 {
+  "hero.badge": "Negociación de Contratos",
+  "hero.title.prefix": "Contratos sólidos. ",
+  "hero.title.accent": "Sin paseos.",
+  "hero.title.suffix": "",
+  "hero.subtitle": "Deja de enviar documentos Word por email y evita plantillas arriesgadas. Negocia contratos en una única plataforma compartida que propone un compromiso para cada cláusula, con una fórmula ponderada publicada que parte de las prioridades de ambas partes.",
+  "hero.cta": "Empieza",
+  "hero.cta.subtitle": "Deja de enviar documentos Word por email y evita plantillas arriesgadas.",
+  "hero.login": "¿Ya tienes cuenta? Inicia sesión",
   "value.label": "Por qué Dealroom",
   "value.heading.prefix": "Tus contratos merecen algo mejor que ",
   "value.heading.accent": "hilos de correo",
