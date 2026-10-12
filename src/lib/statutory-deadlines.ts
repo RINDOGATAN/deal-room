@@ -2,8 +2,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * A small public calendar of statutory dates startups meet often (owner's
- * decision T4, 6 October 2026). Each item carries the official source it
+ * A small public calendar of statutory dates startups meet often. Each item carries the official source it
  * comes from and is marked "verify with the official source". General
  * public dates only: nothing here looks at the user's facts beyond the
  * dates the caller gives, and nothing says what the user must do.
@@ -67,7 +66,7 @@ export const STATUTORY_DEADLINES: readonly DeadlineDef[] = [
   },
 ];
 
-/** The wording of the answer (for the owner's approval: every sentence is here). */
+/** The wording of the answer (every sentence is here, for review). */
 export const DEADLINES_TEXT = {
   verify: { en: "Verify with the official source.", es: "Compruébalo en la fuente oficial." },
   note: {

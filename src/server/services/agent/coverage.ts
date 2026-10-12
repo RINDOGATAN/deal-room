@@ -2,8 +2,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * Startup coverage, first round (owner's decisions T3 and T4, 6 October
- * 2026): the services behind find_template, explain_options and
+ * Startup coverage, first set: the services behind find_template, explain_options and
  * list_obligations. All three read what Dealroom already holds (the guide
  * list, the template's own option texts, the deal's agreed terms); none
  * calls an AI model, spends a credit or gives an opinion.
@@ -53,7 +52,7 @@ export function findTemplateAnswer(query: string, locale: PageLocale) {
 // ---------------------------------------------------------------------------
 // explain_options
 
-/** The wording of the answer (for the owner's approval: every sentence is here). */
+/** The wording of the answer (every sentence is here, for review). */
 export const EXPLAIN_TEXT = {
   neutral: {
     en: "Each option's description and its pros and cons for each side come from the template. Dealroom does not say which option to choose.",

@@ -179,7 +179,7 @@ export function buildObligationsLedger({
 }
 
 // ---------------------------------------------------------------------------
-// Contract dates (owner's decision T4, 6 October 2026)
+// Contract dates
 
 /**
  * The dates and periods a deal states, for every contract type: date

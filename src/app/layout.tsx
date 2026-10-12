@@ -10,7 +10,7 @@ import { features } from "@/config/features";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale } from "next-intl/server";
 
-// Page speed (owner, 10 Oct 2026): only the two fonts every public page draws
+// Page speed: only the two fonts every public page draws
 // with (Jost for text, Archivo Black for headings) are preloaded. Inter is not
 // used by the stylesheet, Dancing Script only on the signature page and Space
 // Mono only in code samples; preloading them held back the first paint on
@@ -105,7 +105,7 @@ export default async function RootLayout({
         <script async src="https://t.sealmetrics.com/t.js?id=todolaw" />
       </head>
       <body className={`${inter.variable} ${dancingScript.variable} ${jost.variable} ${archivoBlack.variable} ${spaceMono.variable} font-sans antialiased min-h-screen flex flex-col`}>
-        {/* Nothing app-wide here (page speed, owner 10 Oct 2026): the message
+        {/* Nothing app-wide here (page speed): the message
             catalogue, the session, the tRPC client and the toaster come with
             the sections that use them (AppSection), not with every public page. */}
         <NextIntlClientProvider messages={{}}>

@@ -9,7 +9,7 @@
  * only in the document routes (PDF, DOCX, TXT) and at the start of the
  * signature; negotiation, counter-offers and the on-screen preview never
  * call it. With Stripe off (the kit) every deal counts as paid and nothing
- * is read. (The monthly plan was discarded in round 2; there is none.)
+ * is read. (There is no monthly plan.)
  */
 
 import { NextResponse } from "next/server";

@@ -104,8 +104,7 @@ export const features = {
   /** Startup Quick Start — guided US Delaware C-Corp launch journey */
   startupJourney: true,
   /**
-   * Startup coverage, first round (owner's decisions of 6 October 2026,
-   * T3, T4 and E1 step 1): the agent tools find_template, explain_options,
+   * Startup coverage, first set: the agent tools find_template, explain_options,
    * list_obligations, get_deadlines and share_with_attorney, their REST
    * routes, and the "invite your own lawyer" action of the attorney review.
    * Off until `NEXT_PUBLIC_STARTUP_COVERAGE=true` is set at build time

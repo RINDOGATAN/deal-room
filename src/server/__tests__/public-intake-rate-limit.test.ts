@@ -2,7 +2,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * C6 (cycle 15): the unauthenticated intake and token look-ups are limited
+ * The unauthenticated intake and token look-ups are limited
  * per client IP and per minute on the shared database counter, and answer
  * 429 with Retry-After once the limit is spent:
  *   - tRPC feedback.submit (driven through the real fetch adapter and the

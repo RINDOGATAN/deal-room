@@ -8,7 +8,7 @@ import type { PageLocale } from "@/lib/contract-pages-paths";
 /**
  * Header, content and footer of the public contract pages and Developers, in
  * the URL's language. The header and footer are the ones every public page
- * shows (PublicHeader, PublicFooter; owner, 10 Oct 2026); the current
+ * shows (PublicHeader, PublicFooter); the current
  * section follows the path.
  */
 export function ContractsShell({

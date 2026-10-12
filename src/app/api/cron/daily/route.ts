@@ -35,7 +35,7 @@
  *    limits (sign-in, magic links, health) write one row per client per
  *    window, so without the purge the table grows without bound.
  *
- * 5-7. Transactional deal emails (owner decisions of 2026-10-04)
+ * 5-7. Transactional deal emails
  *    Invitation reminders on about day 3 and day 10 of an invitation that
  *    has not been accepted; the unfinished-draft reminder two days after
  *    the last activity; and a catch-up for "your contract is ready" on

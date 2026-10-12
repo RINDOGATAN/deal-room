@@ -5,7 +5,7 @@ becomes part of a fresh self-host / Mac install of the todo.law suite **for free
 while staying **€9/mo premium on cloud** (dealroom.todo.law).
 
 Written 2026-07-27 after making it live on the local suite install
-(`/Users/sme/todo-law`). **Update 2026-07-29:** the Option B `seed.ts` change
+(the suite install directory). **Update 2026-07-29:** the Option B `seed.ts` change
 recommended in §3 has since shipped as `db16c80` and is tagged `v0.1.13`, so
 self-host installs pulling `:latest` already include the bundled BAA.
 
@@ -200,7 +200,7 @@ when users already exist). So Option A/B covers **fresh** installs. For an
 
 ## 5. What was done to THIS local install (it was pre-existing, not fresh)
 
-`/Users/sme/todo-law` already had users + stale baa (NEW_YORK, "Privacy",
+The local suite install already had users + stale baa (NEW_YORK, "Privacy",
 pre-renderer), so first-boot auto-seed did not apply. Steps taken (all local,
 nothing pushed):
 
@@ -221,7 +221,7 @@ nothing pushed):
     deal-room-builder:local npm run db:seed
   ```
 
-  (`<DEAL_DB_PASSWORD>` = `DEAL_DB_PASSWORD` from `/Users/sme/todo-law/.env`.)
+  (`<DEAL_DB_PASSWORD>` = `DEAL_DB_PASSWORD` from the suite install's `.env`.)
   The premium loop marked baa `isPremium=true` / €9 — free locally via no-Stripe.
 - Applied the category consolidation on the stale DPA/Privacy-Notice rows with a
   one-off `UPDATE contract_templates SET category='Privacy & Data Protection' …`

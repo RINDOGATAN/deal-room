@@ -55,8 +55,7 @@ const partySchema = (who: string) => ({
 });
 
 /**
- * The startup-coverage tools (owner's decisions T3, T4 and E1 step 1, 6
- * October 2026), listed only while `features.startupCoverage` is on. All
+ * The startup-coverage tools, listed only while `features.startupCoverage` is on. All
  * free: none spends a credit.
  */
 export const COVERAGE_TOOL_NAMES = [

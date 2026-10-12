@@ -1,7 +1,6 @@
 # Billing: pay per contract
 
-Owner decisions of 29 September 2026 (round 1, then the six answers of
-round 2). This page explains how Dealroom charges when payments are on,
+This page explains how Dealroom charges when payments are on,
 which variables switch it on, and what to set up in Stripe. The self-hosted
 kit is not affected: payments stay off there and every contract is free.
 
@@ -176,9 +175,9 @@ cancellation allowed.
   refund), each entry with the key that bought or spent it. A refunded pack
   is taken back even if some credits were already spent; the balance can
   then go below zero, which blocks new spending.
-- `agent_credits`, `agent_credit_entries` (credits per key, round 1) and
+- `agent_credits`, `agent_credit_entries` (credits per key, an earlier design) and
   `contract_plans` (the discarded plan) stay in the schema, unused.
-  Migrations are append-only; the round-2 migration copies any per-key
+  Migrations are append-only; a later migration copies any per-key
   balance into the customer's.
 
 Two paths record a payment, and both are idempotent: the webhook, and the
@@ -194,5 +193,5 @@ hosted Dealroom:
 - For agents: "Credits in packs of ten, 25 percent off" (and "Créditos en
   packs de diez, con un 25 % de descuento").
 
-The amounts above are the owner's decision at the time of writing; the
+The amounts above are those at the time of writing; the
 product itself reads them from the display variables or from Stripe.

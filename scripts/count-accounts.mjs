@@ -7,7 +7,7 @@
  * Usage:
  *   DATABASE_URL="<connection string>" node scripts/count-accounts.mjs [--out=DIR]
  *
- * Reads a production database: do not run without the owner's go-ahead.
+ * Reads a production database: run only with the operator's approval.
  *
  * Optional: CONTRACT_BILLING_START (the same ISO date the app reads) bounds
  * the payment part of `paying`. Without it every paid row counts, and
@@ -20,7 +20,7 @@
  * can reach the output. A failure prints the error class only.
  *
  * Definitions:
- *   users          every account row (cycle 11 definition, kept unfiltered so
+ *   users          every account row (kept unfiltered so
  *                  the series stays comparable between snapshots)
  *   organizations  null — Dealroom has no organization table (tenants are
  *                  Customers)
@@ -44,7 +44,7 @@
  * Fixtures the schema can tell apart, and which the activity figures and
  * `paying` exclude: the deal simulator's deals (name prefix) and accounts,
  * the three tester quick-access accounts, and seed / end-to-end accounts on
- * the reserved `.test` and `example.com` domains. The owner's own test
+ * the reserved `.test` and `example.com` domains. The operator's own test
  * accounts on ordinary addresses cannot be told apart and are counted.
  */
 

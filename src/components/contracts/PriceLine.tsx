@@ -15,7 +15,7 @@ type PriceInfo = { billing: false; contract: null } | { billing: true; contract:
  * The one price line of a contract page. The page itself is static; the
  * price comes from the price configuration (`/api/pricing/contract`) and
  * shows in the visitor's one currency, as on /pricing. Spanish pages show
- * euros only (owner's rule: nobody reading Spanish sees a dollar price).
+ * euros only (no Spanish page shows a dollar price).
  */
 export function PriceLine({ locale }: { locale: PageLocale }) {
   const copy = CONTRACT_COPY[locale];

@@ -8,7 +8,7 @@ import { PublicHeader } from "@/components/public/PublicHeader";
 
 /**
  * Docs and Pricing: the header and footer every public page shows
- * (PublicHeader, PublicFooter; owner, 10 Oct 2026), in the cookie's
+ * (PublicHeader, PublicFooter), in the cookie's
  * language. The language control writes the cookie and refreshes.
  */
 export default function PublicLayout({

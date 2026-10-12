@@ -26,7 +26,7 @@ const ENV_KEYS = [
   "STRIPE_PRICE_CREDITS_10_USD",
   "STRIPE_PRICE_CREDITS_10_EUR",
   "CONTRACT_BILLING_START",
-  // Discarded in round 2; listed so the tests can prove they are not read.
+  // Removed variables; listed so the tests can prove they are not read.
   "STRIPE_PRICE_MONTHLY_USD",
   "STRIPE_PRICE_MONTHLY_EUR",
 ] as const;

@@ -2,7 +2,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * Portal token isolation (cycle 12, F2).
+ * Portal token isolation.
  *
  * All three sign-ins share NEXTAUTH_SECRET. A token issued by the ordinary
  * user sign-in must never read as an admin or supervisor session, whatever

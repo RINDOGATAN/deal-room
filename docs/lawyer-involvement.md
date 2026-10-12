@@ -2,7 +2,7 @@
 
 Lawyers can participate at three distinct stages of a deal. Each stage is independent — parties may use any combination (all three, just one, or none).
 
-**Own lawyer only (owner's decision, 6 October 2026).** Dealroom keeps no list of lawyers for parties and states no fee for legal review. A technology company that lists lawyers and states their fee looks like a lawyer referral service, which Dealroom does not run (US) and which European bars restrict. A party always brings its own lawyer: in Stage A it invites one by e-mail, in Stage B the initiator names one by e-mail. The lawyer works for the client and bills the client directly; Dealroom takes no fee and makes no recommendation. The in-app invitation works whatever the `startupCoverage` feature flag says (the flag gates only the agent tools and discovery).
+**Own lawyer only.** Dealroom keeps no list of lawyers for parties and states no fee for legal review. A technology company that lists lawyers and states their fee looks like a lawyer referral service, which Dealroom does not run (US) and which European bars restrict. A party always brings its own lawyer: in Stage A it invites one by e-mail, in Stage B the initiator names one by e-mail. The lawyer works for the client and bills the client directly; Dealroom takes no fee and makes no recommendation. The in-app invitation works whatever the `startupCoverage` feature flag says (the flag gates only the agent tools and discovery).
 
 ---
 
@@ -256,7 +256,7 @@ model SupervisorBarAdmission {
 
 ### Impact on Attorney Selection
 
-None for parties: there is no attorney selection list (owner's decision, 6 October 2026). Existing supervisors and their bar admissions are kept intact and stay visible in the admin views.
+None for parties: there is no attorney selection list. Existing supervisors and their bar admissions are kept intact and stay visible in the admin views.
 
 ---
 

@@ -3,7 +3,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * The one footer of Dealroom's public pages (owner, 10 Oct 2026), the
+ * The one footer of Dealroom's public pages, the
  * companion of PublicHeader: the same links on the home, the contract
  * guides, Developers, Docs and Pricing. No prices. The GitHub icon is the
  * footer's only link to the repository.

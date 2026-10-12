@@ -2,7 +2,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * Page speed (owner, 10 Oct 2026): the root layout sends no message catalogue
+ * Page speed: the root layout sends no message catalogue
  * to the browser, and every section whose client components translate wraps
  * itself in AppSection (with the tRPC client and the toaster). The home, the contract guides and Developers carry
  * their own wording, so their HTML no longer includes the catalogue.

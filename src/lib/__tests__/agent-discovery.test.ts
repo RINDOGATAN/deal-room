@@ -2,7 +2,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * Agent discovery (owner, 6 October 2026): every guide's agent block, the
+ * Agent discovery: every guide's agent block, the
  * MCP server card, /.well-known/mcp.json, the agent card, /llms-full.txt
  * and the ranked list on /developers come from one source, carry every
  * contract code and use absolute addresses only.

@@ -2,12 +2,12 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * The agreed contract as one flow (owner's test purchase, 2 October 2026):
- * - one "Get this contract", never two (item 3);
+ * The agreed contract as one flow:
+ * - one "Get this contract", never two;
  * - the execution details asked inside that step only when missing; saved
- *   details are a quiet "Saved" line, not a second call to action (item 4);
+ *   details are a quiet "Saved" line, not a second call to action;
  * - after paying, saved details are not shown again, the signature area
- *   comes directly, and the signing view offers no unsigned copy (item 5).
+ *   comes directly, and the signing view offers no unsigned copy.
  */
 import { readFileSync } from "node:fs";
 import { join } from "node:path";

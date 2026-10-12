@@ -5,7 +5,7 @@
  * One currency per visitor: euros in Europe (EU, EEA, United Kingdom,
  * Switzerland), dollars elsewhere. Country header first, then the
  * Accept-Language region, then dollars; a stored billing currency wins.
- * There is no switch (owner decision 2 October 2026).
+ * There is no switch.
  */
 import { describe, it, expect } from "vitest";
 import {

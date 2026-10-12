@@ -2,7 +2,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * Solo first (owner decision 2b, 4 October 2026).
+ * Solo first.
  *
  * A template declares solo support in its skill metadata
  * (`skills/<name>/metadata.json`, seeded into `ContractTemplate`):

@@ -2,7 +2,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * C7 (cycle 15): the paid path, end to end, against a real (throwaway)
+ * The paid path, end to end, against a real (throwaway)
  * Postgres and Stripe's official mock server.
  *
  *   draft -> agree -> 402 at download (and at the start of signature)

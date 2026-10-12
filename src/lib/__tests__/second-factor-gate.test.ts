@@ -2,7 +2,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * The second-factor gate (cycle 12, F3).
+ * The second-factor gate.
  *
  * The gate cookie used to be the fixed string "true". The holder of a
  * first-factor session could set it by hand and skip the TOTP step, the three

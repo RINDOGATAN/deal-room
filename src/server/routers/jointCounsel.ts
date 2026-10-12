@@ -10,7 +10,7 @@ import { requestJointCounsel } from "@/server/services/attorney/jointCounsel";
 export const jointCounselRouter = createTRPCRouter({
   /**
    * Request joint closing counsel (Stage B) by naming a lawyer by e-mail
-   * (owner's decision, 6 October 2026). Only the INITIATOR may request,
+   * Only the INITIATOR may request,
    * once per deal; the other party then acknowledges or declines. There is
    * no list of lawyers to choose from and no supervisor id is accepted.
    */

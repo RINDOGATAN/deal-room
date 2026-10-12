@@ -8,7 +8,7 @@ import { TRPCError } from "@trpc/server";
 import { inviteOwnLawyer } from "@/server/services/attorney/ownLawyer";
 
 /**
- * Party counsel (Stage A). Since the owner's decision of 6 October 2026 a
+ * Party counsel (Stage A). A
  * party involves a lawyer only by inviting one of its own choice, by
  * e-mail: there is no list of lawyers for parties (the former
  * listAvailableAttorneys) and no request that names a platform-chosen
@@ -18,7 +18,7 @@ import { inviteOwnLawyer } from "@/server/services/attorney/ownLawyer";
 export const attorneyReviewRouter = createTRPCRouter({
   /**
    * Invite a lawyer of the caller's choice, by e-mail, to review this
-   * deal for the caller's side (owner's decision E1, step 1). Same review
+   * deal for the caller's side. Same review
    * stage as before; no fee, no recommendation, no directory.
    * Available whatever `features.startupCoverage` says: it is the only way
    * a party involves a lawyer, so it can never be switched off.

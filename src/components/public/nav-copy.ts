@@ -2,8 +2,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * Wording of the one public header and footer (owner, 10 Oct 2026: the
- * navigation is the same on the home, the contract guides, Developers,
+ * Wording of the one public header and footer (the navigation is the same on the home, the contract guides, Developers,
  * Agents, Docs and Pricing). By page language, so prerendered pages carry
  * it without the cookie-based messages.
  */

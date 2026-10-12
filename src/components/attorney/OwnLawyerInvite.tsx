@@ -4,11 +4,9 @@
 "use client";
 
 /**
- * "Invite your own lawyer" (owner's decision E1, step 1, 6 October 2026):
- * an e-mail field, an optional name, and the one plain sentence that the
- * lawyer works for the client and Dealroom takes no fee. Since the
- * owner's decision of the same day to remove the platform list of
- * lawyers, this form is the whole attorney review dialog, whatever
+ * "Invite your own lawyer": an e-mail field, an optional name, and the one
+ * plain sentence that the lawyer works for the client and Dealroom takes no
+ * fee. There is no platform list of lawyers, so this form is the whole attorney review dialog, whatever
  * `features.startupCoverage` says. The dialog supplies the title.
  */
 

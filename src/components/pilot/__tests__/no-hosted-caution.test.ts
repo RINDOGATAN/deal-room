@@ -2,7 +2,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * Owner, 2026-10-01: Dealroom is fully rolled out, so the hosted caution
+ * Dealroom is fully rolled out, so the hosted caution
  * (no contractual safeguards; do not enter privileged or confidential
  * information) is gone from every screen, the pricing page and llms.txt.
  * The Terms of Service and Privacy Policy are hosted elsewhere and are

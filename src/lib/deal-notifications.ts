@@ -2,23 +2,23 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * Transactional deal emails (owner decisions of 4 October 2026), the pure
+ * Transactional deal emails, the pure
  * rules: who receives which email, and when. No database, no sending; the
  * service in `src/server/services/notifications/deal-emails.ts` applies
  * these rules and records every email in `deal_notifications`.
  *
- * - "Your turn" (2a): when a party submits its clause choices or a
+ * - "Your turn": when a party submits its clause choices or a
  *   counter-proposal, the other party is told it is now their turn. Once
  *   per submission, and once per round for counter-proposals (a party
  *   countering five clauses in one round sends one email, not five).
- * - Invitation reminders (2a): about day 3 and day 10 after an invitation
+ * - Invitation reminders: about day 3 and day 10 after an invitation
  *   that has not been accepted (invitations expire at 14 days). Each at
  *   most once per invitation; if the day-3 window was missed, only the
  *   day-10 reminder goes out.
- * - "Your contract is ready" (2a): when a deal becomes agreed and is not
+ * - "Your contract is ready": when a deal becomes agreed and is not
  *   paid, to both parties, with the price in the recipient's currency and a
  *   direct link to "Get this contract". Once per party.
- * - Unfinished draft (2d): one email to the initiator two days after the
+ * - Unfinished draft: one email to the initiator two days after the
  *   last activity on a deal still in DRAFT, at most once per deal.
  *
  * Every email is about the person's own deal; none is marketing. None is

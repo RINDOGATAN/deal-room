@@ -2,7 +2,7 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * "Invite your own lawyer" (owner's decision E1, step 1, 6 October 2026).
+ * "Invite your own lawyer".
  *
  * A party invites any lawyer it chooses, by e-mail, to review the draft in
  * the existing attorney review: the lawyer becomes a supervisor of this
@@ -17,7 +17,7 @@
  * takes no fee, makes no recommendation, keeps no directory and charges
  * nothing per invitation. The same rules apply to every jurisdiction.
  *
- * Since the owner's decision of 6 October 2026 this is the only way a
+ * This is the only way a
  * party involves a lawyer: the platform list of lawyers (and its flat fee
  * note) was removed, because a technology company that lists lawyers and
  * states their fee looks like a lawyer referral service.

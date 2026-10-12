@@ -419,7 +419,7 @@ function RequestReviewDialog({
   onClose: () => void;
   onSuccess: () => void;
 }) {
-  // Invite your own lawyer by e-mail (owner's decision, 6 October 2026):
+  // Invite your own lawyer by e-mail:
   // there is no platform list of lawyers to pick from.
   const tReview = useTranslations("launch.hub.reviewDialog");
   const tSteps = useTranslations("launch.steps");

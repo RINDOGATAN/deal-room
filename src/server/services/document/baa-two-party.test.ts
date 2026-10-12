@@ -225,7 +225,7 @@ describe("the two PHI postures", () => {
   });
 });
 
-describe("the conventional posture is not offered (owner, 6 October 2026)", () => {
+describe("the conventional posture is not offered", () => {
   it("is switched off", () => {
     expect(BAA_CONVENTIONAL_ENABLED).toBe(false);
   });

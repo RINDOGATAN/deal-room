@@ -2,8 +2,8 @@
 // Copyright (C) 2025-2026 Rindogatan LLC
 
 /**
- * Public text must describe what the product does (owner, 2026-10-02).
- * Guards the corrections made then: one contract-type count everywhere,
+ * Public text must describe what the product does. Guards these
+ * corrections: one contract-type count everywhere,
  * no encryption or "AI decides" claims the code cannot back, llms.txt
  * links that resolve, and a /docs/skills page whose strings exist.
  */
