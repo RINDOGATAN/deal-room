@@ -4,45 +4,42 @@
 /**
  * One currency per visitor.
  *
- * Euros for a visitor in Europe (the EU and EEA countries, the United
- * Kingdom, Switzerland), dollars for everyone else. The region is the
+ * Euros for a visitor in one of the 27 member states of the European
+ * Union, dollars for everyone else (including the United Kingdom,
+ * Switzerland and the EEA states outside the EU). The region is the
  * hosting platform's country header (`x-vercel-ip-country`); without it,
- * the region of the first `Accept-Language` tag that names one; without
- * either, dollars.
+ * the region of the first `Accept-Language` tag that names one, judged
+ * against the same EU list; without either, dollars.
  *
- * There is no currency switch: the region
- * decides. One cookie, for the browser session only: `currency`, the
- * region guess, written by the middleware. A signed-in customer's stored
- * billing currency wins over the region guess (server side,
- * `resolveVisitorCurrency`).
+ * There is no currency switch: the region decides. One cookie, for the
+ * browser session only: `currency`, the region guess, written by the
+ * middleware and re-evaluated on every page request, so a value written
+ * under an earlier rule is overwritten on the next page load. A
+ * signed-in customer's stored billing currency wins over the region guess
+ * (server side, `resolveVisitorCurrency`). Spanish pages always show
+ * euros (`displayCurrency`).
  */
 
 export type Currency = "USD" | "EUR";
 
 export const REGION_COOKIE = "currency";
 
-/** ISO 3166-1 alpha-2 codes that see euros. */
+/**
+ * ISO 3166-1 alpha-2 codes that see euros: the 27 member states of the
+ * European Union, plus "EL" (the EU's own code for Greece).
+ */
 export const EUROPE_COUNTRIES: ReadonlySet<string> = new Set([
-  // European Union (27)
   "AT", "BE", "BG", "HR", "CY", "CZ", "DK", "EE", "FI", "FR", "DE", "GR", "HU", "IE",
   "IT", "LV", "LT", "LU", "MT", "NL", "PL", "PT", "RO", "SK", "SI", "ES", "SE",
-  // European Economic Area outside the EU
-  "IS", "LI", "NO",
-  // United Kingdom, Switzerland
-  "GB", "CH",
-  // Aliases seen in the wild: EL (the EU's own code for Greece), UK
-  "EL", "UK",
-  // Euro microstates and the British Crown dependencies and Gibraltar
-  "AD", "MC", "SM", "VA", "GI", "JE", "GG", "IM",
-  // Montenegro and Kosovo use the euro; same list as the storefront
-  "ME", "XK",
+  // Alias: the EU's own code for Greece
+  "EL",
 ]);
 
 function normalise(code: string | null | undefined): string {
   return (code ?? "").trim().toUpperCase();
 }
 
-/** Euros for a European country code, dollars for any other or none. */
+/** Euros for an EU member state, dollars for any other country or none. */
 export function currencyForCountry(country: string | null | undefined): Currency {
   return EUROPE_COUNTRIES.has(normalise(country)) ? "EUR" : "USD";
 }

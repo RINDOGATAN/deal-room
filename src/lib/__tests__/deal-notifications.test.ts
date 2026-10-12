@@ -166,7 +166,7 @@ describe("your contract is ready", () => {
     expect(recipientCurrency({ stored: "eur", governingLaw: "CALIFORNIA" })).toBe("EUR");
     expect(recipientCurrency({ stored: "usd", governingLaw: "SPAIN" })).toBe("USD");
     expect(recipientCurrency({ governingLaw: "SPAIN" })).toBe("EUR");
-    expect(recipientCurrency({ governingLaw: "ENGLAND_WALES" })).toBe("EUR");
+    expect(recipientCurrency({ governingLaw: "ENGLAND_WALES" })).toBe("USD");
     expect(recipientCurrency({ governingLaw: "CALIFORNIA" })).toBe("USD");
     expect(recipientCurrency({ governingLaw: "NEW_YORK" })).toBe("USD");
   });

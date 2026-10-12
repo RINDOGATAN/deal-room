@@ -186,7 +186,7 @@ const JURISDICTION_COUNTRY: Record<string, string> = {
  * request has no headers for this person, so: their stored billing currency
  * (`Customer.metadata.preferredCurrency`) when they have one, else the
  * currency of the deal's jurisdiction under the same one-currency-per-region
- * rule as the site (`currencyForCountry`: euros in Europe, dollars elsewhere).
+ * rule as the site (`currencyForCountry`: euros in the EU, dollars elsewhere).
  */
 export function recipientCurrency(opts: { stored?: unknown; governingLaw: string }): Currency {
   return parseCurrency(opts.stored) ?? currencyForCountry(JURISDICTION_COUNTRY[opts.governingLaw] ?? null);
