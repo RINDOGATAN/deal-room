@@ -2,6 +2,7 @@ import type { NextConfig } from "next";
 import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import createNextIntlPlugin from "next-intl/plugin";
+import { securityHeaders } from "./src/lib/security-headers";
 
 const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 
@@ -75,10 +76,16 @@ const nextConfig: NextConfig = {
       '</.well-known/mcp/server-card.json>; rel="service-desc"; type="application/json"',
       '</llms.txt>; rel="alternate"; type="text/plain"',
     ].join(", ");
-    return ["/", "/developers", "/es/developers"].map((source) => ({
-      source,
-      headers: [{ key: "Link", value: link }],
-    }));
+    return [
+      {
+        source: "/:path*",
+        headers: securityHeaders({ dev: process.env.NODE_ENV === "development" }),
+      },
+      ...["/", "/developers", "/es/developers"].map((source) => ({
+        source,
+        headers: [{ key: "Link", value: link }],
+      })),
+    ];
   },
 };
 
