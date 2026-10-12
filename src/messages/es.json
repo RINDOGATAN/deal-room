@@ -1202,7 +1202,8 @@
     "prepOverview": "Visión General",
     "prepPolicy": "Redacción de Políticas",
     "prepPlaybook": "Constructor de Playbook",
-    "prepDisputes": "Preparación ante Disputas"
+    "prepDisputes": "Preparación ante Disputas",
+    "security": "Seguridad"
   },
   "a2aSkills": {
     "title": "Skills de Contratos Agente a Agente",
@@ -2209,5 +2210,99 @@
     "errorRateLimit": "Se han creado demasiadas claves en la última hora. Espera un poco y vuelve a intentarlo.",
     "errorGeneric": "Algo ha fallado. Vuelve a intentarlo.",
     "checkoutFailed": "No se ha podido abrir el pago. Vuelve a intentarlo."
+  },
+  "securityDocs": {
+    "title": "Seguridad",
+    "intro": "Cómo protege Dealroom las negociaciones y a quienes negocian. Cada afirmación de esta página describe lo que hace hoy el código.",
+    "hosting": {
+      "title": "Alojamiento y cifrado",
+      "intro": "Nuestra nube funciona en Vercel, en Estados Unidos, con una base de datos PostgreSQL gestionada por Neon.",
+      "items": [
+        {
+          "title": "HTTPS en todo",
+          "description": "Todas las conexiones usan HTTPS (TLS), y se indica a los navegadores que usen solo HTTPS (HSTS)."
+        },
+        {
+          "title": "Datos guardados",
+          "description": "Nuestros proveedores de alojamiento y de base de datos cifran los datos guardados con AES-256. Dealroom no añade un cifrado propio por campos."
+        },
+        {
+          "title": "Sin contraseñas",
+          "description": "Dealroom no usa ni guarda contraseñas."
+        },
+        {
+          "title": "Sin tokens de Google",
+          "description": "Cuando inicias sesión con Google, no se guardan los tokens que devuelve Google."
+        }
+      ]
+    },
+    "auth": {
+      "title": "Inicio de sesión",
+      "intro": "En nuestra nube inicias sesión con una cuenta de Google o con un enlace de un solo uso que recibes por correo electrónico.",
+      "items": [
+        "La sesión se guarda en una cookie HTTP-only (SameSite=Lax), que en nuestra nube solo se envía por HTTPS.",
+        "Las solicitudes y los correos de inicio de sesión tienen límite de peticiones.",
+        "En nuestra nube, un mismo inicio de sesión sirve para todas las aplicaciones de TODO.LAW.",
+        "El inicio de sesión sin contraseña del kit de instalación propia, pensado para una red privada, no se admite en nuestra nube."
+      ]
+    },
+    "access": {
+      "title": "Quién puede ver una negociación",
+      "intro": "Salvo los administradores del servicio y un abogado asignado para revisarla, solo las partes de una negociación pueden verla. Cada solicitud sobre una negociación comprueba, en el servidor, que eres una de sus partes o que estás asignado a ella.",
+      "invitationTitle": "Invitaciones",
+      "invitationBody": "La otra parte se incorpora mediante una invitación por correo electrónico. Solo puede usarse una vez, caduca a los 14 días y solo puede aceptarla quien haya iniciado sesión con la dirección a la que se envió."
+    },
+    "admin": {
+      "title": "Administración",
+      "body": "Los portales de administración y de supervisión tienen su propio inicio de sesión, distinto del del producto, y exigen un segundo factor: un código de una aplicación de autenticación, comprobado en el servidor y con un límite de intentos. Un segundo factor verificado dura cuatro horas y está ligado a ese inicio de sesión."
+    },
+    "records": {
+      "title": "Registro de auditoría y documentos",
+      "auditTitle": "Registro de auditoría",
+      "auditBody": "Las acciones de la negociación, del acuerdo y de la firma se anotan en un registro de auditoría.",
+      "documentsTitle": "Documentos del contrato",
+      "documentsBody": "Los documentos del contrato se generan cuando una parte los pide y no se guardan como archivos."
+    },
+    "ai": {
+      "title": "IA",
+      "body": "Las funciones de IA están desactivadas por defecto. Solo el operador del servicio puede activarlas, y la activación vale para todo el servicio. Mientras están desactivadas, no se envía nada a ningún proveedor de IA."
+    },
+    "payments": {
+      "title": "Pagos",
+      "body": "Los pagos se hacen en las páginas de pago de Stripe, así que Dealroom nunca ve los números de tarjeta. Cada aviso de pago de Stripe se comprueba con su firma y se procesa una sola vez."
+    },
+    "web": {
+      "title": "Protecciones del navegador",
+      "items": [
+        {
+          "title": "Sin marcos",
+          "description": "Otros sitios no pueden mostrar las páginas de Dealroom dentro de un marco."
+        },
+        {
+          "title": "Política de seguridad de contenidos",
+          "description": "Los scripts solo se cargan desde Dealroom y desde los dos servicios que usan sus páginas: el inicio de sesión de Google y el servicio de analítica."
+        },
+        {
+          "title": "Cabeceras",
+          "description": "Se bloquea la detección del tipo de contenido, se limita la información de origen que se envía a otros sitios y se desactivan la cámara, el micrófono y la ubicación."
+        },
+        {
+          "title": "Analítica",
+          "description": "Las páginas usan un servicio de analítica sin cookies para contar las visitas."
+        }
+      ]
+    },
+    "api": {
+      "title": "API para agentes",
+      "body": "Las claves de API se guardan solo como un hash y se muestran una vez, al crearlas. Los avisos del servicio de disputas se comprueban con su firma."
+    },
+    "selfHost": {
+      "title": "En tu propio hardware",
+      "body": "El kit de instalación propia ejecuta el mismo código. Incluye un script que hace copias cifradas de la base de datos; tú decides cuándo se hacen y dónde se guardan. Su inicio de sesión no tiene contraseña y está pensado solo para una red privada."
+    },
+    "contact": {
+      "title": "Comunicar un problema",
+      "body": "Si encuentras un problema de seguridad, escribe a <link>{email}</link> con SECURITY en el asunto."
+    }
   }
 }

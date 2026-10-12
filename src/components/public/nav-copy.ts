@@ -25,6 +25,7 @@ export const NAV_COPY = {
     terms: "Terms of Service",
     privacy: "Privacy Policy",
     licences: "Licences",
+    security: "Security",
   },
   es: {
     contracts: "Contratos",
@@ -41,6 +42,7 @@ export const NAV_COPY = {
     terms: "Términos de uso",
     privacy: "Política de privacidad",
     licences: "Licencias",
+    security: "Seguridad",
   },
 } satisfies Record<PageLocale, Record<string, string>>;
 
