@@ -12,6 +12,7 @@ import {
 } from "@prisma/client";
 import { addDays } from "date-fns";
 import { sendInvitationEmail } from "@/lib/email";
+import { sameEmail } from "@/lib/same-email";
 
 export const invitationRouter = createTRPCRouter({
   // Send an invitation to the respondent
@@ -237,7 +238,7 @@ export const invitationRouter = createTRPCRouter({
     .input(z.object({ token: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const userId = ctx.session.user.id;
-      const userEmail = ctx.session.user.email!;
+      const userEmail = ctx.session.user.email ?? "";
 
       const invitation = await ctx.prisma.invitation.findUnique({
         where: { token: input.token },
@@ -268,6 +269,17 @@ export const invitationRouter = createTRPCRouter({
         throw new TRPCError({
           code: "BAD_REQUEST",
           message: "Invitation has expired",
+        });
+      }
+
+      // The invitation is for the address it was sent to. Holding the link is
+      // not enough: the signed-in account must be that address. The message
+      // does not repeat the invited address.
+      if (!sameEmail(userEmail, invitation.email)) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message:
+            "This invitation was sent to a different email address. Sign in with the address that received it.",
         });
       }
 

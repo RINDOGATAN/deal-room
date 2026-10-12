@@ -14,6 +14,7 @@ import { createHmac } from "crypto";
 import prisma from "@/lib/prisma";
 import type { Prisma } from "@prisma/client";
 import { createLogger } from "@/lib/logger";
+import { safeEqual } from "@/lib/safe-equal";
 
 const logger = createLogger("gavel-webhook");
 
@@ -26,7 +27,7 @@ function verifyGavelSignature(
 ): boolean {
   if (!signature) return false;
   const expected = createHmac("sha256", secret).update(payload).digest("hex");
-  return signature === `sha256=${expected}`;
+  return safeEqual(signature, `sha256=${expected}`);
 }
 
 export async function POST(request: NextRequest) {

@@ -6,6 +6,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import EmailProvider from "next-auth/providers/email";
 import GoogleProvider from "next-auth/providers/google";
 import { PrismaAdapter } from "@auth/prisma-adapter";
+import type { AdapterAccount } from "next-auth/adapters";
 import prisma from "@/lib/prisma";
 import { getResend } from "@/lib/email";
 import { mailFrom, mailProductName, signInSubject } from "@/lib/mail-from";
@@ -15,6 +16,8 @@ import { isTesterEmail } from "@/lib/tester";
 import { createLogger } from "@/lib/logger";
 import { resolveAuthProviderPolicy } from "@/lib/auth-provider-policy";
 import { resolveAuthCookiePolicy } from "@/lib/auth-cookie-policy";
+import { safeEqual } from "@/lib/safe-equal";
+import { withoutOAuthTokens } from "@/lib/oauth-account";
 
 const logger = createLogger("auth");
 
@@ -221,7 +224,7 @@ if (providerPolicy.e2e) {
       async authorize(credentials) {
         if (
           !credentials?.secret ||
-          credentials.secret !== process.env.E2E_CREDENTIALS_SECRET
+          !safeEqual(credentials.secret, process.env.E2E_CREDENTIALS_SECRET)
         ) {
           return null;
         }
@@ -248,8 +251,19 @@ if (providerPolicy.e2e) {
 // keeps the default names, which the *.todo.law cross-app SSO cookie expects.
 const cookiePrefix = features.localAuth ? "dealroom." : "next-auth.";
 
+// OAuth tokens are not kept. Sessions are JWTs and nothing reads the
+// provider's access, refresh or id token from the Account table, so the
+// account link is stored without them (same rule as DPO Central).
+const baseAdapter = PrismaAdapter(prisma) as NextAuthOptions["adapter"];
+export const adapter = {
+  ...baseAdapter!,
+  linkAccount: async (account: AdapterAccount) => {
+    await baseAdapter!.linkAccount!(withoutOAuthTokens(account));
+  },
+} as NextAuthOptions["adapter"];
+
 export const authOptions: NextAuthOptions = {
-  adapter: PrismaAdapter(prisma) as NextAuthOptions["adapter"],
+  adapter,
   providers,
   session: {
     strategy: "jwt",

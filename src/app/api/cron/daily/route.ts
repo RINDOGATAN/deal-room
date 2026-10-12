@@ -60,6 +60,7 @@ import {
   runInvitationReminderJob,
   runReadySweepJob,
 } from "@/server/services/notifications/deal-emails";
+import { safeEqual } from "@/lib/safe-equal";
 
 const logger = createLogger("cron");
 
@@ -83,7 +84,7 @@ export async function GET(req: NextRequest) {
 
   const authHeader = req.headers.get("authorization") ?? "";
   const provided = authHeader.replace(/^Bearer\s+/i, "");
-  if (provided !== CRON_SECRET) {
+  if (!safeEqual(provided, CRON_SECRET)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
