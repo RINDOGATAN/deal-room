@@ -948,7 +948,7 @@
     "yourRole": "Your role",
     "emailMismatch": "Email Mismatch",
     "emailMismatchDescription": "This invitation was sent to {invited}, but you're signed in as {current}.",
-    "emailMismatchHint": "You can still accept if you have access to both emails.",
+    "emailMismatchHint": "To accept, sign in with the address that received the invitation.",
     "readyToNegotiate": "Ready to negotiate?",
     "acceptDescription": "By accepting this invitation, you'll be able to review the contract terms and submit your preferred options.",
     "accepting": "Accepting...",

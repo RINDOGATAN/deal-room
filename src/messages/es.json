@@ -948,7 +948,7 @@
     "yourRole": "Tu papel",
     "emailMismatch": "Los correos electrónicos no coinciden",
     "emailMismatchDescription": "Esta invitación se envió a {invited}, pero has iniciado sesión como {current}.",
-    "emailMismatchHint": "Aún puedes aceptarla si tienes acceso a ambos correos electrónicos.",
+    "emailMismatchHint": "Para aceptarla, inicia sesión con la dirección que recibió la invitación.",
     "readyToNegotiate": "¿Listo para negociar?",
     "acceptDescription": "Al aceptar esta invitación podrás revisar los términos del contrato y enviar tus opciones preferidas.",
     "accepting": "Aceptando...",

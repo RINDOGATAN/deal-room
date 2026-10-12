@@ -19,6 +19,7 @@ import {
   createHmac,
 } from "crypto";
 import { createLogger } from "@/lib/logger";
+import { safeEqual } from "@/lib/safe-equal";
 
 const logger = createLogger("crypto");
 
@@ -290,11 +291,8 @@ export function verifyDownloadToken(
     .update(payloadB64)
     .digest("base64url");
 
-  // Constant-time comparison
-  if (sig.length !== expectedSig.length) return null;
-  const a = Buffer.from(sig);
-  const b = Buffer.from(expectedSig);
-  if (!a.equals(b)) return null;
+  // Constant-time comparison (Buffer.equals is not).
+  if (!safeEqual(sig, expectedSig)) return null;
 
   try {
     const payload = JSON.parse(

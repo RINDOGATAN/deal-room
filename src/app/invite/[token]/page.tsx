@@ -216,7 +216,8 @@ export default function InvitationPage() {
   }
 
   // Signed in - check if email matches and show accept button
-  const emailMatches = session.user?.email?.toLowerCase() === invitation.email.toLowerCase();
+  const emailMatches =
+    session.user?.email?.trim().toLowerCase() === invitation.email.trim().toLowerCase();
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-6">
@@ -274,6 +275,13 @@ export default function InvitationPage() {
                 <p className="text-sm text-muted-foreground mt-2">
                   {t("emailMismatchHint")}
                 </p>
+                <button
+                  onClick={() => signIn("email", { email: invitation.email, callbackUrl: `/invite/${token}` })}
+                  className="btn-brutal mt-3 inline-flex items-center gap-2"
+                >
+                  <Mail className="w-4 h-4" />
+                  {t("signInWith", { email: invitation.email })}
+                </button>
               </div>
             </div>
           </div>
@@ -287,7 +295,7 @@ export default function InvitationPage() {
           </p>
           <button
             onClick={() => acceptInvitation.mutate({ token })}
-            disabled={acceptInvitation.isPending}
+            disabled={acceptInvitation.isPending || !emailMatches}
             className="btn-brutal w-full flex items-center justify-center gap-2"
           >
             {acceptInvitation.isPending ? (
