@@ -37,6 +37,7 @@ const navSectionsDef: NavSection[] = [
     items: [
       { href: "/docs", labelKey: "dashboardOverview", exact: true },
       { href: "/docs/how-it-works", labelKey: "navigation" },
+      { href: "/docs/security", labelKey: "security" },
     ],
   },
   {

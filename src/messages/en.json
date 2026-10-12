@@ -1202,7 +1202,8 @@
     "prepOverview": "Preparation Overview",
     "prepPolicy": "Policy Authoring",
     "prepPlaybook": "Playbook Builder",
-    "prepDisputes": "Dispute Readiness"
+    "prepDisputes": "Dispute Readiness",
+    "security": "Security"
   },
   "a2aSkills": {
     "title": "Agent-to-Agent Contract Skills",
@@ -2209,5 +2210,99 @@
     "errorRateLimit": "Too many keys were created in the last hour. Please wait and try again.",
     "errorGeneric": "Something went wrong. Please try again.",
     "checkoutFailed": "The checkout could not be opened. Please try again."
+  },
+  "securityDocs": {
+    "title": "Security",
+    "intro": "How Dealroom protects deals and the people who negotiate them. Each statement on this page describes what the code does today.",
+    "hosting": {
+      "title": "Hosting and encryption",
+      "intro": "Our cloud runs on Vercel, in the United States, with a managed PostgreSQL database from Neon.",
+      "items": [
+        {
+          "title": "HTTPS everywhere",
+          "description": "Every connection uses HTTPS (TLS), and browsers are told to use HTTPS only (HSTS)."
+        },
+        {
+          "title": "Stored data",
+          "description": "Our hosting and database providers encrypt stored data with AES-256. Dealroom adds no field-level encryption of its own."
+        },
+        {
+          "title": "No passwords",
+          "description": "Dealroom does not use or store passwords."
+        },
+        {
+          "title": "No Google tokens kept",
+          "description": "When you sign in with Google, the tokens Google returns are not stored."
+        }
+      ]
+    },
+    "auth": {
+      "title": "Sign-in",
+      "intro": "On our cloud you sign in with a Google account or with a single-use link sent by email.",
+      "items": [
+        "The session is kept in an HTTP-only cookie (SameSite=Lax), sent only over HTTPS on our cloud.",
+        "Sign-in requests and sign-in emails are rate-limited.",
+        "On our cloud, one sign-in works across the TODO.LAW apps.",
+        "The passwordless sign-in of the self-host kit, meant for a private network, is refused on our cloud."
+      ]
+    },
+    "access": {
+      "title": "Who can see a deal",
+      "intro": "Apart from the service's administrators and a lawyer assigned to review the deal, only the parties to a deal can see it. Each request for a deal checks, on the server, that you are one of its parties or assigned to it.",
+      "invitationTitle": "Invitations",
+      "invitationBody": "The other party joins through an invitation sent by email. It can be used once, expires after 14 days, and can be accepted only by someone signed in with the address it was sent to."
+    },
+    "admin": {
+      "title": "Administration",
+      "body": "The administration and supervision portals have their own sign-in, separate from the product's, and need a second factor: a code from an authenticator app, checked on the server, with a limit on attempts. A verified second factor lasts four hours and is tied to that sign-in."
+    },
+    "records": {
+      "title": "Audit log and documents",
+      "auditTitle": "Audit log",
+      "auditBody": "Deal, negotiation and signing actions are written to an audit log.",
+      "documentsTitle": "Contract documents",
+      "documentsBody": "Contract documents are generated when a party asks for them and are not stored as files."
+    },
+    "ai": {
+      "title": "AI",
+      "body": "AI features are off by default. Only the service's operator can switch them on, and the switch applies to the whole service. While they are off, nothing is sent to an AI provider."
+    },
+    "payments": {
+      "title": "Payments",
+      "body": "Payments are taken on Stripe's own checkout pages, so Dealroom never sees card numbers. Every payment notification from Stripe is checked against its signature and processed once."
+    },
+    "web": {
+      "title": "Browser protections",
+      "items": [
+        {
+          "title": "No framing",
+          "description": "Other sites cannot show Dealroom's pages inside a frame."
+        },
+        {
+          "title": "Content Security Policy",
+          "description": "Scripts load only from Dealroom and the two services its pages use: Google sign-in and the analytics service."
+        },
+        {
+          "title": "Headers",
+          "description": "Content-type sniffing is blocked, the referrer sent to other sites is limited, and the camera, microphone and location are switched off."
+        },
+        {
+          "title": "Analytics",
+          "description": "The pages use an analytics service that sets no cookies to count visits."
+        }
+      ]
+    },
+    "api": {
+      "title": "Agent API",
+      "body": "API keys are stored only as a hash and are shown once, when they are created. Notifications from the dispute service are checked against their signature."
+    },
+    "selfHost": {
+      "title": "On your own hardware",
+      "body": "The self-host kit runs the same code. It includes a script that makes encrypted database backups; you set the schedule and keep the copies. Its sign-in has no password and is meant for a private network only."
+    },
+    "contact": {
+      "title": "Reporting a problem",
+      "body": "If you find a security problem, write to <link>{email}</link> with SECURITY in the subject."
+    }
   }
 }

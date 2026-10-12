@@ -66,6 +66,10 @@ export function PublicFooter({ locale }: { locale: PageLocale }) {
               <Link href="/docs" onClick={keepLanguage} className={link}>
                 {copy.docs}
               </Link>
+              {dot}
+              <Link href="/docs/security" onClick={keepLanguage} className={link}>
+                {copy.security}
+              </Link>
             </>
           )}
           {features.stripeEnabled && (
