@@ -80,6 +80,14 @@ describe("requestJointCounsel", () => {
     expect(mail.sendJointCounselNotificationEmail).toHaveBeenCalledWith(expect.objectContaining({ to: "other@counterparty.example", supervisorName: "C. Counsel" }));
   });
 
+  it("refuses a lawyer address under the account e-mail policy", async () => {
+    const db = makeDb();
+    const r = await requestJointCounsel(db as never, { partyId: "party_0", lawyerEmail: "Closing@Hotmail.com" });
+    expect(r).toMatchObject({ ok: false, status: 400, code: "email_not_accepted" });
+    const ok = await requestJointCounsel(makeDb() as never, { partyId: "party_0", lawyerEmail: "first.last@gmail.com" });
+    expect(ok).not.toMatchObject({ code: "email_not_accepted" });
+  });
+
   it("only the initiator may name joint counsel", async () => {
     const r = await requestJointCounsel(makeDb({ role: "RESPONDENT" }) as never, { partyId: "party_0", lawyerEmail: "closing@lawyers.example" });
     expect(r).toMatchObject({ ok: false, status: 403 });

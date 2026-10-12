@@ -30,6 +30,8 @@ import {
   CheckSquare,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { blockedEmailMessage, isBlockedAccountEmail } from "@/lib/email-policy";
+import { EmailPolicyError, isEmailPolicyError } from "@/components/EmailPolicyError";
 import {
   Dialog,
   DialogContent,
@@ -426,6 +428,7 @@ function RequestReviewDialog({
   const locale = useLocale();
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
+  const [emailError, setEmailError] = useState<string | null>(null);
 
   const request = trpc.journey.requestStepReview.useMutation({
     onSuccess: (res) => {
@@ -437,7 +440,7 @@ function RequestReviewDialog({
       );
       onSuccess();
     },
-    onError: (err) => toast.error(err.message),
+    onError: (err) => (isEmailPolicyError(err) ? setEmailError(err.message) : toast.error(err.message)),
   });
 
   const stepLabel = tSteps(`${stepKey}.title`);
@@ -459,6 +462,10 @@ function RequestReviewDialog({
           onSubmit={(e) => {
             e.preventDefault();
             if (!email.trim()) return;
+            if (isBlockedAccountEmail(email)) {
+              setEmailError(blockedEmailMessage(locale));
+              return;
+            }
             request.mutate({
               journeyId,
               stepKey,
@@ -475,9 +482,15 @@ function RequestReviewDialog({
               required
               autoComplete="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                setEmailError(null);
+              }}
+              aria-invalid={emailError ? true : undefined}
+              aria-describedby={emailError ? "step-review-email-error" : undefined}
               className="w-full px-3 py-2 bg-background border border-border rounded-md"
             />
+            <EmailPolicyError id="step-review-email-error" message={emailError} />
           </label>
           <label className="block text-sm">
             <span className="block mb-1">{tReview("nameLabel")}</span>

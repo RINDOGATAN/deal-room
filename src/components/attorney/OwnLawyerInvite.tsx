@@ -15,12 +15,15 @@ import { useLocale, useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { Mail } from "lucide-react";
 import { trpc } from "@/lib/trpc";
+import { blockedEmailMessage, isBlockedAccountEmail } from "@/lib/email-policy";
+import { EmailPolicyError, isEmailPolicyError } from "@/components/EmailPolicyError";
 
 export function OwnLawyerInvite({ dealRoomId, onInvited }: { dealRoomId: string; onInvited: () => void }) {
   const t = useTranslations("review.ownLawyer");
   const locale = useLocale();
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
+  const [emailError, setEmailError] = useState<string | null>(null);
   const invite = trpc.attorneyReview.inviteOwnLawyer.useMutation({
     onSuccess: () => {
       toast.success(t("sent"));
@@ -28,7 +31,10 @@ export function OwnLawyerInvite({ dealRoomId, onInvited }: { dealRoomId: string;
       setName("");
       onInvited();
     },
-    onError: (error) => toast.error(t("failed", { error: error.message })),
+    onError: (error) =>
+      isEmailPolicyError(error)
+        ? setEmailError(error.message)
+        : toast.error(t("failed", { error: error.message })),
   });
 
   return (
@@ -37,6 +43,10 @@ export function OwnLawyerInvite({ dealRoomId, onInvited }: { dealRoomId: string;
       onSubmit={(e) => {
         e.preventDefault();
         if (!email.trim()) return;
+        if (isBlockedAccountEmail(email)) {
+          setEmailError(blockedEmailMessage(locale));
+          return;
+        }
         invite.mutate({
           dealRoomId,
           email: email.trim(),
@@ -53,9 +63,15 @@ export function OwnLawyerInvite({ dealRoomId, onInvited }: { dealRoomId: string;
           required
           autoComplete="email"
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={(e) => {
+            setEmail(e.target.value);
+            setEmailError(null);
+          }}
+          aria-invalid={emailError ? true : undefined}
+          aria-describedby={emailError ? "own-lawyer-email-error" : undefined}
           className="w-full px-3 py-2 bg-background border border-border rounded-md"
         />
+        <EmailPolicyError id="own-lawyer-email-error" message={emailError} />
       </label>
       <label className="block text-sm">
         <span className="block mb-1">{t("nameLabel")}</span>

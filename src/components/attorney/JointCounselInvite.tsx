@@ -16,6 +16,8 @@ import { useLocale, useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { Mail } from "lucide-react";
 import { trpc } from "@/lib/trpc";
+import { blockedEmailMessage, isBlockedAccountEmail } from "@/lib/email-policy";
+import { EmailPolicyError, isEmailPolicyError } from "@/components/EmailPolicyError";
 
 export function JointCounselInvite({
   dealRoomId,
@@ -32,6 +34,7 @@ export function JointCounselInvite({
   const locale = useLocale();
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
+  const [emailError, setEmailError] = useState<string | null>(null);
   const request = trpc.jointCounsel.request.useMutation({
     onSuccess: () => {
       toast.success(t("toastMessages.requested"));
@@ -39,7 +42,10 @@ export function JointCounselInvite({
       setName("");
       onRequested();
     },
-    onError: (error) => toast.error(t("toastMessages.requestFailed", { error: error.message })),
+    onError: (error) =>
+      isEmailPolicyError(error)
+        ? setEmailError(error.message)
+        : toast.error(t("toastMessages.requestFailed", { error: error.message })),
   });
 
   return (
@@ -48,6 +54,10 @@ export function JointCounselInvite({
       onSubmit={(e) => {
         e.preventDefault();
         if (!email.trim()) return;
+        if (isBlockedAccountEmail(email)) {
+          setEmailError(blockedEmailMessage(locale));
+          return;
+        }
         request.mutate({
           dealRoomId,
           email: email.trim(),
@@ -64,9 +74,15 @@ export function JointCounselInvite({
           required
           autoComplete="email"
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={(e) => {
+            setEmail(e.target.value);
+            setEmailError(null);
+          }}
+          aria-invalid={emailError ? true : undefined}
+          aria-describedby={emailError ? "joint-counsel-email-error" : undefined}
           className="w-full px-3 py-2 bg-background border border-border rounded-md"
         />
+        <EmailPolicyError id="joint-counsel-email-error" message={emailError} />
       </label>
       <label className="block text-sm">
         <span className="block mb-1">{t("nameLabel")}</span>

@@ -8,5 +8,6 @@
   "login.magicLink": "Send magic link",
   "login.newHere": "New here? Sign up",
   "or": "or",
-  "continueWithGoogle": "Continue with Google"
+  "continueWithGoogle": "Continue with Google",
+  "emailNotAccepted": "Please use your work e-mail address, or a different personal address. We can't accept this one."
 }

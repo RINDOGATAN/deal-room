@@ -18,6 +18,8 @@ import { resolveAuthProviderPolicy } from "@/lib/auth-provider-policy";
 import { resolveAuthCookiePolicy } from "@/lib/auth-cookie-policy";
 import { safeEqual } from "@/lib/safe-equal";
 import { withoutOAuthTokens } from "@/lib/oauth-account";
+import { isBlockedAccountEmail } from "@/lib/email-policy";
+import { AUTH_ERROR_EMAIL_NOT_ACCEPTED } from "@/lib/email-policy-server";
 
 const logger = createLogger("auth");
 
@@ -318,6 +320,16 @@ export const authOptions: NextAuthOptions = {
     },
   },
   callbacks: {
+    // E-mail policy (email-policy.ts): refused addresses never get a magic
+    // link, a credentials session or a Google session. Google refusals land
+    // on the auth error page with the policy message.
+    async signIn({ user, email }) {
+      const address = user?.email ?? (email as { email?: string } | undefined)?.email;
+      if (address && isBlockedAccountEmail(address)) {
+        return `/auth-error?error=${AUTH_ERROR_EMAIL_NOT_ACCEPTED}`;
+      }
+      return true;
+    },
     async session({ session, token }) {
       if (session.user && token.sub) {
         session.user.id = token.sub;

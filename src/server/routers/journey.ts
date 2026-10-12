@@ -14,6 +14,7 @@
 
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
+import { assertAccountEmailAllowed, localeFromCookies } from "@/lib/email-policy-server";
 import {
   Prisma,
   ClauseStatus,
@@ -432,6 +433,9 @@ export const journeyRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       const userId = ctx.session.user.id;
+
+      // The invited lawyer signs in with this address: account e-mail policy.
+      assertAccountEmailAllowed(input.email, input.lang ?? localeFromCookies(ctx.getCookie));
 
       const journey = await ctx.prisma.startupJourney.findFirst({
         where: { id: input.journeyId, userId },
