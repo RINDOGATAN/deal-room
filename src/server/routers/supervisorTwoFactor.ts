@@ -10,6 +10,7 @@ import {
   verifySupervisorToken,
 } from "@/lib/totp-supervisor";
 import { claimSecondFactorAttempt } from "../services/second-factor";
+import { sealTotpSecret } from "@/lib/totp-secret-box";
 
 export const supervisorTwoFactorRouter = createTRPCRouter({
   // Get 2FA status for current supervisor
@@ -64,11 +65,11 @@ export const supervisorTwoFactorRouter = createTRPCRouter({
       where: { supervisorId: supervisor.id },
       create: {
         supervisorId: supervisor.id,
-        secret,
+        secret: sealTotpSecret(secret),
         verified: false,
       },
       update: {
-        secret,
+        secret: sealTotpSecret(secret),
         verified: false,
       },
     });
