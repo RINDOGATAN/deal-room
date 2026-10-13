@@ -181,15 +181,24 @@ function baseTools(baseUrl: string, stripeEnabled: boolean): McpToolDef[] {
       name: "list_contract_types",
       title: "List contract types",
       description:
-        `Every contract type Dealroom can make, with the code to use as contractType, the guide slug, the governing laws and languages it is offered in, the role the caller can take (DPA and BAA only) and the inputs it asks for. Each input says whether it is required and, when it has one, its default; mustSend marks the required inputs without a default. ${REQUIRED_INPUTS_RULE.en} Call this first to know what to ask the user. No API key needed.`,
+        `Every contract type Dealroom can make, with the code to use as contractType, the guide slug, the governing laws and languages it is offered in, the role the caller can take (DPA and BAA only) and the inputs it asks for. Each input says whether it is required and, when it has one, its default; mustSend marks the required inputs without a default. ${REQUIRED_INPUTS_RULE.en} Call this first to know what to ask the user. Send contractType to get one type with its inputs, or summary true to get every type without its inputs (a short list of codes). No API key needed.`,
       inputSchema: {
         type: "object",
         properties: {
           lang: { type: "string", enum: ["en", "es"], default: "en", description: "Language of names and labels" },
+          contractType: {
+            type: "string",
+            description: "Optional: one code (for example DPA) or guide slug; only that type is returned, with its inputs",
+          },
+          summary: {
+            type: "boolean",
+            default: false,
+            description: "Optional: leave the inputs out of each type (each then carries inputCount)",
+          },
         },
         required: [],
       },
-      endpoint: { method: "GET", url: `${baseUrl}/contract-types?lang={lang}` },
+      endpoint: { method: "GET", url: `${baseUrl}/contract-types?lang={lang}&contractType={contractType}&summary={summary}` },
       requiredScopes: [],
       public: true,
       readOnly: true,

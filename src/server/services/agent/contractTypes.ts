@@ -168,6 +168,35 @@ export function sortContractTypes(list: ContractTypeDescriptor[], lang: "en" | "
   );
 }
 
+/** A contract type without its inputs, with the number of inputs instead (summary mode). */
+export type ContractTypeSummary = Omit<ContractTypeDescriptor, "inputs"> & { inputCount: number };
+
+/**
+ * Narrows the full list for a caller: one contract type (its code, the code
+ * in any case or its guide slug) and/or a summary without the inputs. With
+ * neither option the list is returned unchanged, so existing callers keep
+ * the full catalogue. An unknown type answers `{ unknown }`.
+ */
+export function selectContractTypes(
+  list: ContractTypeDescriptor[],
+  opts: { contractType?: string | null; summary?: boolean } = {},
+): { contractTypes: ContractTypeDescriptor[] | ContractTypeSummary[] } | { unknown: string } {
+  let selected = list;
+  const wanted = opts.contractType?.trim();
+  if (wanted) {
+    const code = contractTypeFromInput(
+      wanted,
+      list.map((t) => t.contractType),
+    );
+    if (!code) return { unknown: wanted };
+    selected = list.filter((t) => t.contractType === code);
+  }
+  if (!opts.summary) return { contractTypes: selected };
+  return {
+    contractTypes: selected.map(({ inputs, ...rest }) => ({ ...rest, inputCount: inputs.length })),
+  };
+}
+
 const TTL_MS = 5 * 60 * 1000;
 const cache = new Map<string, { at: number; list: ContractTypeDescriptor[] }>();
 

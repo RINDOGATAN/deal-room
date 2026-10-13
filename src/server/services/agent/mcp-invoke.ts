@@ -72,8 +72,11 @@ const params = <T extends Record<string, string>>(p: T) => ({ params: Promise.re
 export const invokeTool: ToolInvoker = async (tool: McpToolDef, args, authorization) => {
   switch (tool.name) {
     case "list_contract_types": {
-      const lang = str(args.lang) === "es" ? "es" : "en";
-      return contractTypesGET(request(`/contract-types?lang=${lang}`, authorization));
+      const sp = new URLSearchParams({ lang: str(args.lang) === "es" ? "es" : "en" });
+      const contractType = str(args.contractType);
+      if (contractType) sp.set("contractType", contractType);
+      if (args.summary === true || str(args.summary) === "true") sp.set("summary", "1");
+      return contractTypesGET(request(`/contract-types?${sp.toString()}`, authorization));
     }
     case "generate_contract": {
       // Agents read text best: the contract comes back as Markdown unless asked otherwise.

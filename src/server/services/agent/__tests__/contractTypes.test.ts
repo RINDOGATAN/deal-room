@@ -12,6 +12,7 @@ import {
   governingLawsFor,
   inputsFor,
   listContractTypes,
+  selectContractTypes,
 } from "@/server/services/agent/contractTypes";
 
 describe("contract types", () => {
@@ -126,5 +127,35 @@ describe("contract types", () => {
       "en",
     );
     expect(sorted.map((x: { contractType: string }) => x.contractType)).toEqual(["NDA", "SAAS", "DPA", "X"]);
+  });
+
+  describe("selectContractTypes", () => {
+    const input = { id: "x", label: "X", type: "text", required: true, mustSend: true };
+    const t = (contractType: string, inputs: unknown[]) => ({ contractType, name: contractType, inputs }) as never;
+    const list = [t("NDA", [input]), t("DPA", [input, input])];
+
+    it("returns the list unchanged without options", () => {
+      expect(selectContractTypes(list)).toEqual({ contractTypes: list });
+      expect(selectContractTypes(list, { contractType: "  " })).toEqual({ contractTypes: list });
+    });
+
+    it("returns one type, with its inputs, by code, code in any case or guide slug", () => {
+      for (const wanted of ["DPA", "dpa", "data-processing-agreement"]) {
+        const res = selectContractTypes(list, { contractType: wanted });
+        expect(res).toEqual({ contractTypes: [list[1]] });
+      }
+    });
+
+    it("answers an unknown type", () => {
+      expect(selectContractTypes(list, { contractType: "LEASE" })).toEqual({ unknown: "LEASE" });
+    });
+
+    it("leaves the inputs out in summary mode, with their count", () => {
+      const res = selectContractTypes(list, { summary: true }) as { contractTypes: Record<string, unknown>[] };
+      expect(res.contractTypes.map((x) => x.inputCount)).toEqual([1, 2]);
+      expect(res.contractTypes.every((x) => !("inputs" in x))).toBe(true);
+      const one = selectContractTypes(list, { contractType: "NDA", summary: true }) as { contractTypes: Record<string, unknown>[] };
+      expect(one.contractTypes).toEqual([{ contractType: "NDA", name: "NDA", inputCount: 1 }]);
+    });
   });
 });

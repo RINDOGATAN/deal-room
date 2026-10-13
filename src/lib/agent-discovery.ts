@@ -239,7 +239,7 @@ const AUTH = {
   header: "Authorization",
   format: `Bearer ${KEY_PLACEHOLDER}`,
   description:
-    "A Dealroom API key (it starts with drk_) in the Authorization header. A person creates it after signing in, under Settings, API keys. list_contract_types works without a key.",
+    "A Dealroom API key (it starts with drk_) in the Authorization header. A person creates it after signing in, under Settings, API keys. find_template, list_contract_types and get_deadlines work without a key.",
   keyCreationUrl: `${SITE_URL}/settings/api-keys`,
 };
 

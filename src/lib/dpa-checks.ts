@@ -18,6 +18,7 @@ const IDENTIFYING_CATEGORIES = [
   "identification-data",
   "financial-data",
   "account-credentials",
+  "employee-data",
 ];
 
 export type DpaWarningId =

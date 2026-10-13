@@ -151,7 +151,7 @@ export async function GET() {
         id: "list-contract-types",
         name: "List Contract Types",
         description:
-          "Every contract type the one call makes, with its code (send it as contractType), guide, governing laws, languages, roles and required inputs (GET /api/v1/agent/contract-types, no key; ?lang=es for Spanish). MCP tool: list_contract_types.",
+          "Every contract type the one call makes, with its code (send it as contractType), guide, governing laws, languages, roles and required inputs (GET /api/v1/agent/contract-types, no key; ?lang=es for Spanish; &contractType=DPA for one type; &summary=1 without inputs). MCP tool: list_contract_types.",
         inputModes: ["application/json"],
         outputModes: ["application/json"],
         endpoint: { method: "GET", url: CONTRACT_TYPES_URL },

@@ -9,6 +9,24 @@ history was not tracked per-release and lives only in git.
 
 ## [Unreleased]
 
+### Added
+- **`list_contract_types` takes an optional filter.** `contractType` (a code
+  or guide slug) returns that one type with its inputs (404 `NOT_FOUND` for an
+  unknown one); `summary` returns every type without its inputs, with an
+  `inputCount`. Same on `GET /api/v1/agent/contract-types?contractType=&summary=1`.
+  Without either, the full list, as before.
+- **DPA: an "Employee data (HR records)" data category** (`employee-data`),
+  listed in Annex I and in the TIA's transfer details, and treated as directly
+  identifying by the pseudonymization check.
+
+### Changed
+- Discovery: the API key note says that `find_template`,
+  `list_contract_types` and `get_deadlines` work without a key.
+- Built-in skills: input labels, hints, placeholders and clause help texts of
+  the DPA use no long dashes and no "e.g."; the Spanish hints of the DPA, NDA,
+  MSA and SaaS address the reader as "tú". Clause legal text is unchanged.
+  Hosted: takes effect after the next built-in skills seed.
+
 ## [0.1.34] - prepared 2026-10-02 (not yet tagged)
 
 For self-hosters: three additive migrations (`users.pilotStartedAt`, the
