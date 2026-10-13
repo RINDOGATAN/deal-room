@@ -1538,7 +1538,8 @@ model CustomerCreditEntry {
   dealRoomId              String?
   stripeCheckoutSessionId String?
   stripePaymentIntentId   String?
-  // Why a GRANT was made (required for GRANT, empty otherwise).
+  // Why a GRANT was made (required for GRANT). On a PURCHASE, set only when a
+  // promotion code applied: "discount promotion_code=... coupon=... amount_discount=... amount_total=...".
   note                    String?
   createdAt               DateTime          @default(now())
 

@@ -38,6 +38,33 @@ export const creditsSessionPaid = {
   metadata: { kind: "credits", apiKeyId: "key_1", customerId: "cust_2", credits: "10" },
 } as unknown as Stripe.Checkout.Session;
 
+/**
+ * Completed sessions a 100% promotion code took to zero: Stripe reports
+ * "no_payment_required", charges nothing and creates no payment intent.
+ */
+const fullDiscount = {
+  payment_status: "no_payment_required",
+  amount_total: 0,
+  payment_intent: null,
+  discounts: [{ coupon: "cpn_test_free", promotion_code: "promo_test_free" }],
+};
+
+export const contractSessionFree = {
+  ...contractSessionPaid,
+  id: "cs_test_contract_free",
+  ...fullDiscount,
+  amount_subtotal: 2900,
+  total_details: { amount_discount: 2900, amount_shipping: 0, amount_tax: 0 },
+} as unknown as Stripe.Checkout.Session;
+
+export const creditsSessionFree = {
+  ...creditsSessionPaid,
+  id: "cs_test_credits_free",
+  ...fullDiscount,
+  amount_subtotal: 21750,
+  total_details: { amount_discount: 21750, amount_shipping: 0, amount_tax: 0 },
+} as unknown as Stripe.Checkout.Session;
+
 /** A session carrying the discarded "plan" kind: not pay per contract any more. */
 export const planSessionComplete = {
   id: "cs_test_plan_1",

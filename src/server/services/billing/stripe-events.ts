@@ -35,11 +35,49 @@ function idOf(ref: string | { id: string } | null | undefined): string | null {
   return typeof ref === "string" ? ref : ref.id;
 }
 
+/**
+ * Whether a completed checkout has settled and may grant what it bought.
+ * "paid" is a charged session; "no_payment_required" is one a promotion
+ * code discounted to zero (Stripe charges nothing, so nothing is pending).
+ * "unpaid" (a delayed method still on its way) never grants.
+ */
+export function isCheckoutSettled(session: Pick<Stripe.Checkout.Session, "payment_status">) {
+  return session.payment_status === "paid" || session.payment_status === "no_payment_required";
+}
+
+/**
+ * A short, countable note for a discounted purchase, or null when no
+ * discount applied: the promotion code and coupon ids from
+ * `session.discounts`, and the discount amount from `total_details`.
+ */
+export function discountNoteOf(session: Stripe.Checkout.Session): string | null {
+  const discounts = (session.discounts ?? []) as Array<{
+    coupon?: string | { id: string } | null;
+    promotion_code?: string | { id: string } | null;
+  }>;
+  const amountOff = session.total_details?.amount_discount ?? 0;
+  const free = session.payment_status === "no_payment_required";
+  if (!discounts.length && amountOff <= 0 && !free) return null;
+  const parts = ["discount"];
+  for (const d of discounts) {
+    const promo = idOf(d.promotion_code ?? null);
+    const coupon = idOf(d.coupon ?? null);
+    if (promo) parts.push(`promotion_code=${promo}`);
+    if (coupon) parts.push(`coupon=${coupon}`);
+  }
+  parts.push(`amount_discount=${amountOff}`);
+  parts.push(`amount_total=${session.amount_total ?? 0}`);
+  return parts.join(" ");
+}
+
 function isUniqueViolation(err: unknown) {
   return err instanceof Prisma.PrismaClientKnownRequestError && err.code === "P2002";
 }
 
-/** A contract bought for one deal. Only a paid session unlocks it. */
+/**
+ * A contract bought for one deal. Only a settled session unlocks it; a
+ * discounted one is recorded with the amount actually charged (0 when free).
+ */
 async function fulfilContract(session: Stripe.Checkout.Session) {
   const meta = session.metadata ?? {};
   if (!meta.dealRoomId) {
@@ -63,7 +101,11 @@ async function fulfilContract(session: Stripe.Checkout.Session) {
     update: { stripePaymentIntentId: data.stripePaymentIntentId },
     create: data,
   });
-  logger.info("contract paid", { dealRoomId: meta.dealRoomId, sessionId: session.id });
+  logger.info("contract paid", {
+    dealRoomId: meta.dealRoomId,
+    sessionId: session.id,
+    discounted: discountNoteOf(session) !== null,
+  });
 }
 
 /**
@@ -95,6 +137,8 @@ async function fulfilCredits(session: Stripe.Checkout.Session) {
           reason: "PURCHASE",
           stripeCheckoutSessionId: session.id,
           stripePaymentIntentId: idOf(session.payment_intent as string | Stripe.PaymentIntent | null),
+          // Set only when a promotion code applied, so free grants can be counted.
+          note: discountNoteOf(session),
         },
       });
       await tx.customerCredit.update({
@@ -118,9 +162,11 @@ export async function fulfilCheckoutSession(session: Stripe.Checkout.Session) {
   const kind = billingKindOf(session.metadata);
   if (!kind) return false;
 
-  // Card payments arrive "paid"; delayed methods (bank debits) arrive
-  // "unpaid" and are fulfilled on checkout.session.async_payment_succeeded.
-  if (session.payment_status !== "paid") {
+  // Card payments arrive "paid"; a session discounted to zero arrives
+  // "no_payment_required" and is granted the same way. Delayed methods
+  // (bank debits) arrive "unpaid" and are fulfilled on
+  // checkout.session.async_payment_succeeded.
+  if (!isCheckoutSettled(session)) {
     logger.info("checkout completed, payment not yet received", { sessionId: session.id, kind });
     return true;
   }

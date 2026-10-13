@@ -31,6 +31,8 @@ import {
   fulfilCheckoutSession,
   handleChargeRefunded,
   handleCheckoutPaymentFailed,
+  isCheckoutSettled,
+  discountNoteOf,
 } from "../stripe-events";
 
 const unique = () => new Prisma.PrismaClientKnownRequestError("unique", { code: "P2002", clientVersion: "5" });
@@ -126,6 +128,84 @@ describe("checkout.session.completed", () => {
     expect(billingKindOf(fx.legacySkillSession.metadata)).toBeNull();
     expect(await fulfilCheckoutSession(fx.legacySkillSession)).toBe(false);
     expect(db.dealPayment.upsert).not.toHaveBeenCalled();
+  });
+});
+
+describe("checkouts a promotion code took to zero (no_payment_required)", () => {
+  it("counts as settled, like paid; unpaid still does not", () => {
+    expect(isCheckoutSettled(fx.contractSessionPaid)).toBe(true);
+    expect(isCheckoutSettled(fx.contractSessionFree)).toBe(true);
+    expect(isCheckoutSettled(fx.contractSessionUnpaid)).toBe(false);
+  });
+
+  it("unlocks the contract, recording the amount actually charged (0)", async () => {
+    expect(await fulfilCheckoutSession(fx.contractSessionFree)).toBe(true);
+    expect(db.dealPayment.upsert).toHaveBeenCalledWith({
+      where: { stripeCheckoutSessionId: "cs_test_contract_free" },
+      update: { stripePaymentIntentId: null },
+      create: expect.objectContaining({
+        dealRoomId: "deal_1",
+        kind: "CONTRACT",
+        status: "PAID",
+        amount: 0,
+        stripePaymentIntentId: null,
+      }),
+    });
+    expectNoRound1OrRevenueWrites();
+  });
+
+  it("adds the pack and notes the promotion code on the ledger entry", async () => {
+    expect(await fulfilCheckoutSession(fx.creditsSessionFree)).toBe(true);
+    expect(db.customerCreditEntry.create).toHaveBeenCalledWith({
+      data: expect.objectContaining({
+        customerId: "cust_2",
+        delta: 10,
+        reason: "PURCHASE",
+        stripeCheckoutSessionId: "cs_test_credits_free",
+        stripePaymentIntentId: null,
+        note: "discount promotion_code=promo_test_free coupon=cpn_test_free amount_discount=21750 amount_total=0",
+      }),
+    });
+    expect(db.customerCredit.update).toHaveBeenCalledWith({
+      where: { customerId: "cust_2" },
+      data: { balance: { increment: 10 } },
+    });
+    expectNoRound1OrRevenueWrites();
+  });
+
+  it("leaves the note empty on an undiscounted purchase", async () => {
+    expect(discountNoteOf(fx.creditsSessionPaid)).toBeNull();
+    await fulfilCheckoutSession(fx.creditsSessionPaid);
+    expect(db.customerCreditEntry.create).toHaveBeenCalledWith({
+      data: expect.objectContaining({ note: null }),
+    });
+  });
+
+  it("reads expanded discount objects too", () => {
+    const expanded = {
+      ...fx.creditsSessionFree,
+      discounts: [{ coupon: { id: "cpn_x" }, promotion_code: { id: "promo_x" } }],
+    } as unknown as typeof fx.creditsSessionFree;
+    expect(discountNoteOf(expanded)).toContain("promotion_code=promo_x coupon=cpn_x");
+  });
+
+  it("credits a free pack only once when the event is replayed", async () => {
+    await fulfilCheckoutSession(fx.creditsSessionFree);
+    db.customerCreditEntry.create.mockRejectedValueOnce(unique());
+    await expect(fulfilCheckoutSession(fx.creditsSessionFree)).resolves.toBe(true);
+    expect(db.customerCreditEntry.create).toHaveBeenCalledTimes(2);
+    expect(db.customerCredit.update).toHaveBeenCalledTimes(1);
+  });
+
+  it("upserts a replayed free contract on the session id, never a second row", async () => {
+    await fulfilCheckoutSession(fx.contractSessionFree);
+    await fulfilCheckoutSession(fx.contractSessionFree);
+    expect(db.dealPayment.upsert).toHaveBeenCalledTimes(2);
+    for (const [arg] of db.dealPayment.upsert.mock.calls) {
+      expect(arg.where).toEqual({ stripeCheckoutSessionId: "cs_test_contract_free" });
+      // A replay never re-marks the row PAID (a revoked one stays revoked).
+      expect(arg.update).toEqual({ stripePaymentIntentId: null });
+    }
   });
 });
 

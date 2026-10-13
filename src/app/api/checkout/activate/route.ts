@@ -8,7 +8,7 @@ import prisma from "@/lib/prisma";
 import { getStripe, getSubscription } from "@/lib/stripe";
 import { features } from "@/config/features";
 import { apiError } from "@/lib/api-response";
-import { billingKindOf, fulfilCheckoutSession } from "@/server/services/billing/stripe-events";
+import { billingKindOf, fulfilCheckoutSession, isCheckoutSettled } from "@/server/services/billing/stripe-events";
 
 /**
  * Activates entitlements for a completed Stripe checkout session.
@@ -40,7 +40,8 @@ export async function POST(request: NextRequest) {
     const stripe = getStripe();
     const checkoutSession = await stripe.checkout.sessions.retrieve(sessionId);
 
-    if (checkoutSession.payment_status !== "paid") {
+    // "paid", or "no_payment_required" when a promotion code took it to zero.
+    if (!isCheckoutSettled(checkoutSession)) {
       return NextResponse.json({ error: "Payment not completed" }, { status: 400 });
     }
 
