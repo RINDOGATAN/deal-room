@@ -123,6 +123,44 @@ describe("party details in a one-call NDA", () => {
     expect(sig).not.toContain("Name: Demo Supplier B");
   });
 
+  it("Spanish: signature blocks in Spanish, one full stop after EE.UU.", async () => {
+    const deal = soloNda("es", SUPPLIER);
+    deal.clauses = [
+      {
+        status: "AGREED",
+        agreedOptionId: "opt-delaware",
+        selections: [],
+        clauseTemplate: {
+          clauseId: "dispute-resolution",
+          title: "Governing law and jurisdiction",
+          category: "Legal",
+          order: 5,
+          localizedContent: { title: { en: "Governing law and jurisdiction", es: "Ley aplicable y jurisdicción" } },
+          options: [
+            {
+              id: "opt-delaware",
+              code: "courts-delaware",
+              label: "Delaware courts",
+              legalText: "Delaware.",
+              localizedContent: { legalText: { en: "Delaware.", es: "Toda controversia se resolverá en Delaware." } },
+            },
+          ],
+        },
+      },
+    ] as never[];
+    currentDeal = deal;
+    const data = (await generateContractData("deal-1"))!;
+    expect(data.governingLawArticle?.text).toContain("Estado de California, EE.UU. Toda controversia");
+    for (const text of [generateContractMarkdown(data), generateContractTxt(data), generateContractHtml(data)]) {
+      expect(text).not.toContain("For and on behalf of");
+      expect(text).not.toMatch(/\bSignature:|\bTitle:/);
+      expect(text).toContain("En nombre y representación de Demo Company A:");
+      expect(text).toContain("Firma: ");
+      expect(text).toContain("Cargo: ");
+      expect(text).not.toContain("EE.UU..");
+    }
+  });
+
   it("uses a supplied contact and signatory", async () => {
     currentDeal = soloNda("en", { ...SUPPLIER, contact: "Ana García, legal@supplier.example", signatoryName: "Ana García", signatoryTitle: "Administradora" });
     const data = (await generateContractData("deal-1"))!;

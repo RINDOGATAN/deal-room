@@ -13,7 +13,7 @@
  *      the customer holds no credit;
  *   3. creates an agreed SOLO deal through the solo fact intake
  *      (`createSoloDealFromFacts`), filling every clause the caller leaves
- *      out with the skill's baseline option;
+ *      out with the skill's default (src/lib/default-option.ts);
  *   4. pays for it exactly as the first document download does
  *      (`dealAccessForAgent`: one credit, or nothing where billing is off);
  *   5. returns the deal, the document links and, on request, the contract
