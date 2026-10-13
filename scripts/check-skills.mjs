@@ -45,6 +45,8 @@ const SYSTEM_BOILERPLATE_VARS = new Set([
   "partyBName",
   "partyAAddress",
   "partyBAddress",
+  "partyAJurisdiction",
+  "partyBJurisdiction",
   "partyAId",
   "partyBId",
   "partyAShortName",

@@ -356,7 +356,7 @@ export function llmsFullText(opts: {
     "",
     "## Make a contract in one call",
     "",
-    `\`POST ${ONE_CALL_URL}\` with \`Authorization: Bearer drk_...\`. Body: \`contractType\` (the code), \`party\` (your side: \`legalName\` required; \`address\`, \`taxId\`, \`signatoryName\`, \`signatoryTitle\`, \`email\` optional), optional \`counterparty\` (same shape), \`governingLaw\` (needed only when the type offers more than one), \`language\` (\`en\` or \`es\`), \`terms\` (the required inputs, by id), \`clauses\` (clause id to option code), \`role\` (DPA and BAA) and \`inline\` (\`md\`, \`html\` or \`txt\`). Send an \`Idempotency-Key\` header so a retry is not charged twice.`,
+    `\`POST ${ONE_CALL_URL}\` with \`Authorization: Bearer drk_...\`. Body: \`contractType\` (the code), \`party\` (your side: \`legalName\` required; \`address\`, \`jurisdiction\` (of incorporation), \`taxId\`, \`signatoryName\`, \`signatoryTitle\`, \`contact\`, \`email\` optional; only what you send is written into the contract, never the account e-mail), optional \`counterparty\` (same shape), \`governingLaw\` (needed only when the type offers more than one), \`language\` (\`en\` or \`es\`), \`terms\` (the required inputs, by id), \`clauses\` (clause id to option code), \`role\` (DPA and BAA) and \`inline\` (\`md\`, \`html\` or \`txt\`). Send an \`Idempotency-Key\` header so a retry is not charged twice.`,
     "",
     "```sh",
     oneCallCurl("NDA", "en"),

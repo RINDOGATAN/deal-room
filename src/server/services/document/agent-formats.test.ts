@@ -114,10 +114,19 @@ describe("Markdown", () => {
   it("fills both parties and the signature blocks", () => {
     expect(md).toContain("### Disclosing Party: Acme Inc");
     expect(md).toContain("- **Address:** 1 Main St, Los Angeles");
-    expect(md).toContain("- **Contact:** Ada Founder (ada@acme.example)");
     expect(md).toContain("### Receiving Party: Globex LLC");
-    expect(md).toContain("- **Contact:** Globex LLC\n");
+    expect(md).toContain("- **Name:** Ada Founder");
     expect(md).toContain("- **Title:** CEO");
+  });
+
+  it("never prints the account e-mail, and no contact line it was not given", () => {
+    expect(md).not.toContain("ada@acme.example");
+    expect(md).not.toContain("**Contact:**");
+    const withContact = generateContractMarkdown(
+      sample({ partyB: { name: "Globex LLC", email: "", legalName: "Globex LLC", contact: "Bo Buyer, legal@globex.example" } }),
+    );
+    expect(withContact).toContain("- **Contact:** Bo Buyer, legal@globex.example");
+    expect(withContact).not.toContain("- **Contact:** Globex LLC");
   });
 
   it("adds no long dash of its own and no notice on a single-party contract", () => {

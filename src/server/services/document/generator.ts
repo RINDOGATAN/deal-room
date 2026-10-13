@@ -23,12 +23,18 @@ import { DERIVED_TEXTS, pick } from "./derivedTexts";
 const logger = createLogger("doc-generator");
 
 export interface PartyData {
+  /** Display name: legal name, company or person, never a login e-mail. */
   name: string;
+  /** Account e-mail. Kept for certification and notices; never printed in a contract. */
   email: string;
   company?: string;
   legalName?: string;
   address?: string;
+  /** Where the party is incorporated or registered, when supplied. */
+  jurisdiction?: string;
   taxId?: string;
+  /** Contact line as supplied (a contact person, an e-mail or both). Absent: no contact line. */
+  contact?: string;
   signatoryName?: string;
   signatoryTitle?: string;
   /** Typed signature string (the name the party typed at signing). */
@@ -82,6 +88,10 @@ export interface BoilerplateData {
   partyLabels?: { partyA: string; partyB: string };
   /** Annexes/Schedules rendered on their own pages AFTER the signature blocks (e.g. DPA Annex I/II). */
   annexes?: StandardClause[];
+  /** True when the template's signature block already carries each party's
+   *  block ({partyASignatureBlock} / {partyBSignatureBlock}). Renderers that
+   *  print the signature block text then add no second, structured block. */
+  signatureBlockHasParties?: boolean;
   /** Opt-in flag (BAA): render the whole body as ONE continuous, sequentially
    *  numbered agreement — negotiable clauses and fixed standardClauses merged
    *  into a single list ordered by their true section number, each heading
@@ -488,6 +498,9 @@ export function processBoilerplate(
     annexes: annexes.length > 0 ? annexes : undefined,
     sequentialNumbering: bp.sequentialNumbering === true,
     signatureBlock: resolve(bp.signatureBlock),
+    signatureBlockHasParties: /\{party[AB]SignatureBlock\}/.test(
+      resolveLocalizedString(bp.signatureBlock, language)
+    ),
     partyLabels: partyLabels
       ? {
           partyA: resolveLocalizedString(partyLabels.partyA, language),
@@ -694,12 +707,12 @@ export async function generateContractData(
   });
 
   // Extract signing details
-  const sdA = initiator.signingDetails as { legalName?: string; address?: string; taxId?: string; signatoryName?: string; signatoryTitle?: string } | null;
+  const sdA = initiator.signingDetails as { legalName?: string; address?: string; jurisdiction?: string; taxId?: string; signatoryName?: string; signatoryTitle?: string; contact?: string; email?: string } | null;
   // A SOLO deal has no respondent; the other side's details, when the
   // filling side supplied them (one-call agent generation), live on the deal.
   const soloCounterparty =
     isSolo && !respondent ? readSoloCounterparty(deal.soloCounterparty) : null;
-  const sdB = (respondent?.signingDetails ?? soloCounterparty) as { legalName?: string; address?: string; taxId?: string; signatoryName?: string; signatoryTitle?: string } | null;
+  const sdB = (respondent?.signingDetails ?? soloCounterparty) as { legalName?: string; address?: string; jurisdiction?: string; taxId?: string; signatoryName?: string; signatoryTitle?: string; contact?: string; email?: string } | null;
   const hasPartyB = !!respondent || !!soloCounterparty;
 
   // Build party names with signing details → company → name fallback.
@@ -735,6 +748,8 @@ export async function generateContractData(
     partyBName,
     partyAAddress,
     partyBAddress,
+    partyAJurisdiction: sdA?.jurisdiction || "",
+    partyBJurisdiction: hasPartyB ? sdB?.jurisdiction || "" : "",
     partyAId: sdA?.taxId || "",
     partyBId: sdB?.taxId || "",
     partyAShortName: "Party A",
@@ -896,6 +911,7 @@ export async function generateContractData(
     for (const [a, b] of [
       ["partyAName", "partyBName"],
       ["partyAAddress", "partyBAddress"],
+      ["partyAJurisdiction", "partyBJurisdiction"],
       ["partyAId", "partyBId"],
       ["partyASignatureBlock", "partyBSignatureBlock"],
     ]) {
@@ -936,39 +952,52 @@ export async function generateContractData(
   // themselves (not just the boilerplate variables) so EVERY renderer — cover,
   // parties section, and signature blocks in PDF/DOCX/TXT — shows each party
   // under the role they chose.
+  // The contract shows what the parties supplied and nothing else: the
+  // account e-mail is never a name, a contact or a signatory, and the
+  // contact line is the supplied contact (or e-mail given as party details),
+  // never the legal name repeated. Missing values stay as fill-in blanks.
+  const supplied = (v: string) => (v === namePlaceholder ? undefined : v);
+  const contactOf = (sd: { contact?: string; email?: string } | null | undefined) =>
+    sd?.contact || sd?.email || undefined;
   let outPartyA: PartyData = {
-    name: initiator.name || initiator.email,
+    name: partyAName,
     email: initiator.email,
     company: initiator.company || undefined,
     legalName: sdA?.legalName,
     address: sdA?.address,
+    jurisdiction: sdA?.jurisdiction,
     taxId: sdA?.taxId,
-    signatoryName: sdA?.signatoryName,
+    contact: contactOf(sdA),
+    signatoryName: supplied(partyASignatoryName),
     signatoryTitle: sdA?.signatoryTitle,
     signature: deal.signingRequest?.initiatorSignature || undefined,
     signedAt: deal.signingRequest?.initiatorSignedAt || undefined,
   };
   let outPartyB: PartyData | null = respondent
     ? {
-        name: respondent.name || respondent.email,
+        name: partyBName,
         email: respondent.email,
         company: respondent.company || undefined,
         legalName: sdB?.legalName,
         address: sdB?.address,
+        jurisdiction: sdB?.jurisdiction,
         taxId: sdB?.taxId,
-        signatoryName: sdB?.signatoryName,
+        contact: contactOf(sdB),
+        signatoryName: supplied(partyBSignatoryName),
         signatoryTitle: sdB?.signatoryTitle,
         signature: deal.signingRequest?.respondentSignature || undefined,
         signedAt: deal.signingRequest?.respondentSignedAt || undefined,
       }
     : soloCounterparty
       ? {
-          name: soloCounterparty.signatoryName || soloCounterparty.legalName || namePlaceholder,
+          name: soloCounterparty.legalName || namePlaceholder,
           email: soloCounterparty.email || "",
           company: soloCounterparty.legalName,
           legalName: soloCounterparty.legalName,
           address: soloCounterparty.address,
+          jurisdiction: soloCounterparty.jurisdiction,
           taxId: soloCounterparty.taxId,
+          contact: contactOf(soloCounterparty),
           signatoryName: soloCounterparty.signatoryName,
           signatoryTitle: soloCounterparty.signatoryTitle,
         }

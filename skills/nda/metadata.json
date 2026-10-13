@@ -2,7 +2,7 @@
   "contractType": "NDA",
   "category": { "en": "IP", "es": "PI" },
   "displayName": { "en": "Non-Disclosure Agreement", "es": "Acuerdo de Confidencialidad" },
-  "description": { "en": "Mutual or one-way confidentiality agreements for protecting sensitive business information during discussions, due diligence, partnerships, or other business relationships.", "es": "Acuerdos de confidencialidad mutuos o unilaterales para proteger información empresarial sensible durante conversaciones, procesos de diligencia debida, asociaciones u otras relaciones comerciales." },
+  "description": { "en": "One-way confidentiality agreement: the Disclosing Party (Party A) shares confidential information and the Receiving Party (Party B) keeps it confidential, during discussions, due diligence, partnerships or other business relationships. Only Party A's information is protected.", "es": "Acuerdo de confidencialidad unilateral: la Parte Divulgante (Parte A) comparte información confidencial y la Parte Receptora (Parte B) la mantiene en secreto, durante conversaciones, procesos de diligencia debida, asociaciones u otras relaciones comerciales. Solo se protege la información de la Parte A." },
   "version": "1.0",
   "clauseCount": 9,
   "languages": ["en", "es"],
