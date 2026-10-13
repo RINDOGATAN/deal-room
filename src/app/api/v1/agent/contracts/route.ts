@@ -9,7 +9,7 @@
  *     role?, terms?, clauses?, includeText? }
  *
  * Creates an agreed single-party contract (every clause left out takes the
- * skill's baseline option), pays for it with one of the customer's credits
+ * skill's default option, src/lib/default-option.ts), pays for it with one of the customer's credits
  * exactly as the first document download does, and returns the deal, the
  * links to its documents and, with includeText, its text. HTTP 402 with no
  * credit (nothing is created). The logic lives in

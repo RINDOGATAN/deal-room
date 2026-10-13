@@ -62,9 +62,16 @@ function sectionHeader(title: string): string {
   return `\n${title.toUpperCase()}\n${divider("─", title.length)}`;
 }
 
+/** Party and signature field labels, in the contract's language. */
+const FIELD_LABELS: Record<string, Record<string, string>> = {
+  en: { legalName: "Legal Name", address: "Address", jurisdiction: "Jurisdiction of incorporation", taxId: "Tax ID", contact: "Contact", name: "Name", title: "Title" },
+  es: { legalName: "Nombre o denominación", address: "Domicilio", jurisdiction: "Lugar de constitución", taxId: "Identificación fiscal", contact: "Contacto", name: "Nombre", title: "Cargo" },
+};
+
 export function generateContractTxt(data: ContractData): string {
   const lang = data.language || "en";
   const l = LABELS[lang] || LABELS.en;
+  const fl = FIELD_LABELS[lang] || FIELD_LABELS.en;
   const partyALabel = data.boilerplate?.partyLabels?.partyA || l.partyA;
   const partyBLabel = data.boilerplate?.partyLabels?.partyB || l.partyB;
   const lines: string[] = [];
@@ -95,20 +102,22 @@ export function generateContractTxt(data: ContractData): string {
   lines.push(sectionHeader(l.parties));
   lines.push("");
   lines.push(`${partyALabel}:`);
-  lines.push(`  ${data.partyA.company || data.partyA.name}`);
-  if (data.partyA.legalName) lines.push(`  Legal Name: ${data.partyA.legalName}`);
-  if (data.partyA.address) lines.push(`  Address: ${data.partyA.address}`);
-  if (data.partyA.taxId) lines.push(`  Tax ID: ${data.partyA.taxId}`);
-  lines.push(`  Contact: ${data.partyA.name}${data.partyA.email ? ` (${data.partyA.email})` : ""}`);
+  lines.push(`  ${data.partyA.legalName || data.partyA.company || data.partyA.name}`);
+  if (data.partyA.legalName) lines.push(`  ${fl.legalName}: ${data.partyA.legalName}`);
+  if (data.partyA.address) lines.push(`  ${fl.address}: ${data.partyA.address}`);
+  if (data.partyA.jurisdiction) lines.push(`  ${fl.jurisdiction}: ${data.partyA.jurisdiction}`);
+  if (data.partyA.taxId) lines.push(`  ${fl.taxId}: ${data.partyA.taxId}`);
+  if (data.partyA.contact) lines.push(`  ${fl.contact}: ${data.partyA.contact}`);
   lines.push("");
 
   if (data.partyB) {
     lines.push(`${partyBLabel}:`);
-    lines.push(`  ${data.partyB.company || data.partyB.name}`);
-    if (data.partyB.legalName) lines.push(`  Legal Name: ${data.partyB.legalName}`);
-    if (data.partyB.address) lines.push(`  Address: ${data.partyB.address}`);
-    if (data.partyB.taxId) lines.push(`  Tax ID: ${data.partyB.taxId}`);
-    lines.push(`  Contact: ${data.partyB.name}${data.partyB.email ? ` (${data.partyB.email})` : ""}`);
+    lines.push(`  ${data.partyB.legalName || data.partyB.company || data.partyB.name}`);
+    if (data.partyB.legalName) lines.push(`  ${fl.legalName}: ${data.partyB.legalName}`);
+    if (data.partyB.address) lines.push(`  ${fl.address}: ${data.partyB.address}`);
+    if (data.partyB.jurisdiction) lines.push(`  ${fl.jurisdiction}: ${data.partyB.jurisdiction}`);
+    if (data.partyB.taxId) lines.push(`  ${fl.taxId}: ${data.partyB.taxId}`);
+    if (data.partyB.contact) lines.push(`  ${fl.contact}: ${data.partyB.contact}`);
     lines.push("");
   }
 
@@ -219,18 +228,22 @@ export function generateContractTxt(data: ContractData): string {
     lines.push("");
   }
 
-  lines.push(`${partyALabel}:`);
-  lines.push(`Name: ${data.partyA.signatoryName || data.partyA.name}`);
-  if (data.partyA.signatoryTitle) lines.push(`Title: ${data.partyA.signatoryTitle}`);
-  lines.push(`${l.date} ____________________`);
-  lines.push("");
-
-  if (data.partyB) {
-    lines.push(`${partyBLabel}:`);
-    lines.push(`Name: ${data.partyB.signatoryName || data.partyB.name}`);
-    if (data.partyB.signatoryTitle) lines.push(`Title: ${data.partyB.signatoryTitle}`);
+  // A signature block whose text already holds each party's block (most
+  // templates) needs no second, structured one.
+  if (!data.boilerplate?.signatureBlockHasParties) {
+    lines.push(`${partyALabel}:`);
+    lines.push(`${fl.name}: ${data.partyA.signatoryName || "____________________"}`);
+    if (data.partyA.signatoryTitle) lines.push(`${fl.title}: ${data.partyA.signatoryTitle}`);
     lines.push(`${l.date} ____________________`);
     lines.push("");
+
+    if (data.partyB) {
+      lines.push(`${partyBLabel}:`);
+      lines.push(`${fl.name}: ${data.partyB.signatoryName || "____________________"}`);
+      if (data.partyB.signatoryTitle) lines.push(`${fl.title}: ${data.partyB.signatoryTitle}`);
+      lines.push(`${l.date} ____________________`);
+      lines.push("");
+    }
   }
 
   // Annexes — after the signature blocks, each separated by a page-feed marker.

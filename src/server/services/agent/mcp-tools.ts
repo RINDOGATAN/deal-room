@@ -44,12 +44,20 @@ const partySchema = (who: string) => ({
   type: "object",
   description: who,
   properties: {
-    legalName: { type: "string", description: "Full legal name of the company or person" },
-    address: { type: "string", description: "Registered or postal address" },
-    taxId: { type: "string", description: "Company or tax number, where the contract shows one" },
-    signatoryName: { type: "string", description: "Name of the person who signs" },
-    signatoryTitle: { type: "string", description: "Title of the person who signs, for example CEO" },
-    email: { type: "string", format: "email" },
+    legalName: { type: "string", description: "Full legal name of the company or person. Printed as the party's name in the preamble, the Parties section and the signature block." },
+    address: {
+      type: "string",
+      description: "Registered office or principal place of business, for example \"Calle Mayor 1, 28013 Madrid, Spain\". Printed in the preamble (\"with its principal place of business at ...\") and the Parties section. Left out: [Address] stays as a blank to fill in.",
+    },
+    jurisdiction: {
+      type: "string",
+      description: "Where the party is incorporated or registered, for example \"Spain\" or \"Delaware, United States\". Printed in the Parties section of the Markdown, HTML and text versions.",
+    },
+    taxId: { type: "string", description: "Company or tax number (for example a Spanish NIF or a US EIN). Printed in the Parties section of the Markdown, HTML and text versions, and in the preamble where the template shows one." },
+    signatoryName: { type: "string", description: "Name of the person who signs. Printed in the signature block; left out, the Name line stays blank." },
+    signatoryTitle: { type: "string", description: "Title of the person who signs, for example CEO. Printed in the signature block; left out, the Title line stays blank." },
+    contact: { type: "string", description: "Contact person or details for the Contact line of the Parties section (Markdown, HTML and text versions), for example \"Ana García, legal@example.com\". Left out: no Contact line." },
+    email: { type: "string", format: "email", description: "A contact e-mail for this party. Used for the Contact line when contact is left out. The API key's account e-mail is never written into the contract." },
   },
   required: ["legalName"],
 });
@@ -207,8 +215,8 @@ function baseTools(baseUrl: string, stripeEnabled: boolean): McpToolDef[] {
       name: "generate_contract",
       title: "Make a contract in one call",
       description: stripeEnabled
-        ? "Make a finished contract in one call: give the contract type, your side's details and, if you know them, the other side's. Clauses you leave out take the standard option. One prepaid credit is spent (the same price as any contract); with no credit the answer is HTTP 402 with code PAYMENT_REQUIRED and nothing is created. Returns the contract as Markdown, then the deal id, the link where the person can read it in Dealroom and the Markdown, HTML, PDF, DOCX and TXT links (free to fetch again)."
-        : "Make a finished contract in one call: give the contract type, your side's details and, if you know them, the other side's. Clauses you leave out take the standard option. Payments are off on this deployment. Returns the contract as Markdown, then the deal id, the link where the person can read it in Dealroom and the Markdown, HTML, PDF, DOCX and TXT links.",
+        ? "Make a finished contract in one call: give the contract type, your side's details and, if you know them, the other side's. Clauses you leave out take the template's middle-ground option (the most neutral one; for an optional clause such as non-solicitation, none), never simply the first option listed. One prepaid credit is spent (the same price as any contract); with no credit the answer is HTTP 402 with code PAYMENT_REQUIRED and nothing is created. Returns the contract as Markdown, then the deal id, the link where the person can read it in Dealroom and the Markdown, HTML, PDF, DOCX and TXT links (free to fetch again)."
+        : "Make a finished contract in one call: give the contract type, your side's details and, if you know them, the other side's. Clauses you leave out take the template's middle-ground option (the most neutral one; for an optional clause such as non-solicitation, none), never simply the first option listed. Payments are off on this deployment. Returns the contract as Markdown, then the deal id, the link where the person can read it in Dealroom and the Markdown, HTML, PDF, DOCX and TXT links.",
       inputSchema: {
         type: "object",
         properties: {
@@ -223,8 +231,8 @@ function baseTools(baseUrl: string, stripeEnabled: boolean): McpToolDef[] {
           },
           language: { type: "string", enum: ["en", "es"], default: "en" },
           title: { type: "string", description: "Name of the deal; made from the parties when left out" },
-          party: partySchema("Your side (the side the API key acts for)"),
-          counterparty: partySchema("The other side. Left out: its block stays blank for it to complete."),
+          party: partySchema("Your side (the side the API key acts for). Send every detail you have: only what you send is written into the contract."),
+          counterparty: partySchema("The other side, with its address and jurisdiction of incorporation when you know them. Left out: its block stays blank for it to complete."),
           role: {
             type: "string",
             description: "DPA and BAA only: the role you take (see roles in list_contract_types)",

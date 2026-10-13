@@ -805,7 +805,7 @@ function addPartiesInfo(
       spacing: { after: 200 },
       children: [
         new TextRun({
-          text: data.partyA.email,
+          text: data.partyA.contact || "",
           size: 18,
           color: "666666",
           font: "Times New Roman",
@@ -863,7 +863,7 @@ function addPartiesInfo(
         spacing: { after: 300 },
         children: [
           new TextRun({
-            text: data.partyB.email,
+            text: data.partyB.contact || "",
             size: 18,
             color: "666666",
             font: "Times New Roman",
@@ -937,7 +937,7 @@ function addSignatureBlocks(
     new Paragraph({
       children: [
         new TextRun({
-          text: data.partyA.signatoryName || data.partyA.name,
+          text: data.partyA.signatoryName || "[_________________]",
           size: 18,
           color: "666666",
           font: "Times New Roman",
@@ -1044,7 +1044,7 @@ function addSignatureBlocks(
       new Paragraph({
         children: [
           new TextRun({
-            text: data.partyB.signatoryName || data.partyB.name,
+            text: data.partyB.signatoryName || "[_________________]",
             size: 18,
             color: "666666",
             font: "Times New Roman",

@@ -127,7 +127,7 @@ export const DEVELOPERS_COPY = {
     fieldsTitle: "Fields",
     fields: [
       { name: "contractType", text: "Required. The code (NDA) or the address of the contract's guide (nda). See Contract types below." },
-      { name: "party", text: "Required. Your side: legalName (required), address, taxId, signatoryName, signatoryTitle, email." },
+      { name: "party", text: "Required. Your side: legalName (required), address, jurisdiction (of incorporation), taxId, signatoryName, signatoryTitle, contact, email. Only what you send is written into the contract; the account e-mail never is." },
       { name: "counterparty", text: "The other side, same fields. Left out, its block stays blank for them to complete." },
       { name: "governingLaw", text: "CALIFORNIA, NEW_YORK, ENGLAND_WALES, SPAIN or DELAWARE. Needed only when the contract is offered under more than one." },
       { name: "language", text: "en or es, where the contract is offered in both. Default en." },
@@ -315,7 +315,7 @@ export const DEVELOPERS_COPY = {
     fieldsTitle: "Campos",
     fields: [
       { name: "contractType", text: "Obligatorio. El código (NDA) o la dirección de la guía del contrato (nda). Consulta Tipos de contrato más abajo." },
-      { name: "party", text: "Obligatorio. Tu parte: legalName (obligatorio), address, taxId, signatoryName, signatoryTitle, email." },
+      { name: "party", text: "Obligatorio. Tu parte: legalName (obligatorio), address, jurisdiction (lugar de constitución), taxId, signatoryName, signatoryTitle, contact, email. En el contrato solo se escribe lo que envías; el e-mail de la cuenta, nunca." },
       { name: "counterparty", text: "La otra parte, con los mismos campos. Si no lo envías, su bloque queda en blanco para que lo complete ella." },
       { name: "governingLaw", text: "CALIFORNIA, NEW_YORK, ENGLAND_WALES, SPAIN o DELAWARE. Solo hace falta cuando el contrato se ofrece con más de una." },
       { name: "language", text: "en o es, cuando el contrato se ofrece en los dos. Por defecto, en." },

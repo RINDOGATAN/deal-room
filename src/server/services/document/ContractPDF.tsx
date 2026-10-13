@@ -1106,7 +1106,7 @@ export function ContractPDF({ data, whiteLabel }: ContractPDFProps) {
                       {data.partyA.company}
                     </Text>
                   )}
-                  <Text style={styles.partyEmail}>{data.partyA.email}</Text>
+                  {data.partyA.contact && <Text style={styles.partyEmail}>{data.partyA.contact}</Text>}
                 </View>
                 {data.partyB && (
                 <View style={styles.partyBox}>
@@ -1117,7 +1117,7 @@ export function ContractPDF({ data, whiteLabel }: ContractPDFProps) {
                       {data.partyB.company}
                     </Text>
                   )}
-                  <Text style={styles.partyEmail}>{data.partyB.email}</Text>
+                  {data.partyB.contact && <Text style={styles.partyEmail}>{data.partyB.contact}</Text>}
                 </View>
                 )}
               </View>
@@ -1152,7 +1152,7 @@ export function ContractPDF({ data, whiteLabel }: ContractPDFProps) {
                     {data.partyA.legalName || data.partyA.company || data.partyA.name}
                   </Text>
                   <Text style={styles.signatureMeta}>
-                    {data.partyA.signatoryName || data.partyA.name}
+                    {data.partyA.signatoryName || "[_________________]"}
                   </Text>
                   {data.partyA.signatoryTitle && (
                     <Text style={styles.signatureMeta}>
@@ -1181,7 +1181,7 @@ export function ContractPDF({ data, whiteLabel }: ContractPDFProps) {
                     {data.partyB ? (data.partyB.legalName || data.partyB.company || data.partyB.name) : "[_________________]"}
                   </Text>
                   <Text style={styles.signatureMeta}>
-                    {data.partyB ? (data.partyB.signatoryName || data.partyB.name) : "[_________________]"}
+                    {data.partyB ? (data.partyB.signatoryName || "[_________________]") : "[_________________]"}
                   </Text>
                   {data.partyB?.signatoryTitle && (
                     <Text style={styles.signatureMeta}>
@@ -1292,7 +1292,7 @@ export function ContractPDF({ data, whiteLabel }: ContractPDFProps) {
                     {data.partyA.legalName || data.partyA.company || data.partyA.name}
                   </Text>
                   <Text style={styles.signatureMeta}>
-                    {data.partyA.signatoryName || data.partyA.name}
+                    {data.partyA.signatoryName || "[_________________]"}
                   </Text>
                   {data.partyA.signatoryTitle && (
                     <Text style={styles.signatureMeta}>
@@ -1311,7 +1311,7 @@ export function ContractPDF({ data, whiteLabel }: ContractPDFProps) {
                     {data.partyB.legalName || data.partyB.company || data.partyB.name}
                   </Text>
                   <Text style={styles.signatureMeta}>
-                    {data.partyB.signatoryName || data.partyB.name}
+                    {data.partyB.signatoryName || "[_________________]"}
                   </Text>
                   {data.partyB.signatoryTitle && (
                     <Text style={styles.signatureMeta}>

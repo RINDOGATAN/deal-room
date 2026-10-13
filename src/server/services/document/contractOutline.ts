@@ -18,6 +18,7 @@ const FIELD_LABELS: Record<string, Record<string, string>> = {
   en: {
     legalName: "Legal name",
     address: "Address",
+    jurisdiction: "Jurisdiction of incorporation",
     taxId: "Tax ID",
     contact: "Contact",
     name: "Name",
@@ -27,6 +28,7 @@ const FIELD_LABELS: Record<string, Record<string, string>> = {
   es: {
     legalName: "Nombre o denominación",
     address: "Domicilio",
+    jurisdiction: "Lugar de constitución",
     taxId: "Identificación fiscal",
     contact: "Contacto",
     name: "Nombre",
@@ -117,10 +119,12 @@ export function buildContractOutline(data: ContractData): ContractOutline {
     const fields: { label: string; value: string }[] = [];
     if (p.legalName) fields.push({ label: f.legalName, value: p.legalName });
     if (p.address) fields.push({ label: f.address, value: p.address });
+    if (p.jurisdiction) fields.push({ label: f.jurisdiction, value: p.jurisdiction });
     if (p.taxId) fields.push({ label: f.taxId, value: p.taxId });
-    const contact = p.email ? `${p.name} (${p.email})` : p.name;
-    if (contact) fields.push({ label: f.contact, value: contact });
-    return { id, label, name: p.company || p.name, fields };
+    // The contact line is the supplied contact only: never the account
+    // e-mail, never the legal name repeated.
+    if (p.contact) fields.push({ label: f.contact, value: p.contact });
+    return { id, label, name: p.legalName || p.company || p.name, fields };
   };
 
   const sections: OutlineSection[] = [];
@@ -202,7 +206,7 @@ export function buildContractOutline(data: ContractData): ContractOutline {
     id,
     label,
     fields: [
-      { label: f.name, value: p.signatoryName || p.name },
+      { label: f.name, value: p.signatoryName || BLANK_LINE },
       ...(p.signatoryTitle ? [{ label: f.title, value: p.signatoryTitle }] : []),
       { label: f.date, value: BLANK_LINE },
     ],
@@ -226,10 +230,14 @@ export function buildContractOutline(data: ContractData): ContractOutline {
     signatures: {
       title: l.signatures,
       intro: bp?.signatureBlock || l.inWitnessWhereof,
-      blocks: [
-        signer("signature-party-a", partyALabel, data.partyA),
-        ...(data.partyB ? [signer("signature-party-b", partyBLabel, data.partyB)] : []),
-      ],
+      // A signature block whose text already holds each party's block
+      // (most templates) needs no second, structured one.
+      blocks: bp?.signatureBlockHasParties
+        ? []
+        : [
+            signer("signature-party-a", partyALabel, data.partyA),
+            ...(data.partyB ? [signer("signature-party-b", partyBLabel, data.partyB)] : []),
+          ],
     },
     annexes: (bp?.annexes ?? []).map((a) => ({
       id: uniqueId(`annex-${slugify(a.title)}`),

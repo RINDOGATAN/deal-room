@@ -17,9 +17,13 @@ import { z } from "zod";
 export const partyDetailsSchema = z.object({
   legalName: z.string().trim().min(1).max(200),
   address: z.string().trim().max(500).optional(),
+  /** Where the company is incorporated or registered (for example "Spain" or "Delaware, United States"). */
+  jurisdiction: z.string().trim().max(200).optional(),
   taxId: z.string().trim().max(100).optional(),
   signatoryName: z.string().trim().max(200).optional(),
   signatoryTitle: z.string().trim().max(200).optional(),
+  /** The contact person or details to print on the contract's Contact line. */
+  contact: z.string().trim().max(320).optional(),
   email: z.string().trim().email().max(320).optional(),
 });
 

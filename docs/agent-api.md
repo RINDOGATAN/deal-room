@@ -24,8 +24,8 @@ Quick start for developers (keys, credits, MCP client setup): https://dealroom.t
   "governingLaw": "CALIFORNIA",
   "language": "en",
   "title": "optional deal name",
-  "party": { "legalName": "Your Company, Inc.", "address": "...", "taxId": "...", "signatoryName": "...", "signatoryTitle": "CEO", "email": "..." },
-  "counterparty": { "legalName": "Other Company, LLC" },
+  "party": { "legalName": "Your Company, Inc.", "address": "...", "jurisdiction": "Delaware, United States", "taxId": "...", "signatoryName": "...", "signatoryTitle": "CEO", "contact": "...", "email": "..." },
+  "counterparty": { "legalName": "Other Company, S.L.", "address": "Calle Mayor 1, 28013 Madrid, Spain", "jurisdiction": "Spain" },
   "role": "PROCESSOR",
   "terms": { "input-id": "value" },
   "clauses": { "clause-id": "option-code" },
@@ -36,7 +36,7 @@ Quick start for developers (keys, credits, MCP client setup): https://dealroom.t
 - `contractType`: the code, the code in any case, or the guide slug. `party.legalName` is the only other required field.
 - `governingLaw`: required only when the type offers more than one (Delaware formations run under `CALIFORNIA` and need none).
 - `terms`: inputs left out take their default (as the wizard pre-fills them); required inputs without a default must be sent, else 422 `Missing required parameters` with the list.
-- Clauses left out take the skill's baseline option (solo intake with `selectionPolicy: "defaults"`). The deal is a SOLO deal: `party` becomes the initiator's signing details, `counterparty` is stored on the deal (`soloCounterparty`) and fills the other block; without it that block stays blank.
+- Clauses left out take the skill's default: the most neutral option by the options' biases (the middle ground the guides describe), or `none` for an optional clause that has one; never simply the first option (`src/lib/default-option.ts`; solo intake with `selectionPolicy: "defaults"`). The deal is a SOLO deal: `party` becomes the initiator's signing details, `counterparty` is stored on the deal (`soloCounterparty`) and fills the other block; without it that block stays blank. Only supplied details are printed: `address` in the preamble and Parties section, `jurisdiction` and `taxId` in the Parties section, `contact` (or `email`) on the Contact line, `signatoryName` and `signatoryTitle` in the one signature block per party. The account e-mail is never written into the contract, and missing values stay as fill-in blanks.
 - Payment: with billing on, a customer with no credit gets **402** `PAYMENT_REQUIRED` before anything is created. Otherwise the deal is paid exactly as the first document download (`dealAccessForAgent`: one credit), so later downloads are free. If the last credit is spent elsewhere in between, the answer is 402 with the `dealId` (fetch `/deals/:id/document` once a credit is back).
 - Answer **201**: `dealId` (agent deal id, for `/deals/:id/...`), `dealRoomId`, `status: "AGREED"`, `contractType`, `governingLaw`, `language`, `paid`, `dealUrl` (opens in the browser for the person whose e-mail is the customer's; null with `dealUrlNote` when no such account exists), `documents.{pdf,docx,txt,md,html}`, `guide`, and with `inline` (`md`, `html` or `txt`) `document: { format, content }`.
 
