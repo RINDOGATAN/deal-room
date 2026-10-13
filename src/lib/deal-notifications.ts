@@ -177,6 +177,7 @@ export function draftReminderDue(
 const JURISDICTION_COUNTRY: Record<string, string> = {
   CALIFORNIA: "US",
   NEW_YORK: "US",
+  DELAWARE: "US",
   ENGLAND_WALES: "GB",
   SPAIN: "ES",
 };

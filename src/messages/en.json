@@ -200,7 +200,9 @@
       "spain": "Spain, EU",
       "spainDescription": "Spanish civil law within EU regulatory framework",
       "spainCourt": "Courts of Madrid, Spain",
-      "delaware": "Delaware, USA"
+      "delaware": "Delaware, USA",
+      "delawareDescription": "Delaware corporate law (DGCL), the law of the state where the company is incorporated",
+      "delawareCourt": "Court of Chancery of the State of Delaware"
     },
     "allCategories": "All",
     "languages": {

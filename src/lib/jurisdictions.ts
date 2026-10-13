@@ -7,11 +7,10 @@
  * Skill/template jurisdiction tags are free-form strings
  * (`ContractTemplate.jurisdictions` is `String[]`) and can be more specific
  * than the `GoverningLaw` enum the deal engine runs on (CALIFORNIA, NEW_YORK,
- * ENGLAND_WALES, SPAIN). Example: the Delaware Certificate of Incorporation
- * is authored against the DGCL and tagged DELAWARE, but deals created from
- * it run under the US-pragmatic GoverningLaw default, CALIFORNIA — the same
- * convention the journey router documents ("skill content handles Delaware
- * specifics").
+ * ENGLAND_WALES, SPAIN, DELAWARE). The Delaware Certificate of Incorporation
+ * is authored against the DGCL and tagged DELAWARE, so deals created from it
+ * run under DELAWARE: a company's charter is governed by the law of its state
+ * of incorporation, never by California.
  *
  * This module is the single place that bridges the two vocabularies. If a
  * new tag is added to a skill's metadata.json, map it here (and add it to
@@ -19,15 +18,15 @@
  * reject it.
  */
 
-export type GoverningLaw = "CALIFORNIA" | "NEW_YORK" | "ENGLAND_WALES" | "SPAIN";
+export type GoverningLaw = "CALIFORNIA" | "NEW_YORK" | "ENGLAND_WALES" | "SPAIN" | "DELAWARE";
 
 export const SKILL_JURISDICTION_TO_GOVERNING_LAW: Record<string, GoverningLaw> = {
   CALIFORNIA: "CALIFORNIA",
   NEW_YORK: "NEW_YORK",
   ENGLAND_WALES: "ENGLAND_WALES",
   SPAIN: "SPAIN",
-  // Delaware corporate formations (DGCL) run under the US framework.
-  DELAWARE: "CALIFORNIA",
+  // Delaware corporate documents (DGCL) are governed by Delaware law.
+  DELAWARE: "DELAWARE",
 };
 
 /**
@@ -37,6 +36,20 @@ export const SKILL_JURISDICTION_TO_GOVERNING_LAW: Record<string, GoverningLaw> =
  */
 export function governingLawForSkillJurisdiction(tag: string): GoverningLaw | null {
   return SKILL_JURISDICTION_TO_GOVERNING_LAW[tag] ?? null;
+}
+
+/**
+ * The governing law a startup-journey deal is created under: CALIFORNIA (the
+ * journey's US default) when the template offers it or has no tags, else the
+ * template's own first law, so the Delaware Certificate of Incorporation runs
+ * under DELAWARE.
+ */
+export function journeyGoverningLaw(tags: string[]): GoverningLaw {
+  const laws = tags
+    .map((t) => governingLawForSkillJurisdiction(t))
+    .filter((l): l is GoverningLaw => l !== null);
+  if (laws.length === 0 || laws.includes("CALIFORNIA")) return "CALIFORNIA";
+  return laws[0];
 }
 
 /**

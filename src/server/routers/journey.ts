@@ -20,7 +20,6 @@ import {
   ClauseStatus,
   DealMode,
   DealRoomStatus,
-  GoverningLaw,
   PartyRole,
   PartyStatus,
   StartupJourneyStatus,
@@ -32,6 +31,7 @@ import { validateEquity } from "@/lib/journey/equity";
 import { autoAgreeSingleOptionClauses } from "../services/deal/autoAgreeSingleOption";
 import { createLogger } from "@/lib/logger";
 import { LIVE_ROWS } from "@/lib/clause-retirement";
+import { journeyGoverningLaw } from "@/lib/jurisdictions";
 import { findOrCreateInvitedLawyer } from "../services/attorney/ownLawyer";
 import { sendOwnLawyerInviteEmail } from "@/lib/email";
 
@@ -334,7 +334,7 @@ export const journeyRouter = createTRPCRouter({
             name: d.name,
             contractTemplateId: template.id,
             dealMode: DealMode.SOLO,
-            governingLaw: GoverningLaw.CALIFORNIA, // US-pragmatic default; skill content handles Delaware specifics
+            governingLaw: journeyGoverningLaw(template.jurisdictions),
             contractLanguage: "en",
             parameters: Object.keys(d.parameters).length
               ? (d.parameters as Prisma.InputJsonValue)

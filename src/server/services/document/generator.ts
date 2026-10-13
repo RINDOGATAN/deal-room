@@ -214,6 +214,10 @@ const GOVERNING_LAW_DISPLAY: Record<string, Record<string, string>> = {
     en: "State of New York, United States of America",
     es: "Estado de Nueva York, EE.UU.",
   },
+  DELAWARE: {
+    en: "State of Delaware, United States of America",
+    es: "Estado de Delaware, EE.UU.",
+  },
   ENGLAND_WALES: {
     en: "England and Wales, United Kingdom",
     es: "Inglaterra y Gales, Reino Unido",
