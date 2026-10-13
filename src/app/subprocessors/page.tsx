@@ -56,18 +56,20 @@ const COPY = {
       {
         role: "Web analytics: counts visits to our pages without setting cookies; receives the IP address of each page request, and we use only aggregated figures",
         provider: "Sealmetrics",
-        location: "Ireland, European Union",
+        location: "Ireland and France, European Union",
       },
     ] as Row[],
     where:
       "Dealroom's data is stored in the European Union (Frankfurt). Its application servers run in the United States, so the data is processed there when you use the service.",
+    handoffs:
+      "If you choose to sign a contract with Firmas or to take a disagreement to Gavel, the details needed for that step go to that service. Rindogatan LLC also operates both; each has its own privacy notice and providers.",
     transfers:
       "Where a provider is in the United States or may be accessed from there, the transfer relies on the EU-US Data Privacy Framework where the provider is certified to it and otherwise on the standard contractual clauses approved by the European Commission. For the AI gateway provider, the safeguard is the standard contractual clauses only, as its row states.",
     google:
       "Sign in with Google (only if the user chooses it): Google LLC acts as an independent controller of the sign-in data under its Controller-Controller Data Protection Terms. It is not a sub-processor; we mention it for transparency.",
     changes: "We update this page before we add or replace a provider.",
     privacy: "Privacy Policy",
-    updated: "Last updated: 12 October 2026",
+    updated: "Last updated: 13 October 2026",
   },
   es: {
     title: "Subencargados",
@@ -107,18 +109,20 @@ const COPY = {
       {
         role: "Analítica web: cuenta las visitas a nuestras páginas sin instalar cookies; recibe la dirección IP de cada petición de página y solo usamos cifras agregadas",
         provider: "Sealmetrics",
-        location: "Irlanda, Unión Europea",
+        location: "Irlanda y Francia, Unión Europea",
       },
     ] as Row[],
     where:
       "Los datos de Dealroom se guardan en la Unión Europea (Fráncfort). Sus servidores de aplicación funcionan en Estados Unidos, así que los datos se tratan allí cuando usas el servicio.",
+    handoffs:
+      "Si eliges firmar un contrato con Firmas o llevar un desacuerdo a Gavel, los datos necesarios para ese paso pasan a ese servicio. Rindogatan LLC también presta ambos; cada uno tiene su propio aviso de privacidad y sus propios proveedores.",
     transfers:
       "Cuando un proveedor está en Estados Unidos o se puede acceder a los datos desde allí, la transferencia se ampara en el Marco de Privacidad de Datos UE-EE. UU. si el proveedor está adherido a él y, si no, en las cláusulas contractuales tipo aprobadas por la Comisión Europea. Para el proveedor de la pasarela de IA, la garantía son solo las cláusulas contractuales tipo, como indica su fila.",
     google:
       "Inicio de sesión con Google (solo si la persona usuaria lo elige): Google LLC actúa como responsable independiente de los datos de inicio de sesión conforme a sus condiciones de protección de datos entre responsables (Controller-Controller Data Protection Terms). No es un subencargado; lo mencionamos por transparencia.",
     changes: "Actualizamos esta página antes de añadir o sustituir un proveedor.",
     privacy: "Política de privacidad",
-    updated: "Última actualización: 12 de octubre de 2026",
+    updated: "Última actualización: 13 de octubre de 2026",
   },
 } as const;
 
@@ -171,6 +175,7 @@ export default async function SubprocessorsPage() {
 
       <section className="space-y-3 text-sm text-muted-foreground leading-relaxed">
         <p>{c.where}</p>
+        <p>{c.handoffs}</p>
         <p>{c.google}</p>
         <p>{c.transfers}</p>
         <p>{c.changes}</p>
