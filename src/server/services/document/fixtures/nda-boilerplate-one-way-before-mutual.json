@@ -1,0 +1,226 @@
+{
+  "contractTitle": {
+    "en": "NON-DISCLOSURE AGREEMENT",
+    "es": "ACUERDO DE CONFIDENCIALIDAD"
+  },
+  "preamble": {
+    "en": "This Non-Disclosure Agreement (this \"Agreement\") is entered into as of {effectiveDate} (the \"Effective Date\") by and between:\n\nDISCLOSING PARTY:\n{partyAName}, with its principal place of business at {partyAAddress} (the \"Disclosing Party\")\n\nRECEIVING PARTY:\n{partyBName}, with its principal place of business at {partyBAddress} (the \"Receiving Party\")",
+    "es": "El presente Acuerdo de Confidencialidad (en adelante, el \"Acuerdo\") se formaliza con fecha {effectiveDate} (la \"Fecha de Efectividad\") entre:\n\nPARTE DIVULGANTE:\n{partyAName}, con domicilio social en {partyAAddress} (la \"Parte Divulgante\")\n\nPARTE RECEPTORA:\n{partyBName}, con domicilio social en {partyBAddress} (la \"Parte Receptora\")"
+  },
+  "background": {
+    "en": "WHEREAS the Disclosing Party possesses certain confidential and proprietary information; and WHEREAS the Receiving Party desires to receive such information for the purpose of evaluating or pursuing a business relationship between the parties (the \"Purpose\"); NOW, THEREFORE, in consideration of the mutual promises and covenants contained herein, and for other good and valuable consideration, the receipt and sufficiency of which are hereby acknowledged, the parties agree as follows:",
+    "es": "CONSIDERANDO que la Parte Divulgante posee determinada información confidencial y de su propiedad; y CONSIDERANDO que la Parte Receptora desea recibir dicha información con el fin de evaluar o desarrollar una relación comercial entre las partes (la \"Finalidad\"); EN CONSECUENCIA, en virtud de las promesas y compromisos mutuos contenidos en el presente Acuerdo, y de otra contraprestación válida y suficiente, cuya recepción y suficiencia se reconocen expresamente, las partes acuerdan lo siguiente:"
+  },
+  "definitions": [
+    {
+      "term": {
+        "en": "Disclosing Party",
+        "es": "Parte Divulgante"
+      },
+      "definition": {
+        "en": "means the party identified above as the Disclosing Party, including its officers, directors, employees, agents, and authorized representatives.",
+        "es": "designa a la parte identificada anteriormente como Parte Divulgante, incluidos sus directivos, administradores, empleados, agentes y representantes autorizados."
+      }
+    },
+    {
+      "term": {
+        "en": "Receiving Party",
+        "es": "Parte Receptora"
+      },
+      "definition": {
+        "en": "means the party identified above as the Receiving Party, including its officers, directors, employees, agents, and authorized representatives.",
+        "es": "designa a la parte identificada anteriormente como Parte Receptora, incluidos sus directivos, administradores, empleados, agentes y representantes autorizados."
+      }
+    },
+    {
+      "term": {
+        "en": "Purpose",
+        "es": "Finalidad"
+      },
+      "definition": {
+        "en": "means the evaluation or pursuit of a potential business relationship between the parties, and any discussions, negotiations, or transactions related thereto.",
+        "es": "designa la evaluación o el desarrollo de una potencial relación comercial entre las partes, así como cualesquiera conversaciones, negociaciones o transacciones relacionadas con dicha relación."
+      }
+    },
+    {
+      "term": {
+        "en": "Representatives",
+        "es": "Representantes"
+      },
+      "definition": {
+        "en": "means a party's affiliates, and its and their respective officers, directors, employees, agents, advisors (including legal counsel, accountants, and financial advisors), and other authorized representatives.",
+        "es": "designa a las entidades vinculadas de una parte, así como a sus respectivos directivos, administradores, empleados, agentes, asesores (incluidos abogados, auditores y asesores financieros) y demás representantes autorizados."
+      }
+    },
+    {
+      "term": {
+        "en": "Disclosing Materials",
+        "es": "Materiales Divulgados"
+      },
+      "definition": {
+        "en": "means all documents, records, data, samples, prototypes, software, models, and other materials (in whatever form) that contain or embody Confidential Information.",
+        "es": "designa todos los documentos, registros, datos, muestras, prototipos, software, modelos y demás materiales (en cualquier formato) que contengan o incorporen Información Confidencial."
+      }
+    }
+  ],
+  "standardClauses": [
+    {
+      "title": {
+        "en": "Excluded information",
+        "es": "Información excluida"
+      },
+      "text": {
+        "en": "Confidential Information does not include information that:\n\n(a) is or becomes generally available to the public other than as a result of a breach of this Agreement by the Receiving Party or its Representatives;\n\n(b) was already known to the Receiving Party, without restriction on disclosure, at the time of disclosure by the Disclosing Party, as evidenced by the Receiving Party's written records;\n\n(c) is independently developed by the Receiving Party without use of or reference to the Disclosing Party's Confidential Information, as evidenced by the Receiving Party's written records;\n\n(d) becomes available to the Receiving Party on a non-confidential basis from a source other than the Disclosing Party, provided that such source is not bound by a confidentiality obligation to the Disclosing Party.\n\nThe burden of proving that any of the foregoing exceptions applies rests with the Receiving Party.",
+        "es": "No se considerará Información Confidencial aquella que:\n\n(a) sea o pase a ser de dominio público por causas ajenas al incumplimiento del presente Acuerdo por parte de la Parte Receptora o sus Representantes;\n\n(b) ya fuera conocida por la Parte Receptora, sin restricción alguna de divulgación, en el momento de su comunicación por la Parte Divulgante, según conste en los registros escritos de la Parte Receptora;\n\n(c) haya sido desarrollada de forma independiente por la Parte Receptora sin utilizar ni hacer referencia a la Información Confidencial de la Parte Divulgante, según conste en los registros escritos de la Parte Receptora;\n\n(d) haya sido puesta a disposición de la Parte Receptora de forma no confidencial por una fuente distinta de la Parte Divulgante, siempre que dicha fuente no esté sujeta a una obligación de confidencialidad frente a la Parte Divulgante.\n\nLa carga de probar la concurrencia de cualquiera de las excepciones anteriores corresponderá a la Parte Receptora."
+      }
+    },
+    {
+      "title": {
+        "en": "Confidentiality obligations",
+        "es": "Obligaciones de confidencialidad"
+      },
+      "text": {
+        "en": "The Receiving Party shall:\n\n(a) hold the Confidential Information in strict confidence and not disclose it to any third party except to its Representatives who have a need to know for the Purpose and who are bound by confidentiality obligations no less restrictive than those contained in this Agreement;\n\n(b) use the Confidential Information solely for the Purpose and not for any other purpose whatsoever;\n\n(c) exercise at least the same degree of care to protect the Confidential Information as it uses to protect its own confidential information of a similar nature, but in no event less than reasonable care;\n\n(d) be responsible for any breach of this Agreement by its Representatives.",
+        "es": "La Parte Receptora deberá:\n\n(a) mantener la Información Confidencial en estricta confidencialidad y no divulgarla a terceros, salvo a sus Representantes que tengan necesidad de conocerla para la Finalidad y que estén sujetos a obligaciones de confidencialidad no menos restrictivas que las contenidas en el presente Acuerdo;\n\n(b) utilizar la Información Confidencial exclusivamente para la Finalidad y no para ningún otro fin;\n\n(c) aplicar al menos el mismo grado de diligencia para proteger la Información Confidencial que el que emplea para proteger su propia información confidencial de naturaleza similar, sin que en ningún caso dicho grado pueda ser inferior a una diligencia razonable;\n\n(d) responder de cualquier incumplimiento del presente Acuerdo por parte de sus Representantes."
+      }
+    },
+    {
+      "title": {
+        "en": "No license or transfer of rights",
+        "es": "Ausencia de licencia o cesión de derechos"
+      },
+      "text": {
+        "en": "Nothing in this Agreement grants the Receiving Party any right, title, or interest in or to the Confidential Information, or any license under any intellectual property rights of the Disclosing Party. All Confidential Information remains the sole and exclusive property of the Disclosing Party.",
+        "es": "Nada en el presente Acuerdo otorga a la Parte Receptora derecho, título o interés alguno sobre la Información Confidencial, ni licencia alguna sobre los derechos de propiedad intelectual o industrial de la Parte Divulgante. Toda la Información Confidencial seguirá siendo propiedad exclusiva de la Parte Divulgante."
+      }
+    },
+    {
+      "title": {
+        "en": "No warranty on information",
+        "es": "Ausencia de garantía sobre la información"
+      },
+      "text": {
+        "en": "ALL CONFIDENTIAL INFORMATION IS PROVIDED \"AS IS.\" THE DISCLOSING PARTY MAKES NO WARRANTIES, EXPRESS OR IMPLIED, REGARDING THE ACCURACY, COMPLETENESS, OR FITNESS FOR A PARTICULAR PURPOSE OF ANY CONFIDENTIAL INFORMATION. The Disclosing Party shall have no liability for any errors or omissions in the Confidential Information, or for any decisions made by the Receiving Party in reliance upon it.",
+        "es": "TODA LA INFORMACIÓN CONFIDENCIAL SE FACILITA \"TAL CUAL\". LA PARTE DIVULGANTE NO OTORGA GARANTÍA ALGUNA, EXPRESA O IMPLÍCITA, SOBRE LA EXACTITUD, INTEGRIDAD O IDONEIDAD PARA UN FIN DETERMINADO DE LA INFORMACIÓN CONFIDENCIAL. La Parte Divulgante no será responsable de los errores u omisiones en la Información Confidencial ni de las decisiones adoptadas por la Parte Receptora basándose en ella."
+      }
+    },
+    {
+      "title": {
+        "en": "Compelled disclosure",
+        "es": "Divulgación obligatoria"
+      },
+      "text": {
+        "en": "If the Receiving Party is required by law, regulation, or legal process (including a subpoena, court order, or regulatory demand) to disclose any Confidential Information, the Receiving Party shall:\n\n(a) to the extent legally permitted, promptly notify the Disclosing Party in writing prior to such disclosure so that the Disclosing Party may seek a protective order or other appropriate remedy;\n\n(b) reasonably cooperate with the Disclosing Party (at the Disclosing Party's expense) in any efforts to prevent or limit such disclosure;\n\n(c) disclose only that portion of the Confidential Information that is legally required to be disclosed.",
+        "es": "Si la Parte Receptora se viera obligada por ley, norma o procedimiento legal (incluidos un requerimiento judicial, una orden judicial o un requerimiento administrativo) a divulgar Información Confidencial, la Parte Receptora deberá:\n\n(a) en la medida en que esté legalmente permitido, notificar sin demora y por escrito a la Parte Divulgante antes de dicha divulgación, a fin de que la Parte Divulgante pueda solicitar medidas cautelares u otras medidas oportunas;\n\n(b) cooperar razonablemente con la Parte Divulgante (a cargo de la Parte Divulgante) en cualquier actuación encaminada a evitar o limitar dicha divulgación;\n\n(c) divulgar únicamente la parte de la Información Confidencial cuya comunicación sea legalmente exigible."
+      }
+    }
+  ],
+  "generalProvisions": [
+    {
+      "title": {
+        "en": "Entire agreement",
+        "es": "Integridad del acuerdo"
+      },
+      "text": {
+        "en": "This Agreement constitutes the entire agreement between the parties with respect to the subject matter hereof and supersedes all prior negotiations, representations, warranties, commitments, offers, and agreements, whether written or oral.",
+        "es": "El presente Acuerdo constituye el acuerdo íntegro entre las partes en relación con su objeto y deja sin efecto cualesquiera negociaciones, declaraciones, garantías, compromisos, ofertas y acuerdos anteriores, ya sean escritos u orales."
+      }
+    },
+    {
+      "title": {
+        "en": "Amendments",
+        "es": "Modificaciones"
+      },
+      "text": {
+        "en": "This Agreement may not be amended, modified, or supplemented except by a written instrument signed by both parties.",
+        "es": "El presente Acuerdo no podrá ser modificado ni complementado salvo mediante documento escrito firmado por ambas partes."
+      }
+    },
+    {
+      "title": {
+        "en": "Severability",
+        "es": "Divisibilidad"
+      },
+      "text": {
+        "en": "If any provision of this Agreement is held to be invalid, illegal, or unenforceable, the remaining provisions shall continue in full force and effect, and the invalid provision shall be modified to the minimum extent necessary to make it valid and enforceable.",
+        "es": "Si cualquier disposición del presente Acuerdo fuera declarada nula, ilegal o inaplicable, las restantes disposiciones mantendrán su plena vigencia y eficacia, y la disposición afectada será modificada en la medida mínima necesaria para que resulte válida y ejecutable."
+      }
+    },
+    {
+      "title": {
+        "en": "Waiver",
+        "es": "Renuncia"
+      },
+      "text": {
+        "en": "No failure or delay by either party in exercising any right under this Agreement shall operate as a waiver thereof, nor shall any single or partial exercise of any right preclude any further exercise of that or any other right.",
+        "es": "La falta de ejercicio o el retraso de cualquiera de las partes en el ejercicio de cualquier derecho en virtud del presente Acuerdo no constituirá una renuncia al mismo, ni el ejercicio parcial de un derecho impedirá el ejercicio posterior de ese u otro derecho."
+      }
+    },
+    {
+      "title": {
+        "en": "Notices",
+        "es": "Notificaciones"
+      },
+      "text": {
+        "en": "All notices under this Agreement shall be in writing and shall be deemed given: (a) when delivered personally; (b) when sent by confirmed electronic mail; (c) one (1) business day after being sent by internationally recognized overnight courier; or (d) three (3) business days after being mailed by registered or certified mail, postage prepaid, to the parties at their respective addresses set forth above.",
+        "es": "Todas las notificaciones en virtud del presente Acuerdo deberán realizarse por escrito y se entenderán efectuadas: (a) en el momento de su entrega personal; (b) en el momento de su envío por correo electrónico con confirmación de recepción; (c) un (1) día hábil después de su envío mediante servicio de mensajería urgente internacionalmente reconocido; o (d) tres (3) días hábiles después de su envío por correo certificado con acuse de recibo, franqueo pagado, a las direcciones de las partes indicadas anteriormente."
+      }
+    },
+    {
+      "title": {
+        "en": "Counterparts",
+        "es": "Ejemplares"
+      },
+      "text": {
+        "en": "This Agreement may be executed in counterparts, each of which shall be deemed an original, and all of which together shall constitute one and the same instrument. Electronic signatures shall be deemed original signatures for all purposes.",
+        "es": "El presente Acuerdo podrá firmarse en varios ejemplares, cada uno de los cuales se considerará un original y todos ellos conjuntamente constituirán un único instrumento. Las firmas electrónicas tendrán la misma validez que las firmas manuscritas a todos los efectos."
+      }
+    }
+  ],
+  "jurisdictionProvisions": {
+    "CALIFORNIA": {
+      "title": {
+        "en": "California-specific provisions",
+        "es": "Disposiciones específicas de California"
+      },
+      "text": {
+        "en": "(a) Trade Secrets: To the extent Confidential Information constitutes trade secrets under the California Uniform Trade Secrets Act (Cal. Civ. Code §3426 et seq.) (\"CUTSA\"), the protections of CUTSA shall apply in addition to the protections of this Agreement.\n\n(b) Injunctive Relief: Each party acknowledges that a breach of this Agreement may cause irreparable harm for which monetary damages would be an inadequate remedy. Accordingly, the Disclosing Party shall be entitled to seek injunctive or other equitable relief without the requirement of posting a bond, in addition to all other remedies available at law or in equity.\n\n(c) Jury Waiver: EACH PARTY HEREBY IRREVOCABLY WAIVES, TO THE FULLEST EXTENT PERMITTED BY APPLICABLE LAW, ALL RIGHTS TO TRIAL BY JURY IN ANY ACTION, PROCEEDING, OR COUNTERCLAIM ARISING OUT OF OR RELATING TO THIS AGREEMENT.\n\n(d) CCPA/CPRA: To the extent that any Confidential Information includes personal information as defined under the California Consumer Privacy Act (Cal. Civ. Code §1798.100 et seq.) and the California Privacy Rights Act, the Receiving Party shall comply with all applicable requirements thereunder.",
+        "es": "(a) Secretos empresariales: En la medida en que la Información Confidencial constituya secretos comerciales conforme a la California Uniform Trade Secrets Act (Cal. Civ. Code §3426 y ss.) (\"CUTSA\"), las protecciones de la CUTSA se aplicarán adicionalmente a las del presente Acuerdo.\n\n(b) Medidas cautelares: Ambas partes reconocen que el incumplimiento del presente Acuerdo puede causar un daño irreparable para el cual la indemnización pecuniaria sería un remedio insuficiente. En consecuencia, la Parte Divulgante tendrá derecho a solicitar medidas cautelares u otras medidas de equidad sin necesidad de prestar caución, además de cualesquiera otros recursos disponibles en derecho o en equidad.\n\n(c) Renuncia al juicio con jurado: CADA PARTE RENUNCIA IRREVOCABLEMENTE, EN LA MEDIDA MÁXIMA PERMITIDA POR LA LEGISLACIÓN APLICABLE, A TODOS LOS DERECHOS A UN JUICIO CON JURADO EN CUALQUIER ACCIÓN, PROCEDIMIENTO O RECONVENCIÓN DERIVADO DE O RELACIONADO CON EL PRESENTE ACUERDO.\n\n(d) CCPA/CPRA: En la medida en que la Información Confidencial incluya información personal según se define en la California Consumer Privacy Act (Cal. Civ. Code §1798.100 y ss.) y la California Privacy Rights Act, la Parte Receptora cumplirá con todos los requisitos aplicables de dichas normas."
+      }
+    },
+    "ENGLAND_WALES": {
+      "title": {
+        "en": "England & Wales-specific provisions",
+        "es": "Disposiciones específicas de Inglaterra y Gales"
+      },
+      "text": {
+        "en": "(a) Third Party Rights: No person who is not a party to this Agreement shall have any rights under the Contracts (Rights of Third Parties) Act 1999 to enforce any term of this Agreement.\n\n(b) Non-Excludable Liability: Nothing in this Agreement shall exclude or limit liability for: (i) fraud or fraudulent misrepresentation; (ii) death or personal injury caused by negligence; or (iii) any other liability that cannot be excluded or limited under applicable law.\n\n(c) Equitable Relief: Each party acknowledges that damages alone may not be an adequate remedy for breach of this Agreement, and that the Disclosing Party shall be entitled to seek the remedies of injunction, specific performance, and other equitable relief for any threatened or actual breach.\n\n(d) UK GDPR: To the extent that any Confidential Information includes personal data as defined under the UK General Data Protection Regulation and the Data Protection Act 2018, in each case as amended by the Data (Use and Access) Act 2025, the Receiving Party shall comply with all applicable requirements thereunder.",
+        "es": "(a) Derechos de terceros: Ninguna persona que no sea parte del presente Acuerdo tendrá derecho alguno en virtud de la Contracts (Rights of Third Parties) Act 1999 para exigir el cumplimiento de cualquier estipulación de este Acuerdo.\n\n(b) Responsabilidad no excluible: Nada en el presente Acuerdo excluirá ni limitará la responsabilidad por: (i) fraude o declaración fraudulenta; (ii) muerte o lesiones personales causadas por negligencia; o (iii) cualquier otra responsabilidad que no pueda ser excluida o limitada conforme a la legislación aplicable.\n\n(c) Tutela judicial: Ambas partes reconocen que la indemnización por daños y perjuicios puede no constituir un remedio suficiente ante el incumplimiento del presente Acuerdo, y que la Parte Divulgante tendrá derecho a solicitar medidas cautelares, el cumplimiento específico y otras medidas de equidad ante cualquier incumplimiento efectivo o inminente.\n\n(d) RGPD del RU: En la medida en que la Información Confidencial incluya datos personales según se definen en el Reglamento General de Protección de Datos del Reino Unido y la Data Protection Act 2018, en cada caso en su versión modificada por la Data (Use and Access) Act 2025, la Parte Receptora cumplirá con todos los requisitos aplicables de dichas normas."
+      }
+    },
+    "SPAIN": {
+      "title": {
+        "en": "Spain-specific provisions",
+        "es": "Disposiciones específicas de España"
+      },
+      "text": {
+        "en": "(a) Ley de Secretos Empresariales: To the extent Confidential Information constitutes trade secrets (secretos empresariales) under Ley 1/2019, de 20 de febrero, de Secretos Empresariales, the protections of that law shall apply in addition to the protections of this Agreement.\n\n(b) Good Faith: This Agreement shall be interpreted and performed in accordance with the principle of good faith (buena fe) as set forth in Articles 7 and 1258 of the Código Civil.\n\n(c) Interpretation: In the event of any ambiguity, this Agreement shall be interpreted in accordance with the rules of interpretation set forth in Articles 1281 through 1289 of the Código Civil.\n\n(d) GDPR/LOPDGDD: To the extent that any Confidential Information includes personal data as defined under the EU General Data Protection Regulation (Regulation (EU) 2016/679) and the Ley Orgánica 3/2018 de Protección de Datos Personales y garantía de los derechos digitales (LOPDGDD), the Receiving Party shall comply with all applicable requirements thereunder.",
+        "es": "(a) Ley de Secretos Empresariales: En la medida en que la Información Confidencial constituya secretos empresariales conforme a la Ley 1/2019, de 20 de febrero, de Secretos Empresariales, las protecciones de dicha ley se aplicarán adicionalmente a las previstas en el presente Acuerdo.\n\n(b) Buena fe: El presente Acuerdo se interpretará y ejecutará conforme al principio de buena fe establecido en los artículos 7 y 1258 del Código Civil.\n\n(c) Interpretación: En caso de ambigüedad, el presente Acuerdo se interpretará conforme a las reglas de interpretación previstas en los artículos 1281 a 1289 del Código Civil.\n\n(d) RGPD/LOPDGDD: En la medida en que la Información Confidencial incluya datos personales según se definen en el Reglamento General de Protección de Datos de la UE (Reglamento (UE) 2016/679) y la Ley Orgánica 3/2018, de Protección de Datos Personales y garantía de los derechos digitales (LOPDGDD), la Parte Receptora cumplirá con todos los requisitos aplicables de dichas normas."
+      }
+    }
+  },
+  "signatureBlock": {
+    "en": "SIGNED by the parties:\n\n{partyASignatureBlock}\n\n{partyBSignatureBlock}",
+    "es": "FIRMADO por las partes:\n\n{partyASignatureBlock}\n\n{partyBSignatureBlock}"
+  },
+  "partyLabels": {
+    "partyA": {
+      "en": "Disclosing Party",
+      "es": "Parte Divulgante"
+    },
+    "partyB": {
+      "en": "Receiving Party",
+      "es": "Parte Receptora"
+    }
+  }
+}
