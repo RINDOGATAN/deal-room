@@ -23,6 +23,7 @@ const GOVERNING_LAW_TO_JURISDICTION: Record<string, string> = {
   NEW_YORK: "NEW_YORK",
   ENGLAND_WALES: "ENGLAND_WALES",
   SPAIN: "SPAIN",
+  DELAWARE: "DELAWARE",
 };
 
 /**
@@ -399,7 +400,7 @@ export const dealRouter = createTRPCRouter({
       z.object({
         name: z.string().min(1).max(200),
         contractType: z.string(),
-        governingLaw: z.enum(["CALIFORNIA", "NEW_YORK", "ENGLAND_WALES", "SPAIN"]),
+        governingLaw: z.enum(["CALIFORNIA", "NEW_YORK", "ENGLAND_WALES", "SPAIN", "DELAWARE"]),
         contractLanguage: z.enum(["en", "es"]).default("en"),
         // Self-host (local auth) has no counterparty invite, so an omitted
         // mode means SOLO there; hosted keeps the two-party default.
@@ -491,8 +492,8 @@ export const dealRouter = createTRPCRouter({
       }
 
       // Validate jurisdiction and language constraints. Template jurisdiction
-      // tags can be more specific than the GoverningLaw enum (e.g. DELAWARE
-      // runs under the US framework) — resolve them before comparing.
+      // tags can be more specific than the GoverningLaw enum (any tag that is
+      // not a governing law itself) — resolve them before comparing.
       const templateGoverningLaws = template.jurisdictions
         .map((j) => governingLawForSkillJurisdiction(j))
         .filter((j): j is NonNullable<typeof j> => j !== null);

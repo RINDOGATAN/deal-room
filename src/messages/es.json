@@ -200,7 +200,9 @@
       "spain": "España, UE",
       "spainDescription": "Derecho civil español dentro del marco regulatorio de la UE",
       "spainCourt": "Tribunales de Madrid, España",
-      "delaware": "Delaware, EE.UU."
+      "delaware": "Delaware, EE.UU.",
+      "delawareDescription": "Derecho societario de Delaware (DGCL), la ley del estado en el que se constituye la sociedad",
+      "delawareCourt": "Court of Chancery del Estado de Delaware"
     },
     "allCategories": "Todas",
     "languages": {

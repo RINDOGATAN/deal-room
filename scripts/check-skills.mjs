@@ -66,8 +66,8 @@ const SYSTEM_BOILERPLATE_VARS = new Set([
   "tomsInheritedList",
 ]);
 
-// Superset of the GoverningLaw enum: skill tags may be more specific (e.g.
-// DELAWARE). Keep in sync with SKILL_JURISDICTION_TO_GOVERNING_LAW in
+// The skill tags the deal engine accepts (today each is also a GoverningLaw
+// value). Keep in sync with SKILL_JURISDICTION_TO_GOVERNING_LAW in
 // src/lib/jurisdictions.ts, which maps tags onto the deal engine's enum.
 const VALID_JURISDICTIONS = new Set(["CALIFORNIA", "DELAWARE", "ENGLAND_WALES", "NEW_YORK", "SPAIN"]);
 

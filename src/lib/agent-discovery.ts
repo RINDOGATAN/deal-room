@@ -108,8 +108,8 @@ export function mustSendInputs(t: AgentContractType | undefined, law?: string | 
 }
 
 const LAW_PREFERENCE: Record<PageLocale, string[]> = {
-  en: ["ENGLAND_WALES", "CALIFORNIA", "SPAIN", "NEW_YORK"],
-  es: ["SPAIN", "ENGLAND_WALES", "CALIFORNIA", "NEW_YORK"],
+  en: ["ENGLAND_WALES", "CALIFORNIA", "SPAIN", "NEW_YORK", "DELAWARE"],
+  es: ["SPAIN", "ENGLAND_WALES", "CALIFORNIA", "NEW_YORK", "DELAWARE"],
 };
 
 /** The governing law the example sends: none where the type offers only one. */

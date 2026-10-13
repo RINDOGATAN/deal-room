@@ -34,7 +34,7 @@ import { VettingBadge } from "@/components/VettingBadge";
 import { useContractMessages } from "@/lib/use-contract-messages";
 import { StatusNote } from "@/components/ui/status-note";
 
-type GoverningLaw = "CALIFORNIA" | "NEW_YORK" | "ENGLAND_WALES" | "SPAIN";
+type GoverningLaw = "CALIFORNIA" | "NEW_YORK" | "ENGLAND_WALES" | "SPAIN" | "DELAWARE";
 
 interface JurisdictionRule {
   available: boolean;
@@ -54,6 +54,7 @@ interface JurisdictionConfig {
   NEW_YORK?: RawJurisdictionRule;
   ENGLAND_WALES?: RawJurisdictionRule;
   SPAIN?: RawJurisdictionRule;
+  DELAWARE?: RawJurisdictionRule;
 }
 
 const governingLawTKey: Record<GoverningLaw, string> = {
@@ -61,6 +62,7 @@ const governingLawTKey: Record<GoverningLaw, string> = {
   NEW_YORK: "newYork",
   ENGLAND_WALES: "englandWales",
   SPAIN: "spain",
+  DELAWARE: "delaware",
 };
 
 interface Selection {

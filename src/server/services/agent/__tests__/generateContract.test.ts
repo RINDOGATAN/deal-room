@@ -203,7 +203,7 @@ describe("generateContract", () => {
     expect(intake.createSoloDealFromFacts).not.toHaveBeenCalled();
   });
 
-  it("uses the only governing law a type offers when none is sent (Delaware runs under California)", async () => {
+  it("uses the only governing law a type offers when none is sent (Delaware runs under Delaware)", async () => {
     const res = await generateContract(
       db({ balance: 1 }) as never,
       AUTH,
@@ -213,7 +213,7 @@ describe("generateContract", () => {
     expect(intake.createSoloDealFromFacts).toHaveBeenCalledWith(
       expect.anything(),
       expect.anything(),
-      expect.objectContaining({ contractType: "DELAWARE_CERT_OF_INCORPORATION", governingLaw: "CALIFORNIA" }),
+      expect.objectContaining({ contractType: "DELAWARE_CERT_OF_INCORPORATION", governingLaw: "DELAWARE" }),
     );
   });
 

@@ -69,7 +69,7 @@ const contractIcons: Record<string, typeof FileText> = {
 
 import { governingLawForSkillJurisdiction, JURISDICTION_DISPLAY, CONTRACT_LANGUAGE_NAMES } from "@/lib/jurisdictions";
 
-type GoverningLaw = "CALIFORNIA" | "NEW_YORK" | "ENGLAND_WALES" | "SPAIN";
+type GoverningLaw = "CALIFORNIA" | "NEW_YORK" | "ENGLAND_WALES" | "SPAIN" | "DELAWARE";
 
 // Template type from the API
 interface TemplateInfo {
@@ -191,6 +191,9 @@ const jurisdictionMeta = [
   { value: "NEW_YORK" as GoverningLaw, flag: "🇺🇸", tKey: "newYork" as const, onlyWhenOffered: true },
   { value: "ENGLAND_WALES" as GoverningLaw, flag: "🇬🇧", tKey: "englandWales" as const },
   { value: "SPAIN" as GoverningLaw, flag: "🇪🇸", tKey: "spain" as const },
+  // Delaware: only for a contract whose own skill is tagged DELAWARE (the
+  // Certificate of Incorporation), never a general option.
+  { value: "DELAWARE" as GoverningLaw, flag: "🇺🇸", tKey: "delaware" as const, onlyWhenOffered: true },
 ];
 
 /** Asymmetric-role picker for contracts whose two parties take named,
@@ -740,7 +743,7 @@ export default function NewDealPage() {
                       // For soloModeOnly, auto-set jurisdiction (user picks multi-jurisdiction via parameters)
                       if (family.primaryTemplate.soloModeOnly && family.primaryTemplate.jurisdictions.length > 0) {
                         // Jurisdiction tags may be more specific than GoverningLaw
-                        // (e.g. DELAWARE → US framework) — resolve before setting.
+                        // — resolve before setting.
                         setSelectedJurisdiction(
                           governingLawForSkillJurisdiction(family.primaryTemplate.jurisdictions[0]) ??
                             (family.primaryTemplate.jurisdictions[0] as GoverningLaw)
@@ -1460,6 +1463,7 @@ export default function NewDealPage() {
 const CURRENCY_SYMBOLS: Record<string, string> = {
   CALIFORNIA: "$",
   NEW_YORK: "$",
+  DELAWARE: "$",
   ENGLAND_WALES: "£",
   SPAIN: "€",
 };
@@ -1490,6 +1494,7 @@ function ParameterField({
       ? resolveParamString(param.optionLabels[opt], lang)
       : opt === "CALIFORNIA" ? `🇺🇸 ${t("jurisdictions.california")}` :
         opt === "NEW_YORK" ? `🇺🇸 ${t("jurisdictions.newYork")}` :
+        opt === "DELAWARE" ? `🇺🇸 ${t("jurisdictions.delaware")}` :
         opt === "ENGLAND_WALES" ? `🇬🇧 ${t("jurisdictions.englandWales")}` :
         opt === "SPAIN" ? `🇪🇸 ${t("jurisdictions.spain")}` : opt;
 

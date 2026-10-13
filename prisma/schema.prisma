@@ -445,6 +445,7 @@ enum GoverningLaw {
   ENGLAND_WALES // England & Wales, UK
   SPAIN // Spain, EU
   NEW_YORK // New York, USA
+  DELAWARE // Delaware, USA (corporate formation documents under the DGCL)
 }
 
 enum PartyRole {

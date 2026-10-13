@@ -35,7 +35,7 @@ export interface McpToolDef {
 }
 
 /** The governing laws some contract type offers (no type offers New York today). */
-export const OFFERED_GOVERNING_LAWS = ["CALIFORNIA", "ENGLAND_WALES", "SPAIN"];
+export const OFFERED_GOVERNING_LAWS = ["CALIFORNIA", "ENGLAND_WALES", "SPAIN", "DELAWARE"];
 
 const NEGOTIATION_CONTRACT_TYPE =
   "Contract type code: one from list_contract_types, or an A2A_ agent-to-agent protocol type from list_templates (those are negotiated only, never made with generate_contract)";

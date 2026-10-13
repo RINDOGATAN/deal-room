@@ -107,8 +107,8 @@ export async function createSoloDealFromFacts(
   if (!Object.values(GoverningLaw).includes(input.governingLaw as GoverningLaw)) {
     return { ok: false, status: 422, error: `Unknown governing law: ${input.governingLaw}` };
   }
-  // A template tag may be narrower than the governing-law values (DELAWARE
-  // runs under CALIFORNIA, see src/lib/jurisdictions.ts).
+  // A template tag may be narrower than the governing-law values (see
+  // src/lib/jurisdictions.ts).
   if (
     template.jurisdictions.length > 0 &&
     !template.jurisdictions.some(

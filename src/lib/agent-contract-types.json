@@ -351,7 +351,7 @@
       "contractType": "DELAWARE_CERT_OF_INCORPORATION",
       "slug": "delaware-certificate-of-incorporation",
       "governingLaws": [
-        "CALIFORNIA"
+        "DELAWARE"
       ],
       "languages": [
         "en"

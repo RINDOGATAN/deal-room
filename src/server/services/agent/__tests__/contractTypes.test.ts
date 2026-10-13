@@ -18,7 +18,8 @@ import {
 describe("contract types", () => {
   it("maps jurisdiction tags to governing laws without repeats", () => {
     expect(governingLawsFor(["CALIFORNIA", "SPAIN"])).toEqual(["CALIFORNIA", "SPAIN"]);
-    expect(governingLawsFor(["DELAWARE", "CALIFORNIA"])).toEqual(["CALIFORNIA"]);
+    expect(governingLawsFor(["DELAWARE", "CALIFORNIA"])).toEqual(["DELAWARE", "CALIFORNIA"]);
+    expect(governingLawsFor(["DELAWARE"])).toEqual(["DELAWARE"]);
     expect(governingLawsFor(["ATLANTIS"])).toEqual([]);
   });
 
