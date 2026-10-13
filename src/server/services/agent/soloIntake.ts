@@ -14,8 +14,9 @@
  * Selections address clauses by their authored skill-level ids and options
  * by authored optionId or code (never DB cuids), so packages survive
  * reseeds. With selectionPolicy "defaults", unspecified multi-option
- * clauses fall back to the lowest-ordered option available in the deal's
- * jurisdiction — the skill's baseline. Unknown clause ids and options that
+ * clauses take the skill's default among the options available in the
+ * deal's jurisdiction: the most neutral one, or "none" for an optional
+ * clause (src/lib/default-option.ts), never simply the first listed. Unknown clause ids and options that
  * do not exist or are unavailable in the jurisdiction fail the intake
  * loudly rather than silently drifting the document.
  */
@@ -39,6 +40,7 @@ import {
 } from "@/lib/parameters";
 import { baaPostureRefusal } from "@/lib/baa-posture";
 import { governingLawForSkillJurisdiction } from "@/lib/jurisdictions";
+import { defaultOption } from "@/lib/default-option";
 import { compactPartyDetails, type PartyDetails } from "@/lib/solo-counterparty";
 
 export interface SoloIntakeInput {
@@ -79,6 +81,9 @@ interface OptionRow {
   optionId: string;
   code: string;
   order: number;
+  label?: string | null;
+  biasPartyA?: number | null;
+  biasPartyB?: number | null;
   jurisdictionConfig: unknown;
 }
 
@@ -180,7 +185,10 @@ export async function createSoloDealFromFacts(
         presetSelections[clause.clauseId] = match.optionId;
       }
     } else if (input.selectionPolicy === "defaults") {
-      const fallback = options.find((o) => availableInJurisdiction(o, input.governingLaw));
+      const fallback = defaultOption(
+        options.filter((o) => availableInJurisdiction(o, input.governingLaw)),
+        { isRequired: (clause as { isRequired?: boolean }).isRequired },
+      );
       if (fallback) presetSelections[clause.clauseId] = fallback.optionId;
     }
     // policy "explicit": unspecified multi-option clauses stay unresolved;

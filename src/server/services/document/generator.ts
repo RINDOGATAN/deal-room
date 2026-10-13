@@ -245,9 +245,31 @@ function interpolateText(
   text: string,
   variables: Record<string, string>
 ): string {
-  return text.replace(/\{(\w+)\}/g, (match, key) => {
-    return variables[key] || match;
-  });
+  return endSentenceOnce(
+    text.replace(/\{([\w.]+)\}/g, (match, key) => {
+      return variables[key] || match;
+    })
+  );
+}
+
+/**
+ * A value that ends in an abbreviation ("EE.UU.", "Inc.") placed before
+ * the sentence's own full stop prints "EE.UU.."; one full stop is right in
+ * both languages. An ellipsis ("...") is left alone.
+ */
+export function endSentenceOnce(text: string): string {
+  return text.replace(/(?<=\p{L}\.)\.(?!\.)/gu, "");
+}
+
+/** One party's signature block, in the contract's language. */
+const SIGNATURE_LABELS: Record<string, { onBehalf: string; signature: string; name: string; title: string; date: string }> = {
+  en: { onBehalf: "For and on behalf of", signature: "Signature", name: "Name", title: "Title", date: "Date" },
+  es: { onBehalf: "En nombre y representación de", signature: "Firma", name: "Nombre", title: "Cargo", date: "Fecha" },
+};
+
+export function signatureBlockText(language: string, partyName: string, signatoryName: string, signatoryTitle: string): string {
+  const l = SIGNATURE_LABELS[language] || SIGNATURE_LABELS.en;
+  return `${l.onBehalf} ${partyName}:\n\n${l.signature}: _______________________________\n\n${l.name}: ${signatoryName}\n\n${l.title}: ${signatoryTitle}\n\n${l.date}: ___________________________________`;
 }
 
 /**
@@ -604,8 +626,8 @@ export async function generateContractData(
     deal.governingLaw;
   const govLawLead =
     language === "es"
-      ? `El presente Acuerdo se rige e interpreta de conformidad con la legislación de ${govLawDisplay}. `
-      : `This Agreement is governed by and construed in accordance with the laws of ${govLawDisplay}. `;
+      ? endSentenceOnce(`El presente Acuerdo se rige e interpreta de conformidad con la legislación de ${govLawDisplay}. `)
+      : endSentenceOnce(`This Agreement is governed by and construed in accordance with the laws of ${govLawDisplay}. `);
   let governingLawArticle: { title: string; text: string } | undefined;
   const pushClause = (entry: ClauseData, clauseId: string, optionCode?: string) => {
     if (clauseId === "governing-law-jurisdiction") {
@@ -754,8 +776,8 @@ export async function generateContractData(
     partyBId: sdB?.taxId || "",
     partyAShortName: "Party A",
     partyBShortName: "Party B",
-    partyASignatureBlock: `For and on behalf of ${partyAName}:\n\nSignature: _______________________________\n\nName: ${partyASignatoryName}\n\nTitle: ${partyASignatoryTitle}\n\nDate: ___________________________________`,
-    partyBSignatureBlock: `For and on behalf of ${partyBName}:\n\nSignature: _______________________________\n\nName: ${partyBSignatoryName}\n\nTitle: ${partyBSignatoryTitle}\n\nDate: ___________________________________`,
+    partyASignatureBlock: signatureBlockText(language, partyAName, partyASignatoryName, partyASignatoryTitle),
+    partyBSignatureBlock: signatureBlockText(language, partyBName, partyBSignatoryName, partyBSignatoryTitle),
   };
 
   // Merge deal parameter boilerplate variables into the variables dict
