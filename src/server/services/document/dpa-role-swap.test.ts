@@ -253,3 +253,21 @@ describe("solo DPA with the other side's details (soloCounterparty)", () => {
     expect(data.coverPartyBName).toBe(BLANK);
   });
 });
+
+describe("DPA employee data category", () => {
+  it("lists employee data (HR records) in Annex I in English and Spanish", async () => {
+    for (const [lang, label] of [
+      ["en", "Employee data (HR records)"],
+      ["es", "Datos de empleados (recursos humanos)"],
+    ] as const) {
+      currentDeal = {
+        ...buildSoloDpa("CONTROLLER"),
+        contractLanguage: lang,
+        parameters: { "processing-purpose": "Payroll", "data-categories": "contact-details,employee-data" },
+      };
+      const data = (await generateContractData("deal-1"))!;
+      const annexI = data.boilerplate!.annexes!.find((a) => /Annex I\b|Anexo I\b/.test(a.title))!;
+      expect(annexI.text, lang).toContain(`(b) ${label};`);
+    }
+  });
+});

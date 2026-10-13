@@ -12,7 +12,7 @@ Quick start for developers (keys, credits, MCP client setup): https://dealroom.t
 
 ### List contract types (public)
 
-`GET /contract-types[?lang=es]`, no key. Every type the one call accepts (agent-to-agent `A2A_` protocols excluded): `contractType` code, guide `slug`, `governingLaws`, `languages`, `roles` (DPA and BAA; default first), `inputs` (id, label, type, required, `onlyUnder` governing laws, options, default, hint), `clauseCount`, the guide URLs and the `details` URL (`/templates/:contractType`, behind a key).
+`GET /contract-types[?lang=es][&contractType=DPA][&summary=1]`, no key. Every type the one call accepts (agent-to-agent `A2A_` protocols excluded): `contractType` code, guide `slug`, `governingLaws`, `languages`, `roles` (DPA and BAA; default first), `inputs` (id, label, type, required, `onlyUnder` governing laws, options, default, hint), `clauseCount`, the guide URLs and the `details` URL (`/templates/:contractType`, behind a key). Optional `contractType` (a code or guide slug) returns only that type, with its inputs (404 `NOT_FOUND` for an unknown one); `summary=1` leaves the inputs out and gives each type an `inputCount`. Without either, the full list. The MCP tool takes the same `contractType` and `summary` (boolean) arguments.
 
 ### Generate a contract
 
@@ -69,7 +69,7 @@ The one call returns the Markdown, HTML or text in the answer with `inline`; MCP
 
 ### MCP
 
-`POST /mcp` is the MCP server (Streamable HTTP, JSON answers, no sessions; methods `initialize`, `ping`, `tools/list`, `tools/call`). The key goes in the `Authorization` header; connecting and listing tools work without it. Each tool runs its REST route, so prices and limits are the same. `GET /mcp` still returns the tool list as JSON with each tool's endpoint. Tools: `list_contract_types` (public), `generate_contract`, `list_templates`, `get_template`, `create_playbook`, `initiate_negotiation`, `join_negotiation`, `get_deal`, `download_contract` (Markdown by default; Markdown, HTML and text come back as text, PDF and DOCX as embedded resources), `delete_deal` (marked destructive), `buy_credits`, `get_credit_balance`, `get_subscriptions`.
+`POST /mcp` is the MCP server (Streamable HTTP, JSON answers, no sessions; methods `initialize`, `ping`, `tools/list`, `tools/call`). The key goes in the `Authorization` header; connecting and listing tools work without it. Each tool runs its REST route, so prices and limits are the same. `GET /mcp` still returns the tool list as JSON with each tool's endpoint. Tools: `list_contract_types` (public; optional `contractType` and `summary`), `generate_contract`, `list_templates`, `get_template`, `create_playbook`, `initiate_negotiation`, `join_negotiation`, `get_deal`, `download_contract` (Markdown by default; Markdown, HTML and text come back as text, PDF and DOCX as embedded resources), `delete_deal` (marked destructive), `buy_credits`, `get_credit_balance`, `get_subscriptions`.
 
 ### Startup coverage tools (behind a flag)
 

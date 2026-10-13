@@ -1744,8 +1744,8 @@
           "biasPartyA": 0,
           "biasPartyB": 0,
           "plainDescription": {
-            "en": "Apply the law and courts you specify in the deal details — e.g. keep an EU/UK-inspired contract under your home state's law and courts.",
-            "es": "Aplica la ley y los tribunales que especifique en los detalles del acuerdo — p. ej. mantener un contrato de inspiración europea bajo la ley y los tribunales de su propio estado."
+            "en": "Apply the law and courts you specify in the deal details (for example, keep an EU/UK-inspired contract under your home state's law and courts).",
+            "es": "Aplica la ley y los tribunales que especifiques en los detalles del acuerdo (por ejemplo, mantener un contrato de inspiración europea bajo la ley y los tribunales de tu propio estado)."
           },
           "pros": {
             "partyA": {

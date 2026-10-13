@@ -13,12 +13,12 @@
         "es": "¿Cuál es la finalidad del tratamiento?"
       },
       "hint": {
-        "en": "Describe, in your own words, why the Processor handles personal data — this is written verbatim into Annex I.",
-        "es": "Describa, con sus palabras, por qué el Encargado trata datos personales — se incluirá literalmente en el Anexo I."
+        "en": "Describe, in your own words, why the Processor handles personal data. This is written verbatim into Annex I.",
+        "es": "Describe, con tus palabras, por qué el Encargado trata datos personales. Se incluirá literalmente en el Anexo I."
       },
       "placeholder": {
-        "en": "e.g. Providing and maintaining the contracted SaaS analytics service and customer support.",
-        "es": "p. ej. Prestar y mantener el servicio SaaS de analítica contratado y dar soporte al cliente."
+        "en": "For example: Providing and maintaining the contracted SaaS analytics service and customer support.",
+        "es": "Por ejemplo: Prestar y mantener el servicio SaaS de analítica contratado y dar soporte al cliente."
       }
     },
     {
@@ -34,7 +34,7 @@
       },
       "hint": {
         "en": "Pick all that apply. Add anything specific under \"Other\" below.",
-        "es": "Seleccione todas las que apliquen. Añada lo específico en «Otros» más abajo."
+        "es": "Selecciona todas las que correspondan. Añade lo específico en «Otros» más abajo."
       },
       "options": [
         "contact-details",
@@ -44,6 +44,7 @@
         "usage-technical",
         "location-data",
         "professional-data",
+        "employee-data",
         "marketing-comms",
         "support-content",
         "special-category",
@@ -78,6 +79,10 @@
           "en": "Professional / employment data",
           "es": "Datos profesionales y de empleo"
         },
+        "employee-data": {
+          "en": "Employee data (HR records)",
+          "es": "Datos de empleados (recursos humanos)"
+        },
         "marketing-comms": {
           "en": "Marketing & communications",
           "es": "Marketing y comunicaciones"
@@ -107,12 +112,12 @@
         "es": "Otras categorías (opcional)"
       },
       "hint": {
-        "en": "Anything not covered above — separate multiple entries with semicolons.",
-        "es": "Lo que no esté cubierto arriba — separe varias entradas con punto y coma."
+        "en": "Anything not covered above. Separate multiple entries with semicolons.",
+        "es": "Lo que no esté cubierto arriba. Separa varias entradas con punto y coma."
       },
       "placeholder": {
-        "en": "e.g. Vehicle registration numbers; loyalty-card history",
-        "es": "p. ej. Matrículas de vehículos; historial de tarjeta de fidelización"
+        "en": "For example: Vehicle registration numbers; loyalty-card history",
+        "es": "Por ejemplo: Matrículas de vehículos; historial de tarjeta de fidelización"
       },
       "group": {
         "en": "Scope of processing",
@@ -128,16 +133,16 @@
       "negotiable": true,
       "boilerplateVariable": "dataExcluded",
       "label": {
-        "en": "Data expressly OUT of scope (optional — the strongest safeguard)",
-        "es": "Datos expresamente FUERA del alcance (opcional — la salvaguarda más fuerte)"
+        "en": "Data expressly OUT of scope (optional, and the strongest safeguard)",
+        "es": "Datos expresamente FUERA del alcance (opcional, y la salvaguarda más fuerte)"
       },
       "hint": {
-        "en": "State what the Processor never receives — e.g. only pseudonymous identifiers transfer while raw identities stay with the Controller; cohort-level events only; transient technical data purged on session end. Narrowing scope precisely is the strongest safeguard a processor can offer: data never received cannot be transferred or compromised. Rendered in Annex I and incorporated into SCC Annex I by reference.",
-        "es": "Indique lo que el Encargado nunca recibe — p. ej., solo se transfieren identificadores seudónimos mientras las identidades reales permanecen con el Responsable; solo eventos a nivel de cohorte; datos técnicos transitorios que se purgan al cerrar la sesión. Delimitar el alcance con precisión es la salvaguarda más fuerte que un encargado puede ofrecer: los datos que nunca se reciben no pueden transferirse ni verse comprometidos. Se recoge en el Anexo I y se incorpora por referencia al Anexo I de las CCT."
+        "en": "State what the Processor never receives. For example: only pseudonymous identifiers transfer while raw identities stay with the Controller; cohort-level events only; transient technical data purged on session end. Narrowing scope precisely is the strongest safeguard a processor can offer: data never received cannot be transferred or compromised. Rendered in Annex I and incorporated into SCC Annex I by reference.",
+        "es": "Indica lo que el Encargado nunca recibe. Por ejemplo: solo se transfieren identificadores seudónimos mientras las identidades reales permanecen con el Responsable; solo eventos a nivel de cohorte; datos técnicos transitorios que se purgan al cerrar la sesión. Delimitar el alcance con precisión es la salvaguarda más fuerte que un encargado puede ofrecer: los datos que nunca se reciben no pueden transferirse ni verse comprometidos. Se recoge en el Anexo I y se incorpora por referencia al Anexo I de las CCT."
       },
       "placeholder": {
-        "en": "e.g. Direct identifiers (names, emails) — only pseudonymous user IDs are transferred; payment card data; special-category data",
-        "es": "p. ej. Identificadores directos (nombres, correos) — solo se transfieren IDs de usuario seudónimos; datos de tarjetas de pago; categorías especiales de datos"
+        "en": "For example: direct identifiers (names, emails), as only pseudonymous user IDs are transferred; payment card data; special-category data",
+        "es": "Por ejemplo: identificadores directos (nombres, correos), pues solo se transfieren IDs de usuario seudónimos; datos de tarjetas de pago; categorías especiales de datos"
       },
       "group": {
         "en": "Scope of processing",
@@ -156,12 +161,12 @@
         "es": "Lista inicial de subencargados"
       },
       "hint": {
-        "en": "The sub-processors already engaged when the DPA takes effect (e.g. your cloud host, email provider, analytics). Any cloud-hosted service has at least one. This list completes SCC Annex III for international transfers; leaving it empty leaves a visible blank in the document.",
-        "es": "Los subencargados ya contratados cuando el ATD surte efectos (p. ej., su proveedor de nube, de correo, de analítica). Cualquier servicio alojado en la nube tiene al menos uno. Esta lista completa el Anexo III de las CCT para transferencias internacionales; dejarla vacía deja un espacio en blanco visible en el documento."
+        "en": "The sub-processors already engaged when the DPA takes effect (for example, your cloud host, email provider, analytics). Any cloud-hosted service has at least one. This list completes SCC Annex III for international transfers; leaving it empty leaves a visible blank in the document.",
+        "es": "Los subencargados ya contratados cuando el ATD surte efectos (por ejemplo, tu proveedor de nube, de correo, de analítica). Cualquier servicio alojado en la nube tiene al menos uno. Esta lista completa el Anexo III de las CCT para transferencias internacionales; dejarla vacía deja un espacio en blanco visible en el documento."
       },
       "placeholder": {
-        "en": "e.g. Amazon Web Services EMEA SARL (cloud hosting, EU-West); Postmark (transactional email, US)",
-        "es": "p. ej. Amazon Web Services EMEA SARL (alojamiento en la nube, UE-Oeste); Postmark (correo transaccional, EE. UU.)"
+        "en": "For example: Amazon Web Services EMEA SARL (cloud hosting, EU-West); Postmark (transactional email, US)",
+        "es": "Por ejemplo: Amazon Web Services EMEA SARL (alojamiento en la nube, UE-Oeste); Postmark (correo transaccional, EE. UU.)"
       },
       "group": {
         "en": "Sub-processors",
@@ -180,8 +185,8 @@
         "es": "¿Qué medidas de seguridad adicionales puede acreditar el Encargado? (Anexo II)"
       },
       "hint": {
-        "en": "Annex II is incorporated into the SCCs as their Annex II, so its statements are warranties, not aspirations. Select only measures the Processor's latest SOC 2 / ISO 27001 / audit evidence actually supports — unselected areas stay at the modest baseline (TLS in transit, role-based access, unique credentials, confidentiality and training, documented security programme).",
-        "es": "El Anexo II se incorpora a las CCT como su Anexo II, por lo que sus afirmaciones son garantías, no aspiraciones. Seleccione solo las medidas que la evidencia de auditoría más reciente del Encargado (SOC 2 / ISO 27001) realmente respalde — las áreas no seleccionadas se quedan en la base modesta (TLS en tránsito, acceso por roles, credenciales únicas, confidencialidad y formación, programa de seguridad documentado)."
+        "en": "Annex II is incorporated into the SCCs as their Annex II, so its statements are warranties, not aspirations. Select only measures the Processor's latest SOC 2 / ISO 27001 / audit evidence actually supports. Unselected areas stay at the modest baseline (TLS in transit, role-based access, unique credentials, confidentiality and training, documented security programme).",
+        "es": "El Anexo II se incorpora a las CCT como su Anexo II, por lo que sus afirmaciones son garantías, no aspiraciones. Selecciona solo las medidas que la evidencia de auditoría más reciente del Encargado (SOC 2 / ISO 27001) realmente respalde. Las áreas no seleccionadas se quedan en la base modesta (TLS en tránsito, acceso por roles, credenciales únicas, confidencialidad y formación, programa de seguridad documentado)."
       },
       "options": [
         "toms-encryption-rest",
@@ -239,8 +244,8 @@
         "es": "¿Cuáles de las medidas confirmadas se heredan de subencargados en la nube?"
       },
       "hint": {
-        "en": "Controls your infrastructure provider operates (e.g. encryption at rest on the cloud platform, its network security) rather than your own team. Annex II will attribute them explicitly and state the validation mechanism — annual review of the provider's audit reports — which is what makes the reliance legitimate. Only selections also confirmed above are used.",
-        "es": "Controles que opera su proveedor de infraestructura (p. ej., el cifrado en reposo de la plataforma en la nube, su seguridad de red) y no su propio equipo. El Anexo II los atribuirá expresamente e indicará el mecanismo de validación — revisión anual de los informes de auditoría del proveedor — que es lo que legitima esa confianza. Solo se usan las selecciones también confirmadas arriba."
+        "en": "Controls your infrastructure provider operates (for example, encryption at rest on the cloud platform, its network security) rather than your own team. Annex II will attribute them explicitly and state the validation mechanism (annual review of the provider's audit reports), which is what makes the reliance legitimate. Only selections also confirmed above are used.",
+        "es": "Controles que opera tu proveedor de infraestructura (por ejemplo, el cifrado en reposo de la plataforma en la nube, su seguridad de red) y no tu propio equipo. El Anexo II los atribuirá expresamente e indicará el mecanismo de validación (revisión anual de los informes de auditoría del proveedor), que es lo que legitima esa confianza. Solo se usan las selecciones también confirmadas arriba."
       },
       "options": [
         "toms-encryption-rest",
@@ -299,8 +304,8 @@
         "es": "¿Quién gestiona la seguridad física de los centros de datos?"
       },
       "hint": {
-        "en": "Most SaaS processors run on cloud infrastructure and cannot truthfully claim badge readers and cameras as their own measures — the provider-managed wording states physical security is the infrastructure provider's, validated through at least annual review of its SOC 2 / ISO 27001 reports.",
-        "es": "La mayoría de los encargados SaaS operan sobre infraestructura en la nube y no pueden afirmar con veracidad que los lectores de tarjetas y las cámaras son medidas propias — la redacción de gestión por el proveedor indica que la seguridad física corresponde al proveedor de infraestructura, validada mediante la revisión al menos anual de sus informes SOC 2 / ISO 27001."
+        "en": "Most SaaS processors run on cloud infrastructure and cannot truthfully claim badge readers and cameras as their own measures. The provider-managed wording states physical security is the infrastructure provider's, validated through at least annual review of its SOC 2 / ISO 27001 reports.",
+        "es": "La mayoría de los encargados SaaS operan sobre infraestructura en la nube y no pueden afirmar con veracidad que los lectores de tarjetas y las cámaras son medidas propias. La redacción de gestión por el proveedor indica que la seguridad física corresponde al proveedor de infraestructura, validada mediante la revisión al menos anual de sus informes SOC 2 / ISO 27001."
       },
       "options": [
         "provider-managed",
@@ -388,13 +393,13 @@
           "es": "No / sin verificar"
         },
         "yes": {
-          "en": "Yes — active certification verified",
-          "es": "Sí — certificación activa verificada"
+          "en": "Yes: active certification verified",
+          "es": "Sí: certificación activa verificada"
         }
       },
       "group": {
-        "en": "International transfers & TIA (Annexes III–IV)",
-        "es": "Transferencias internacionales y EIT (Anexos III–IV)"
+        "en": "International transfers & TIA (Annexes III and IV)",
+        "es": "Transferencias internacionales y EIT (Anexos III y IV)"
       }
     },
     {
@@ -411,7 +416,7 @@
       },
       "hint": {
         "en": "Attached by default whenever the Processor is established outside the EEA (it is ignored otherwise): Clause 14 of the Standard Contractual Clauses requires this assessment. Choose No only if you maintain the assessment as a separate internal document.",
-        "es": "Se adjunta por defecto cuando el Encargado está establecido fuera del EEE (en otro caso se ignora): la Cláusula 14 de las Cláusulas Contractuales Tipo exige esta evaluación. Elija No solo si mantiene la evaluación como documento interno separado."
+        "es": "Se adjunta por defecto cuando el Encargado está establecido fuera del EEE (en otro caso se ignora): la Cláusula 14 de las Cláusulas Contractuales Tipo exige esta evaluación. Elige No solo si mantienes la evaluación como documento interno separado."
       },
       "options": [
         "no",
@@ -423,13 +428,13 @@
           "es": "No"
         },
         "yes": {
-          "en": "Yes — attach as Annex IV",
-          "es": "Sí — adjuntar como Anexo IV"
+          "en": "Yes: attach as Annex IV",
+          "es": "Sí: adjuntar como Anexo IV"
         }
       },
       "group": {
-        "en": "International transfers & TIA (Annexes III–IV)",
-        "es": "Transferencias internacionales y EIT (Anexos III–IV)"
+        "en": "International transfers & TIA (Annexes III and IV)",
+        "es": "Transferencias internacionales y EIT (Anexos III y IV)"
       }
     },
     {
@@ -443,8 +448,8 @@
         "es": "¿Qué medidas suplementarias existen? (para la Evaluación de Impacto de las Transferencias)"
       },
       "hint": {
-        "en": "Select every measure the Processor actually applies. Contractual measures are not asked here: they follow automatically from agreeing the \"Government access requests\" clause with full commitments. Note: under EDPB guidance, contractual and organizational measures alone cannot support an unqualified conclusion — at least one technical measure is needed.",
-        "es": "Seleccione todas las medidas que el Encargado aplica realmente. Las medidas contractuales no se preguntan aquí: se derivan automáticamente de pactar la cláusula «Solicitudes de acceso gubernamentales» con compromisos completos. Nota: según el CEPD, las medidas contractuales y organizativas por sí solas no permiten una conclusión sin reservas — se necesita al menos una medida técnica."
+        "en": "Select every measure the Processor actually applies. Contractual measures are not asked here: they follow automatically from agreeing the \"Government access requests\" clause with full commitments. Note: under EDPB guidance, contractual and organizational measures alone cannot support an unqualified conclusion, so at least one technical measure is needed.",
+        "es": "Selecciona todas las medidas que el Encargado aplica realmente. Las medidas contractuales no se preguntan aquí: se derivan automáticamente de pactar la cláusula «Solicitudes de acceso gubernamentales» con compromisos completos. Nota: según el CEPD, las medidas contractuales y organizativas por sí solas no permiten una conclusión sin reservas, así que hace falta al menos una medida técnica."
       },
       "options": [
         "tech-encryption-transit",
@@ -496,8 +501,8 @@
         }
       },
       "group": {
-        "en": "International transfers & TIA (Annexes III–IV)",
-        "es": "Transferencias internacionales y EIT (Anexos III–IV)"
+        "en": "International transfers & TIA (Annexes III and IV)",
+        "es": "Transferencias internacionales y EIT (Anexos III y IV)"
       }
     },
     {
@@ -513,8 +518,8 @@
         "es": "¿Incorporar el Anexo del Reino Unido (UK Addendum) para transferencias de datos del RU?"
       },
       "hint": {
-        "en": "Only relevant when the Processor is outside the EEA. Incorporates the ICO's International Data Transfer Addendum to the EU SCCs by reference, applying only to transfers subject to the UK GDPR — harmless if none exist. Choose No to state instead that the parties will execute it separately when needed.",
-        "es": "Solo relevante cuando el Encargado está fuera del EEE. Incorpora por referencia el Anexo de Transferencia Internacional de Datos de la ICO a las CCT de la UE, aplicable únicamente a transferencias sujetas al RGPD del Reino Unido — inocuo si no existen. Elija No para indicar que las partes lo suscribirán por separado cuando sea necesario."
+        "en": "Only relevant when the Processor is outside the EEA. Incorporates the ICO's International Data Transfer Addendum to the EU SCCs by reference, applying only to transfers subject to the UK GDPR (harmless if none exist). Choose No to state instead that the parties will execute it separately when needed.",
+        "es": "Solo es relevante cuando el Encargado está fuera del EEE. Incorpora por referencia el Anexo de Transferencia Internacional de Datos de la ICO a las CCT de la UE, aplicable únicamente a transferencias sujetas al RGPD del Reino Unido (inocuo si no existen). Elige No para indicar que las partes lo suscribirán por separado cuando sea necesario."
       },
       "options": [
         "no",
@@ -522,17 +527,17 @@
       ],
       "optionLabels": {
         "no": {
-          "en": "No — execute separately if needed",
-          "es": "No — suscribir por separado si es necesario"
+          "en": "No: execute separately if needed",
+          "es": "No: suscribir por separado si es necesario"
         },
         "yes": {
-          "en": "Yes — incorporate by reference",
-          "es": "Sí — incorporar por referencia"
+          "en": "Yes: incorporate by reference",
+          "es": "Sí: incorporar por referencia"
         }
       },
       "group": {
-        "en": "International transfers & TIA (Annexes III–IV)",
-        "es": "Transferencias internacionales y EIT (Anexos III–IV)"
+        "en": "International transfers & TIA (Annexes III and IV)",
+        "es": "Transferencias internacionales y EIT (Anexos III y IV)"
       }
     },
     {
@@ -561,13 +566,13 @@
           "es": "No"
         },
         "yes": {
-          "en": "Yes — include adaptations",
-          "es": "Sí — incluir adaptaciones"
+          "en": "Yes: include adaptations",
+          "es": "Sí: incluir adaptaciones"
         }
       },
       "group": {
-        "en": "International transfers & TIA (Annexes III–IV)",
-        "es": "Transferencias internacionales y EIT (Anexos III–IV)"
+        "en": "International transfers & TIA (Annexes III and IV)",
+        "es": "Transferencias internacionales y EIT (Anexos III y IV)"
       }
     },
     {
@@ -582,8 +587,8 @@
         "es": "¿El Encargado almacena o aloja datos de clientes como servicio? (para la EIT)"
       },
       "hint": {
-        "en": "Hosted/cloud services are likely \"remote computing services\" under 18 U.S.C. § 2711, which brings the provider within potential reach of FISA 702 directives — the Transfer Impact Assessment records a documented conclusion either way.",
-        "es": "Los servicios alojados o en la nube son probablemente «remote computing services» según 18 U.S.C. § 2711, lo que sitúa al proveedor al alcance potencial de las directivas de la FISA 702 — la Evaluación de Impacto de las Transferencias documenta una conclusión en ambos casos."
+        "en": "Hosted/cloud services are likely \"remote computing services\" under 18 U.S.C. § 2711, which brings the provider within potential reach of FISA 702 directives. The Transfer Impact Assessment records a documented conclusion either way.",
+        "es": "Los servicios alojados o en la nube son probablemente «remote computing services» según 18 U.S.C. § 2711, lo que sitúa al proveedor al alcance potencial de las directivas de la FISA 702. La Evaluación de Impacto de las Transferencias documenta una conclusión en ambos casos."
       },
       "options": [
         "yes",
@@ -592,12 +597,12 @@
       ],
       "optionLabels": {
         "yes": {
-          "en": "Yes — hosted/cloud service",
-          "es": "Sí — servicio alojado o en la nube"
+          "en": "Yes: hosted/cloud service",
+          "es": "Sí: servicio alojado o en la nube"
         },
         "no": {
-          "en": "No — no hosted storage or communications for third parties",
-          "es": "No — sin almacenamiento ni comunicaciones alojadas para terceros"
+          "en": "No: no hosted storage or communications for third parties",
+          "es": "No: sin almacenamiento ni comunicaciones alojadas para terceros"
         },
         "unknown": {
           "en": "Not determined",
@@ -605,8 +610,8 @@
         }
       },
       "group": {
-        "en": "International transfers & TIA (Annexes III–IV)",
-        "es": "Transferencias internacionales y EIT (Anexos III–IV)"
+        "en": "International transfers & TIA (Annexes III and IV)",
+        "es": "Transferencias internacionales y EIT (Anexos III y IV)"
       }
     },
     {
@@ -621,8 +626,8 @@
         "es": "¿Ha recibido el Encargado solicitudes de acceso gubernamentales hasta la fecha? (para la EIT)"
       },
       "hint": {
-        "en": "Ask the Processor directly — its answer becomes a documented statement in the Transfer Impact Assessment and feeds the risk-based conclusion.",
-        "es": "Pregunte directamente al Encargado — su respuesta se convierte en una declaración documentada en la Evaluación de Impacto de las Transferencias y alimenta la conclusión basada en el riesgo."
+        "en": "Ask the Processor directly: its answer becomes a documented statement in the Transfer Impact Assessment and feeds the risk-based conclusion.",
+        "es": "Pregunta directamente al Encargado: su respuesta se convierte en una declaración documentada en la Evaluación de Impacto de las Transferencias y alimenta la conclusión basada en el riesgo."
       },
       "options": [
         "none",
@@ -635,8 +640,8 @@
           "es": "Ninguna solicitud recibida (declarado por el Encargado)"
         },
         "some": {
-          "en": "Yes — requests have been received",
-          "es": "Sí — se han recibido solicitudes"
+          "en": "Yes: requests have been received",
+          "es": "Sí: se han recibido solicitudes"
         },
         "unknown": {
           "en": "Not determined",
@@ -644,8 +649,8 @@
         }
       },
       "group": {
-        "en": "International transfers & TIA (Annexes III–IV)",
-        "es": "Transferencias internacionales y EIT (Anexos III–IV)"
+        "en": "International transfers & TIA (Annexes III and IV)",
+        "es": "Transferencias internacionales y EIT (Anexos III y IV)"
       }
     },
     {
@@ -660,8 +665,8 @@
         "es": "¿Ha sufrido el Encargado violaciones de datos personales notificables? (para la EIT)"
       },
       "hint": {
-        "en": "Ask the Processor directly — its declared breach history becomes a documented statement in the Transfer Impact Assessment's assessment of the importer's practices.",
-        "es": "Pregunte directamente al Encargado — su historial declarado de violaciones se convierte en una declaración documentada en la evaluación de las prácticas del importador dentro de la EIT."
+        "en": "Ask the Processor directly: its declared breach history becomes a documented statement in the Transfer Impact Assessment's assessment of the importer's practices.",
+        "es": "Pregunta directamente al Encargado: su historial declarado de violaciones se convierte en una declaración documentada en la evaluación de las prácticas del importador dentro de la EIT."
       },
       "options": [
         "none",
@@ -674,8 +679,8 @@
           "es": "Ninguna que exigiera notificación a la autoridad (declarado)"
         },
         "some": {
-          "en": "Yes — breaches have occurred",
-          "es": "Sí — se han producido violaciones"
+          "en": "Yes: breaches have occurred",
+          "es": "Sí: se han producido violaciones"
         },
         "unknown": {
           "en": "Not determined",
@@ -683,8 +688,8 @@
         }
       },
       "group": {
-        "en": "International transfers & TIA (Annexes III–IV)",
-        "es": "Transferencias internacionales y EIT (Anexos III–IV)"
+        "en": "International transfers & TIA (Annexes III and IV)",
+        "es": "Transferencias internacionales y EIT (Anexos III y IV)"
       }
     },
     {
@@ -698,12 +703,12 @@
         "es": "Ley aplicable personalizada (opcional)"
       },
       "hint": {
-        "en": "Only used if you select the \"Custom governing law and courts\" option on the Governing law clause. Lets you keep this DPA's GDPR/UK-inspired substance while applying the law your business knows — for example, a US company choosing its home state's law.",
-        "es": "Solo se usa si selecciona la opción «Ley aplicable y tribunales personalizados» en la cláusula de ley aplicable. Permite mantener el contenido de este acuerdo, inspirado en el RGPD, aplicando el Derecho que su empresa conoce — por ejemplo, una empresa estadounidense que elige el Derecho de su propio estado."
+        "en": "Only used if you select the \"Custom governing law and courts\" option on the Governing law clause. Lets you keep this DPA's GDPR/UK-inspired substance while applying the law your business knows (for example, a US company choosing its home state's law).",
+        "es": "Solo se usa si seleccionas la opción «Ley aplicable y tribunales personalizados» en la cláusula de ley aplicable. Permite mantener el contenido de este acuerdo, inspirado en el RGPD, aplicando el Derecho que tu empresa conoce (por ejemplo, una empresa estadounidense que elige el Derecho de su propio estado)."
       },
       "placeholder": {
-        "en": "e.g. the State of Delaware and applicable United States federal law",
-        "es": "p. ej. el Derecho del Estado de Delaware y el Derecho federal de los Estados Unidos aplicable"
+        "en": "For example: the State of Delaware and applicable United States federal law",
+        "es": "Por ejemplo: el Derecho del Estado de Delaware y el Derecho federal de los Estados Unidos aplicable"
       },
       "negotiable": true,
       "group": {
@@ -722,12 +727,12 @@
         "es": "Tribunales o foro personalizados (opcional)"
       },
       "hint": {
-        "en": "Only used with the \"Custom governing law and courts\" option. Note: if the DPA incorporates the EU Standard Contractual Clauses (Annex III), disputes under the SCCs themselves stay with the EU forum designated there — that election is mandatory under the SCCs.",
-        "es": "Solo se usa con la opción «Ley aplicable y tribunales personalizados». Nota: si el acuerdo incorpora las Cláusulas Contractuales Tipo de la UE (Anexo III), los litigios derivados de las propias CCT permanecen ante el foro de la UE allí designado — esa elección es obligatoria según las CCT."
+        "en": "Only used with the \"Custom governing law and courts\" option. Note: if the DPA incorporates the EU Standard Contractual Clauses (Annex III), disputes under the SCCs themselves stay with the EU forum designated there, because that election is mandatory under the SCCs.",
+        "es": "Solo se usa con la opción «Ley aplicable y tribunales personalizados». Nota: si el acuerdo incorpora las Cláusulas Contractuales Tipo de la UE (Anexo III), los litigios derivados de las propias CCT permanecen ante el foro de la UE allí designado, porque esa elección es obligatoria según las CCT."
       },
       "placeholder": {
-        "en": "e.g. the state and federal courts located in New York County, New York",
-        "es": "p. ej. los tribunales estatales y federales del condado de Nueva York (Nueva York)"
+        "en": "For example: the state and federal courts located in New York County, New York",
+        "es": "Por ejemplo: los tribunales estatales y federales del condado de Nueva York (Nueva York)"
       },
       "negotiable": true,
       "group": {

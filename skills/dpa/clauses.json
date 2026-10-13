@@ -35,13 +35,13 @@
           "id": "scope-narrow",
           "code": "narrow",
           "label": {
-            "en": "Narrow — Named categories only",
-            "es": "Restringido — Solo categorías específicas"
+            "en": "Narrow: named categories only",
+            "es": "Restringido: solo categorías específicas"
           },
           "order": 1,
           "plainDescription": {
-            "en": "Processing limited to explicitly listed data categories (e.g., name, email, usage logs) for stated service purposes only.",
-            "es": "El tratamiento se limita a las categorías de datos enumeradas expresamente (p. ej., nombre, correo electrónico, registros de uso) únicamente para los fines declarados del servicio."
+            "en": "Processing limited to explicitly listed data categories (for example, name, email, usage logs) for stated service purposes only.",
+            "es": "El tratamiento se limita a las categorías de datos enumeradas expresamente (por ejemplo, nombre, correo electrónico, registros de uso) únicamente para los fines declarados del servicio."
           },
           "prosPartyA": {
             "en": [
@@ -77,11 +77,11 @@
           },
           "consPartyB": {
             "en": [
-              "Inflexible — new features may need amendments",
+              "Inflexible: new features may need amendments",
               "Administrative overhead for changes"
             ],
             "es": [
-              "Inflexible — nuevas funcionalidades pueden requerir modificaciones",
+              "Inflexible: nuevas funcionalidades pueden requerir modificaciones",
               "Carga administrativa por los cambios"
             ]
           },
@@ -95,8 +95,8 @@
             "CALIFORNIA": {
               "available": true,
               "note": {
-                "en": "Aligns with CCPA Service Provider restrictions — limits processing to disclosed business purposes",
-                "es": "Conforme a las restricciones de Proveedor de Servicios de la CCPA — limita el tratamiento a los fines comerciales declarados"
+                "en": "Aligns with CCPA Service Provider restrictions: limits processing to disclosed business purposes",
+                "es": "Conforme a las restricciones de Proveedor de Servicios de la CCPA: limita el tratamiento a los fines comerciales declarados"
               }
             },
             "ENGLAND_WALES": {
@@ -111,8 +111,8 @@
           "id": "scope-standard",
           "code": "standard",
           "label": {
-            "en": "Standard — Service-linked categories",
-            "es": "Estándar — Categorías vinculadas al servicio"
+            "en": "Standard: service-linked categories",
+            "es": "Estándar: categorías vinculadas al servicio"
           },
           "order": 2,
           "plainDescription": {
@@ -189,8 +189,8 @@
           "id": "scope-broad",
           "code": "broad",
           "label": {
-            "en": "Broad — All data for service delivery",
-            "es": "Amplio — Todos los datos para la prestación del servicio"
+            "en": "Broad: all data for service delivery",
+            "es": "Amplio: todos los datos para la prestación del servicio"
           },
           "order": 3,
           "plainDescription": {
@@ -251,8 +251,8 @@
             "CALIFORNIA": {
               "available": true,
               "warning": {
-                "en": "Broad scope may risk CCPA Service Provider status — ensure processing is limited to disclosed business purposes",
-                "es": "El alcance amplio puede poner en riesgo el estatus de Proveedor de Servicios bajo la CCPA — asegúrese de que el tratamiento se limite a los fines comerciales declarados"
+                "en": "Broad scope may risk CCPA Service Provider status: ensure processing is limited to disclosed business purposes",
+                "es": "El alcance amplio puede poner en riesgo el estatus de Proveedor de Servicios bajo la CCPA: asegúrate de que el tratamiento se limite a los fines comerciales declarados"
               }
             },
             "ENGLAND_WALES": {
@@ -265,8 +265,8 @@
             "SPAIN": {
               "available": true,
               "warning": {
-                "en": "AEPD expects detailed processing descriptions — broad scope may face scrutiny",
-                "es": "La AEPD espera descripciones detalladas del tratamiento — el alcance amplio puede ser objeto de escrutinio"
+                "en": "AEPD expects detailed processing descriptions: broad scope may face scrutiny",
+                "es": "La AEPD espera descripciones detalladas del tratamiento: el alcance amplio puede ser objeto de escrutinio"
               }
             }
           }
@@ -298,8 +298,8 @@
           "id": "instructions-strict",
           "code": "strict",
           "label": {
-            "en": "Strict — Documented instructions only",
-            "es": "Estricto — Solo instrucciones documentadas"
+            "en": "Strict: documented instructions only",
+            "es": "Estricto: solo instrucciones documentadas"
           },
           "order": 1,
           "plainDescription": {
@@ -372,13 +372,13 @@
           "id": "instructions-standard",
           "code": "standard",
           "label": {
-            "en": "Standard — Documented with reasonable discretion",
-            "es": "Estándar — Documentadas con discreción razonable"
+            "en": "Standard: documented with reasonable discretion",
+            "es": "Estándar: documentadas con discreción razonable"
           },
           "order": 2,
           "plainDescription": {
-            "en": "Processor follows documented instructions but may exercise reasonable technical discretion for routine operational matters (e.g., security patching, backup schedules).",
-            "es": "El encargado sigue las instrucciones documentadas pero puede ejercer discreción técnica razonable en asuntos operativos rutinarios (p. ej., parches de seguridad, programación de copias de seguridad)."
+            "en": "Processor follows documented instructions but may exercise reasonable technical discretion for routine operational matters (for example, security patching, backup schedules).",
+            "es": "El encargado sigue las instrucciones documentadas pero puede ejercer discreción técnica razonable en asuntos operativos rutinarios (por ejemplo, parches de seguridad, programación de copias de seguridad)."
           },
           "prosPartyA": {
             "en": [
@@ -446,8 +446,8 @@
           "id": "instructions-service-agreement",
           "code": "service-agreement",
           "label": {
-            "en": "Flexible — Per service agreement terms",
-            "es": "Flexible — Según términos del contrato de servicios"
+            "en": "Flexible: per service agreement terms",
+            "es": "Flexible: según términos del contrato de servicios"
           },
           "order": 3,
           "plainDescription": {
@@ -542,8 +542,8 @@
         "es": "¿Cómo debe el encargado obtener aprobación antes de contratar a otras empresas (subencargados) para ayudar a tratar datos personales?"
       },
       "legalContext": {
-        "en": "GDPR Article 28(2) requires processors to obtain prior written authorization from the controller before engaging sub-processors — either specific (per sub-processor) or general (with notification and objection rights). CCPA requires contractual restrictions to flow down to subcontractors.",
-        "es": "El artículo 28(2) del RGPD exige que los encargados obtengan autorización previa por escrito del responsable antes de contratar subencargados — ya sea específica (por subencargado) o general (con notificación y derecho de objeción). La CCPA exige que las restricciones contractuales se trasladen a los subcontratistas."
+        "en": "GDPR Article 28(2) requires processors to obtain prior written authorization from the controller before engaging sub-processors: either specific (per sub-processor) or general (with notification and objection rights). CCPA requires contractual restrictions to flow down to subcontractors.",
+        "es": "El artículo 28(2) del RGPD exige que los encargados obtengan autorización previa por escrito del responsable antes de contratar subencargados: ya sea específica (por subencargado) o general (con notificación y derecho de objeción). La CCPA exige que las restricciones contractuales se trasladen a los subcontratistas."
       },
       "isRequired": true,
       "options": [
@@ -551,8 +551,8 @@
           "id": "subproc-general-30d",
           "code": "general-30d",
           "label": {
-            "en": "General authorization — 30-day objection",
-            "es": "Autorización general — 30 días para objeción"
+            "en": "General authorization: 30-day objection",
+            "es": "Autorización general: 30 días para objeción"
           },
           "order": 1,
           "plainDescription": {
@@ -699,8 +699,8 @@
           "id": "subproc-general-14d",
           "code": "general-14d",
           "label": {
-            "en": "General authorization — 14-day objection",
-            "es": "Autorización general — 14 días para objeción"
+            "en": "General authorization: 14-day objection",
+            "es": "Autorización general: 14 días para objeción"
           },
           "order": 3,
           "plainDescription": {
@@ -771,8 +771,8 @@
           "id": "subproc-no-objection",
           "code": "no-objection",
           "label": {
-            "en": "Notification only — No objection right",
-            "es": "Solo notificación — Sin derecho de objeción"
+            "en": "Notification only: no objection right",
+            "es": "Solo notificación: sin derecho de objeción"
           },
           "order": 4,
           "plainDescription": {
@@ -836,15 +836,15 @@
             "ENGLAND_WALES": {
               "available": true,
               "warning": {
-                "en": "UK GDPR Art 28(2) requires 'prior specific or general written authorisation' with opportunity to object — notification-only may not satisfy this requirement",
-                "es": "El Art. 28(2) del RGPD del Reino Unido requiere 'autorización previa específica o general por escrito' con oportunidad de objeción — solo notificación puede no satisfacer este requisito"
+                "en": "UK GDPR Art 28(2) requires 'prior specific or general written authorisation' with opportunity to object: notification-only may not satisfy this requirement",
+                "es": "El Art. 28(2) del RGPD del Reino Unido requiere 'autorización previa específica o general por escrito' con oportunidad de objeción: solo notificación puede no satisfacer este requisito"
               }
             },
             "SPAIN": {
               "available": true,
               "warning": {
-                "en": "GDPR Art 28(2) requires controller authorization for sub-processors — notification-only may not comply",
-                "es": "El Art. 28(2) del RGPD requiere autorización del responsable para subencargados — solo notificación puede no cumplir"
+                "en": "GDPR Art 28(2) requires controller authorization for sub-processors: notification-only may not comply",
+                "es": "El Art. 28(2) del RGPD requiere autorización del responsable para subencargados: solo notificación puede no cumplir"
               }
             }
           }
@@ -940,8 +940,8 @@
             "CALIFORNIA": {
               "available": false,
               "warning": {
-                "en": "Impractical for most US-based SaaS — US data commonly flows between states and to cloud regions globally",
-                "es": "Impracticable para la mayoría de SaaS en EE.UU. — los datos en EE.UU. comúnmente fluyen entre estados y a regiones de nube globalmente"
+                "en": "Impractical for most US-based SaaS: US data commonly flows between states and to cloud regions globally",
+                "es": "Impracticable para la mayoría de SaaS en EE.UU.: los datos en EE.UU. comúnmente fluyen entre estados y a regiones de nube globalmente"
               }
             },
             "ENGLAND_WALES": {
@@ -1056,7 +1056,7 @@
           },
           "consPartyA": {
             "en": [
-              "Adequacy decisions can be revoked (e.g., Schrems II)",
+              "Adequacy decisions can be revoked (for example, Schrems II)",
               "Less restrictive than SCCs-only"
             ],
             "es": [
@@ -1096,8 +1096,8 @@
             "CALIFORNIA": {
               "available": true,
               "note": {
-                "en": "CCPA does not restrict international transfers — this provides additional safeguards beyond CCPA requirements",
-                "es": "La CCPA no restringe las transferencias internacionales — esto proporciona garantías adicionales más allá de los requisitos de la CCPA"
+                "en": "CCPA does not restrict international transfers: this provides additional safeguards beyond CCPA requirements",
+                "es": "La CCPA no restringe las transferencias internacionales: esto proporciona garantías adicionales más allá de los requisitos de la CCPA"
               }
             },
             "ENGLAND_WALES": {
@@ -1177,15 +1177,15 @@
             "ENGLAND_WALES": {
               "available": true,
               "warning": {
-                "en": "Controller remains accountable for transfers under UK GDPR — delegating discretion may not satisfy Art 28 requirements",
-                "es": "El responsable sigue siendo responsable de las transferencias bajo el RGPD del Reino Unido — delegar discreción puede no satisfacer los requisitos del Art. 28"
+                "en": "Controller remains accountable for transfers under UK GDPR: delegating discretion may not satisfy Art 28 requirements",
+                "es": "El responsable sigue siendo responsable de las transferencias bajo el RGPD del Reino Unido: delegar discreción puede no satisfacer los requisitos del Art. 28"
               }
             },
             "SPAIN": {
               "available": true,
               "warning": {
-                "en": "AEPD expects controllers to maintain oversight of international transfers — full processor discretion may face scrutiny",
-                "es": "La AEPD espera que los responsables mantengan supervisión de las transferencias internacionales — la discreción total del encargado puede ser objeto de escrutinio"
+                "en": "AEPD expects controllers to maintain oversight of international transfers: full processor discretion may face scrutiny",
+                "es": "La AEPD espera que los responsables mantengan supervisión de las transferencias internacionales: la discreción total del encargado puede ser objeto de escrutinio"
               }
             }
           }
@@ -1447,8 +1447,8 @@
           "id": "security-discretion",
           "code": "processor-discretion",
           "label": {
-            "en": "Processor discretion — Industry-standard",
-            "es": "Discreción del encargado — Estándar de la industria"
+            "en": "Processor discretion: industry-standard",
+            "es": "Discreción del encargado: estándar de la industria"
           },
           "order": 4,
           "plainDescription": {
@@ -1512,15 +1512,15 @@
             "ENGLAND_WALES": {
               "available": true,
               "warning": {
-                "en": "ICO expects specific, documented TOMs under UK GDPR Art 32 — vague 'industry standard' may not suffice",
-                "es": "El ICO espera MOT específicas y documentadas conforme al Art. 32 del RGPD del Reino Unido — el vago 'estándar de la industria' puede no ser suficiente"
+                "en": "ICO expects specific, documented TOMs under UK GDPR Art 32: vague 'industry standard' may not suffice",
+                "es": "El ICO espera MOT específicas y documentadas conforme al Art. 32 del RGPD del Reino Unido: el vago 'estándar de la industria' puede no ser suficiente"
               }
             },
             "SPAIN": {
               "available": true,
               "warning": {
-                "en": "AEPD requires documented security measures — general industry standard references may not satisfy Art 32",
-                "es": "La AEPD exige medidas de seguridad documentadas — las referencias generales a estándares de la industria pueden no satisfacer el Art. 32"
+                "en": "AEPD requires documented security measures: general industry standard references may not satisfy Art 32",
+                "es": "La AEPD exige medidas de seguridad documentadas: las referencias generales a estándares de la industria pueden no satisfacer el Art. 32"
               }
             }
           }
@@ -1543,8 +1543,8 @@
         "es": "¿Con qué rapidez debe el encargado notificar al responsable una brecha de datos personales, y qué información debe proporcionar?"
       },
       "legalContext": {
-        "en": "GDPR Article 33 requires controllers to notify supervisory authorities within 72 hours of becoming aware of a breach. This means processors must notify controllers promptly enough for controllers to meet this deadline. CCPA does not impose a specific breach notification timeline on service providers but California Civil Code §1798.82 requires consumer notification 'in the most expedient time possible'. Before choosing a window, check the commitments you have already made elsewhere — your incident-response policy, cyber-insurance terms, or other agreements may promise a shorter window than the one you select here; inconsistent windows across documents are a common audit finding.",
-        "es": "El artículo 33 del RGPD exige a los responsables notificar a las autoridades de control en un plazo de 72 horas desde que tengan conocimiento de una brecha. Esto significa que los encargados deben notificar a los responsables con suficiente rapidez para que estos cumplan este plazo. La CCPA no impone un plazo específico de notificación de brechas a los proveedores de servicios, pero el Código Civil de California §1798.82 exige la notificación al consumidor 'en el tiempo más rápido posible'. Antes de elegir un plazo, revise los compromisos ya asumidos en otros documentos — su política de respuesta a incidentes, su póliza de ciberseguro u otros contratos pueden prometer un plazo más corto que el que seleccione aquí; los plazos incoherentes entre documentos son un hallazgo de auditoría habitual."
+        "en": "GDPR Article 33 requires controllers to notify supervisory authorities within 72 hours of becoming aware of a breach. This means processors must notify controllers promptly enough for controllers to meet this deadline. CCPA does not impose a specific breach notification timeline on service providers but California Civil Code §1798.82 requires consumer notification 'in the most expedient time possible'. Before choosing a window, check the commitments you have already made elsewhere: your incident-response policy, cyber-insurance terms, or other agreements may promise a shorter window than the one you select here; inconsistent windows across documents are a common audit finding.",
+        "es": "El artículo 33 del RGPD exige a los responsables notificar a las autoridades de control en un plazo de 72 horas desde que tengan conocimiento de una brecha. Esto significa que los encargados deben notificar a los responsables con suficiente rapidez para que estos cumplan este plazo. La CCPA no impone un plazo específico de notificación de brechas a los proveedores de servicios, pero el Código Civil de California §1798.82 exige la notificación al consumidor 'en el tiempo más rápido posible'. Antes de elegir un plazo, revisa los compromisos que ya has asumido en otros documentos: tu política de respuesta a incidentes, tu póliza de ciberseguro u otros contratos pueden prometer un plazo más corto que el que selecciones aquí; los plazos incoherentes entre documentos son un hallazgo de auditoría habitual."
       },
       "isRequired": true,
       "options": [
@@ -1703,8 +1703,8 @@
           },
           "order": 3,
           "plainDescription": {
-            "en": "Processor must notify the controller within 72 hours — aligned with the GDPR supervisory authority notification deadline.",
-            "es": "El encargado debe notificar al responsable en un plazo de 72 horas — alineado con el plazo de notificación a la autoridad de control del RGPD."
+            "en": "Processor must notify the controller within 72 hours: aligned with the GDPR supervisory authority notification deadline.",
+            "es": "El encargado debe notificar al responsable en un plazo de 72 horas: alineado con el plazo de notificación a la autoridad de control del RGPD."
           },
           "prosPartyA": {
             "en": [
@@ -1760,22 +1760,22 @@
             "CALIFORNIA": {
               "available": true,
               "note": {
-                "en": "CCPA has no mandatory processor-to-controller notification timeframe — 72 hours is generous by US standards",
-                "es": "La CCPA no tiene plazo obligatorio de notificación del encargado al responsable — 72 horas es generoso según estándares de EE.UU."
+                "en": "CCPA has no mandatory processor-to-controller notification timeframe: 72 hours is generous by US standards",
+                "es": "La CCPA no tiene plazo obligatorio de notificación del encargado al responsable: 72 horas es generoso según estándares de EE.UU."
               }
             },
             "ENGLAND_WALES": {
               "available": true,
               "warning": {
-                "en": "72 hours matches the ICO notification deadline — leaves no buffer for controller assessment before reporting",
-                "es": "72 horas coincide con el plazo de notificación al ICO — no deja margen para la evaluación del responsable antes de informar"
+                "en": "72 hours matches the ICO notification deadline: leaves no buffer for controller assessment before reporting",
+                "es": "72 horas coincide con el plazo de notificación al ICO: no deja margen para la evaluación del responsable antes de informar"
               }
             },
             "SPAIN": {
               "available": true,
               "warning": {
-                "en": "72 hours matches the AEPD notification deadline — controller has no additional time for assessment",
-                "es": "72 horas coincide con el plazo de notificación a la AEPD — el responsable no tiene tiempo adicional para la evaluación"
+                "en": "72 hours matches the AEPD notification deadline: controller has no additional time for assessment",
+                "es": "72 horas coincide con el plazo de notificación a la AEPD: el responsable no tiene tiempo adicional para la evaluación"
               }
             }
           }
@@ -1881,8 +1881,8 @@
           "id": "rights-full",
           "code": "full",
           "label": {
-            "en": "Full assistance — Processor handles requests",
-            "es": "Asistencia completa — El encargado gestiona las solicitudes"
+            "en": "Full assistance: Processor handles requests",
+            "es": "Asistencia completa: el encargado gestiona las solicitudes"
           },
           "order": 1,
           "plainDescription": {
@@ -1955,8 +1955,8 @@
           "id": "rights-standard",
           "code": "standard",
           "label": {
-            "en": "Standard — Processor assists on request",
-            "es": "Estándar — El encargado asiste bajo solicitud"
+            "en": "Standard: Processor assists on request",
+            "es": "Estándar: el encargado asiste bajo solicitud"
           },
           "order": 2,
           "plainDescription": {
@@ -2029,8 +2029,8 @@
           "id": "rights-self-service",
           "code": "self-service",
           "label": {
-            "en": "Self-service — Controller uses platform tools",
-            "es": "Autoservicio — El responsable USA herramientas de la plataforma"
+            "en": "Self-service: Controller uses platform tools",
+            "es": "Autoservicio: el responsable usa herramientas de la plataforma"
           },
           "order": 3,
           "plainDescription": {
@@ -2202,13 +2202,13 @@
           "id": "audit-hybrid",
           "code": "hybrid",
           "label": {
-            "en": "Hybrid — Reports + on-site on cause",
-            "es": "Híbrido — Informes + in situ por causa"
+            "en": "Hybrid: reports + on-site on cause",
+            "es": "Híbrido: informes + in situ por causa"
           },
           "order": 2,
           "plainDescription": {
-            "en": "Processor provides annual compliance reports and certifications. On-site audits allowed only where there is reasonable cause (e.g., after a breach or compliance concern).",
-            "es": "El encargado proporciona informes anuales de cumplimiento y certificaciones. Auditorías in situ permitidas solo cuando exista causa razonable (p. ej., después de una brecha o preocupación de cumplimiento)."
+            "en": "Processor provides annual compliance reports and certifications. On-site audits allowed only where there is reasonable cause (for example, after a breach or compliance concern).",
+            "es": "El encargado proporciona informes anuales de cumplimiento y certificaciones. Auditorías in situ permitidas solo cuando exista causa razonable (por ejemplo, después de una brecha o preocupación de cumplimiento)."
           },
           "prosPartyA": {
             "en": [
@@ -2341,15 +2341,15 @@
             "ENGLAND_WALES": {
               "available": true,
               "warning": {
-                "en": "UK GDPR Art 28(3)(h) requires the processor to 'allow for and contribute to audits, including inspections' — reports-only may not fully satisfy this",
-                "es": "El Art. 28(3)(h) del RGPD del Reino Unido exige que el encargado 'permita y contribuya a auditorías, incluidas inspecciones' — solo informes puede no satisfacer completamente este requisito"
+                "en": "UK GDPR Art 28(3)(h) requires the processor to 'allow for and contribute to audits, including inspections': reports-only may not fully satisfy this",
+                "es": "El Art. 28(3)(h) del RGPD del Reino Unido exige que el encargado 'permita y contribuya a auditorías, incluidas inspecciones': solo informes puede no satisfacer completamente este requisito"
               }
             },
             "SPAIN": {
               "available": true,
               "warning": {
-                "en": "GDPR Art 28(3)(h) requires the processor to allow audits including inspections — reports-only may not comply",
-                "es": "El Art. 28(3)(h) del RGPD exige que el encargado permita auditorías incluidas inspecciones — solo informes puede no cumplir"
+                "en": "GDPR Art 28(3)(h) requires the processor to allow audits including inspections: reports-only may not comply",
+                "es": "El Art. 28(3)(h) del RGPD exige que el encargado permita auditorías incluidas inspecciones: solo informes puede no cumplir"
               }
             }
           }
@@ -2430,8 +2430,8 @@
             "SPAIN": {
               "available": true,
               "warning": {
-                "en": "Questionnaire-only does not satisfy GDPR Art 28(3)(h) audit requirement — AEPD expects inspection rights",
-                "es": "Solo cuestionario no satisface el requisito de auditoría del Art. 28(3)(h) del RGPD — la AEPD espera derechos de inspección"
+                "en": "Questionnaire-only does not satisfy GDPR Art 28(3)(h) audit requirement: AEPD expects inspection rights",
+                "es": "Solo cuestionario no satisface el requisito de auditoría del Art. 28(3)(h) del RGPD: la AEPD espera derechos de inspección"
               }
             }
           }
@@ -2616,8 +2616,8 @@
           },
           "order": 3,
           "plainDescription": {
-            "en": "Processor deletes all personal data within 90 days of termination. No formal return process — controller should export data before termination.",
-            "es": "El encargado suprime todos los datos personales en 90 días desde la terminación. Sin proceso formal de devolución — el responsable debe exportar los datos antes de la terminación."
+            "en": "Processor deletes all personal data within 90 days of termination. No formal return process: controller should export data before termination.",
+            "es": "El encargado suprime todos los datos personales en 90 días desde la terminación. Sin proceso formal de devolución: el responsable debe exportar los datos antes de la terminación."
           },
           "prosPartyA": {
             "en": [
@@ -2750,15 +2750,15 @@
             "ENGLAND_WALES": {
               "available": true,
               "warning": {
-                "en": "UK GDPR Art 28(3)(g) requires deletion of all personal data — retention even in anonymized form may face ICO scrutiny if anonymization is insufficient",
-                "es": "El Art. 28(3)(g) del RGPD del Reino Unido exige la supresión de todos los datos personales — la conservación incluso anonimizada puede ser objeto de escrutinio del ICO si la anonimización es insuficiente"
+                "en": "UK GDPR Art 28(3)(g) requires deletion of all personal data: retention even in anonymized form may face ICO scrutiny if anonymization is insufficient",
+                "es": "El Art. 28(3)(g) del RGPD del Reino Unido exige la supresión de todos los datos personales: la conservación incluso anonimizada puede ser objeto de escrutinio del ICO si la anonimización es insuficiente"
               }
             },
             "SPAIN": {
               "available": true,
               "warning": {
-                "en": "GDPR Art 28(3)(g) requires deletion or return — AEPD may scrutinize whether anonymization meets the threshold to fall outside GDPR scope",
-                "es": "El Art. 28(3)(g) del RGPD exige la supresión o devolución — la AEPD puede escrutar si la anonimización cumple el umbral para quedar fuera del ámbito del RGPD"
+                "en": "GDPR Art 28(3)(g) requires deletion or return: AEPD may scrutinize whether anonymization meets the threshold to fall outside GDPR scope",
+                "es": "El Art. 28(3)(g) del RGPD exige la supresión o devolución: la AEPD puede escrutar si la anonimización cumple el umbral para quedar fuera del ámbito del RGPD"
               }
             }
           }
@@ -2858,8 +2858,8 @@
           "id": "confidentiality-strict",
           "code": "strict",
           "label": {
-            "en": "Strict — Binding agreements + background checks",
-            "es": "Estricto — Acuerdos vinculantes + verificación de antecedentes"
+            "en": "Strict: binding agreements + background checks",
+            "es": "Estricto: acuerdos vinculantes + verificación de antecedentes"
           },
           "order": 1,
           "plainDescription": {
@@ -2932,8 +2932,8 @@
           "id": "confidentiality-standard",
           "code": "standard",
           "label": {
-            "en": "Standard — Contractual confidentiality + training",
-            "es": "Estándar — Confidencialidad contractual + formación"
+            "en": "Standard: contractual confidentiality + training",
+            "es": "Estándar: confidencialidad contractual + formación"
           },
           "order": 2,
           "plainDescription": {
@@ -3006,8 +3006,8 @@
           "id": "confidentiality-basic",
           "code": "basic",
           "label": {
-            "en": "Basic — Employment terms only",
-            "es": "Básico — Solo términos de empleo"
+            "en": "Basic: employment terms only",
+            "es": "Básico: solo términos de empleo"
           },
           "order": 3,
           "plainDescription": {
@@ -3334,8 +3334,8 @@
           },
           "order": 4,
           "plainDescription": {
-            "en": "Each data protection incident has a separate liability cap (e.g., 50% of annual fees per incident), with no aggregate cap across incidents.",
-            "es": "Cada incidente de protección de datos tiene un límite de responsabilidad separado (p. ej., 50% de las cuotas anuales por incidente), sin límite agregado entre incidentes."
+            "en": "Each data protection incident has a separate liability cap (for example, 50% of annual fees per incident), with no aggregate cap across incidents.",
+            "es": "Cada incidente de protección de datos tiene un límite de responsabilidad separado (por ejemplo, 50% de las cuotas anuales por incidente), sin límite agregado entre incidentes."
           },
           "prosPartyA": {
             "en": [
@@ -3418,7 +3418,7 @@
         "es": "Opcional. Añade un límite de responsabilidad aplicable específicamente a las violaciones de datos personales, junto a la cláusula general de responsabilidad. Solo se ofrece cuando el acuerdo se rige por el Derecho de la UE o del Reino Unido; en acuerdos regidos por el Derecho estadounidense, la exposición por violaciones se aborda en la cláusula general de Responsabilidad e indemnización, por lo que esta cláusula no genera texto."
       },
       "legalContext": {
-        "en": "There is no breach-specific statutory liability regime in the EU or the UK: Article 82 GDPR governs all damage arising from non-compliant processing, and the general liability clause already addresses it. US state data-breach-notification statutes and CCPA/CPRA statutory damages (Cal. Civ. Code §1798.150) make breach-specific caps meaningful, but for US-governed agreements those are addressed in the general Liability & indemnification clause — hence the cap options here are unavailable for California. Any cap selected here governs liability as between the controller and processor only; it cannot limit either party's statutory liability to data subjects or to a supervisory authority.",
+        "en": "There is no breach-specific statutory liability regime in the EU or the UK: Article 82 GDPR governs all damage arising from non-compliant processing, and the general liability clause already addresses it. US state data-breach-notification statutes and CCPA/CPRA statutory damages (Cal. Civ. Code §1798.150) make breach-specific caps meaningful, but for US-governed agreements those are addressed in the general Liability & indemnification clause, so the cap options here are unavailable for California. Any cap selected here governs liability as between the controller and processor only; it cannot limit either party's statutory liability to data subjects or to a supervisory authority.",
         "es": "No existe un régimen legal de responsabilidad específico por violaciones en la UE ni en el Reino Unido: el artículo 82 del RGPD regula todo daño derivado de un tratamiento no conforme, y la cláusula general de responsabilidad ya lo aborda. Las leyes estatales estadounidenses de notificación de violaciones y los daños legales de la CCPA/CPRA (Cal. Civ. Code §1798.150) hacen relevantes los límites específicos por violaciones, pero en acuerdos regidos por el Derecho estadounidense estos se abordan en la cláusula general de Responsabilidad e indemnización; por ello, las opciones de límite aquí no están disponibles para California. Cualquier límite que se seleccione aquí rige únicamente la responsabilidad entre el responsable y el encargado; no puede limitar la responsabilidad legal de ninguna de las partes frente a los interesados ni frente a una autoridad de control."
       },
       "options": [
@@ -3427,8 +3427,8 @@
           "code": "none",
           "order": 1,
           "label": {
-            "en": "None — general liability clause governs",
-            "es": "Ninguno — rige la cláusula general de responsabilidad"
+            "en": "None: general liability clause governs",
+            "es": "Ninguno: rige la cláusula general de responsabilidad"
           },
           "plainDescription": {
             "en": "No separate breach cap. Liability for personal data breaches is governed entirely by the general Liability & indemnification clause.",
@@ -3489,12 +3489,12 @@
           "code": "supercap-2x",
           "order": 2,
           "label": {
-            "en": "Breach super-cap — 2× annual fees, in addition to the general cap",
-            "es": "Supralímite por violaciones — 2× cuotas anuales, adicional al límite general"
+            "en": "Breach super-cap: 2× annual fees, in addition to the general cap",
+            "es": "Supralímite por violaciones: 2× cuotas anuales, adicional al límite general"
           },
           "plainDescription": {
-            "en": "Breaches get their own, higher cap that sits on top of the general liability cap — favouring the Controller.",
-            "es": "Las violaciones tienen su propio límite, más elevado, que se suma al límite general de responsabilidad — favorece al Responsable."
+            "en": "Breaches get their own, higher cap that sits on top of the general liability cap: favouring the Controller.",
+            "es": "Las violaciones tienen su propio límite, más elevado, que se suma al límite general de responsabilidad: favorece al Responsable."
           },
           "prosPartyA": {
             "en": [
@@ -3555,12 +3555,12 @@
           "code": "subcap-1x",
           "order": 3,
           "label": {
-            "en": "Breach sub-cap — limited to 1× annual fees, within the general cap",
-            "es": "Sublímite por violaciones — limitado a 1× cuotas anuales, dentro del límite general"
+            "en": "Breach sub-cap: limited to 1× annual fees, within the general cap",
+            "es": "Sublímite por violaciones: limitado a 1× cuotas anuales, dentro del límite general"
           },
           "plainDescription": {
-            "en": "Breaches are limited to their own, lower cap that counts within the general liability cap — favouring the Processor.",
-            "es": "Las violaciones se limitan a su propio límite, más bajo, que se computa dentro del límite general — favorece al Encargado."
+            "en": "Breaches are limited to their own, lower cap that counts within the general liability cap: favouring the Processor.",
+            "es": "Las violaciones se limitan a su propio límite, más bajo, que se computa dentro del límite general: favorece al Encargado."
           },
           "prosPartyA": {
             "en": [
@@ -4401,8 +4401,8 @@
             "es": "Ley aplicable y tribunales personalizados (especificar abajo)"
           },
           "plainDescription": {
-            "en": "Keep this DPA's substance but apply the law and courts you specify in the deal details — e.g. a US company using a GDPR- or ICO-inspired DPA under Delaware law and New York courts.",
-            "es": "Mantiene el contenido de este acuerdo pero aplica la ley y los tribunales que especifique en los detalles del acuerdo — p. ej. una empresa estadounidense que usa un acuerdo inspirado en el RGPD con Derecho de Delaware y tribunales de Nueva York."
+            "en": "Keep this DPA's substance but apply the law and courts you specify in the deal details (for example, a US company using a GDPR- or ICO-inspired DPA under Delaware law and New York courts).",
+            "es": "Mantiene el contenido de este acuerdo pero aplica la ley y los tribunales que especifiques en los detalles del acuerdo (por ejemplo, una empresa estadounidense que usa un acuerdo inspirado en el RGPD con Derecho de Delaware y tribunales de Nueva York)."
           },
           "prosPartyA": {
             "en": [
@@ -4480,8 +4480,8 @@
         "es": "¿Cómo debe reaccionar el encargado si una autoridad pública exige acceso a los datos personales?"
       },
       "legalContext": {
-        "en": "EDPB Recommendations 01/2020 (Annex 2, use cases 6–7) identify notification, legality review, challenge, minimal disclosure and transparency reporting as the standard contractual supplementary measures for third-country transfers. Where adopted, they also support the Transfer Impact Assessment's conclusion. Clause 15 of the EU SCCs imposes a baseline notification duty; this clause strengthens it contractually.",
-        "es": "Las Recomendaciones 01/2020 del CEPD (Anexo 2, casos de uso 6–7) identifican la notificación, la revisión de legalidad, la impugnación, la divulgación mínima y los informes de transparencia como las medidas suplementarias contractuales estándar para transferencias a terceros países. Cuando se adoptan, respaldan además la conclusión de la Evaluación de Impacto de las Transferencias. La Cláusula 15 de las CCT de la UE impone un deber básico de notificación; esta cláusula lo refuerza contractualmente."
+        "en": "EDPB Recommendations 01/2020 (Annex 2, use cases 6 and 7) identify notification, legality review, challenge, minimal disclosure and transparency reporting as the standard contractual supplementary measures for third-country transfers. Where adopted, they also support the Transfer Impact Assessment's conclusion. Clause 15 of the EU SCCs imposes a baseline notification duty; this clause strengthens it contractually.",
+        "es": "Las Recomendaciones 01/2020 del CEPD (Anexo 2, casos de uso 6 y 7) identifican la notificación, la revisión de legalidad, la impugnación, la divulgación mínima y los informes de transparencia como las medidas suplementarias contractuales estándar para transferencias a terceros países. Cuando se adoptan, respaldan además la conclusión de la Evaluación de Impacto de las Transferencias. La Cláusula 15 de las CCT de la UE impone un deber básico de notificación; esta cláusula lo refuerza contractualmente."
       },
       "isRequired": false,
       "options": [

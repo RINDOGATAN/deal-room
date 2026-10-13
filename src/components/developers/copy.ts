@@ -160,7 +160,7 @@ export const DEVELOPERS_COPY = {
     },
     toolsTitle: "Tools",
     tools: [
-      { name: "list_contract_types", text: "Every contract type and the facts it needs. No key needed." },
+      { name: "list_contract_types", text: "Every contract type and the facts it needs, or one type with contractType. No key needed." },
       { name: "generate_contract", text: "Make a contract in one call. Returns it as Markdown, with the links." },
       { name: "download_contract", text: "One contract as Markdown, HTML, PDF, DOCX or TXT." },
       { name: "get_deal", text: "A deal's clauses and status." },
@@ -348,7 +348,7 @@ export const DEVELOPERS_COPY = {
     },
     toolsTitle: "Herramientas",
     tools: [
-      { name: "list_contract_types", text: "Todos los tipos de contrato y los datos que pide cada uno. Sin clave." },
+      { name: "list_contract_types", text: "Todos los tipos de contrato y los datos que pide cada uno, o un solo tipo con contractType. Sin clave." },
       { name: "generate_contract", text: "Crea un contrato en una sola llamada. Lo devuelve en Markdown, con los enlaces." },
       { name: "download_contract", text: "Un contrato en Markdown, HTML, PDF, DOCX o TXT." },
       { name: "get_deal", text: "Las cláusulas y el estado de un acuerdo." },

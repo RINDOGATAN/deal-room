@@ -63,6 +63,16 @@ describe("validateTiaSelections (B-1 wizard cross-validation)", () => {
     ).toEqual(["pseudonymizationVsCategories"]);
   });
 
+  it("treats employee data (HR records) as directly identifying", () => {
+    expect(
+      validateTiaSelections({
+        "processor-establishment": "US",
+        "data-categories": "employee-data",
+        "tia-safeguards": "tech-pseudonymization",
+      }),
+    ).toEqual(["pseudonymizationVsCategories"]);
+  });
+
   it("accepts pseudonymization when only non-identifying categories transfer", () => {
     expect(
       validateTiaSelections({
