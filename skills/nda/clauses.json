@@ -1059,7 +1059,7 @@
       "order": 5,
       "plainDescription": {
         "en": "Which law governs this agreement, and how and where any dispute about it is resolved — courts in the governing-law jurisdiction, neutral Delaware courts, or arbitration (JAMS, AAA, ICC or LCIA).",
-        "es": "Qué ley rige este acuerdo y cómo y dónde se resuelve cualquier controversia relativa a él — tribunales de la jurisdicción de la ley aplicable, tribunales neutrales de Delaware o arbitraje (JAMS, AAA, ICC o LCIA)."
+        "es": "Qué ley rige este acuerdo y cómo y dónde se resuelve cualquier controversia relativa a él: tribunales de la jurisdicción de la ley aplicable, tribunales neutrales de Delaware o arbitraje (JAMS, AAA, ICC o LCIA)."
       },
       "legalContext": {
         "en": "The forum for disputes is negotiable even though the governing law is fixed. Court litigation is public with appeal rights. Arbitration is private and faster but typically final. The choice of forum can significantly impact cost and convenience.",
@@ -1528,7 +1528,7 @@
           },
           "plainDescription": {
             "en": "Submission to the ordinary courts of a Spanish city — public, fast, no arbitration fees.",
-            "es": "Sumisión expresa a los Juzgados y Tribunales de una ciudad española — vía pública, rápida y sin costes de arbitraje."
+            "es": "Sumisión expresa a los Juzgados y Tribunales de una ciudad española: vía pública, rápida y sin costes de arbitraje."
           },
           "pros": {
             "partyA": {
@@ -1550,7 +1550,7 @@
                 "Standard procedural protections"
               ],
               "es": [
-                "Coste reducido — sin honorarios arbitrales",
+                "Coste reducido: sin honorarios arbitrales",
                 "El expediente público protege contra futuros abusos",
                 "Protecciones procesales estándar"
               ]
@@ -1563,7 +1563,7 @@
                 "Slower than arbitration in many regions"
               ],
               "es": [
-                "Procedimiento público — afecta a la confidencialidad",
+                "Procedimiento público: afecta a la confidencialidad",
                 "Más lento que el arbitraje en muchas plazas"
               ]
             },
@@ -1678,7 +1678,7 @@
           },
           "plainDescription": {
             "en": "Binding arbitration administered by the Madrid Arbitration Court — private, faster than courts, leading Spanish institution.",
-            "es": "Arbitraje vinculante administrado por la Corte de Arbitraje de Madrid — vía privada, más rápida que los tribunales y la institución arbitral de referencia en España."
+            "es": "Arbitraje vinculante administrado por la Corte de Arbitraje de Madrid: vía privada, más rápida que los tribunales y la institución arbitral de referencia en España."
           },
           "pros": {
             "partyA": {
@@ -1688,7 +1688,7 @@
                 "Award directly enforceable under NY Convention"
               ],
               "es": [
-                "Confidencialidad estricta — el procedimiento es privado",
+                "Confidencialidad estricta: el procedimiento es privado",
                 "Más rápido que la vía ordinaria",
                 "Laudo directamente ejecutable conforme al Convenio de Nueva York"
               ]
@@ -1714,7 +1714,7 @@
               ],
               "es": [
                 "Honorarios arbitrales significativos para controversias pequeñas",
-                "Recurso limitado — causas tasadas de anulación"
+                "Recurso limitado: causas tasadas de anulación"
               ]
             },
             "partyB": {
