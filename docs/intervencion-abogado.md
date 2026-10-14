@@ -1,6 +1,6 @@
 # Intervención de Abogado/a
 
-Los abogados pueden participar en tres fases distintas de una operación. Cada fase es independiente — las partes pueden utilizar cualquier combinación (las tres, solo una, o ninguna).
+Los abogados pueden participar en tres fases distintas de una operación. Cada fase es independiente: las partes pueden utilizar cualquier combinación (las tres, solo una, o ninguna).
 
 **Solo tu propio abogado o abogada (decisión del propietario, 6 de octubre de 2026).** Dealroom no ofrece a las partes ninguna lista de abogados ni indica tarifas de revisión legal. Una empresa tecnológica que lista abogados e indica sus honorarios parece un servicio de derivación a abogados, que Dealroom no presta (EE. UU.) y que los colegios de abogados europeos restringen. Cada parte trae siempre a su propio abogado o abogada: en la Fase A lo invita por correo y en la Fase B el promotor lo propone por correo. El abogado o la abogada trabaja para su cliente y le factura directamente; Dealroom no cobra nada por ello ni hace recomendaciones. La invitación dentro de la aplicación funciona con independencia del indicador `startupCoverage` (que solo controla las herramientas para agentes y su descubrimiento).
 
@@ -22,13 +22,13 @@ Los abogados pueden participar en tres fases distintas de una operación. Cada f
 
 | Fase | Cuándo | Quién solicita | Rol del abogado/a | Independencia |
 |------|--------|---------------|-------------------|---------------|
-| **0 — Pre-Revisión** | Antes de crear la operación | El abogado/a invita al cliente | Asesoramiento durante la negociación | Unilateral |
-| **A — Asesor de Parte** | Tras enviar las selecciones | Cada parte de forma independiente | Revisa la posición de esa parte | Unilateral |
-| **B — Asesor de Cierre Conjunto** | Tras acordar todas las cláusulas | El promotor (la otra parte debe confirmar) | Ayuda a ambas partes a cerrar | Bilateral |
+| **0: Pre-Revisión** | Antes de crear la operación | El abogado/a invita al cliente | Asesoramiento durante la negociación | Unilateral |
+| **A: Asesor de Parte** | Tras enviar las selecciones | Cada parte de forma independiente | Revisa la posición de esa parte | Unilateral |
+| **B: Asesor de Cierre Conjunto** | Tras acordar todas las cláusulas | El promotor (la otra parte debe confirmar) | Ayuda a ambas partes a cerrar | Bilateral |
 
 ---
 
-## Fase 0 — Pre-Revisión
+## Fase 0: Pre-Revisión
 
 ### Qué Es
 
@@ -55,25 +55,25 @@ Antes de la creación de la operación. El abogado/a configura el marco de la op
 
 ---
 
-## Fase A — Asesor de Parte
+## Fase A: Asesor de Parte
 
 ### Qué Es
 
-Tras enviar sus selecciones, una parte puede invitar por correo a su propio abogado o abogada para que revise su posición. Es una acción privada — la otra parte no recibe notificación y desconoce si la parte contraria tiene asesoramiento.
+Tras enviar sus selecciones, una parte puede invitar por correo a su propio abogado o abogada para que revise su posición. Es una acción privada: la otra parte no recibe notificación y desconoce si la parte contraria tiene asesoramiento.
 
 ### Cuándo Ocurre
 
 Desde el momento en que una parte envía sus selecciones. Disponible durante los siguientes estados de la parte:
 
-- `SUBMITTED` — selecciones recién enviadas
-- `REVIEWING` — revisión de compromiso en curso
-- `ACCEPTED` — compromiso aceptado
+- `SUBMITTED`: selecciones recién enviadas
+- `REVIEWING`: revisión de compromiso en curso
+- `ACCEPTED`: compromiso aceptado
 
 ### Cómo Funciona
 
 1. La parte accede a `/deals/[id]/review`
 2. Pulsa "Invita a tu propio abogado o abogada"
-3. Introduce el correo del abogado o abogada (y, si quiere, su nombre). El diálogo dice: "El abogado o la abogada que invites trabaja para ti y te factura directamente; Dealroom no cobra nada por ello ni hace recomendaciones."
+3. Introduce el correo del abogado o abogada (y, si quieres, su nombre). El diálogo dice: "El abogado o la abogada que invites trabaja para ti y te factura directamente; Dealroom no cobra nada por ello ni hace recomendaciones."
 4. El abogado o la abogada pasa a ser supervisor de esa operación (se reutiliza la cuenta si ya existe; una cuenta nueva no tiene colegiación registrada) y recibe un correo con un enlace al portal de revisión
 5. Inicia sesión en `/supervise` con esa dirección (la primera vez configura la verificación en dos pasos) y revisa la posición de la parte
 6. Aprueba la revisión
@@ -99,7 +99,7 @@ No hay lista de abogados ni filtro por jurisdicción: la parte elige a su abogad
 
 ---
 
-## Fase B — Asesor de Cierre Conjunto
+## Fase B: Asesor de Cierre Conjunto
 
 ### Qué Es
 
@@ -113,15 +113,15 @@ Solo después de que todas las cláusulas alcancen el estado `AGREED` (acordado)
 
 1. El **promotor** accede a `/deals/[id]/review`
 2. Pulsa "Solicitar Abogado/a de Cierre Conjunto"
-3. Introduce el correo del abogado o abogada (y, si quiere, su nombre). El diálogo dice: "El abogado o la abogada que propongas trabaja para ambas partes y os factura directamente; Dealroom no cobra nada por ello ni hace recomendaciones."
+3. Introduce el correo del abogado o abogada (y, si quieres, su nombre). El diálogo dice: "El abogado o la abogada que propongas trabaja para ambas partes y os factura directamente; Dealroom no cobra nada por ello ni hace recomendaciones."
    - Se rechaza la dirección de cualquiera de las partes
    - Se rechaza a quien ya intervino en la Fase A de cualquiera de las partes (prevención de conflictos)
 4. Se envían dos correos electrónicos:
    - Al **abogado o abogada**: invitación al portal de revisión
    - A la **otra parte**: notificación para confirmar o rechazar
 5. La **otra parte** revisa la solicitud y:
-   - **Confirma** — el asesor conjunto procede; se puede iniciar la firma
-   - **Rechaza** — se cancela el asesor conjunto; se puede firmar sin asesoramiento
+   - **Confirma**: el asesor conjunto procede; se puede iniciar la firma
+   - **Rechaza**: se cancela el asesor conjunto; se puede firmar sin asesoramiento
 
 Una sola solicitud por operación: tras un rechazo, las partes firman sin asesor conjunto.
 
@@ -209,8 +209,8 @@ En las operaciones en las que no ha intervenido un abogado/a desde el inicio (si
 
 El aviso muestra:
 
-1. **Advertencia de riesgo** — declaración breve sobre continuar sin asesoramiento legal
-2. **Cronología de fases** — resumen visual de las tres fases de intervención de abogado/a:
+1. **Advertencia de riesgo**: declaración breve sobre continuar sin asesoramiento legal
+2. **Cronología de fases**: resumen visual de las tres fases de intervención de abogado/a:
    - Fase 0 mostrada como "omitida" (al no tener abogado/a de pre-revisión)
    - Fase A descrita como disponible tras el envío de selecciones (invita a tu propio abogado o abogada)
    - Fase B descrita como disponible tras el acuerdo (el promotor propone por correo un abogado o una abogada común)
@@ -222,8 +222,8 @@ El botón "Entendido" llama a `deal.dismissLawyerWarning`, que establece `DealRo
 ### Páginas
 
 El aviso se muestra en:
-- `/deals/[id]` — página de detalle de la operación
-- `/deals/[id]/negotiate` — página de negociación
+- `/deals/[id]`: página de detalle de la operación
+- `/deals/[id]/negotiate`: página de negociación
 
 ---
 
@@ -275,8 +275,8 @@ Cuando un supervisor está asignado como asesor de parte (Fase A):
 ### Indicadores de Fase B
 
 Cuando un supervisor está asignado como asesor de cierre conjunto (Fase B):
-- Banner pendiente: **"Asesor de Cierre Conjunto — Pendiente"** con ambas partes listadas, a la espera de confirmación
-- Banner activo: **"Asesor de Cierre Conjunto — Activo"** con ambas partes listadas y fecha de confirmación
+- Banner pendiente: **"Asesor de Cierre Conjunto: Pendiente"** con ambas partes listadas, a la espera de confirmación
+- Banner activo: **"Asesor de Cierre Conjunto: Activo"** con ambas partes listadas y fecha de confirmación
 
 ---
 

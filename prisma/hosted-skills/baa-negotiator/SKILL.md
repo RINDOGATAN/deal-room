@@ -345,8 +345,8 @@ Software work-product tooling — not legal advice. Requires supervised use by a
 professional. Jurisdiction and currency of law must be verified by the supervising
 lawyer before any output is relied upon.
 
-*Uso supervisado:* Herramienta de software para la elaboración de producto de trabajo —
-no constituye asesoramiento jurídico. Requiere uso supervisado por un profesional de la
+*Uso supervisado:* Herramienta de software para la elaboración de producto de trabajo (no
+constituye asesoramiento jurídico). Requiere uso supervisado por un profesional de la
 abogacía colegiado. La jurisdicción y la vigencia de la normativa deben ser verificadas
 por el abogado supervisor antes de utilizar cualquier resultado.
 
