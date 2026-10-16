@@ -31,7 +31,7 @@ El aviso empieza definiendo Datos Personales, Tratamiento, Responsable del Trata
 A diferencia de un contrato, el aviso de privacidad es un **documento de una sola parte**. Se prepara únicamente en modo individual: no hay contraparte, ni negociación, ni firma.
 
 - **Quién lo publica**: la empresa titular del sitio web o del servicio, que habla en primera persona del plural y se identifica como **responsable del tratamiento** (quien decide los fines y medios del tratamiento).
-- **A quién se dirige**: a quienes utilizan el sitio web y los servicios, a quienes trata de "usted"; los apartados por jurisdicción se dirigen a los usuarios de California, del Reino Unido y de España o la Unión Europea.
+- **A quién se dirige**: a quienes utilizan el sitio web y los servicios, a quienes trata de "tú"; los apartados por jurisdicción se dirigen a los usuarios de California, del Reino Unido y de España o la Unión Europea.
 
 La empresa facilita su **nombre**, su **sitio web**, un **correo electrónico de contacto de privacidad** (destino de las consultas y solicitudes de derechos), la **fecha de entrada en vigor** y las **jurisdicciones** de sus usuarios. El aviso termina con la fecha de la última actualización y esos datos de contacto.
 
