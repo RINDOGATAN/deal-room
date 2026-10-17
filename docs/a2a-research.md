@@ -778,7 +778,7 @@ No changes needed to:
 - Compromise algorithm (works with any clause/option structure)
 - Entitlement system (premium flag already supported)
 - Webhook system (events fire for all contract types)
-- Gavel dispute escalation (already implemented for all deals)
+- Gavel dispute escalation (planned, not yet available; the endpoint answers 501 today)
 - A2A agent card (dynamically pulls from database)
 
 ### Entitlement Model
