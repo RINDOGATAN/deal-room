@@ -1218,7 +1218,7 @@
     "clauses": "cláusulas",
     "options": "opciones",
     "negotiableClauses": "Cláusulas Negociables",
-    "gavelRecommended": "Recomendado para disputas entre agentes: rápido, electrónico, vinculante",
+    "gavelRecommended": "Recomendada para disputas entre agentes: rápida y electrónica. Aún no se ha obtenido una opinión jurídica sobre si los laudos de Gavel son vinculantes.",
     "howItWorksTitle": "Cómo Funciona la Negociación entre Agentes",
     "howItWorksDesc": "Tu organización configura un playbook con las posiciones preferidas en cada cláusula. Cuando tu agente se encuentra con una contraparte, ambas partes presentan sus playbooks y el algoritmo de compromiso de Dealroom encuentra el acuerdo óptimo o identifica posiciones irreconciliables.",
     "step1Title": "1. Revisa los tipos de contrato",
@@ -1411,10 +1411,10 @@
     "connectionTitle": "Conexión de la DRC con Dealroom",
     "connectionDesc": "Cuando tu agente negocia un contrato en Dealroom y selecciona la opción de Arbitraje Automatizado Gavel en la cláusula de resolución de controversias, los parámetros DRC que has configurado definen el procedimiento de resolución. La DRC se incorpora al contrato acordado, haciéndola ejecutable.",
     "escalationTitle": "Escalación de una Disputa",
-    "escalationDesc": "Si se incumple un contrato, tu agente (o tu equipo) puede escalar a Gavel a través de la API:",
+    "escalationDesc": "La escalación a Gavel a través de la API está prevista y aún no está disponible. Cuando lo esté, tu agente (o tu equipo) escalará un contrato incumplido con:",
     "escalationEndpoint": "POST /api/v1/agent/deals/:id/dispute",
     "escalationScope": "Scope: disputes:create",
-    "escalationNote": "Solo los acuerdos en estado FAILED o AGREED pueden ser objeto de disputa. El caso en Gavel se crea automáticamente con los parámetros DRC del contrato."
+    "escalationNote": "Hoy el punto de acceso responde 501 gavel_escalation_planned y no guarda nada. Solo podrán escalarse las operaciones en estado FAILED o AGREED."
   },
   "localDeployment": {
     "title": "Despliegue Local",
@@ -2041,11 +2041,11 @@
     "mcpToolsDesc": "Devuelve definiciones de herramientas compatibles con MCP para todas las operaciones de Dealroom. Solo descubrimiento: la ejecución se realiza a través de la API REST.",
     "mcpToolsPath": "GET /api/v1/agent/mcp",
     "sectionDisputes": "Disputas",
-    "disputesDesc": "Cuando una operación falla o una parte alega incumplimiento, cualquiera de las partes puede escalar a arbitraje a través de la plataforma de resolución de disputas Gavel.",
-    "purposeDispute": "Escalar una operación a arbitraje",
-    "disputesNotConfiguredTitle": "Cuando el arbitraje no está disponible: 503 gavel_not_configured",
-    "disputesNotConfiguredDesc": "La remisión a Gavel solo se realiza cuando la instalación tiene configuradas la dirección y la clave del servicio Gavel. Si no es así, el punto de acceso rechaza la petición con HTTP 503 y el cuerpo que se muestra a continuación. No se guarda nada: no se crea ningún registro de disputa ni se abre ningún caso.",
-    "disputesNotConfiguredMeaning": "Significado: la operación admite disputa en principio, pero no existe ningún arbitraje. No reintentes de forma automática; la respuesta no cambiará hasta que el operador configure Gavel. Resuelve la disputa por otras vías o ponte en contacto con el operador. Un 503 con un cuerpo distinto significa que Gavel está configurado pero no se ha podido contactar, y un reintento posterior puede tener éxito.",
+    "disputesDesc": "La escalación a Gavel está prevista y aún no está disponible. Cuando lo esté, cualquiera de las partes podrá escalar a Gavel una operación fallida o en disputa: resolución de disputas por niveles; custodia solo en red de pruebas.",
+    "purposeDispute": "Escalar una operación a Gavel (prevista)",
+    "disputesPlannedTitle": "Hoy: 501 gavel_escalation_planned",
+    "disputesPlannedDesc": "El punto de acceso comprueba la clave de API y el permiso disputes:create y después rechaza la petición con HTTP 501 y el cuerpo que se muestra a continuación. No se guarda nada y no se llama a Gavel.",
+    "disputesPlannedMeaning": "No reintentes de forma automática: la respuesta no cambiará hasta que la escalación esté disponible. Gavel tramita las disputas al amparo de una cláusula que todas las partes han aceptado; consulta https://gavel.todo.law/docs.",
     "versioning": "Versionado",
     "versioningDesc1": "La API utiliza versionado",
     "versioningDesc2": ". Los cambios incompatibles se introducirán bajo un nuevo prefijo de versión."

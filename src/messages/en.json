@@ -1218,7 +1218,7 @@
     "clauses": "clauses",
     "options": "options",
     "negotiableClauses": "Negotiable Clauses",
-    "gavelRecommended": "Recommended for agent-to-agent disputes: fast, electronic, binding",
+    "gavelRecommended": "Recommended for agent-to-agent disputes: fast and electronic. No legal opinion has yet been obtained on whether Gavel awards are binding.",
     "howItWorksTitle": "How Agent Negotiation Works",
     "howItWorksDesc": "Your organization configures a playbook with preferred positions on each clause. When your agent encounters a counterparty, both sides submit their playbooks and Dealroom's compromise algorithm finds the optimal agreement, or identifies irreconcilable positions.",
     "step1Title": "1. Review contract types",
@@ -1411,10 +1411,10 @@
     "connectionTitle": "Connecting DRC to Dealroom",
     "connectionDesc": "When your agent negotiates a contract on Dealroom and selects the Gavel Automated Arbitration option in the dispute-resolution clause, the DRC parameters you have configured define the resolution procedure. The DRC is embedded in the agreed contract, making it enforceable.",
     "escalationTitle": "Escalating a Dispute",
-    "escalationDesc": "If a contract is breached, your agent (or your team) can escalate to Gavel via the API:",
+    "escalationDesc": "Escalation to Gavel through the API is planned and not yet available. When it ships, your agent (or your team) will escalate a breached contract with:",
     "escalationEndpoint": "POST /api/v1/agent/deals/:id/dispute",
     "escalationScope": "Scope: disputes:create",
-    "escalationNote": "Only FAILED or AGREED deals can be disputed. The Gavel case is created automatically with the DRC parameters from the contract."
+    "escalationNote": "Today the endpoint answers 501 gavel_escalation_planned and stores nothing. Only FAILED or AGREED deals will be eligible."
   },
   "localDeployment": {
     "title": "Local Deployment",
@@ -2041,11 +2041,11 @@
     "mcpToolsDesc": "Returns MCP-compatible tool definitions for all Dealroom operations. Discovery only: execution goes through the REST API.",
     "mcpToolsPath": "GET /api/v1/agent/mcp",
     "sectionDisputes": "Disputes",
-    "disputesDesc": "When a deal fails or a party alleges breach, either party can escalate to arbitration via the Gavel dispute resolution platform.",
-    "purposeDispute": "Escalate a deal to arbitration",
-    "disputesNotConfiguredTitle": "When arbitration is not available: 503 gavel_not_configured",
-    "disputesNotConfiguredDesc": "The hand-off to Gavel is only made when the deployment has been configured with a Gavel service address and key. When it has not, the endpoint refuses the request with HTTP 503 and the body below. Nothing is stored: no dispute record is created and no case is opened.",
-    "disputesNotConfiguredMeaning": "Meaning: the deal was accepted for dispute in principle, but no arbitration exists. Do not retry automatically; the answer will not change until the operator configures Gavel. Resolve the dispute by other means or contact the operator. A 503 with a different body means Gavel is configured but could not be reached, and a retry later may succeed.",
+    "disputesDesc": "Escalation to Gavel is planned and not yet available. When it ships, either party will be able to escalate a failed or disputed deal to Gavel: dispute resolution in tiers; escrow on testnet only.",
+    "purposeDispute": "Escalate a deal to Gavel (planned)",
+    "disputesPlannedTitle": "Today: 501 gavel_escalation_planned",
+    "disputesPlannedDesc": "The endpoint checks the API key and the disputes:create scope, then refuses the request with HTTP 501 and the body below. Nothing is stored and Gavel is not called.",
+    "disputesPlannedMeaning": "Do not retry automatically: the answer will not change until the escalation ships. Gavel files disputes under a clause that every party has accepted; see https://gavel.todo.law/docs.",
     "versioning": "Versioning",
     "versioningDesc1": "The API uses",
     "versioningDesc2": "versioning. Breaking changes will be introduced under a new version prefix."
