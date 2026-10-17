@@ -7,9 +7,16 @@
  * POST /api/v1/agent/deals/:id/dispute
  * Escalate a deal to Gavel ADR when negotiation fails or breach alleged.
  *
- * Requires GAVEL_API_URL and GAVEL_API_KEY. When either is missing the route
- * answers 503 `{ "error": "gavel_not_configured" }` and stores nothing, so a
- * caller can never mistake an unconfigured deployment for an opened case.
+ * PLANNED: the escalation is not live. After authentication and the scope
+ * check the route answers 501 `{ "error": "gavel_escalation_planned" }` and
+ * stores nothing (see isGavelEscalationAvailable in src/lib/gavel.ts). The
+ * code below that call is kept for the rebuild; it posts to `/cases`, which
+ * Gavel does not serve.
+ *
+ * When enabled, it requires GAVEL_API_URL and GAVEL_API_KEY. When either is
+ * missing the route answers 503 `{ "error": "gavel_not_configured" }` and
+ * stores nothing, so a caller can never mistake an unconfigured deployment for
+ * an opened case.
  */
 
 import { NextRequest, NextResponse } from "next/server";
@@ -23,7 +30,12 @@ import { unauthorizedResponse } from "@/server/middleware/unauthorized";
 import { withIdempotency } from "@/server/middleware/idempotency";
 import { features } from "@/config/features";
 import { createLogger } from "@/lib/logger";
-import { getGavelConfig, GAVEL_NOT_CONFIGURED_BODY } from "@/lib/gavel";
+import {
+  getGavelConfig,
+  GAVEL_NOT_CONFIGURED_BODY,
+  GAVEL_ESCALATION_PLANNED_BODY,
+  isGavelEscalationAvailable,
+} from "@/lib/gavel";
 
 const logger = createLogger("agent-api");
 
@@ -48,6 +60,11 @@ export async function POST(
         return NextResponse.json({ error: e.message }, { status: 403 });
       }
       throw e;
+    }
+
+    // The escalation is planned: refuse before any read, write or outbound call.
+    if (!isGavelEscalationAvailable()) {
+      return NextResponse.json(GAVEL_ESCALATION_PLANNED_BODY, { status: 501 });
     }
 
     // Refuse honestly when the arbitration service is not configured. This

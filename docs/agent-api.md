@@ -128,6 +128,7 @@ All endpoints return errors in a consistent format:
 | `409` | Conflict — duplicate name, already joined, etc. |
 | `429` | Rate limit exceeded — retry after the seconds in the `Retry-After` header |
 | `500` | Internal server error |
+| `501` | Not implemented: the dispute escalation to Gavel is planned and answers `{ "error": "gavel_escalation_planned" }` (see Dispute Escalation) |
 | `503` | Service unavailable — a downstream dependency (Gavel, Stripe) is not configured or unreachable. The dispute endpoint returns `{ "error": "gavel_not_configured" }` when Gavel is not configured (see Dispute Escalation) |
 
 ---
@@ -1335,15 +1336,36 @@ Spanish contracts:
 
 ---
 
-## Dispute Escalation (Gavel ADR)
+## Dispute Escalation (Gavel ADR, planned)
 
-When negotiation fails or a party alleges breach, disputes can be escalated to Gavel for stablecoin-based arbitration.
+Planned, not yet available. Gavel offers dispute resolution in tiers; escrow on
+testnet only. Until the escalation ships, the endpoint below checks the API key
+and the `disputes:create` scope, then refuses every request and stores nothing
+(no dispute record, no call to Gavel):
 
 ```
 POST /deals/:id/dispute
 Scope: disputes:create
-Content-Type: application/json
 ```
+
+```
+HTTP/1.1 501 Not Implemented
+Content-Type: application/json
+
+{
+  "error": "gavel_escalation_planned",
+  "message": "Escalation to Gavel is planned and not yet available."
+}
+```
+
+Do not retry automatically; the answer will not change until the escalation
+ships. Gavel files disputes under a clause that every party has accepted
+(https://gavel.todo.law/docs); its dispute pages are at
+`https://gavel.todo.law/disputes/:id`.
+
+### When the escalation ships
+
+The request body will carry the reason and, optionally, an escrow amount:
 
 ```json
 {
@@ -1352,36 +1374,10 @@ Content-Type: application/json
 }
 ```
 
-**Response:** `201 Created`
-
-```json
-{
-  "disputeId": "clxyz...",
-  "gavelCaseId": "gavel_abc123",
-  "gavelCaseUrl": "https://gavel.todo.law/cases/gavel_abc123",
-  "status": "PENDING",
-  "createdAt": "2026-03-12T10:00:00.000Z"
-}
-```
-
-### When arbitration is not available
-
-The hand-off is only made when the deployment is configured with both
-`GAVEL_API_URL` and `GAVEL_API_KEY`. When either is missing the endpoint
-refuses the request and stores nothing (no dispute record, no case):
-
-```
-HTTP/1.1 503 Service Unavailable
-Content-Type: application/json
-
-{ "error": "gavel_not_configured" }
-```
-
-Meaning: no arbitration exists for this deal. Do not retry automatically; the
-answer will not change until the operator configures Gavel. A `503` with the
-body `{ "error": "Gavel service unavailable" }` means Gavel is configured but
-could not be reached, and a later retry may succeed. A `502` means Gavel
-rejected the case.
+The hand-off will only be made when the deployment is configured with both
+`GAVEL_API_URL` and `GAVEL_API_KEY`. When either is missing the endpoint will
+refuse the request with `503 { "error": "gavel_not_configured" }` and store
+nothing. The response shape on success will be fixed with the rebuild.
 
 ---
 
@@ -1468,14 +1464,14 @@ When the limit is exceeded, the API returns `429 Too Many Requests` with a `Retr
 
 ### Gavel Dispute Resolution
 
-All A2A contract skills include a dispute resolution clause with **Gavel Automated Arbitration** as the recommended default option. When parties agree to Gavel arbitration, disputes can be escalated via:
+All A2A contract skills include a dispute resolution clause with **Gavel Automated Arbitration** as the recommended default option. When parties agree to Gavel arbitration, disputes will be escalated (planned, not yet available) via:
 
 ```
 POST /api/v1/agent/deals/:id/dispute
 Scope: disputes:create
 ```
 
-Gavel provides electronic arbitration with rapid turnaround, escrow mechanisms, and binding decisions — designed for the speed requirements of agent-to-agent commerce.
+Gavel provides dispute resolution in tiers; escrow on testnet only. The escalation endpoint is planned and answers `501 gavel_escalation_planned` today (see "Dispute Escalation" above).
 
 ---
 

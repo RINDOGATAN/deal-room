@@ -628,18 +628,18 @@ export default function AgentApiPage() {
             </table>
           </div>
           <div className="p-4 border border-warning-mark bg-warning-surface rounded-xl space-y-2">
-            <p className="text-sm font-medium">{t("disputesNotConfiguredTitle")}</p>
+            <p className="text-sm font-medium">{t("disputesPlannedTitle")}</p>
             <p className="text-sm text-muted-foreground">
-              {t("disputesNotConfiguredDesc")}
+              {t("disputesPlannedDesc")}
             </p>
             <pre className="text-xs bg-muted/50 p-3 rounded-lg overflow-x-auto">
-{`HTTP/1.1 503 Service Unavailable
+{`HTTP/1.1 501 Not Implemented
 Content-Type: application/json
 
-{ "error": "gavel_not_configured" }`}
+{ "error": "gavel_escalation_planned", "message": "Escalation to Gavel is planned and not yet available." }`}
             </pre>
             <p className="text-sm text-muted-foreground">
-              {t("disputesNotConfiguredMeaning")}
+              {t("disputesPlannedMeaning")}
             </p>
           </div>
         </div>
