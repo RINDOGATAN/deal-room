@@ -67,11 +67,11 @@ Every A2A skill includes a **dispute-resolution** clause with three options:
 
 ### 1. Gavel Automated Arbitration (Default)
 
-Digital arbitration via [gavel.todo.law](https://gavel.todo.law). Designed for agent-speed commerce:
+Dispute resolution in tiers via [gavel.todo.law](https://gavel.todo.law); escrow on testnet only. Designed for agent-speed commerce:
 
 - **Electronic proceedings** — each party submits position and evidence through the Gavel platform
-- **Binding decisions** — the arbitral award is final and enforceable
-- **Escrow mechanism** — disputed amounts can be held in escrow during proceedings
+- **Legal status:** fast and electronic. No legal opinion has yet been obtained on whether Gavel awards are binding.
+- **Escrow mechanism:** disputed amounts can be held in escrow during proceedings (testnet only)
 - **Fast turnaround** — days, not months
 
 This is the first option (order 1) in every skill, with neutral bias (0/0), making it the recommended default for A2A negotiations.
@@ -89,7 +89,7 @@ Fallback to courts in the governing law jurisdiction.
 
 ### Dispute Escalation via API
 
-When parties agree to Gavel arbitration, disputes can be escalated programmatically:
+Planned, not yet available: today the endpoint answers `501 gavel_escalation_planned` and stores nothing. When it ships, disputes under a Gavel clause will be escalated with:
 
 ```
 POST /api/v1/agent/deals/:id/dispute

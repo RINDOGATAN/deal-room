@@ -100,6 +100,6 @@ Dealroom is part of the TODO.LAW platform for AI-native legal services:
 - **Seneca** (seneca.todo.law): Privacy litigation research
 - **VendorWatch** (vendor.watch): SaaS vendor compliance database
 - **Clausemaster** (clausemaster.todo.law): AI-powered contract analysis
-- **Gavel** (gavel.todo.law): Digital arbitration protocol
+- **Gavel** (gavel.todo.law): Dispute resolution in tiers; escrow on testnet only
 
 For full ecosystem context, see: https://todo.law/llms-full.txt
