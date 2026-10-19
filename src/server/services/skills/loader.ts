@@ -208,6 +208,14 @@ const BoilerplateSchema = z.object({
   annexes: z.array(StandardClauseSchema).optional(),
   // Opt-in: render as ONE continuous sequentially-numbered agreement (BAA).
   sequentialNumbering: z.boolean().optional(),
+  // Alternative wordings: {name} takes the first variant whose showIf holds
+  // (see processBoilerplate in the document generator).
+  conditionalVariables: z
+    .record(
+      z.string(),
+      z.array(z.object({ showIf: z.unknown().optional(), value: BoilerplateStringSchema })),
+    )
+    .optional(),
 });
 
 export type ClausesFile = z.infer<typeof ClausesFileSchema>;

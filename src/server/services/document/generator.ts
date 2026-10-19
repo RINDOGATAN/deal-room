@@ -393,34 +393,12 @@ export function processBoilerplate(
   }
 
   const bp = rawBoilerplate as Record<string, unknown>;
+  // Conditional variables below are added to a copy, never the caller's map.
+  variables = { ...variables };
 
   // Helper: resolve i18n then interpolate variables
   const resolve = (val: unknown): string =>
     interpolateText(resolveLocalizedString(val, language), variables);
-
-  // Get jurisdiction-specific provision(s)
-  const jpMap = bp.jurisdictionProvisions as Record<string, Record<string, unknown>> | undefined;
-  const jp = jpMap?.[governingLawKey];
-  const jurisdictionProvision = jp
-    ? { title: resolve(jp.title), text: resolve(jp.text) }
-    : null;
-
-  // Multi-jurisdiction support: collect provisions for all selected jurisdictions
-  let multiJurisdictionProvisions: StandardClause[] | undefined;
-  if (multiJurisdictionKeys && multiJurisdictionKeys.length > 0 && jpMap) {
-    multiJurisdictionProvisions = multiJurisdictionKeys
-      .map((key) => {
-        const provision = jpMap[key];
-        if (!provision) return null;
-        return { title: resolve(provision.title), text: resolve(provision.text) };
-      })
-      .filter((p): p is StandardClause => p !== null);
-  }
-
-  const definitions = (bp.definitions as Array<Record<string, unknown>> || []).map((d) => ({
-    term: resolveLocalizedString(d.term, language),
-    definition: resolve(d.definition),
-  }));
 
   // Conditional boilerplate: an annex, one of its `sections`, a standard
   // clause or one of the `backgroundSections` may declare `showIf`: one
@@ -463,6 +441,46 @@ export function processBoilerplate(
       return false;
     });
   };
+
+  // Conditional variables: `conditionalVariables: { name: [{ showIf, value }, ...] }`.
+  // The first variant whose condition holds (a variant without showIf always
+  // holds) sets {name}, interpolated with the variables known so far; text
+  // anywhere in the boilerplate can then use {name}. Lets one template carry
+  // alternative wordings (the NDA's one-way and mutual texts) without
+  // duplicating every section. Declared order matters: a later variable may
+  // use an earlier one.
+  const conditionalVariables = bp.conditionalVariables as
+    | Record<string, Array<{ showIf?: unknown; value?: unknown }>>
+    | undefined;
+  for (const [name, variants] of Object.entries(conditionalVariables ?? {})) {
+    const hit = (Array.isArray(variants) ? variants : []).find((v) => conditionsMet(v.showIf));
+    variables[name] = hit ? resolve(hit.value) : "";
+  }
+
+
+  // Get jurisdiction-specific provision(s)
+  const jpMap = bp.jurisdictionProvisions as Record<string, Record<string, unknown>> | undefined;
+  const jp = jpMap?.[governingLawKey];
+  const jurisdictionProvision = jp
+    ? { title: resolve(jp.title), text: resolve(jp.text) }
+    : null;
+
+  // Multi-jurisdiction support: collect provisions for all selected jurisdictions
+  let multiJurisdictionProvisions: StandardClause[] | undefined;
+  if (multiJurisdictionKeys && multiJurisdictionKeys.length > 0 && jpMap) {
+    multiJurisdictionProvisions = multiJurisdictionKeys
+      .map((key) => {
+        const provision = jpMap[key];
+        if (!provision) return null;
+        return { title: resolve(provision.title), text: resolve(provision.text) };
+      })
+      .filter((p): p is StandardClause => p !== null);
+  }
+
+  const definitions = (bp.definitions as Array<Record<string, unknown>> || []).map((d) => ({
+    term: resolveLocalizedString(d.term, language),
+    definition: resolve(d.definition),
+  }));
 
   const standardClauses = (bp.standardClauses as Array<Record<string, unknown>> || [])
     .filter((c) => conditionsMet(c.showIf))
@@ -525,8 +543,8 @@ export function processBoilerplate(
     ),
     partyLabels: partyLabels
       ? {
-          partyA: resolveLocalizedString(partyLabels.partyA, language),
-          partyB: resolveLocalizedString(partyLabels.partyB, language),
+          partyA: resolve(partyLabels.partyA),
+          partyB: resolve(partyLabels.partyB),
         }
       : undefined,
   };
@@ -783,6 +801,15 @@ export async function generateContractData(
   // Merge deal parameter boilerplate variables into the variables dict
   const paramBoilerplateVars = buildBoilerplateVariables(dealParams, parameterSchema);
   Object.assign(variables, paramBoilerplateVars);
+
+  // Agreed clause options as condition variables ("clause.<clauseId>" =
+  // option code), so boilerplate text can follow a negotiated choice (the
+  // NDA's California injunction paragraph follows its remedies clause).
+  for (const c of deal.clauses) {
+    if (c.status !== "AGREED" || !c.agreedOptionId) continue;
+    const code = c.clauseTemplate.options.find((o) => o.id === c.agreedOptionId)?.code;
+    if (code) variables[`clause.${c.clauseTemplate.clauseId}`] = code;
+  }
 
   // DPA Annex I data categories: turn the selected canonical keys into a
   // localized, lettered list, appending any free-text "other" entries. This
