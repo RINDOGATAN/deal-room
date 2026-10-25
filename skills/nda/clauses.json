@@ -1079,8 +1079,8 @@
           "biasPartyB": 0,
           "jurisdictionDefault": true,
           "plainDescription": {
-            "en": "Disputes resolved in courts of the governing law jurisdiction: San Francisco (California), London (England & Wales), or Madrid (Spain).",
-            "es": "Controversias resueltas ante los tribunales de la jurisdicción de la ley aplicable: San Francisco (California), Londres (Inglaterra y Gales) o Madrid (España)."
+            "en": "Disputes resolved in the courts of the place whose law governs this agreement.",
+            "es": "Controversias resueltas ante los tribunales del lugar cuya ley rige este acuerdo."
           },
           "pros": {
             "partyA": {
