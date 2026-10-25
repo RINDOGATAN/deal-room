@@ -46,7 +46,7 @@
           "biasPartyA": -0.3,
           "biasPartyB": 0.3,
           "plainDescription": {
-            "en": "Confidentiality obligations last 2 years after termination - standard for most business discussions.",
+            "en": "Confidentiality obligations last 2 years after termination (standard for most business discussions).",
             "es": "Las obligaciones de confidencialidad se extienden durante 2 años tras la resolución del acuerdo, lo cual es habitual en la mayoría de las relaciones comerciales."
           },
           "pros": {
@@ -115,7 +115,7 @@
           "biasPartyA": -0.1,
           "biasPartyB": 0.1,
           "plainDescription": {
-            "en": "Confidentiality obligations last 3 years - balanced protection for sensitive industries.",
+            "en": "Confidentiality obligations last 3 years (balanced protection for sensitive industries).",
             "es": "Las obligaciones de confidencialidad se extienden durante 3 años, ofreciendo una protección equilibrada para sectores sensibles."
           },
           "pros": {
@@ -182,7 +182,7 @@
           "biasPartyA": 0.2,
           "biasPartyB": -0.2,
           "plainDescription": {
-            "en": "Confidentiality obligations last 5 years - strong protection for highly sensitive information.",
+            "en": "Confidentiality obligations last 5 years (strong protection for highly sensitive information).",
             "es": "Las obligaciones de confidencialidad se extienden durante 5 años, proporcionando una protección sólida para información altamente sensible."
           },
           "pros": {
@@ -1058,7 +1058,7 @@
       },
       "order": 5,
       "plainDescription": {
-        "en": "Which law governs this agreement, and how and where any dispute about it is resolved — courts in the governing-law jurisdiction, neutral Delaware courts, or arbitration (JAMS, AAA, ICC or LCIA).",
+        "en": "Which law governs this agreement, and how and where any dispute about it is resolved: courts in the governing-law jurisdiction, neutral Delaware courts, or arbitration (JAMS, AAA, ICC or LCIA).",
         "es": "Qué ley rige este acuerdo y cómo y dónde se resuelve cualquier controversia relativa a él: tribunales de la jurisdicción de la ley aplicable, tribunales neutrales de Delaware o arbitraje (JAMS, AAA, ICC o LCIA)."
       },
       "legalContext": {
@@ -1079,8 +1079,8 @@
           "biasPartyB": 0,
           "jurisdictionDefault": true,
           "plainDescription": {
-            "en": "Disputes resolved in courts of the governing law jurisdiction: San Francisco (California), London (England & Wales), or Madrid (Spain).",
-            "es": "Controversias resueltas ante los tribunales de la jurisdicción de la ley aplicable: San Francisco (California), Londres (Inglaterra y Gales) o Madrid (España)."
+            "en": "Disputes resolved in the courts of the place whose law governs this agreement.",
+            "es": "Controversias resueltas ante los tribunales del lugar cuya ley rige este acuerdo."
           },
           "pros": {
             "partyA": {
@@ -1131,7 +1131,7 @@
             }
           },
           "legalText": {
-            "en": "Any dispute arising from this Agreement will be resolved exclusively in the state and federal courts located in the jurisdiction of the governing law. Each Party irrevocably submits to the exclusive jurisdiction of such courts.",
+            "en": "Any dispute arising from this Agreement will be resolved exclusively in the courts of the jurisdiction of the governing law. Each Party irrevocably submits to the exclusive jurisdiction of such courts.",
             "es": "Toda controversia derivada del presente Acuerdo se resolverá exclusivamente ante los juzgados y tribunales de la jurisdicción de la ley aplicable. Cada Parte se somete irrevocablemente a la jurisdicción exclusiva de dichos tribunales."
           }
         },
@@ -1139,8 +1139,8 @@
           "id": "dispute-courts-delaware",
           "code": "courts-delaware",
           "label": {
-            "en": "Delaware courts (Neutral - US)",
-            "es": "Tribunales de Delaware (Neutral - EE. UU.)"
+            "en": "Delaware courts (Neutral, US)",
+            "es": "Tribunales de Delaware (Neutral, EE. UU.)"
           },
           "order": 2,
           "biasPartyA": 0,
@@ -1221,7 +1221,7 @@
           "biasPartyA": 0,
           "biasPartyB": 0,
           "plainDescription": {
-            "en": "Private arbitration under JAMS (Judicial Arbitration and Mediation Services) rules - popular with technology companies and startups.",
+            "en": "Private arbitration under JAMS (Judicial Arbitration and Mediation Services) rules, popular with technology companies and startups.",
             "es": "Arbitraje privado conforme al reglamento de JAMS (Judicial Arbitration and Mediation Services), habitual entre empresas tecnológicas y startups."
           },
           "pros": {
@@ -1300,7 +1300,7 @@
           "biasPartyA": 0,
           "biasPartyB": 0,
           "plainDescription": {
-            "en": "International arbitration under ICC (International Chamber of Commerce) rules - the gold standard for cross-border disputes.",
+            "en": "International arbitration under ICC (International Chamber of Commerce) rules: the gold standard for cross-border disputes.",
             "es": "Arbitraje internacional conforme al reglamento de la CCI (Cámara de Comercio Internacional), referencia en materia de controversias transfronterizas."
           },
           "pros": {
@@ -1367,7 +1367,7 @@
           "biasPartyA": 0,
           "biasPartyB": 0,
           "plainDescription": {
-            "en": "Arbitration under AAA (American Arbitration Association) Commercial Rules - well-established with extensive arbitrator network.",
+            "en": "Arbitration under AAA (American Arbitration Association) Commercial Rules: well established, with an extensive arbitrator network.",
             "es": "Arbitraje conforme al Reglamento Comercial de la AAA (Asociación Americana de Arbitraje), consolidado y con una amplia red de árbitros."
           },
           "pros": {
@@ -1444,7 +1444,7 @@
           "biasPartyA": 0,
           "biasPartyB": 0,
           "plainDescription": {
-            "en": "Arbitration under LCIA (London Court of International Arbitration) rules - preferred for UK and international commercial disputes.",
+            "en": "Arbitration under LCIA (London Court of International Arbitration) rules: preferred for UK and international commercial disputes.",
             "es": "Arbitraje conforme al reglamento de la LCIA (Corte de Arbitraje Internacional de Londres), preferido para controversias comerciales del Reino Unido e internacionales."
           },
           "pros": {
@@ -1527,7 +1527,7 @@
             }
           },
           "plainDescription": {
-            "en": "Submission to the ordinary courts of a Spanish city — public, fast, no arbitration fees.",
+            "en": "Submission to the ordinary courts of a Spanish city: public, fast, no arbitration fees.",
             "es": "Sumisión expresa a los Juzgados y Tribunales de una ciudad española: vía pública, rápida y sin costes de arbitraje."
           },
           "pros": {
@@ -1545,7 +1545,7 @@
             },
             "partyB": {
               "en": [
-                "Lower cost — no arbitral fees",
+                "Lower cost: no arbitral fees",
                 "Public record protects against future abuses",
                 "Standard procedural protections"
               ],
@@ -1559,7 +1559,7 @@
           "cons": {
             "partyA": {
               "en": [
-                "Public proceedings — confidentiality concerns",
+                "Public proceedings: confidentiality concerns",
                 "Slower than arbitration in many regions"
               ],
               "es": [
@@ -1677,13 +1677,13 @@
             }
           },
           "plainDescription": {
-            "en": "Binding arbitration administered by the Madrid Arbitration Court — private, faster than courts, leading Spanish institution.",
+            "en": "Binding arbitration administered by the Madrid Arbitration Court: private, faster than courts, leading Spanish institution.",
             "es": "Arbitraje vinculante administrado por la Corte de Arbitraje de Madrid: vía privada, más rápida que los tribunales y la institución arbitral de referencia en España."
           },
           "pros": {
             "partyA": {
               "en": [
-                "Strict confidentiality — proceedings are private",
+                "Strict confidentiality: proceedings are private",
                 "Faster than ordinary courts",
                 "Award directly enforceable under NY Convention"
               ],
@@ -1710,7 +1710,7 @@
             "partyA": {
               "en": [
                 "Arbitration fees can be significant for small disputes",
-                "Limited appeal — narrow annulment grounds"
+                "Limited appeal: narrow annulment grounds"
               ],
               "es": [
                 "Honorarios arbitrales significativos para controversias pequeñas",
@@ -2328,7 +2328,7 @@
           "jurisdictionConfig": {
             "CALIFORNIA": {
               "available": true,
-              "note": "Recommended for California - non-solicitation provisions are generally unenforceable"
+              "note": "Recommended for California: non-solicitation provisions are generally unenforceable"
             },
             "ENGLAND_WALES": {
               "available": true
@@ -2492,7 +2492,7 @@
             },
             "ENGLAND_WALES": {
               "available": true,
-              "note": "Must be reasonable - courts may reduce excessive duration"
+              "note": "Must be reasonable: courts may reduce excessive duration"
             },
             "SPAIN": {
               "available": true,
