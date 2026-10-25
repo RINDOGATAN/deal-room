@@ -92,7 +92,7 @@
     "superjson": "^2.2.6",
     "tailwind-merge": "^3.4.0",
     "uuid": "^13.0.0",
-    "zod": "^4.3.5"
+    "zod": "^4.6.6"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.11.1",
