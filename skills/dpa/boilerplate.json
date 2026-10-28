@@ -118,8 +118,8 @@
   "annexes": [
     {
       "title": {
-        "en": "Annex I — Description of Processing",
-        "es": "Anexo I — Descripción del Tratamiento"
+        "en": "Annex I: Description of Processing",
+        "es": "Anexo I: Descripción del Tratamiento"
       },
       "text": {
         "en": "This Annex describes the processing carried out by the Processor on behalf of the Controller under this DPA.\n\n1. SUBJECT MATTER AND DURATION\nThe Processor will process Personal Data for the duration of the Principal Agreement, and until all Personal Data has been deleted or returned in accordance with this DPA.\n\n2. PURPOSE AND NATURE OF PROCESSING\n{processingPurpose}\nFor that purpose the processing may include the collection, recording, organisation, structuring, storage, retrieval, consultation, use, disclosure, restriction, erasure and destruction of Personal Data.\n\n3. CATEGORIES OF PERSONAL DATA\nThe Personal Data processed comprises the following categories:\n{dataCategoriesList}",
@@ -148,8 +148,8 @@
     },
     {
       "title": {
-        "en": "Annex II — Technical and Organisational Measures",
-        "es": "Anexo II — Medidas Técnicas y Organizativas"
+        "en": "Annex II: Technical and Organisational Measures",
+        "es": "Anexo II: Medidas Técnicas y Organizativas"
       },
       "text": {
         "en": "This Annex describes the technical and organisational security measures implemented by the Processor to protect Personal Data in accordance with Article 32 of the GDPR. It states only measures the Processor actually maintains and can evidence; areas not addressed by an additional section below are governed by the baseline measures.\n\nBASELINE MEASURES\n(a) All Personal Data transmitted over public networks is encrypted in transit using TLS 1.2 or higher;\n(b) Access to Personal Data is restricted on a role and need-to-know basis, with unique credentials assigned to each authorized individual; shared accounts are prohibited;\n(c) Access rights are revoked promptly upon termination of employment or change of role;\n(d) All personnel with access to Personal Data are bound by written confidentiality obligations and receive data protection and information security training at onboarding and periodically thereafter;\n(e) The Processor maintains a documented information security programme that is reviewed and updated at least annually.",
@@ -284,8 +284,8 @@
     },
     {
       "title": {
-        "en": "Annex III — Incorporation of the Standard Contractual Clauses (International Transfers)",
-        "es": "Anexo III — Incorporación de las Cláusulas Contractuales Tipo (Transferencias Internacionales)"
+        "en": "Annex III: Incorporation of the Standard Contractual Clauses (International Transfers)",
+        "es": "Anexo III: Incorporación de las Cláusulas Contractuales Tipo (Transferencias Internacionales)"
       },
       "showIf": [
         {
@@ -303,8 +303,8 @@
     },
     {
       "title": {
-        "en": "Annex IV — Transfer Impact Assessment",
-        "es": "Anexo IV — Evaluación de Impacto de las Transferencias"
+        "en": "Annex IV: Transfer Impact Assessment",
+        "es": "Anexo IV: Evaluación de Impacto de las Transferencias"
       },
       "showIf": [
         {
