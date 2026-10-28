@@ -4,7 +4,7 @@
     "en": "Certificate of Incorporation (Delaware C-Corp)"
   },
   "description": {
-    "en": "Delaware C-Corp Certificate of Incorporation — the document filed with the Secretary of State to bring the company into existence under the Delaware General Corporation Law."
+    "en": "Delaware C-Corp Certificate of Incorporation: the document filed with the Secretary of State to bring the company into existence under the Delaware General Corporation Law."
   },
   "version": "1.0",
   "languages": [
@@ -177,12 +177,12 @@
           "cons": {
             "partyA": {
               "en": [
-                "None — this is the default for modern Delaware C-Corps"
+                "None: this is the default for modern Delaware C-Corps"
               ]
             },
             "partyB": {
               "en": [
-                "None — this is the default for modern Delaware C-Corps"
+                "None: this is the default for modern Delaware C-Corps"
               ]
             }
           },
@@ -202,10 +202,10 @@
       },
       "order": 4,
       "plainDescription": {
-        "en": "How many shares of Common Stock can the corporation issue? This sets the ceiling — you can issue up to this number without amending the certificate, but amending later requires a board + shareholder vote."
+        "en": "How many shares of Common Stock can the corporation issue? This sets the ceiling: you can issue up to this number without amending the certificate, but amending later requires a board + shareholder vote."
       },
       "legalContext": {
-        "en": "8 Del. C. § 102(a)(4) requires the certificate to state the total authorized shares. Amending later means filing a Certificate of Amendment with the Delaware Secretary of State, plus board and stockholder approval. Franchise tax: Delaware uses the lower of two calculations — at the typical low par value ($0.00001) the 'assumed par value method' gives roughly the $85 minimum regardless of authorized count, so share count mainly affects headroom, not tax."
+        "en": "8 Del. C. § 102(a)(4) requires the certificate to state the total authorized shares. Amending later means filing a Certificate of Amendment with the Delaware Secretary of State, plus board and stockholder approval. Franchise tax: Delaware uses the lower of two calculations. At the typical low par value ($0.00001) the 'assumed par value method' gives roughly the $85 minimum regardless of authorized count, so share count mainly affects headroom, not tax."
       },
       "isRequired": true,
       "options": [
@@ -330,12 +330,12 @@
           "cons": {
             "partyA": {
               "en": [
-                "Non-standard — some investors will ask why you deviated from 10M"
+                "Non-standard: some investors will ask why you deviated from 10M"
               ]
             },
             "partyB": {
               "en": [
-                "Non-standard — some investors will ask why you deviated from 10M"
+                "Non-standard: some investors will ask why you deviated from 10M"
               ]
             }
           },
@@ -391,12 +391,12 @@
           "cons": {
             "partyA": {
               "en": [
-                "None — this is the market standard"
+                "None: this is the market standard"
               ]
             },
             "partyB": {
               "en": [
-                "None — this is the market standard"
+                "None: this is the market standard"
               ]
             }
           },
@@ -450,12 +450,12 @@
           "cons": {
             "partyA": {
               "en": [
-                "Incorporator's role ends at initial board election — they don't retain special authority afterward"
+                "Incorporator's role ends at initial board election; they don't retain special authority afterward"
               ]
             },
             "partyB": {
               "en": [
-                "Incorporator's role ends at initial board election — they don't retain special authority afterward"
+                "Incorporator's role ends at initial board election; they don't retain special authority afterward"
               ]
             }
           },

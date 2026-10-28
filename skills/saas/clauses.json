@@ -1977,8 +1977,8 @@
       },
       "order": 10,
       "plainDescription": {
-        "en": "Which law governs this agreement, and how and where any dispute about it is resolved — courts in the governing-law jurisdiction, neutral Delaware courts, or arbitration (JAMS, AAA, ICC or LCIA).",
-        "es": "Qué ley rige este acuerdo y cómo y dónde se resuelve cualquier controversia relativa a él — tribunales de la jurisdicción de la ley aplicable, tribunales neutrales de Delaware o arbitraje (JAMS, AAA, ICC o LCIA)."
+        "en": "Which law governs this agreement, and how and where any dispute about it is resolved (courts in the governing-law jurisdiction, neutral Delaware courts, or arbitration through JAMS, AAA, ICC or LCIA).",
+        "es": "Qué ley rige este acuerdo y cómo y dónde se resuelve cualquier controversia relativa a él: tribunales de la jurisdicción de la ley aplicable, tribunales neutrales de Delaware o arbitraje (JAMS, AAA, ICC o LCIA)."
       },
       "legalContext": {
         "en": "The forum for disputes is negotiable even though the governing law is fixed. Court litigation is public with appeal rights. Arbitration is private and faster but typically final. For SaaS disputes, arbitration is increasingly popular due to confidentiality.",
@@ -2050,7 +2050,7 @@
             }
           },
           "legalText": {
-            "en": "Any dispute arising from this Agreement will be resolved exclusively in the state and federal courts located in the jurisdiction of the governing law. Each Party irrevocably submits to the exclusive jurisdiction of such courts.",
+            "en": "Any dispute arising from this Agreement will be resolved exclusively in the courts of the jurisdiction of the governing law. Each Party irrevocably submits to the exclusive jurisdiction of such courts.",
             "es": "Toda controversia derivada del presente Contrato será resuelta exclusivamente ante los juzgados y tribunales competentes de la jurisdicción de la ley aplicable. Cada Parte se somete irrevocablemente a la jurisdicción exclusiva de dichos tribunales."
           }
         },

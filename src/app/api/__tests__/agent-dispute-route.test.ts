@@ -4,7 +4,10 @@
 /**
  * Route tests for the Gavel hand-off (POST /api/v1/agent/deals/:id/dispute).
  *
- * Two contracts are pinned here:
+ * Today the escalation is planned: the route answers 501
+ * `{ error: "gavel_escalation_planned" }` after auth and scope, before any read,
+ * write or call to Gavel. The kept code path is exercised below with the
+ * availability switch mocked on. With it on, two contracts are pinned:
  *   1. With GAVEL_API_URL and GAVEL_API_KEY set, the route opens a case at
  *      `<url>/cases` with a bearer token and the documented payload, then
  *      stores the returned case id.
@@ -54,6 +57,12 @@ vi.mock("@/lib/logger", () => ({
     error: vi.fn(),
   }),
 }));
+
+const escalation = vi.hoisted(() => ({ available: true }));
+vi.mock("@/lib/gavel", async () => {
+  const actual = await vi.importActual<typeof import("@/lib/gavel")>("@/lib/gavel");
+  return { ...actual, isGavelEscalationAvailable: () => escalation.available };
+});
 
 import { POST } from "@/app/api/v1/agent/deals/[id]/dispute/route";
 
@@ -106,6 +115,7 @@ function setGavelEnv(url: string | undefined, key: string | undefined) {
 
 beforeEach(() => {
   vi.clearAllMocks();
+  escalation.available = true;
   mockAuthenticateApiKey.mockResolvedValue(AUTH);
   mockAgentDealFindUnique.mockResolvedValue(DEAL);
   mockDisputeCreate.mockImplementation(async ({ data }) => ({
@@ -285,5 +295,47 @@ describe("dispute route without Gavel configured", () => {
 
     const res = await POST(post({}), { params });
     expect(res.status).toBe(403);
+  });
+});
+
+// --- Planned (the shipped state): no call to Gavel at all ---------------------
+
+describe("dispute route while the escalation is planned", () => {
+  beforeEach(() => {
+    escalation.available = false;
+  });
+
+  it("answers 501 gavel_escalation_planned even when Gavel is configured, and touches nothing", async () => {
+    setGavelEnv("https://gavel.example.test/api/v1", "gavel_secret_key");
+    const fetchMock = vi.fn();
+    vi.stubGlobal("fetch", fetchMock);
+
+    const res = await POST(post({ reason: "x" }), { params });
+
+    expect(res.status).toBe(501);
+    expect(await res.json()).toEqual({
+      error: "gavel_escalation_planned",
+      message: "Escalation to Gavel is planned and not yet available.",
+    });
+    expect(fetchMock).not.toHaveBeenCalled();
+    expect(mockAgentDealFindUnique).not.toHaveBeenCalled();
+    expect(mockDisputeCreate).not.toHaveBeenCalled();
+  });
+
+  it("still requires authentication and the disputes:create scope first", async () => {
+    mockAuthenticateApiKey.mockResolvedValueOnce(null);
+    expect((await POST(post({}), { params })).status).toBe(401);
+
+    mockAuthenticateApiKey.mockResolvedValueOnce({
+      ...AUTH,
+      apiKey: { ...AUTH.apiKey, scopes: ["deals:read"] },
+      scopes: ["deals:read"],
+    });
+    expect((await POST(post({}), { params })).status).toBe(403);
+  });
+
+  it("is the shipped default", async () => {
+    const actual = await vi.importActual<typeof import("@/lib/gavel")>("@/lib/gavel");
+    expect(actual.isGavelEscalationAvailable()).toBe(false);
   });
 });

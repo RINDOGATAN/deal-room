@@ -20,6 +20,12 @@ history was not tracked per-release and lives only in git.
   identifying by the pseudonymization check.
 
 ### Changed
+- **Gavel wording matches Gavel's own position.** The agent-preparation pages
+  (EN, ES), `docs/a2a-contracts.md`, `docs/a2a-research.md` and `llms.txt` no
+  longer call Gavel binding, final or enforceable under the New York
+  Convention: Gavel is fast and electronic, no legal opinion has yet been
+  obtained on whether its awards are binding, the hosted service does not issue
+  awards, and escrow is on testnet only.
 - Discovery: the API key note says that `find_template`,
   `list_contract_types` and `get_deadlines` work without a key.
 - Built-in skills: input labels, hints, placeholders and clause help texts of

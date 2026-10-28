@@ -23,3 +23,21 @@ export function getGavelConfig(): { apiUrl: string; apiKey: string } | null {
  * made. Documented in /docs/agent-api, section "Disputes".
  */
 export const GAVEL_NOT_CONFIGURED_BODY = { error: "gavel_not_configured" } as const;
+
+/**
+ * Whether the escalation to Gavel is live. It is not: the hand-off below posts
+ * to `<GAVEL_API_URL>/cases`, which Gavel does not serve (Gavel files disputes
+ * at POST /v1/disputes under a clause every named party has accepted, with
+ * party ids taken from the caller's key). Until both sides are rebuilt, the
+ * route refuses with 501 and the code that calls Gavel is kept, unreached.
+ * A function, not a constant, so tests can exercise the kept code path.
+ */
+export function isGavelEscalationAvailable(): boolean {
+  return false;
+}
+
+/** Body returned (HTTP 501) while the escalation is planned. */
+export const GAVEL_ESCALATION_PLANNED_BODY = {
+  error: "gavel_escalation_planned",
+  message: "Escalation to Gavel is planned and not yet available.",
+} as const;

@@ -958,7 +958,7 @@ export function TiaPDF({
         <RunningHeader title={docTitle} dealName={data.dealName} />
         <View style={styles.annexHeader}>
           <Text style={styles.annexKicker}>
-            {isES ? "Anexo IV — documento autónomo" : "Annex IV — standalone production"}
+            {isES ? "Anexo IV (documento autónomo)" : "Annex IV — standalone production"}
           </Text>
           <Text style={styles.annexTitle}>
             {isES ? "Evaluación de Impacto de las Transferencias" : "Transfer Impact Assessment"}

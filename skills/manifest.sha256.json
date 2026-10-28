@@ -1,31 +1,31 @@
 {
   "version": 1,
-  "generatedAt": "2026-10-13T00:42:47.051Z",
+  "generatedAt": "2026-10-25T23:27:58.778Z",
   "skills": {
     "delaware-certificate-of-incorporation": {
-      "digest": "6740010b8fb6e685d05e31e160b9647c0e0bd64e23e4b1ff77e3721d702cca0f",
+      "digest": "afc92949012da31cbd2cc171de7c17f1573a01269e79d9a47dc7056fb8c2bb96",
       "files": {
         "boilerplate.json": "bf7f1dfa03dff0d9346bd4d1dd73eef82daa09c59cc02161e5027d0361bd6a4d",
-        "clauses.json": "a16b669d97142f84c68eeb46f996827c95299f161c3b72bf9b44f2982380f696",
+        "clauses.json": "ac2de4cd1af6ada6b32196d71f41beb90160e48299eb95579d710fc2f25378e9",
         "metadata.json": "41da7b2edf9aa14a1eebf18fda3749fce61274414d556725bf468dc6d1e6d2f4",
         "parameters.json": "2c21a75f0354b7a5e2d17e72804d14a22ef29882d5de5c4e1eeaa205f13473a7"
       }
     },
     "dpa": {
-      "digest": "42de3e114f64fe92f6c5305fe42869cb2a5001c6ab4534b04f03c2c4696027a1",
+      "digest": "68a7916f8de663338df88daba778714d9ac28a784136d6ba2f8767e408b66b29",
       "files": {
-        "boilerplate.json": "50476a87ccce009e992c39f74bd09d5f9c8b1bd4333cbcab6b09cb20387e2706",
-        "clauses.json": "40f80ab961576139930b2608fe22c755d3a16d0caea753683fe95d0139af5d07",
+        "boilerplate.json": "3a232c6645a52e007136a51ee766e348d1b309bf3cf7a4df0fc6f485702381aa",
+        "clauses.json": "e66ed5777935046fe9afe7836230242b77ac154fa8c1c1bd0bf14d37530a8b4d",
         "metadata.json": "2d3a5ca542882826c7273070a2e424dda2c23430d9a3e3d9798cbdccaf7a9e4c",
-        "parameters.json": "c84b9fc0b4573aa2d5f59e7c6d3d39bf8766a1448a9feee562029ff629426d28"
+        "parameters.json": "46aa03d319ea5ddf196ad4910075c3e06bdde0e1932062993e94637ba69d57a0"
       }
     },
     "msa": {
-      "digest": "f5f15062c1cf5cbc03aa9bd5d4f82a448541691040fbd9f5a7c807a8539f05c2",
+      "digest": "ac73bdf955551b46fb18df37c537d1b64ad25e4802fda7e0aab2c43bad019949",
       "files": {
         "SKILL.md": "47651317a93ea434d640010d26cdb783c2ee60bcfb02a3c4db5196c247577517",
         "boilerplate.json": "abf48b3f3aae78d0a4b3bc82ad8979f54c2a75edcce677b520937b33de161d0d",
-        "clauses.json": "f2397dbbc20d8f7cf12d41625969e9bc73a311eaf726392293564bf99fe6870b",
+        "clauses.json": "5edd49779c27a61d989f5b1071d67823d42cbe78d43775b36f30ae8f3566e474",
         "metadata.json": "21451fbfb01c39452a1cfeb6a8ebfc0a3068b46e6a914ba8c12701e1271f6700",
         "parameters.json": "e9d111cf026b461d1dbe421603fceb43f8096a857d471ccb18aae6bcf67a1083",
         "references/msa-template.md": "6583ba58636d757082bef3f7b94db189a5ee8bb588741c3286bbb5a6a588c5b0",
@@ -33,32 +33,32 @@
       }
     },
     "nda": {
-      "digest": "bcbb494790441dc9a1b8ddb3d318487bdd4770e5be3fbf7a461e6a0174dfff43",
+      "digest": "eb9dcd9a3b1b1ea8f90244060d121ef164c91300bf2f22511c7e2982a5087841",
       "files": {
         "SKILL.md": "7355a2dc0f11663cdb9fb5c37a2a798e2269a8b2b3e4b06b6b8cfdb8e13ca22f",
         "boilerplate.json": "22e6b4c94a4503b3107fab8b9cd72ecd54a0efd946710d35e20c742a95e9cad2",
-        "clauses.json": "7b8d534815869ca2247cd538054a886365386142fa3fe61b53aeb0282db3e365",
-        "metadata.json": "99c0fe36f58feedac93bf38f7a2ab97a8a1c2ac0081235749dbca8b385b9ef25",
+        "clauses.json": "1a6a12d3dfa90bc6a8b69b4420d3014e55442f300ff08c93aa6977b6ded81f44",
+        "metadata.json": "20495814c9e46cea20b70ba5dfa925741672e9c9dc07c070eb390e034227d9eb",
         "parameters.json": "e4fc6a470c950956b2a0757847859514efc54e25c6aa0c0b5259fe1b68ae4800",
         "references/nda-template.md": "f555988363a6e8a483410255c2d4495dd65b148d92fc979c1bff5794f57428c8",
         "references/review-checklist.md": "3ce59e01fefb8e9f8a5716cac472ec92752f6df0aef483b8bbcb6f85452643d9"
       }
     },
     "privacy-notice": {
-      "digest": "f187fc1b91ea838b49ec502a2c096eb07cef6dc777508578bb19c1fbfcfbc614",
+      "digest": "acf43cca87ff511477592bb519ad5578fa7a121844ea058970775cc9f13218a6",
       "files": {
-        "boilerplate.json": "ab2eb52b61d130bf54bd1c6a7bfb9ceda8cd01ae811e398919867768d673b844",
-        "clauses.json": "e972860f5b028f37b3784308655e3161895baa39ff166f78d3fc39765be5c36e",
+        "boilerplate.json": "1a6e7db7424292b642de190e97e556a88a3acdffcf58e03accb6cfd0baddfda2",
+        "clauses.json": "b506277fb0fe3e5e161e1bbdd26cde0abcb7631d56d7baacac61df9d4765b139",
         "metadata.json": "baf1dc7d037db6e01438da78c64058ba749f12173fd4b2d9ee120b01786dc49f",
         "parameters.json": "f6a0fbad2c0143ec1af6055c6cc6d28f7e7cd1049a3b8742c093b8cb2ada1118"
       }
     },
     "saas": {
-      "digest": "7ce8d44d7082af94081e4743311bf2e146810507dc9d921b8f6b520d5d407544",
+      "digest": "49ce7d1a71736b1aa6a6b131d39ed341066aea5ac2d4857a94d6c3f481848f48",
       "files": {
         "SKILL.md": "ca54a055064082fd0b204cbb886f62cce85b031040ec920dcdec4d290bc69312",
         "boilerplate.json": "3088f69445a6fb0ee6bfbc71ac67194cf7290638633ccca8937c3d3ed33cfc90",
-        "clauses.json": "3fb0436a4f5e8402f2407915a7345bdb570ed8bb77377b792a003cd39a9587c6",
+        "clauses.json": "bab2e8f6db14d55a16f32a79c479bd830740086f3ba764374e613a7b83e510fc",
         "metadata.json": "f9b1971e782836a3913040ed17dcf04a30b44ec7dc40f8e62efe0dd6805c0d72",
         "parameters.json": "1e7e40fec4f401c1bbbcf807914289a2d04b8972f8eb20e7569a29ec2d367a8d",
         "references/review-checklist.md": "1cd89ad102e4bb77ead732152281c4f73925485de65b450fb7821bde21460414",
@@ -66,5 +66,5 @@
       }
     }
   },
-  "digest": "bd1cb2aa88bf82c61c3241b9f5998f82986e9a624f0a11087b9ceead34532e2b"
+  "digest": "5caa98fb69798b345139bb505293f5ba2a562aab1f678a64be05cdeca648b349"
 }

@@ -132,8 +132,8 @@ export function buildObligationsLedger({
         ? `Notify the Controller of a personal data breach within ${window} hours — unconditional on internal triage`
         : "Notify the Controller of a personal data breach without undue delay — unconditional on internal triage",
       window
-        ? `Notificar al Responsable una violación de datos personales en un plazo de ${window} horas — sin condicionarlo a la evaluación interna`
-        : "Notificar al Responsable una violación de datos personales sin dilación indebida — sin condicionarlo a la evaluación interna"
+        ? `Notificar al Responsable una violación de datos personales en un plazo de ${window} horas, sin condicionarlo a la evaluación interna`
+        : "Notificar al Responsable una violación de datos personales sin dilación indebida, sin condicionarlo a la evaluación interna"
     );
   }
 

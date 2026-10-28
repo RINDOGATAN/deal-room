@@ -464,40 +464,40 @@
       ],
       "optionLabels": {
         "tech-encryption-transit": {
-          "en": "Technical — encryption in transit (TLS 1.2+)",
-          "es": "Técnica — cifrado en tránsito (TLS 1.2+)"
+          "en": "Technical: encryption in transit (TLS 1.2+)",
+          "es": "Técnica: cifrado en tránsito (TLS 1.2+)"
         },
         "tech-encryption-rest": {
-          "en": "Technical — encryption at rest with strong algorithms",
-          "es": "Técnica — cifrado en reposo con algoritmos robustos"
+          "en": "Technical: encryption at rest with strong algorithms",
+          "es": "Técnica: cifrado en reposo con algoritmos robustos"
         },
         "tech-eu-held-keys": {
-          "en": "Technical — encryption keys held in the EEA / by the Controller (HYOK/EKM)",
-          "es": "Técnica — claves de cifrado custodiadas en el EEE o por el Responsable (HYOK/EKM)"
+          "en": "Technical: encryption keys held in the EEA / by the Controller (HYOK/EKM)",
+          "es": "Técnica: claves de cifrado custodiadas en el EEE o por el Responsable (HYOK/EKM)"
         },
         "tech-client-side-encryption": {
-          "en": "Technical — client-side / end-to-end encryption (processor never holds plaintext)",
-          "es": "Técnica — cifrado en cliente o de extremo a extremo (el encargado nunca accede al texto en claro)"
+          "en": "Technical: client-side / end-to-end encryption (processor never holds plaintext)",
+          "es": "Técnica: cifrado en cliente o de extremo a extremo (el encargado nunca accede al texto en claro)"
         },
         "tech-pseudonymization": {
-          "en": "Technical — pseudonymization before transfer, re-identification keys kept in the EEA",
-          "es": "Técnica — seudonimización previa a la transferencia, con claves de reidentificación en el EEE"
+          "en": "Technical: pseudonymization before transfer, re-identification keys kept in the EEA",
+          "es": "Técnica: seudonimización previa a la transferencia, con claves de reidentificación en el EEE"
         },
         "tech-eu-residency": {
-          "en": "Technical — data stored and processed in EEA regions",
-          "es": "Técnica — datos almacenados y tratados en regiones del EEE"
+          "en": "Technical: data stored and processed in EEA regions",
+          "es": "Técnica: datos almacenados y tratados en regiones del EEE"
         },
         "tech-split-processing": {
-          "en": "Technical — split or multi-party processing across jurisdictions",
-          "es": "Técnica — tratamiento fragmentado o multiparte entre jurisdicciones"
+          "en": "Technical: split or multi-party processing across jurisdictions",
+          "es": "Técnica: tratamiento fragmentado o multiparte entre jurisdicciones"
         },
         "org-request-policy": {
-          "en": "Organizational — documented government-request handling policy with legal review",
-          "es": "Organizativa — política documentada de gestión de solicitudes gubernamentales con revisión jurídica"
+          "en": "Organizational: documented government-request handling policy with legal review",
+          "es": "Organizativa: política documentada de gestión de solicitudes gubernamentales con revisión jurídica"
         },
         "org-audits-review": {
-          "en": "Organizational — independent audits (ISO 27001/SOC 2) and scheduled TIA reviews",
-          "es": "Organizativa — auditorías independientes (ISO 27001/SOC 2) y revisiones periódicas de la evaluación"
+          "en": "Organizational: independent audits (ISO 27001/SOC 2) and scheduled TIA reviews",
+          "es": "Organizativa: auditorías independientes (ISO 27001/SOC 2) y revisiones periódicas de la evaluación"
         }
       },
       "group": {

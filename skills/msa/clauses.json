@@ -2175,8 +2175,8 @@
       },
       "order": 11,
       "plainDescription": {
-        "en": "Which law governs this agreement, and how and where any dispute about it is resolved — courts in the governing-law jurisdiction, neutral Delaware courts, or arbitration (JAMS, AAA, ICC or LCIA).",
-        "es": "Qué ley rige este acuerdo y cómo y dónde se resuelve cualquier controversia relativa a él — tribunales de la jurisdicción de la ley aplicable, tribunales neutrales de Delaware o arbitraje (JAMS, AAA, ICC o LCIA)."
+        "en": "Which law governs this agreement, and how and where any dispute about it is resolved (courts in the governing-law jurisdiction, neutral Delaware courts, or arbitration through JAMS, AAA, ICC or LCIA).",
+        "es": "Qué ley rige este acuerdo y cómo y dónde se resuelve cualquier controversia relativa a él: tribunales de la jurisdicción de la ley aplicable, tribunales neutrales de Delaware o arbitraje (JAMS, AAA, ICC o LCIA)."
       },
       "legalContext": {
         "en": "For services disputes, the choice of forum can significantly impact cost and convenience. Arbitration is popular for professional services due to confidentiality and specialized arbitrators.",
@@ -2248,7 +2248,7 @@
             }
           },
           "legalText": {
-            "en": "Any dispute arising from this Agreement will be resolved exclusively in the state and federal courts located in the jurisdiction of the governing law. Each Party irrevocably submits to the exclusive jurisdiction of such courts.",
+            "en": "Any dispute arising from this Agreement will be resolved exclusively in the courts of the jurisdiction of the governing law. Each Party irrevocably submits to the exclusive jurisdiction of such courts.",
             "es": "Toda controversia derivada del presente Contrato se resolverá exclusivamente ante los juzgados y tribunales de la jurisdicción de la ley aplicable. Cada Parte se somete irrevocablemente a la jurisdicción exclusiva de dichos tribunales."
           }
         },
