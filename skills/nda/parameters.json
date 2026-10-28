@@ -2,13 +2,47 @@
   "version": "1.0",
   "parameters": [
     {
+      "id": "nda-type",
+      "token": "nda type",
+      "scope": "*",
+      "type": "choice",
+      "required": false,
+      "default": "one-way",
+      "boilerplateVariable": "ndaType",
+      "negotiable": true,
+      "label": {
+        "en": "Who shares confidential information?",
+        "es": "¿Quién comparte información confidencial?"
+      },
+      "hint": {
+        "en": "One-way: only Party A (the Disclosing Party) shares information, and only Party B takes on duties of confidentiality. Mutual: both parties share information, and each protects what it receives from the other.",
+        "es": "Unilateral: solo la Parte A (la Parte Divulgante) comparte información, y solo la Parte B asume deberes de confidencialidad. Mutuo: ambas partes comparten información, y cada una protege la que recibe de la otra. Elige «Mutuo» si tú también vas a recibir información de la otra parte."
+      },
+      "options": [
+        "one-way",
+        "mutual"
+      ],
+      "optionLabels": {
+        "one-way": {
+          "en": "One-way: Party A discloses",
+          "es": "Unilateral: divulga la Parte A"
+        },
+        "mutual": {
+          "en": "Mutual: both parties disclose",
+          "es": "Mutuo: divulgan ambas partes"
+        }
+      }
+    },
+    {
       "id": "dispute-forum-city",
       "token": "dispute forum city",
       "scope": "dispute-resolution",
       "type": "text",
       "required": true,
       "default": "Madrid",
-      "jurisdictions": ["SPAIN"],
+      "jurisdictions": [
+        "SPAIN"
+      ],
       "label": {
         "en": "City of the competent courts",
         "es": "Ciudad de los juzgados y tribunales competentes"

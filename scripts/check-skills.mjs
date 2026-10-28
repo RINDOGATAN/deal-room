@@ -338,6 +338,15 @@ function checkBoilerplateVars(skill, boilerplate, parameters) {
       if (p.boilerplateVariable) declared.add(p.boilerplateVariable);
     }
   }
+  // Conditional variables (alternative wordings) are declared in the
+  // boilerplate itself; each must end in a variant without showIf, so the
+  // variable is never left empty (an empty value would print "{name}").
+  for (const [name, variants] of Object.entries(boilerplate?.conditionalVariables ?? {})) {
+    declared.add(name);
+    if (!Array.isArray(variants) || variants.length === 0 || variants[variants.length - 1].showIf) {
+      logError(skill, "boilerplate.json", `conditionalVariables.${name}: the last variant must have no showIf (the fallback)`);
+    }
+  }
   const re = /\{([a-zA-Z][a-zA-Z0-9_]*)\}/g;
   const seen = new Set();
   walkValues(boilerplate, "", (val, path) => {
