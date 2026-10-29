@@ -22,7 +22,7 @@ faq:
 
 ## Qué es y cuándo se utiliza
 
-El contrato de encargo del tratamiento (también llamado acuerdo de tratamiento de datos o DPA, por sus siglas en inglés) es el contrato que firma una empresa cuando otra trata datos personales por su cuenta. Quien decide para qué y cómo se usan los datos es el responsable del tratamiento; quien realiza el tratamiento por cuenta de aquel es el encargado. El artículo 28 del RGPD exige que esta relación se rija por un contrato escrito con un contenido mínimo.
+El contrato de encargo del tratamiento (también llamado acuerdo de tratamiento de datos o DPA, por sus siglas en inglés) es el contrato que firma una empresa cuando otra trata datos personales por su cuenta. Quien decide para qué y cómo se usan los datos es el responsable del tratamiento; quien realiza el tratamiento por cuenta de aquel es el encargado. El [artículo 28 del RGPD](https://dposchool.com/gdpr/article/28) exige que esta relación se rija por un contrato escrito con un contenido mínimo.
 
 El modelo de Dealroom está pensado para empresas SaaS y prestadores de servicios que tratan datos personales de sus clientes, conforme al RGPD de la UE, al RGPD del Reino Unido y, cuando proceda, a la CCPA/CPRA. Se integra en un contrato de servicios principal, como un [contrato SaaS](/es/contracts/saas-agreement) o un [contrato marco de servicios](/es/contracts/master-services-agreement), y prevalece sobre él en materia de protección de datos.
 
@@ -38,7 +38,7 @@ Esta cláusula fija qué datos puede tratar el encargado y con qué fin: solo ca
 
 ### Instrucciones de tratamiento
 
-El artículo 28.3.a) exige que el encargado actúe solo según instrucciones documentadas. Las opciones van desde instrucciones escritas estrictas, pasando por instrucciones documentadas con un margen técnico razonable para asuntos rutinarios (parches de seguridad, copias de seguridad), hasta considerar el propio contrato de servicios como las instrucciones.
+El [artículo 28.3.a)](https://dposchool.com/gdpr/article/28#3) exige que el encargado actúe solo según instrucciones documentadas. Las opciones van desde instrucciones escritas estrictas, pasando por instrucciones documentadas con un margen técnico razonable para asuntos rutinarios (parches de seguridad, copias de seguridad), hasta considerar el propio contrato de servicios como las instrucciones.
 
 ### Subencargados
 
