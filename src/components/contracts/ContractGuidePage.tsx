@@ -152,6 +152,13 @@ export function ContractGuidePage({ slug, locale }: { slug: string; locale: Page
           </div>
           <div className="mt-4">
             <PriceLine locale={locale} />
+            {def.contractType === "DPA" && (
+              <p className="mt-2 text-sm" data-testid="dpa-lawyer-line">
+                <a href={copy.dpaLawyerHref} className="text-primary hover:underline">
+                  {copy.dpaLawyerText}
+                </a>
+              </p>
+            )}
           </div>
         </section>
 

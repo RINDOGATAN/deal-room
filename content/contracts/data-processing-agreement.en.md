@@ -16,6 +16,8 @@ faq:
     a: "When the processor is established in the United States or another country outside the EEA, Dealroom's DPA adds Annex III, which incorporates the EU Standard Contractual Clauses (Implementing Decision (EU) 2021/914, Module Two, controller to processor) by reference. If the processor holds an active EU-U.S. Data Privacy Framework certification, the transfer relies on the 2023 adequacy decision and the SCCs apply as a fallback."
   - q: "Can a DPA be governed by a law other than an EU or UK law?"
     a: "Yes. Besides the standard forums for each jurisdiction, the governing-law clause offers a custom option in which the parties write in the law and the courts they want, for example a US company keeping a GDPR-based DPA under its home state's law. Disputes under the incorporated SCCs still go to the forum the SCCs designate, because that election is mandatory."
+  - q: "Does the CCPA require a DPA?"
+    a: "The CCPA does not use the term, but it requires a written contract with each service provider or contractor that limits how the provider may use the personal information it receives. Dealroom's DPA includes those terms when California applies, so one agreement can cover both the GDPR and the CCPA."
 ---
 
 ## What it is and when it is used

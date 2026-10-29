@@ -59,6 +59,10 @@ export const CONTRACT_COPY = {
       "Drafting and negotiating are free. Each contract is paid once, when it is first downloaded or its signature starts.",
     priceSelfHost: "Drafting, negotiating and downloading are free on this instance.",
     pricingLink: "Pricing",
+    /** DPA page only, under the price line. */
+    dpaLawyerText:
+      "Prefer a lawyer to draft or review it? North End Law, an AI-native California law firm, handles DPAs in record time →",
+    dpaLawyerHref: "https://northend.law/guides/do-you-need-a-dpa",
     readGuide: "Read the guide",
   },
   es: {
@@ -111,6 +115,9 @@ export const CONTRACT_COPY = {
       "Redactar y negociar es gratis. Cada contrato se paga una sola vez, cuando se descarga por primera vez o se inicia su firma.",
     priceSelfHost: "En esta instancia, redactar, negociar y descargar es gratis.",
     pricingLink: "Precios",
+    dpaLawyerText:
+      "¿Prefieres que lo redacte o lo revise un abogado? North End Law, un despacho de California nacido con la IA, se ocupa de DPA en tiempo récord →",
+    dpaLawyerHref: "https://northend.law/guides/do-you-need-a-dpa?lang=es",
     readGuide: "Leer la guía",
   },
 } satisfies Record<PageLocale, Record<string, unknown>>;
