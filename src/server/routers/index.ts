@@ -23,6 +23,7 @@ import { journeyRouter } from "./journey";
 import { aiRouter } from "./ai";
 import { diagnosticsRouter } from "./diagnostics";
 import { apiKeysRouter } from "./apiKeys";
+import { reviewInterestRouter } from "./reviewInterest";
 
 export const appRouter = createTRPCRouter({
   deal: dealRouter,
@@ -49,6 +50,8 @@ export const appRouter = createTRPCRouter({
   ai: aiRouter,
   // Settings, API keys: the signed-in person's own agent API keys.
   apiKeys: apiKeysRouter,
+  // Anonymous lawyer-review interest counts on finished DPAs.
+  reviewInterest: reviewInterestRouter,
   // Test-only failing procedure; off unless FAILURE_PROBE_ENABLED=true.
   diagnostics: diagnosticsRouter,
 });

@@ -9,6 +9,10 @@
  *
  *   node scripts/indexnow.mjs            # every sitemap address
  *   node scripts/indexnow.mjs /contracts/nda /es/contracts/nda
+ *
+ * Runs automatically after each successful production deployment
+ * (.github/workflows/indexnow.yml) with only the pages whose date in
+ * src/lib/page-dates.json changed (scripts/page-dates-diff.mjs).
  */
 const HOST = "dealroom.todo.law";
 const KEY = "af51fd7577abcd4a832b4dc545d3f568";

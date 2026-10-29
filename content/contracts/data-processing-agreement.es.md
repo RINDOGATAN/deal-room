@@ -16,6 +16,8 @@ faq:
     a: "Cuando el encargado está establecido en Estados Unidos o en otro país fuera del EEE, el acuerdo añade el Anexo III, que incorpora por referencia las Cláusulas Contractuales Tipo de la UE (Decisión de Ejecución (UE) 2021/914, Módulo Dos, de responsable a encargado). Si el encargado tiene una certificación activa en el Marco de Privacidad de Datos UE-EE.UU., la transferencia se ampara en la decisión de adecuación de 2023 y las cláusulas quedan como mecanismo subsidiario."
   - q: "¿Puede someterse el contrato de encargo a una ley distinta de la española?"
     a: "Sí. Además de los foros previstos para cada jurisdicción, la cláusula de ley aplicable ofrece una opción personalizada en la que las partes indican la ley y los tribunales que deseen. Los litigios derivados de las Cláusulas Contractuales Tipo incorporadas siguen sometidos al Derecho español y a los tribunales de Madrid, porque esa elección es obligatoria según las propias cláusulas."
+  - q: "¿Exige la CCPA un DPA?"
+    a: "La CCPA no usa ese término, pero exige un contrato por escrito con cada proveedor de servicios o contratista que limite cómo puede usar la información personal que recibe. El DPA de Dealroom incluye esas cláusulas cuando se aplica California, de modo que un solo acuerdo puede cubrir el RGPD y la CCPA."
 ---
 
 ## Qué es y cuándo se utiliza

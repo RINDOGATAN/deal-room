@@ -72,6 +72,27 @@ jobs:
       - name: Build
         run: npm run build
 
+  # The sitemap's <lastmod> comes from src/lib/page-dates.json, written from
+  # the git history by scripts/page-dates.mjs. On a pull request, fail when a
+  # content or skill change was committed without refreshing that file.
+  # Full history is needed (the dates are per-file last commits).
+  page-dates:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Page dates match the history
+        run: node scripts/page-dates.mjs --check
+
   # The paid path, end to end: draft, agree, the 402 at download, a checkout
   # on Stripe's official mock server (stripe/stripe-mock), the webhook signed
   # with a test secret, the download and the signature

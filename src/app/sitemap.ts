@@ -3,11 +3,14 @@
 
 import type { MetadataRoute } from "next";
 import { CONTRACT_PAGES, SITE_URL, contractPath, developersPath } from "@/lib/contract-pages-paths";
+import { lastModifiedFor } from "@/lib/page-dates";
 
 /**
  * /sitemap.xml: the public pages (no signed-in routes such as
  * /marketplace), plus every contract guide in English and Spanish with
  * its language alternates, and the developer quick start in both. Replaces the former static public/sitemap.xml.
+ * The contract guides and their index carry `lastModified`; the other
+ * pages have no recorded content date and so carry none.
  */
 
 export const dynamic = "force-static";
@@ -32,16 +35,18 @@ const STATIC_PAGES: [path: string, changeFrequency: Entry["changeFrequency"], pr
 ];
 
 function contractEntries(slug: string | undefined, priority: number): Entry[] {
-  const languages = {
-    en: `${SITE_URL}${contractPath("en", slug)}`,
-    es: `${SITE_URL}${contractPath("es", slug)}`,
-  };
-  return (["en", "es"] as const).map((locale) => ({
-    url: languages[locale],
-    changeFrequency: "monthly",
-    priority,
-    alternates: { languages },
-  }));
+  const paths = { en: contractPath("en", slug), es: contractPath("es", slug) };
+  const languages = { en: `${SITE_URL}${paths.en}`, es: `${SITE_URL}${paths.es}` };
+  return (["en", "es"] as const).map((locale) => {
+    const lastModified = lastModifiedFor(paths[locale]);
+    return {
+      url: languages[locale],
+      ...(lastModified ? { lastModified } : {}),
+      changeFrequency: "monthly",
+      priority,
+      alternates: { languages },
+    };
+  });
 }
 
 /** The developer quick start, in both languages, and its Markdown twins. */

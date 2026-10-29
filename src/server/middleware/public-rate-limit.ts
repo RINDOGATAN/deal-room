@@ -38,7 +38,8 @@ export type PublicLimitName =
   | "signing-bundle"
   | "signing-callback"
   | "api-key-create"
-  | "credits-checkout";
+  | "credits-checkout"
+  | "review-interest";
 
 /** Per-identity limits. Identity is the client IP unless noted. */
 export const PUBLIC_LIMITS: Record<
@@ -67,6 +68,9 @@ export const PUBLIC_LIMITS: Record<
   "api-key-create": { limit: 10, windowMs: HOUR },
   // Keyed by user id: Settings, API keys (open a credit-pack checkout).
   "credits-checkout": { limit: 10, windowMs: HOUR },
+  // tRPC reviewInterest.record: anonymous, writes a row each time (at most
+  // four per DPA view: shown, clicked, answered, link).
+  "review-interest": { limit: 20, windowMs: MINUTE },
 };
 
 type HeaderSource = { get(name: string): string | null };

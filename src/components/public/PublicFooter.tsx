@@ -46,7 +46,7 @@ export function PublicFooter({ locale }: { locale: PageLocale }) {
 
         <nav aria-label={copy.menu} className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1.5">
           <Link href={contractPath(locale)} className={link}>
-            {copy.contracts}
+            {copy.allTemplates}
           </Link>
           {dot}
           <Link href={developersPath(locale)} className={link}>

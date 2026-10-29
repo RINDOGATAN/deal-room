@@ -5,6 +5,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowRight, Bot, FileText } from "lucide-react";
 import {
+  chooseRelated,
   contractPath,
   loadContractPage,
   pageForSlug,
@@ -31,9 +32,10 @@ export function ContractGuidePage({ slug, locale }: { slug: string; locale: Page
   const jurisdictions = entry?.jurisdictions ?? [];
   const languages = entry?.languages ?? [];
   const headings = sectionHeadings(page.body);
-  const related = page.related
-    .map((s) => ({ slug: s, page: pageForSlug(s) ? loadContractPage(s, locale) : null }))
-    .filter((r) => r.page);
+  const related = chooseRelated(slug, page.related, (s) => loadContractPage(s, locale) !== null).map((s) => ({
+    slug: s,
+    page: loadContractPage(s, locale)!,
+  }));
   const other: PageLocale = locale === "en" ? "es" : "en";
   const agentJsonLd = contractAgentJsonLd({
     locale,
@@ -150,6 +152,13 @@ export function ContractGuidePage({ slug, locale }: { slug: string; locale: Page
           </div>
           <div className="mt-4">
             <PriceLine locale={locale} />
+            {def.contractType === "DPA" && (
+              <p className="mt-2 text-sm" data-testid="dpa-lawyer-line">
+                <a href={copy.dpaLawyerHref} className="text-primary hover:underline">
+                  {copy.dpaLawyerText}
+                </a>
+              </p>
+            )}
           </div>
         </section>
 
@@ -163,7 +172,7 @@ export function ContractGuidePage({ slug, locale }: { slug: string; locale: Page
                     href={contractPath(locale, r.slug)}
                     className="block border border-border rounded-lg bg-card p-4 hover:border-primary transition-colors"
                   >
-                    <span className="font-semibold">{r.page!.heading}</span>
+                    <span className="font-semibold">{r.page.heading}</span>
                   </Link>
                 </li>
               ))}

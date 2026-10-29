@@ -6,6 +6,8 @@ heading: "Acuerdo de confidencialidad (NDA)"
 summary: "El acuerdo de confidencialidad permite a una empresa compartir información sensible con otra con una finalidad concreta, como valorar una posible operación, mientras la empresa que la recibe se compromete a guardar secreto y a utilizarla solo para esa finalidad."
 related: ["master-services-agreement", "services-agreement-spain", "ip-assignment-spain", "term-sheet"]
 faq:
+  - q: "¿Qué es un NDA?"
+    a: "Un NDA (acuerdo de confidencialidad) es el contrato por el que una o las dos partes se comprometen a no revelar ni usar para otros fines la información que se comparten. Es mutuo cuando las dos partes comparten información, y unilateral cuando solo una la entrega."
   - q: "¿Qué diferencia hay entre un NDA mutuo y uno unilateral?"
     a: "En un NDA unilateral solo una de las partes comparte información confidencial y solo la otra asume obligaciones de secreto. En un NDA mutuo ambas partes comparten información y cada una protege la de la otra. El acuerdo de Dealroom está redactado como unilateral: identifica una Parte Divulgante y una Parte Receptora, y las obligaciones de secreto recaen sobre la Parte Receptora."
   - q: "¿Cuánto tiempo debe durar un acuerdo de confidencialidad?"
@@ -19,6 +21,8 @@ faq:
 ---
 
 ## Qué es y cuándo se utiliza
+
+Un NDA (acuerdo de confidencialidad) es el contrato por el que una o las dos partes se comprometen a no revelar ni usar para otros fines la información que se comparten. Es mutuo cuando las dos partes comparten información, y unilateral cuando solo una la entrega.
 
 El acuerdo de confidencialidad, conocido también como NDA (por sus siglas en inglés, *non-disclosure agreement*), es el contrato por el que una empresa comparte información sensible con otra y la receptora se obliga a mantenerla en secreto. En el modelo de Dealroom la información se comunica para una "Finalidad": evaluar o desarrollar una posible relación comercial entre las partes.
 

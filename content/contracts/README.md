@@ -33,8 +33,11 @@ faq:
 - `title`: the search result title, about 50 to 60 characters, built around
   the words people search for. " | Dealroom" is added by the site.
 - `description`: the search result text, about 140 to 160 characters.
-- `related`: slugs of other pages (they become links at the end).
-- `faq`: four or five questions. They are shown on the page and published as
+- `related`: slugs of other pages, by family (they become the "Related
+  contracts" links at the end). The page shows three or four: the first four
+  of this list, topped up from the same group and then the most used guides
+  when it has fewer than three.
+- `faq`: four to six questions. They are shown on the page and published as
   structured data.
 
 ## Body
@@ -48,3 +51,10 @@ page.
 Writing rules: plain business English and Castilian Spanish (Spain), no
 marketing tone, no long dashes (use commas, parentheses or a full stop). State
 only what the skill itself contains.
+
+## Dates
+
+The sitemap's last-modified date of each page comes from
+`src/lib/page-dates.json`. After committing a change to a page or to a skill
+kept in this repository, run `npm run seo:dates` and commit the file it
+writes; CI fails a pull request whose file does not match the history.

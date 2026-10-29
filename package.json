@@ -8,6 +8,9 @@
   },
   "scripts": {
     "seo:indexnow": "node scripts/indexnow.mjs",
+    "seo:dates": "node scripts/page-dates.mjs",
+    "check:dates": "node scripts/page-dates.mjs --check",
+    "report:review-interest": "node scripts/count-review-interest.mjs",
     "dev": "next dev",
     "build": "prisma migrate deploy && prisma generate && next build",
     "start": "next start",

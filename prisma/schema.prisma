@@ -1142,6 +1142,25 @@ model Feedback {
   @@map("feedback")
 }
 
+// Lawyer-review interest on finished DPAs: anonymous counts only. No user,
+// deal, address or browser column by design; the allowed values are
+// enforced by the reviewInterest tRPC router (src/lib/review-interest.ts).
+model ReviewInterestEvent {
+  id           String   @id @default(cuid())
+  /// shown | clicked | answered | california_link
+  event        String
+  /// california | us_other | eu | uk | elsewhere (answered, california_link)
+  jurisdiction String?
+  /// two_hours | same_day | this_week (answered, california_link)
+  speed        String?
+  /// en | es
+  locale       String
+  createdAt    DateTime @default(now())
+
+  @@index([event])
+  @@map("review_interest_events")
+}
+
 // ============================================================
 // NEGOTIATION USAGE METERING (Phase 1)
 // ============================================================
