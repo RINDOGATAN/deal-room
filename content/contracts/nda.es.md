@@ -9,7 +9,7 @@ faq:
   - q: "¿Qué es un NDA?"
     a: "Un NDA (acuerdo de confidencialidad) es el contrato por el que una o las dos partes se comprometen a no revelar ni usar para otros fines la información que se comparten. Es mutuo cuando las dos partes comparten información, y unilateral cuando solo una la entrega."
   - q: "¿Qué diferencia hay entre un NDA mutuo y uno unilateral?"
-    a: "En un NDA unilateral solo una de las partes comparte información confidencial y solo la otra asume obligaciones de secreto. En un NDA mutuo ambas partes comparten información y cada una protege la de la otra. El acuerdo de Dealroom está redactado como unilateral: identifica una Parte Divulgante y una Parte Receptora, y las obligaciones de secreto recaen sobre la Parte Receptora."
+    a: "En un NDA unilateral solo una de las partes comparte información confidencial y solo la otra asume obligaciones de secreto. En un NDA mutuo ambas partes comparten información y cada una protege la de la otra. El NDA de Dealroom puede ser de los dos tipos: eliges unilateral o mutuo al crearlo. Es unilateral salvo que elijas lo contrario."
   - q: "¿Cuánto tiempo debe durar un acuerdo de confidencialidad?"
     a: "Hay dos plazos distintos. La vigencia del acuerdo (1, 2 o 3 años en Dealroom) es el periodo en el que pueden comunicarse nuevas informaciones. La duración de la confidencialidad (2, 3 o 5 años tras su finalización, o indefinida para los secretos empresariales) es el tiempo durante el que subsiste el deber de secreto. Los tribunales suelen considerar razonables plazos de 2 a 5 años para la mayoría de la información comercial."
   - q: "¿Qué información no queda protegida por un NDA?"
@@ -33,7 +33,7 @@ Se firma antes de las conversaciones iniciales sobre una colaboración, de la di
 - En un **NDA unilateral**, una parte divulga y la otra recibe. Solo la parte receptora asume obligaciones de confidencialidad.
 - En un **NDA mutuo** (o bilateral), ambas partes divulgan y cada una protege la información de la otra.
 
-El acuerdo de Dealroom está redactado como **unilateral**. El encabezamiento identifica una Parte Divulgante y una Parte Receptora, y las obligaciones principales (guardar secreto, usar la información solo para la Finalidad, devolverla o destruirla al final) recaen sobre la Parte Receptora. Algunas estipulaciones obligan a ambas partes por igual (no captación, cesión, la opción "equilibrada" de remedios y la resolución con preaviso), pero no existe una opción que convierta el documento en un NDA plenamente mutuo, por lo que los papeles deben corresponder al sentido real en que circulará la información.
+El NDA de Dealroom puede redactarse de las dos formas: al crearlo eliges quién comparte información confidencial, y es unilateral salvo que elijas mutuo. En la forma unilateral, el encabezamiento identifica una Parte Divulgante y una Parte Receptora, y las obligaciones principales (guardar secreto, usar la información solo para la Finalidad, devolverla o destruirla al final) recaen sobre la Parte Receptora. En la forma mutua, ambas partes asumen esas obligaciones respecto de lo que reciben. Elige la forma que corresponda al sentido real en que circulará la información.
 
 ## Quién lo firma y en qué condición
 
