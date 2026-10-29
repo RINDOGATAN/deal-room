@@ -48,6 +48,8 @@ import {
 } from "@/components/ui/dialog";
 import { useContractMessages } from "@/lib/use-contract-messages";
 import { dealHasTia } from "@/lib/dpa-checks";
+import { showsReviewInterest } from "@/lib/review-interest";
+import { ReviewInterest } from "@/components/review-interest/ReviewInterest";
 import { buildObligationsLedger } from "@/lib/obligations";
 import { StatusNote } from "@/components/ui/status-note";
 import { CheckoutReturn, PaidDownloads, useDealPayment } from "@/components/billing/ContractPayment";
@@ -667,6 +669,11 @@ function DealDetailContent({ dealId }: { dealId: string }) {
             </div>
           );
         })()}
+
+      {/* Lawyer-review interest: one line under a finished DPA. */}
+      {showsReviewInterest(deal.contractTemplate?.contractType, deal.status) && (
+        <ReviewInterest dealId={deal.id} locale={locale} />
+      )}
 
       {/* Progress */}
       {progress && (

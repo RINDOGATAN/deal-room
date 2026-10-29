@@ -12,6 +12,8 @@ import type { PageLocale } from "@/lib/contract-pages-paths";
 export const NAV_COPY = {
   en: {
     contracts: "Contracts",
+    /** Footer link to the index of every contract guide. */
+    allTemplates: "All templates",
     developers: "Developers",
     agents: "Agents",
     docs: "Docs",
@@ -30,6 +32,7 @@ export const NAV_COPY = {
   },
   es: {
     contracts: "Contratos",
+    allTemplates: "Todas las plantillas",
     developers: "Desarrolladores",
     agents: "Agentes",
     docs: "Documentación",

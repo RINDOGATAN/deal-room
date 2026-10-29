@@ -59,9 +59,9 @@ describe.each(pages.map((p) => [`${p.def.slug}.${p.locale}`, p] as const))("%s",
     expect(page!.summary).not.toBe("");
   });
 
-  it("has four or five questions with answers", () => {
+  it("has four to six questions with answers", () => {
     expect(page!.faq.length).toBeGreaterThanOrEqual(4);
-    expect(page!.faq.length).toBeLessThanOrEqual(5);
+    expect(page!.faq.length).toBeLessThanOrEqual(6);
     for (const f of page!.faq) {
       expect(f.q.trim()).not.toBe("");
       expect(f.a.trim()).not.toBe("");

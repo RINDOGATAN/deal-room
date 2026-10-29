@@ -71,6 +71,52 @@ export const CONTRACT_PAGES: readonly ContractPageDef[] = [
   { slug: "california-residential-lease", contractType: "RESIDENTIAL_TENANCY_US_CA", group: "property" },
 ];
 
+/** The most used guides, first, for filling a short related list. */
+export const KEY_CONTRACT_SLUGS: readonly string[] = [
+  "data-processing-agreement",
+  "nda",
+  "consulting-agreement",
+  "software-development-agreement",
+  "advisory-agreement",
+  "convertible-note",
+];
+
+export const RELATED_MIN = 3;
+export const RELATED_MAX = 4;
+
+/**
+ * The "Related contracts" links of a guide: the page's own `related` list
+ * (chosen by family) first, then other guides of the same group, then the
+ * key guides, until there are at least three; never more than four, never
+ * the page itself, and only guides that exist in the page's language
+ * (`available`).
+ */
+export function chooseRelated(
+  slug: string,
+  curated: readonly string[],
+  available: (slug: string) => boolean,
+): string[] {
+  const out: string[] = [];
+  const add = (s: string) => {
+    if (out.length < RELATED_MAX && s !== slug && !out.includes(s) && pageForSlug(s) && available(s)) out.push(s);
+  };
+  curated.forEach(add);
+  if (out.length >= RELATED_MIN) return out;
+  const rank = (s: string) => {
+    const i = KEY_CONTRACT_SLUGS.indexOf(s);
+    return i === -1 ? KEY_CONTRACT_SLUGS.length : i;
+  };
+  const group = pageForSlug(slug)?.group;
+  const sameGroup = CONTRACT_PAGES.filter((p) => p.group === group)
+    .map((p) => p.slug)
+    .sort((a, b) => rank(a) - rank(b));
+  for (const s of [...sameGroup, ...KEY_CONTRACT_SLUGS]) {
+    if (out.length >= RELATED_MIN) break;
+    add(s);
+  }
+  return out;
+}
+
 export function pageForSlug(slug: string): ContractPageDef | undefined {
   return CONTRACT_PAGES.find((p) => p.slug === slug);
 }

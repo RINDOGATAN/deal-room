@@ -1,0 +1,67 @@
+name: IndexNow
+
+# After a production deployment succeeds, tell the IndexNow search engines
+# about the public pages whose content date changed since the previous
+# successful production deployment (src/lib/page-dates.json). Nothing is
+# sent when no date moved. The IndexNow key is public by design (served at
+# /<key>.txt), so no secret is involved.
+on: deployment_status
+
+permissions:
+  contents: read
+  deployments: read
+
+concurrency:
+  group: indexnow
+  cancel-in-progress: false
+
+jobs:
+  ping:
+    if: >-
+      github.event.deployment_status.state == 'success' &&
+      github.event.deployment.environment == 'Production'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.deployment.sha }}
+          fetch-depth: 0
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Previous successful production deployment
+        id: previous
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          CURRENT_ID: ${{ github.event.deployment.id }}
+          CURRENT_SHA: ${{ github.event.deployment.sha }}
+        run: |
+          set -euo pipefail
+          previous=""
+          # Newest first; skip this deployment and any for the same commit.
+          for row in $(gh api "repos/$REPO/deployments?environment=Production&per_page=30" --jq '.[] | "\(.id):\(.sha)"'); do
+            id="${row%%:*}"; sha="${row##*:}"
+            if [ "$id" -ge "$CURRENT_ID" ] || [ "$sha" = "$CURRENT_SHA" ]; then continue; fi
+            state="$(gh api "repos/$REPO/deployments/$id/statuses?per_page=1" --jq '.[0].state // ""')"
+            if [ "$state" = "success" ]; then previous="$sha"; break; fi
+          done
+          echo "sha=$previous" >> "$GITHUB_OUTPUT"
+          echo "Previous successful production deployment: ${previous:-none found}"
+
+      - name: Pages whose date changed
+        id: changed
+        if: steps.previous.outputs.sha != ''
+        run: |
+          set -euo pipefail
+          paths="$(node scripts/page-dates-diff.mjs "${{ steps.previous.outputs.sha }}" | tr '\n' ' ')"
+          echo "paths=$paths" >> "$GITHUB_OUTPUT"
+          echo "Changed: ${paths:-none}"
+
+      - name: Ping IndexNow
+        if: steps.changed.outputs.paths != ''
+        run: node scripts/indexnow.mjs ${{ steps.changed.outputs.paths }}
