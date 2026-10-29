@@ -22,7 +22,7 @@ faq:
 
 ## What it is and when it is used
 
-A data processing agreement (DPA) is the contract a business signs when another business handles personal data on its behalf. The business that decides why and how the data is used is the controller; the business that carries out the processing for it is the processor. Article 28 of the GDPR requires this relationship to be governed by a written contract with specific content.
+A data processing agreement (DPA) is the contract a business signs when another business handles personal data on its behalf. The business that decides why and how the data is used is the controller; the business that carries out the processing for it is the processor. [Article 28 of the GDPR](https://dposchool.com/gdpr/article/28) requires this relationship to be governed by a written contract with specific content.
 
 Dealroom's DPA is built for SaaS and service providers that process customer personal data, under the EU GDPR, the UK GDPR and, where applicable, the CCPA/CPRA. It sits alongside a main services contract, such as a [SaaS agreement](/contracts/saas-agreement) or a [master services agreement](/contracts/master-services-agreement), and prevails over it on data protection matters.
 
@@ -38,7 +38,7 @@ This clause sets what data the processor may handle and for what purpose: only n
 
 ### Processing instructions
 
-Article 28(3)(a) requires the processor to act only on documented instructions. The options range from strict written instructions, through documented instructions with reasonable technical discretion for routine matters (security patches, backups), to treating the service agreement itself as the instructions.
+[Article 28(3)(a)](https://dposchool.com/gdpr/article/28#3) requires the processor to act only on documented instructions. The options range from strict written instructions, through documented instructions with reasonable technical discretion for routine matters (security patches, backups), to treating the service agreement itself as the instructions.
 
 ### Sub-processors
 
