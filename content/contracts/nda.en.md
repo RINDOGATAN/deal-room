@@ -7,7 +7,7 @@ summary: "A non-disclosure agreement lets one business share confidential inform
 related: ["master-services-agreement", "consulting-agreement", "ip-assignment-agreement", "term-sheet"]
 faq:
   - q: "What is the difference between a mutual and a one-way NDA?"
-    a: "In a one-way NDA only one side shares confidential information, and only the other side takes on duties of secrecy. In a mutual NDA both sides share information and each protects what the other discloses. The Dealroom NDA is drafted one-way: it names a Disclosing Party and a Receiving Party, and the secrecy duties fall on the Receiving Party."
+    a: "In a one-way NDA only one side shares confidential information, and only the other side takes on duties of secrecy. In a mutual NDA both sides share information and each protects what the other discloses. The Dealroom NDA can be either: you choose one-way or mutual when you create it. It is one-way unless you choose otherwise."
   - q: "How long should an NDA last?"
     a: "Two periods matter. The agreement term (1, 2 or 3 years in Dealroom) is the window in which new information can be shared. The confidentiality period (2, 3 or 5 years after the end, or indefinitely for trade secrets) is how long the duty of secrecy survives. Courts generally treat 2 to 5 years as reasonable for most business information."
   - q: "What information is not covered by an NDA?"
@@ -29,7 +29,7 @@ NDAs are typically signed before early talks about a partnership, due diligence 
 - In a **one-way NDA**, one side discloses and the other side receives. Only the receiving side takes on duties of secrecy.
 - In a **mutual NDA**, both sides disclose, so each is both a disclosing and a receiving party, and each protects the other's information.
 
-The Dealroom NDA is drafted as a **one-way** agreement. The preamble names a Disclosing Party and a Receiving Party, and the core duties (keep the information secret, use it only for the Purpose, return or destroy it at the end) are placed on the Receiving Party. Some terms bind both sides equally (non-solicitation, assignment, the "balanced" remedies option and the right to end the agreement on notice), but there is no setting that converts the document into a fully mutual NDA, so the roles should match the way information will actually flow.
+The Dealroom NDA can be drafted either way: when you create it, you choose who shares confidential information, and it is one-way unless you choose mutual. In the one-way form the preamble names a Disclosing Party and a Receiving Party, and the core duties (keep the information secret, use it only for the Purpose, return or destroy it at the end) are placed on the Receiving Party. In the mutual form both parties take on those duties for what they receive. Choose the form that matches the way information will actually flow.
 
 ## Who signs it and in which role
 
